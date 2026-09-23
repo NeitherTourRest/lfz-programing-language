@@ -423,3 +423,43 @@
   - **P3.9b（HOF）**：`Interp::call_user` 仍需提升为可复用 ABI。
 
 - **证据**：`Get-ChildItem src\evaluator.rs,src\env.rs,src\value.rs` → 114981 / 22303 / 45986 B（合法 UTF-8）；`cargo build --tests --message-format=json 2>$null` → `warnings=0`；`cargo test` → **`226 passed; 0 failed`**（新增 `evaluator::tests::*` **15**）。
+
+---
+
+### [2026-09-24 04:00] [runtime-dev] P3.9b 高阶内置：调用能力注入（`Invoke` ABI）+ §10.7 全表 54/54 齐备
+
+- **背景**：契约 §10.7 全表 54 个内置中，P3.9a 已交付 47 个**非高阶**（ABI `fn(&[Value], Span) -> R<Value>`）。剩余 7 个高阶内置（`map` / `filter` / `reduce` / `sortBy` / `minBy` / `maxBy` / `each`）**必须能调用用户函数 / 闭包**。P3.7 把 `Interp::call_user`（建调用帧 / 绑参 / 执行体 / 维护递归深度与 traceback）留为**求值器私有**，故须设计一个可复用的「调用能力」ABI。
+
+- **决定 1（调用能力 = 注入式回调 `Invoke`；关键决策）**：
+  ```rust
+  pub type Invoke<'a> = &'a mut dyn FnMut(&Value, &[Value], Span) -> R<Value>;
+  pub type HofFn = fn(&[Value], Span, Invoke<'_>) -> R<Value>;
+  ```
+  7 个 HOF 均实现为 `HofFn`，在需要时调用 `invoke(f, args, span)`。求值器在**派发内置处**（`eval_call`）就地构造闭包 `|f, a, s| self.call_value(f, a, s)`（`call_value` 为新增的 `&mut self` 方法：非函数 → `NotCallable`；函数 → `call_user`），经 [`builtins::call_with`] 注入。
+  - **为何不是任务书「推荐」的 `&dyn Fn`（共享借用）**：`call_user` 需要 `&mut self`（它会**递增/递减递归深度** `self.depth` 并**压/弹 traceback 帧栈** `self.trace`），共享借用的 `&dyn Fn` 无法表达可变能力。`&mut dyn FnMut` 是**最小且忠实**的抽象（对比：`&dyn Fn` + `RefCell` 只会把可变性藏起来且更脆）。
+  - **为何不「由求值器特判 7 个名字」**：那会把内置表一分为二、HOF 逻辑外溢到求值器，且**破坏可测性**（无法脱离完整求值器测 HOF）。注入式回调让每个 HOF 只依赖一个**窄接口**，单测可直接传 stub 回调（已验证：新增 7 条 HOF 单测**不依赖 evaluator**）。
+
+- **决定 2（表结构：两张表，**不**动既有 47 项 ABI）**：保留 `TABLE: [Builtin; 47]` 与 `lookup` / `call`（对 47 个的**语义与签名完全不变**）；新增 `HOF_TABLE: [Hof; 7]` 与：
+  - `pub fn lookup_hof(name) -> Option<Hof>`、`pub const HOF_NAMES: &[&str]`（7）；
+  - `pub fn call_with(name, args, span, invoke) -> R<Value>` —— **求值器唯一入口**（高阶表优先，否则回落 `call`）；
+  - `is_builtin` 改为两表**并集**（54）；`BUILTIN_NAMES` 由 47 更新为**全表 54**（字母序，测试锁定与两表并集逐项一致）。
+  - `Builtin::call` / `Hof::call` 各自集中做 `[min_args, max_args]` 校验（`TypeError::ArgCount`）。
+  - **兼容性**：求值器原 `builtins::call(...)` 改调 `call_with(...)`；对 47 个内置，`lookup_hof` 为 `None` → `call` → **行为逐字节不变**。既有 246 测试中仅 2 条「高阶留待 P3.9b」的**状态断言**（`lookup_table_names_consistency` 的 `47`、`hof_deferred_names_are_absent`）按新状态更新为 54 / 已注册；**无任何行为回退**。
+
+- **决定 3（7 个 HOF 的语义口径，逐条对齐 §10.7 / §8.1 / §4.5.6）**：
+  - **data-last**：回调（`f` / `pred` / `keyFn`）在前、容器 `xs` 恒为**末参**；容器更新一律**返回新值**（A1，浅拷贝），原容器不变。
+  - **回调类型先校验**：`f` / `pred` / `keyFn` 非函数值 → `TypeError::NotCallable`（「不可调用：{t} 不是函数」），**即使容器为空亦先报错**（§10.7「参数类型不符 → `TypeError`」的严格口径）。容器非 `array` → `TypeError`。
+  - `map` 逐元素调用 → 新 `array`；`filter` 谓词结果**须为 `bool`**，否则 `TypeError::ConditionNotBool`（§8.1 第 88 行把 `filter` 谓词与 `if`/`while` 并列要求 `bool`）；`each` 仅副作用遍历、返回 `nil`。
+  - `reduce` **左折叠** `acc = f(acc, x)`（左→右，B1）；空数组 → 直接返回 `init`（不调用 `f`）。
+  - `sortBy` 按 `keyFn` 结果**升序稳定**（`slice::sort_by` 稳定 + 初始下标序）；键须同类可全序（§4.5.6），否则 `TypeError`（承 `sort` 的 `validate_orderable`）。
+  - `minBy` / `maxBy` 空 → `ValueError`（**新消息** `空数组没有极值（{func}）`，复用 `ValueMsg::EmptyExtremum`）；非空按键取极值，返回**原元素**（等键取首个，与 `min`/`max` 一致）。
+  - 所有 HOF 的 `LzError` 均携带**调用点** `span`（位置红线）。
+
+- **决定 4（端到端可测性的现实约束；上报）**：本机 `parser.rs`（core-dev 并行实现中）**尚不支持 lambda**（`fn (...)` / `(...) =>`），故「`map` + 闭包」的 **lex+parse+eval 成功路径暂不可达**。本批以：(a) **2 条 `lex+parse+eval` 用例**覆盖 HOF 的**求值器路由 / data-last / 参数个数 / 回调类型**（`map(1, [1,2])`、`sortBy(nil, [3,1])`、`each(1)`、`reduce(nil, 0)`）；(b) 1 条**程序化 AST** 用例覆盖真实用户闭包（`map(fn(x) x*2, …)`、`reduce`、闭包捕获 A2、`filter` 非 bool）经求值器 `Invoke` 全链路。**待 parser 支持 lambda 后**，可把 (b) 改回 `lex+parse+eval`（无需改动 HOF 实现）。
+
+- **下游影响**：
+  - **core-dev（parser）**：HOF 成功路径依赖 lambda（`fn (...) body` / `(...) =>`，见 syntax.md §3.3 / §4.3 与 §9 样例 `(s) => s.score`）。另注：**v1 内置函数不是一等值**（`eval_expr` 的 `Ident` 对内置名报 `NameError`），故 HOF 回调只能是用户 lambda / 命名函数——与 spec §9 样例一致。
+  - **tooling-dev / test-engineer / verifier**：`map`/`filter`/`reduce`/`sortBy`/`minBy`/`maxBy`/`each` 已可用（配用户函数）；错误类/消息见上；`BUILTIN_NAMES` 现为 **54**。
+  - **language-architect**：请确认「HOF 回调类型**先校验**（空容器也对非法 `f` 报 `TypeError`）」与「`filter` 非 bool 用 `ConditionNotBool`」两处口径；如另有指定请知会。
+
+- **证据**：`Get-ChildItem src\builtins.rs` → **90390 B**（合法 UTF-8）；`cargo build` → `Finished`（**0 warning**）；`cargo build --tests --message-format=json 2>$null` → `warnings=0 errors=0`；`cargo test` → **`256 passed; 0 failed; 0 ignored`**（基线 246 + 新增 10：`builtins::tests::hof_*` 8 + `evaluator::tests::{e2e_hof_*,hof_drives_user_closures_through_evaluator}` 3，另**替换** 1 条过时的「高阶留待」断言）。未改 `docs/spec/`、`error.rs`、`span.rs`、`loader.rs`、`lexer.rs`、`ast.rs`、`parser.rs`、`Cargo.toml`。

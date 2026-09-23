@@ -1,5 +1,21 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 23:26] P3.9b-integr（parser 运算符/赋值 + 高阶内置 + HOF ADR）：三个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；已核验：`cargo build` 0 warning、`cargo test` 277 passed / 0 failed（parser 57 测、builtins 43 测、evaluator 44 测）；工作区恰 **6 个**已修改文件：`src/parser.rs`（外部执行者交付）、`src/builtins.rs`、`src/evaluator.rs`、`.opencode/team/DECISIONS.md`、`agents/runtime-dev/{STATUS,JOURNAL}.md`；做**三个原子提交**并 push；禁区：禁 force-push、不打 tag（`v0.2.0` 待 P3.11）、不提交 target/密钥/临时文件、不改清单外文件；出现清单外条目即停止）
+- 完成:
+  - 入清单门禁：`git status --short --untracked-files=all` 复核恰为任务书预期 **6 项**，**无清单外条目、无未跟踪文件**；门禁未触发。
+  - 基线复核：`git rev-parse --abbrev-ref HEAD` = `main`；push 前本地基线 HEAD = 远程 `refs/heads/main` = `81a4b8a feat(p3): parser postfix expressions and array/struct literals`。
+  - **提交 1（parser 运算符/赋值）**：`git add src/parser.rs`（暂存精确 1 文件）→ `git -c core.autocrlf=false commit -F lfz_msg1.txt`（标题 `feat(p3): parser binary operators and assignment`，正文 `§4 precedence/associativity table, unary/binary, simple+compound assignment with invalid-target error; 21 new tests.`）→ **短哈希 `ae88d38`**（1 file changed, 927 insertions(+), 10 deletions(-)）；`git log -1 --format=%B` 复核标题/正文完整无损。
+  - **提交 2（高阶内置）**：`git add src/builtins.rs src/evaluator.rs .opencode/team/agents/runtime-dev/STATUS.md .opencode/team/agents/runtime-dev/JOURNAL.md`（暂存精确 4 文件）→ 提交标题 `feat(p3): higher-order builtins (map/filter/reduce/sortBy/minBy/maxBy/each)`，正文 `§10.7 now 54/54; call-capability injected by evaluator; 7 new builtins + 3 evaluator tests.` → **短哈希 `d51755a`**（`git show --stat` = 4 files changed, **618 insertions(+), 78 deletions(-)**；`git commit` 自身打印的 3586/3046 为 CRLF 虚高，未采信）。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 3。
+  - **提交 3（决策 + 收工文档）**：`git add .opencode/team/DECISIONS.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md` → 提交 `docs(team): record HOF call-injection ADR`（`DECISIONS.md` 本轮含 runtime-dev 的 P3.9b HOF 调用能力注入 ADR，由其撰写、我仅代为入库；本提交即本条日志所在提交，短哈希见汇报）。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 三个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -5`（顶部为本轮第 3 提交，往下 `d51755a`、`ae88d38`、`81a4b8a`、`0aedd42`）；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag，`v0.2.0` 待 P3.11）。
+- 决策: 无新 ADR（本轮 ADR 由 runtime-dev 撰写，仅代为入库）。
+- 下一步: P3.11 收口时打附注标签 `v0.2.0`；后续子阶段按模块原子提交。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-23 23:12] P3.4b2a（parser：后缀表达式 + 数组/结构体字面量）：单个原子提交并推送
 - 来源: team-lead 任务书（轻量启动；已核验：`src/parser.rs` 47190 B（parser 测试 16→36，+20 测）、`cargo build` 0 warning、`cargo test` 246 passed / 0 failed；本轮**只有 1 个**已修改文件 `src/parser.rs`（外部执行者交付、**未**更新任何团队文档，符合预期）；做单个原子提交并 push；禁区：禁 force-push、不打 tag、不提交 target/密钥/临时文件、不改清单外文件；出现清单外条目即停止）
 - 完成:
