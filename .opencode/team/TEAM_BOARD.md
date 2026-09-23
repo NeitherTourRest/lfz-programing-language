@@ -11,8 +11,7 @@
 ## 🟡 待办
 | ID | 阶段 | 交付物 | 负责 | 映射评分项 | 通过条件 |
 | -- | -- | -- | -- | -- | -- |
-| P0.5 | 版本基线 | git init + 初始提交（团队脚手架，按 TEAM_SPEC §12 顺序） | release-manager | 交付物 7 | 仓库初始化；`git log` 含初始提交；工作区干净 |
-| P1 | 需求 | 需求矩阵+验收标准 | requirements-analyst | 全部（需求基线） | 矩阵完整 |
+| P1 | 需求 | 需求矩阵+验收标准同步（对齐冻结 spec v1） | requirements-analyst | 全部（需求基线） | 矩阵完整 |
 | P3 | 核心实现 | lexer/parser/AST/eval/builtins（TDD） | core-dev + runtime-dev | 评分项 1 | `lfz` 能跑 hello world；单测全绿 |
 | P4 | 工具链 | CLI/REPL/一键测试 runner/打包 | tooling-dev | 评分项 1（+支撑评分项 2） | `lfz test` 可跑通最小套件 |
 | P5 | 黑盒测试 | LFZ 全量测试集+覆盖矩阵 | test-engineer | 评分项 2 | 一个命令跑全部；覆盖全特性 |
@@ -23,7 +22,7 @@
 | P10 | 发布+答辩 | git 历史+交付清单+PPT | release-manager + ppt-presenter | — | 8 项交付物齐备 |
 
 > **评分项对照（合计 100 分）**：评分项 1 解释器（20）= P3 + P4；评分项 2 自动测试（20）= P5；评分项 3 性能（10）= P6；评分项 4 语法说明 + 人/AI 指南（20）= P2 + P7；评分项 5 Agent 应用（30）= P8。P0.5/P1/P9/P10 为支撑阶段，无独立分值。
-> **开工首步**：P0.5（git init + 初始提交）是用户下达开工指令后 team-lead 派发的**第一个任务**（release-manager 的第一任务），先于 P1 执行，保证后续所有工作进入 git 历史。
+> **版本纪律（自 P0.5 起全程生效）**：release-manager 在每个阶段里程碑做**原子提交 + 附注标签 + 实时更新 README + push**；远程 = https://github.com/NeitherTourRest/lfz-programing-language（Public）。
 
 ## 🔴 阻塞
 | ID | 任务 | 负责 | 阻塞原因 | 需要支持 |
@@ -33,5 +32,6 @@
 ## ✅ 已完成
 | ID | 阶段 | 交付物 | 负责 | 映射评分项 | 通过条件 | 完成日期 |
 | -- | -- | -- | -- | -- | -- | -- |
-| P0 | 团队就绪 | 脚手架通过 S1–S5（尚未提交 git，待 P0.5） | team-lead | — | 全部场景通过 | 2026-09-22 |
+| P0 | 团队就绪 | 脚手架通过 S1–S5 | team-lead | — | 全部场景通过 | 2026-09-22 |
 | P2 | 语言设计 | `docs/spec/{syntax,semantics,interface-contract}.md` 冻结（910/382/298 行）+ ADR D-016 | language-architect | 评分项 4（+支撑评分项 1） | 冻结门禁：core-dev PASS；runtime-dev 3 项非架构级已闭合 | 2026-09-23 |
+| P0.5 | 版本基线 | 本地 `git init` + 初始提交 `e060b21` + `v0.1.0`；远程 `github.com/NeitherTourRest/lfz-programing-language`（Public） | release-manager | 交付物 7 | `git ls-remote`：`main`=`35e5f62`、tag=`v0.1.0`；本地 = 远程 | 2026-09-23 |

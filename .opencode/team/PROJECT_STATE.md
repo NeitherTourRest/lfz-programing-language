@@ -7,13 +7,17 @@
 设计并实现 LFZ 解释型脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用，完成 8 项交付物并通过线下验收。
 
 ## 2. 当前阶段
-**P2 语言设计已完成并冻结**（DECISIONS **D-016**）：`docs/spec/{syntax,semantics,interface-contract}.md` 三件套定稿（60010/28153/26116 字节；910/382/298 行；UTF-8 无 BOM），冻结基线为 `DRAFT-LFZ-v0.5.md`（已含 3 处补钉）。冻结门禁：core-dev 复审 **PASS（文法无回溯可实现）**；runtime-dev 复审 CONCERNS 3 项（均非架构级，冻结时已闭合）。关键决策：**实现语言 = Rust**（D-011，工具链已装并 `cargo build` 冒烟通过）；v1 功能范围 = 5 特色 + `float`；`#42` 文件头 + Python 式中文错误；开发方式 = 契约先行 + 双轨 TDD；阶段划分见 D-009。P0 团队初始化完成（脚手架已构建并验证，**尚未纳入 git**）。**当前等待用户下达开工指令**；开工首步为 **P0.5**（release-manager 执行 `git init` + 初始提交），随后 P1 需求基线同步 → **P3 核心实现**（core-dev + runtime-dev 并行，依冻结契约 `docs/spec/`）。
+**已开工。P0 团队就绪 ✅、P2 语言设计冻结 ✅、P0.5 版本基线（本地 + 远程）✅。**
+- **P2 语言设计已冻结**（DECISIONS **D-016**）：`docs/spec/{syntax,semantics,interface-contract}.md` 三件套定稿（60010/28153/26116 字节；910/382/298 行；UTF-8 无 BOM），冻结基线为 `DRAFT-LFZ-v0.5.md`（含 3 处补钉）。冻结门禁：core-dev 复审 **PASS**（文法无回溯可实现）；runtime-dev 复审 CONCERNS 3 项（非架构级，已闭合）。
+- **P0.5 版本基线已完成（本地 + 远程）**：`git init -b main`、初始提交 `e060b21`、附注标签 `v0.1.0`、版本管理纪律 ADR；远程仓库 **https://github.com/NeitherTourRest/lfz-programing-language**（**Public**，默认分支 `main`，`main` = `35e5f62`，`v0.1.0` 已推送）；本地与远程一致。⚠️ **认证账号 login = `NeitherTourRest`**（其 display name = `MakeChase`）——GitHub 上另有同名不同账号 `MakeChase`，故仓库 URL 用 `NeitherTourRest`。
+- **关键决策**：**实现语言 = Rust**（D-011，工具链已装并 `cargo build` 冒烟通过）；v1 = 5 特色 + `float`；`#42` 文件头 + Python 式中文错误；契约先行 + 双轨 TDD；阶段划分见 D-009；**协议 MIT**；**全程自动版本管理 + README 实时更新**。
+- **下一步**：**P1 需求基线同步**（requirements-analyst）→ **P3 核心实现**（core-dev + runtime-dev 并行，依冻结契约 `docs/spec/`，TDD）。
 
 ## 3. 里程碑进度表
 | 阶段 | 里程碑 | 状态 | 负责人 |
 | -- | -- | -- | -- |
 | P0 | 团队就绪（脚手架通过 S1–S5） | ✅ 已完成 | team-lead |
-| P0.5 | 版本基线（git init + 初始提交） | 🟡 待办（开工首步） | release-manager |
+| P0.5 | 版本基线（git init + 初始提交 + `v0.1.0` + GitHub 远程） | ✅ 已完成 | release-manager |
 | P1 | 需求矩阵+验收标准 | 🟡 待办 | requirements-analyst |
 | P2 | 语言设计（语法+语义+接口契约+ADR） | ✅ 已完成（`docs/spec/` 冻结，D-016） | language-architect |
 | P3 | 核心实现（lexer/parser/AST/eval/builtins，TDD） | 🟡 待办 | core-dev + runtime-dev |
@@ -34,16 +38,18 @@
 | 4 | LFZ 性能测试报告 | 10（评分项 3） | 未开始 | perf-engineer | `benchmarks/` + `docs/reports/performance.md` |
 | 5 | 开发指南（人 + AI） | 20（评分项 4 一部分） | 未开始 | docs-writer + ai-dx-engineer | `docs/guide/` + `.opencode/skills/lfz-programming/` |
 | 6 | 应用源代码 + 开发记录 | 30（评分项 5） | 未开始 | app-dev | `app/` + `app/DEV_RECORD.md` |
-| 7 | Git 历史记录 | 无独立分值（交付完整性） | 未开始（仓库尚未初始化，待 P0.5） | release-manager | `.git/` |
+| 7 | Git 历史记录 | 无独立分值（交付完整性） | ✅ 已建立（本地 + 远程） | release-manager | `.git/` + https://github.com/NeitherTourRest/lfz-programing-language |
 | 8 | 系统介绍 PPT | 无独立分值（答辩载体） | 未开始 | ppt-presenter | `docs/slides/` |
 
 ## 5. 关键事实
 - **技术栈（已确认，D-011）**：解释器用 **Rust**（cargo 工程，优先仅用 std）。**工具链已装并验证**：rustc/cargo 1.98.1、`stable-x86_64-pc-windows-msvc`、链接器可用、`cargo build` 冒烟通过。Rust 实现需重规划运行时值模型（`enum Value` + `Rc<RefCell<...>>`）与 `Result` 错误处理。
 - **目录约定**：`docs/spec/`（语法/语义/接口契约）、`src/`（lexer/parser/ast/evaluator/builtins/env）、`tests/`（黑盒测试）、`benchmarks/`（性能脚本）、`docs/guide/`（人类文档）、`docs/reports/`（各类报告）、`app/`（应用）、`.opencode/`（团队与技能）。
 - **运行命令**：待定（P4 由 tooling-dev 定义 `lfz run <file>`、`lfz test`）。
+- **Git 与远程**：仓库根 = 项目根；默认分支 `main`；`origin` = https://github.com/NeitherTourRest/lfz-programing-language.git（Public）；协议 **MIT**（`LICENSE`，`Copyright (c) 2026 MakeChase`）。
+- **环境坑（重要）**：本机 git 配了代理 `http://127.0.0.1:7890`，但 **gh CLI 不读 git 配置**，调用 gh 前须设 `HTTPS_PROXY`/`HTTP_PROXY` 同值，否则直连 `github.com:443` 超时。
 
 ## 6. 当前风险与开放决策
-- **风险（P0.5，最高优先）**：脚手架与后续全部工作尚未纳入 git；开工首步必须先完成 `git init` + 初始提交，否则 Git 历史交付物（交付物 7）缺失早期记录。
+- **已消解（P0.5 完成）**：脚手架与全部工作已纳入 git 并推送远程（交付物 7 已建立基线）。版本管理纪律（main / 里程碑原子提交 / conventional commits / 附注标签自 `v0.1.0` 起 / 禁 force-push / README 由 release-manager 实时更新）见 DECISIONS。
 - **D-004 已定案（用户）**：实现语言 = **Rust**（D-011）。工具链已装并验证 ✅。**风险：Rust 返工率高于 Python，须以契约先行 + 编译驱动 + 小步提交 + 频繁 `cargo test` 控制。**
 - **应用选题已定（用户）**：排序算法可视化（P8；由 app-dev 展开设计）。
 - **已确认（D-011）**：v1 功能范围 = 5 特色**全纳入**、`float` **纳入**、应用选题 = **排序算法可视化**（P8）。

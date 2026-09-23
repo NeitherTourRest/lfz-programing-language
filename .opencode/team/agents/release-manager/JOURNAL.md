@@ -1,5 +1,32 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 23:55] P0.5 团队文档同步提交并推送
+- 来源: team-lead 任务书（P0.5 收尾——将团队记忆文档原子提交并 `git push`，恢复工作区干净、本地=远程）
+- 完成:
+  - `git status --short` 复核：恰为 7 个预期文件（team-lead：`PROJECT_STATE.md`/`TEAM_BOARD.md`/`agents/team-lead/{STATUS,JOURNAL}.md`；我：`DECISIONS.md`/`agents/release-manager/{STATUS,JOURNAL}.md`），**无越界文件**；密文扫描（`ghp_/gho_/github_pat_/Bearer/password=/token=`）无命中。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入同一提交。
+  - `git add .opencode/team/`（仅团队文档范围）→ 原子提交 `docs(team): sync project state and board after P0.5 completion` → `git push`。
+- 产出:
+  - 新提交（短哈希见下方证据）；`git status --short` 空；`git ls-remote origin` 的 `refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline`（新提交位于 `35e5f62` 之上）；`git ls-remote origin`；`git tag -n`（仍仅 `v0.1.0`，未新增/移动）。
+- 决策: 无新增 ADR（本次为常规文档同步，非跨角色新决策）。
+- 下一步: 待 team-lead 就 owner 偏差拍板；下一里程碑继续 原子提交 + 附注标签 + README 更新 + push。
+- 阻塞: 无。
+## [2026-09-23 20:32] P0.5r 远程仓库建立与推送（owner=NeitherTourRest）
+- 来源: team-lead 任务书 P0.5r（创建 GitHub Public 仓库 `lfz-programing-language` + 推送 `main` 与 `v0.1.0` + 更新 README 链接）
+- 完成:
+  - 诊断：`gh auth status` 显示**未登录**（无 oauth token / 无 `hosts.yml` / keyring 无 `gh:github.com`）；本机 git 凭据管理器存在 github.com 凭据（login `NeitherTourRest`，display name `MakeChase`，scope 含 `repo`）。以 `git credential fill`（token 不落盘打印）→ `gh auth login --with-token` **恢复 gh 登录**。
+  - `gh auth setup-git`；`gh repo create lfz-programing-language --public`（创建**空**仓库，未自动加 remote）。
+  - `git remote add origin https://github.com/NeitherTourRest/lfz-programing-language.git`。
+  - `git push -u origin main`（`* [new branch] main -> main`）；`git push origin v0.1.0`（`* [new tag] v0.1.0 -> v0.1.0`）。
+  - 更新 `README.md`（顶部"仓库地址" + "快速开始"克隆命令，克隆 URL 用**实际 owner**）；提交 `35e5f62 docs: add repository url and clone instructions`；`git push`（`6873fe7..35e5f62 main -> main`）。
+- 产出:
+  - **远程仓库: https://github.com/NeitherTourRest/lfz-programing-language （Public，默认分支 main）**
+  - 证据: `gh auth status`→`Logged in to github.com account NeitherTourRest`；`git remote -v`→origin 为该 URL；`git ls-remote origin`→ `refs/heads/main`=`35e5f62…` + `refs/tags/v0.1.0`；`gh repo view --json name,visibility,url,defaultBranchRef`→`visibility=PUBLIC`、`defaultBranchRef=main`、url 正确；`git log --oneline`=3 提交。
+  - `.opencode/team/DECISIONS.md`（追加 P0.5r owner 偏差 ADR）
+- 决策: 以**可认证账号的 login `NeitherTourRest`** 作为仓库 owner（任务书字面 `github.com/MakeChase` 系**另一同名用户** id 128372141，无法认证）；README 克隆链接按实际 URL 写入。详见 ADR。
+- 下一步: 待 team-lead 就 owner 偏差拍板；后续阶段里程碑提交/打标签/README 更新 + `git push`。
+- 阻塞: 无（已交付）；owner 偏差待确认（若需落到字面 `MakeChase` 账号，须另行迁移/重建）。
 ## [2026-09-23 23:30] P0.5 本地版本基线（git init + 初始提交 + v0.1.0 + ADR）
 - 来源: team-lead 任务书（P0.5 本地部分）
 - 完成: `git init -b main`；完善 `.gitignore`（保留原 28 行 + 新增 Rust/编辑器/系统项）；新建 MIT `LICENSE`（2026 MakeChase）；更新 `README.md`（MIT 徽标 + 许可证段、当前状态表、"release-manager 实时更新"说明）；单次初始提交（`git commit -F` UTF-8 信息文件）；打附注标签 `v0.1.0`；向 DECISIONS.md 追加版本管理纪律 ADR。

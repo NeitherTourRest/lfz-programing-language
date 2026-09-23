@@ -180,3 +180,14 @@
   9. **远程 GitHub 仓库与推送方式（认证）待用户确认**：参数（仓库名 / 可见性 / 认证 HTTPS+PAT vs SSH）确认前，**不执行任何远程操作**（不安装 `gh`、不 `gh repo create`、不 `git remote add`、不 push / fetch）。
 - **影响**：后续各阶段的提交/标签由 release-manager 统一执行并附 `git log --oneline` 证据；各角色交付物逐步纳入历史；README 与版本标签成为交付物 7（Git 历史）的进度证据；远程推送在用户确认后由 team-lead 派发。
 - **证据**：`git log --oneline` = `e060b21 chore: initial commit — LFZ scaffold, team constitution, frozen v1 language spec`；`git status --short` 为空；`git tag` = `v0.1.0`；`git ls-files | Measure-Object` 计 **67** 个文件。
+
+### [2026-09-23 20:32] [release-manager] P0.5r 远程仓库建立与推送（owner 偏差：NeitherTourRest 而非 MakeChase）
+- **背景**：team-lead 派发 P0.5r——在 GitHub 创建 **Public** 仓库 `lfz-programing-language`、推送 `main` 与附注标签 `v0.1.0`、并更新 README 仓库链接。任务书假定 gh CLI 已设备码登录（账号 `MakeChase`）。**实测**：执行前 `gh auth status` 显示**未登录**（无 oauth token / 无 `hosts.yml` / keyring 无 `gh:github.com`），登录未持久化；本机 git 凭据管理器仅有 github.com 凭据（**login `NeitherTourRest`，display name `MakeChase`，id 180032968，scope 含 `repo`**）。
+- **决策**：
+  1. 用既有凭据经 `git credential fill` → `gh auth login --with-token` 恢复 gh 登录（**不新建任何凭据**），全程走 `HTTPS_PROXY=http://127.0.0.1:7890`。
+  2. 以**可认证账号的 login `NeitherTourRest`** 作为远程仓库 owner：`gh repo create lfz-programing-language --public` → `https://github.com/NeitherTourRest/lfz-programing-language`。
+  3. README 仓库链接/克隆命令按**实际 URL** 写入（`https://github.com/NeitherTourRest/lfz-programing-language.git`）。
+  4. 未 force-push、未改默认分支（保持 `main`）、未改他人交付物、未在仓库外建文件。
+- **偏差说明（需 team-lead/用户确认）**：任务书写的 `github.com/MakeChase` 与 GitHub 用户 `MakeChase`（id **128372141**）同名，但那是**另一个账号**；可认证账号是 `NeitherTourRest`（id **180032968**，display name `MakeChase`）。因 **GitHub URL 用 login 而非 display name**，仓库实际落在 `NeitherTourRest` 名下。若用户期望 owner 为字面 `MakeChase`，需在该账号完成认证后**迁移/重建**仓库并更新 README——release-manager 待授权执行。
+- **影响**：交付物 7（Git 历史）已具备远程可见性（Public）；README 顶部与"快速开始"含正确克隆入口；后续阶段 push/tag 沿用 `origin`（`NeitherTourRest`）。
+- **证据**：`gh auth status` → `Logged in to github.com account NeitherTourRest`；`git remote -v` → origin=该 URL；`git ls-remote origin` → `refs/heads/main 35e5f628…` + `refs/tags/v0.1.0`；`gh repo view --json name,visibility,url,defaultBranchRef` → `visibility=PUBLIC`、`defaultBranchRef=main`、url 正确；`git log --oneline` = `35e5f62` / `6873fe7` / `e060b21`。
