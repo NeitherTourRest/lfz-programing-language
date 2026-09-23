@@ -1,0 +1,41 @@
+# LFZ 项目 .gitignore
+# 最后更新: 2026-09-23 by release-manager
+
+# opencode 团队状态
+# 注意: .opencode/ 必须入库（团队记忆与 docs/spec 等交付物在其中），请勿忽略
+.omo/
+.codegraph/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# 虚拟环境
+.venv/
+venv/
+
+# 构建产物
+dist/
+build/
+
+# Rust（/target/ 锚定仓库根；Cargo.lock 必须提交——本项目为二进制应用）
+/target/
+**/*.rs.bk
+*.pdb
+
+# 编辑器 / IDE
+.idea/
+.vscode/
+
+# 系统文件
+Thumbs.db
+
+# 临时文件
+*.tmp
+~$*
+
+# macOS
+.DS_Store
