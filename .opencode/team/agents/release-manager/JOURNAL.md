@@ -196,3 +196,20 @@
 - 完成: 角色定义与活文档建立
 - 产出: `.opencode/agents/release-manager.md`
 - 下一步: 等待 team-lead 调度
+
+## [2026-09-24 02:45] P3.8（evaluator v1 语义）+ P3.8 ADR：两个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；已核验：cargo build 0 warning、cargo test 226 passed / 0 failed（evaluator 新增 15 测）；工作区恰 6 个已修改文件；本轮做两个原子提交并 push；src/parser.rs 不在清单内 —— 不得提交；出现清单外条目即停止）
+- 完成:
+  - 入清单门禁：git status --short --untracked-files=all 复核恰为任务书预期 6 项（M src/evaluator.rs、M src/value.rs、M src/env.rs、M .opencode/team/DECISIONS.md、M .opencode/team/agents/runtime-dev/{STATUS,JOURNAL}.md），无清单外条目、无未跟踪文件；门禁未触发。src/parser.rs 不在其中。
+  - 基线复核：git branch --show-current = main；HEAD = 89b8624 feat(p3): parser skeleton and statement layer（push 前本地基线）；git remote -v → origin = https://github.com/NeitherTourRest/lfz-programing-language.git。
+  - 提交 1（evaluator 代码 + runtime-dev 文档）：git add src/evaluator.rs src/value.rs src/env.rs .opencode/team/agents/runtime-dev/STATUS.md .opencode/team/agents/runtime-dev/JOURNAL.md（git diff --cached --name-only 精确 5 文件）→ git -c core.autocrlf=false commit -F lfz_msg_p38.txt（标题 feat(p3): v1 evaluator semantics (determinism, A4/A5/A6, RecursionError, dump, traceback)，正文含 §4.5 与 ;;）→ 短哈希 f9aec70（git show --stat 5 files changed, +937/-85）；git log -1 --format=%B 复核标题/正文完整无损。
+  - 体量核对（戳破假象）：git commit 自身在 core.autocrlf=false 下打印 3106/2254 属行尾转换虚高；判据取 git show --stat = +937/-85；并以 git hash-object <f> == git rev-parse HEAD:<f> 逐文件比对（5 文件全 MATCH）证明 工作区=索引=提交。
+  - 先完成收工协议（覆盖更新本角色 STATUS.md、追加本 JOURNAL.md），使收工改动并入提交 2。
+  - 提交 2（ADR + 收工文档）：git add .opencode/team/DECISIONS.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md → 提交 docs(team): record P3.8 evaluator semantics ADR（DECISIONS.md 为 runtime-dev 撰写的 P3.8 ADR，我仅代为入库；本提交即本条日志所在提交，短哈希见汇报）。
+  - git push（非 force，$LASTEXITCODE 判据）。
+- 产出:
+  - 两个新提交；git status --short 空；git ls-remote origin refs/heads/main = 本地 HEAD；git log --name-only -2 不含 src/parser.rs。
+  - 证据: git log --oneline -4（顶部两条为本轮提交，位于 89b8624 之上）；git ls-remote origin refs/heads/main；git tag -n（仍仅 v0.1.0，本轮未打 tag，v0.2.0 待 P3.11）。
+- 决策: 无新 ADR（DECISIONS.md 本轮改动为 runtime-dev 追加、我仅代为入库；常规提交非新跨角色决策）。owner 偏差仍为遗留待确认项。
+- 下一步: P3.4b2（parser）/ P3.9b（HOF）按模块原子提交；P3.11 收口打附注标签 v0.2.0；P10 交付清单核对。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。

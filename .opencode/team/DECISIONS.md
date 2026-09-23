@@ -387,3 +387,39 @@
   - **P3.9b（HOF）**：`call_user` 为本批 `Interp` 私有；HOF 需将「调用用户函数」能力提升为可复用 ABI（P3.9b 处理）。
 
 - **证据**：`src/evaluator.rs` **79980 B**（原 182 B）；`cargo build --message-format=json` → `warnings=0`；`cargo test` → **`195 passed; 0 failed`**（新增 `evaluator::tests::*` **26**）；`src/evaluator.rs` 为合法 UTF-8。
+
+---
+
+### [2026-09-24 02:30] [runtime-dev] P3.8 `src/evaluator.rs` 语义定稿（求值大栈线程 / `TracedRun` traceback ABI / `deep_eq_bounded` / 规范缺口）
+
+- **背景**：P3.7 交付求值主干后，P3.8 需补齐 §4.5 确定性八项、A4/A5/A6、`RecursionError`、`;;`（`Dump`）、traceback。其中两项需跨模块决定：(a) 树遍历器 10000 层递归所需**栈**远超主线程默认值；(b) §10.3 要求「出错时把帧栈序列化进 `LzError`」，但 `error.rs`（只读）的 12 变体**无帧栈字段**。
+
+- **决定 1（求值在专用大栈线程上进行）**：`pub fn eval_module_traced(&Program) -> TracedRun` 在 `std::thread::scope` 内以 `Builder::spawn_scoped` + `stack_size(256 MiB)` 起线程求值；结果经 `struct Transfer<T>(T)` + `unsafe impl<T> Send for Transfer<T>` 在 `join` 边界移交。
+  - **理由/实测**：debug 构建下 `fn loop(n){ loop(n) }` 的 10000 层递归在 **8 MiB 与 64 MiB 栈均栈溢出**，256 MiB 才可达逻辑上限。若不加大栈，`RecursionError` 永远无法在有意义的深度触发，且 CLI 深递归会**崩溃**（`STATUS` 缓冲的栈溢出风险）。
+  - **安全性论证**：`join` 建立 happens-before；生产线程返回后不再访问该值，消费线程 `join` 返回后才访问 → 任一时刻仅一个线程访问这些 `Rc`，无数据竞争（`Rc` 非原子计数不被并发触碰）。`unsafe impl Send` 是这唯一一处的「信任桥」，已就地注释。
+  - **退化**：线程创建失败（OS 资源不足）时回退当前栈求值（仍受逻辑深度上限保护）。
+  - **`pub fn eval_module` / `run` 签名不变**；新增 `pub const RECURSION_LIMIT: u32 = 10_000`。
+
+- **决定 2（traceback ABI = `TracedRun`，不动 `LzError`）**：新增 `pub struct TracedRun { pub result: R<Value>, pub frames: Vec<TraceFrame>, func_names }` + `pub fn frame_name(&TraceFrame) -> Rc<str>`（`<module>` / 函数名 / `<fn>`，§8.4）。帧栈按 §10.3 N1 维护（**进入 Call 先把当前帧 `span` 更新为调用点，再压新帧**），自**最外层 → 最内层**；位置用 `Span`（line/col）。
+  - **理由**：`error.rs` 为 runtime-dev **只读**，其 12 变体无帧栈字段；无法在不越界的前提下让 `LzError` 承载 traceback。此 ABI 让 CLI/tooling 取到帧栈。
+  - **待 architect 确认**：若规范坚持帧栈「序列化进 `LzError`」，需 core-dev 为 `LzError` 增字段（届时 `TracedRun` 可保留或收敛）。
+
+- **决定 3（`deep_eq_bounded`，收口 §4.5.5 深结构上限）**：`value.rs` 增 `pub fn Value::deep_eq_bounded(&self, other: &Value, limit: u32) -> Result<bool, u32>`；`==` / `!=` 走此路（超限 `Err(深度)` → 求值器转 `RecursionError`）。既有 `pub fn deep_eq` **签名与行为不变**（内部 `limit = u32::MAX`；环安全由「已访问有序对集合」保证，非深度）。
+  - **未收口项**：`Display` / `str` 仍为无上限递归——`fmt::Result` **无法**返回 `LzError`，§4.5.5 的显示层上限**实现受限**（上报）。
+
+- **决定 4（`;;` 渲染 = 纯函数 + 运行时可见链）**：`pub fn render_dump(&[(Rc<str>, Value)]) -> String`（行格式 `<name> ： <value>`，分隔串 `U+0020 U+FF1A U+0020`）。`visible_entries` 沿运行时词法链**内→外**（块/函数帧链 → 捕获 cell → globals）、同层按 `Env` per-scope 名字表**声明序（= slot 升序）**、**遮蔽去重**。
+  - **与 §10.5 `ScopeDebug` 的关系**：语义等价——`Env` 的 per-scope `names` 以声明序组织（slot 升序），沿链内→外遍历并去重，即 `ScopeDebugTable::visible_slots` 的行为。**实现取运行时 `Env` 链而非编译期 `ScopeDebugTable`**：因 P3.7 名字解析为运行时查名、AST 无 `(depth,slot)`、且**捕获 cell 的槽位不在当前 env 链内**（用 `ScopeDebug` 绝对槽位无法解析捕获变量）。行为一致，机制不同。
+
+- **未明确项（上报 language-architect，不自行发明；本实现取保守口径）**：
+  1. `LzError` 无 traceback 字段（见决定 2）。
+  2. `let` 重绑定的错误类未定义（§4.5.2 称非法、§8.1 无错误类）→ 仍存储 `mutable` 标志但**不强制**。
+  3. `Display` / `fmt` 深结构上限无法产 `RecursionError`（见决定 3）。
+  4. `struct` 模板（`StructDef`）的 `==` 仍取同一性（承 P3.6b）。
+
+- **下游影响**：
+  - **tooling-dev**：CLI 错误格式化建议改用 `eval_module_traced` 取帧栈；`line/col` 用 `Span`。`eval_module` / `run` 不变。
+  - **test-engineer / verifier**：`;;` 输出分流到 stdout，格式逐字符 `名字 ： 值`；深递归应得 `RecursionError`（非崩溃）。
+  - **language-architect**：请裁定缺口 1–4；`error.rs` 变更需 core-dev。
+  - **P3.9b（HOF）**：`Interp::call_user` 仍需提升为可复用 ABI。
+
+- **证据**：`Get-ChildItem src\evaluator.rs,src\env.rs,src\value.rs` → 114981 / 22303 / 45986 B（合法 UTF-8）；`cargo build --tests --message-format=json 2>$null` → `warnings=0`；`cargo test` → **`226 passed; 0 failed`**（新增 `evaluator::tests::*` **15**）。
