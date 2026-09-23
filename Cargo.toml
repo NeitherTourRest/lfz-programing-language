@@ -1,0 +1,15 @@
+[package]
+name = "lfz"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "lfz"
+path = "src/lib.rs"
+
+[[bin]]
+name = "lfz"
+path = "src/main.rs"
+
+# 仅用 std：无第三方依赖（D-011 / PLAN-P3 §1）。
+[dependencies]
