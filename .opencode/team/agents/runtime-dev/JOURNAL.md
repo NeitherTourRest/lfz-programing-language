@@ -1,5 +1,28 @@
 # runtime-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 02:30] P3.8 — `src/evaluator.rs` 语义定稿（§4.5 确定性八项 / A4 / A5 / A6 / RecursionError / `;;` / traceback）
+- 来源: team-lead 任务书「P3.8 — `src/evaluator.rs` 语义定稿」，依据 `docs/spec/semantics.md` §4.5（全节）/§3.6/§3.7/§8，`interface-contract.md` §10.3/§10.4/§10.5/§10.8。
+- 完成:
+  - **§4.5 确定性八项**：B1 求值序（二元左→右、赋值 key→rhs、数组/struct 字面量书写序、短路）；B2 `for` 迭代快照；B3 struct 键 UTF-8 字节序升序；B4 迭代/递归栈上限；B6 `float` IEEE（`NaN` 比较、`±Inf`、除零不产 Inf）；B7 struct 实例化平拷贝；B13 `int→float` 加宽（唯一入口 `Value::as_f64`）+ 精确比较。
+  - **RecursionError（B4）**：`Interp.depth` 帧深计数，`> RECURSION_LIMIT(10000)` → `LzError::Recursion { depth, limit, span }`；**深结构**路径经新 `Value::deep_eq_bounded(other, limit) -> Result<bool,u32>`（`==`/`!=` 接入，超限转 `RecursionError`）。
+  - **求值线程（关键工程决策）**：树遍历器 10000 层递归在 8 MiB / 64 MiB 栈均**栈溢出**，故 `eval_module_traced` 在 **256 MiB 大栈线程**上求值；结果经 `Transfer<T>`（`unsafe impl Send`，`join` happens-before 保证不并发）跨线程移交。
+  - **A4**：`check` 非致命（`builtins` 已实现；单测确认返回 `false` 且**继续执行**、不产 `LzError`）；`assert` / `fail` 致命（`AssertionError`，消息构造方组装：`断言失败：{msg}` / `{msg}`）。
+  - **A5**：单测锁定 struct 数据面（`keys`/`values`/`entries`/`display`/`==`/`has`/`len`）**不含**函数值字段。
+  - **A6**：`==` 环安全（重访即相等）+ 身份优先；`!=` 取反；端到端构造自引用环验证不报错、不死循环。
+  - **`;;`（Dump）**：新增纯函数 `pub fn render_dump(&[(Rc<str>, Value)]) -> String`（行格式 `<name> ： <value>`，U+FF1A 全角冒号）；`visible_entries` 沿可见链**内→外**、同层**声明序（slot 升序）**、**遮蔽去重**；Dump 处理器仅收集 + 写 **stdout**。
+  - **traceback**：新增 `pub fn eval_module_traced(&Program) -> TracedRun` 与 `TracedRun::frame_name`；按 §10.3 N1「进入 Call 先更新当前帧 span 为调用点，再压新帧」，帧栈自最外层→最内层，位置用 `Span`（line/col）。
+  - **跨模块扩展**（只改 runtime-dev 自有模块）：`value.rs` 增 `deep_eq_bounded`（`deep_eq` 签名/行为不变）；`env.rs` 增 `Env::bindings()`（声明序）。
+- 产出:
+  - `Get-ChildItem src\evaluator.rs,src\env.rs,src\value.rs` → evaluator.rs **114981 B**、env.rs **22303 B**、value.rs **45986 B**（均合法 UTF-8）。
+  - `cargo build --tests --message-format=json 2>$null` → **warnings = 0**。
+  - `cargo test` → **`226 passed; 0 failed; 0 ignored`**（新增 `evaluator::tests::*` **15**，全绿）。
+  - 新增测试（15）：b1_evaluation_order_is_left_to_right / b2_for_iterates_over_snapshot / b3_struct_keys_are_byte_order_sorted / b4_deep_recursion_yields_recursion_error / b6_float_ieee_rules / b7_struct_instantiation_is_flat_copy / b13_int_float_widening_is_the_only_implicit_conversion / a4_check_nonfatal_assert_and_fail_fatal / a5_struct_data_plane_excludes_method_fields / a6_equality_is_cycle_safe_and_identity_first / dump_render_is_pure_and_formats_lines / dump_visible_entries_inner_to_outer_shadow_dedup / dump_statement_runs_and_returns_nil / traceback_frames_follow_call_site_rule / end_to_end_lex_parse_eval_smoke。
+- 决策: 追加 ADR [2026-09-24 02:30]（求值大栈线程 + `TracedRun` traceback ABI + `deep_eq_bounded` + 规范缺口）。**未**改 `docs/spec/`、`error.rs`、`ast.rs`、`parser.rs`、`span.rs`、`lexer.rs`、`loader.rs`、`Cargo.toml`。
+- 缺口（上报，不自行发明）: (1) `LzError`（§10.4）无帧栈字段而 §10.3 要求写入 → 新增 `eval_module_traced` 带出帧栈，请 architect 确认；(2) `let` 重绑定错误类未定义（仍不强制）；(3) `Display`/`fmt` 无法返回 `RecursionError`（深结构仅 `==` 路径收口）；(4) `StructDef` 模板 `==` 仍同一性（承 P3.6b）。
+- 事故与恢复: 一次误用 PowerShell `Get-Content`+`Set-Content` 改 `src/evaluator.rs`，导致 UTF-8 中文双重编码 + 换行吞并（源码结构性损坏）；经 `git checkout HEAD -- src/evaluator.rs`（HEAD 恰为 P3.7 基线 79980 B）恢复后，**全程改用 `edit`/`write` 工具**重做本批编辑。已将教训写入 STATUS「关键经验」。
+- 下一步: 待 team-lead 核验 P3.8；P3.9b（7 个高阶内置）。
+- 阻塞: 无。
+
 ## [2026-09-24 01:30] P3.7 — `src/evaluator.rs` 核心（树遍历求值器：表达式 / 语句 / 控制流 / 函数与闭包 / 调用）
 - 来源: team-lead 任务书「P3.7 — `src/evaluator.rs` 核心」，依据 `docs/spec/semantics.md` §3.6/§3.7/§4/§4.2/§4.5.1–§4.5.11，`interface-contract.md` §10.2/§10.3/§10.5/§10.6/§10.7/§10.8。
 - 完成:

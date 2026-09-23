@@ -228,13 +228,23 @@ impl Value {
     /// - 类型不同（如 `array` vs `struct`、`number` vs `string`）→ `false`。
     ///
     /// 注 1：`struct` **模板**（`StructDef`）的相等**规范未明确定义**（§4.5.9 未列该类）；
-    /// 本实现保守取**同一性**（同 `Rc` 分配 → `true`，否则 `false`），待规范补齐（见汇报）。
-    /// 注 2：本实现为**递归**（与 [`Display`](fmt::Display) 一致），未施加 §4.5.5 的 10000 层深度上限
-    /// （该上限需显式迭代栈 + `RecursionError`）；属 P3.7/P3.8 求值器接入时的遗留项（见汇报）。
+    /// 本实现保守取**同一性**（同 `Rc` 分配 → `true`，否则 `false`）。
+    /// 注 2：本方法**不施加深结构上限**（`limit = u32::MAX`），仅保既有签名；需要 §4.5.5 的
+    /// 10000 层上限时请用 [`Value::deep_eq_bounded`]（求值器 `==` / `!=` 走后者）。
     #[must_use]
     pub fn deep_eq(&self, other: &Value) -> bool {
+        // 环安全由 `seen`（已访问有序对集合）保证，与深度无关，故 `u32::MAX` 不改变环行为。
+        self.deep_eq_bounded(other, u32::MAX).unwrap_or(false)
+    }
+
+    /// **深结构相等（带上限）**（§4.5.5 / A6）：`deep_eq` 的深度受限版本。
+    ///
+    /// 递归处理容器时逐层递增深度；**深度超过 `limit`** → `Err(实际达到的深度)`，
+    /// 调用方据此构造 `LzError::Recursion`（`semantics.md` §4.5.5：深结构处理超限 → `RecursionError`）。
+    /// 未超限 → `Ok(bool)`；语义与 [`Value::deep_eq`] 完全一致（含环安全 / 数据面 / 精确比较）。
+    pub fn deep_eq_bounded(&self, other: &Value, limit: u32) -> Result<bool, u32> {
         let mut seen: Vec<(usize, usize)> = Vec::new();
-        eq_rec(self, other, &mut seen)
+        eq_rec(self, other, &mut seen, 0, limit)
     }
 
     // ----- 全序比较（§4.5.6 / §4.5.7） --------------------------------------
@@ -423,49 +433,74 @@ fn same_identity(a: &Value, b: &Value) -> bool {
     }
 }
 
-/// [`Value::deep_eq`] 的递归内核；`seen` 为**已访问有序对集合**（`(a, b)` 的身份地址对）。
+/// [`Value::deep_eq_bounded`] 的递归内核；`seen` 为**已访问有序对集合**（`(a, b)` 的身份地址对）。
 ///
-/// 重访一对 ⇒ 视为相等（**环安全**，A6 步骤 3b/3d）。
-fn eq_rec(a: &Value, b: &Value, seen: &mut Vec<(usize, usize)>) -> bool {
+/// 重访一对 ⇒ 视为相等（**环安全**，A6 步骤 3b/3d）；容器递归逐层 `depth + 1`，
+/// `depth > limit` → `Err(depth)`（§4.5.5 深结构上限）。
+fn eq_rec(
+    a: &Value,
+    b: &Value,
+    seen: &mut Vec<(usize, usize)>,
+    depth: u32,
+    limit: u32,
+) -> Result<bool, u32> {
     if same_identity(a, b) {
-        return true; // 身份优先（含自引用容器，直接短路）
+        return Ok(true); // 身份优先（含自引用容器，直接短路）
     }
     match (a, b) {
-        (Value::Nil, Value::Nil) => true,
-        (Value::Bool(x), Value::Bool(y)) => x == y,
-        (Value::Int(x), Value::Int(y)) => x == y,
+        (Value::Nil, Value::Nil) => Ok(true),
+        (Value::Bool(x), Value::Bool(y)) => Ok(x == y),
+        (Value::Int(x), Value::Int(y)) => Ok(x == y),
         // IEEE（§4.5.6）：`NaN != NaN`、`+0.0 == -0.0`。
-        (Value::Float(x), Value::Float(y)) => x == y,
+        (Value::Float(x), Value::Float(y)) => Ok(x == y),
         // `int`/`float` 混合按数学精确值（§4.5.7）；`NaN` → `false`。
-        (Value::Int(x), Value::Float(y)) => num_eq_int_float(*x, *y),
-        (Value::Float(x), Value::Int(y)) => num_eq_int_float(*y, *x),
-        (Value::Str(x), Value::Str(y)) => x == y, // 按内容（`Rc` 不同亦可）
+        (Value::Int(x), Value::Float(y)) => Ok(num_eq_int_float(*x, *y)),
+        (Value::Float(x), Value::Int(y)) => Ok(num_eq_int_float(*y, *x)),
+        (Value::Str(x), Value::Str(y)) => Ok(x == y), // 按内容（`Rc` 不同亦可）
         (Value::Array(x), Value::Array(y)) => {
             let key = (Rc::as_ptr(x) as usize, Rc::as_ptr(y) as usize);
             if seen.contains(&key) {
-                return true; // 重访 ⇒ 视为相等
+                return Ok(true); // 重访 ⇒ 视为相等
+            }
+            if depth >= limit {
+                return Err(depth + 1); // §4.5.5：深结构处理超限
             }
             seen.push(key);
             let (bx, by) = (x.borrow(), y.borrow());
-            bx.len() == by.len() && bx.iter().zip(by.iter()).all(|(u, v)| eq_rec(u, v, seen))
+            if bx.len() != by.len() {
+                return Ok(false);
+            }
+            for (u, v) in bx.iter().zip(by.iter()) {
+                if !eq_rec(u, v, seen, depth + 1, limit)? {
+                    return Ok(false);
+                }
+            }
+            Ok(true)
         }
         (Value::Struct(x), Value::Struct(y)) => {
             let key = (Rc::as_ptr(x) as usize, Rc::as_ptr(y) as usize);
             if seen.contains(&key) {
-                return true; // 重访 ⇒ 视为相等
+                return Ok(true); // 重访 ⇒ 视为相等
+            }
+            if depth >= limit {
+                return Err(depth + 1); // §4.5.5：深结构处理超限
             }
             seen.push(key);
             let (bx, by) = (x.borrow(), y.borrow());
             let dx = bx.data_fields_sorted(); // 数据面：跳方法、键字节序升序（A5/B3）
             let dy = by.data_fields_sorted();
-            dx.len() == dy.len()
-                && dx
-                    .iter()
-                    .zip(dy.iter())
-                    .all(|((kx, vx), (ky, vy))| kx == ky && eq_rec(vx, vy, seen))
+            if dx.len() != dy.len() {
+                return Ok(false);
+            }
+            for ((kx, vx), (ky, vy)) in dx.iter().zip(dy.iter()) {
+                if kx != ky || !eq_rec(vx, vy, seen, depth + 1, limit)? {
+                    return Ok(false);
+                }
+            }
+            Ok(true)
         }
         // 类型不同（含 `array` vs `struct`）、`function` / `struct` 模板仅同一性 → 不相等。
-        _ => false,
+        _ => Ok(false),
     }
 }
 

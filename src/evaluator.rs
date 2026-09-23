@@ -35,12 +35,21 @@
 //! - **递归**：命名 `fn` 先以 `nil` 预绑定其名（占位）→ 创建闭包（捕获含自身名的 cell）→
 //!   再写回闭包值，使函数体内可查到自己（自引用经 cell 成立）。
 //!
-//! # 本批范围（明确留给 P3.8）
+//! # P3.8 语义定稿（本节已落地）
 //!
-//! 不含：§4.5 确定性八项逐条审计、`check` 的完整接线（`check` 内置已可用，仅不做专项断言）、
-//! `RecursionError`（无帧深上限）、`;;`（`Dump`）输出（本批为无操作）、traceback 组装
-//! （`TraceFrame` / `func_id` 仅分配不复用）。`==`（A6）与 `< <= > >=` 已接线（复用
-//! `Value::deep_eq` 与 `Value::total_cmp`），其边界审计归 P3.8。
+//! - §4.5 确定性八项：B1 求值序、B2 `for` 快照、B3 键字节序、B4 递归/深结构上限、B6 IEEE、
+//!   B7 平拷贝、B13 `int→float` 加宽（唯一入口 [`Value::as_f64`]）。
+//! - A4：`check` 非致命（stderr 一行 + 返回 `false` + 继续）；`assert` / `fail` 致命。
+//! - A5 / A6：struct 数据面排除方法字段；`==` / `!=` 复用 [`Value::deep_eq_bounded`]（环安全 + 精确比较）。
+//! - `RecursionError`（[`RECURSION_LIMIT`] = 10000；调用帧与深结构两条路径）。
+//! - `;;`（[`StmtKind::Dump`]）：沿可见链内→外 / 同层 slot 升序 / 遮蔽去重，渲染为纯函数
+//!   [`render_dump`]，写 **stdout**。
+//! - traceback：[`eval_module_traced`] 按 §10.3 N1 组装帧栈（自最外层→最内层）。
+//!
+//! # 求值线程（栈深）
+//!
+//! 树遍历器实现 10000 层递归所需栈远超主线程默认值，故 [`eval_module_traced`] 在
+//! **专用大栈线程**（[`EVAL_STACK_SIZE`]）上求值，结果经 [`Transfer`] 在 `join` 边界移交。
 //!
 //! # 管道
 //!
@@ -55,14 +64,93 @@ use crate::ast::{
 use crate::builtins;
 use crate::env::{Cell, Env, ScopeChain};
 use crate::error::{
-    div_zero, field as field_error, index as index_error, name as name_error, overflow, type_error,
-    value as value_error, LzError, OverflowMsg, R, TypeMsg, ValueMsg,
+    div_zero, field as field_error, index as index_error, io as io_error, name as name_error,
+    overflow, recursion, type_error, value as value_error, LzError, OverflowMsg, R, TraceFrame,
+    TypeMsg, ValueMsg,
 };
 use crate::span::Span;
 use crate::value::{Closure, StructObj, UserFn, Value};
 use std::cell::RefCell;
 use std::cmp::Ordering;
+use std::io::Write;
 use std::rc::Rc;
+
+// ===========================================================================
+// 公开常量 / 结果
+// ===========================================================================
+
+/// 求值帧与深结构处理的**递归深度上限**（§4.5.5：默认 10000；超过 → `RecursionError`）。
+pub const RECURSION_LIMIT: u32 = 10_000;
+
+/// 模块顶层帧的 `func_id`（traceback 显示名恒为 `<module>`，§10.3 / §8.4）。
+const MODULE_FUNC_ID: u32 = 0;
+
+/// 求值专用线程的栈大小（§4.5.5）。
+///
+/// 树遍历器实现 10000 层递归需要远超主线程默认栈（Windows 常见 1–8 MiB）的空间，
+/// 故求值在**专用大栈线程**上进行（见 [`eval_module_traced`]）。
+const EVAL_STACK_SIZE: usize = 256 * 1024 * 1024;
+
+/// 跨线程移交载荷：`join` 提供 happens-before，移交前后**同一时刻只有一个线程**访问其内容，
+/// 故不存在数据竞争（`Rc` 的非原子计数不会被并发触碰）。
+struct Transfer<T>(T);
+
+// SAFETY: `Transfer` 仅在 `std::thread::scope` 的 `join` 边界处移交：生产线程在返回前不再
+// 访问该值，消费线程在 `join` 返回后才访问；`join` 建立 happens-before，二者不并发。
+unsafe impl<T> Send for Transfer<T> {}
+
+/// 带 traceback 的求值结果（§10.3 / §8.2）。
+///
+/// 错误模型 `LzError`（`error.rs`，只读）**不携带**帧栈字段，故帧栈由本结构在**错误发生时**
+/// 自最外层→最内层带出，供 CLI / tooling 组装 `Traceback (most recent call last):` 输出。
+pub struct TracedRun {
+    /// 求值结果（最后一条语句的值；出错则为 `Err`）。
+    pub result: R<Value>,
+    /// 帧栈，**最外层 → 最内层**（§10.3）：首帧恒为模块帧 `<module>`，末帧为出错点所在帧。
+    pub frames: Vec<TraceFrame>,
+    /// `func_id → 函数名`：索引 0 = 模块；`Some(名)` = 命名函数；`None` = 匿名 `<fn>`。
+    func_names: Vec<Option<Rc<str>>>,
+}
+
+impl TracedRun {
+    /// 该帧在 traceback 中的**显示名**（§8.4）：`<module>` / 函数名 / `<fn>`。
+    #[must_use]
+    pub fn frame_name(&self, frame: &TraceFrame) -> Rc<str> {
+        if frame.func_id == MODULE_FUNC_ID {
+            return Rc::from("<module>");
+        }
+        match self.func_names.get(frame.func_id as usize) {
+            Some(Some(n)) => Rc::clone(n),
+            _ => Rc::from("<fn>"),
+        }
+    }
+}
+
+/// 渲染 `;;` 的可见变量（**纯函数**，便于单测；§3.6）。
+///
+/// - `entries` 须**已按 §3.6 排序**（作用域内→外、同层 slot 升序、遮蔽去重）；
+/// - 行格式（逐字符精确）：`<name>` + `U+0020` + `U+FF1A`（全角冒号）+ `U+0020` + `<value>` + `\n`；
+/// - 值渲染复用 §3.7 显示形式（`Value::to_string()`）；
+/// - 空链 ⇒ **空串**（零行，不报错）。
+#[must_use]
+pub fn render_dump(entries: &[(Rc<str>, Value)]) -> String {
+    let mut out = String::new();
+    for (name, value) in entries {
+        out.push_str(name);
+        out.push_str(" ： ");
+        out.push_str(&value.to_string());
+        out.push('\n');
+    }
+    out
+}
+
+/// 函数体「首节点」`Span`（§10.3：压入帧时的初始 span）。
+fn body_first_span(body: &Body) -> Span {
+    match body {
+        Body::Block(b) => b.stmts.first().map_or(b.span, |s| s.span),
+        Body::Expr(e) => e.span,
+    }
+}
 
 // ===========================================================================
 // 公开入口
@@ -73,17 +161,60 @@ use std::rc::Rc;
 /// 说明：AST 类型名为 `Program`（非 `Module`）；本函数即任务书所称 `eval_module`。
 /// 顶层作用域即模块作用域（globals），不创建额外子作用域。
 pub fn eval_module(program: &Program) -> R<Value> {
+    eval_module_traced(program).result
+}
+
+/// 执行一个编译单元并**带出 traceback 帧栈**（§10.3 / §8.2）。
+///
+/// 帧栈在求值过程中按 §10.3 N1 维护：**进入一次 `Call` 时先把当前帧 span 更新为调用点，
+/// 再压入新帧**；出错时帧栈即自**最外层→最内层**的 traceback。`TracedRun::frame_name`
+/// 按 `func_id` 反查显示名（`<module>` / 函数名 / `<fn>`，§8.4）。
+///
+/// 求值在**专用大栈线程**（[`EVAL_STACK_SIZE`]）上进行，以保证 §4.5.5 的 10000 层递归上限
+/// 可达且不会因耗尽调用方栈而崩溃；`TracedRun` 经 [`Transfer`] 在 `join` 边界移交。
+///
+/// `result` 为最后一条语句的值（顶层 `return` 防御性接受；无语句 → `nil`）。
+pub fn eval_module_traced(program: &Program) -> TracedRun {
+    std::thread::scope(|scope| {
+        let handle = match std::thread::Builder::new()
+            .stack_size(EVAL_STACK_SIZE)
+            .spawn_scoped(scope, || Transfer(eval_module_on_thread(program)))
+        {
+            Ok(h) => h,
+            // 线程创建失败（OS 资源不足）时退化为当前栈求值（仍受逻辑深度上限保护）。
+            Err(_) => return eval_module_on_thread(program),
+        };
+        match handle.join() {
+            Ok(transfer) => transfer.0,
+            Err(payload) => std::panic::resume_unwind(payload),
+        }
+    })
+}
+
+/// [`eval_module_traced`] 的实际求值体（在求值线程上运行）。
+fn eval_module_on_thread(program: &Program) -> TracedRun {
     let mut interp = Interp::new();
     let top = Scope {
         env: Rc::clone(&interp.globals),
         captured: Rc::new(Vec::new()),
         self_val: None,
     };
-    match interp.exec_stmts(&program.stmts, &top)? {
-        Flow::Value(v) => Ok(v),
-        // 顶层 `return` 由 parser 拒绝（`ReturnOutsideFunction`）；此处防御性接受。
-        Flow::Return(v) => Ok(v),
-        Flow::Break | Flow::Continue => Ok(Value::Nil),
+    // 模块帧：初始 span = 首条语句 span（空程序回退到 `Program.span`）。
+    let init_span = program.stmts.first().map_or(program.span, |s| s.span);
+    interp.trace.push(TraceFrame {
+        func_id: MODULE_FUNC_ID,
+        span: init_span,
+    });
+    let result = match interp.exec_stmts(&program.stmts, &top) {
+        Ok(Flow::Value(v)) | Ok(Flow::Return(v)) => Ok(v),
+        // 顶层 `break` / `continue` 由 parser 拒绝；此处防御性接受。
+        Ok(Flow::Break | Flow::Continue) => Ok(Value::Nil),
+        Err(e) => Err(e),
+    };
+    TracedRun {
+        result,
+        frames: std::mem::take(&mut interp.trace),
+        func_names: std::mem::take(&mut interp.func_names),
     }
 }
 
@@ -145,19 +276,28 @@ impl Scope {
 // 解释器
 // ===========================================================================
 
-/// 树遍历解释器：模块全局环境 + 单调递增的 `func_id` 分配器。
+/// 树遍历解释器：模块全局环境 + 单调递增的 `func_id` 分配器 + traceback 帧栈。
 struct Interp {
     /// 模块顶层作用域（globals）；所有函数调用帧直接挂在它之下。
     globals: Rc<RefCell<Env>>,
-    /// 函数表下标分配器（traceback 用，P3.8 复用）。
+    /// 函数表下标分配器（traceback 用）；`1` 起，`0` 保留给模块帧（§10.3）。
     next_func_id: u32,
+    /// 当前求值帧深度（用户函数调用层数，§4.5.5）。
+    depth: u32,
+    /// traceback 帧栈：首元素为模块帧，末元素为当前帧（§10.3）。
+    trace: Vec<TraceFrame>,
+    /// `func_id → 函数名`；索引 0 = 模块（`None` 占位）。
+    func_names: Vec<Option<Rc<str>>>,
 }
 
 impl Interp {
     fn new() -> Self {
         Self {
             globals: Env::root(),
-            next_func_id: 0,
+            next_func_id: 1,
+            depth: 0,
+            trace: Vec::new(),
+            func_names: vec![None], // [0] = 模块帧（`<module>`）
         }
     }
 
@@ -215,6 +355,63 @@ impl Interp {
     }
 
     // -----------------------------------------------------------------------
+    // `;;` 可见链（§3.6）
+    // -----------------------------------------------------------------------
+
+    /// 收集当前**可见名字链**（§3.6）：作用域链**内→外**、同层按**声明序 = slot 升序**、
+    /// **遮蔽去重**（同名只取最内层，每名字恰好一行）。
+    ///
+    /// 顺序 = 名字解析顺序：块 / 函数帧链（不含 globals，内→外）→ 闭包捕获 cell → 模块顶层。
+    /// 与 [`crate::env::ScopeDebugTable::visible_slots`]（契约 §10.5 的 `ScopeDebug` 链遍历）
+    /// 语义一致：运行时 `Env` 的 per-scope 名字表以**声明序**组织（即 slot 升序），本方法沿
+    /// 词法链内→外行走并去重，等价于沿 `ScopeDebug` 的 `parent` 链内→外遍历。
+    fn visible_entries(&self, scope: &Scope) -> Vec<(Rc<str>, Value)> {
+        let mut seen: Vec<String> = Vec::new();
+        let mut out: Vec<(Rc<str>, Value)> = Vec::new();
+
+        // 1) 块 / 函数帧链（内→外），不含 globals。
+        let mut cur = Some(Rc::clone(&scope.env));
+        while let Some(e) = cur {
+            if Rc::ptr_eq(&e, &self.globals) {
+                break;
+            }
+            let bindings = e.borrow().bindings(); // 声明序（slot 升序）
+            for (pos, (n, idx)) in bindings.iter().enumerate() {
+                // 同作用域同名：只取**最后**定义（有效遮蔽，与 `Env::local_index` 一致）。
+                let is_last = !bindings[pos + 1..].iter().any(|(m, _)| m == n);
+                if is_last && !seen.iter().any(|s| s == n) {
+                    if let Some(v) = e.borrow().get_local(*idx) {
+                        seen.push(n.clone());
+                        out.push((Rc::from(n.as_str()), v));
+                    }
+                }
+            }
+            cur = e.borrow().parent();
+        }
+
+        // 2) 闭包捕获 cell（定义作用域的外层自由变量）。
+        for (n, c) in scope.captured.iter() {
+            if !seen.iter().any(|s| s == n.as_ref()) {
+                seen.push(n.to_string());
+                out.push((Rc::clone(n), c.borrow().clone()));
+            }
+        }
+
+        // 3) 模块顶层（最外层）。
+        let gbind = self.globals.borrow().bindings();
+        for (pos, (n, idx)) in gbind.iter().enumerate() {
+            let is_last = !gbind[pos + 1..].iter().any(|(m, _)| m == n);
+            if is_last && !seen.iter().any(|s| s == n) {
+                if let Some(v) = self.globals.borrow().get_local(*idx) {
+                    seen.push(n.clone());
+                    out.push((Rc::from(n.as_str()), v));
+                }
+            }
+        }
+        out
+    }
+
+    // -----------------------------------------------------------------------
     // 闭包创建（A2 捕获）
     // -----------------------------------------------------------------------
 
@@ -252,6 +449,8 @@ impl Interp {
         }
         let func_id = self.next_func_id;
         self.next_func_id += 1;
+        // 函数表：`func_id → 名字`（`None` = 匿名 `<fn>`），报错时反查（§10.3）。
+        self.func_names.push(name.map(Rc::from));
         let user = UserFn {
             params,
             body,
@@ -324,8 +523,18 @@ impl Interp {
             }
             StmtKind::Break => Ok(Flow::Break),
             StmtKind::Continue => Ok(Flow::Continue),
-            // `;;`（Dump）输出留 P3.8：本批不产生输出、不报错（见模块文档）。
-            StmtKind::Dump { .. } => Ok(Flow::Value(Value::Nil)),
+            // `;;`：输出当前**可见名字链**（§3.6：内→外、同层 slot 升序、遮蔽去重）。
+            // 渲染逻辑为纯函数 [`render_dump`]，本处只负责收集 + 打印到 stdout。
+            StmtKind::Dump { .. } => {
+                let entries = self.visible_entries(scope);
+                let text = render_dump(&entries);
+                if !text.is_empty() {
+                    let mut out = std::io::stdout();
+                    out.write_all(text.as_bytes())
+                        .map_err(|e| io_error(format!("无法写入：{e}"), Some(stmt.span)))?;
+                }
+                Ok(Flow::Value(Value::Nil))
+            }
             StmtKind::Expr(e) => self.eval_expr(e, scope),
         }
     }
@@ -864,6 +1073,11 @@ impl Interp {
                 span,
             ));
         }
+        // §4.5.5：求值帧深度上限（默认 10000；含顶层帧，超过 → RecursionError）。
+        if self.depth >= RECURSION_LIMIT {
+            return Err(recursion(self.depth + 1, RECURSION_LIMIT, span));
+        }
+        self.depth += 1;
         // 调用帧直接挂在 globals 之下；自由局部经捕获 cell 解析（§4.5.3）。
         let frame = Env::child_after(&self.globals);
         for (p, a) in user.params.iter().zip(argv.into_iter()) {
@@ -874,7 +1088,16 @@ impl Interp {
             captured: Rc::clone(&user.captured),
             self_val: self_override.or_else(|| user.self_val.clone()),
         };
-        match &user.body {
+        // §10.3 N1：进入 Call **先把当前帧 span 更新为调用点**，再压入新帧；
+        // 新帧初始 span = 函数体首节点 span。
+        if let Some(top) = self.trace.last_mut() {
+            top.span = span;
+        }
+        self.trace.push(TraceFrame {
+            func_id: user.func_id,
+            span: body_first_span(&user.body),
+        });
+        let outcome = match &user.body {
             // 函数体块直接在帧作用域执行（参数与体局部同帧）。
             Body::Block(b) => match self.exec_stmts(&b.stmts, &scope)? {
                 Flow::Value(v) => Ok(v),
@@ -886,7 +1109,11 @@ impl Interp {
                 Flow::Return(v) => Ok(v),
                 Flow::Break | Flow::Continue => Ok(Value::Nil),
             },
-        }
+        };
+        // 仅**成功**返回时弹帧 / 退深度；出错时经 `?` 提前返回，帧栈保留供 traceback（§8.2）。
+        self.trace.pop();
+        self.depth -= 1;
+        outcome
     }
 
     // -----------------------------------------------------------------------
@@ -1022,9 +1249,18 @@ fn apply_binary(op: BinaryOp, l: Value, r: Value, span: Span) -> R<Value> {
         BinaryOp::Lt | BinaryOp::Le | BinaryOp::Gt | BinaryOp::Ge => {
             compare_values(op, &l, &r, span)
         }
-        // A6 深结构相等（`value.rs` 唯一共享实现）。
-        BinaryOp::Eq => Ok(Value::Bool(l.deep_eq(&r))),
-        BinaryOp::Ne => Ok(Value::Bool(!l.deep_eq(&r))),
+        // A6 深结构相等（`value.rs` 唯一共享实现；深度受 §4.5.5 上限约束）。
+        BinaryOp::Eq => eq_values(&l, &r, false, span),
+        BinaryOp::Ne => eq_values(&l, &r, true, span),
+    }
+}
+
+/// `==` / `!=`：复用 [`Value::deep_eq_bounded`]（A6 环安全 + 数据面 + 精确比较）；
+/// 深结构超限 → `RecursionError`（§4.5.5）。
+fn eq_values(l: &Value, r: &Value, negate: bool, span: Span) -> R<Value> {
+    match l.deep_eq_bounded(r, RECURSION_LIMIT) {
+        Ok(eq) => Ok(Value::Bool(eq ^ negate)),
+        Err(depth) => Err(recursion(depth, RECURSION_LIMIT, span)),
     }
 }
 
@@ -1437,6 +1673,14 @@ fn format_mismatch(spec: &str, v: &Value, span: Span) -> Box<LzError> {
 mod tests {
     use super::*;
     use crate::ast::{FieldInit, Lambda, Spanned};
+    use crate::env::ScopeId;
+
+    /// 端到端：`lex` → `parse` → `eval_module`（parser 当前最小子集）。
+    fn eval_src(src: &str) -> R<Value> {
+        let tokens = crate::lexer::lex(src, 1)?;
+        let program = crate::parser::parse(&tokens)?;
+        eval_module(&program)
+    }
 
     // ---- AST 构造辅助（不依赖 parser；parser 由 core-dev 并行开发） ----
 
@@ -2187,5 +2431,539 @@ mod tests {
         let err = eval_module(&prog(vec![Spanned::new(StmtKind::Expr(bad), at)])).unwrap_err();
         assert_eq!(err.class_name(), "TypeError");
         assert_eq!(err.span(), Some(at));
+    }
+
+    // =======================================================================
+    // P3.8 — §4.5 确定性八项 / A4 / A5 / A6 / Recursion / `;;` / traceback
+    // =======================================================================
+
+    /// §4.5.1（B1）：二元运算先左后右；赋值先求下标表达式、再求 rhs。用带副作用的 `mark` 观测。
+    #[test]
+    fn b1_evaluation_order_is_left_to_right() {
+        // `fn mark(n) { log = push(n, log); n }`
+        let mark = || {
+            fn_decl(
+                "mark",
+                &["n"],
+                Body::Block(block(vec![
+                    assign_var("log", call("push", vec![ident("n"), ident("log")])),
+                    expr_stmt(ident("n")),
+                ])),
+            )
+        };
+        // 二元 `mark(1) + mark(2)`：先左后右 → log = [1, 2]。
+        let stmts = vec![
+            decl("log", arr(vec![])),
+            mark(),
+            expr_stmt(bin(
+                BinaryOp::Add,
+                call("mark", vec![int(1)]),
+                call("mark", vec![int(2)]),
+            )),
+            expr_stmt(ident("log")),
+        ];
+        assert_eq!(run_str(stmts), "[1, 2]");
+
+        // 赋值 `a[mark(0)] = mark(9)`：先求 `a` 与下标 `mark(0)`，再求 rhs `mark(9)` → log = [0, 9]。
+        let stmts = vec![
+            decl("log", arr(vec![])),
+            mark(),
+            ldecl("a", arr(vec![int(0), int(0)])),
+            assign_seg(
+                "a",
+                vec![LvalueSegKind::Index(call("mark", vec![int(0)]))],
+                call("mark", vec![int(9)]),
+            ),
+            expr_stmt(ident("log")),
+        ];
+        assert_eq!(run_str(stmts), "[0, 9]");
+    }
+
+    /// §4.5.4（B2）：`for` 迭代开始时取快照，迭代中改长度不影响次数。
+    #[test]
+    fn b2_for_iterates_over_snapshot() {
+        let stmts = vec![
+            decl("xs", arr(vec![int(1), int(2), int(3)])),
+            decl("s", int(0)),
+            st(StmtKind::For {
+                var: "v".to_string(),
+                iter: ident("xs"),
+                body: block(vec![
+                    // 首轮改 `xs`（push 返回新数组 → 重绑定），不应影响本次迭代。
+                    if_stmt(
+                        bin(BinaryOp::Eq, ident("v"), int(1)),
+                        vec![assign_var("xs", call("push", vec![int(4), ident("xs")]))],
+                    ),
+                    assign_op("s", AssignOp::AddAssign, ident("v")),
+                ]),
+            }),
+            // s = 1+2+3 = 6（快照）；迭代后 len(xs) = 4 → 6*10 + 4 = 64
+            expr_stmt(bin(
+                BinaryOp::Add,
+                bin(BinaryOp::Mul, ident("s"), int(10)),
+                call("len", vec![ident("xs")]),
+            )),
+        ];
+        assert_eq!(run_str(stmts), "64");
+    }
+
+    /// §4.5.4（B3）：struct 键序 = UTF-8 字节序升序（`keys` 与 `for` 一致）。
+    #[test]
+    fn b3_struct_keys_are_byte_order_sorted() {
+        let obj = || {
+            e(ExprKind::StructLit(StructLit {
+                type_name: None,
+                fields: vec![
+                    field_init("b", int(2)),
+                    field_init("a", int(1)),
+                    field_init("A", int(0)),
+                ],
+            }))
+        };
+        let stmts = vec![ldecl("m", obj()), expr_stmt(call("keys", vec![ident("m")]))];
+        // 'A'(0x41) < 'a'(0x61) < 'b'(0x62)。
+        assert_eq!(run_str(stmts), "[\"A\", \"a\", \"b\"]");
+
+        let stmts = vec![
+            ldecl("m", obj()),
+            decl("acc", sstr("")),
+            st(StmtKind::For {
+                var: "k".to_string(),
+                iter: ident("m"),
+                body: block(vec![assign_op("acc", AssignOp::AddAssign, ident("k"))]),
+            }),
+            expr_stmt(ident("acc")),
+        ];
+        assert_eq!(run_str(stmts), "Aab");
+    }
+
+    /// §4.5.5（B4）：深递归超过 10000 层 → `RecursionError`（不是栈溢出 / `OverflowError`）。
+    #[test]
+    fn b4_deep_recursion_yields_recursion_error() {
+        let f = fn_decl(
+            "loop",
+            &["n"],
+            Body::Block(block(vec![expr_stmt(call("loop", vec![ident("n")]))])),
+        );
+        let run = eval_module_traced(&prog(vec![
+            f,
+            expr_stmt(call("loop", vec![int(1)])),
+        ]));
+        match run.result {
+            Ok(v) => panic!("应递归超限，得到 {v}"),
+            Err(e) => {
+                assert_eq!(e.class_name(), "RecursionError");
+                assert_eq!(e.message(), "递归深度超限（超过 10000 层）");
+                match e.as_ref() {
+                    LzError::Recursion { depth, limit, .. } => {
+                        assert_eq!(*limit, RECURSION_LIMIT);
+                        assert_eq!(*depth, RECURSION_LIMIT + 1);
+                    }
+                    other => panic!("应为 Recursion，得到 {}", other.class_name()),
+                }
+            }
+        }
+    }
+
+    /// §4.5.6（B6）：IEEE 规则——`NaN` 比较、`±Inf`、除零不产 `Inf`、显示形式。
+    #[test]
+    fn b6_float_ieee_rules() {
+        let nan = || call("float", vec![sstr("nan")]);
+        let inf = || call("float", vec![sstr("inf")]);
+        // NaN != NaN；涉及 NaN 的 `< <= > >=` 均 false。
+        assert_eq!(run_str(vec![expr_stmt(bin(BinaryOp::Eq, nan(), nan()))]), "false");
+        assert_eq!(run_str(vec![expr_stmt(bin(BinaryOp::Ne, nan(), nan()))]), "true");
+        assert_eq!(run_str(vec![expr_stmt(bin(BinaryOp::Lt, nan(), flt(1.0)))]), "false");
+        assert_eq!(run_str(vec![expr_stmt(bin(BinaryOp::Ge, nan(), flt(1.0)))]), "false");
+        // Inf 比较：+Inf 大于任何有限值；Inf == Inf。
+        assert_eq!(run_str(vec![expr_stmt(bin(BinaryOp::Gt, inf(), flt(1.0)))]), "true");
+        assert_eq!(run_str(vec![expr_stmt(bin(BinaryOp::Eq, inf(), inf()))]), "true");
+        // 除零（含 float）→ ZeroDivisionError，不产 Inf。
+        assert_eq!(
+            err_class(vec![expr_stmt(bin(BinaryOp::Div, flt(1.0), flt(0.0)))]),
+            "ZeroDivisionError"
+        );
+        assert_eq!(
+            err_class(vec![expr_stmt(bin(BinaryOp::Rem, flt(1.0), flt(0.0)))]),
+            "ZeroDivisionError"
+        );
+        // 显示：nan / inf / -inf（§3.7）。
+        assert_eq!(run_str(vec![expr_stmt(nan())]), "nan");
+        assert_eq!(run_str(vec![expr_stmt(inf())]), "inf");
+        assert_eq!(
+            run_str(vec![expr_stmt(call("float", vec![sstr("-inf")]))]),
+            "-inf"
+        );
+    }
+
+    /// §4.5.8（B7）：struct 实例化 = 平拷贝（可变默认值每实例各一份；覆盖 / 动态新增）。
+    #[test]
+    fn b7_struct_instantiation_is_flat_copy() {
+        let stmts = vec![
+            struct_decl(
+                "Bag",
+                vec![
+                    StructMember::Field(field_init("xs", arr(vec![]))),
+                    StructMember::Field(field_init("n", int(0))),
+                ],
+            ),
+            // a 覆盖 n=5、动态新增 z=9；b 用默认。
+            ldecl(
+                "a",
+                lit_struct(
+                    "Bag",
+                    vec![field_init("n", int(5)), field_init("z", int(9))],
+                ),
+            ),
+            ldecl("b", lit_struct("Bag", vec![])),
+            // 改 a.xs（push 返回新数组写回）→ b.xs 仍空（默认各一份，不共享）。
+            assign_seg(
+                "a",
+                vec![LvalueSegKind::Field("xs".to_string())],
+                call("push", vec![int(1), field(ident("a"), "xs")]),
+            ),
+            // a.n + a.z + len(b.xs) = 5 + 9 + 0 = 14
+            expr_stmt(bin(
+                BinaryOp::Add,
+                bin(
+                    BinaryOp::Add,
+                    field(ident("a"), "n"),
+                    field(ident("a"), "z"),
+                ),
+                call("len", vec![field(ident("b"), "xs")]),
+            )),
+        ];
+        assert_eq!(run_str(stmts), "14");
+    }
+
+    /// §4.5.7（B13）：`int → float` 加宽是唯一隐式转换；混合算术为 float；精确比较不误判。
+    #[test]
+    fn b13_int_float_widening_is_the_only_implicit_conversion() {
+        assert_eq!(
+            run_str(vec![expr_stmt(bin(BinaryOp::Add, int(1), flt(0.5)))]),
+            "1.5"
+        );
+        assert_eq!(
+            run_str(vec![expr_stmt(bin(BinaryOp::Mul, int(2), flt(0.25)))]),
+            "0.5"
+        );
+        // 精确比较（§4.5.7）：大整数不因加宽丢精度而误判相等。
+        assert_eq!(
+            run_str(vec![expr_stmt(bin(
+                BinaryOp::Eq,
+                e(ExprKind::Int(9_007_199_254_740_993)),
+                flt(9_007_199_254_740_992.0)
+            ))]),
+            "false"
+        );
+        // 无其它隐式转换：`int + string` → TypeError。
+        assert_eq!(
+            err_class(vec![expr_stmt(bin(BinaryOp::Add, int(1), sstr("a")))]),
+            "TypeError"
+        );
+    }
+
+    /// §4.5.10（A4）：`check` 非致命（返回 false 且**继续执行**）；`assert` / `fail` 致命。
+    #[test]
+    fn a4_check_nonfatal_assert_and_fail_fatal() {
+        // check(true) → true。
+        assert_eq!(
+            run_str(vec![expr_stmt(call("check", vec![bool_(true)]))]),
+            "true"
+        );
+        // check(false) → false；后续语句仍执行（继续）。
+        assert_eq!(
+            run_str(vec![
+                ldecl("r", call("check", vec![bool_(false), sstr("soft")])),
+                decl("after", int(7)),
+                expr_stmt(ident("after")),
+            ]),
+            "7"
+        );
+        assert_eq!(
+            run_str(vec![
+                ldecl("r", call("check", vec![bool_(false)])),
+                expr_stmt(ident("r")),
+            ]),
+            "false"
+        );
+        // check 非 bool → TypeError。
+        assert_eq!(
+            err_class(vec![expr_stmt(call("check", vec![int(1)]))]),
+            "TypeError"
+        );
+
+        // assert(true) → nil（继续）；assert(false) → AssertionError（致命）。
+        assert_eq!(
+            run_str(vec![expr_stmt(call("assert", vec![bool_(true)]))]),
+            "nil"
+        );
+        let e = eval_module(&prog(vec![expr_stmt(call(
+            "assert",
+            vec![bool_(false)],
+        ))]))
+        .unwrap_err();
+        assert_eq!(e.class_name(), "AssertionError");
+        assert_eq!(e.message(), "断言失败");
+        let e = eval_module(&prog(vec![expr_stmt(call(
+            "assert",
+            vec![bool_(false), sstr("boom")],
+        ))]))
+        .unwrap_err();
+        assert_eq!(e.class_name(), "AssertionError");
+        assert_eq!(e.message(), "断言失败：boom");
+
+        // fail() → AssertionError，消息 `fail()`；fail(msg) → `{msg}`。
+        let e = eval_module(&prog(vec![expr_stmt(call("fail", vec![]))])).unwrap_err();
+        assert_eq!(e.class_name(), "AssertionError");
+        assert_eq!(e.message(), "fail()");
+        let e = eval_module(&prog(vec![expr_stmt(call("fail", vec![sstr("boom")]))])).unwrap_err();
+        assert_eq!(e.message(), "boom");
+    }
+
+    /// §4.5.9（A5）：struct 数据面（`len` / `keys` / `has` / display / `==`）**不含**方法字段。
+    #[test]
+    fn a5_struct_data_plane_excludes_method_fields() {
+        let def = || {
+            struct_decl(
+                "P",
+                vec![
+                    StructMember::Field(field_init("x", int(0))),
+                    StructMember::Method(FnDecl {
+                        span: sp(),
+                        name: "m".to_string(),
+                        params: vec![],
+                        body: Body::Expr(int(1)),
+                    }),
+                ],
+            )
+        };
+        let with_m = || lit_struct("P", vec![field_init("x", int(1))]);
+        let anon = || {
+            e(ExprKind::StructLit(StructLit {
+                type_name: None,
+                fields: vec![field_init("x", int(1))],
+            }))
+        };
+        // `==` 忽略方法字段：带方法实例 == 无方法匿名 struct（数据面相同）。
+        assert_eq!(
+            run_str(vec![
+                def(),
+                ldecl("a", with_m()),
+                ldecl("b", anon()),
+                expr_stmt(bin(BinaryOp::Eq, ident("a"), ident("b"))),
+            ]),
+            "true"
+        );
+        // len / keys 仅数据字段。
+        assert_eq!(
+            run_str(vec![
+                def(),
+                ldecl("a", with_m()),
+                expr_stmt(call("len", vec![ident("a")])),
+            ]),
+            "1"
+        );
+        assert_eq!(
+            run_str(vec![
+                def(),
+                ldecl("a", with_m()),
+                expr_stmt(call("keys", vec![ident("a")])),
+            ]),
+            "[\"x\"]"
+        );
+        // display 仅数据字段。
+        assert_eq!(
+            run_str(vec![def(), ldecl("a", with_m()), expr_stmt(ident("a"))]),
+            "{x: 1}"
+        );
+        // has：方法名 → false；数据字段 → true。
+        assert_eq!(
+            run_str(vec![
+                def(),
+                ldecl("a", with_m()),
+                expr_stmt(call("has", vec![sstr("m"), ident("a")])),
+            ]),
+            "false"
+        );
+        assert_eq!(
+            run_str(vec![
+                def(),
+                ldecl("a", with_m()),
+                expr_stmt(call("has", vec![sstr("x"), ident("a")])),
+            ]),
+            "true"
+        );
+    }
+
+    /// §4.5.9（A6）：`==` 环安全（重访即相等）+ 身份优先；`!=` 取反；不报错、不死循环。
+    #[test]
+    fn a6_equality_is_cycle_safe_and_identity_first() {
+        // `a = [0]; a[0] = a` → a = [a]（自引用环）；b 同构。
+        let mk = |name: &str| -> Vec<Stmt> {
+            vec![
+                ldecl(name, arr(vec![int(0)])),
+                assign_seg(name, vec![LvalueSegKind::Index(int(0))], ident(name)),
+            ]
+        };
+        let mut stmts = mk("a");
+        stmts.extend(mk("b"));
+        stmts.push(expr_stmt(bin(BinaryOp::Eq, ident("a"), ident("b"))));
+        assert_eq!(run_str(stmts), "true");
+
+        // 身份优先：a == a → true；a != a → false。
+        assert_eq!(
+            run_str(vec![
+                ldecl("a", arr(vec![int(1)])),
+                expr_stmt(bin(BinaryOp::Eq, ident("a"), ident("a"))),
+            ]),
+            "true"
+        );
+        assert_eq!(
+            run_str(vec![
+                ldecl("a", arr(vec![int(1)])),
+                expr_stmt(bin(BinaryOp::Ne, ident("a"), ident("a"))),
+            ]),
+            "false"
+        );
+    }
+
+    /// §3.6：`render_dump` 为纯函数；行格式 `名字 ： 值`（全角冒号）；空链 → 空串。
+    #[test]
+    fn dump_render_is_pure_and_formats_lines() {
+        assert_eq!(render_dump(&[]), "");
+        let entries = vec![
+            (Rc::from("x"), Value::Int(2)),
+            (Rc::from("s"), Value::string("hi")),
+            (Rc::from("b"), Value::Bool(true)),
+        ];
+        assert_eq!(render_dump(&entries), "x ： 2\ns ： hi\nb ： true\n");
+        // 分隔串 = U+0020 + U+FF1A（全角冒号）+ U+0020，逐字符断言。
+        let one = render_dump(&[(Rc::from("k"), Value::Int(1))]);
+        let cs: Vec<char> = one.chars().collect();
+        assert_eq!(
+            cs,
+            vec!['k', ' ', '\u{ff1a}', ' ', '1', '\n'],
+            "行格式必须是 `<name> ： <value>`"
+        );
+    }
+
+    /// §3.6：可见链**内→外**、同层**声明序（slot 升序）**、**遮蔽去重**；含捕获与全局。
+    #[test]
+    fn dump_visible_entries_inner_to_outer_shadow_dedup() {
+        let interp = Interp::new();
+        interp
+            .globals
+            .borrow_mut()
+            .define_named("x", Value::Int(1), false);
+        interp
+            .globals
+            .borrow_mut()
+            .define_named("g", Value::Int(9), false);
+        let child = Env::child_after(&interp.globals);
+        child.borrow_mut().define_named("x", Value::Int(2), false);
+        child.borrow_mut().define_named("y", Value::Int(3), false);
+        let cell: Cell = Rc::new(RefCell::new(Value::Int(7)));
+        let scope = Scope {
+            env: Rc::clone(&child),
+            captured: Rc::new(vec![(Rc::from("z"), cell)]),
+            self_val: None,
+        };
+        let entries = interp.visible_entries(&scope);
+        let got: Vec<(String, String)> = entries
+            .iter()
+            .map(|(n, v)| (n.to_string(), v.to_string()))
+            .collect();
+        // 内层 x（遮蔽全局 x）、内层 y、捕获 z、全局 g；全局 x 被去重。
+        assert_eq!(
+            got,
+            vec![
+                ("x".to_string(), "2".to_string()),
+                ("y".to_string(), "3".to_string()),
+                ("z".to_string(), "7".to_string()),
+                ("g".to_string(), "9".to_string()),
+            ]
+        );
+        assert_eq!(render_dump(&entries), "x ： 2\ny ： 3\nz ： 7\ng ： 9\n");
+    }
+
+    /// `;;`（Dump）语句可执行、返回 `nil`（输出到 stdout；内容由纯函数测试覆盖）。
+    #[test]
+    fn dump_statement_runs_and_returns_nil() {
+        let stmts = vec![
+            decl("x", int(1)),
+            st(StmtKind::Dump { scope: ScopeId(0) }),
+        ];
+        assert_eq!(run_str(stmts), "nil");
+    }
+
+    /// §10.3（N1）：帧栈自最外层→最内层；进入 Call 先把当前帧 span 更新为调用点，再压新帧。
+    #[test]
+    fn traceback_frames_follow_call_site_rule() {
+        let call_at = |name: &str, at: Span| {
+            Spanned::new(
+                ExprKind::Call {
+                    callee: Box::new(Spanned::new(ExprKind::Ident(name.to_string()), at)),
+                    args: vec![],
+                },
+                at,
+            )
+        };
+        // inner 体内错误节点 `1 / 0` 位于 (30,5)；首节点 span = 该语句 span。
+        let inner_body = Body::Block(block(vec![Spanned::new(
+            StmtKind::Expr(Spanned::new(
+                ExprKind::Binary {
+                    op: BinaryOp::Div,
+                    left: Box::new(int(1)),
+                    right: Box::new(int(0)),
+                },
+                Span::new(30, 5),
+            )),
+            Span::new(30, 5),
+        )]));
+        let outer_body = Body::Block(block(vec![Spanned::new(
+            StmtKind::Expr(call_at("inner", Span::new(20, 3))),
+            Span::new(20, 3),
+        )]));
+        let program = prog(vec![
+            fn_decl("inner", &[], inner_body),
+            fn_decl("outer", &[], outer_body),
+            Spanned::new(
+                StmtKind::Expr(call_at("outer", Span::new(10, 1))),
+                Span::new(10, 1),
+            ),
+        ]);
+        let run = eval_module_traced(&program);
+        assert_eq!(
+            run.result.as_ref().unwrap_err().class_name(),
+            "ZeroDivisionError"
+        );
+        // 三帧：模块（外层调用点）→ outer（内层调用点）→ inner（错误节点）。
+        assert_eq!(run.frames.len(), 3);
+        assert_eq!(run.frames[0].span, Span::new(10, 1));
+        assert_eq!(run.frames[1].span, Span::new(20, 3));
+        assert_eq!(run.frames[2].span, Span::new(30, 5));
+        // 帧名（§8.4）。
+        assert_eq!(run.frame_name(&run.frames[0]).as_ref(), "<module>");
+        assert_eq!(run.frame_name(&run.frames[1]).as_ref(), "outer");
+        assert_eq!(run.frame_name(&run.frames[2]).as_ref(), "inner");
+        // 模块帧 func_id = 0；函数帧 id 互不相同。
+        assert_eq!(run.frames[0].func_id, 0);
+        assert_ne!(run.frames[1].func_id, run.frames[2].func_id);
+    }
+
+    /// 端到端：`lex` + `parse` + `eval_module`（parser 当前最小子集）。
+    #[test]
+    fn end_to_end_lex_parse_eval_smoke() {
+        assert_eq!(
+            eval_src("let x = 1\nx").map(|v| v.to_string()).unwrap(),
+            "1"
+        );
+        assert_eq!(
+            eval_src("let s = \"hi\"\ns").map(|v| v.to_string()).unwrap(),
+            "hi"
+        );
+        // 语法错误经 `R` 冒泡（`SyntaxError`）。
+        assert_eq!(eval_src("1 2").unwrap_err().class_name(), "SyntaxError");
     }
 }

@@ -171,6 +171,18 @@ impl Env {
         Some(cell)
     }
 
+    /// 本作用域具名绑定的**声明序**（= slot 升序）快照：`(名字, 作用域内下标)`。
+    ///
+    /// 供 `;;` 可见链遍历（§3.6 第 3 条：**同一作用域内按 slot 下标升序**）。与
+    /// [`Env::named_indices`]（**后定义者在前**，供闭包捕获）方向相反——`;;` 要的是声明序。
+    #[must_use]
+    pub fn bindings(&self) -> Vec<(String, usize)> {
+        self.names
+            .iter()
+            .map(|(n, slot, _)| (n.clone(), (slot - self.first_slot) as usize))
+            .collect()
+    }
+
     /// 本作用域**具名绑定的下标**列表（**后定义者在前**），供闭包按「内层 / 后者优先」捕获。
     #[must_use]
     pub fn named_indices(&self) -> Vec<(String, usize)> {
