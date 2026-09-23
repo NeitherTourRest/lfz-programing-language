@@ -1,5 +1,19 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 23:55] P3.4b1（parser 骨架 + 语句层）：单个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；已核验：`src/parser.rs` 24031 B（+16 parser 测试）、`cargo build` 0 warning、`cargo test` 211 passed / 0 failed；本轮**只有 1 个**已修改文件 `src/parser.rs`（由 team-lead 改派的外部执行者交付、**未**更新任何团队文档，符合预期）；做单个原子提交并 push；出现清单外条目即停止）
+- 完成:
+  - 入清单门禁：`git status --short --untracked-files=all` 复核恰为任务书预期 **1 项**（`M src/parser.rs`），**无清单外条目、无未跟踪文件**；门禁未触发。
+  - 基线/尺寸复核：`git rev-parse --abbrev-ref HEAD` = `main`；push 前本地基线 HEAD = `ef38496 docs(team): record evaluator name-resolution strategy ADR`；`(Get-Item src\parser.rs).Length` = 24031 B，与任务书一致；`git diff --stat -- src/parser.rs` = 1 file changed, 706 insertions(+), 2 deletions(-)。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入同一提交（保持工作区干净）。
+  - `git add src/parser.rs .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（`git diff --cached --name-only` 精确 3 文件）→ `git -c core.autocrlf=false commit -F lfz_msg_parser.txt`（标题 `feat(p3): parser skeleton and statement layer`，正文含 `parse() -> R<Module>`、`;` 与错误名）→ 短哈希见汇报；`git log -1 --format=%B` 复核标题/正文完整无损。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -3`（顶部为本轮提交，位于 `ef38496` 之上）；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag，`v0.2.0` 待 P3.11）。
+- 决策: 无新 ADR。**外部执行者交付的变更仅含 `src/parser.rs`**——未随附任何团队文档更新，团队看板（TEAM_BOARD）/项目状态（PROJECT_STATE）未随之更新（符合预期）；本提交按收工协议另并入本角色 `STATUS.md`/`JOURNAL.md` 收工文档。
+- 下一步: P3 后续子阶段按模块原子提交；P3.11 收口时打附注标签 `v0.2.0`。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-23 22:45] P3.7 求值器核心（tree-walking evaluator）+ P3.7 ADR：两个原子提交并推送
 - 来源: team-lead 任务书（轻量启动；已核验：`cargo build` 0 warning、`cargo test` 195 passed / 0 failed（evaluator 新增 26 测）；工作区恰 **6 个**已修改文件；本轮做两个原子提交并 push；`src/parser.rs` 不在清单内、不得提交；出现清单外条目即停止）
 - 完成:
