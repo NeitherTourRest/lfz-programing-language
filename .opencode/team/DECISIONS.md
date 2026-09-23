@@ -202,3 +202,20 @@
 - **背景**：P3.6 实现值模型与作用域，发现 §10.5 只给出 `ScopeDebug` 的字段名与类型（`ScopeId`/`FuncNameId` 未定义），§4.5.0/§3.7 要求 struct 模板可表示。任务书已授权"若 `FuncNameId` 需要 interned 名字表，请一并定义（保持简洁）"。
 - **影响**：`value.rs` / `env.rs` 为 P3.7（求值器）/P3.8（语义定稿）/P3.9（内置）的共享骨架；`Closure` 的形参 / 函数体 / 捕获 cell 列表由 P3.7 扩展（加字段，不破坏现有消费者）。core-dev 的 AST 若需 `ScopeId` 从 `env` 导入。
 - **证据**：`src/value.rs` 22760 B、`src/env.rs` 17621 B；`cargo build --tests --message-format=json` → `warnings=0 errors=0`；`cargo test` → `47 passed; 0 failed`（P3.6 新增 20 测；`value_is_two_words` 锁定 `Value` = 16 B）。
+
+### [2026-09-23 23:59] [runtime-dev] P3.9a 内置 ABI（携带调用点 `Span`）+ 6 处契约缺口上报
+- **性质**：**不改 spec**（不改 `docs/spec/`）；钉死 §10.7 内置表在 Rust 侧的调用签名，并上报 6 处**非阻塞**契约缺口，供 language-architect 补钉 / P3.7 求值器同步。
+- **决策（ABI）**：内置统一签名为 **`pub type BuiltinFn = fn(&[Value], Span) -> R<Value>`**（`Span` = **调用点**位置，由 P3.7 在脱糖后的 `Call` 节点处传入）。
+  - 任务书「建议」为 `fn(&[Value]) -> R<Value>`；本实现**扩展为携带 `Span`**，因为不携带则内置无法独立构造「带位置」的 `LzError`，违反「运行时错误必须带位置」红线（且 `print`/`input` 的 `IOError` 也需位置）。
+  - 该变更**不改任何语义**，只钉死 Rust 侧签名；仅影响 P3.7 求值器（runtime-dev 自持），无跨人破坏。参数个数由 `Builtin::call` 集中校验；未知名经 `call()` 统一报 `NameError`。
+- **决策（错误选型）**：实参类型不符用 `TypeMsg::BadOperands`（`op`=内置名、`lt`=实参类型、`rt`=期望类型）；参数个数不符用 `TypeMsg::ArgCount`；**`assert`/`check` 的条件非 bool 专用 `TypeMsg::ConditionNotBool`**（§8.1「条件必须是 bool，得到 {t}」）。
+- **上报（契约缺口，非阻塞；本批已按最贴近规范者落地并单测）**：
+  1. §10.7 定 `min`/`max` 空 → `ValueError`，但 `semantics` §8.1 的 `ValueError` 两模板（`Convert` / `BadFormatSpec`）均不适用「空集合取极值」，且 `error.rs::ValueMsg` 为只读冻结枚举（runtime-dev **不得**改）。现以 `Convert{src:"array", dst:<内置名>, text:"空数组"}` 承载。
+  2. `randInt(lo,hi)` 且 `lo >= hi` → `ValueError`，同缺口 1；现以 `Convert{src:"int", dst:"int", text:"{lo} >= {hi}"}` 承载。
+  3. `pop([])` 的 `IndexError` 下标值未规定；现取 `idx=-1, len=0`。
+  4. `floor`/`ceil`/`round` 的 `NaN`/`±Inf`/结果超 `i64` 未规定；现复用 `int(float)` 口径（`NaN→ValueError`、`±Inf`/超界→`OverflowError`）。
+  5. `del(k, s)` 对**方法字段**的判定未规定（A5 未列 `del`）；现按 `raw_fields`「存在即删」（方法字段可删）。
+  6. `insert` 负索引：§10.7 仅言 `i ∈ [0, len]`（未提负索引支持），现 `i<0 → IndexError`（与 `removeAt`/`swap` 的「支持负索引」相区分）。
+  - 建议 language-architect 为 1/2 在 §8.1 补一条 `ValueError` 消息（或新增 `ValueMsg` 变体），并确认 3–6。
+- **影响**：P3.7 求值器按本 ABI 调用内置；test-engineer / docs / ai-dx 若需 snapshot 上述 1–5 的消息文本，须待补钉后定稿（**建议暂不 snapshot**）。
+- **证据**：`src/builtins.rs` 72102 B / 1549 行；`cargo build --tests --message-format=json` → `warnings=0 errors=0`；`cargo test` → `82 passed; 0 failed`（本轮新增 35 测，覆盖 §10.7 全部 47 个非高阶内置，含 A1/A5、`sort` 稳定性与全序、`int(NaN)`/`int(±Inf)` 边界、`floor(3)`/`abs(-3.0)` 加宽对比、`check` 非致命）。

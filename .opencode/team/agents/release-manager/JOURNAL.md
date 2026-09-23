@@ -1,5 +1,20 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 22:14] P3.9a 内置函数第一批（47 个非高阶内置）：两个原子提交并推送
+- 来源: team-lead 任务书（P3.9a 已由 runtime-dev 完成并经 team-lead 核验：`cargo build` 0 warning、`cargo test` 82 passed / 0 failed（builtins 新增 35 测）、`src/builtins.rs` 72102 B；本轮把代码 + 团队文档做两个原子提交并 push）
+- 完成:
+  - `git status --short --untracked-files=all` 复核：恰为预期 4 项（`M src/builtins.rs`、`M .opencode/team/DECISIONS.md`（runtime-dev 追加的内置 ABI + 契约缺口 ADR）、`M agents/runtime-dev/STATUS.md`、`M agents/runtime-dev/JOURNAL.md`），**无清单外文件、无未跟踪文件**；`src/lexer.rs` 未被改动（P3.3 未完成，禁入本提交）。
+  - 尺寸复核：`(Get-Item src\builtins.rs).Length` = 72102 B，与任务书声明一致。
+  - **提交 1（代码 + runtime-dev 文档）**：`git add src/builtins.rs .opencode/team/agents/runtime-dev/STATUS.md .opencode/team/agents/runtime-dev/JOURNAL.md`（`git diff --cached --name-only` 精确为 3 文件）→ `git -c core.autocrlf=false commit -F lfz_msg_p39a_1.txt`（UTF-8 信息文件，标题 `feat(p3): builtins (non-HOF subset)`，正文含 `§10.7`、`fn(&[Value], Span) -> R<Value>`）→ **短哈希 `b81680b`**（3 files changed, 1769 insertions, 30 deletions）；`git log -1 --format=%B` 复核正文完整无损。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 2。
+  - **提交 2（团队文档）**：`git add .opencode/team/DECISIONS.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md` → 提交 `docs(team): record P3.9a builtin ABI and 6 contract gaps`（本提交即本条日志所在提交，短哈希见汇报）。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 两个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -4`（顶部两条为本轮提交，位于 `ebbd4d0` 之上）；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag，`v0.2.0` 待 P3.11）。
+- 决策: 无新 ADR（DECISIONS.md 本轮改动由 runtime-dev 追加、我仅代为入库；常规提交非新跨角色决策）。owner 偏差仍为遗留待确认项。
+- 下一步: P3 后续子阶段继续按模块原子提交；P3.11 收口时打附注标签 `v0.2.0`。
+- 阻塞: 无。
 ## [2026-09-23 22:06] P3.2 loader + P3.6 value/env：三个原子提交并推送
 - 来源: team-lead 任务书（P3.2/P3.6 已由 core-dev/runtime-dev 完成并经 team-lead 独立核验：`cargo build` 0 warning、`cargo test` 47 passed / 0 failed、`src/loader.rs` 15873 B、`src/value.rs` 22760 B、`src/env.rs` 17621 B；本轮把两阶段代码 + 团队文档做**三个原子提交**并 push）
 - 完成:
