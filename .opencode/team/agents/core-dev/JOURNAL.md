@@ -1,5 +1,20 @@
 # core-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 00:35] P3.9a 契约缺口闭合：`ValueMsg` 新增 2 变体（core-dev 侧）
+- 来源: team-lead 轻量任务「按 architect 裁定，`src/error.rs` 新增 2 个 `ValueMsg` 变体（含 `message()` 分支与单测）」
+- 完成: 先读 `DECISIONS.md` 最新 ADR「[2026-09-24 00:20] [language-architect] P3.9a 契约缺口闭合（6 项）」第 1/2 项 + `docs/spec/semantics.md` §8.1 表与新增细分消息表 → 改 `src/error.rs` → 编译 → 补单测 → 汇报。
+- 产出:
+  - `src/error.rs`（+152 / -1 行）。
+  - 新增变体：`ValueMsg::EmptyExtremum { func: String }`、`ValueMsg::BadRange { lo: i64, hi: i64 }`。
+  - `message()` 分支：`format!("空数组没有极值（{func}）")`、`format!("区间非法：{lo} >= {hi}")`。
+  - 证据：`git diff --stat -- src/error.rs` → `1 file changed, 152 insertions(+), 1 deletion(-)`；`cargo build` → `Finished dev profile ... in 1.75s`，**WARNCOUNT=0**，exit 0；`cargo test` → `test result: ok. 117 passed; 0 failed; 0 ignored`，exit 0。
+  - 新增 4 项测试：`value_msg_covers_all_four_rows`、`empty_extremum_message_char_by_char`、`bad_range_message_char_by_char`、`new_value_variants_still_map_to_value_error`（逐字符断言，含 `min/max/minBy/maxBy` 与 `3 >= 3`、负数、`i64::MIN`）。
+- 决策:
+  - **不改 `class_name()`**：两新变体仍映射 `"ValueError"`；`LzError` 仍 12 变体；无新增错误类、无 `E-xxx`。
+  - **不改 spec / builtins / span / loader / lexer / Cargo.toml**（守边界；`builtins.rs` 由 runtime-dev 按本变体改造）。
+  - 枚举文档注释由「两条/双变体」更正为「四条/四变体」（如实反映 §8.1 增补）。
+- 下一步: 等 team-lead 派发 P3.3b（`lexer.rs` 字符串/插值第二批）；runtime-dev 消费新变体改造 `min/max/minBy/maxBy`/`randInt`。
+- 阻塞: 无。
 ## [2026-09-23 23:58] P3.3a lexer 第一批（CODE 模式核心记号）
 - 来源: team-lead 任务书「P3.3a — `src/lexer.rs` 第一批：CODE 模式核心记号（不含字符串/插值）」
 - 完成: **先落盘实现、再补测试**（遵守上轮教训：禁止长时间推演）。

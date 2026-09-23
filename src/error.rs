@@ -160,7 +160,7 @@ impl OverflowMsg {
     }
 }
 
-/// `ValueError` 子消息 —— `semantics.md` §8.1 该行给出**两条**消息模板，故为**双变体**枚举。
+/// `ValueError` 子消息 —— `semantics.md` §8.1 该行给出**四条**消息模板，故为**四变体**枚举。
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum ValueMsg {
     /// `无法把 {src} 转换为 {dst}（'{text}'）`
@@ -171,6 +171,10 @@ pub enum ValueMsg {
     },
     /// `格式说明符非法：'{spec}'`
     BadFormatSpec { spec: String },
+    /// `空数组没有极值（{func}）` —— `min` / `max` / `minBy` / `maxBy` 空数组（`semantics.md` §8.1）。
+    EmptyExtremum { func: String },
+    /// `区间非法：{lo} >= {hi}` —— `randInt(lo, hi)` 且 `lo >= hi`（`semantics.md` §8.1）。
+    BadRange { lo: i64, hi: i64 },
 }
 
 impl ValueMsg {
@@ -182,6 +186,8 @@ impl ValueMsg {
                 format!("无法把 {src} 转换为 {dst}（'{text}'）")
             }
             ValueMsg::BadFormatSpec { spec } => format!("格式说明符非法：'{spec}'"),
+            ValueMsg::EmptyExtremum { func } => format!("空数组没有极值（{func}）"),
+            ValueMsg::BadRange { lo, hi } => format!("区间非法：{lo} >= {hi}"),
         }
     }
 }
@@ -785,6 +791,151 @@ mod tests {
         assert_eq!(
             OverflowMsg::IntegerOutOfRange.message(),
             "整数溢出：结果超出 i64 范围"
+        );
+    }
+
+    /// 逐字符断言两个字符串完全一致（失败时指出首个不符的字符下标）。
+    fn assert_chars_eq(got: &str, expected: &str) {
+        let actual: Vec<char> = got.chars().collect();
+        let want: Vec<char> = expected.chars().collect();
+        assert_eq!(
+            actual.len(),
+            want.len(),
+            "字符数不符：得到 {actual:?}（{got:?}），期望 {want:?}（{expected:?}）"
+        );
+        for (i, (a, e)) in actual.iter().zip(want.iter()).enumerate() {
+            assert_eq!(
+                a, e,
+                "第 {i} 个字符不符：得到 {a:?}，期望 {e:?}（整串 {got:?}）"
+            );
+        }
+    }
+
+    #[test]
+    fn value_msg_covers_all_four_rows() {
+        assert_eq!(
+            ValueMsg::Convert {
+                src: "string".to_string(),
+                dst: "int".to_string(),
+                text: "abc".to_string(),
+            }
+            .message(),
+            "无法把 string 转换为 int（'abc'）"
+        );
+        assert_eq!(
+            ValueMsg::BadFormatSpec {
+                spec: "q".to_string(),
+            }
+            .message(),
+            "格式说明符非法：'q'"
+        );
+        assert_eq!(
+            ValueMsg::EmptyExtremum {
+                func: "min".to_string(),
+            }
+            .message(),
+            "空数组没有极值（min）"
+        );
+        assert_eq!(
+            ValueMsg::BadRange { lo: 3, hi: 3 }.message(),
+            "区间非法：3 >= 3"
+        );
+    }
+
+    /// P3.9a 裁定 1：`EmptyExtremum` 消息 `空数组没有极值（{func}）`，逐字符断言。
+    #[test]
+    fn empty_extremum_message_char_by_char() {
+        assert_chars_eq(
+            &ValueMsg::EmptyExtremum {
+                func: "min".to_string(),
+            }
+            .message(),
+            "空数组没有极值（min）",
+        );
+        // 其余三个函数名。
+        assert_chars_eq(
+            &ValueMsg::EmptyExtremum {
+                func: "max".to_string(),
+            }
+            .message(),
+            "空数组没有极值（max）",
+        );
+        assert_chars_eq(
+            &ValueMsg::EmptyExtremum {
+                func: "minBy".to_string(),
+            }
+            .message(),
+            "空数组没有极值（minBy）",
+        );
+        assert_chars_eq(
+            &ValueMsg::EmptyExtremum {
+                func: "maxBy".to_string(),
+            }
+            .message(),
+            "空数组没有极值（maxBy）",
+        );
+    }
+
+    /// P3.9a 裁定 2：`BadRange` 消息 `区间非法：{lo} >= {hi}`，逐字符断言。
+    #[test]
+    fn bad_range_message_char_by_char() {
+        assert_chars_eq(
+            &ValueMsg::BadRange { lo: 3, hi: 3 }.message(),
+            "区间非法：3 >= 3",
+        );
+        assert_chars_eq(
+            &ValueMsg::BadRange { lo: 5, hi: 2 }.message(),
+            "区间非法：5 >= 2",
+        );
+        // 负数与 i64 边界。
+        assert_chars_eq(
+            &ValueMsg::BadRange { lo: -1, hi: -4 }.message(),
+            "区间非法：-1 >= -4",
+        );
+        assert_chars_eq(
+            &ValueMsg::BadRange {
+                lo: 0,
+                hi: i64::MIN,
+            }
+            .message(),
+            "区间非法：0 >= -9223372036854775808",
+        );
+    }
+
+    /// 新变体仍归 `ValueError` 类（`class_name()` 映射**不改**）。
+    #[test]
+    fn new_value_variants_still_map_to_value_error() {
+        assert_eq!(
+            value(
+                ValueMsg::EmptyExtremum {
+                    func: "min".to_string(),
+                },
+                Span::START,
+            )
+            .class_name(),
+            "ValueError"
+        );
+        assert_eq!(
+            value(ValueMsg::BadRange { lo: 3, hi: 3 }, Span::START).class_name(),
+            "ValueError"
+        );
+        assert_eq!(
+            LzError::Value {
+                msg: ValueMsg::EmptyExtremum {
+                    func: "max".to_string(),
+                },
+                span: Span::START,
+            }
+            .message(),
+            "空数组没有极值（max）"
+        );
+        assert_eq!(
+            LzError::Value {
+                msg: ValueMsg::BadRange { lo: 7, hi: 7 },
+                span: Span::START,
+            }
+            .to_string(),
+            "ValueError: 区间非法：7 >= 7"
         );
     }
 
