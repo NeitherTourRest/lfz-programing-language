@@ -1,5 +1,27 @@
 # core-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 22:29] P3.4a `src/ast.rs`：AST 全节点定义（每节点携带 `Span`）
+- 来源: team-lead 轻量任务书「P3.4a — `src/ast.rs`：AST 全节点定义（每个节点携带 Span）」
+- 完成: 先落盘再测试（轻量启动，禁止长时间推演）。
+  - 读 `agents/core-dev/STATUS.md` → `span.rs`（`Span{line,col}`）→ `syntax.md` §3–§7 全文 → `interface-contract.md` §10.2/§10.3/§10.5/§10.6/§10.8 → `DECISIONS.md` runtime-dev P3.6 ADR（`Dump.scope` 用 `crate::env::ScopeId`）→ `lexer.rs`（TokenKind/Token）→ 一次性落盘 `src/ast.rs` → 编译 → 补单测 → 汇报。
+  - **类型体系**（逐产式对照 §7 EBNF）：
+    - 位置：`Spanned<T>{node,span}`（`new`/`span()`）；`Expr=Spanned<ExprKind>`、`Stmt=Spanned<StmtKind>`。
+    - 程序/块/语句：`Program`；`StmtKind` = `Decl{mutable,name,init}` / `Assign{target,op,value}` / `FnDecl` / `StructDecl` / `If` / `While{cond,body}` / `For{var,iter,body}` / `Return(Option<Expr>)` / `Break` / `Continue` / `Dump{scope:ScopeId}` / `Expr`；`AssignOp` 6。
+    - 辅助（内嵌 span）：`Lvalue{span,base,path}`（`LvalueBase::Name|SelfValue`、`LvalueSegKind::Field|Index`）、`FnDecl`、`StructDecl`、`StructMember::Method|Field`、`FieldInit`、`Block`、`Body::Block|Expr`。
+    - 表达式：`ExprKind` 18 变体 —— `Int(i64)/Float(f64)/Str(String)/Bool/Nil`、`Interp(InterpString)`、`Ident`、`SelfRef`、`Array`、`StructLit`、`Field`、`Index`、`Call`、`Unary`、`Binary`、`Logical`、`If(IfExpr)`、`Lambda(Box<Lambda>)`；`UnaryOp`/`BinaryOp`(11)/`LogicalOp`。
+    - 富字符串：`InterpString{parts}`；`StrPart::Text|Expr{expr,format_spec:Option<String>}`（无 `:` = `None`，M6）。
+    - `IfExpr{cond,then_block,else_branch}` + `ElseBranch::If|Block`（A4/A27）；`Lambda{params,body}`（两种书写形式）。
+  - **两处 Box / 无 Pipe 的裁定**：① `ExprKind::Lambda(Box<Lambda>)` 断 `Body→Expr→ExprKind→Lambda→Body` 递归环（E0072）；② **不设 `Pipe` 节点** —— 依 §4.3/§10.6 管道解析期脱糖为 `Call`（测试 `pipe_is_desugared_to_call_no_pipe_node` 锁定）。
+  - **单测**（`#[cfg(test)]`，19 项，lexer 48 + ast 19）：`spanned_carries_node_and_span`、`literals_cover_all_five_kinds`、`plain_string_vs_interp_string`、`interp_format_spec_is_none_without_colon`、`postfix_call_index_field`、`unary_binary_logical_nodes`、`binary_op_covers_all_eleven`、`array_and_struct_literals`、`if_expression_with_else_if_and_else_block`、`if_without_else_has_none_branch`、`lambda_both_forms`、`all_statement_kinds_constructible`（19 语句覆盖全 StmtKind + 全 6 AssignOp + 多级 lvalue）、`dump_scope_uses_env_scope_id`、`pipe_is_desugared_to_call_no_pipe_node`、`program_aggregates_statements`、`block_and_body_variants`、`field_init_span_and_name_accessible`、`struct_member_both_variants_carry_spans`、`clone_and_partial_eq_derive_work`。
+- 产出:
+  - `src/ast.rs` **151B → 38638B**（纯类型定义 + `#[cfg(test)]`；**无** parser/evaluator 逻辑）。
+  - 证据：`Get-ChildItem src\ast.rs | Select Name,Length` → `ast.rs 38638`；`cargo build`（改 mtime 强制重编）→ `BUILD_EXIT=0`、warning 计数 **0**；`cargo test` → `test result: ok. 154 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out`，exit 0（135 → 154，**+19**）。
+- 决策:
+  - **位置承载 = 混合式**：两个递归大枚举用 `Spanned<T>` 包装（构造点唯一、位置与种类解耦）；辅助结构（`Block/FnDecl/StructDecl/FieldInit/Lvalue/LvalueSeg`）内嵌 `pub span`（避免 `Spanned<Block>` 里套 `Vec<Stmt>` 的双层包装）。两者都保证 `.span` 可取。
+  - **整数字面量存已解析 `i64`**（非原文）：`INT` 原文由 parser 按 §10.8 解析（含 `-9223372036854775808 → i64::MIN`），AST 直接给 evaluator 可用的 `i64`。
+  - **无 `Pipe` 变体**：照契约「管道脱糖为 `Call`」，运行时零开销。
+- 下一步: 等 team-lead 派 **P3.4b / P3.5 parser**（消费本 AST + 完整 lexer 记号流；实现 NL 栈 `SIG/IGN`、`NO_BRACE_LITERAL`、管道脱糖、`_` 绑定 M4、`i64::MIN` 特判、`Dump` 填 `scope`）。
+- 阻塞: 无。**跨模块观察**：测试期间 `builtins.rs`（runtime-dev 领地）曾处并行编辑的瞬时编译错，最终双绿；我未改该文件。
 ## [2026-09-24 02:05] P3.3b lexer 第二批（STR / INTERP 模式 + 未闭合块注释裁定）
 - 来源: team-lead 轻量任务书「P3.3b — `src/lexer.rs` 第二批：STR / INTERP 模式（字符串、转义、插值、格式说明符）+ 落地未闭合块注释裁定」
 - 完成: 先落盘再测试（轻量启动，禁止长时间推演）。
