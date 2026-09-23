@@ -191,3 +191,14 @@
 - **偏差说明（需 team-lead/用户确认）**：任务书写的 `github.com/MakeChase` 与 GitHub 用户 `MakeChase`（id **128372141**）同名，但那是**另一个账号**；可认证账号是 `NeitherTourRest`（id **180032968**，display name `MakeChase`）。因 **GitHub URL 用 login 而非 display name**，仓库实际落在 `NeitherTourRest` 名下。若用户期望 owner 为字面 `MakeChase`，需在该账号完成认证后**迁移/重建**仓库并更新 README——release-manager 待授权执行。
 - **影响**：交付物 7（Git 历史）已具备远程可见性（Public）；README 顶部与"快速开始"含正确克隆入口；后续阶段 push/tag 沿用 `origin`（`NeitherTourRest`）。
 - **证据**：`gh auth status` → `Logged in to github.com account NeitherTourRest`；`git remote -v` → origin=该 URL；`git ls-remote origin` → `refs/heads/main 35e5f628…` + `refs/tags/v0.1.0`；`gh repo view --json name,visibility,url,defaultBranchRef` → `visibility=PUBLIC`、`defaultBranchRef=main`、url 正确；`git log --oneline` = `35e5f62` / `6873fe7` / `e060b21`。
+
+### [2026-09-23 23:55] [runtime-dev] P3.6 §10.5 类型落地 + value 值模型变体集（跨模块接口）
+- **性质**：**不改 spec**（不改 `docs/spec/`）；仅把 §10.5 / §3.7 / §4.5.0 中未给全的**具体 Rust 类型**定死并记录，供 core-dev（AST）与后续 runtime 子阶段同步。契约字段与语义**逐字照 §10.5**，无新增语义。
+- **决策**：
+  1. **§10.5 具体类型置于 `src/env.rs`**：`ScopeDebug { first_slot: u32, names: Vec<FuncNameId>, parent: Option<ScopeId> }`（字段照契约）；新增 `ScopeId(pub u32)`、`pub type FuncNameId = u32`、`NameInterner`（interned 名字表，`intern`/`resolve`）、`ScopeDebugTable`（arena + `visible_slots(from, &names)` 枚举器：内→外、slot 升序、遮蔽去重）、`ScopeChain { table: Rc<ScopeDebugTable>, scope: ScopeId }`（闭包携带的定义处可见链，`Rc` 共享）。
+  2. **core-dev 接口提示**：AST `Dump` 节点若在编译期决议作用域，`scope` 字段请用 `crate::env::ScopeId`（如尚未产出该节点，P3.5 落地时对齐即可）。`ScopeDebug` 表由解析/决议期构造，**仅在 `;;` 时读取**（零热路径开销）。
+  3. **`Value` 变体集**（`src/value.rs`）：`Nil` / `Bool(bool)` / `Int(i64)` / `Float(f64)` / `Str(Rc<String>)` / `Array(Rc<RefCell<Vec<Value>>>)` / `Struct(Rc<RefCell<StructObj>>)` / **`StructDef(Rc<StructDef>)`** / `Func(Rc<Closure>)`。`StructDef` 承载 §3.7/§4.5.0 的 struct **模板**（`type` 报 `"struct"`、显示 `<struct 名字>`）——为使显示与 `type` 完整，属值模型必备，**非**新增语义。
+  4. **`int → float` 唯一入口** = `Value::as_f64()`（§4.5.7）；严格访问器 `as_int`/`as_float` 等**不做**隐式转换。`abs` 同型不加宽、`floor/ceil/round/sqrt/pow` 加宽均经 `as_f64`（P3.9 落地时遵守）。
+- **背景**：P3.6 实现值模型与作用域，发现 §10.5 只给出 `ScopeDebug` 的字段名与类型（`ScopeId`/`FuncNameId` 未定义），§4.5.0/§3.7 要求 struct 模板可表示。任务书已授权"若 `FuncNameId` 需要 interned 名字表，请一并定义（保持简洁）"。
+- **影响**：`value.rs` / `env.rs` 为 P3.7（求值器）/P3.8（语义定稿）/P3.9（内置）的共享骨架；`Closure` 的形参 / 函数体 / 捕获 cell 列表由 P3.7 扩展（加字段，不破坏现有消费者）。core-dev 的 AST 若需 `ScopeId` 从 `env` 导入。
+- **证据**：`src/value.rs` 22760 B、`src/env.rs` 17621 B；`cargo build --tests --message-format=json` → `warnings=0 errors=0`；`cargo test` → `47 passed; 0 failed`（P3.6 新增 20 测；`value_is_two_words` 锁定 `Value` = 16 B）。

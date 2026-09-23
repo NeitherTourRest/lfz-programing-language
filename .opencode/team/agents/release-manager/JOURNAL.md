@@ -1,5 +1,21 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 22:06] P3.2 loader + P3.6 value/env：三个原子提交并推送
+- 来源: team-lead 任务书（P3.2/P3.6 已由 core-dev/runtime-dev 完成并经 team-lead 独立核验：`cargo build` 0 warning、`cargo test` 47 passed / 0 failed、`src/loader.rs` 15873 B、`src/value.rs` 22760 B、`src/env.rs` 17621 B；本轮把两阶段代码 + 团队文档做**三个原子提交**并 push）
+- 完成:
+  - `git status --short --untracked-files=all` 复核：恰为预期 8 项（`M src/loader.rs`、`M src/value.rs`、`M src/env.rs`、`M DECISIONS.md`（runtime-dev 追加的跨模块接口 ADR）、`M core-dev/{STATUS,JOURNAL}.md`、`M runtime-dev/{STATUS,JOURNAL}.md`），**无清单外文件、无未跟踪文件**。
+  - 尺寸复核：`Get-ChildItem src\loader.rs,src\value.rs,src\env.rs` → 15873 / 22760 / 17621 B，与任务书声明完全一致；`git check-ignore -v target/` → `.gitignore:25:/target/`。
+  - **提交 1（P3.2）**：`git add src/loader.rs .opencode/team/agents/core-dev/STATUS.md .opencode/team/agents/core-dev/JOURNAL.md`（`git diff --cached --name-only` 精确为 3 文件）→ `git -c core.autocrlf=false commit -F lfz_msg1.txt`（UTF-8 文件，标题 `feat(p3): loader`，正文 1 行）→ **短哈希 `7d41e17`**（3 files changed, 426 insertions, 25 deletions）。
+  - **提交 2（P3.6）**：`git add src/value.rs src/env.rs .opencode/team/agents/runtime-dev/STATUS.md .opencode/team/agents/runtime-dev/JOURNAL.md`（精确 4 文件）→ `git -c core.autocrlf=false commit -F lfz_msg2.txt`（标题 `feat(p3): value and env`，正文含 `Rc<RefCell>`、`§10.5`）→ **短哈希 `49d485f`**（4 files changed, 1163 insertions, 8 deletions）；`git log -1 --format=%B` 复核正文完整无损。
+  - 先完成收工协议（覆盖更新本 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 3。
+  - **提交 3（团队文档）**：`git add .opencode/team/DECISIONS.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md` → 提交 `docs(team): record P3.6 value/env cross-module interface ADR`（本提交即本条日志所在提交，短哈希见汇报）。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 三个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -6`（顶部三条为本轮提交，位于 `4458e75` 之上）；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag）。
+- 决策: 无新增 ADR（DECISIONS.md 本轮改动由 runtime-dev 追加、我仅代为入库；常规提交非新跨角色决策）。owner 偏差仍为遗留待确认项。
+- 下一步: P3 后续子阶段继续按模块原子提交；P3.11 收口时打附注标签 `v0.2.0`。
+- 阻塞: 无。
 ## [2026-09-24 01:05] P3.1 span/error 模型：两个原子提交并推送
 - 来源: team-lead 任务书（P3.1 已由 core-dev 完成并经 team-lead 独立核验：`cargo build` 0 warning、`cargo test` 15 passed / 0 failed、`E-xxx` = 0、`Span` 为唯一位置类型；本轮把代码 + 团队文档做两个原子提交并 push）
 - 完成:
