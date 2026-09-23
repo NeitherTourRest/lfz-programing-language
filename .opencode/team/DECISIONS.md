@@ -165,3 +165,18 @@
 - **影响**：**core-dev / runtime-dev** 按本三件套启动 P3（lexer/parser/AST/loader 依 syntax.md + interface-contract.md；evaluator/builtins/env 依 semantics.md + interface-contract.md）；**tooling-dev** 按 §10 loader 双入口 / `ext(path)` / `--json` 字段契约；**test-engineer / docs-writer / ai-dx-engineer / app-dev** 只读引用本三件套（测试集 / 手册 / AI 指南 / 应用不得与 spec 冲突）。
 - **证据**：`docs/spec/{syntax,semantics,interface-contract}.md` 三文件均存在且非空（行数见 language-architect STATUS.md / JOURNAL.md）；`.opencode/team/DRAFT-LFZ-v0.5.md` 已含 3 处补钉；三件套可检索 `#42`、`ScopeDebug`、`RecursionError`、`int(NaN)`、`data-last`，且旧计数串不再出现。
 - **状态**：**spec v1 = FROZEN（2026-09-23）**。后续 post-v1 变更走本 ADR 的冻结纪律（先 ADR 后改文档）。
+
+### [2026-09-23 23:30] [release-manager] 版本管理纪律（git 工作流 + MIT + README 实时更新）
+- **背景**：用户下达开工指令并扩展 P0.5 范围——先在本地建立 git 基线，随后创建 GitHub 远程仓库并推送；**此后全程自动进行版本管理，并实时更新 README**；协议采用 **MIT**。本次为 **P0.5 本地部分**（release-manager 执行），已完成初始提交 `e060b21` 与附注标签 `v0.1.0`；**远程仓库创建与推送由 team-lead 与用户确认参数后另派**。
+- **决策（版本管理纪律，长期生效）**：
+  1. **默认分支 = `main`**（以 `git init -b main` 建立）。
+  2. **原子提交**：**每个阶段里程碑做原子提交**；一个提交只承载一个逻辑变更；团队构建阶段的提交顺序遵循 `TEAM_SPEC.md §12`。
+  3. **提交信息用英文 conventional commits**：`type(scope): subject`，type ∈ {feat, fix, docs, test, chore, refactor, perf}；subject 小写、动词开头、≤50 字符，正文可补中文说明；禁止 `update` / `fix bug` 之类空信息。
+  4. **里程碑打附注标签**（`git tag -a -m`），命名 `v<major>.<minor>.<patch>`，自 **`v0.1.0`** 起；附注须写明"阶段 + 内容摘要 + 通过条件"；禁止裸打轻量标签。
+  5. **禁止 force-push / rebase 已推送（共享）历史**；修复一律用新增提交；本地未推送历史如确需整理，须先经 team-lead 批准。
+  6. **入库 / 忽略边界**：**`.opencode/` 必须入库**（团队记忆 + `docs/spec` 等交付物在其中）；**`.omo/`、`.codegraph/` 保持忽略**（另含 `__pycache__/`、`*.pyc`、`.venv/`、构建产物、编辑器/系统文件）；**`Cargo.lock` 入库**（本项目为二进制应用）。
+  7. **README 由 release-manager 在每个阶段里程碑实时更新**（状态表 / 交付物索引 / Git 基线与版本标签），其他角色不直接改写。
+  8. **全部文件采用 MIT 协议**（`LICENSE` 全文，`Copyright (c) 2026 MakeChase`）；新增源码文件沿用同一协议。
+  9. **远程 GitHub 仓库与推送方式（认证）待用户确认**：参数（仓库名 / 可见性 / 认证 HTTPS+PAT vs SSH）确认前，**不执行任何远程操作**（不安装 `gh`、不 `gh repo create`、不 `git remote add`、不 push / fetch）。
+- **影响**：后续各阶段的提交/标签由 release-manager 统一执行并附 `git log --oneline` 证据；各角色交付物逐步纳入历史；README 与版本标签成为交付物 7（Git 历史）的进度证据；远程推送在用户确认后由 team-lead 派发。
+- **证据**：`git log --oneline` = `e060b21 chore: initial commit — LFZ scaffold, team constitution, frozen v1 language spec`；`git status --short` 为空；`git tag` = `v0.1.0`；`git ls-files | Measure-Object` 计 **67** 个文件。
