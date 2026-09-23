@@ -1,0 +1,11 @@
+#42
+fn fact(n) { if n <= 1 { 1 } else { n * fact(n - 1) } }
+print(fact(5))
+fn fib(n) { if n < 2 { n } else { (fib(n - 1)) + (fib(n - 2)) } }
+print(fib(10))
+fn counter() { var n = 0
+  fn inc() { n += 1
+    n }
+  inc }
+let c = counter()
+print("${c()} ${c()} ${c()}")

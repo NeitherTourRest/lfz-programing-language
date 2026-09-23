@@ -1,0 +1,14 @@
+#42
+var i = 0
+var acc = 0
+while i < 5 { acc += i
+  i += 1 }
+print(acc)
+for x in [1, 2, 3, 4] { print(x) }
+let d = { a: 1, b: 2 }
+for k in d { print(k) }
+if acc > 5 { print("big") } else { print("small") }
+for x in [1, 2, 3, 4, 5] { if x == 3 { break }
+  print(x) }
+for x in [1, 2, 3] { if x == 2 { continue }
+  print(x) }

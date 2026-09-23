@@ -1,0 +1,12 @@
+#42
+fn inc(x) { x + 1 }
+fn add(a, b) { a + b }
+print(3 |> inc())
+print([1, 2, 3] |> len())
+print(10 |> add(5))
+print(10 |> add(_, 5))
+print(3 |> inc() |> inc())
+print(range(5) |> map((x) => x * 2))
+print([3, 1, 2] |> sort())
+print([1, 2, 3, 4] |> filter((x) => x % 2 == 0))
+print("abc" |> upper())

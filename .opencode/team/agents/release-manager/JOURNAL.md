@@ -1,5 +1,20 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 00:29] P3.11 验收报告 + 团队状态刷新：单个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；背景：verifier 已出 `docs/reports/P3-verification.md`（31697 B，结论 **FAIL**：3×🔴/4×🟡/2×🟢）+ 夹具目录；team-lead 已刷新 `TEAM_BOARD.md`/`PROJECT_STATE.md`、verifier 已更新自身 `{STATUS,JOURNAL}.md`；**当前有并行修复任务在改 `src/**`，`git status` 可能含 `M src/**` 清单外条目——允许但不暂存**）；要求：`git add` 显式清单（`docs/reports` + 团队/verifier 三文档）+ 本身收工文档，信息 `docs(team): P3.11 verification report (FAIL: 3 blocking bugs) and board update` + 指定 body，`git push`，并做验收取证；禁区：禁 force-push、**严禁打 tag**（FAIL，`v0.2.0` 不得打）、不暂存 `src/**`/`docs/spec/**`、不提交 `target/`/密钥/临时文件）
+- 完成:
+  - 入清单门禁（放宽版）：`git status --short --untracked-files=all` = `M .opencode/team/PROJECT_STATE.md`、`M .opencode/team/TEAM_BOARD.md`、`M agents/verifier/{STATUS,JOURNAL}.md`、`?? docs/reports/P3-verification.md` + `?? docs/reports/fixtures-p3/*.lfz`；**本轮无 `M src/**`**（并行修复尚未落到工作树），门禁未触发。
+  - 目录内容复核（任务书要求）：`Get-ChildItem -Recurse docs/reports` → 报告 1 个（31697 B，与任务书一致）+ 夹具目录 `fixtures-p3/` **恰 9 个 `.lfz`**（01–08 + `spec_9_4_refs.lfz`）。⚠️ 任务书称「10 个 `.lfz`」，实测 **9 个**（与报告 §1.2 表列一致）；以实测为准，如实登记（非缺失交付）。
+  - 基线复核：`git rev-parse --abbrev-ref HEAD` = `main`；push 前本地基线 HEAD = 远程 `refs/heads/main` = **`682d1fb`** `feat(p3): parser v1 features (pipe desugaring, dump, interpolation, i64::MIN)`；`git tag -n` = 仍仅 `v0.1.0`；`git check-ignore -v target` = `.gitignore:25:/target/`。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入同一提交（保持工作区干净）。
+  - **单个原子提交**：`git add docs/reports .opencode/team/TEAM_BOARD.md .opencode/team/PROJECT_STATE.md .opencode/team/agents/verifier/STATUS.md .opencode/team/agents/verifier/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（`git diff --cached --name-only` 核对暂存集精确；**未暂存任何 `src/**`/`docs/spec/**`**）→ `git -c core.autocrlf=false commit -F lfz_msg_p311.txt`（标题/正文按任务书逐字）→ 短哈希见汇报；`git log -1 --format=%B` 复核标题/正文完整无损。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 一个新提交；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -3`（顶部为本轮提交，其下 `682d1fb`、`0ce5123`）；`git status --short`（遗留并行条目如实列出）；`git show --stat HEAD`（入库文件清单）；`git tag -n`（仍仅 `v0.1.0`——**本轮未打 tag，因验收结论为 FAIL**）。
+- 决策: 无新 ADR。**FAIL 阶段不打 `v0.2.0`**，P3 里程碑收口挂起至阻塞缺陷修复并通过复核。
+- 下一步: 待 3 个阻塞缺陷修复 + 复核通过 → 提交 `fix(...)` + push → team-lead 判定通过后打附注标签 `v0.2.0`；P10 交付清单核对。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-24 00:21] P3.5（parser 特色四件套：管道脱糖 / `;;`→`Dump` / 富插值 / `i64::MIN`）：单个原子提交并推送
 - 来源: team-lead 任务书（轻量启动；已核验：`src/parser.rs` 199552 B（parser 测试 99→134，+35 测）、`cargo build` 0 warning、测试 354(库)+8+7(集成) 全绿；P3 全部实现子阶段到此收官；本轮**只有 1 个**已修改文件 `src/parser.rs`（外部执行者交付、**未**更新任何团队文档，符合预期）；做单个原子提交并 push，收工文档并入同一提交；禁区：禁 force-push、不打 tag（`v0.2.0` 待 P3.11）、不提交 target/密钥/临时文件、不改清单外文件；出现清单外条目即停止）
 - 完成:

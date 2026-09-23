@@ -1,0 +1,12 @@
+#42
+let name = "LFZ"
+let n = 42
+let pi = 3.14159265
+print("hello ${name}")
+print("n=${n:05d}")
+print("hex=${n:x} HEX=${n:X} oct=${n:o} bin=${n:b}")
+print("pi=${pi:.3f}")
+print("right=${n:>6} left=${n:<6} center=${n:^6}")
+print("sign=${n:+d}")
+print("s=${name:s}")
+print("esc \${n}")

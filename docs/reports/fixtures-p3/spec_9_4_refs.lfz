@@ -1,0 +1,23 @@
+#42
+// refs.lfz — v0.5 语义演示
+fn makeCounter() {
+    var n = 0
+    fn inc() { n += 1; n }          // 闭包按 cell 捕获 n（A2）
+    inc
+}
+let c = makeCounter()
+print("${c()} ${c()} ${c()}")       // 1 2 3
+
+let a = [1, 2, 3]
+let b = a                            // 引用共享（A1）
+b[0] = 99
+print("${a[0]} ${b[0]}")            // 99 99（同一个 array）
+
+let xs = [3, 1, 2]
+let ys = sort(xs)                    // 返回新值，不改 xs（A1）
+print("${xs}  ${ys}")               // [3, 1, 2]  [1, 2, 3]
+
+let r = {}
+r.self = r                           // 自引用环（A6）
+print(r)                             // {self: <cycle>}
+print(r == r)                        // true（身份优先）
