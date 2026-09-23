@@ -318,3 +318,40 @@
   - **tooling-dev**：无接口变更（沿用既有 `SyntaxError` 输出路径/退出码 2）。
   - **spec 三件套**：`syntax.md` / `semantics.md` / `interface-contract.md` 已同步；错误类计数不变（12 类 + 基类；运行期仍 10 类）；`SyntaxError` 细分消息数 16 → **17**。
 - **证据**：本 ADR 标题行（`DECISIONS.md`）+ `docs/spec/` 三件套改动点原文（见本轮结构化汇报）。
+
+---
+
+### [2026-09-23 22:29] [core-dev] P3.4a `src/ast.rs` AST 节点契约（parser/evaluator 共享接口门禁）
+- **背景**：`src/ast.rs` 是 P3.4b（parser）与 P3.7（evaluator）的**共享接口门禁**，须先定死两链才能并行。契约只规定「每节点至少携带起始 `Span`」（§10.2）与「`Dump { scope }`」「管道脱糖为 `Call`」（§10.5/§10.6），未规定 Rust 具体类型形态；本 ADR 固化选择，供 runtime-dev 消费。
+- **决定（`src/ast.rs` 类型形态）**：
+  1. **位置承载 = 混合式**：`pub struct Spanned<T> { pub node: T, pub span: Span }`（`pub type Expr = Spanned<ExprKind>`、`pub type Stmt = Spanned<StmtKind>`）；辅助结构（`Block` / `FnDecl` / `StructDecl` / `FieldInit` / `Lvalue` / `LvalueSeg`）**内嵌 `pub span: Span`**。两者均可通过 `.span` 取起始位置。
+  2. **无 `Pipe` 节点**：管道依 §4.3/§10.6 在**解析期脱糖为 `Call`**（`L |> F(a)` 无 `_` → `F(a, L)`；有 `_` → 替换该位）。
+  3. **整数字面量存已解析 `i64`**：`ExprKind::Int(i64)`；`INT` 记号原文由 parser 按 §10.8 解析（`-9223372036854775808 → i64::MIN` 特判、越界 → `SyntaxError`），evaluator 零转换。
+  4. **`Dump` 节点**：`StmtKind::Dump { scope: crate::env::ScopeId }`（照 runtime-dev P3.6 ADR）。
+  5. **`Lambda` 用 `Box`**：`ExprKind::Lambda(Box<Lambda>)`，断 `Body→Expr→ExprKind→Lambda→Body` 递归环。
+  6. 派生 `Clone, Debug, PartialEq`；**不引入第三方依赖**；模块只放类型，不含任何解析/求值逻辑。
+- **下游影响**：
+  - **runtime-dev（P3.7 evaluator）**：按上述形态模式匹配消费 AST（`node` + `span`）；`Call` 已是脱糖后形态；`Int` 已是 `i64`；`;;` 用 `Dump.scope` 沿 `ScopeId` parent 链出变量名。
+  - **core-dev（P3.5 parser）**：按此形态构造节点（`Spanned::new`、填 `span`、构造 `Lvalue`/`Block`/`FmtSpec`）。
+  - **tooling-dev / docs / test**：无外部接口变更（AST 为内部类型）。
+- **证据**：`src/ast.rs` 38638B；`cargo build` 0 warning；`cargo test` 154 passed / 0 failed（+19 ast 测试）；`agents/core-dev/STATUS.md` / `JOURNAL.md` 本条目。
+
+---
+
+### [2026-09-24 00:40] [runtime-dev] P3.6b `src/value.rs` 值语义辅助（A6 深相等 + §4.5.6 全序）唯一共享实现
+- **背景**：P3.6a 交付 `value.rs`/`env.rs` 后，`builtins.rs` 的 `sort`/`min`/`max` 使用**内联**比较逻辑（`Kind`/`order_kind`/`total_cmp_ok`/`num_order`/`cmp_int_float`），而 `==` 的 A6 语义（身份优先 + 已访问有序对集合防环）**无统一实现**；P3.7 求值器（`== != < <= > >=`）与 P3.9b（`sortBy`/`minBy`/`maxBy`）均需消费。本 ADR 固化共享 ABI，避免两份口径漂移。
+- **决定（`src/value.rs` 新增公开 ABI，供 P3.7/P3.9b 消费）**：
+  1. `pub fn Value::deep_eq(&self, other: &Value) -> bool` —— A6（§4.5.9）：身份优先（`Rc::ptr_eq` 短路）→ 标量按 §4.2/§4.5.6/§4.5.7；容器（`array`/`struct`）递归维护「**已访问有序对集合**」，**重访一对 ⇒ 视为相等**（不报错、不死循环）；struct 比较**忽略函数值字段**（A5）、键集按 UTF-8 字节序、键序无关。
+  2. `pub fn Value::total_cmp(&self, other: &Value) -> Option<Ordering>` —— §4.5.6 全序：`-Inf < 有限 < +Inf < NaN`；`int`/`float` 混合按 §4.5.7 **数学精确**比较；**仅同类别**（数值组 / 字符串组）可比较，否则 `None`（调用方转 `TypeError`）。
+  3. `pub fn Value::order_kind(&self) -> Option<OrderKind>` + `pub enum OrderKind { Num, Str }` —— 全序类别判定，供调用方映射 `TypeError` 期望类型（`number` / `string`）。
+  4. `pub(crate) const TWO_POW_63: f64`（2^63；`int(float)` 越界判定与精确比较共享常量）。
+  - 全序**仅**服务排序 / 极值；运算符 `< <= > >=` 的 IEEE 语义（涉及 `NaN` → `false`）**不在** `total_cmp` 内，P3.7 求值器须另行处理。
+- **`builtins.rs` 改造**：删除内联比较器（`Kind` / `order_kind` / `total_cmp_ok` / `num_order` / `cmp_int_float` 与本地 `TWO_POW_63`），`sort` / `min` / `max` 改调 `Value::total_cmp`；`validate_orderable` 改调 `Value::order_kind`。行为与既有测试**一致**（无冲突）。
+- **未明确项（上报 language-architect，不自行发明；本实现取保守口径）**：
+  1. **`StructDef`（struct 模板）的 `==`**：§4.5.9 未列该类（非标量、非容器）。本实现取**同一性**（同 `Rc` → `true`，否则 `false`），待规范补齐。
+  2. **§4.5.5 深结构 10000 层上限**：`deep_eq`（与既有 `Display` 同）为**递归**实现，**未**施加 10000 层深度上限 / `RecursionError`（需显式迭代栈 + `Result`）；建议随 P3.7 一并收口。
+- **下游影响**：
+  - **P3.7 evaluator**：`==`/`!=` 用 `Value::deep_eq`；`< <= > >=` 用 `Value::total_cmp`（`None` → `TypeError`）+ 自行处理 `NaN` → `false`。
+  - **P3.9b HOF**：`sortBy`/`minBy`/`maxBy` 复用 `Value::total_cmp`。
+  - **core-dev / tooling-dev / test-engineer**：无接口变更（`value.rs` 为运行时内部类型）。
+- **证据**：`git diff --stat -- src/value.rs src/builtins.rs` → `2 files changed, 462 insertions(+), 100 deletions(-)`；`cargo build --tests --message-format=json` → `warnings=0 errors=0`；`cargo test` → `169 passed; 0 failed`（新增 value 测试 15 个）。

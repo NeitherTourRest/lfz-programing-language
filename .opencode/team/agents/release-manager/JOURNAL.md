@@ -1,5 +1,21 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 22:45] P3.4a（AST 定义 + Span）+ P3.6b（值语义 A6 深相等 + 全序）+ 决策入库：三个原子提交并推送
+- 来源: team-lead 任务书（已核验：`cargo build` 0 warning、`cargo test` 169 passed / 0 failed（ast 19 测、value 28 测）；工作区恰 **8 个**已修改文件；本轮做三个原子提交并 push；出现清单外条目即停止）
+- 完成:
+  - 入清单门禁：`git status --short --untracked-files=all` 复核恰为任务书预期 **8 项**（`M src/ast.rs`、`M src/value.rs`、`M src/builtins.rs`、`M .opencode/team/DECISIONS.md`、`M agents/core-dev/{STATUS,JOURNAL}.md`、`M agents/runtime-dev/{STATUS,JOURNAL}.md`），**无清单外条目、无未跟踪文件**；门禁未触发。
+  - 基线复核：`git branch --show-current` = `main`；HEAD = `07340eb docs(team): P3 sub-phase ledger and project state`（push 前本地基线）；`git check-ignore -v target` → `.gitignore:25:/target/`。
+  - **提交 1（AST 代码 + core-dev 文档）**：`git add src/ast.rs .opencode/team/agents/core-dev/STATUS.md .opencode/team/agents/core-dev/JOURNAL.md`（`git diff --cached --name-only` 精确 3 文件）→ `git -c core.autocrlf=false commit -F lfz_msg_ast.txt`（标题 `feat(p3): AST definitions with spans`，正文含 `§3–§7`、`env::ScopeId`）→ **短哈希 `1dab6f8`**（3 files changed, 1226 insertions, 42 deletions）；`git log -1 --format=%B` 复核标题/正文完整无损。
+  - **提交 2（值语义代码 + runtime-dev 文档）**：`git add src/value.rs src/builtins.rs .opencode/team/agents/runtime-dev/STATUS.md .opencode/team/agents/runtime-dev/JOURNAL.md`（精确 4 文件）→ `git -c core.autocrlf=false commit -F lfz_msg_value.txt`（标题 `feat(p3): shared value semantics (A6 equality + total order)`，正文含 `§4.5.6/§4.5.7`）→ **短哈希 `88ec1bc`**（4 files changed, 516 insertions, 156 deletions）；`git log -1 --format=%B` 复核正文完整无损。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 3。
+  - **提交 3（决策 + 收工文档）**：`git add .opencode/team/DECISIONS.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md` → 提交 `docs(team): record value semantics helper ADR`（`DECISIONS.md` 本轮含 core-dev P3.4a AST 契约 ADR + runtime-dev P3.6b 值语义 ADR，均由各自撰写、我仅代为入库；本提交即本条日志所在提交，短哈希见汇报）。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 三个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -5`（顶部三条为本轮提交，位于 `07340eb` 之上）；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag，`v0.2.0` 待 P3.11）。
+- 决策: 无新 ADR（`DECISIONS.md` 本轮改动由 core-dev / runtime-dev 各自追加、我仅代为入库；常规提交非新跨角色决策）。owner 偏差仍为遗留待确认项。
+- 下一步: P3 后续子阶段按模块原子提交；P3.11 收口时打附注标签 `v0.2.0`；P10 交付清单核对。
+- 阻塞: 无。
 ## [2026-09-23 22:25] P3.3b（lexer STR/INTERP）+ P3.9b（内置缺口裁定）+ 团队状态：三个原子提交并推送
 - 来源: team-lead 任务书（已核验：`cargo build` 0 warning、`cargo test` 135 passed / 0 failed（lexer 48 测、error 15 测、builtins 36 测）；工作区恰 9 个已修改文件；本轮做三个原子提交并 push）
 - 完成:

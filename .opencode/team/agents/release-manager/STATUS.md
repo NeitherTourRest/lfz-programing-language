@@ -1,14 +1,14 @@
 # release-manager — 工作状态
-> 最后更新: 2026-09-23 22:25 by release-manager
+> 最后更新: 2026-09-23 22:45 by release-manager
 ## 当前状态
-**P3.3b（lexer STR/INTERP 模式）+ P3.9b（内置缺口裁定）+ 团队状态：三个原子提交并推送至 origin**：工作区干净、本地 HEAD = `refs/heads/main`。
+**P3.4a（AST 定义 + Span）+ P3.6b（值语义 A6 深相等 + 全序）两组模块代码 + P3.4a/P3.6b ADR：三个原子提交并推送至 origin**：工作区干净、本地 HEAD = `refs/heads/main`。
 - **远程仓库 URL：https://github.com/NeitherTourRest/lfz-programing-language**（Public，默认分支 `main`）。
-- 提交 1（P3.3b lexer 代码 + core-dev 文档）：`feat(p3): lexer STR/INTERP modes and unterminated block comment error` —— `src/lexer.rs` + `src/error.rs` + `core-dev/{STATUS,JOURNAL}.md`（4 files changed, 609 insertions, 71 deletions）；短哈希 `4f2a22e`。
-- 提交 2（P3.9b 内置缺口裁定 + runtime-dev 文档）：`fix(p3): apply builtin gap rulings` —— `src/builtins.rs` + `runtime-dev/{STATUS,JOURNAL}.md`（3 files changed, 100 insertions, 44 deletions）；短哈希 `eda649c`。
-- 提交 3（团队状态）：`docs(team): P3 sub-phase ledger and project state` —— `.opencode/team/TEAM_BOARD.md` + `.opencode/team/PROJECT_STATE.md` + 本角色收工文档（短哈希见汇报）。**`TEAM_BOARD.md`/`PROJECT_STATE.md` 由 team-lead 本人撰写，我仅代为入库**（单一写者规则：team-lead 为唯一写者）。
-- ✅ **已由 team-lead 核验**：`cargo build` **0 warning**；`cargo test` **135 passed / 0 failed**（lexer 48 测、error 15 测、builtins 36 测）。
-- ⚠️ **暂存纪律**：全部用 `git add <显式文件>`，未用 `git add -A`；提交前 `git diff --cached --name-only` 逐条核对暂存集精确为清单内文件。
-- ⚠️ **入清单门禁**：提交前 `git status --short --untracked-files=all` 恰为任务书预期 **9 项**，**无清单外条目、无未跟踪文件**；`target/` 由 `.gitignore` 忽略，未入库。
+- 提交 1（AST 代码 + core-dev 文档）：`feat(p3): AST definitions with spans` —— `src/ast.rs` + `agents/core-dev/{STATUS,JOURNAL}.md`（3 files changed, 1226 insertions, 42 deletions）；短哈希 `1dab6f8`。
+- 提交 2（值语义代码 + runtime-dev 文档）：`feat(p3): shared value semantics (A6 equality + total order)` —— `src/value.rs` + `src/builtins.rs` + `agents/runtime-dev/{STATUS,JOURNAL}.md`（4 files changed, 516 insertions, 156 deletions）；短哈希 `88ec1bc`。
+- 提交 3（团队决策 + 本角色收工文档）：`docs(team): record value semantics helper ADR` —— `.opencode/team/DECISIONS.md` + 本角色 `{STATUS,JOURNAL}.md`（短哈希见汇报）。**本轮 `DECISIONS.md` 含 core-dev 的 P3.4a AST 契约 ADR 与 runtime-dev 的 P3.6b 值语义 ADR，均由各自撰写、我仅代为入库**（单一写者规则：作者写内容，我管入库）。
+- ✅ **已由 team-lead 核验**：`cargo build` **0 warning**；`cargo test` **169 passed / 0 failed**（含 ast 19 测、value 15 测）。
+- ⚠️ **暂存纪律**：全部用 `git add <显式文件>`，未用 `git add -A`；每提交前 `git diff --cached --name-only` 逐条核对暂存集精确为清单内文件。
+- ⚠️ **入清单门禁**：提交前 `git status --short --untracked-files=all` 恰为任务书预期 **8 项**，**无清单外条目、无未跟踪文件**；`target/` 由 `.gitignore` 忽略（`git check-ignore` = `.gitignore:25:/target/`），未入库。
 - **本轮未打任何 tag**（P3 里程碑标签 `v0.2.0` 待 P3.11 收口时打）；tag 仍仅 `v0.1.0`。
 - ⚠️ **owner 偏差（历史遗留，需确认）**：可认证账号 login = `NeitherTourRest`（display name = `MakeChase`，id 180032968）；GitHub 上另一同名账号 `MakeChase`（id 128372141）无权操作。仓库实际落在 `NeitherTourRest` 名下。
 ## 进行中
@@ -27,6 +27,6 @@
 - **PowerShell 假错误**：`git push` 把进度写 stderr，PS 会显示红色 `NativeCommandError`，判据是 `$LASTEXITCODE=0`。
 - **CRLF 警告**：仓库含中文 Markdown / Rust 源，`git add` 会打印 `LF will be replaced by CRLF` 警告，属正常；提交用 `git -c core.autocrlf=false commit` 保持行尾稳定。
 - **多行提交信息 + 非 ASCII 字符**：body 含 `<`/`>`（如 `Rc<RefCell>`）或 `§` 时，**写 UTF-8 信息文件**（`C:\Users\19170\AppData\Local\Temp\opencode\lfz_msg*.txt`）→ `git -c core.autocrlf=false commit -F <file>`，提交后 `git log -1 --format=%B` 复核正文完整。用 `[System.IO.File]::WriteAllText(..., New-Object System.Text.UTF8Encoding($false))` 避免 BOM。
-- **基线事实（更新后）**：提交链 `e060b21`(init) → `6873fe7`(ADR) → `35e5f62`(README url) → `caa66b4`(team docs sync) → `69a57d7`(cargo skeleton) → `4035f86`(p3 span/error) → `4458e75`(docs core-dev P3.1) → `7d41e17`(loader) → `49d485f`(value/env) → `ebbd4d0`(P3.6 ADR) → `b81680b`(builtins) → `bb3e4b4`(P3.9a ADR) → `4c68d18`(lexer CODE-mode) → `711d6b9`(docs spec 6 缺口) → `7accfa3`(P3.9a EmptyExtremum/BadRange) → `5cdcc1b`(docs(spec): pin unterminated block comment) → 本轮 `4f2a22e`(P3.3b lexer STR/INTERP) + `eda649c`(P3.9b builtin gap rulings) + `docs(team): P3 sub-phase ledger`（短哈希见汇报）；附注标签 `v0.1.0` 指向 `e060b21`；远程 `refs/heads/main`=本轮 HEAD。
+- **基线事实（更新后）**：提交链 `e060b21`(init) → `6873fe7`(ADR) → `35e5f62`(README url) → `caa66b4`(team docs sync) → `69a57d7`(cargo skeleton) → `4035f86`(p3 span/error) → `4458e75`(docs core-dev P3.1) → `7d41e17`(loader) → `49d485f`(value/env) → `ebbd4d0`(P3.6 ADR) → `b81680b`(builtins) → `bb3e4b4`(P3.9a ADR) → `4c68d18`(lexer CODE-mode) → `711d6b9`(docs spec 6 缺口) → `7accfa3`(P3.9a EmptyExtremum/BadRange) → `5cdcc1b`(docs(spec): pin unterminated block comment) → `4f2a22e`(P3.3b lexer STR/INTERP) → `eda649c`(P3.9b builtin gap rulings) → `07340eb`(docs(team): P3 sub-phase ledger) → 本轮 `1dab6f8`(AST) + `88ec1bc`(value semantics) + `docs(team): value semantics helper ADR`（短哈希见汇报）；附注标签 `v0.1.0` 指向 `e060b21`；远程 `refs/heads/main`=本轮 HEAD。
 - **撤单核对流程**：先 `git status --short --untracked-files=all` 与任务书预期清单逐条比对，出现清单外文件即停止汇报；暂存后 `git diff --cached --name-only` 确认暂存集精确。
 - **禁区确认**：本轮未 force-push、未改默认分支、未打 tag、未 `git add -A`、未提交 `target/`/密钥/临时文件、未改清单外文件。
