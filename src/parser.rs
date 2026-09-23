@@ -1,4 +1,4 @@
-//! 语法分析器（递归下降）—— 第二批：后缀表达式 + 数组 / struct 字面量。
+//! 语法分析器（递归下降）—— 第三批：二元运算符 + 赋值。
 //!
 //! 契约：`docs/spec/interface-contract.md` §10.6；语法：`docs/spec/syntax.md` §3.1 / §3.2 / §4.1 / §7。
 //!
@@ -6,12 +6,17 @@
 //!
 //! - 换行模式栈（§3.2）：`(` / `[` / 字面量成员表 `{` 内 `NEWLINE` 忽略（`IGN`），
 //!   语句层生效（`SIG`）。
-//! - 语句：`let` / `var` 声明、表达式语句、块 `{ ... }`、程序（`Program`）本身。
+//! - 语句：`let` / `var` 声明、**赋值语句**（`assign_stmt`：`= += -= *= /= %=`，
+//!   目标为 `IDENT` / `self` + `. 字段` / `[ 下标 ]` 链，A21）、表达式语句、
+//!   块 `{ ... }`、程序（`Program`）本身。
 //! - 表达式：字面量（Int / Float / 纯字符串 / true / false / nil）、标识符、
-//!   括号分组 `( expr )`、一元 `-` / `!`、
+//!   括号分组 `( expr )`、一元 `-` / `!`（§4.1 级别 2）、
 //!   后缀链（调用 `f(a, …)` / 索引 `xs[i]` / 字段 `s.k`，可任意链式，§4.1 级别 1）、
-//!   数组字面量 `[a, b, c]`、struct 字面量 `{ k: v }` 与 `Name { k: v }`（§7）。
-//! - 错误：`UnexpectedToken` / `IncompleteExpr` / `LoneSemicolon`，
+//!   数组字面量 `[a, b, c]`、struct 字面量 `{ k: v }` 与 `Name { k: v }`（§7）、
+//!   以及 §4.1 优先级表的二元层（全部左结合）：`* / %`（级别 3）→ `+ -`（级别 4）→
+//!   比较 `< <= > >=`（级别 6）→ 相等 `== !=`（级别 7）→ 短路逻辑 `&&`（级别 8）→
+//!   `||`（级别 9）。
+//! - 错误：`UnexpectedToken` / `IncompleteExpr` / `LoneSemicolon` / `InvalidAssignTarget`，
 //!   语句终结检查（§3.2 同逻辑行两条语句）报 `TwoStatements`。
 //!
 //! # 本批已知简化
@@ -20,7 +25,9 @@
 //!    （AST 的 `StmtKind` 无 Block 变体）；§3.3 / A9「语句首 `{` 恒为匿名
 //!    struct 字面量」留待语句形态补齐批次一并处理。表达式位置的 `{`
 //!   一律为 struct 字面量（NO_BRACE_LITERAL：块起始位不受影响）。
-//! 2. `;;`→`Dump`、管道、插值、赋值、二元运算等均为后续批次；遇之即 `UnexpectedToken`。
+//! 2. `;;`→`Dump`、管道（`|>` 级别 5）、插值、`i64::MIN` 特判等均为后续批次；
+//!   语句 `if` / `while` / `for` / `break` / `continue` / `return` / `fn` / `struct`
+//!   仍报 `UnexpectedToken`。
 
 use crate::ast::*;
 use crate::error::{syntax, LzError, R, SyntaxMsg};
@@ -173,17 +180,120 @@ impl<'a> Parser<'a> {
         Ok(stmts)
     }
 
-    /// 解析一条语句（`let` / `var` 声明、表达式语句；`;` → `LoneSemicolon`）。
+    /// 解析一条语句（`let` / `var` 声明、赋值、表达式语句；`;` → `LoneSemicolon`）。
     fn parse_stmt(&mut self) -> R<Stmt> {
         let span = self.peek_span();
         match self.peek().clone() {
             TokenKind::KwLet | TokenKind::KwVar => self.parse_decl(span),
             TokenKind::Semi => Err(syntax(SyntaxMsg::LoneSemicolon, span)),
             _ => {
+                // `assign_stmt = lvalue , assign_op , expression`（§7；A21 先试 lvalue 头部）。
+                if let Some((target, op)) = self.try_parse_assign_head() {
+                    let value = self.parse_expr()?;
+                    return Ok(Spanned::new(StmtKind::Assign { target, op, value }, span));
+                }
                 let expr = self.parse_expr()?;
+                // A21：表达式后跟 assign_op 而左侧不是 lvalue → `InvalidAssignTarget`。
+                if assign_op_of(self.peek()).is_some() {
+                    return Err(syntax(SyntaxMsg::InvalidAssignTarget, expr.span));
+                }
                 Ok(Spanned::new(StmtKind::Expr(expr), span))
             }
         }
+    }
+
+    /// 试探赋值语句的「lvalue + assign_op」头部（§7 `assign_stmt` / `lvalue`）。
+    ///
+    /// 基座须为 `IDENT` / `self`，路径只允许 `. IDENT` / `[ expression ]`；
+    /// lvalue 解析完且**紧跟 `assign_op`** 才提交（`Some`）。否则回滚游标与换行
+    /// 模式栈并返回 `None`，由调用方按普通表达式语句继续 —— 回滚保证
+    /// `Point { … }`、`f(x)`、`a.b.c` 等以 IDENT 开头的表达式语句不受影响。
+    ///
+    /// 路径节（`LvalueSeg`）的 `span` 取 `.` / `[` 的精确位置（ast 契约）。
+    /// 内层 `[ expression ]` 的解析错误不在此上报：回滚后由完整表达式解析
+    /// 在同位置报出同错（两遍解析的记号流一致）。
+    fn try_parse_assign_head(&mut self) -> Option<(Lvalue, AssignOp)> {
+        let start_pos = self.pos;
+        let start_stack = self.nl_stack.len();
+        let span = self.peek_span();
+        let base = match self.peek().clone() {
+            TokenKind::Ident(name) => {
+                self.bump();
+                LvalueBase::Name(name)
+            }
+            TokenKind::KwSelf => {
+                self.bump();
+                LvalueBase::SelfValue
+            }
+            _ => return None,
+        };
+        let mut path = Vec::new();
+        loop {
+            self.skip_ign_newlines();
+            match self.peek().clone() {
+                TokenKind::Dot => {
+                    let seg_span = self.peek_span();
+                    self.bump();
+                    match self.peek().clone() {
+                        TokenKind::Ident(name) => {
+                            self.bump();
+                            path.push(LvalueSeg {
+                                span: seg_span,
+                                kind: LvalueSegKind::Field(name),
+                            });
+                        }
+                        _ => {
+                            self.reset(start_pos, start_stack);
+                            return None;
+                        }
+                    }
+                }
+                TokenKind::LBracket => {
+                    let seg_span = self.peek_span();
+                    self.bump();
+                    self.nl_stack.push(NlMode::Ign);
+                    let inner = self.parse_expr();
+                    self.nl_stack.pop();
+                    match inner {
+                        Ok(inner) => {
+                            self.skip_ign_newlines();
+                            if *self.peek() == TokenKind::RBracket {
+                                self.bump();
+                                path.push(LvalueSeg {
+                                    span: seg_span,
+                                    kind: LvalueSegKind::Index(inner),
+                                });
+                            } else {
+                                self.reset(start_pos, start_stack);
+                                return None;
+                            }
+                        }
+                        Err(_) => {
+                            self.reset(start_pos, start_stack);
+                            return None;
+                        }
+                    }
+                }
+                _ => break,
+            }
+        }
+        self.skip_ign_newlines();
+        match assign_op_of(self.peek()) {
+            Some(op) => {
+                self.bump();
+                Some((Lvalue { span, base, path }, op))
+            }
+            None => {
+                self.reset(start_pos, start_stack);
+                None
+            }
+        }
+    }
+
+    /// 回滚游标与换行模式栈到给定快照（赋值试探失败时用）。
+    fn reset(&mut self, pos: usize, stack_len: usize) {
+        self.pos = pos;
+        self.nl_stack.truncate(stack_len);
     }
 
     /// `let x = expr` / `var x = expr`（`decl_stmt`）。
@@ -214,12 +324,97 @@ impl<'a> Parser<'a> {
     }
 
     // ------------------------------------------------------------------
-    // 表达式（一元 + 基本表达式）
+    // 表达式（§4.1 优先级分层：or → and → eq → cmp → add → mul → unary → postfix）
     // ------------------------------------------------------------------
 
-    /// `expr = unary`（本批无二元运算，直接落到一元层）。
+    /// `expression = or_expr`（§7；`if_expr` / `lambda` 属后续批次）。
     fn parse_expr(&mut self) -> R<Expr> {
-        self.parse_unary()
+        self.parse_or()
+    }
+
+    /// `or_expr = and_expr , { "||" , and_expr }`（§4.1 级别 9，左结合）。
+    fn parse_or(&mut self) -> R<Expr> {
+        self.parse_logical_layer(Self::parse_and, or_op)
+    }
+
+    /// `and_expr = eq_expr , { "&&" , eq_expr }`（§4.1 级别 8，左结合）。
+    fn parse_and(&mut self) -> R<Expr> {
+        self.parse_logical_layer(Self::parse_eq, and_op)
+    }
+
+    /// `eq_expr = cmp_expr , { ( "==" | "!=" ) , cmp_expr }`（§4.1 级别 7，左结合）。
+    fn parse_eq(&mut self) -> R<Expr> {
+        self.parse_binary_layer(Self::parse_cmp, eq_op)
+    }
+
+    /// `cmp_expr = add_expr , { ( "<" | "<=" | ">" | ">=" ) , add_expr }`（§4.1 级别 6，左结合）。
+    ///
+    /// 管道（`|>` 级别 5）属后续批次：本层直接收 `add_expr`，`|>` 记号
+    /// 不会在任何表达式层被消费（与批 2 行为一致）。
+    fn parse_cmp(&mut self) -> R<Expr> {
+        self.parse_binary_layer(Self::parse_add, cmp_op)
+    }
+
+    /// `add_expr = mul_expr , { ( "+" | "-" ) , mul_expr }`（§4.1 级别 4，左结合）。
+    fn parse_add(&mut self) -> R<Expr> {
+        self.parse_binary_layer(Self::parse_mul, add_op)
+    }
+
+    /// `mul_expr = unary , { ( "*" | "/" | "%" ) , unary }`（§4.1 级别 3，左结合）。
+    fn parse_mul(&mut self) -> R<Expr> {
+        self.parse_binary_layer(Self::parse_unary, mul_op)
+    }
+
+    /// 左结合二元层骨架：`layer = next , { op next }`（算术 / 比较 / 相等）。
+    ///
+    /// 每个 `Binary` 节点的 `span` 取最左操作数的起始位置（与后缀链同规）。
+    /// 循环前 `skip_ign_newlines`：`IGN` 内换行当空白；`SIG` 下不吞换行
+    /// （A2 行尾运算符不续行，缺失右操作数报 `IncompleteExpr`）。
+    fn parse_binary_layer(
+        &mut self,
+        next: fn(&mut Self) -> R<Expr>,
+        op_of: fn(&TokenKind) -> Option<BinaryOp>,
+    ) -> R<Expr> {
+        let mut left = next(self)?;
+        loop {
+            self.skip_ign_newlines();
+            let op = match op_of(self.peek()) {
+                Some(op) => op,
+                None => break,
+            };
+            let span = left.span;
+            self.bump();
+            let right = next(self)?;
+            left = Spanned::new(
+                ExprKind::Binary { op, left: Box::new(left), right: Box::new(right) },
+                span,
+            );
+        }
+        Ok(left)
+    }
+
+    /// 左结合短路逻辑层骨架（`&&` / `||`）：与二元层同构，产出 `Logical` 节点。
+    fn parse_logical_layer(
+        &mut self,
+        next: fn(&mut Self) -> R<Expr>,
+        op_of: fn(&TokenKind) -> Option<LogicalOp>,
+    ) -> R<Expr> {
+        let mut left = next(self)?;
+        loop {
+            self.skip_ign_newlines();
+            let op = match op_of(self.peek()) {
+                Some(op) => op,
+                None => break,
+            };
+            let span = left.span;
+            self.bump();
+            let right = next(self)?;
+            left = Spanned::new(
+                ExprKind::Logical { op, left: Box::new(left), right: Box::new(right) },
+                span,
+            );
+        }
+        Ok(left)
     }
 
     /// 一元 `-` / `!`（§4.1 级别 2）；否则降级到后缀表达式。
@@ -516,6 +711,74 @@ fn parse_int(text: &str) -> Option<i64> {
 /// 解析浮点字面量原文（允许 `_` 分隔，§2.7）。
 fn parse_float(text: &str) -> Option<f64> {
     text.replace('_', "").parse::<f64>().ok()
+}
+
+/// §4.1 级别 3：`*` `/` `%` → `BinaryOp`。
+fn mul_op(kind: &TokenKind) -> Option<BinaryOp> {
+    match kind {
+        TokenKind::Star => Some(BinaryOp::Mul),
+        TokenKind::Slash => Some(BinaryOp::Div),
+        TokenKind::Percent => Some(BinaryOp::Rem),
+        _ => None,
+    }
+}
+
+/// §4.1 级别 4：`+` `-` → `BinaryOp`。
+fn add_op(kind: &TokenKind) -> Option<BinaryOp> {
+    match kind {
+        TokenKind::Plus => Some(BinaryOp::Add),
+        TokenKind::Minus => Some(BinaryOp::Sub),
+        _ => None,
+    }
+}
+
+/// §4.1 级别 6：`<` `<=` `>` `>=` → `BinaryOp`。
+fn cmp_op(kind: &TokenKind) -> Option<BinaryOp> {
+    match kind {
+        TokenKind::Lt => Some(BinaryOp::Lt),
+        TokenKind::Le => Some(BinaryOp::Le),
+        TokenKind::Gt => Some(BinaryOp::Gt),
+        TokenKind::Ge => Some(BinaryOp::Ge),
+        _ => None,
+    }
+}
+
+/// §4.1 级别 7：`==` `!=` → `BinaryOp`。
+fn eq_op(kind: &TokenKind) -> Option<BinaryOp> {
+    match kind {
+        TokenKind::EqEq => Some(BinaryOp::Eq),
+        TokenKind::NotEq => Some(BinaryOp::Ne),
+        _ => None,
+    }
+}
+
+/// §4.1 级别 8：`&&` → `LogicalOp`。
+fn and_op(kind: &TokenKind) -> Option<LogicalOp> {
+    match kind {
+        TokenKind::AndAnd => Some(LogicalOp::And),
+        _ => None,
+    }
+}
+
+/// §4.1 级别 9：`||` → `LogicalOp`。
+fn or_op(kind: &TokenKind) -> Option<LogicalOp> {
+    match kind {
+        TokenKind::OrOr => Some(LogicalOp::Or),
+        _ => None,
+    }
+}
+
+/// `assign_op = "=" | "+=" | "-=" | "*=" | "/=" | "%="`（§7）。
+fn assign_op_of(kind: &TokenKind) -> Option<AssignOp> {
+    match kind {
+        TokenKind::Assign => Some(AssignOp::Assign),
+        TokenKind::PlusAssign => Some(AssignOp::AddAssign),
+        TokenKind::MinusAssign => Some(AssignOp::SubAssign),
+        TokenKind::StarAssign => Some(AssignOp::MulAssign),
+        TokenKind::SlashAssign => Some(AssignOp::DivAssign),
+        TokenKind::PercentAssign => Some(AssignOp::RemAssign),
+        _ => None,
+    }
 }
 
 /// 记号的可读描述（用于错误消息的「得到 …」）。
@@ -1338,5 +1601,659 @@ mod tests {
             1,
             3,
         );
+    }
+
+    // ---- 二元运算符（§4.1 优先级表）----
+
+    #[test]
+    fn precedence_mul_binds_tighter_than_add() {
+        // `1 + 2 * 3` → Add(1, Mul(2, 3))。
+        let p = parse(&[
+            tok(TokenKind::Int("1".into()), 1, 1),
+            tok(TokenKind::Plus, 1, 3),
+            tok(TokenKind::Int("2".into()), 1, 5),
+            tok(TokenKind::Star, 1, 7),
+            tok(TokenKind::Int("3".into()), 1, 9),
+            tok(TokenKind::Eof, 1, 10),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        assert_eq!(e.span, Span::new(1, 1));
+        match &e.node {
+            ExprKind::Binary { op, left, right } => {
+                assert_eq!(*op, BinaryOp::Add);
+                assert_eq!(left.node, ExprKind::Int(1));
+                match &right.node {
+                    ExprKind::Binary { op, left, right } => {
+                        assert_eq!(*op, BinaryOp::Mul);
+                        assert_eq!(left.node, ExprKind::Int(2));
+                        assert_eq!(right.node, ExprKind::Int(3));
+                    }
+                    other => panic!("应为 Mul，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 Add，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn associativity_subtraction_is_left() {
+        // `1 - 2 - 3` → Sub(Sub(1, 2), 3)。
+        let p = parse(&[
+            tok(TokenKind::Int("1".into()), 1, 1),
+            tok(TokenKind::Minus, 1, 3),
+            tok(TokenKind::Int("2".into()), 1, 5),
+            tok(TokenKind::Minus, 1, 7),
+            tok(TokenKind::Int("3".into()), 1, 9),
+            tok(TokenKind::Eof, 1, 10),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Binary { op, left, right } => {
+                assert_eq!(*op, BinaryOp::Sub);
+                assert_eq!(right.node, ExprKind::Int(3));
+                match &left.node {
+                    ExprKind::Binary { op, left, right } => {
+                        assert_eq!(*op, BinaryOp::Sub);
+                        assert_eq!(left.node, ExprKind::Int(1));
+                        assert_eq!(right.node, ExprKind::Int(2));
+                    }
+                    other => panic!("应为 Sub，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 Sub，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn associativity_and_is_left() {
+        // `a && b && c` → And(And(a, b), c)。
+        let p = parse(&[
+            tok(TokenKind::Ident("a".into()), 1, 1),
+            tok(TokenKind::AndAnd, 1, 3),
+            tok(TokenKind::Ident("b".into()), 1, 6),
+            tok(TokenKind::AndAnd, 1, 8),
+            tok(TokenKind::Ident("c".into()), 1, 11),
+            tok(TokenKind::Eof, 1, 12),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Logical { op, left, right } => {
+                assert_eq!(*op, LogicalOp::And);
+                assert_eq!(right.node, ExprKind::Ident("c".into()));
+                match &left.node {
+                    ExprKind::Logical { op, left, right } => {
+                        assert_eq!(*op, LogicalOp::And);
+                        assert_eq!(left.node, ExprKind::Ident("a".into()));
+                        assert_eq!(right.node, ExprKind::Ident("b".into()));
+                    }
+                    other => panic!("应为 And，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 And，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn comparison_is_looser_than_arithmetic() {
+        // `1 + 2 < 3 * 4` → Lt(Add(1, 2), Mul(3, 4))。
+        let p = parse(&[
+            tok(TokenKind::Int("1".into()), 1, 1),
+            tok(TokenKind::Plus, 1, 3),
+            tok(TokenKind::Int("2".into()), 1, 5),
+            tok(TokenKind::Lt, 1, 7),
+            tok(TokenKind::Int("3".into()), 1, 9),
+            tok(TokenKind::Star, 1, 11),
+            tok(TokenKind::Int("4".into()), 1, 13),
+            tok(TokenKind::Eof, 1, 14),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Binary { op, left, right } => {
+                assert_eq!(*op, BinaryOp::Lt);
+                assert!(matches!(left.node, ExprKind::Binary { op: BinaryOp::Add, .. }));
+                assert!(matches!(right.node, ExprKind::Binary { op: BinaryOp::Mul, .. }));
+            }
+            other => panic!("应为 Lt，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn comparison_chain_is_left_assoc() {
+        // `1 < 2 < 3` → Lt(Lt(1, 2), 3)。
+        let p = parse(&[
+            tok(TokenKind::Int("1".into()), 1, 1),
+            tok(TokenKind::Lt, 1, 3),
+            tok(TokenKind::Int("2".into()), 1, 5),
+            tok(TokenKind::Lt, 1, 7),
+            tok(TokenKind::Int("3".into()), 1, 9),
+            tok(TokenKind::Eof, 1, 10),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Binary { op, left, right } => {
+                assert_eq!(*op, BinaryOp::Lt);
+                assert_eq!(right.node, ExprKind::Int(3));
+                assert!(matches!(left.node, ExprKind::Binary { op: BinaryOp::Lt, .. }));
+            }
+            other => panic!("应为 Lt，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn equality_is_looser_than_comparison() {
+        // `a == b < c` → Eq(a, Lt(b, c))。
+        let p = parse(&[
+            tok(TokenKind::Ident("a".into()), 1, 1),
+            tok(TokenKind::EqEq, 1, 3),
+            tok(TokenKind::Ident("b".into()), 1, 6),
+            tok(TokenKind::Lt, 1, 8),
+            tok(TokenKind::Ident("c".into()), 1, 10),
+            tok(TokenKind::Eof, 1, 11),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Binary { op, left, right } => {
+                assert_eq!(*op, BinaryOp::Eq);
+                assert_eq!(left.node, ExprKind::Ident("a".into()));
+                assert!(matches!(right.node, ExprKind::Binary { op: BinaryOp::Lt, .. }));
+            }
+            other => panic!("应为 Eq，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn logical_short_circuit_shape_and_precedence() {
+        // `a || b && c` → Or(a, And(b, c))：`&&` 比 `||` 紧。
+        let p = parse(&[
+            tok(TokenKind::Ident("a".into()), 1, 1),
+            tok(TokenKind::OrOr, 1, 3),
+            tok(TokenKind::Ident("b".into()), 1, 6),
+            tok(TokenKind::AndAnd, 1, 8),
+            tok(TokenKind::Ident("c".into()), 1, 11),
+            tok(TokenKind::Eof, 1, 12),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Logical { op, left, right } => {
+                assert_eq!(*op, LogicalOp::Or);
+                assert_eq!(left.node, ExprKind::Ident("a".into()));
+                assert!(matches!(right.node, ExprKind::Logical { op: LogicalOp::And, .. }));
+            }
+            other => panic!("应为 Or，得到 {other:?}"),
+        }
+        // `a && b || c` → Or(And(a, b), c)：同级左结合。
+        let p = parse(&[
+            tok(TokenKind::Ident("a".into()), 1, 1),
+            tok(TokenKind::AndAnd, 1, 3),
+            tok(TokenKind::Ident("b".into()), 1, 6),
+            tok(TokenKind::OrOr, 1, 8),
+            tok(TokenKind::Ident("c".into()), 1, 11),
+            tok(TokenKind::Eof, 1, 12),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Logical { op, left, right } => {
+                assert_eq!(*op, LogicalOp::Or);
+                assert_eq!(right.node, ExprKind::Ident("c".into()));
+                assert!(matches!(left.node, ExprKind::Logical { op: LogicalOp::And, .. }));
+            }
+            other => panic!("应为 Or，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn unary_binds_tighter_than_binary() {
+        // `-a + b` → Add(Neg(a), b)。
+        let p = parse(&[
+            tok(TokenKind::Minus, 1, 1),
+            tok(TokenKind::Ident("a".into()), 1, 2),
+            tok(TokenKind::Plus, 1, 4),
+            tok(TokenKind::Ident("b".into()), 1, 6),
+            tok(TokenKind::Eof, 1, 7),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Binary { op, left, right } => {
+                assert_eq!(*op, BinaryOp::Add);
+                assert!(matches!(left.node, ExprKind::Unary { op: UnaryOp::Neg, .. }));
+                assert_eq!(right.node, ExprKind::Ident("b".into()));
+            }
+            other => panic!("应为 Add，得到 {other:?}"),
+        }
+        // `1 - -2` → Sub(1, Neg(2))：二元 `-` 的右侧仍收一元层。
+        let p = parse(&[
+            tok(TokenKind::Int("1".into()), 1, 1),
+            tok(TokenKind::Minus, 1, 3),
+            tok(TokenKind::Minus, 1, 5),
+            tok(TokenKind::Int("2".into()), 1, 6),
+            tok(TokenKind::Eof, 1, 7),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Binary { op, left, right } => {
+                assert_eq!(*op, BinaryOp::Sub);
+                assert_eq!(left.node, ExprKind::Int(1));
+                assert!(matches!(right.node, ExprKind::Unary { op: UnaryOp::Neg, .. }));
+            }
+            other => panic!("应为 Sub，得到 {other:?}"),
+        }
+        // `!a && b` → And(Not(a), b)：逻辑层的操作数仍为一元层。
+        let p = parse(&[
+            tok(TokenKind::Bang, 1, 1),
+            tok(TokenKind::Ident("a".into()), 1, 2),
+            tok(TokenKind::AndAnd, 1, 4),
+            tok(TokenKind::Ident("b".into()), 1, 7),
+            tok(TokenKind::Eof, 1, 8),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Logical { op, left, right } => {
+                assert_eq!(*op, LogicalOp::And);
+                assert!(matches!(left.node, ExprKind::Unary { op: UnaryOp::Not, .. }));
+                assert_eq!(right.node, ExprKind::Ident("b".into()));
+            }
+            other => panic!("应为 And，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn all_binary_operators_map_to_binaryop() {
+        let cases: &[(TokenKind, BinaryOp)] = &[
+            (TokenKind::Plus, BinaryOp::Add),
+            (TokenKind::Minus, BinaryOp::Sub),
+            (TokenKind::Star, BinaryOp::Mul),
+            (TokenKind::Slash, BinaryOp::Div),
+            (TokenKind::Percent, BinaryOp::Rem),
+            (TokenKind::Lt, BinaryOp::Lt),
+            (TokenKind::Le, BinaryOp::Le),
+            (TokenKind::Gt, BinaryOp::Gt),
+            (TokenKind::Ge, BinaryOp::Ge),
+            (TokenKind::EqEq, BinaryOp::Eq),
+            (TokenKind::NotEq, BinaryOp::Ne),
+        ];
+        for (kind, want) in cases {
+            let p = parse(&[
+                tok(TokenKind::Int("1".into()), 1, 1),
+                tok(kind.clone(), 1, 3),
+                tok(TokenKind::Int("2".into()), 1, 5),
+                tok(TokenKind::Eof, 1, 6),
+            ])
+            .unwrap();
+            match &expr_of(&p).node {
+                ExprKind::Binary { op, left, right } => {
+                    assert_eq!(op, want);
+                    assert_eq!(left.node, ExprKind::Int(1));
+                    assert_eq!(right.node, ExprKind::Int(2));
+                }
+                other => panic!("应为 Binary，得到 {other:?}"),
+            }
+        }
+    }
+
+    // ---- 赋值语句（§7 `assign_stmt` / A21）----
+
+    /// 取程序首条语句的赋值三元组 `(target, op, value)`。
+    fn assign_of(p: &Program) -> (&Lvalue, AssignOp, &Expr) {
+        match &p.stmts[0].node {
+            StmtKind::Assign { target, op, value } => (target, *op, value),
+            other => panic!("应为 Assign，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn assign_simple_identifier() {
+        // `x = 1`。
+        let p = parse(&[
+            tok(TokenKind::Ident("x".into()), 1, 1),
+            tok(TokenKind::Assign, 1, 3),
+            tok(TokenKind::Int("1".into()), 1, 5),
+            tok(TokenKind::Eof, 1, 6),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 1);
+        assert_eq!(p.stmts[0].span, Span::new(1, 1));
+        let (target, op, value) = assign_of(&p);
+        assert_eq!(op, AssignOp::Assign);
+        assert_eq!(target.span, Span::new(1, 1));
+        assert_eq!(target.base, LvalueBase::Name("x".into()));
+        assert!(target.path.is_empty());
+        assert_eq!(value.node, ExprKind::Int(1));
+    }
+
+    #[test]
+    fn assign_each_compound_operator() {
+        // `x += 1` / `y -= 2` / `z *= 3` / `w /= 4` / `v %= 5`。
+        let p = parse(&[
+            tok(TokenKind::Ident("x".into()), 1, 1),
+            tok(TokenKind::PlusAssign, 1, 3),
+            tok(TokenKind::Int("1".into()), 1, 6),
+            tok(TokenKind::Newline, 1, 7),
+            tok(TokenKind::Ident("y".into()), 2, 1),
+            tok(TokenKind::MinusAssign, 2, 3),
+            tok(TokenKind::Int("2".into()), 2, 6),
+            tok(TokenKind::Newline, 2, 7),
+            tok(TokenKind::Ident("z".into()), 3, 1),
+            tok(TokenKind::StarAssign, 3, 3),
+            tok(TokenKind::Int("3".into()), 3, 6),
+            tok(TokenKind::Newline, 3, 7),
+            tok(TokenKind::Ident("w".into()), 4, 1),
+            tok(TokenKind::SlashAssign, 4, 3),
+            tok(TokenKind::Int("4".into()), 4, 6),
+            tok(TokenKind::Newline, 4, 7),
+            tok(TokenKind::Ident("v".into()), 5, 1),
+            tok(TokenKind::PercentAssign, 5, 3),
+            tok(TokenKind::Int("5".into()), 5, 6),
+            tok(TokenKind::Eof, 5, 7),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 5);
+        let wants = [
+            (AssignOp::AddAssign, "x", 1),
+            (AssignOp::SubAssign, "y", 2),
+            (AssignOp::MulAssign, "z", 3),
+            (AssignOp::DivAssign, "w", 4),
+            (AssignOp::RemAssign, "v", 5),
+        ];
+        for (i, (want_op, want_name, want_val)) in wants.iter().enumerate() {
+            match &p.stmts[i].node {
+                StmtKind::Assign { target, op, value } => {
+                    assert_eq!(op, want_op);
+                    assert_eq!(target.base, LvalueBase::Name((*want_name).into()));
+                    assert!(target.path.is_empty());
+                    assert_eq!(value.node, ExprKind::Int(*want_val));
+                }
+                other => panic!("第 {i} 条应为 Assign，得到 {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn assign_to_index_and_field() {
+        // `a[0] = 1` 与 `s.k = 2`（两条语句）。
+        let p = parse(&[
+            tok(TokenKind::Ident("a".into()), 1, 1),
+            tok(TokenKind::LBracket, 1, 2),
+            tok(TokenKind::Int("0".into()), 1, 3),
+            tok(TokenKind::RBracket, 1, 4),
+            tok(TokenKind::Assign, 1, 6),
+            tok(TokenKind::Int("1".into()), 1, 8),
+            tok(TokenKind::Newline, 1, 9),
+            tok(TokenKind::Ident("s".into()), 2, 1),
+            tok(TokenKind::Dot, 2, 2),
+            tok(TokenKind::Ident("k".into()), 2, 3),
+            tok(TokenKind::Assign, 2, 5),
+            tok(TokenKind::Int("2".into()), 2, 7),
+            tok(TokenKind::Eof, 2, 8),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 2);
+        // 第一句：a[0] = 1。
+        match &p.stmts[0].node {
+            StmtKind::Assign { target, op, value } => {
+                assert_eq!(*op, AssignOp::Assign);
+                assert_eq!(target.base, LvalueBase::Name("a".into()));
+                assert_eq!(target.path.len(), 1);
+                assert_eq!(target.path[0].span, Span::new(1, 2)); // `[` 的位置
+                match &target.path[0].kind {
+                    LvalueSegKind::Index(e) => assert_eq!(e.node, ExprKind::Int(0)),
+                    other => panic!("应为 Index，得到 {other:?}"),
+                }
+                assert_eq!(value.node, ExprKind::Int(1));
+            }
+            other => panic!("应为 Assign，得到 {other:?}"),
+        }
+        // 第二句：s.k = 2。
+        match &p.stmts[1].node {
+            StmtKind::Assign { target, op, value } => {
+                assert_eq!(*op, AssignOp::Assign);
+                assert_eq!(target.base, LvalueBase::Name("s".into()));
+                assert_eq!(target.path.len(), 1);
+                assert_eq!(target.path[0].span, Span::new(2, 2)); // `.` 的位置
+                match &target.path[0].kind {
+                    LvalueSegKind::Field(f) => assert_eq!(f, "k"),
+                    other => panic!("应为 Field，得到 {other:?}"),
+                }
+                assert_eq!(value.node, ExprKind::Int(2));
+            }
+            other => panic!("应为 Assign，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn assign_nested_chain_with_compound_op() {
+        // `a.b[0] += 1`：目标 = Name(a) + Field(b) + Index(0)。
+        let p = parse(&[
+            tok(TokenKind::Ident("a".into()), 1, 1),
+            tok(TokenKind::Dot, 1, 2),
+            tok(TokenKind::Ident("b".into()), 1, 3),
+            tok(TokenKind::LBracket, 1, 4),
+            tok(TokenKind::Int("0".into()), 1, 5),
+            tok(TokenKind::RBracket, 1, 6),
+            tok(TokenKind::PlusAssign, 1, 8),
+            tok(TokenKind::Int("1".into()), 1, 11),
+            tok(TokenKind::Eof, 1, 12),
+        ])
+        .unwrap();
+        let (target, op, value) = assign_of(&p);
+        assert_eq!(op, AssignOp::AddAssign);
+        assert_eq!(target.span, Span::new(1, 1));
+        assert_eq!(target.base, LvalueBase::Name("a".into()));
+        assert_eq!(target.path.len(), 2);
+        assert_eq!(target.path[0].span, Span::new(1, 2)); // `.`
+        assert_eq!(target.path[1].span, Span::new(1, 4)); // `[`
+        match &target.path[0].kind {
+            LvalueSegKind::Field(f) => assert_eq!(f, "b"),
+            other => panic!("应为 Field，得到 {other:?}"),
+        }
+        match &target.path[1].kind {
+            LvalueSegKind::Index(e) => assert_eq!(e.node, ExprKind::Int(0)),
+            other => panic!("应为 Index，得到 {other:?}"),
+        }
+        assert_eq!(value.node, ExprKind::Int(1));
+    }
+
+    #[test]
+    fn assign_to_self_field() {
+        // `self.count = 1`：基座 SelfValue（A21）。
+        let p = parse(&[
+            tok(TokenKind::KwSelf, 1, 1),
+            tok(TokenKind::Dot, 1, 5),
+            tok(TokenKind::Ident("count".into()), 1, 6),
+            tok(TokenKind::Assign, 1, 12),
+            tok(TokenKind::Int("1".into()), 1, 14),
+            tok(TokenKind::Eof, 1, 15),
+        ])
+        .unwrap();
+        let (target, op, value) = assign_of(&p);
+        assert_eq!(op, AssignOp::Assign);
+        assert_eq!(target.base, LvalueBase::SelfValue);
+        assert_eq!(target.path.len(), 1);
+        match &target.path[0].kind {
+            LvalueSegKind::Field(f) => assert_eq!(f, "count"),
+            other => panic!("应为 Field，得到 {other:?}"),
+        }
+        assert_eq!(value.node, ExprKind::Int(1));
+    }
+
+    #[test]
+    fn assign_value_may_be_binary_expr() {
+        // `x = 1 + 2 * 3`：右值走完整表达式层。
+        let p = parse(&[
+            tok(TokenKind::Ident("x".into()), 1, 1),
+            tok(TokenKind::Assign, 1, 3),
+            tok(TokenKind::Int("1".into()), 1, 5),
+            tok(TokenKind::Plus, 1, 7),
+            tok(TokenKind::Int("2".into()), 1, 9),
+            tok(TokenKind::Star, 1, 11),
+            tok(TokenKind::Int("3".into()), 1, 13),
+            tok(TokenKind::Eof, 1, 14),
+        ])
+        .unwrap();
+        let (_, op, value) = assign_of(&p);
+        assert_eq!(op, AssignOp::Assign);
+        match &value.node {
+            ExprKind::Binary { op, right, .. } => {
+                assert_eq!(*op, BinaryOp::Add);
+                assert!(matches!(right.node, ExprKind::Binary { op: BinaryOp::Mul, .. }));
+            }
+            other => panic!("应为 Add，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn invalid_assign_target_call() {
+        // `f(x) = 1`：调用不能作为赋值目标（A21）。
+        let err = parse(&[
+            tok(TokenKind::Ident("f".into()), 1, 1),
+            tok(TokenKind::LParen, 1, 2),
+            tok(TokenKind::Ident("x".into()), 1, 3),
+            tok(TokenKind::RParen, 1, 4),
+            tok(TokenKind::Assign, 1, 6),
+            tok(TokenKind::Int("1".into()), 1, 8),
+            tok(TokenKind::Eof, 1, 9),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::InvalidAssignTarget, 1, 1);
+    }
+
+    #[test]
+    fn invalid_assign_target_binary() {
+        // `1 + 2 = 3`：二元表达式不能作为赋值目标。
+        let err = parse(&[
+            tok(TokenKind::Int("1".into()), 1, 1),
+            tok(TokenKind::Plus, 1, 3),
+            tok(TokenKind::Int("2".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::Int("3".into()), 1, 9),
+            tok(TokenKind::Eof, 1, 10),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::InvalidAssignTarget, 1, 1);
+    }
+
+    #[test]
+    fn invalid_assign_target_literal() {
+        // `1 = 2`：字面量不能作为赋值目标。
+        let err = parse(&[
+            tok(TokenKind::Int("1".into()), 1, 1),
+            tok(TokenKind::Assign, 1, 3),
+            tok(TokenKind::Int("2".into()), 1, 5),
+            tok(TokenKind::Eof, 1, 6),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::InvalidAssignTarget, 1, 1);
+    }
+
+    // ---- 回归：二元运算进入既有语法位（声明初值 / 实参 / 下标 / 字段值）----
+
+    #[test]
+    fn binary_in_decl_init() {
+        // `let x = a + b`。
+        let p = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("x".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::Ident("a".into()), 1, 9),
+            tok(TokenKind::Plus, 1, 11),
+            tok(TokenKind::Ident("b".into()), 1, 13),
+            tok(TokenKind::Eof, 1, 14),
+        ])
+        .unwrap();
+        match &decl_init(&p).node {
+            ExprKind::Binary { op, left, right } => {
+                assert_eq!(*op, BinaryOp::Add);
+                assert_eq!(left.node, ExprKind::Ident("a".into()));
+                assert_eq!(right.node, ExprKind::Ident("b".into()));
+            }
+            other => panic!("应为 Add，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn binary_in_call_args_index_and_field_value() {
+        // `f(a + b, i * 2)`：实参中的二元运算。
+        let p = parse(&[
+            tok(TokenKind::Ident("f".into()), 1, 1),
+            tok(TokenKind::LParen, 1, 2),
+            tok(TokenKind::Ident("a".into()), 1, 3),
+            tok(TokenKind::Plus, 1, 5),
+            tok(TokenKind::Ident("b".into()), 1, 7),
+            tok(TokenKind::Comma, 1, 8),
+            tok(TokenKind::Ident("i".into()), 1, 10),
+            tok(TokenKind::Star, 1, 12),
+            tok(TokenKind::Int("2".into()), 1, 14),
+            tok(TokenKind::RParen, 1, 15),
+            tok(TokenKind::Eof, 1, 16),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Call { args, .. } => {
+                assert_eq!(args.len(), 2);
+                assert!(matches!(args[0].node, ExprKind::Binary { op: BinaryOp::Add, .. }));
+                assert!(matches!(args[1].node, ExprKind::Binary { op: BinaryOp::Mul, .. }));
+            }
+            other => panic!("应为 Call，得到 {other:?}"),
+        }
+        // `a[i + 1]`：下标中的二元运算。
+        let p = parse(&[
+            tok(TokenKind::Ident("a".into()), 1, 1),
+            tok(TokenKind::LBracket, 1, 2),
+            tok(TokenKind::Ident("i".into()), 1, 3),
+            tok(TokenKind::Plus, 1, 5),
+            tok(TokenKind::Int("1".into()), 1, 7),
+            tok(TokenKind::RBracket, 1, 8),
+            tok(TokenKind::Eof, 1, 9),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Index { index, .. } => {
+                assert!(matches!(index.node, ExprKind::Binary { op: BinaryOp::Add, .. }));
+            }
+            other => panic!("应为 Index，得到 {other:?}"),
+        }
+        // `let x = { k: 1 + 2 }`：struct 字面量字段值中的二元运算。
+        let p = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("x".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::LBrace, 1, 9),
+            tok(TokenKind::Ident("k".into()), 1, 10),
+            tok(TokenKind::Colon, 1, 11),
+            tok(TokenKind::Int("1".into()), 1, 13),
+            tok(TokenKind::Plus, 1, 15),
+            tok(TokenKind::Int("2".into()), 1, 17),
+            tok(TokenKind::RBrace, 1, 18),
+            tok(TokenKind::Eof, 1, 19),
+        ])
+        .unwrap();
+        match &decl_init(&p).node {
+            ExprKind::StructLit(StructLit { fields, .. }) => {
+                assert_eq!(fields.len(), 1);
+                assert!(matches!(fields[0].value.node, ExprKind::Binary { op: BinaryOp::Add, .. }));
+            }
+            other => panic!("应为 StructLit，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ident_before_brace_still_struct_lit_after_assign_attempt() {
+        // 赋值试探回滚后，`Point { x: 1 }` 语句仍须解析为具名 struct 字面量。
+        let p = parse(&[
+            tok(TokenKind::Ident("Point".into()), 1, 1),
+            tok(TokenKind::LBrace, 1, 7),
+            tok(TokenKind::Ident("x".into()), 1, 8),
+            tok(TokenKind::Colon, 1, 9),
+            tok(TokenKind::Int("1".into()), 1, 11),
+            tok(TokenKind::RBrace, 1, 12),
+            tok(TokenKind::Eof, 1, 13),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::StructLit(StructLit { type_name, .. }) => {
+                assert_eq!(type_name.as_deref(), Some("Point"));
+            }
+            other => panic!("应为 StructLit，得到 {other:?}"),
+        }
     }
 }
