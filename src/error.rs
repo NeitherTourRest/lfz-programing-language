@@ -24,7 +24,7 @@ pub type R<T> = Result<T, Box<LzError>>;
 // 子消息枚举
 // ===========================================================================
 
-/// `SyntaxError` 细分消息 —— `semantics.md` §8.1「`SyntaxError` 细分消息」表，**16 条**。
+/// `SyntaxError` 细分消息 —— `semantics.md` §8.1「`SyntaxError` 细分消息」表，**17 条**。
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum SyntaxMsg {
     /// `非法字符 '{c}'`
@@ -33,6 +33,8 @@ pub enum SyntaxMsg {
     HashPosition,
     /// `字符串字面量在此处未闭合`
     UnterminatedString,
+    /// `块注释在此处未闭合（缺少 '*/'）`
+    UnterminatedBlockComment,
     /// `这里期待 {expected}，但得到 {got}`
     UnexpectedToken { expected: String, got: String },
     /// `表达式未结束：行尾不能终止表达式；请用括号跨行`
@@ -71,6 +73,9 @@ impl SyntaxMsg {
                 "'#' 只能出现在文件首行的前导位；(字符串 / 注释 / 格式说明符内的 '#' 除外)".to_string()
             }
             SyntaxMsg::UnterminatedString => "字符串字面量在此处未闭合".to_string(),
+            SyntaxMsg::UnterminatedBlockComment => {
+                "块注释在此处未闭合（缺少 '*/'）".to_string()
+            }
             SyntaxMsg::UnexpectedToken { expected, got } => {
                 format!("这里期待 {expected}，但得到 {got}")
             }
@@ -657,7 +662,7 @@ mod tests {
     }
 
     #[test]
-    fn syntax_msg_covers_all_sixteen_rows() {
+    fn syntax_msg_covers_all_seventeen_rows() {
         assert_eq!(
             SyntaxMsg::IllegalChar { c: '$' }.message(),
             "非法字符 '$'"
@@ -669,6 +674,10 @@ mod tests {
         assert_eq!(
             SyntaxMsg::UnterminatedString.message(),
             "字符串字面量在此处未闭合"
+        );
+        assert_eq!(
+            SyntaxMsg::UnterminatedBlockComment.message(),
+            "块注释在此处未闭合（缺少 '*/'）"
         );
         assert_eq!(
             SyntaxMsg::UnexpectedToken {

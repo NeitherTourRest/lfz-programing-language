@@ -1,5 +1,24 @@
 # core-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 02:05] P3.3b lexer 第二批（STR / INTERP 模式 + 未闭合块注释裁定）
+- 来源: team-lead 轻量任务书「P3.3b — `src/lexer.rs` 第二批：STR / INTERP 模式（字符串、转义、插值、格式说明符）+ 落地未闭合块注释裁定」
+- 完成: 先落盘再测试（轻量启动，禁止长时间推演）。
+  - 读 `agents/core-dev/STATUS.md` + `syntax.md` §2.8/§2.1-2.4 + `DECISIONS.md` 最新 ADR「未闭合块注释（/* 至 EOF）裁定」+ `semantics.md` §8.1 → 改 `src/error.rs` → 改 `src/lexer.rs` → 编译 → 补单测 → 汇报。
+  - **A. error.rs**：`SyntaxMsg::UnterminatedBlockComment`（无字段）→ `块注释在此处未闭合（缺少 '*/'）`；文档注释 16→17 条；测试改名 `syntax_msg_covers_all_seventeen_rows` 并加断言。
+  - **B. lexer.rs 块注释**：`block_comment() -> R<()>`；未闭合 → `Err(syntax(UnterminatedBlockComment, sp))`，`sp` 指向 `/*` 的 `/`；闭合行为不变。
+  - **C. STR / INTERP**：新增 `Mode { Str, Interp(u32), FormatSpec }` 模式栈（空栈=CODE）；`run()` 按栈顶分发；`code_token()` 顶层 CODE 与 INTERP 共用（`\n`/`{}`/depth==1 `:` 差异化）；`str_text(bool)` 处理 STR 与 FormatSpec 原始模式；`"` 不再 IllegalChar。
+  - **D. 单测**：lexer 31 → 48（+17），覆盖空串/普通串/7 转义/未列举转义/未闭合串（EOF+裸换行）/多段插值/嵌套串/嵌套插值/格式说明符（含空 spec 与原始 `#{a`）/插值裸换行/`#` 在 STR 字面 vs INTERP 报错/`$` 字面/`{}` 字面/EOF 于 interp 与 formatspec/未闭合块注释/闭合块注释对照/跨行 line_base。
+- 产出:
+  - `src/lexer.rs` **27396B → 45149B**（+566/-27）；`src/error.rs` **37129B → 37507B**（+13 行附近）。
+  - 证据：`Get-ChildItem src\lexer.rs,src\error.rs` → `lexer.rs 45149`、`error.rs 37507`；`cargo build`（改 mtime 强制重编）→ `Finished dev profile ... in 1.46s`，**WARNCOUNT=0**，exit 0；`cargo test` → `test result: ok. 135 passed; 0 failed; 0 ignored`，exit 0（117 → 135，+18）。
+  - `git diff --stat -- src/lexer.rs src/error.rs` → `2 files changed, 552 insertions(+), 27 deletions(-)`。
+- 决策:
+  - **模式栈用单一 `Vec<Mode>`（空栈=CODE）**，而非三个独立状态变量；`Str`/`Interp` 交替压栈天然支持任意层「嵌套字符串 × 嵌套插值」。
+  - **格式说明符读到「首个 `}`」**（严格照 §2.8「到匹配 `}` 之间」的最小读法）：`"${x:#{}}"` → spec=`#{`，其后 `}` 属 STR 字面。已在测试中钉死。
+  - **EOF 统一在 `run()` 收尾判定**：栈非空 → `UnterminatedString`，避免三处重复。
+  - 未闭合转义 `\` 后紧跟 EOF → `UnterminatedString`（字符串必然未闭合；spec 未单列）。
+- 下一步: 等 team-lead 派 P3.4a AST / P3.5 parser（消费完整 lexer 记号流）。
+- 阻塞: 无。历史契约缺口（未闭合块注释）已由 architect ADR 裁定并在本批落地。
 ## [2026-09-24 00:35] P3.9a 契约缺口闭合：`ValueMsg` 新增 2 变体（core-dev 侧）
 - 来源: team-lead 轻量任务「按 architect 裁定，`src/error.rs` 新增 2 个 `ValueMsg` 变体（含 `message()` 分支与单测）」
 - 完成: 先读 `DECISIONS.md` 最新 ADR「[2026-09-24 00:20] [language-architect] P3.9a 契约缺口闭合（6 项）」第 1/2 项 + `docs/spec/semantics.md` §8.1 表与新增细分消息表 → 改 `src/error.rs` → 编译 → 补单测 → 汇报。

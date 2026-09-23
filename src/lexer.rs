@@ -4,10 +4,12 @@
 //! 2.5 空白与换行 / 2.6 标识符与关键字 / 2.7 数值字面量 / 2.8 字符串与插值），
 //! 以及 `docs/spec/interface-contract.md` §10.2（Span）/ §10.6（模块分工）。
 //!
-//! **本批范围（P3.3a）**：CODE 模式下的核心记号 —— 空白 / 注释 / 换行 /
-//! 标识符 / 关键字 / 保留字 / 数值字面量 / 运算符与分隔符。
-//! **本批不含**：字符串与插值（`"` / `${` / `FORMAT_SPEC`，模式栈 CODE/STR/INTERP）
-//! —— 留待 P3.3b；本批遇 `"` 暂时按 `IllegalChar('"')` 兜底。
+//! **本批范围**：
+//! - P3.3a：CODE 模式下的核心记号 —— 空白 / 注释 / 换行 / 标识符 / 关键字 /
+//!   保留字 / 数值字面量 / 运算符与分隔符。
+//! - P3.3b：字符串与插值（`syntax.md` §2.8）—— 模式栈 `CODE` / `STR` / `INTERP`
+//!   （外加格式说明符原始模式），产出 `StrBegin` / `Text` / `InterpBegin` /
+//!   `FormatSpec` / `InterpEnd` / `StrEnd`。
 //!
 //! 位置语义（§10.2）：`line` = **本地行号 + `line_base`**；`col` 为 1-based、
 //! 按 **Unicode 标量**计数（非字节偏移）。
@@ -26,7 +28,7 @@ pub enum TokenKind {
     /// 标识符（仅 ASCII）。
     Ident(String),
 
-    // ---- 字符串 / 插值（P3.3b 产出；本批仅定义，不产生）----
+    // ---- 字符串 / 插值（P3.3b 产出；`syntax.md` §2.8）----
     /// 字符串开始 `"`。
     StrBegin,
     /// 字符串结束 `"`。
@@ -169,6 +171,20 @@ pub fn lex(text: &str, line_base: u32) -> R<Vec<Token>> {
     Lexer::new(text, line_base).run()
 }
 
+/// 模式栈条目的词法模式（`syntax.md` §2.8）。
+///
+/// 栈为空 = **CODE**（顶层）；`Str` = 字符串文本；`Interp(d)` = 插值表达式
+/// （`d` 为花括号深度，进入时置 1）；`FormatSpec` = `:` 之后的格式说明符原始模式。
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum Mode {
+    /// 字符串文本模式（STR）。
+    Str,
+    /// 插值表达式模式（INTERP），携带花括号深度。
+    Interp(u32),
+    /// 格式说明符原始模式（自 `:` 后到匹配 `}`，不解析记号）。
+    FormatSpec,
+}
+
 struct Lexer {
     chars: Vec<char>,
     pos: usize,
@@ -177,6 +193,8 @@ struct Lexer {
     /// 列号（1-based，按 Unicode 标量计数）。
     col: u32,
     line_base: u32,
+    /// 模式栈；空 = CODE（顶层）。
+    modes: Vec<Mode>,
     out: Vec<Token>,
 }
 
@@ -188,6 +206,7 @@ impl Lexer {
             line: 1,
             col: 1,
             line_base,
+            modes: Vec::new(),
             out: Vec::new(),
         }
     }
@@ -241,26 +260,205 @@ impl Lexer {
     }
 
     fn run(mut self) -> R<Vec<Token>> {
-        while let Some(c) = self.peek() {
-            match c {
-                ' ' | '\t' | '\r' => {
-                    self.bump();
-                }
-                '\n' => {
-                    let sp = self.span();
-                    self.bump();
-                    self.push(TokenKind::Newline, sp);
-                }
-                '/' if self.peek_at(1) == Some('/') => self.line_comment(),
-                '/' if self.peek_at(1) == Some('*') => self.block_comment(),
-                c if c.is_ascii_digit() => self.number(),
-                c if c.is_ascii_alphabetic() || c == '_' => self.ident_or_keyword(),
-                _ => self.punct_or_error()?,
+        loop {
+            if self.peek().is_none() {
+                break;
             }
+            match self.modes.last() {
+                None => self.code_token()?,
+                Some(Mode::Str) => self.str_text(false)?,
+                Some(Mode::Interp(_)) => self.code_token()?,
+                Some(Mode::FormatSpec) => self.str_text(true)?,
+            }
+        }
+        // EOF 时仍停留在字符串 / 插值 / 格式说明符内 → 字符串未闭合（§2.8）。
+        if !self.modes.is_empty() {
+            let sp = self.span();
+            return Err(syntax(SyntaxMsg::UnterminatedString, sp));
         }
         let sp = self.span();
         self.push(TokenKind::Eof, sp);
         Ok(self.out)
+    }
+
+    /// 当前是否处于插值模式（栈顶为 `INTERP`）。
+    fn interp_depth(&self) -> Option<u32> {
+        match self.modes.last() {
+            Some(Mode::Interp(d)) => Some(*d),
+            _ => None,
+        }
+    }
+
+    /// CODE 模式（顶层或插值内）的一个记号。
+    ///
+    /// 插值内（`INTERP`）与顶层 `CODE` 共用本函数，差异由模式栈细化：
+    /// `\n` → 插值报错；`{` / `}` → 深度记账；depth==1 的 `:` → 格式说明符。
+    fn code_token(&mut self) -> R<()> {
+        let c = self.peek().unwrap_or('\0');
+        match c {
+            ' ' | '\t' | '\r' => {
+                self.bump();
+                Ok(())
+            }
+            '\n' => {
+                if self.interp_depth().is_some() {
+                    return Err(syntax(SyntaxMsg::InterpolationNewline, self.span()));
+                }
+                let sp = self.span();
+                self.bump();
+                self.push(TokenKind::Newline, sp);
+                Ok(())
+            }
+            // 字符串开始（顶层 CODE 与 INTERP 内一致；INTERP 内即嵌套字符串）。
+            '"' => {
+                let sp = self.span();
+                self.bump();
+                self.push(TokenKind::StrBegin, sp);
+                self.modes.push(Mode::Str);
+                Ok(())
+            }
+            // 插值内的花括号深度记账。
+            '{' if self.interp_depth().is_some() => {
+                let sp = self.span();
+                self.bump();
+                if let Some(Mode::Interp(d)) = self.modes.last_mut() {
+                    *d += 1;
+                }
+                self.push(TokenKind::LBrace, sp);
+                Ok(())
+            }
+            '}' if self.interp_depth().is_some() => {
+                let sp = self.span();
+                self.bump();
+                let depth = match self.modes.last_mut() {
+                    Some(Mode::Interp(d)) => {
+                        *d -= 1;
+                        *d
+                    }
+                    _ => 0,
+                };
+                if depth == 0 {
+                    self.push(TokenKind::InterpEnd, sp);
+                    self.modes.pop();
+                } else {
+                    self.push(TokenKind::RBrace, sp);
+                }
+                Ok(())
+            }
+            // depth==1（插值顶层）的首个 `:` → 转格式说明符原始模式。
+            ':' if self.interp_depth() == Some(1) => {
+                let sp = self.span();
+                self.bump();
+                self.push(TokenKind::Colon, sp);
+                self.modes.push(Mode::FormatSpec);
+                Ok(())
+            }
+            '/' if self.peek_at(1) == Some('/') => {
+                self.line_comment();
+                Ok(())
+            }
+            '/' if self.peek_at(1) == Some('*') => self.block_comment(),
+            c if c.is_ascii_digit() => {
+                self.number();
+                Ok(())
+            }
+            c if c.is_ascii_alphabetic() || c == '_' => {
+                self.ident_or_keyword();
+                Ok(())
+            }
+            _ => self.punct_or_error(),
+        }
+    }
+
+    /// `STR` 模式（`format_spec == false`）或格式说明符原始模式（`true`）的一个片段。
+    ///
+    /// - `STR`：累积文本 → `Text`；`${` → `InterpBegin` 并压 `INTERP`；`"` → `StrEnd`；
+    ///   转义解码；裸 `\n` → `UnterminatedString`。
+    /// - `FormatSpec`：自 `:` 之后**原样**读到 `}`（不解析 `#` / `{}` / 转义），
+    ///   发 `FormatSpec`（可为空串）后发 `InterpEnd` 并弹出 `FormatSpec` 与 `INTERP`。
+    fn str_text(&mut self, format_spec: bool) -> R<()> {
+        let sp = self.span();
+        let mut text = String::new();
+        loop {
+            let c = match self.peek() {
+                Some(c) => c,
+                // EOF：由 `run` 统一报「字符串未闭合」。
+                None => return Ok(()),
+            };
+            if format_spec {
+                match c {
+                    '}' => {
+                        self.push(TokenKind::FormatSpec(std::mem::take(&mut text)), sp);
+                        let sp2 = self.span();
+                        self.bump();
+                        self.push(TokenKind::InterpEnd, sp2);
+                        self.modes.pop(); // FormatSpec
+                        self.modes.pop(); // Interp
+                        return Ok(());
+                    }
+                    '\n' => return Err(syntax(SyntaxMsg::InterpolationNewline, self.span())),
+                    _ => {
+                        self.bump();
+                        text.push(c);
+                    }
+                }
+                continue;
+            }
+            match c {
+                '"' => {
+                    self.flush_text(&text, sp);
+                    let sp2 = self.span();
+                    self.bump();
+                    self.push(TokenKind::StrEnd, sp2);
+                    self.modes.pop();
+                    return Ok(());
+                }
+                '\n' => return Err(syntax(SyntaxMsg::UnterminatedString, self.span())),
+                '$' if self.peek_at(1) == Some('{') => {
+                    self.flush_text(&text, sp);
+                    let sp2 = self.span();
+                    self.bump(); // '$'
+                    self.bump(); // '{'
+                    self.push(TokenKind::InterpBegin, sp2);
+                    self.modes.push(Mode::Interp(1));
+                    return Ok(());
+                }
+                '\\' => {
+                    let esc_sp = self.span();
+                    self.bump(); // '\\'
+                    let e = match self.peek() {
+                        Some(e) => e,
+                        None => return Err(syntax(SyntaxMsg::UnterminatedString, self.span())),
+                    };
+                    let decoded = match e {
+                        'n' => '\n',
+                        't' => '\t',
+                        'r' => '\r',
+                        '\\' => '\\',
+                        '"' => '"',
+                        'e' => '\u{1B}',
+                        '$' => '$',
+                        other => {
+                            return Err(syntax(SyntaxMsg::UnknownEscape { c: other }, esc_sp));
+                        }
+                    };
+                    self.bump();
+                    text.push(decoded);
+                }
+                // 其余字符（含 `{` `}` `#` 与未成 `${` 的 `$`）按字面入文本。
+                _ => {
+                    self.bump();
+                    text.push(c);
+                }
+            }
+        }
+    }
+
+    /// 仅当文本非空时发出 `TEXT` 片段。
+    fn flush_text(&mut self, text: &str, sp: Span) {
+        if !text.is_empty() {
+            self.push(TokenKind::Text(text.to_string()), sp);
+        }
     }
 
     /// `// … 到行尾`（不含行尾换行）。
@@ -273,20 +471,21 @@ impl Lexer {
         }
     }
 
-    /// `/* … */`，不可嵌套；等价于一个空格，不产生 `Newline`（§2.4）。
-    fn block_comment(&mut self) {
+    /// `/* … */`，不可嵌套；**已闭合**时等价于一个空格，不产生 `Newline`（§2.4）。
+    /// 未闭合（`/*` 至 EOF 仍无 `*/`）→ `UnterminatedBlockComment`，`span` 指向 `/*` 的 `/`。
+    fn block_comment(&mut self) -> R<()> {
+        let sp = self.span();
         self.bump(); // '/'
         self.bump(); // '*'
         while let Some(c) = self.peek() {
             if c == '*' && self.peek_at(1) == Some('/') {
                 self.bump();
                 self.bump();
-                return;
+                return Ok(());
             }
             self.bump();
         }
-        // EOF 处仍未闭合：`SyntaxMsg` 无对应变体（契约缺口，见汇报）。
-        // 本批按「消费至 EOF、等价一个空白」处理，不发明新错误。
+        Err(syntax(SyntaxMsg::UnterminatedBlockComment, sp))
     }
 
     /// 数值字面量（§2.7），原文保留。
@@ -826,8 +1025,325 @@ mod tests {
         assert_eq!(err_of("@").0, SyntaxMsg::IllegalChar { c: '@' });
         assert_eq!(err_of("?").0, SyntaxMsg::IllegalChar { c: '?' });
         assert_eq!(err_of("a ? b").0, SyntaxMsg::IllegalChar { c: '?' });
-        // 本批字符串未实现：`"` 暂按非法字符兜底（P3.3b 替换）
-        assert_eq!(err_of("\"").0, SyntaxMsg::IllegalChar { c: '"' });
+        // P3.3b 后 `"` 不再是非法字符（进入 STR 模式）
+        assert_eq!(err_of("\"").0, SyntaxMsg::UnterminatedString);
+    }
+
+    // ---- 字符串与插值（§2.8，P3.3b）----
+
+    #[test]
+    fn empty_string_is_begin_end() {
+        assert_eq!(
+            kinds_no_eof("\"\""),
+            vec![TokenKind::StrBegin, TokenKind::StrEnd]
+        );
+    }
+
+    #[test]
+    fn plain_string_is_one_text_fragment() {
+        assert_eq!(
+            kinds_no_eof("\"hello world\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::Text("hello world".into()),
+                TokenKind::StrEnd,
+            ]
+        );
+    }
+
+    #[test]
+    fn every_escape_decodes() {
+        let cases = [
+            ("\\n", '\n'),
+            ("\\t", '\t'),
+            ("\\r", '\r'),
+            ("\\\\", '\\'),
+            ("\\\"", '"'),
+            ("\\e", '\u{1B}'),
+            ("\\$", '$'),
+        ];
+        for (src, ch) in cases {
+            let src = format!("\"a{src}b\"");
+            assert_eq!(
+                kinds_no_eof(&src),
+                vec![
+                    TokenKind::StrBegin,
+                    TokenKind::Text(format!("a{ch}b")),
+                    TokenKind::StrEnd,
+                ],
+                "src={src}"
+            );
+        }
+    }
+
+    #[test]
+    fn escaped_dollar_is_literal_not_interp() {
+        assert_eq!(
+            kinds_no_eof("\"\\${x}\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::Text("${x}".into()),
+                TokenKind::StrEnd,
+            ]
+        );
+    }
+
+    #[test]
+    fn unknown_escape_is_error_at_backslash() {
+        assert_eq!(err_of("\"\\q\"").0, SyntaxMsg::UnknownEscape { c: 'q' });
+        assert_eq!(err_of("\"\\q\"").1, Span::new(1, 2));
+        assert_eq!(err_of("\"\\{\"").0, SyntaxMsg::UnknownEscape { c: '{' });
+        assert_eq!(err_of("\"\\'\"").0, SyntaxMsg::UnknownEscape { c: '\'' });
+        assert_eq!(err_of("\"\\0\"").0, SyntaxMsg::UnknownEscape { c: '0' });
+    }
+
+    #[test]
+    fn unterminated_string_at_eof_and_newline() {
+        assert_eq!(err_of("\"abc").0, SyntaxMsg::UnterminatedString);
+        assert_eq!(err_of("\"abc").1, Span::new(1, 5));
+        // 裸换行：位置指向该 `\n`
+        assert_eq!(err_of("\"a\nb\"").0, SyntaxMsg::UnterminatedString);
+        assert_eq!(err_of("\"a\nb\"").1, Span::new(1, 3));
+    }
+
+    #[test]
+    fn interpolation_single_and_multi_segment() {
+        assert_eq!(
+            kinds_no_eof("\"a${x}b\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::Text("a".into()),
+                TokenKind::InterpBegin,
+                TokenKind::Ident("x".into()),
+                TokenKind::InterpEnd,
+                TokenKind::Text("b".into()),
+                TokenKind::StrEnd,
+            ]
+        );
+        // 无文本片段的插值
+        assert_eq!(
+            kinds_no_eof("\"${x}\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::InterpBegin,
+                TokenKind::Ident("x".into()),
+                TokenKind::InterpEnd,
+                TokenKind::StrEnd,
+            ]
+        );
+    }
+
+    #[test]
+    fn nested_interpolation_and_nested_string() {
+        // 插值内花括号 → 深度记账（LBrace / RBrace）
+        assert_eq!(
+            kinds_no_eof("\"${{a}}\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::InterpBegin,
+                TokenKind::LBrace,
+                TokenKind::Ident("a".into()),
+                TokenKind::RBrace,
+                TokenKind::InterpEnd,
+                TokenKind::StrEnd,
+            ]
+        );
+        // 嵌套字符串：`"a${ "b" }c"`
+        assert_eq!(
+            kinds_no_eof("\"a${ \"b\" }c\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::Text("a".into()),
+                TokenKind::InterpBegin,
+                TokenKind::StrBegin,
+                TokenKind::Text("b".into()),
+                TokenKind::StrEnd,
+                TokenKind::InterpEnd,
+                TokenKind::Text("c".into()),
+                TokenKind::StrEnd,
+            ]
+        );
+        // 嵌套字符串内再插值
+        assert_eq!(
+            kinds_no_eof("\"a${ \"b${y}\" }c\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::Text("a".into()),
+                TokenKind::InterpBegin,
+                TokenKind::StrBegin,
+                TokenKind::Text("b".into()),
+                TokenKind::InterpBegin,
+                TokenKind::Ident("y".into()),
+                TokenKind::InterpEnd,
+                TokenKind::StrEnd,
+                TokenKind::InterpEnd,
+                TokenKind::Text("c".into()),
+                TokenKind::StrEnd,
+            ]
+        );
+    }
+
+    #[test]
+    fn format_spec_is_raw_until_brace() {
+        assert_eq!(
+            kinds_no_eof("\"${x:>3}\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::InterpBegin,
+                TokenKind::Ident("x".into()),
+                TokenKind::Colon,
+                TokenKind::FormatSpec(">3".into()),
+                TokenKind::InterpEnd,
+                TokenKind::StrEnd,
+            ]
+        );
+        // 空格式说明符允许
+        assert_eq!(
+            kinds_no_eof("\"${x:}\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::InterpBegin,
+                TokenKind::Ident("x".into()),
+                TokenKind::Colon,
+                TokenKind::FormatSpec(String::new()),
+                TokenKind::InterpEnd,
+                TokenKind::StrEnd,
+            ]
+        );
+        // 原始模式：`#` / `{` 均按字面（到**首个** `}` 为止）
+        assert_eq!(
+            kinds_no_eof("\"${x:#{a}\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::InterpBegin,
+                TokenKind::Ident("x".into()),
+                TokenKind::Colon,
+                TokenKind::FormatSpec("#{a".into()),
+                TokenKind::InterpEnd,
+                TokenKind::StrEnd,
+            ]
+        );
+        // depth>1 的 `:` 仍是普通 Colon（不触发格式说明符）
+        assert_eq!(
+            kinds_no_eof("\"${{x:y}}\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::InterpBegin,
+                TokenKind::LBrace,
+                TokenKind::Ident("x".into()),
+                TokenKind::Colon,
+                TokenKind::Ident("y".into()),
+                TokenKind::RBrace,
+                TokenKind::InterpEnd,
+                TokenKind::StrEnd,
+            ]
+        );
+    }
+
+    #[test]
+    fn interpolation_bare_newline_is_error() {
+        assert_eq!(
+            err_of("\"${x\n}\"").0,
+            SyntaxMsg::InterpolationNewline
+        );
+        assert_eq!(err_of("\"${x\n}\"").1, Span::new(1, 5));
+        // 插值字符串内裸换行仍是字符串未闭合
+        assert_eq!(err_of("\"${ \"a\n\" }\"").0, SyntaxMsg::UnterminatedString);
+    }
+
+    #[test]
+    fn hash_is_literal_in_str_but_error_in_interp() {
+        // STR 内 `#` 字面
+        assert_eq!(
+            kinds_no_eof("\"#42\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::Text("#42".into()),
+                TokenKind::StrEnd,
+            ]
+        );
+        // INTERP 内 `#` 非法
+        assert_eq!(err_of("\"${x#y}\"").0, SyntaxMsg::HashPosition);
+        // 格式说明符内 `#` 字面（上面的 format_spec 测试已覆盖，此处补一条独立）
+        assert_eq!(
+            kinds_no_eof("\"${x:#}\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::InterpBegin,
+                TokenKind::Ident("x".into()),
+                TokenKind::Colon,
+                TokenKind::FormatSpec("#".into()),
+                TokenKind::InterpEnd,
+                TokenKind::StrEnd,
+            ]
+        );
+    }
+
+    #[test]
+    fn dollar_without_brace_is_literal() {
+        assert_eq!(
+            kinds_no_eof("\"a$b\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::Text("a$b".into()),
+                TokenKind::StrEnd,
+            ]
+        );
+    }
+
+    #[test]
+    fn braces_are_literal_in_str() {
+        assert_eq!(
+            kinds_no_eof("\"{a} # b\""),
+            vec![
+                TokenKind::StrBegin,
+                TokenKind::Text("{a} # b".into()),
+                TokenKind::StrEnd,
+            ]
+        );
+    }
+
+    #[test]
+    fn unmatched_interp_brace_at_eof_is_unterminated() {
+        assert_eq!(err_of("\"${x").0, SyntaxMsg::UnterminatedString);
+        // EOF 落在格式说明符内同样报字符串未闭合
+        assert_eq!(err_of("\"${x:").0, SyntaxMsg::UnterminatedString);
+    }
+
+    // ---- 未闭合块注释（v1 补钉 ADR）----
+
+    #[test]
+    fn unterminated_block_comment_is_error_at_slash() {
+        let (msg, span) = err_of("/* abc");
+        assert_eq!(msg, SyntaxMsg::UnterminatedBlockComment);
+        assert_eq!(span, Span::new(1, 1));
+        // 代码之后再开未闭合块注释：位置指向 `/*` 的 `/`
+        assert_eq!(err_of("x\n  /* y").1, Span::new(2, 3));
+    }
+
+    #[test]
+    fn closed_block_comment_still_acts_as_space() {
+        // 对照：已闭合块注释行为不变（不报错）
+        assert_eq!(
+            kinds_no_eof("/* a */x"),
+            vec![TokenKind::Ident("x".into())]
+        );
+    }
+
+    // ---- 字符串跨行与 line_base ----
+
+    #[test]
+    fn line_base_holds_across_string_interp() {
+        // 字符串在 body 第 2 行（line_base=1）+ 插值内标识符位置
+        let src = "\"abc\"\n\"${xy}\"";
+        let t = lex(src, 1).unwrap();
+        assert_eq!(t[0].kind, TokenKind::StrBegin);
+        assert_eq!(t[0].span, Span::new(2, 1)); // \"abc\" 的 StrBegin 在第 2 行
+        assert_eq!(t[3].kind, TokenKind::Newline);
+        assert_eq!(t[4].kind, TokenKind::StrBegin);
+        assert_eq!(t[4].span, Span::new(3, 1)); // 第二个字符串在第 3 行第 1 列
+        assert_eq!(t[6].kind, TokenKind::Ident("xy".into()));
+        assert_eq!(t[6].span, Span::new(3, 4)); // 插值内 `xy`
     }
 
     #[test]
