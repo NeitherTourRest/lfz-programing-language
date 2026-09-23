@@ -629,6 +629,12 @@ fn b_drop(args: &[Value], span: Span) -> R<Value> {
 // struct / 字典
 // ===========================================================================
 
+/// **数据字段**判定（A5）：值非函数即数据字段——`keys` / `values` / `entries` / `has` / `len` / `del`
+/// 共用同一谓词，保证字段集合一致。
+fn is_data_field(v: &Value) -> bool {
+    !matches!(v, Value::Func(_))
+}
+
 /// `keys(s) -> array[string]`：**数据字段**键，**字节序升序**（A5/B3）。
 fn b_keys(args: &[Value], span: Span) -> R<Value> {
     let s = need_struct("keys", args, 0, span)?;
@@ -669,20 +675,19 @@ fn b_entries(args: &[Value], span: Span) -> R<Value> {
 fn b_has(args: &[Value], span: Span) -> R<Value> {
     let k = need_str("has", args, 0, span)?;
     let s = need_struct("has", args, 1, span)?;
-    let present = s
-        .borrow()
-        .raw_fields()
-        .iter()
-        .any(|(key, v)| key == k && !matches!(v, Value::Func(_)));
+    let present = s.borrow().raw_fields().iter().any(|(key, v)| key == k && is_data_field(v));
     Ok(Value::Bool(present))
 }
 
-/// `del(k, s) -> struct`：去掉 `k` 的**新** struct；缺失 → `FieldError`。
+/// `del(k, s) -> struct`：去掉 `k`（**仅数据字段**）的**新** struct；缺失 → `FieldError`。
+///
+/// §4.5.9 补钉：`del` 属**数据面**操作，字段集合与 `has` / `keys` / `len` 完全一致；`k` 为
+/// **方法字段**（函数值字段）时**视为缺失** → `FieldError`。不变量：**`del(k,s)` 成功 ⟺ `has(k,s)`**。
 fn b_del(args: &[Value], span: Span) -> R<Value> {
     let k = need_str("del", args, 0, span)?;
     let s = need_struct("del", args, 1, span)?;
     let raw = s.borrow().raw_fields().to_vec();
-    if !raw.iter().any(|(key, _)| key == k) {
+    if !raw.iter().any(|(key, v)| key == k && is_data_field(v)) {
         return Err(field_error(k.to_string(), span));
     }
     let fields: Vec<(String, Value)> = raw.into_iter().filter(|(key, _)| key != k).collect();
@@ -876,14 +881,7 @@ fn b_rand_int(args: &[Value], span: Span) -> R<Value> {
     let lo = need_int("randInt", args, 0, span)?;
     let hi = need_int("randInt", args, 1, span)?;
     if lo >= hi {
-        return Err(value_error(
-            ValueMsg::Convert {
-                src: "int".to_string(),
-                dst: "int".to_string(),
-                text: format!("{lo} >= {hi}"),
-            },
-            span,
-        ));
+        return Err(value_error(ValueMsg::BadRange { lo, hi }, span));
     }
     let width = (hi as i128 - lo as i128) as u128; // > 0
     let r = (next_u64() as u128) % width;
@@ -1075,18 +1073,13 @@ fn b_fail(args: &[Value], span: Span) -> R<Value> {
 // 契约缺口（非阻塞）辅助
 // ===========================================================================
 
-/// `min` / `max` 空数组的 `ValueError`。
+/// `min` / `max` 空数组的 `ValueError`（§8.1 补钉：`空数组没有极值（{func}）`）。
 ///
-/// ⚠️ **契约缺口（非阻塞）**：§10.7 规定「空 → `ValueError`」，但 `semantics.md` §8.1 的 `ValueError`
-/// 消息模板只有 `无法把 {src} 转换为 {dst}（'{text}'）` 与 `格式说明符非法：'{spec}'`，**均不适用于**
-/// 「空集合取极值」。`error.rs` 的 `ValueMsg` 为只读的冻结枚举，无法新增变体，故此处以唯一可用的
-/// `Convert` 承载，`text` 写明「空数组」。已列入收工汇报「需支持」，待 language-architect 补钉后改。
+/// `name` = 内置名（`min` / `max`；P3.9b 的 `minBy` / `maxBy` 同此口径）。
 fn empty_collection_value_error(name: &str, span: Span) -> Box<LzError> {
     value_error(
-        ValueMsg::Convert {
-            src: "array".to_string(),
-            dst: name.to_string(),
-            text: "空数组".to_string(),
+        ValueMsg::EmptyExtremum {
+            func: name.to_string(),
         },
         span,
     )
@@ -1200,7 +1193,9 @@ mod tests {
         assert_eq!(ok("insert", &[i(2), i(9), xs.clone()]).to_string(), "[1, 2, 9]"); // i == len
         assert_eq!(xs.to_string(), "[1, 2]");
         assert_eq!(cls("insert", &[i(3), i(9), xs.clone()]), "IndexError"); // i > len
-        assert_eq!(cls("insert", &[i(-1), i(9), xs]), "IndexError"); // 负索引不支持
+        assert_eq!(msg("insert", &[i(3), i(9), xs.clone()]), "下标 3 越界（长度 2）");
+        assert_eq!(cls("insert", &[i(-1), i(9), xs.clone()]), "IndexError"); // 负索引不支持
+        assert_eq!(msg("insert", &[i(-1), i(9), xs]), "下标 -1 越界（长度 2）"); // idx = 实参原值
     }
 
     #[test]
@@ -1234,9 +1229,11 @@ mod tests {
         // 全序：NaN 排最后（§4.5.6）。
         assert_eq!(ok("max", &[arr(vec![f(1.0), f(f64::NAN), f(2.0)])]).to_string(), "nan");
         assert_eq!(ok("min", &[arr(vec![f(f64::NAN), f(1.0)])]).to_string(), "1.0");
-        // 空 → ValueError。
+        // 空 → ValueError（§8.1 补钉：`空数组没有极值（{func}）`）。
         assert_eq!(cls("min", &[arr(vec![])]), "ValueError");
         assert_eq!(cls("max", &[arr(vec![])]), "ValueError");
+        assert_eq!(msg("min", &[arr(vec![])]), "空数组没有极值（min）");
+        assert_eq!(msg("max", &[arr(vec![])]), "空数组没有极值（max）");
         // 类型不一致 → TypeError。
         assert_eq!(cls("min", &[arr(vec![i(1), s("a")])]), "TypeError");
         assert_eq!(cls("max", &[arr(vec![Value::Bool(true), Value::Bool(false)])]), "TypeError");
@@ -1347,9 +1344,27 @@ mod tests {
             _ => panic!("应为 struct"),
         }
         assert_eq!(cls("del", &[s("z"), v.clone()]), "FieldError");
-        // 方法字段可被 del（原样移除）。
+        assert_eq!(msg("del", &[s("z"), v.clone()]), "结构体没有字段 'z'");
+        // §4.5.9 补钉：`del` 仅作用于**数据字段**；方法字段视为缺失 → FieldError。
         let with_method = st(vec![("a", i(1)), ("m", fnval())]);
-        assert_eq!(ok("del", &[s("m"), with_method]).to_string(), "{a: 1}");
+        assert_eq!(cls("del", &[s("m"), with_method.clone()]), "FieldError");
+        assert_eq!(msg("del", &[s("m"), with_method.clone()]), "结构体没有字段 'm'");
+        assert_eq!(ok("del", &[s("a"), with_method]).to_string(), "{}"); // 数据字段可删
+    }
+
+    /// §4.5.9 不变量：**`del(k, s)` 成功 ⟺ `has(k, s) == true`**（对数据字段 / 方法字段 / 缺失键逐例验证）。
+    #[test]
+    fn del_succeeds_iff_has_is_true() {
+        let v = st(vec![("a", i(1)), ("m", fnval())]);
+        for k in ["a", "m", "z"] {
+            let has = ok("has", &[s(k), v.clone()]).to_string();
+            let del_ok = run("del", &[s(k), v.clone()]).is_ok();
+            assert_eq!(
+                del_ok,
+                has == "true",
+                "不变量破坏：has({k})={has}, del({k}) 成功={del_ok}"
+            );
+        }
     }
 
     #[test]
@@ -1428,6 +1443,15 @@ mod tests {
         assert_eq!(cls("floor", &[s("x")]), "TypeError");
         assert_eq!(cls("ceil", &[arr(vec![])]), "TypeError");
         assert_eq!(cls("round", &[Value::Nil]), "TypeError");
+        // §10.7 补钉：`NaN` / `±Inf` / 超界复用 `int(float)` 口径（§4.5.7）。
+        for name in ["floor", "ceil", "round"] {
+            assert_eq!(cls(name, &[f(f64::NAN)]), "ValueError", "{name}(NaN)");
+            assert_eq!(msg(name, &[f(f64::NAN)]), "无法把 float 转换为 int（'nan'）", "{name}(NaN)");
+            assert_eq!(cls(name, &[f(f64::INFINITY)]), "OverflowError", "{name}(+inf)");
+            assert_eq!(cls(name, &[f(f64::NEG_INFINITY)]), "OverflowError", "{name}(-inf)");
+            assert_eq!(cls(name, &[f(1e30)]), "OverflowError", "{name}(超 i64)");
+            assert_eq!(cls(name, &[f(-1e30)]), "OverflowError", "{name}(超 i64 负)");
+        }
     }
 
     #[test]
@@ -1475,6 +1499,9 @@ mod tests {
         assert!(matches!(ok("randInt", &[i(i64::MIN), i(i64::MAX)]), Value::Int(_)));
         assert_eq!(cls("randInt", &[i(5), i(5)]), "ValueError");
         assert_eq!(cls("randInt", &[i(7), i(3)]), "ValueError");
+        assert_eq!(msg("randInt", &[i(5), i(5)]), "区间非法：5 >= 5");
+        assert_eq!(msg("randInt", &[i(7), i(3)]), "区间非法：7 >= 3");
+        assert_eq!(msg("randInt", &[i(-1), i(-4)]), "区间非法：-1 >= -4");
         assert_eq!(cls("randInt", &[s("a"), i(3)]), "TypeError");
         assert_eq!(cls("rand", &[i(1)]), "TypeError"); // 0 参
         assert_eq!(cls("seed", &[]), "TypeError"); // 1 参

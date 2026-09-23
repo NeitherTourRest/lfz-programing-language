@@ -1,5 +1,21 @@
 # runtime-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24] P3.9a 契约缺口闭合 — `src/builtins.rs`（清单 3/4/5 落地）
+- 来源: team-lead 任务书「改造 `src/builtins.rs`（P3.9a 缺口的代码落地，清单 3/4/5）」，依据 ADR [2026-09-24 00:20] language-architect「P3.9a 契约缺口闭合（6 项）」。
+- 完成（逐条）:
+  1. `min`/`max` 空数组 → `ValueMsg::EmptyExtremum { func }`（不再 `Convert` 兜底）：`empty_collection_value_error`（L1079）改用新变体；消息 `空数组没有极值（min）` / `（max）`。
+  2. `randInt(lo>=hi)` → `ValueMsg::BadRange { lo, hi }`：`b_rand_int`（L884）；消息 `区间非法：5 >= 5`。
+  3. `del(k,s)` 仅作用于数据字段：`b_del`（L686）判定由 `raw_fields`「存在即删」改为「数据字段集合」；新增共用谓词 `is_data_field`（L634），`b_has`（L675）复用之；方法字段 → `FieldError`（`结构体没有字段 'm'`）。不变量 `del(k,s) 成功 ⟺ has(k,s)` 由新测 `del_succeeds_iff_has_is_true` 锁定。
+  4. 确认对齐（**无代码变更**）: `pop([])` → `Index{-1,0}`（`b_pop` L487）；`insert` 不支持负索引、越界 → `Index{i,len}`（`b_insert` L509）；`floor`/`ceil`/`round` 复用 `int(float)` 口径（`float_to_int` L305：NaN→`Convert{float,int,nan}`、±Inf/超界→`Overflow`）——三者均已满足，仅补断言。
+  5. `minBy`/`maxBy`：HOF，属 P3.9b；代码里**无占位实现**（仅文档 TODO），无需改。
+- 产出:
+  - `git diff --stat -- src/builtins.rs` → `1 file changed, 55 insertions(+), 28 deletions(-)`。
+  - `cargo build --tests --message-format=json 2>$null` → `warnings=0 errors=0`。
+  - `cargo test` → `135 passed; 0 failed`（builtins 模块 **36** 个测试全绿：新增 `del_succeeds_iff_has_is_true` + 改动 `min_max_total_order_and_empty` / `rand_seed_deterministic_and_rand_int` / `del_returns_new_struct_and_missing_field` / `insert_bounds_and_new_array` / `floor_ceil_round_widen_and_banker`）。
+- 决策: 无新 ADR（纯代码落地，遵循既有 ADR 裁定；未新增/改 spec、未改 `error.rs`）。
+- 下一步: P3.7 求值器 → P3.9b（7 个高阶内置；`minBy`/`maxBy` 空数组复用 `EmptyExtremum`）。
+- 阻塞: 无。（注：本轮 `cargo test` 期间 core-dev 的 `src/lexer.rs` 正在并发编辑，曾出现 2 次瞬时 lexer 测试失败；core-dev 改动稳定后全绿，与本轮 `builtins.rs` 无关。）
+
 ## [2026-09-23] P3.9a — `src/builtins.rs`（内置函数第一批：全部非高阶内置）
 - 来源: team-lead 任务书「P3.9a — `src/builtins.rs`（内置函数第一批）」，契约 §10.7 全表 + §8.1/§10.8，semantics §3.7/§4.2/§4.5.6/§4.5.7/§4.5.10/§8.1。
 - 完成:
