@@ -1,5 +1,17 @@
 # core-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 22:02] P3.2 加载器（loader.rs）
+- 来源: team-lead 任务书「P3.2 — `src/loader.rs`」（契约 §10.1 / syntax.md §2.2）
+- 完成: 实现 `src/loader.rs`（纯加载，不碰 lexer/parser/evaluator）。
+  - `Loaded{text,line_base}` + `load_file`（读→UTF-8→BOM→归一化→按扩展名分流，#42 前导）+ `load_source`（不要求前导，line_base=0）+ `ext()`/`is_lfz()`（§2.2.0 四步）+ 私有 `normalize()`/`consume_preamble()`。
+  - TDD 红→绿：先写 12 项测试 + `todo!()` 骨架，`cargo test` → 12 失败（not yet implemented）；再实现 → 全绿。
+- 产出:
+  - `src/loader.rs`（15873B / 384 行，含测试）
+  - 证据：`cargo build`（改 mtime 强制重编）→ `Finished dev profile ... in 0.86s`，WARNINGS=0，exit 0；`cargo test` → `test result: ok. 27 passed; 0 failed; 0 ignored`（15 旧 + 12 新），exit 0
+  - §10.1 四要点落点：职责 L62–84/L98–109；双入口+Loaded L20–26/L62/L89–95；ext 四步 L37–44/L50–53；前导不产 token + line_base L116–126/L82/L93。
+- 决策: 3 处「契约待确认」按最小合理读法实现，列 STATUS【阻塞/需支持】请 architect 裁定（不阻塞）：①`NotUtf8.span`=`Span::START`（精确偏移由消息承载）②`#42` 消费后 `text` 自 `#42\n` 之后起（依 §2.2.2 7d）③`ext` 返回 `Option<&str>` 原始子串 + 独立 `is_lfz()`（步骤 4 折叠）。
+- 下一步: 待 team-lead 派 P3.3 `lexer.rs`。
+- 阻塞: 无
 ## [2026-09-23 23:40] P3.1 基座类型（span + error）
 - 来源: team-lead 任务书「P3.1 — 基座类型」（PLAN-P3 §3 串行门禁子阶段）
 - 完成: 实现 `src/span.rs` 与 `src/error.rs`（本项目错误与位置的唯一事实源），纯实现 + 单测，不涉词法/语法/求值。
