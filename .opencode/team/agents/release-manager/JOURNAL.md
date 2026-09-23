@@ -1,5 +1,19 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 23:12] P3.4b2a（parser：后缀表达式 + 数组/结构体字面量）：单个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；已核验：`src/parser.rs` 47190 B（parser 测试 16→36，+20 测）、`cargo build` 0 warning、`cargo test` 246 passed / 0 failed；本轮**只有 1 个**已修改文件 `src/parser.rs`（外部执行者交付、**未**更新任何团队文档，符合预期）；做单个原子提交并 push；禁区：禁 force-push、不打 tag、不提交 target/密钥/临时文件、不改清单外文件；出现清单外条目即停止）
+- 完成:
+  - 入清单门禁：`git status --short --untracked-files=all` 复核恰为任务书预期 **1 项**（`M src/parser.rs`），**无清单外条目、无未跟踪文件**；门禁未触发。
+  - 基线/尺寸复核：`git rev-parse --abbrev-ref HEAD` = `main`；push 前本地基线 HEAD = 远程 `refs/heads/main` = `0aedd42 docs(team): record P3.8 evaluator semantics ADR`；`(Get-Item src\parser.rs).Length` = **47190 B**，与任务书一致；`git diff --stat -- src/parser.rs` = 1 file changed, 647 insertions(+), 12 deletions(-)。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入同一提交（保持工作区干净）。
+  - `git add src/parser.rs .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（`git diff --cached --name-only` 精确 3 文件）→ `git -c core.autocrlf=false commit -F lfz_msg_parser_p34b2a.txt`（标题 `feat(p3): parser postfix expressions and array/struct literals`，正文含 `call/index/field chaining`、`NO_BRACE_LITERAL`）→ 短哈希见汇报；`git log -1 --format=%B` 复核标题/正文完整无损。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -3`（顶部为本轮提交，位于 `0aedd42` 之上）；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag，`v0.2.0` 待 P3.11）。
+- 决策: 无新 ADR。**外部执行者交付的变更仅含 `src/parser.rs`**——未随附任何团队文档更新，团队看板（TEAM_BOARD）/项目状态（PROJECT_STATE）未随之更新（符合预期）；本提交按收工协议另并入本角色 `STATUS.md`/`JOURNAL.md` 收工文档。
+- 下一步: P3 后续子阶段（P3.9b HOF 内置、P3.11 收口）按模块原子提交；P3.11 收口时打附注标签 `v0.2.0`。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-23 23:55] P3.4b1（parser 骨架 + 语句层）：单个原子提交并推送
 - 来源: team-lead 任务书（轻量启动；已核验：`src/parser.rs` 24031 B（+16 parser 测试）、`cargo build` 0 warning、`cargo test` 211 passed / 0 failed；本轮**只有 1 个**已修改文件 `src/parser.rs`（由 team-lead 改派的外部执行者交付、**未**更新任何团队文档，符合预期）；做单个原子提交并 push；出现清单外条目即停止）
 - 完成:

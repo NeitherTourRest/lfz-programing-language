@@ -1,20 +1,25 @@
-//! 语法分析器（递归下降）—— 第一批：最小可用子集。
+//! 语法分析器（递归下降）—— 第二批：后缀表达式 + 数组 / struct 字面量。
 //!
-//! 契约：`docs/spec/interface-contract.md` §10.6；语法：`docs/spec/syntax.md` §3.1 / §3.2。
+//! 契约：`docs/spec/interface-contract.md` §10.6；语法：`docs/spec/syntax.md` §3.1 / §3.2 / §4.1 / §7。
 //!
-//! # 本批范围（其余构造在后续批次实现，当前一律报 `UnexpectedToken`）
+//! # 已实现（本批 + 前批；其余构造在后续批次实现，当前一律报 `UnexpectedToken`）
 //!
-//! - 换行模式栈（§3.2）：`(` / `[` 内 `NEWLINE` 忽略（`IGN`），语句层生效（`SIG`）。
+//! - 换行模式栈（§3.2）：`(` / `[` / 字面量成员表 `{` 内 `NEWLINE` 忽略（`IGN`），
+//!   语句层生效（`SIG`）。
 //! - 语句：`let` / `var` 声明、表达式语句、块 `{ ... }`、程序（`Program`）本身。
 //! - 表达式：字面量（Int / Float / 纯字符串 / true / false / nil）、标识符、
-//!   括号分组 `( expr )`、一元 `-` / `!`。
+//!   括号分组 `( expr )`、一元 `-` / `!`、
+//!   后缀链（调用 `f(a, …)` / 索引 `xs[i]` / 字段 `s.k`，可任意链式，§4.1 级别 1）、
+//!   数组字面量 `[a, b, c]`、struct 字面量 `{ k: v }` 与 `Name { k: v }`（§7）。
 //! - 错误：`UnexpectedToken` / `IncompleteExpr` / `LoneSemicolon`，
 //!   语句终结检查（§3.2 同逻辑行两条语句）报 `TwoStatements`。
 //!
-//! # 本批两处已知简化
+//! # 本批已知简化
 //!
-//! 1. 裸块语句（语句起始处的 `{ ... }`）：AST 的 `StmtKind` 无 Block 变体，
-//!    故将块内语句**内联**进外层语句序列（`{ let x = 1 }` ≡ `let x = 1`）。
+//! 1. 语句起始处的 `{ ... }` 仍按**裸块语句**解析并内联进外层语句序列
+//!    （AST 的 `StmtKind` 无 Block 变体）；§3.3 / A9「语句首 `{` 恒为匿名
+//!    struct 字面量」留待语句形态补齐批次一并处理。表达式位置的 `{`
+//!   一律为 struct 字面量（NO_BRACE_LITERAL：块起始位不受影响）。
 //! 2. `;;`→`Dump`、管道、插值、赋值、二元运算等均为后续批次；遇之即 `UnexpectedToken`。
 
 use crate::ast::*;
@@ -217,7 +222,7 @@ impl<'a> Parser<'a> {
         self.parse_unary()
     }
 
-    /// 一元 `-` / `!`（§4.1 级别 2）；否则降级到基本表达式。
+    /// 一元 `-` / `!`（§4.1 级别 2）；否则降级到后缀表达式。
     fn parse_unary(&mut self) -> R<Expr> {
         self.skip_ign_newlines();
         let span = self.peek_span();
@@ -232,11 +237,62 @@ impl<'a> Parser<'a> {
                 let operand = self.parse_unary()?;
                 Ok(Spanned::new(ExprKind::Unary { op, operand: Box::new(operand) }, span))
             }
-            None => self.parse_primary(),
+            None => self.parse_postfix(),
         }
     }
 
-    /// 基本表达式：字面量 / 标识符 / 括号分组。
+    /// 后缀表达式 `postfix = primary , { call | index | field }`（§4.1 级别 1，左结合）。
+    ///
+    /// 链式示例：`a.b[0](x)` → `Call { Index { Field(a, b), 0 }, [x] }`。
+    /// 每个后缀节点的 `span` 一律取基座（primary）的起始位置。
+    fn parse_postfix(&mut self) -> R<Expr> {
+        self.skip_ign_newlines();
+        let span = self.peek_span();
+        let mut expr = self.parse_primary()?;
+        loop {
+            self.skip_ign_newlines();
+            match self.peek().clone() {
+                // 调用 `callee ( args )`。
+                TokenKind::LParen => {
+                    self.bump();
+                    self.nl_stack.push(NlMode::Ign);
+                    let args = self.parse_args(TokenKind::RParen)?;
+                    self.expect(&TokenKind::RParen)?;
+                    self.nl_stack.pop();
+                    expr = Spanned::new(ExprKind::Call { callee: Box::new(expr), args }, span);
+                }
+                // 索引 `object [ expr ]`。
+                TokenKind::LBracket => {
+                    self.bump();
+                    self.nl_stack.push(NlMode::Ign);
+                    let inner = self.parse_expr()?;
+                    self.skip_ign_newlines();
+                    self.expect(&TokenKind::RBracket)?;
+                    self.nl_stack.pop();
+                    expr = Spanned::new(
+                        ExprKind::Index { object: Box::new(expr), index: Box::new(inner) },
+                        span,
+                    );
+                }
+                // 字段 `object . IDENT`。
+                TokenKind::Dot => {
+                    self.bump();
+                    let name = match self.peek().clone() {
+                        TokenKind::Ident(name) => {
+                            self.bump();
+                            name
+                        }
+                        _ => return Err(self.unexpected("字段名")),
+                    };
+                    expr = Spanned::new(ExprKind::Field { object: Box::new(expr), name }, span);
+                }
+                _ => break,
+            }
+        }
+        Ok(expr)
+    }
+
+    /// 基本表达式：字面量 / 标识符 / 括号分组 / 数组与 struct 字面量。
     fn parse_primary(&mut self) -> R<Expr> {
         self.skip_ign_newlines();
         let span = self.peek_span();
@@ -282,8 +338,17 @@ impl<'a> Parser<'a> {
             }
             TokenKind::Ident(name) => {
                 self.bump();
-                Ok(Spanned::new(ExprKind::Ident(name), span))
+                // `IDENT {`：具名 struct 字面量（§3.3 规则 2、§7 `struct_lit`）。
+                // 仅当 `{` 紧随其后（`IGN` 内换行忽略，`SIG` 下换行即拆句，A3）。
+                self.skip_ign_newlines();
+                if *self.peek() == TokenKind::LBrace {
+                    self.parse_struct_lit(Some(name), span)
+                } else {
+                    Ok(Spanned::new(ExprKind::Ident(name), span))
+                }
             }
+            TokenKind::LBracket => self.parse_array(span),
+            TokenKind::LBrace => self.parse_struct_lit(None, span),
             TokenKind::LParen => self.parse_group(span),
             TokenKind::Newline => Err(syntax(SyntaxMsg::IncompleteExpr, span)),
             _ => Err(self.unexpected("表达式")),
@@ -328,6 +393,102 @@ impl<'a> Parser<'a> {
         self.expect(&TokenKind::RParen)?;
         self.nl_stack.pop();
         Ok(Spanned::new(inner.node, span))
+    }
+
+    /// `args = expression , { "," , expression } , [ "," ]`（§7；A8）。
+    ///
+    /// 用于调用实参表与数组元素表；`close` 为终结分隔符（`)` / `]`）。
+    /// 逗号必填、尾逗号可选；表内换行已由调用方压入的 `IGN` 模式忽略。
+    fn parse_args(&mut self, close: TokenKind) -> R<Vec<Expr>> {
+        let mut args = Vec::new();
+        self.skip_ign_newlines();
+        if self.peek() == &close {
+            return Ok(args);
+        }
+        loop {
+            self.skip_ign_newlines();
+            args.push(self.parse_expr()?);
+            self.skip_ign_newlines();
+            if *self.peek() == TokenKind::Comma {
+                self.bump();
+                self.skip_ign_newlines();
+                if self.peek() == &close {
+                    break; // 尾逗号
+                }
+                continue;
+            }
+            break;
+        }
+        Ok(args)
+    }
+
+    /// 数组字面量 `array_lit = "[" , [ args ] , "]"`（§7；`[` 内压 `IGN`）。
+    fn parse_array(&mut self, span: Span) -> R<Expr> {
+        self.bump(); // LBracket
+        self.nl_stack.push(NlMode::Ign);
+        let elems = self.parse_args(TokenKind::RBracket)?;
+        self.expect(&TokenKind::RBracket)?;
+        self.nl_stack.pop();
+        Ok(Spanned::new(ExprKind::Array(elems), span))
+    }
+
+    /// struct 字面量 `struct_lit = [ IDENT ] , "{" , [ field_list ] , "}"`（§7）。
+    ///
+    /// 成员表 `{ … }` 内压 `IGN`（§3.2 表）。`type_name` 为具名形式的前缀名。
+    /// 期望当前 token 为 `{`。
+    fn parse_struct_lit(&mut self, type_name: Option<String>, span: Span) -> R<Expr> {
+        self.expect(&TokenKind::LBrace)?;
+        self.nl_stack.push(NlMode::Ign);
+        let fields = self.parse_field_list()?;
+        self.expect(&TokenKind::RBrace)?;
+        self.nl_stack.pop();
+        Ok(Spanned::new(ExprKind::StructLit(StructLit { type_name, fields }), span))
+    }
+
+    /// `field_list = field_init , { "," , field_init } , [ "," ]`（§7；A7）。
+    fn parse_field_list(&mut self) -> R<Vec<FieldInit>> {
+        let mut fields = Vec::new();
+        self.skip_ign_newlines();
+        if *self.peek() == TokenKind::RBrace {
+            return Ok(fields);
+        }
+        loop {
+            self.skip_ign_newlines();
+            fields.push(self.parse_field_init()?);
+            self.skip_ign_newlines();
+            if *self.peek() == TokenKind::Comma {
+                self.bump();
+                self.skip_ign_newlines();
+                if *self.peek() == TokenKind::RBrace {
+                    break; // 尾逗号
+                }
+                continue;
+            }
+            break;
+        }
+        Ok(fields)
+    }
+
+    /// `field_init = ( IDENT | STRING ) , ":" , expression`（§7）。
+    fn parse_field_init(&mut self) -> R<FieldInit> {
+        let span = self.peek_span();
+        let name = match self.peek().clone() {
+            TokenKind::Ident(name) => {
+                self.bump();
+                name
+            }
+            TokenKind::StrBegin => {
+                let e = self.parse_string(span)?;
+                match e.node {
+                    ExprKind::Str(s) => s,
+                    _ => unreachable!("纯字符串解析必得 Str"),
+                }
+            }
+            _ => return Err(self.unexpected("字段名")),
+        };
+        self.expect(&TokenKind::Colon)?;
+        let value = self.parse_expr()?;
+        Ok(FieldInit { span, name, value })
     }
 }
 
@@ -703,5 +864,479 @@ mod tests {
         ])
         .unwrap_err();
         assert_syntax(&err, SyntaxMsg::TwoStatements, 1, 3);
+    }
+
+    // ---- 后缀表达式（§4.1 级别 1：调用 / 索引 / 字段）----
+
+    /// 取程序首条语句的表达式节点。
+    fn expr_of(p: &Program) -> &Expr {
+        match &p.stmts[0].node {
+            StmtKind::Expr(e) => e,
+            other => panic!("应为 Expr，得到 {other:?}"),
+        }
+    }
+
+    /// 取程序首条语句（`let` 声明）的初始化表达式节点。
+    fn decl_init(p: &Program) -> &Expr {
+        match &p.stmts[0].node {
+            StmtKind::Decl { init, .. } => init,
+            other => panic!("应为 Decl，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn call_with_zero_args() {
+        let p = parse(&[
+            tok(TokenKind::Ident("f".into()), 1, 1),
+            tok(TokenKind::LParen, 1, 2),
+            tok(TokenKind::RParen, 1, 3),
+            tok(TokenKind::Eof, 1, 4),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        assert_eq!(e.span, Span::new(1, 1));
+        match &e.node {
+            ExprKind::Call { callee, args } => {
+                assert_eq!(callee.node, ExprKind::Ident("f".into()));
+                assert!(args.is_empty());
+            }
+            other => panic!("应为 Call，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn call_with_many_args() {
+        let p = parse(&[
+            tok(TokenKind::Ident("f".into()), 1, 1),
+            tok(TokenKind::LParen, 1, 2),
+            tok(TokenKind::Int("1".into()), 1, 3),
+            tok(TokenKind::Comma, 1, 4),
+            tok(TokenKind::Int("2".into()), 1, 6),
+            tok(TokenKind::Comma, 1, 7),
+            tok(TokenKind::Int("3".into()), 1, 9),
+            tok(TokenKind::RParen, 1, 10),
+            tok(TokenKind::Eof, 1, 11),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Call { args, .. } => {
+                assert_eq!(args.len(), 3);
+                assert_eq!(args[2].node, ExprKind::Int(3));
+            }
+            other => panic!("应为 Call，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn call_trailing_comma_is_allowed() {
+        let p = parse(&[
+            tok(TokenKind::Ident("f".into()), 1, 1),
+            tok(TokenKind::LParen, 1, 2),
+            tok(TokenKind::Int("1".into()), 1, 3),
+            tok(TokenKind::Comma, 1, 4),
+            tok(TokenKind::RParen, 1, 5),
+            tok(TokenKind::Eof, 1, 6),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Call { args, .. } => assert_eq!(args.len(), 1),
+            other => panic!("应为 Call，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn index_expression() {
+        let p = parse(&[
+            tok(TokenKind::Ident("xs".into()), 1, 1),
+            tok(TokenKind::LBracket, 1, 3),
+            tok(TokenKind::Int("0".into()), 1, 4),
+            tok(TokenKind::RBracket, 1, 5),
+            tok(TokenKind::Eof, 1, 6),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Index { object, index } => {
+                assert_eq!(object.node, ExprKind::Ident("xs".into()));
+                assert_eq!(index.node, ExprKind::Int(0));
+            }
+            other => panic!("应为 Index，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn field_access() {
+        let p = parse(&[
+            tok(TokenKind::Ident("s".into()), 1, 1),
+            tok(TokenKind::Dot, 1, 2),
+            tok(TokenKind::Ident("k".into()), 1, 3),
+            tok(TokenKind::Eof, 1, 4),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Field { object, name } => {
+                assert_eq!(object.node, ExprKind::Ident("s".into()));
+                assert_eq!(name, "k");
+            }
+            other => panic!("应为 Field，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn chained_postfix_a_b_0_x() {
+        let p = parse(&[
+            tok(TokenKind::Ident("a".into()), 1, 1),
+            tok(TokenKind::Dot, 1, 2),
+            tok(TokenKind::Ident("b".into()), 1, 3),
+            tok(TokenKind::LBracket, 1, 4),
+            tok(TokenKind::Int("0".into()), 1, 5),
+            tok(TokenKind::RBracket, 1, 6),
+            tok(TokenKind::LParen, 1, 7),
+            tok(TokenKind::Ident("x".into()), 1, 8),
+            tok(TokenKind::RParen, 1, 9),
+            tok(TokenKind::Eof, 1, 10),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        assert_eq!(e.span, Span::new(1, 1)); // 全链取基座起始位置
+        match &e.node {
+            ExprKind::Call { callee, args } => {
+                assert_eq!(args.len(), 1);
+                assert_eq!(args[0].node, ExprKind::Ident("x".into()));
+                match &callee.node {
+                    ExprKind::Index { object, index } => {
+                        assert_eq!(index.node, ExprKind::Int(0));
+                        match &object.node {
+                            ExprKind::Field { object, name } => {
+                                assert_eq!(object.node, ExprKind::Ident("a".into()));
+                                assert_eq!(name, "b");
+                            }
+                            other => panic!("应为 Field，得到 {other:?}"),
+                        }
+                    }
+                    other => panic!("应为 Index，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 Call，得到 {other:?}"),
+        }
+    }
+
+    // ---- 数组字面量（§7 `array_lit`）----
+
+    #[test]
+    fn array_literal_empty() {
+        let p = parse(&[
+            tok(TokenKind::LBracket, 1, 1),
+            tok(TokenKind::RBracket, 1, 2),
+            tok(TokenKind::Eof, 1, 3),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Array(elems) => assert!(elems.is_empty()),
+            other => panic!("应为 Array，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn array_literal_non_empty_with_trailing_comma() {
+        let p = parse(&[
+            tok(TokenKind::LBracket, 1, 1),
+            tok(TokenKind::Int("1".into()), 1, 2),
+            tok(TokenKind::Comma, 1, 3),
+            tok(TokenKind::Int("2".into()), 1, 5),
+            tok(TokenKind::Comma, 1, 6),
+            tok(TokenKind::RBracket, 1, 7),
+            tok(TokenKind::Eof, 1, 8),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Array(elems) => {
+                assert_eq!(elems.len(), 2);
+                assert_eq!(elems[0].node, ExprKind::Int(1));
+                assert_eq!(elems[1].node, ExprKind::Int(2));
+            }
+            other => panic!("应为 Array，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn array_elements_may_be_postfix_or_nested_array() {
+        let p = parse(&[
+            tok(TokenKind::LBracket, 1, 1),
+            tok(TokenKind::Ident("f".into()), 1, 2),
+            tok(TokenKind::LParen, 1, 3),
+            tok(TokenKind::Int("1".into()), 1, 4),
+            tok(TokenKind::RParen, 1, 5),
+            tok(TokenKind::Comma, 1, 6),
+            tok(TokenKind::LBracket, 1, 8),
+            tok(TokenKind::RBracket, 1, 9),
+            tok(TokenKind::RBracket, 1, 10),
+            tok(TokenKind::Eof, 1, 11),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Array(elems) => {
+                assert_eq!(elems.len(), 2);
+                assert!(matches!(elems[0].node, ExprKind::Call { .. }));
+                assert!(matches!(elems[1].node, ExprKind::Array(ref xs) if xs.is_empty()));
+            }
+            other => panic!("应为 Array，得到 {other:?}"),
+        }
+    }
+
+    // ---- struct 字面量（§7 `struct_lit`；§3.3 / NO_BRACE_LITERAL）----
+
+    #[test]
+    fn struct_literal_empty_in_expr_position() {
+        let p = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("x".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::LBrace, 1, 9),
+            tok(TokenKind::RBrace, 1, 10),
+            tok(TokenKind::Eof, 1, 11),
+        ])
+        .unwrap();
+        match &decl_init(&p).node {
+            ExprKind::StructLit(StructLit { type_name, fields }) => {
+                assert_eq!(*type_name, None);
+                assert!(fields.is_empty());
+            }
+            other => panic!("应为 StructLit，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn struct_literal_non_empty_with_fields() {
+        let p = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("x".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::LBrace, 1, 9),
+            tok(TokenKind::Ident("k".into()), 1, 10),
+            tok(TokenKind::Colon, 1, 11),
+            tok(TokenKind::Int("1".into()), 1, 13),
+            tok(TokenKind::Comma, 1, 14),
+            tok(TokenKind::Ident("j".into()), 1, 16),
+            tok(TokenKind::Colon, 1, 17),
+            tok(TokenKind::Int("2".into()), 1, 19),
+            tok(TokenKind::RBrace, 1, 20),
+            tok(TokenKind::Eof, 1, 21),
+        ])
+        .unwrap();
+        match &decl_init(&p).node {
+            ExprKind::StructLit(StructLit { type_name, fields }) => {
+                assert_eq!(*type_name, None);
+                assert_eq!(fields.len(), 2);
+                assert_eq!(fields[0].name, "k");
+                assert_eq!(fields[0].value.node, ExprKind::Int(1));
+                assert_eq!(fields[0].span, Span::new(1, 10));
+                assert_eq!(fields[1].name, "j");
+                assert_eq!(fields[1].value.node, ExprKind::Int(2));
+            }
+            other => panic!("应为 StructLit，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn struct_literal_string_key_and_trailing_comma() {
+        let p = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("x".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::LBrace, 1, 9),
+            tok(TokenKind::StrBegin, 1, 10),
+            tok(TokenKind::Text("k".into()), 1, 11),
+            tok(TokenKind::StrEnd, 1, 12),
+            tok(TokenKind::Colon, 1, 13),
+            tok(TokenKind::Int("1".into()), 1, 15),
+            tok(TokenKind::Comma, 1, 16),
+            tok(TokenKind::RBrace, 1, 17),
+            tok(TokenKind::Eof, 1, 18),
+        ])
+        .unwrap();
+        match &decl_init(&p).node {
+            ExprKind::StructLit(StructLit { fields, .. }) => {
+                assert_eq!(fields.len(), 1);
+                assert_eq!(fields[0].name, "k"); // 字符串键解码为字段名
+            }
+            other => panic!("应为 StructLit，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn named_struct_literal_after_ident() {
+        let p = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("p".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::Ident("Point".into()), 1, 9),
+            tok(TokenKind::LBrace, 1, 15),
+            tok(TokenKind::Ident("x".into()), 1, 16),
+            tok(TokenKind::Colon, 1, 17),
+            tok(TokenKind::Int("1".into()), 1, 19),
+            tok(TokenKind::RBrace, 1, 20),
+            tok(TokenKind::Eof, 1, 21),
+        ])
+        .unwrap();
+        match &decl_init(&p).node {
+            ExprKind::StructLit(StructLit { type_name, fields }) => {
+                assert_eq!(type_name.as_deref(), Some("Point"));
+                assert_eq!(fields.len(), 1);
+            }
+            other => panic!("应为 StructLit，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn struct_literal_as_call_argument() {
+        // `f({k: 1})`：表达式位置的 `{` 是 struct 字面量（§3.3 规则 2）。
+        let p = parse(&[
+            tok(TokenKind::Ident("f".into()), 1, 1),
+            tok(TokenKind::LParen, 1, 2),
+            tok(TokenKind::LBrace, 1, 3),
+            tok(TokenKind::Ident("k".into()), 1, 4),
+            tok(TokenKind::Colon, 1, 5),
+            tok(TokenKind::Int("1".into()), 1, 7),
+            tok(TokenKind::RBrace, 1, 8),
+            tok(TokenKind::RParen, 1, 9),
+            tok(TokenKind::Eof, 1, 10),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::Call { args, .. } => {
+                assert_eq!(args.len(), 1);
+                assert!(matches!(args[0].node, ExprKind::StructLit(_)));
+            }
+            other => panic!("应为 Call，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn no_brace_literal_statement_start_is_block() {
+        // NO_BRACE_LITERAL：语句起始处的 `{` 仍是块（本批内联进外层语句序列）。
+        let p = parse(&[
+            tok(TokenKind::LBrace, 1, 1),
+            tok(TokenKind::KwLet, 1, 3),
+            tok(TokenKind::Ident("a".into()), 1, 7),
+            tok(TokenKind::Assign, 1, 9),
+            tok(TokenKind::Int("1".into()), 1, 11),
+            tok(TokenKind::Newline, 1, 13),
+            tok(TokenKind::KwLet, 2, 3),
+            tok(TokenKind::Ident("b".into()), 2, 7),
+            tok(TokenKind::Assign, 2, 9),
+            tok(TokenKind::Int("2".into()), 2, 11),
+            tok(TokenKind::RBrace, 2, 13),
+            tok(TokenKind::Eof, 2, 14),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 2);
+        assert!(matches!(p.stmts[0].node, StmtKind::Decl { .. }));
+        assert!(matches!(p.stmts[1].node, StmtKind::Decl { .. }));
+    }
+
+    #[test]
+    fn named_struct_literal_as_statement() {
+        let p = parse(&[
+            tok(TokenKind::Ident("Point".into()), 1, 1),
+            tok(TokenKind::LBrace, 1, 7),
+            tok(TokenKind::Ident("x".into()), 1, 8),
+            tok(TokenKind::Colon, 1, 9),
+            tok(TokenKind::Int("1".into()), 1, 11),
+            tok(TokenKind::RBrace, 1, 12),
+            tok(TokenKind::Eof, 1, 13),
+        ])
+        .unwrap();
+        match &expr_of(&p).node {
+            ExprKind::StructLit(StructLit { type_name, .. }) => {
+                assert_eq!(type_name.as_deref(), Some("Point"));
+            }
+            other => panic!("应为 StructLit，得到 {other:?}"),
+        }
+    }
+
+    // ---- 错误情形（缺 `]` / `)` / `:` / 字段名）----
+
+    #[test]
+    fn array_missing_rbracket_is_error() {
+        let err = parse(&[
+            tok(TokenKind::LBracket, 1, 1),
+            tok(TokenKind::Int("1".into()), 1, 2),
+            tok(TokenKind::Comma, 1, 3),
+            tok(TokenKind::Int("2".into()), 1, 5),
+            tok(TokenKind::Eof, 1, 6),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "']'".to_string(),
+                got: "'文件末尾'".to_string(),
+            },
+            1,
+            6,
+        );
+    }
+
+    #[test]
+    fn call_missing_rparen_is_error() {
+        let err = parse(&[
+            tok(TokenKind::Ident("f".into()), 1, 1),
+            tok(TokenKind::LParen, 1, 2),
+            tok(TokenKind::Int("1".into()), 1, 3),
+            tok(TokenKind::Eof, 1, 4),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "')'".to_string(),
+                got: "'文件末尾'".to_string(),
+            },
+            1,
+            4,
+        );
+    }
+
+    #[test]
+    fn struct_field_missing_colon_is_error() {
+        let err = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("x".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::LBrace, 1, 9),
+            tok(TokenKind::Ident("k".into()), 1, 10),
+            tok(TokenKind::Int("1".into()), 1, 12),
+            tok(TokenKind::RBrace, 1, 13),
+            tok(TokenKind::Eof, 1, 14),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "':'".to_string(),
+                got: "'1'".to_string(),
+            },
+            1,
+            12,
+        );
+    }
+
+    #[test]
+    fn field_missing_name_is_error() {
+        let err = parse(&[
+            tok(TokenKind::Ident("a".into()), 1, 1),
+            tok(TokenKind::Dot, 1, 2),
+            tok(TokenKind::Eof, 1, 3),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "字段名".to_string(),
+                got: "'文件末尾'".to_string(),
+            },
+            1,
+            3,
+        );
     }
 }
