@@ -1,5 +1,19 @@
 # language-architect — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 01:00] 未闭合块注释（/* 至 EOF）裁定（1 处契约缺口闭合，v1 补钉）
+- 来源: team-lead 下达「就 core-dev 上报的 1 处契约缺口（未闭合块注释 `/*` 至 EOF）给规范裁定」任务（轻量启动；依据 `syntax.md` §2.4/§2.5、`semantics.md` §8.1、`interface-contract.md` §10.6）
+- 完成:
+  - **裁定**：未闭合块注释 `/*`（至 EOF 仍无 `*/`）→ **`SyntaxError`**；**否决** core-dev 临时口径「消费至 EOF、等价空白、不报错」。**新增 `SyntaxMsg::UnterminatedBlockComment`**（无字段），消息 `块注释在此处未闭合（缺少 '*/'）`；`span` = `/*` 的 `/`。
+  - **理由 4 条**：① 与 §2.8「字符串遇 EOF → SyntaxError」同源（CODE 模式同类未闭合词法区）；② LFZ「无魔法/结构化报错」红线，静默吞 EOF 掩盖漏写 `*/`；③ 最接近的 `UnterminatedString` 消息对注释**语义错误**，不可复用；④ 行业一致（C/C++/Rust/Java/Go/JS 均报错）。
+  - **规范落地**：`syntax.md` §2.4（+规范性条目）+ §2.5（空白收窄为"闭合块注释"）；`semantics.md` §8.1（触发列表 + 细分表 +1 行，16→17）；`interface-contract.md` §10.6 + §10.8（变体规格）。
+  - **纪律**：先追加 ADR，后改 `docs/spec/`；三件套头部「冻结于 2026-09-23」不变；不新增错误类（仍 12 类 + 基类）、不引入 `E-xxx`。
+- 产出: `.opencode/team/DECISIONS.md` 追加 ADR「未闭合块注释（/* 至 EOF）裁定」（标题行 L290）；`docs/spec/syntax.md`（910→**911** 行）、`semantics.md`（403→**404** 行）、`interface-contract.md`（308→**309** 行）
+- 证据: 字节级 LF=911/404/309、CR=**0**、BOM=False、末字节=LF(10)；错误类计数 `共 12 类 + 1 基类` / `运行期 10 类` 不变；`E-xxx` 仍 11 处（仅 §13）；新增串 `UnterminatedBlockComment` / `块注释在此处未闭合` / `未闭合块注释` 均命中
+- 决策: ADR「未闭合块注释（/* 至 EOF）裁定」（缺口 → 裁定 → 落地 + 待执行代码变更清单 + 下游影响）
+- 待执行代码变更（本轮未写代码）: `src/error.rs`（core-dev：加 `SyntaxMsg::UnterminatedBlockComment` + message + 更新「16 条」注释/测试）；`src/lexer.rs`（core-dev：未闭合块注释改报 SyntaxError，替代静默吞 EOF）
+- 下一步: 通知 team-lead 转 core-dev 落地 1/2；test-engineer 可写负例断言；docs/ai-dx 补「块注释必须闭合」
+- 阻塞: 无
+
 ## [2026-09-24 00:20] P3.9a 契约缺口闭合（6 项，v1 补钉）
 - 来源: team-lead 下达「闭合 runtime-dev 上报的 6 处契约缺口」任务（先读 DECISIONS 末条 ADR + `semantics.md` §8.1 + `interface-contract.md` §8.1/§10.7）
 - 完成:

@@ -1,15 +1,14 @@
 # release-manager — 工作状态
-> 最后更新: 2026-09-23 23:05 by release-manager
+> 最后更新: 2026-09-23 23:40 by release-manager
 ## 当前状态
-**P3.3a（lexer CODE 模式核心）+ 6 处契约缺口闭合（ADR + spec 补钉）已入库并推送至 origin**：两个原子提交已落地 `main` 并 push，工作区干净、本地 HEAD = `refs/heads/main`。
+**P3.9a 缺口闭合（`ValueMsg::EmptyExtremum/BadRange` 消息）+ 规范补钉（未终止块注释钉死为 SyntaxError）已做两个原子提交并推送至 origin**：工作区干净、本地 HEAD = `refs/heads/main`。
 - **远程仓库 URL：https://github.com/NeitherTourRest/lfz-programing-language**（Public，默认分支 `main`）。
-- 提交 1（P3.3a 代码 + core-dev 文档）：`feat(p3): lexer CODE-mode core tokens` —— `src/lexer.rs` + `core-dev/{STATUS,JOURNAL}.md`（3 files changed, 924 insertions, 31 deletions）；短哈希 `4c68d18`。
-- 提交 2（规范 + 决策 + 团队文档）：`docs(spec): close 6 P3.9a contract gaps (ADR + v1 pins)` —— `.opencode/team/DECISIONS.md`（+67 行 ADR）+ `docs/spec/semantics.md`（+25 行补钉）+ `docs/spec/interface-contract.md`（+12 行补钉）+ `language-architect/{STATUS,JOURNAL}.md` + 本角色收工文档（短哈希见 JOURNAL/汇报）。
-- ✅ **P3.3a 已由 team-lead 核验**：`src/lexer.rs` 27396 B（+886 行，31 个 lexer 测试）；`cargo build` 0 warning；`cargo test` 113 passed / 0 failed。提交前实测 `(Get-Item src\lexer.rs).Length` = 27396 吻合。
-- ✅ **缺口闭合已核验**：`DECISIONS.md` +67 行（ADR：新增 `ValueMsg::EmptyExtremum/BadRange`；`pop idx/len` 钉死；`floor/ceil/round` 复用 `int(float)`；`del` 限数据字段；`insert` 拒负索引）、`semantics.md` +25 行、`interface-contract.md` +12 行。
-- ⚠️ **本轮提交 `docs/spec/**` 补钉**：属冻结文档的合法补充（已先有 ADR 授权），照常入库；未打 tag。
+- 提交 1（P3 代码 + core-dev 文档）：`feat(p3): add ValueMsg::EmptyExtremum and BadRange` —— `src/error.rs` + `core-dev/{STATUS,JOURNAL}.md`（3 files changed, 197 insertions, 11 deletions）；短哈希 `7accfa3`。
+- 提交 2（规范 + 决策 + 团队文档）：`docs(spec): pin unterminated block comment as SyntaxError (ADR)` —— `.opencode/team/DECISIONS.md` + `docs/spec/syntax.md` + `docs/spec/semantics.md` + `docs/spec/interface-contract.md` + `language-architect/{STATUS,JOURNAL}.md` + 本角色收工文档（短哈希见汇报）。
+- ✅ **已由 team-lead 核验**：`cargo build` **0 warning**；`cargo test` **117 passed / 0 failed**（P3.9a 缺口消息新增 4 测）。
 - ⚠️ **暂存纪律**：全部用 `git add <显式文件>`，未用 `git add -A`；提交前 `git diff --cached --name-only` 逐条核对暂存集精确为清单内文件（提交 1 = 3 文件）。
-- ⚠️ **`target/` 未入库**：`.gitignore:25 /target/` 生效；`--untracked-files=all` 无未跟踪文件；提交前工作区恰为任务书预期的 8 项、无清单外条目。
+- ⚠️ **入清单门禁**：提交前 `git status --short --untracked-files=all` 恰为任务书预期 **9 项**，**无清单外条目、无未跟踪文件**；`target/` 由 `.gitignore:25 /target/` 忽略，未入库。
+- ⚠️ **`docs/spec/**` 补钉**：属冻结文档的合法补充（已先有 ADR 授权），照常入库。
 - **本轮未打任何 tag**（P3 里程碑标签 `v0.2.0` 待 P3.11 收口时打）；tag 仍仅 `v0.1.0`。
 - ⚠️ **owner 偏差（历史遗留，需确认）**：任务书曾写 `github.com/MakeChase`，但可认证账号 login = `NeitherTourRest`（display name = `MakeChase`，id 180032968）；GitHub 上另一同名账号 `MakeChase`（id 128372141）无权操作。仓库实际落在 `NeitherTourRest` 名下。
 ## 进行中
@@ -27,7 +26,7 @@
 - **代理纪律**：`gh` 只认 `HTTP_PROXY`/`HTTPS_PROXY` 环境变量（`$env:HTTPS_PROXY="http://127.0.0.1:7890"`），**不读** git 的 `http.proxy`；`git push` 走 git 自身 `http.proxy`（本仓库已设 `http.proxy`/`https.proxy=http://127.0.0.1:7890`）。
 - **PowerShell 假错误**：`git push` 把进度写 stderr，PS 会显示红色 `NativeCommandError`，判据是 `$LASTEXITCODE=0`。
 - **CRLF 警告**：仓库含中文 Markdown / Rust 源，`git add` 会打印 `LF will be replaced by CRLF` 警告，属正常；提交用 `git -c core.autocrlf=false commit` 保持行尾稳定。
-- **多行提交信息 + 非 ASCII 字符**：body 含 `<`/`>`（如 `Rc<RefCell>`、`fn(&[Value], Span) -> R<Value>`）或 `§` 时，**写 UTF-8 信息文件**（`C:\Users\19170\AppData\Local\Temp\opencode\lfz_msg*.txt`）→ `git -c core.autocrlf=false commit -F <file>`，提交后 `git log -1 --format=%B` 复核正文完整。本轮两个信息文件均为纯 ASCII，`-F` 依旧稳定。
-- **基线事实（更新后）**：提交链 `e060b21`(init) → `6873fe7`(ADR) → `35e5f62`(README url) → `caa66b4`(team docs sync) → `69a57d7`(cargo skeleton) → `4035f86`(p3 span/error) → `4458e75`(docs core-dev P3.1) → `7d41e17`(loader) → `49d485f`(value/env) → `ebbd4d0`(P3.6 ADR) → `b81680b`(builtins) → `bb3e4b4`(P3.9a ADR) → 本轮 `4c68d18`(lexer CODE-mode) + `docs(spec)`(契约补钉，短哈希见汇报)；附注标签 `v0.1.0` 指向 `e060b21`；远程 `refs/heads/main`=本轮 HEAD。
-- **撤单核对流程**：先 `git status --short --untracked-files=all` 与任务书预期清单逐条比对，出现清单外文件即停止汇报；暂存后 `git diff --cached --name-only` 确认暂存集精确；提交前实测文件字节数与任务书声明的尺寸一致（本轮 27396 吻合）。
+- **多行提交信息 + 非 ASCII 字符**：body 含 `<`/`>`（如 `Rc<RefCell>`、`fn(&[Value], Span) -> R<Value>`）或 `§` 时，**写 UTF-8 信息文件**（`C:\Users\19170\AppData\Local\Temp\opencode\lfz_msg*.txt`）→ `git -c core.autocrlf=false commit -F <file>`，提交后 `git log -1 --format=%B` 复核正文完整。本轮两个信息均为纯 ASCII，`-m`×2 依旧稳定。
+- **基线事实（更新后）**：提交链 `e060b21`(init) → `6873fe7`(ADR) → `35e5f62`(README url) → `caa66b4`(team docs sync) → `69a57d7`(cargo skeleton) → `4035f86`(p3 span/error) → `4458e75`(docs core-dev P3.1) → `7d41e17`(loader) → `49d485f`(value/env) → `ebbd4d0`(P3.6 ADR) → `b81680b`(builtins) → `bb3e4b4`(P3.9a ADR) → `4c68d18`(lexer CODE-mode) → `711d6b9`(docs spec 6 缺口) → 本轮 `7accfa3`(P3.9a EmptyExtremum/BadRange) + `docs(spec)`(未终止块注释钉死，短哈希见汇报)；附注标签 `v0.1.0` 指向 `e060b21`；远程 `refs/heads/main`=本轮 HEAD。
+- **撤单核对流程**：先 `git status --short --untracked-files=all` 与任务书预期清单逐条比对，出现清单外文件即停止汇报；暂存后 `git diff --cached --name-only` 确认暂存集精确；提交前实测文件字节数与任务书声明的尺寸一致。
 - **禁区确认**：本轮未 force-push、未改默认分支、未打 tag、未 `git add -A`、未提交 `target/`/密钥/临时文件、未改清单外文件。

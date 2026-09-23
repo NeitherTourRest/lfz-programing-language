@@ -286,3 +286,35 @@
 - **消歧回退（3 条，按 §2.3/§2.7 最小读法）**：`1e` → `Int("1")`+`Ident("e")`；`1.` → `Int("1")`+`Dot`（A23）；`0x`（无进制位）→ `Int("0")`+`Ident("x")`。
 - **契约缺口（1 处，待 language-architect 裁定）**：未闭合块注释 `/*`（至 EOF 仍无 `*/`）在 `SyntaxMsg` 16 变体中**无对应条目**。core-dev 口径：**消费至 EOF、等价一个空白、不报错**（不自造错误码/文案）。若期望报错，请指定码/文案。
 - **影响**：无 spec 改动；`runtime-dev` 当前不消费 lexer；`tooling-dev` 经 parser 间接消费。**不阻塞** P3.3b。
+
+### [2026-09-24 01:00] [language-architect] 未闭合块注释（/* 至 EOF）裁定
+
+- **性质**：闭合 core-dev 在 [2026-09-23 23:58] ADR「lexer CODE 模式记号接口（P3.3a）」中上报的 **1 处契约缺口**。本轮**先追加本 ADR、后改 `docs/spec/`**（顺序可核）；三件套头部「冻结于 2026-09-23」**保持不变**，改动为 **v1 补钉（补充钉死）**，未推翻任何既有冻结规则；**不新增错误类**（仍 12 类 + 基类）、**不引入 `E-xxx`**。
+- **缺口**：未闭合块注释 `/*`（开到 EOF 仍无 `*/`）在 `SyntaxMsg` 的 16 个子消息变体中**无对应条目**；core-dev 暂定口径「消费至 EOF、等价一个空白、不报错」，请求裁定。
+- **裁定：判为 `SyntaxError`**——**core-dev 的临时口径（消费至 EOF、不报错）不予采纳**。理由：
+  1. **与字符串同源一致性**：`syntax.md` §2.8 已写死「`STR` / `INTERP` 遇 EOF → `SyntaxError`（字符串未闭合）」；块注释是 CODE 模式下**同类的"未闭合词法区"**，应同判。`syntax.md` §2.4「等价一个空格」**预设** `/* … */` 已闭合，未闭合即违反该构造定义。
+  2. **LFZ 身份红线**：「无魔法 / 确定性；越界/缺字段/溢出/类型不符一律结构化报错」——静默吞到 EOF 会**掩盖**用户漏写 `*/` 的错误（程序只执行前半段却"成功"），正是本语言明确拒绝的静默错误行为。
+  3. **不可复用现有变体**：最接近的 `SyntaxMsg::UnterminatedString` 消息为 `字符串字面量在此处未闭合`，对注释**语义错误**（沿用既有判据「消息模板要语义正确而非能塞进去」）；其余 15 个变体均不适用。
+  4. **行业一致**：C/C++/Rust/Java/Go/JS 对未闭合块注释一律诊断报错。
+- **落地方式（变体规格，供 core-dev 在 `src/error.rs` 落地）**：
+  - 变体：**`SyntaxMsg::UnterminatedBlockComment`**（**无字段**）。
+  - 消息模板：**`块注释在此处未闭合（缺少 '*/'）`**（固定串，无参数；与既有 `NotUtf8` 消息同用全角括号风格）。
+  - 归类：仍为 `LfzError::Syntax { msg, span }` → `SyntaxError`（**不新增错误类**）。
+  - 位置 `span`：**指向 `/*` 中的 `/`**（词法/记号错误指向该记号首字符，`semantics.md` §8.2）。
+- **规范落地（本轮已改）**：
+  - `docs/spec/syntax.md` §2.4（新增「未闭合块注释（规范性，v1 补钉）」条目）+ §2.5（空白定义收窄为"**闭合**块注释"）。
+  - `docs/spec/semantics.md` §8.1（`SyntaxError` 触发条件列表 + 细分消息表**新增一行**，细分表 16 → **17 条**）。
+  - `docs/spec/interface-contract.md` §10.6（lexer 条目）+ §10.8（`SyntaxMsg` 新增变体）。
+- **待执行代码变更清单**（仅 `src/**`，由 core-dev 落地；language-architect 不写代码）：
+  | # | 文件 | 变更 | 变体 / 字段 | 消息模板 |
+  |---|---|---|---|---|
+  | 1 | `src/error.rs`（core-dev） | 新增枚举变体 + `message()` 分支；同步顶部文档注释「16 条」→「17 条」；测试 `syntax_msg_covers_all_sixteen_rows` 增断言（建议改名 seventeen） | `SyntaxMsg::UnterminatedBlockComment`（无字段） | `块注释在此处未闭合（缺少 '*/'）` |
+  | 2 | `src/lexer.rs`（core-dev） | 块注释扫描遇 EOF 仍无 `*/` → **发 `SyntaxError`**（span = `/*` 的 `/`），**替代**现「消费至 EOF 当空白」；**闭合**块注释行为不变 | — | 同 1 |
+- **下游影响**：
+  - **core-dev**：**需改代码**——`src/error.rs`（新变体 + `message()`）与 `src/lexer.rs`（未闭合处报错）。这是本轮唯一代码变更。
+  - **runtime-dev**：无影响（lexer 期错误，运行时不可达）。
+  - **test-engineer**：**可写负例断言**——夹具（置于非自动发现目录，见 §11.2 T-R2）`/*` 至 EOF 无 `*/` → 期望 `{"error":"SyntaxError"}`，消息逐字符 `块注释在此处未闭合（缺少 '*/'）`，插入符指向 `/*` 的 `/`。
+  - **docs-writer / ai-dx-engineer**：手册 / AI 指南"注释"节补一句：块注释**必须闭合**；`/*` 至 EOF 未闭合 → `SyntaxError`（与未闭合字符串同类）。
+  - **tooling-dev**：无接口变更（沿用既有 `SyntaxError` 输出路径/退出码 2）。
+  - **spec 三件套**：`syntax.md` / `semantics.md` / `interface-contract.md` 已同步；错误类计数不变（12 类 + 基类；运行期仍 10 类）；`SyntaxError` 细分消息数 16 → **17**。
+- **证据**：本 ADR 标题行（`DECISIONS.md`）+ `docs/spec/` 三件套改动点原文（见本轮结构化汇报）。

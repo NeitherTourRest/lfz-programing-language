@@ -1,56 +1,49 @@
 # language-architect — 工作状态
-> 最后更新: 2026-09-24 00:20 by language-architect
+> 最后更新: 2026-09-24 01:00 by language-architect
 
 ## 当前状态
-**✅ spec v1 已冻结（FROZEN，2026-09-23）；本轮完成 post-v1 变更（v1 补钉）：闭合 runtime-dev 上报的 6 处契约缺口。**
-- 交付：`.opencode/team/DECISIONS.md` 追加 ADR「P3.9a 契约缺口闭合（6 项）」+ `docs/spec/{semantics.md, interface-contract.md}` 补充钉死（`syntax.md` 不变）。
-- 纪律：**先 ADR 后改文档**；三件套头部「冻结于 2026-09-23」保持；改动均为**补充钉死**，未推翻任何既有冻结规则；不新增错误类（仍 12 类 + 1 基类）、不引入 `E-xxx`。
+**✅ spec v1 已冻结（FROZEN，2026-09-23）；本轮完成 post-v1 变更（v1 补钉）：裁定并闭合 core-dev 上报的 1 处契约缺口——「未闭合块注释 `/*` 至 EOF」。**
+- 交付：`.opencode/team/DECISIONS.md` 追加 ADR「未闭合块注释（/* 至 EOF）裁定」+ `docs/spec/{syntax.md, semantics.md, interface-contract.md}` 补充钉死（三件套均有改动）。
+- 纪律：**先 ADR 后改文档**；三件套头部「冻结于 2026-09-23」保持；改动均为**补充钉死**，未推翻任何既有冻结规则；不新增错误类（仍 12 类 + 基类）、不引入 `E-xxx`。
 
-## 本轮 6 项裁定（速查表）
-| # | 缺口 | 裁定 | 落地方式 | 代码变更 |
-|---|---|---|---|---|
-| 1 | `min`/`max`/`minBy`/`maxBy` 空 | `ValueError`，**新增 `ValueMsg::EmptyExtremum { func }`**，消息 `空数组没有极值（{func}）` | `semantics.md` §8.1 + `interface-contract.md` §8.1/§10.7/§10.8 | **需** `src/error.rs` |
-| 2 | `randInt(lo,hi)` 且 `lo >= hi` | `ValueError`，**新增 `ValueMsg::BadRange { lo, hi }`**，消息 `区间非法：{lo} >= {hi}` | 同上 | **需** `src/error.rs` |
-| 3 | `pop([])` 的 `idx`/`len` | 复用现有 `Index{idx,len}`，钉死 `idx=-1, len=0` + 通用规则 | `semantics.md` §8.1 + `interface-contract.md` §10.7 | 无（现值一致） |
-| 4 | `floor`/`ceil`/`round` 的 `NaN`/`±Inf`/超界 | **复用 `int(float)` 口径**（`NaN`→`ValueError`、`±Inf`/超界→`OverflowError`），写成 §4.5.7 规范 | `semantics.md` §4.5.7 + `interface-contract.md` §10.7 | 无（现值一致） |
-| 5 | `del(k,s)` 对方法字段 | **`del` 属数据面、仅作用于数据字段**；方法字段键 → `FieldError`（`del 成功 ⟺ has==true`） | `semantics.md` §4.5.9/§8.1 + `interface-contract.md` §10.7 | **需** `src/builtins.rs`（改判定） |
-| 6 | `insert` 负索引 | **不支持负索引**；`i ∈ [0,len]`，`i<0`/`i>len` → `Index{idx:i,len}` | `semantics.md` §8.1 + `interface-contract.md` §10.7 | 无（现值一致） |
+## 本轮裁定（缺口 → 裁定 → 落地）
+| 缺口 | 裁定 | 变体 / 消息 | 代码变更 |
+|---|---|---|---|
+| 未闭合块注释 `/*` 至 EOF 无 `*/` | **判 `SyntaxError`**（**否决** core-dev「消费至 EOF、不报错」临时口径） | **新增 `SyntaxMsg::UnterminatedBlockComment`**（无字段），消息 `块注释在此处未闭合（缺少 '*/'）`；`span` 指向 `/*` 的 `/` | **需** `src/error.rs` + `src/lexer.rs` |
 
-## 待执行代码变更清单（交 core-dev / runtime-dev；本轮未写代码）
+**裁定理由（4 条）**：① 与 §2.8「字符串遇 EOF → `SyntaxError`」同源（CODE 模式同类的"未闭合词法区"）；② LFZ「无魔法/结构化报错」红线——静默吞到 EOF 会掩盖漏写 `*/` 的错误；③ 最接近的 `UnterminatedString` 消息对注释**语义错误**，不可复用（沿既有判据「模板要语义正确而非能塞进去」）；④ 行业一致（C/C++/Rust/Java/Go/JS 均报错）。
+
+## 待执行代码变更清单（交 core-dev；本轮未写代码）
 | # | 文件 | 负责人 | 变更 |
 |---|---|---|---|
-| 1 | `src/error.rs` | core-dev | 新增 `ValueMsg::EmptyExtremum { func: String }` + `message()`（`空数组没有极值（{func}）`） |
-| 2 | `src/error.rs` | core-dev | 新增 `ValueMsg::BadRange { lo: i64, hi: i64 }` + `message()`（`区间非法：{lo} >= {hi}`） |
-| 3 | `src/builtins.rs` | runtime-dev | 1/2 改用新变体（`min`/`max`/`minBy`/`maxBy` 空、`randInt` 非法区间） |
-| 4 | `src/builtins.rs` | runtime-dev | `del` 判定由 `raw_fields`（存在即删）改为**数据字段集合**（复用 `has`/`keys` 谓词） |
-| 5 | `src/builtins.rs` | runtime-dev | 确认 `pop` → `Index{idx:-1,len:0}`；`insert` 越界/负索引 → `Index{idx:i,len}`；`floor`/`ceil`/`round` 复用 `int(float)` 口径 |
+| 1 | `src/error.rs` | core-dev | 新增 `SyntaxMsg::UnterminatedBlockComment` + `message()` 分支（`块注释在此处未闭合（缺少 '*/'）`）；同步顶部注释「16 条」→「17 条」；测试 `syntax_msg_covers_all_sixteen_rows` 增断言（建议改名 seventeen） |
+| 2 | `src/lexer.rs` | core-dev | 块注释扫描遇 EOF 仍无 `*/` → **发 `SyntaxError`**（span = `/*` 的 `/`），替代现「消费至 EOF 当空白」；闭合块注释行为**不变** |
 
 ## 产出与证据（可命令验证）
-| 文件 | 行数 | 说明 |
+| 文件 | 行数（LF） | 说明 |
 |---|---|---|
-| `docs/spec/syntax.md` | 910（不变） | 6 项均非形式/文法问题 |
-| `docs/spec/semantics.md` | 382 → **403** | §4.5.7（+floor/ceil/round 边界）、§4.5.9（+del 数据面）、§8.1（ValueError 新子场景表 + IndexError idx/len 表 + FieldError 行） |
-| `docs/spec/interface-contract.md` | 298 → **308** | §8.1（ValueError 模板）、§10.7（内置边界补钉块）、§10.8（ValueMsg 变体） |
-| `.opencode/team/DECISIONS.md` | +40 行 | 追加 ADR「P3.9a 契约缺口闭合（6 项）」（L223 起） |
+| `docs/spec/syntax.md` | 910 → **911** | §2.4（+未闭合块注释规范性条目、块注释限定为"已闭合"）、§2.5（空白定义收窄为"**闭合**块注释"） |
+| `docs/spec/semantics.md` | 403 → **404** | §8.1（SyntaxError 触发条件列表 + 细分消息表**新增一行**，16 → **17 条**） |
+| `docs/spec/interface-contract.md` | 308 → **309** | §10.6（lexer 条目：未闭合块注释 → SyntaxError）、§10.8（`SyntaxMsg` 新增变体） |
+| `.opencode/team/DECISIONS.md` | 288 → **320** | 追加 ADR「未闭合块注释（/* 至 EOF）裁定」（标题行 L290） |
 
-- 三者 UTF-8 无 BOM；错误类计数保持 `共 12 类` + `运行期…10 类`；`E-xxx` 仅存于既有 §13 附录（11 处，本轮未新增）。
-- 新增串命中：`EmptyExtremum`、`BadRange`、`空数组没有极值`、`区间非法`、`不支持负索引`。
+- 三件套 UTF-8 无 BOM；字节级证据：`syntax.md` bytes=60529 LF=911 CR=**0**、`semantics.md` bytes=31679 LF=404 CR=**0**、`interface-contract.md` bytes=28824 LF=309 CR=**0**，末字节均 = LF(10)。
+- 错误类计数保持：`共 12 类 + 1 基类`、`运行期错误 = 10 类`（未变）；`E-xxx` 仍 **11** 处（全在 §13 附录，未新增）。
+- 新增串命中：`UnterminatedBlockComment`、`块注释在此处未闭合`、`未闭合块注释`。
 
 ## 进行中
-- （无；待 team-lead 转派 core-dev / runtime-dev 落地代码变更清单）
+- （无；待 team-lead 转派 core-dev 落地代码变更清单 1/2）
 
 ## 阻塞 / 需要支持
 - 无。
 
 ## 下一步计划
-- team-lead 派发：**core-dev**（`src/error.rs` 加 2 变体）→ **runtime-dev**（`src/builtins.rs` 改用变体 + `del` 改数据面判定）。
-- 通知受影响下游：**test-engineer** 解除「暂不 snapshot 缺口 1–5 消息文本」禁令；**docs-writer / ai-dx-engineer** 补 4 点（min/max 空、randInt 区间非法、insert 无负索引、del 仅数据字段）。
+- team-lead 派发：**core-dev** → `src/error.rs`（加变体 + message）→ `src/lexer.rs`（未闭合块注释改报错）。
+- 通知受影响下游：**test-engineer** 可写负例断言（`/*` 至 EOF，期望 `{"error":"SyntaxError"}` + 逐字符消息 + 插入符指向 `/*` 的 `/`）；**docs-writer / ai-dx-engineer** 补一句"块注释必须闭合"。
 - 若落地中发现新歧义 → 继续走 post-v1 变更（先 ADR 后改 spec）。
 
 ## 关键经验（写给未来的自己）
-- **冻结后变更的最小改动判据**：先问「能否用现有枚举字段表达」——本轮 6 项里 4 项（3/4/5/6）零新增变体，仅 1/2 确需新增；能复用（`Index{idx,len}` / `ValueMsg::Convert`）就绝不新增。
-- **消息模板要「语义正确」而非「能塞进去」**：runtime-dev 的 `Convert{src:"array",dst:"min"}` 能跑但语义错（不是转换失败）——此类"能表达但语义不符"必须判为**需新增变体**，不能用"最小改动"为由迁就。
-- **A5 数据面是单一口径**：凡 struct-as-dictionary 操作（keys/values/entries/display/==/has/len/**del**）必须共用「数据字段」集合，否则出现 `has(k)=false` 却 `del(k)` 成功的自相矛盾；扩展 A5 时以「同集合不变量」背书。
-- **idx/len 不能只钉 pop**：一次性把"通用取值规则（实参原值 / pop 取 -1 / len=越界时容器长度）"补进规范，可避免 removeAt/swap/insert 逐个再报缺口。
-- **计数是易腐面**：本轮只加"子场景"不改错误类，故 `共 12 类`/`运行期 10` 保持；增删条目后仍须全文 grep 复核计数。
-- **收工用双向 grep**：既查新增串存在（`EmptyExtremum` 等），也查禁用串未新增（`E-[A-Z]{2,3}-[0-9]` 应仅 11 处、全在 §13）。
+- **"等价空格"类定义天然预设有界**：`§2.4 块注释等价一个空格` 只对**闭合**块注释成立；凡"X 等价于空白/良性"的规则，都要问"X 的边界（EOF/未闭合）是否另行定义"，否则必被 core-dev 在边界处上报缺口。本轮即此模式。
+- **同族构造要同判**：语言里成对的词法构造（字符串 / 块注释）若一方已定义 EOF 行为，另一方缺失即为**不一致缺口**；优先"对齐同族构造"而非让边界静默。
+- **边界默许 = 隐藏 bug**：对"漏写结束符"这类高频手误，静默容忍违背「无魔法」；即便"最小改动"是零代码，也不应以牺牲可诊断性换取——判据仍是"语义正确 > 改动最小"。
+- **变体命名对齐既有家族**：`UnterminatedBlockComment` 直接沿 `UnterminatedString` 命名与消息句式（`…在此处未闭合`），降低 core-dev 落地成本、便于 test-engineer 归组断言。

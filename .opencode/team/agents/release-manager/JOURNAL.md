@@ -1,5 +1,20 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 23:40] P3.9a 缺口消息（EmptyExtremum/BadRange）+ 规范补钉（未终止块注释钉死）：两个原子提交并推送
+- 来源: team-lead 任务书（P3.9a 缺口消息由 core-dev 完成、规范补钉由 language-architect 完成，均经 team-lead 核验：`cargo build` 0 warning、`cargo test` 117 passed / 0 failed（缺口消息新增 4 测）；本轮把两组改动做两个原子提交并 push）
+- 完成:
+  - `git status --short --untracked-files=all` 复核：恰为任务书预期 **9 项**（`M src/error.rs`、`M .opencode/team/DECISIONS.md`、`M docs/spec/{syntax,semantics,interface-contract}.md`、`M agents/core-dev/{STATUS,JOURNAL}.md`、`M agents/language-architect/{STATUS,JOURNAL}.md`），**无清单外文件、无未跟踪文件**；出现清单外条目即停止的门禁未触发。
+  - 基线复核：`git branch --show-current` = `main`；HEAD = `711d6b9 docs(spec): close 6 P3.9a contract gaps (ADR + v1 pins)`（push 前本地基线）。
+  - **提交 1（P3.9a 缺口消息代码 + core-dev 文档）**：`git add src/error.rs .opencode/team/agents/core-dev/STATUS.md .opencode/team/agents/core-dev/JOURNAL.md`（`git diff --cached --name-only` 精确为 3 文件）→ `git -c core.autocrlf=false commit -m 'feat(p3): add ValueMsg::EmptyExtremum and BadRange' -m 'Per architect ruling on P3.9a gaps: empty-extremum and bad-random-range ValueError messages; 4 new tests.'` → **短哈希 `7accfa3`**（3 files changed, 197 insertions, 11 deletions）；`git log -1 --format='%h%n%s%n%b'` 复核标题/正文完整无损。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 2。
+  - **提交 2（规范 + 决策 + 团队文档）**：`git add .opencode/team/DECISIONS.md docs/spec/syntax.md docs/spec/semantics.md docs/spec/interface-contract.md .opencode/team/agents/language-architect/STATUS.md .opencode/team/agents/language-architect/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md` → 提交 `docs(spec): pin unterminated block comment as SyntaxError (ADR)`（标题含 `(`/`)`；本提交即本条日志所在提交，短哈希见汇报）。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 两个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -4`（顶部两条为本轮提交，位于 `711d6b9` 之上）；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag，`v0.2.0` 待 P3.11）。
+- 决策: 无新 ADR（DECISIONS.md 本轮改动由 language-architect 追加、我仅代为入库；`docs/spec/**` 为冻结文档的合法补钉，已先有 ADR 授权）。owner 偏差仍为遗留待确认项。
+- 下一步: P3.3b（strings/interp）、P3.9b（HOF 内置）继续按模块原子提交；P3.11 收口时打附注标签 `v0.2.0`。
+- 阻塞: 无。
 ## [2026-09-23 23:05] P3.3a（lexer CODE 模式核心）+ 6 处契约缺口闭合：两个原子提交并推送
 - 来源: team-lead 任务书（P3.3a 由 core-dev 完成、缺口闭合由 language-architect 完成，均经 team-lead 核验：`src/lexer.rs` 27396 B（+886 行，31 个 lexer 测试）、`cargo build` 0 warning、`cargo test` 113 passed / 0 failed；`DECISIONS.md` +67 行 ADR、`docs/spec/semantics.md` +25 行、`docs/spec/interface-contract.md` +12 行；本轮把两组改动做两个原子提交并 push）
 - 完成:

@@ -121,7 +121,7 @@ enum LfzError {
 
 ### 10.6 其它
 
-- lexer：模式栈 `CODE/STR/INTERP`（[syntax.md](./syntax.md) §2.8）；最大匹配表（§2.3）；CODE 模式下 `#` → `SyntaxError`。
+- lexer：模式栈 `CODE/STR/INTERP`（[syntax.md](./syntax.md) §2.8）；最大匹配表（§2.3）；CODE 模式下 `#` → `SyntaxError`。**未闭合块注释 `/*` 至 EOF → `SyntaxError`**（`SyntaxMsg::UnterminatedBlockComment`，消息 `块注释在此处未闭合（缺少 '*/'）`，`span` 指向 `/*` 中的 `/`）；**不得**静默消费至空白（[syntax.md](./syntax.md) §2.4、[semantics.md](./semantics.md) §8.1）。
 - parser：换行模式栈 `SIG/IGN`（§3.2）+ NO_BRACE_LITERAL 限制位（§3.4）；`;;` 生成 `Dump` 节点；管道脱糖为 `Call`；每节点填 `Span`。
 - CLI：仅做**错误格式化**与**退出码映射**（0/1/2）；`--json` 输出 [semantics.md](./semantics.md) §8.3 示例 4 的字段。
 
@@ -232,6 +232,7 @@ enum LfzError {
 - **`s[k]` 与 `.k` 的键统一为 string**；`has` / `keys` 只认数据字段（A5）。
 - **int→float 加宽（B13）**：见 [semantics.md](./semantics.md) §4.5.7（加宽可能不精确；混合比较按数学精确值）。
 - **`ValueMsg` 变体（实现侧，v1 补钉）**：`Convert { src, dst, text }`、`BadFormatSpec { spec }`、**`EmptyExtremum { func: String }`**（消息 `空数组没有极值（{func}）`）、**`BadRange { lo: i64, hi: i64 }`**（消息 `区间非法：{lo} >= {hi}`）。后两者为本轮补钉**新增**，供 core-dev 在 `src/error.rs` 落地；均归类 `ValueError`（**不新增错误类**）。
+- **`SyntaxMsg` 新增变体（实现侧，v1 补钉）**：**`UnterminatedBlockComment`**（**无字段**，消息 `块注释在此处未闭合（缺少 '*/'）`）——**未闭合块注释 `/*` 至 EOF**（[syntax.md](./syntax.md) §2.4、[semantics.md](./semantics.md) §8.1）；归 `LfzError::Syntax` → `SyntaxError`，`span` 指向 `/*` 中的 `/`（**不新增错误类**）。
 
 ---
 
