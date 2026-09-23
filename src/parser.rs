@@ -1,4 +1,5 @@
-//! 语法分析器（递归下降）—— 第五批：声明与函数字面量（fn / struct / lambda / self）。
+//! 语法分析器（递归下降）—— 第六批：管道脱糖 / `;;` dump / 富字符串插值 / i64 边界
+//! （前五批：语句、表达式、控制流、声明与函数字面量）。
 //!
 //! 契约：`docs/spec/interface-contract.md` §10.6；语法：`docs/spec/syntax.md` §3.1 / §3.2 / §3.4 / §3.5 / §4.1 / §7。
 //!
@@ -33,6 +34,21 @@
 //!   `BreakContinueOutsideLoop` / `ReturnOutsideFunction`；语句终结检查
 //!   （§3.2 同逻辑行两条语句）报 `TwoStatements`。
 //!
+//! # 本批实现（第六批）
+//!
+//! - **管道脱糖**（§4.1 级别 5 / §4.3）：`cmp_expr` 层插入 `pipe_expr = add_expr { "|>" pipe_rhs }`。
+//!   `L |> F(a1,…,an)` 脱糖为 `Call`（data-last：无 `_` 时 `L` 追加为末参；恰一个 `_` 原位替换；
+//!   ≥2 个 `_` → `PipeMultiplePlaceholder`）；右侧非调用（函数名 / 方法 / lambda）→ `R(L)`。
+//!   `_` 仅合法于管道 RHS 的调用实参位（任意嵌套深度），其余位置（含 lambda 体、`let _ = …`）
+//!   → `PlaceholderPosition`（§4.3 规则 4/6，M4）。
+//! - **`;;` → `Dump` 节点**（§10.5 / §10.6）：`StmtKind::Dump { scope }`，`scope` 填哨兵
+//!   `ScopeId(0)`；evaluator 执行时**忽略**该字段、以运行时当前 scope 为准（见汇报的协调点）。
+//! - **富字符串插值**（§2.8）：`StrBegin / Text / InterpBegin / …表达式… / [FormatSpec] /
+//!   InterpEnd / … / StrEnd` → `ExprKind::Interp(InterpString)`，`format_spec: Option<String>`
+//!   （无 `:` 为 `None`，`:` 后可空）。纯文本无插值仍产出 `ExprKind::Str`。
+//! - **`i64::MIN` 字面量**（§10.8 B12）：`-` 紧邻 INT 且其正值为 `2^63` → `Int(i64::MIN)`
+//!   （不产生 `Unary`）；十进制超出 `i64` / radix 形式超出 `u64` → `IntegerOutOfRange`。
+//!
 //! # 本批已知简化
 //!
 //! 1. 语句起始处的 `{ ... }` 仍按**裸块语句**解析并内联进外层语句序列
@@ -42,11 +58,13 @@
 //!    `if_expr`（§7 `unary` 层）属后续批次。
 //! 3. 循环 / 函数体深度由 `loop_depth` / `fn_depth` 计数（本批起 `fn` 声明、
 //!    lambda 体真正 +1）。
-//! 4. `;;`→`Dump`、管道（`|>` 级别 5）、插值、`i64::MIN` 特判为后续批次（P3.5）。
+//! 4. （已由第六批实现：`;;`→`Dump`、管道 `|>` 脱糖、富字符串插值、
+//!    `i64::MIN` / `IntegerOutOfRange` 特判，见上「本批实现」。）
 //! 5. `self` 与形参重名不作语法级限制（§7 无规则）；`self` 归属方法体的语义校验
 //!    在求值期。
 
 use crate::ast::*;
+use crate::env::ScopeId;
 use crate::error::{syntax, LzError, R, SyntaxMsg};
 use crate::lexer::{Token, TokenKind};
 use crate::span::Span;
@@ -58,6 +76,40 @@ enum NlMode {
     Sig,
     /// `NEWLINE` 忽略：当空白跳过（`( … )` / `[ … ]` 内）。
     Ign,
+}
+
+/// 管道上下文（§4.3）：决定 `_` 占位符的合法性。
+#[derive(Clone, Debug)]
+enum PipeCtx {
+    /// 正在解析某个 `|>` 的 RHS：记录已见 `_` 与当前调用实参位嵌套深度。
+    Rhs {
+        /// 已见的 `_` 位置（至多一个，§4.3 规则 1）。
+        placeholder: Option<Span>,
+        /// 调用实参位嵌套深度（`_` 仅在此 >0 时合法，§4.3 规则 4）。
+        call_args: u32,
+    },
+    /// 函数 / lambda 体：`_` 不得穿 λ 体（§4.3 规则 6，M4）。
+    Barrier,
+}
+
+impl PipeCtx {
+    /// 取出本帧已记录的 `_` 位置（`Barrier` 帧恒为 `None`）。
+    fn placeholder(&self) -> Option<Span> {
+        match self {
+            PipeCtx::Rhs { placeholder, .. } => *placeholder,
+            PipeCtx::Barrier => None,
+        }
+    }
+}
+
+/// `_` 占位符在当前位置的合法性判定结果。
+enum PlaceholderState {
+    /// 管道 RHS 调用实参位且尚无占位符：合法。
+    Legal,
+    /// 管道 RHS 已有一个占位符：第二个 `_` → `PipeMultiplePlaceholder`。
+    Multiple,
+    /// 其它位置（或 lambda 体内）：非法 → `PlaceholderPosition`。
+    Illegal,
 }
 
 /// 递归下降解析器：`tokens` + 游标 + 换行模式栈 + 控制流上下文。
@@ -74,6 +126,8 @@ pub struct Parser<'a> {
     cond_restrict: bool,
     /// 控制流头表达式中 `(` / `[` 嵌套深度：`>0` 时 NO_BRACE_LITERAL 临时解除（§3.4）。
     group_depth: u32,
+    /// 管道上下文栈（§4.3）：`|>` RHS 压 `Rhs`，函数体压 `Barrier`；`_` 合法性据此判定。
+    pipe_stack: Vec<PipeCtx>,
 }
 
 /// 解析记号流为一个程序（`Program` = 顶层语句序列；即任务书所称 module）。
@@ -98,6 +152,7 @@ impl<'a> Parser<'a> {
             fn_depth: 0,
             cond_restrict: false,
             group_depth: 0,
+            pipe_stack: Vec::new(),
         }
     }
 
@@ -229,6 +284,12 @@ impl<'a> Parser<'a> {
                 self.parse_fn_decl(span)
             }
             TokenKind::KwStruct => self.parse_struct_decl(span),
+            // `;;` → `Dump` 节点（§10.5 / §10.6）：scope 填哨兵 `ScopeId(0)`，
+            // evaluator 执行时忽略该字段、以运行时当前作用域为准。
+            TokenKind::Dump => {
+                self.bump();
+                Ok(Spanned::new(StmtKind::Dump { scope: ScopeId(0) }, span))
+            }
             TokenKind::Semi => Err(syntax(SyntaxMsg::LoneSemicolon, span)),
             _ => {
                 // `assign_stmt = lvalue , assign_op , expression`（§7；A21 先试 lvalue 头部）。
@@ -349,6 +410,10 @@ impl<'a> Parser<'a> {
                 self.bump();
                 name
             }
+            // §4.3 规则 4：`_` 不得作绑定名（`let _ = …` 非法）。
+            TokenKind::Placeholder => {
+                return Err(syntax(SyntaxMsg::PlaceholderPosition, self.peek_span()));
+            }
             _ => return Err(self.unexpected("变量名")),
         };
         self.expect(&TokenKind::Assign)?;
@@ -406,6 +471,10 @@ impl<'a> Parser<'a> {
                     self.bump();
                     params.push(name);
                 }
+                // A24 / §4.3 规则 4：`_` 不得作形参名。
+                TokenKind::Placeholder => {
+                    return Err(syntax(SyntaxMsg::PlaceholderPosition, self.peek_span()));
+                }
                 _ => return Err(self.unexpected("形参名")),
             }
             self.skip_ign_newlines();
@@ -420,10 +489,13 @@ impl<'a> Parser<'a> {
 
     /// 函数体 `body = block | "=>" , ( block | expression )`（§7；§3.5 块前换行；M3）。
     ///
-    /// 解析期间 `fn_depth` +1：体内 `return` 合法；错误路径亦先回退深度再上抛。
+    /// 解析期间 `fn_depth` +1（体内 `return` 合法）并压入 `Barrier`（§4.3 规则 6：
+    /// `_` 不得穿 λ 体）；错误路径亦先回退深度再上抛。
     fn parse_fn_body(&mut self) -> R<Body> {
         self.fn_depth += 1;
+        self.pipe_stack.push(PipeCtx::Barrier);
         let result = self.parse_body_forms();
+        self.pipe_stack.pop();
         self.fn_depth -= 1;
         result
     }
@@ -452,10 +524,12 @@ impl<'a> Parser<'a> {
     }
 
     /// 箭头 lambda 的体（`=>` 已由 `try_parse_arrow_lambda` 消费）：
-    /// 仅补 `fn_depth` 管理后解析 `( block | expression )`。
+    /// 仅补 `fn_depth` 管理与 `Barrier`（§4.3 规则 6）后解析 `( block | expression )`。
     fn parse_arrow_fn_body(&mut self) -> R<Body> {
         self.fn_depth += 1;
+        self.pipe_stack.push(PipeCtx::Barrier);
         let result = self.parse_arrow_body();
+        self.pipe_stack.pop();
         self.fn_depth -= 1;
         result
     }
@@ -689,12 +763,79 @@ impl<'a> Parser<'a> {
         self.parse_binary_layer(Self::parse_cmp, eq_op)
     }
 
-    /// `cmp_expr = add_expr , { ( "<" | "<=" | ">" | ">=" ) , add_expr }`（§4.1 级别 6，左结合）。
+    /// `cmp_expr = pipe_expr , { ( "<" | "<=" | ">" | ">=" ) , pipe_expr }`（§4.1 级别 6，左结合）。
     ///
-    /// 管道（`|>` 级别 5）属后续批次：本层直接收 `add_expr`，`|>` 记号
-    /// 不会在任何表达式层被消费（与批 2 行为一致）。
+    /// §4.4：`cmp_expr` 直接收 `pipe_expr`（`|>` 级别 5 比比较/逻辑紧、比 `+ - * / %` 松）。
     fn parse_cmp(&mut self) -> R<Expr> {
-        self.parse_binary_layer(Self::parse_add, cmp_op)
+        self.parse_binary_layer(Self::parse_pipe, cmp_op)
+    }
+
+    /// `pipe_expr = add_expr , { "|>" , pipe_rhs }`（§4.1 级别 5，左结合；§4.3）。
+    ///
+    /// 每个 `|>` 的 RHS 解析期间压入 `PipeCtx::Rhs`（`_` 由此合法），解析完立即弹出
+    /// （错误路径也弹出）；脱糖由 [`desugar_pipe`] 完成。
+    fn parse_pipe(&mut self) -> R<Expr> {
+        let mut left = self.parse_add()?;
+        loop {
+            self.skip_ign_newlines();
+            if *self.peek() != TokenKind::Pipe {
+                break;
+            }
+            let span = left.span;
+            self.bump();
+            self.pipe_stack.push(PipeCtx::Rhs {
+                placeholder: None,
+                call_args: 0,
+            });
+            let rhs_result = self.parse_pipe_rhs();
+            let frame = self.pipe_stack.pop().expect("管道帧必然存在");
+            let rhs = rhs_result?;
+            left = desugar_pipe(left, rhs, frame.placeholder(), span);
+        }
+        Ok(left)
+    }
+
+    /// `pipe_rhs = postfix | lambda`（§4.3）。
+    fn parse_pipe_rhs(&mut self) -> R<Expr> {
+        self.skip_ign_newlines();
+        let span = self.peek_span();
+        match self.peek() {
+            TokenKind::KwFn => self.parse_fn_lambda(span),
+            TokenKind::LParen => match self.try_parse_arrow_lambda(span)? {
+                Some(lambda) => Ok(lambda),
+                None => self.parse_postfix(),
+            },
+            _ => self.parse_postfix(),
+        }
+    }
+
+    /// `_` 占位符在当前位置的合法性（§4.3 规则 1 / 4 / 6）。
+    fn placeholder_state(&self) -> PlaceholderState {
+        match self.pipe_stack.last() {
+            Some(PipeCtx::Rhs {
+                placeholder: Some(_),
+                ..
+            }) => PlaceholderState::Multiple,
+            Some(PipeCtx::Rhs {
+                placeholder: None,
+                call_args,
+            }) if *call_args > 0 => PlaceholderState::Legal,
+            _ => PlaceholderState::Illegal,
+        }
+    }
+
+    /// 进入一层调用实参表：栈顶管道帧的实参位深度 +1。
+    fn pipe_call_args_enter(&mut self) {
+        if let Some(PipeCtx::Rhs { call_args, .. }) = self.pipe_stack.last_mut() {
+            *call_args += 1;
+        }
+    }
+
+    /// 离开一层调用实参表：栈顶管道帧的实参位深度 -1。
+    fn pipe_call_args_leave(&mut self) {
+        if let Some(PipeCtx::Rhs { call_args, .. }) = self.pipe_stack.last_mut() {
+            *call_args -= 1;
+        }
     }
 
     /// `add_expr = mul_expr , { ( "+" | "-" ) , mul_expr }`（§4.1 级别 4，左结合）。
@@ -769,6 +910,14 @@ impl<'a> Parser<'a> {
         match self.peek() {
             TokenKind::Minus => {
                 self.bump();
+                // B12（§10.8）：`-` 紧邻 INT 且其正值为 2^63 → `Int(i64::MIN)`
+                // （不产生 `Unary` 节点）；否则按普通一元负号继续。
+                if let TokenKind::Int(text) = self.peek().clone() {
+                    if int_magnitude(&text) == Some(1u128 << 63) {
+                        self.bump();
+                        return Ok(Spanned::new(ExprKind::Int(i64::MIN), span));
+                    }
+                }
                 let operand = self.parse_unary()?;
                 Ok(Spanned::new(
                     ExprKind::Unary { op: UnaryOp::Neg, operand: Box::new(operand) },
@@ -851,7 +1000,9 @@ impl<'a> Parser<'a> {
                     self.bump();
                     self.nl_stack.push(NlMode::Ign);
                     self.group_depth += 1; // §3.4：实参表内临时解除 NO_BRACE_LITERAL
+                    self.pipe_call_args_enter(); // §4.3：`_` 在调用实参位才合法
                     let args = self.parse_args(TokenKind::RParen)?;
+                    self.pipe_call_args_leave();
                     self.expect(&TokenKind::RParen)?;
                     self.group_depth -= 1;
                     self.nl_stack.pop();
@@ -897,15 +1048,9 @@ impl<'a> Parser<'a> {
         match self.peek().clone() {
             TokenKind::Int(text) => {
                 self.bump();
-                let n = parse_int(&text).ok_or_else(|| {
-                    syntax(
-                        SyntaxMsg::UnexpectedToken {
-                            expected: "i64 范围内的整数".to_string(),
-                            got: format!("'{text}'"),
-                        },
-                        span,
-                    )
-                })?;
+                // §10.8 B12：十进制超出 i64 / radix 形式超出 u64 → `IntegerOutOfRange`。
+                let n = parse_int(&text)
+                    .ok_or_else(|| syntax(SyntaxMsg::IntegerOutOfRange, span))?;
                 Ok(Spanned::new(ExprKind::Int(n), span))
             }
             TokenKind::Float(text) => {
@@ -951,6 +1096,22 @@ impl<'a> Parser<'a> {
                 }
             }
             TokenKind::LBracket => self.parse_array(span),
+            // `_` 占位符（§4.3）：仅管道 RHS 调用实参位合法，见 `placeholder_state`。
+            TokenKind::Placeholder => match self.placeholder_state() {
+                PlaceholderState::Legal => {
+                    self.bump();
+                    if let Some(PipeCtx::Rhs { placeholder, .. }) = self.pipe_stack.last_mut() {
+                        *placeholder = Some(span);
+                    }
+                    // 哨兵：`Ident("_")` 不可能由词法产生（裸 `_` 是 `Placeholder` 记号），
+                    // RHS 解析完成后由 `replace_placeholder` 原位替换为管道左侧。
+                    Ok(Spanned::new(ExprKind::Ident("_".to_string()), span))
+                }
+                PlaceholderState::Multiple => {
+                    Err(syntax(SyntaxMsg::PipeMultiplePlaceholder, span))
+                }
+                PlaceholderState::Illegal => Err(syntax(SyntaxMsg::PlaceholderPosition, span)),
+            },
             TokenKind::LBrace => {
                 if self.no_brace_literal() {
                     // §3.4：条件 / 可迭代位最外层的裸 `{` 终止表达式；此处表达式
@@ -966,33 +1127,54 @@ impl<'a> Parser<'a> {
         }
     }
 
-    /// 纯字符串字面量：`StrBegin , { Text } , StrEnd`（本批不支持插值）。
+    /// 字符串字面量（§2.8）：`StrBegin , { Text | 插值段 } , StrEnd`。
+    ///
+    /// 无插值 → `ExprKind::Str`（纯文本）；含插值 → `ExprKind::Interp(InterpString)`，
+    /// 分段按书写顺序；插值段 `InterpBegin , 表达式 , [FormatSpec] , InterpEnd`，
+    /// `format_spec` 无 `:` 为 `None`（M6），`:` 后可空串。
     fn parse_string(&mut self, span: Span) -> R<Expr> {
         self.bump(); // StrBegin
-        let mut text = String::new();
+        let mut parts: Vec<StrPart> = Vec::new();
+        let mut cur_text = String::new();
+        let mut saw_interp = false;
         loop {
             match self.peek().clone() {
                 TokenKind::Text(part) => {
-                    text.push_str(&part);
+                    cur_text.push_str(&part);
                     self.bump();
+                }
+                TokenKind::InterpBegin => {
+                    self.bump();
+                    saw_interp = true;
+                    if !cur_text.is_empty() {
+                        parts.push(StrPart::Text(std::mem::take(&mut cur_text)));
+                    }
+                    let expr = self.parse_expr()?;
+                    let format_spec = match self.peek().clone() {
+                        TokenKind::FormatSpec(spec) => {
+                            self.bump();
+                            Some(spec)
+                        }
+                        _ => None,
+                    };
+                    self.expect(&TokenKind::InterpEnd)?;
+                    parts.push(StrPart::Expr { expr, format_spec });
                 }
                 TokenKind::StrEnd => {
                     self.bump();
                     break;
                 }
-                TokenKind::InterpBegin => {
-                    return Err(syntax(
-                        SyntaxMsg::UnexpectedToken {
-                            expected: "\"".to_string(),
-                            got: "${".to_string(),
-                        },
-                        self.peek_span(),
-                    ));
-                }
                 _ => return Err(self.unexpected("\"")),
             }
         }
-        Ok(Spanned::new(ExprKind::Str(text), span))
+        if saw_interp {
+            if !cur_text.is_empty() {
+                parts.push(StrPart::Text(std::mem::take(&mut cur_text)));
+            }
+            Ok(Spanned::new(ExprKind::Interp(InterpString { parts }), span))
+        } else {
+            Ok(Spanned::new(ExprKind::Str(cur_text), span))
+        }
     }
 
     /// 括号分组 `( expr )`：`(` 内压入 `IGN` 模式（换行当空白）。
@@ -1095,8 +1277,18 @@ impl<'a> Parser<'a> {
             TokenKind::StrBegin => {
                 let e = self.parse_string(span)?;
                 match e.node {
+                    // §7 `field_init = ( IDENT | STRING )`：字段名只收纯字符串。
                     ExprKind::Str(s) => s,
-                    _ => unreachable!("纯字符串解析必得 Str"),
+                    ExprKind::Interp(_) => {
+                        return Err(syntax(
+                            SyntaxMsg::UnexpectedToken {
+                                expected: "字段名".to_string(),
+                                got: "插值字符串".to_string(),
+                            },
+                            span,
+                        ));
+                    }
+                    _ => unreachable!("字符串解析必得 Str 或 Interp"),
                 }
             }
             _ => return Err(self.unexpected("字段名")),
@@ -1111,10 +1303,27 @@ impl<'a> Parser<'a> {
 // 辅助函数
 // ===========================================================================
 
-/// 解析整数字面量原文（`_` 分隔与 `0x` / `0b` / `0o` 进制，§2.7）。
+/// 解析整数字面量原文（`_` 分隔与 `0x` / `0b` / `0o` 进制，§2.7；§10.8 B12）。
 ///
-/// 失败返回 `None`（B12 的 `i64::MIN` 特判属后续批次）。
+/// 十进制按 `i64` 解析；十六 / 二 / 八进制按 `u64` 解析后**按位重解释**为 `i64`
+/// （radix 形式仅在超出 `u64` 范围时报错）。失败返回 `None`。
 fn parse_int(text: &str) -> Option<i64> {
+    let t = text.replace('_', "");
+    if let Some(r) = t.strip_prefix("0x").or_else(|| t.strip_prefix("0X")) {
+        u64::from_str_radix(r, 16).ok().map(|v| v as i64)
+    } else if let Some(r) = t.strip_prefix("0b").or_else(|| t.strip_prefix("0B")) {
+        u64::from_str_radix(r, 2).ok().map(|v| v as i64)
+    } else if let Some(r) = t.strip_prefix("0o").or_else(|| t.strip_prefix("0O")) {
+        u64::from_str_radix(r, 8).ok().map(|v| v as i64)
+    } else {
+        t.parse::<i64>().ok()
+    }
+}
+
+/// 整数字面量原文的无符号数值（`u128`），供 `-` 后 `2^63` 特判（§10.8 B12）。
+///
+/// 覆盖十进制与 `0x` / `0b` / `0o` 进制（`_` 分隔先去除）。
+fn int_magnitude(text: &str) -> Option<u128> {
     let t = text.replace('_', "");
     let (radix, digits) = if let Some(r) = t.strip_prefix("0x").or_else(|| t.strip_prefix("0X")) {
         (16, r)
@@ -1125,7 +1334,105 @@ fn parse_int(text: &str) -> Option<i64> {
     } else {
         (10, t.as_str())
     };
-    i64::from_str_radix(digits, radix).ok()
+    u128::from_str_radix(digits, radix).ok()
+}
+
+/// §4.3 管道脱糖：`L |> F(args)` 生成 `Call`。
+///
+/// - 恰有一个 `_` → 原位替换为 `L`（`replace_placeholder`）；
+/// - 无 `_` 且右侧是调用 → `L` **追加为末参**（data-last）；
+/// - 无 `_` 且右侧非调用（函数名 / 方法 / lambda）→ `R(L)`。
+///
+/// 生成节点的 `span` 取管道左侧起始位置（与二元层「最左操作数」同规）。
+fn desugar_pipe(left: Expr, rhs: Expr, placeholder: Option<Span>, span: Span) -> Expr {
+    if placeholder.is_some() {
+        let replaced = replace_placeholder(rhs, &left);
+        Spanned::new(replaced.node, span)
+    } else {
+        let node = match rhs.node {
+            ExprKind::Call { callee, mut args } => {
+                args.push(left);
+                ExprKind::Call { callee, args }
+            }
+            _ => ExprKind::Call {
+                callee: Box::new(rhs),
+                args: vec![left],
+            },
+        };
+        Spanned::new(node, span)
+    }
+}
+
+/// 把管道 RHS 中的占位哨兵（`Ident("_")`，仅由管道实参位产生）替换为 `with`。
+///
+/// `_` 只可能出现在调用实参位（解析期保证），故沿实参可嵌套的节点（`Call` /
+/// 数组 / struct 字面量 / 插值字符串 / 后缀 / 一元 / 二元 / 逻辑）深入即可；
+/// lambda 体内的 `_` 解析期即被 `Barrier` 拒绝（§4.3 规则 6），故不进入 `Lambda`。
+fn replace_placeholder(expr: Expr, with: &Expr) -> Expr {
+    let span = expr.span;
+    let node = match expr.node {
+        ExprKind::Ident(ref name) if name == "_" => return with.clone(),
+        ExprKind::Array(xs) => ExprKind::Array(
+            xs.into_iter().map(|e| replace_placeholder(e, with)).collect(),
+        ),
+        ExprKind::Interp(InterpString { parts }) => ExprKind::Interp(InterpString {
+            parts: parts
+                .into_iter()
+                .map(|p| match p {
+                    StrPart::Text(t) => StrPart::Text(t),
+                    StrPart::Expr { expr, format_spec } => StrPart::Expr {
+                        expr: replace_placeholder(expr, with),
+                        format_spec,
+                    },
+                })
+                .collect(),
+        }),
+        ExprKind::StructLit(StructLit { type_name, fields }) => {
+            ExprKind::StructLit(StructLit {
+                type_name,
+                fields: fields
+                    .into_iter()
+                    .map(|f| FieldInit {
+                        span: f.span,
+                        name: f.name,
+                        value: replace_placeholder(f.value, with),
+                    })
+                    .collect(),
+            })
+        }
+        ExprKind::Field { object, name } => ExprKind::Field {
+            object: Box::new(replace_placeholder(*object, with)),
+            name,
+        },
+        ExprKind::Index { object, index } => ExprKind::Index {
+            object: Box::new(replace_placeholder(*object, with)),
+            index: Box::new(replace_placeholder(*index, with)),
+        },
+        ExprKind::Call { callee, args } => ExprKind::Call {
+            callee: Box::new(replace_placeholder(*callee, with)),
+            args: args
+                .into_iter()
+                .map(|a| replace_placeholder(a, with))
+                .collect(),
+        },
+        ExprKind::Unary { op, operand } => ExprKind::Unary {
+            op,
+            operand: Box::new(replace_placeholder(*operand, with)),
+        },
+        ExprKind::Binary { op, left, right } => ExprKind::Binary {
+            op,
+            left: Box::new(replace_placeholder(*left, with)),
+            right: Box::new(replace_placeholder(*right, with)),
+        },
+        ExprKind::Logical { op, left, right } => ExprKind::Logical {
+            op,
+            left: Box::new(replace_placeholder(*left, with)),
+            right: Box::new(replace_placeholder(*right, with)),
+        },
+        // 字面量 / SelfRef / If / Lambda：不可能含占位符。
+        other => other,
+    };
+    Spanned::new(node, span)
 }
 
 /// 解析浮点字面量原文（允许 `_` 分隔，§2.7）。
@@ -1276,6 +1583,7 @@ fn token_desc(kind: &TokenKind) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::env::ScopeId;
     use crate::error::LzError;
 
     fn tok(kind: TokenKind, line: u32, col: u32) -> Token {
@@ -4072,5 +4380,748 @@ mod tests {
         ])
         .unwrap_err();
         assert_syntax(&err, SyntaxMsg::TwoStatements, 1, 9);
+    }
+
+    // ======================================================================
+    // 第六批：`;;` → Dump 节点
+    // ======================================================================
+
+    #[test]
+    fn dump_statement_builds_dump_node_with_sentinel_scope() {
+        let p = parse(&[
+            tok(TokenKind::Dump, 1, 1),
+            tok(TokenKind::Eof, 1, 3),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 1);
+        assert_eq!(p.stmts[0].span, Span::new(1, 1));
+        match &p.stmts[0].node {
+            StmtKind::Dump { scope } => assert_eq!(*scope, ScopeId(0)),
+            other => panic!("应为 Dump，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn dump_inside_block_is_legal() {
+        let p = parse(&[
+            tok(TokenKind::LBrace, 1, 1),
+            tok(TokenKind::Dump, 1, 3),
+            tok(TokenKind::Newline, 1, 5),
+            tok(TokenKind::RBrace, 1, 6),
+            tok(TokenKind::Eof, 1, 7),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 1);
+        assert!(matches!(p.stmts[0].node, StmtKind::Dump { .. }));
+    }
+
+    #[test]
+    fn dump_must_occupy_own_line() {
+        // `x = 1 ;;` —— A10 反例：`;;` 不独占逻辑行 → 同逻辑行两条语句。
+        let err = parse(&[
+            tok(TokenKind::Ident("x".into()), 1, 1),
+            tok(TokenKind::Assign, 1, 3),
+            tok(TokenKind::Int("1".into()), 1, 5),
+            tok(TokenKind::Dump, 1, 7),
+            tok(TokenKind::Eof, 1, 9),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::TwoStatements, 1, 7);
+    }
+
+    // ======================================================================
+    // 第六批：管道 `|>` 脱糖（§4.3）
+    // ======================================================================
+
+    #[test]
+    fn pipe_without_placeholder_appends_as_last_arg() {
+        // `xs |> f(a, b)` → Call { f, [a, b, xs] }（data-last）。
+        let p = parse(&[
+            tok(TokenKind::Ident("xs".into()), 1, 1),
+            tok(TokenKind::Pipe, 1, 4),
+            tok(TokenKind::Ident("f".into()), 1, 7),
+            tok(TokenKind::LParen, 1, 8),
+            tok(TokenKind::Ident("a".into()), 1, 9),
+            tok(TokenKind::Comma, 1, 10),
+            tok(TokenKind::Ident("b".into()), 1, 12),
+            tok(TokenKind::RParen, 1, 13),
+            tok(TokenKind::Eof, 1, 14),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        assert_eq!(e.span, Span::new(1, 1));
+        match &e.node {
+            ExprKind::Call { callee, args } => {
+                assert!(matches!(&callee.node, ExprKind::Ident(n) if n == "f"));
+                assert_eq!(args.len(), 3);
+                assert!(matches!(&args[0].node, ExprKind::Ident(n) if n == "a"));
+                assert!(matches!(&args[1].node, ExprKind::Ident(n) if n == "b"));
+                assert!(matches!(&args[2].node, ExprKind::Ident(n) if n == "xs"));
+                assert_eq!(args[2].span, Span::new(1, 1));
+            }
+            other => panic!("应为脱糖后的 Call，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn pipe_with_placeholder_injects_at_position() {
+        // `xs |> f(a, _, b)` → Call { f, [a, xs, b] }。
+        let p = parse(&[
+            tok(TokenKind::Ident("xs".into()), 1, 1),
+            tok(TokenKind::Pipe, 1, 4),
+            tok(TokenKind::Ident("f".into()), 1, 7),
+            tok(TokenKind::LParen, 1, 8),
+            tok(TokenKind::Ident("a".into()), 1, 9),
+            tok(TokenKind::Comma, 1, 10),
+            tok(TokenKind::Placeholder, 1, 12),
+            tok(TokenKind::Comma, 1, 13),
+            tok(TokenKind::Ident("b".into()), 1, 15),
+            tok(TokenKind::RParen, 1, 16),
+            tok(TokenKind::Eof, 1, 17),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        match &e.node {
+            ExprKind::Call { callee, args } => {
+                assert!(matches!(&callee.node, ExprKind::Ident(n) if n == "f"));
+                assert_eq!(args.len(), 3);
+                assert!(matches!(&args[0].node, ExprKind::Ident(n) if n == "a"));
+                assert!(matches!(&args[1].node, ExprKind::Ident(n) if n == "xs"));
+                assert!(matches!(&args[2].node, ExprKind::Ident(n) if n == "b"));
+            }
+            other => panic!("应为脱糖后的 Call，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn pipe_placeholder_in_nested_call_args() {
+        // `xs |> f(g(_))` → Call { f, [Call { g, [xs] }] }（规则 5：任意嵌套深度）。
+        let p = parse(&[
+            tok(TokenKind::Ident("xs".into()), 1, 1),
+            tok(TokenKind::Pipe, 1, 4),
+            tok(TokenKind::Ident("f".into()), 1, 7),
+            tok(TokenKind::LParen, 1, 8),
+            tok(TokenKind::Ident("g".into()), 1, 9),
+            tok(TokenKind::LParen, 1, 10),
+            tok(TokenKind::Placeholder, 1, 11),
+            tok(TokenKind::RParen, 1, 12),
+            tok(TokenKind::RParen, 1, 13),
+            tok(TokenKind::Eof, 1, 14),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        match &e.node {
+            ExprKind::Call { callee, args } => {
+                assert!(matches!(&callee.node, ExprKind::Ident(n) if n == "f"));
+                assert_eq!(args.len(), 1);
+                match &args[0].node {
+                    ExprKind::Call { callee, args } => {
+                        assert!(matches!(&callee.node, ExprKind::Ident(n) if n == "g"));
+                        assert!(matches!(&args[0].node, ExprKind::Ident(n) if n == "xs"));
+                    }
+                    other => panic!("应为嵌套 Call，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为脱糖后的 Call，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn pipe_chaining_is_left_associative() {
+        // `xs |> f() |> g()` → Call { g, [Call { f, [xs] }] }。
+        let p = parse(&[
+            tok(TokenKind::Ident("xs".into()), 1, 1),
+            tok(TokenKind::Pipe, 1, 4),
+            tok(TokenKind::Ident("f".into()), 1, 7),
+            tok(TokenKind::LParen, 1, 8),
+            tok(TokenKind::RParen, 1, 9),
+            tok(TokenKind::Pipe, 1, 11),
+            tok(TokenKind::Ident("g".into()), 1, 14),
+            tok(TokenKind::LParen, 1, 15),
+            tok(TokenKind::RParen, 1, 16),
+            tok(TokenKind::Eof, 1, 17),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        assert_eq!(e.span, Span::new(1, 1));
+        match &e.node {
+            ExprKind::Call { callee, args } => {
+                assert!(matches!(&callee.node, ExprKind::Ident(n) if n == "g"));
+                match &args[0].node {
+                    ExprKind::Call { callee, args } => {
+                        assert!(matches!(&callee.node, ExprKind::Ident(n) if n == "f"));
+                        assert!(matches!(&args[0].node, ExprKind::Ident(n) if n == "xs"));
+                    }
+                    other => panic!("应为内层 Call，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为脱糖后的 Call，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn pipe_rhs_bare_ident_wraps_call() {
+        // `xs |> sum` → Call { sum, [xs] }（规则 2）。
+        let p = parse(&[
+            tok(TokenKind::Ident("xs".into()), 1, 1),
+            tok(TokenKind::Pipe, 1, 4),
+            tok(TokenKind::Ident("sum".into()), 1, 7),
+            tok(TokenKind::Eof, 1, 10),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        match &e.node {
+            ExprKind::Call { callee, args } => {
+                assert!(matches!(&callee.node, ExprKind::Ident(n) if n == "sum"));
+                assert_eq!(args.len(), 1);
+                assert!(matches!(&args[0].node, ExprKind::Ident(n) if n == "xs"));
+            }
+            other => panic!("应为脱糖后的 Call，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn pipe_rhs_lambda_wraps_call() {
+        // `xs |> (x) => x` → Call { Lambda, [xs] }（规则 2）。
+        let p = parse(&[
+            tok(TokenKind::Ident("xs".into()), 1, 1),
+            tok(TokenKind::Pipe, 1, 4),
+            tok(TokenKind::LParen, 1, 7),
+            tok(TokenKind::Ident("x".into()), 1, 8),
+            tok(TokenKind::RParen, 1, 9),
+            tok(TokenKind::Arrow, 1, 11),
+            tok(TokenKind::Ident("x".into()), 1, 14),
+            tok(TokenKind::Eof, 1, 15),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        match &e.node {
+            ExprKind::Call { callee, args } => {
+                assert!(matches!(callee.node, ExprKind::Lambda(_)));
+                assert!(matches!(&args[0].node, ExprKind::Ident(n) if n == "xs"));
+            }
+            other => panic!("应为脱糖后的 Call，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn pipe_precedence_add_binds_tighter() {
+        // `1 + 2 |> f` → Call { f, [Binary(+, 1, 2)] }（§4.4：`|>` 比 `+` 松）。
+        let p = parse(&[
+            tok(TokenKind::Int("1".into()), 1, 1),
+            tok(TokenKind::Plus, 1, 3),
+            tok(TokenKind::Int("2".into()), 1, 5),
+            tok(TokenKind::Pipe, 1, 7),
+            tok(TokenKind::Ident("f".into()), 1, 10),
+            tok(TokenKind::Eof, 1, 11),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        match &e.node {
+            ExprKind::Call { callee, args } => {
+                assert!(matches!(&callee.node, ExprKind::Ident(n) if n == "f"));
+                assert!(matches!(
+                    &args[0].node,
+                    ExprKind::Binary { op: BinaryOp::Add, .. }
+                ));
+            }
+            other => panic!("应为脱糖后的 Call，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn pipe_rhs_must_be_postfix_or_lambda() {
+        // `xs |> sum() + 1` → A2：`|>` 右侧仅收 pipe_rhs，`+` 处同逻辑行第二条语句。
+        let err = parse(&[
+            tok(TokenKind::Ident("xs".into()), 1, 1),
+            tok(TokenKind::Pipe, 1, 4),
+            tok(TokenKind::Ident("sum".into()), 1, 7),
+            tok(TokenKind::LParen, 1, 10),
+            tok(TokenKind::RParen, 1, 11),
+            tok(TokenKind::Plus, 1, 13),
+            tok(TokenKind::Int("1".into()), 1, 15),
+            tok(TokenKind::Eof, 1, 16),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::TwoStatements, 1, 13);
+    }
+
+    #[test]
+    fn pipe_multiple_placeholder_is_error() {
+        // `xs |> f(_, _)` → 第二个 `_` 处 PipeMultiplePlaceholder。
+        let err = parse(&[
+            tok(TokenKind::Ident("xs".into()), 1, 1),
+            tok(TokenKind::Pipe, 1, 4),
+            tok(TokenKind::Ident("f".into()), 1, 7),
+            tok(TokenKind::LParen, 1, 8),
+            tok(TokenKind::Placeholder, 1, 9),
+            tok(TokenKind::Comma, 1, 10),
+            tok(TokenKind::Placeholder, 1, 12),
+            tok(TokenKind::RParen, 1, 13),
+            tok(TokenKind::Eof, 1, 14),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::PipeMultiplePlaceholder, 1, 12);
+    }
+
+    #[test]
+    fn placeholder_as_whole_rhs_is_error() {
+        // `xs |> _` → `_` 不在调用实参位 → PlaceholderPosition。
+        let err = parse(&[
+            tok(TokenKind::Ident("xs".into()), 1, 1),
+            tok(TokenKind::Pipe, 1, 4),
+            tok(TokenKind::Placeholder, 1, 7),
+            tok(TokenKind::Eof, 1, 8),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::PlaceholderPosition, 1, 7);
+    }
+
+    #[test]
+    fn placeholder_outside_pipe_is_error() {
+        // 裸 `_` 表达式语句 → PlaceholderPosition（规则 4）。
+        let err = parse(&[
+            tok(TokenKind::Placeholder, 1, 1),
+            tok(TokenKind::Eof, 1, 2),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::PlaceholderPosition, 1, 1);
+    }
+
+    #[test]
+    fn placeholder_in_let_binding_is_error() {
+        // `let _ = 1` → PlaceholderPosition（规则 4：`let _ = …` 非法）。
+        let err = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Placeholder, 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::Int("1".into()), 1, 9),
+            tok(TokenKind::Eof, 1, 10),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::PlaceholderPosition, 1, 5);
+    }
+
+    #[test]
+    fn placeholder_in_lambda_body_is_error() {
+        // `xs |> map((x) => x + _)` → 规则 6（M4）：`_` 不得穿 λ 体。
+        let err = parse(&[
+            tok(TokenKind::Ident("xs".into()), 1, 1),
+            tok(TokenKind::Pipe, 1, 4),
+            tok(TokenKind::Ident("map".into()), 1, 7),
+            tok(TokenKind::LParen, 1, 10),
+            tok(TokenKind::LParen, 1, 11),
+            tok(TokenKind::Ident("x".into()), 1, 12),
+            tok(TokenKind::RParen, 1, 13),
+            tok(TokenKind::Arrow, 1, 15),
+            tok(TokenKind::Ident("x".into()), 1, 18),
+            tok(TokenKind::Plus, 1, 20),
+            tok(TokenKind::Placeholder, 1, 22),
+            tok(TokenKind::RParen, 1, 23),
+            tok(TokenKind::Eof, 1, 24),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::PlaceholderPosition, 1, 22);
+    }
+
+    #[test]
+    fn nested_pipe_inside_lambda_body_binds_to_inner_pipe() {
+        // `xs |> map((x) => x |> f(_))` → 内层 `_` 绑定内层 `|>`（规则 6）。
+        let p = parse(&[
+            tok(TokenKind::Ident("xs".into()), 1, 1),
+            tok(TokenKind::Pipe, 1, 4),
+            tok(TokenKind::Ident("map".into()), 1, 7),
+            tok(TokenKind::LParen, 1, 10),
+            tok(TokenKind::LParen, 1, 11),
+            tok(TokenKind::Ident("x".into()), 1, 12),
+            tok(TokenKind::RParen, 1, 13),
+            tok(TokenKind::Arrow, 1, 15),
+            tok(TokenKind::Ident("x".into()), 1, 18),
+            tok(TokenKind::Pipe, 1, 20),
+            tok(TokenKind::Ident("f".into()), 1, 23),
+            tok(TokenKind::LParen, 1, 24),
+            tok(TokenKind::Placeholder, 1, 25),
+            tok(TokenKind::RParen, 1, 26),
+            tok(TokenKind::RParen, 1, 27),
+            tok(TokenKind::Eof, 1, 28),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        match &e.node {
+            ExprKind::Call { callee, args } => {
+                assert!(matches!(&callee.node, ExprKind::Ident(n) if n == "map"));
+                // 无顶层 `_` → `xs` 追加为末参；lambda 体内 `x |> f(_)` → `f(x)`。
+                assert_eq!(args.len(), 2);
+                assert!(matches!(args[0].node, ExprKind::Lambda(_)));
+                assert!(matches!(&args[1].node, ExprKind::Ident(n) if n == "xs"));
+                match &args[0].node {
+                    ExprKind::Lambda(l) => match &l.body {
+                        Body::Expr(inner) => match &inner.node {
+                            ExprKind::Call { callee, args } => {
+                                assert!(matches!(&callee.node, ExprKind::Ident(n) if n == "f"));
+                                assert!(matches!(&args[0].node, ExprKind::Ident(n) if n == "x"));
+                            }
+                            other => panic!("应为内层脱糖 Call，得到 {other:?}"),
+                        },
+                        _ => panic!("lambda 体应为表达式"),
+                    },
+                    other => panic!("应为 Lambda，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为脱糖后的 Call，得到 {other:?}"),
+        }
+    }
+
+    // ======================================================================
+    // 第六批：富字符串插值（§2.8）
+    // ======================================================================
+
+    #[test]
+    fn interp_text_only_is_plain_str() {
+        // `"hi"` 无插值 → 仍为纯 `Str`（回归）。
+        let p = parse(&[
+            tok(TokenKind::StrBegin, 1, 1),
+            tok(TokenKind::Text("hi".into()), 1, 2),
+            tok(TokenKind::StrEnd, 1, 4),
+            tok(TokenKind::Eof, 1, 5),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        assert_eq!(e.node, ExprKind::Str("hi".to_string()));
+    }
+
+    #[test]
+    fn interp_single_expr_without_format_spec() {
+        // `"${x}"` → Interp { parts: [Expr { Ident(x), format_spec: None }] }。
+        let p = parse(&[
+            tok(TokenKind::StrBegin, 1, 1),
+            tok(TokenKind::InterpBegin, 1, 2),
+            tok(TokenKind::Ident("x".into()), 1, 4),
+            tok(TokenKind::InterpEnd, 1, 5),
+            tok(TokenKind::StrEnd, 1, 6),
+            tok(TokenKind::Eof, 1, 7),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        assert_eq!(e.span, Span::new(1, 1));
+        match &e.node {
+            ExprKind::Interp(InterpString { parts }) => {
+                assert_eq!(parts.len(), 1);
+                match &parts[0] {
+                    StrPart::Expr { expr, format_spec } => {
+                        assert!(matches!(&expr.node, ExprKind::Ident(n) if n == "x"));
+                        assert_eq!(expr.span, Span::new(1, 4));
+                        assert_eq!(*format_spec, None);
+                    }
+                    other => panic!("应为表达式段，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 Interp，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn interp_multi_segment_text_expr_alternation() {
+        // `"a${x}b${y}c"` → [Text(a), Expr(x), Text(b), Expr(y), Text(c)]。
+        let p = parse(&[
+            tok(TokenKind::StrBegin, 1, 1),
+            tok(TokenKind::Text("a".into()), 1, 2),
+            tok(TokenKind::InterpBegin, 1, 3),
+            tok(TokenKind::Ident("x".into()), 1, 5),
+            tok(TokenKind::InterpEnd, 1, 6),
+            tok(TokenKind::Text("b".into()), 1, 7),
+            tok(TokenKind::InterpBegin, 1, 8),
+            tok(TokenKind::Ident("y".into()), 1, 10),
+            tok(TokenKind::InterpEnd, 1, 11),
+            tok(TokenKind::Text("c".into()), 1, 12),
+            tok(TokenKind::StrEnd, 1, 13),
+            tok(TokenKind::Eof, 1, 14),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        match &e.node {
+            ExprKind::Interp(InterpString { parts }) => {
+                assert_eq!(parts.len(), 5);
+                assert!(matches!(&parts[0], StrPart::Text(t) if t == "a"));
+                assert!(matches!(&parts[1], StrPart::Expr { format_spec: None, .. }));
+                assert!(matches!(&parts[2], StrPart::Text(t) if t == "b"));
+                assert!(matches!(&parts[3], StrPart::Expr { format_spec: None, .. }));
+                assert!(matches!(&parts[4], StrPart::Text(t) if t == "c"));
+            }
+            other => panic!("应为 Interp，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn interp_with_format_spec_some() {
+        // `"${x:>3}"` → format_spec = Some(">3")（M6）。
+        let p = parse(&[
+            tok(TokenKind::StrBegin, 1, 1),
+            tok(TokenKind::InterpBegin, 1, 2),
+            tok(TokenKind::Ident("x".into()), 1, 4),
+            tok(TokenKind::FormatSpec(">3".into()), 1, 5),
+            tok(TokenKind::InterpEnd, 1, 8),
+            tok(TokenKind::StrEnd, 1, 9),
+            tok(TokenKind::Eof, 1, 10),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        match &e.node {
+            ExprKind::Interp(InterpString { parts }) => match &parts[0] {
+                StrPart::Expr { format_spec, .. } => {
+                    assert_eq!(format_spec.as_deref(), Some(">3"));
+                }
+                other => panic!("应为表达式段，得到 {other:?}"),
+            },
+            other => panic!("应为 Interp，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn interp_empty_format_spec_is_some_empty() {
+        // `"${x:}"` → format_spec = Some("")（M6：`:` 后可空）。
+        let p = parse(&[
+            tok(TokenKind::StrBegin, 1, 1),
+            tok(TokenKind::InterpBegin, 1, 2),
+            tok(TokenKind::Ident("x".into()), 1, 4),
+            tok(TokenKind::FormatSpec(String::new()), 1, 5),
+            tok(TokenKind::InterpEnd, 1, 6),
+            tok(TokenKind::StrEnd, 1, 7),
+            tok(TokenKind::Eof, 1, 8),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        match &e.node {
+            ExprKind::Interp(InterpString { parts }) => match &parts[0] {
+                StrPart::Expr { format_spec, .. } => assert_eq!(format_spec.as_deref(), Some("")),
+                other => panic!("应为表达式段，得到 {other:?}"),
+            },
+            other => panic!("应为 Interp，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn interp_nested_string_inside_expr() {
+        // `"${"inner"}"` → Expr { Str("inner"), None }（嵌套字符串，§2.8 规则 3）。
+        let p = parse(&[
+            tok(TokenKind::StrBegin, 1, 1),
+            tok(TokenKind::InterpBegin, 1, 2),
+            tok(TokenKind::StrBegin, 1, 4),
+            tok(TokenKind::Text("inner".into()), 1, 5),
+            tok(TokenKind::StrEnd, 1, 10),
+            tok(TokenKind::InterpEnd, 1, 11),
+            tok(TokenKind::StrEnd, 1, 12),
+            tok(TokenKind::Eof, 1, 13),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        match &e.node {
+            ExprKind::Interp(InterpString { parts }) => match &parts[0] {
+                StrPart::Expr { expr, format_spec } => {
+                    assert_eq!(expr.node, ExprKind::Str("inner".to_string()));
+                    assert_eq!(*format_spec, None);
+                }
+                other => panic!("应为表达式段，得到 {other:?}"),
+            },
+            other => panic!("应为 Interp，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn interp_expr_may_contain_operator() {
+        // `"${a + 1}"` → Expr 段为 Binary(+, a, 1)。
+        let p = parse(&[
+            tok(TokenKind::StrBegin, 1, 1),
+            tok(TokenKind::InterpBegin, 1, 2),
+            tok(TokenKind::Ident("a".into()), 1, 4),
+            tok(TokenKind::Plus, 1, 6),
+            tok(TokenKind::Int("1".into()), 1, 8),
+            tok(TokenKind::InterpEnd, 1, 9),
+            tok(TokenKind::StrEnd, 1, 10),
+            tok(TokenKind::Eof, 1, 11),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        match &e.node {
+            ExprKind::Interp(InterpString { parts }) => match &parts[0] {
+                StrPart::Expr { expr, .. } => {
+                    assert!(matches!(
+                        &expr.node,
+                        ExprKind::Binary { op: BinaryOp::Add, .. }
+                    ));
+                }
+                other => panic!("应为表达式段，得到 {other:?}"),
+            },
+            other => panic!("应为 Interp，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn interp_in_assign_and_decl_init() {
+        // `let s = "n=${n}"` 声明初值含插值 → Interp 段表达式为 Ident("n")。
+        let p = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("s".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::StrBegin, 1, 9),
+            tok(TokenKind::Text("n=".into()), 1, 10),
+            tok(TokenKind::InterpBegin, 1, 12),
+            tok(TokenKind::Ident("n".into()), 1, 14),
+            tok(TokenKind::InterpEnd, 1, 15),
+            tok(TokenKind::StrEnd, 1, 16),
+            tok(TokenKind::Eof, 1, 17),
+        ])
+        .unwrap();
+        let e = decl_init(&p);
+        match &e.node {
+            ExprKind::Interp(InterpString { parts }) => {
+                assert_eq!(parts.len(), 2);
+                assert!(matches!(&parts[0], StrPart::Text(t) if t == "n="));
+            }
+            other => panic!("应为 Interp，得到 {other:?}"),
+        }
+    }
+
+    // ======================================================================
+    // 第六批：i64::MIN 字面量 / IntegerOutOfRange（§10.8 B12）
+    // ======================================================================
+
+    #[test]
+    fn int_literal_i64_min_with_unary_minus_is_legal() {
+        // `-9223372036854775808` → `Int(i64::MIN)`，**不产生** Unary 节点。
+        let p = parse(&[
+            tok(TokenKind::Minus, 1, 1),
+            tok(TokenKind::Int("9223372036854775808".into()), 1, 2),
+            tok(TokenKind::Eof, 1, 22),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        assert_eq!(e.node, ExprKind::Int(i64::MIN));
+        assert_eq!(e.span, Span::new(1, 1));
+    }
+
+    #[test]
+    fn int_literal_i64_min_hex_with_unary_minus_is_legal() {
+        // `-0x8000000000000000`（正值为 2^63）→ `Int(i64::MIN)`。
+        let p = parse(&[
+            tok(TokenKind::Minus, 1, 1),
+            tok(TokenKind::Int("0x8000000000000000".into()), 1, 2),
+            tok(TokenKind::Eof, 1, 20),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        assert_eq!(e.node, ExprKind::Int(i64::MIN));
+    }
+
+    #[test]
+    fn int_literal_i64_max_is_legal() {
+        let p = parse(&[
+            tok(TokenKind::Int("9223372036854775807".into()), 1, 1),
+            tok(TokenKind::Eof, 1, 21),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        assert_eq!(e.node, ExprKind::Int(i64::MAX));
+    }
+
+    #[test]
+    fn int_literal_positive_overflow_is_error() {
+        // `9223372036854775808`（无负号）→ IntegerOutOfRange。
+        let err = parse(&[
+            tok(TokenKind::Int("9223372036854775808".into()), 1, 1),
+            tok(TokenKind::Eof, 1, 21),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::IntegerOutOfRange, 1, 1);
+    }
+
+    #[test]
+    fn int_literal_negative_overflow_is_error() {
+        // `-9223372036854775809`（正值为 2^63 + 1，非 2^63 特判）→ IntegerOutOfRange。
+        let err = parse(&[
+            tok(TokenKind::Minus, 1, 1),
+            tok(TokenKind::Int("9223372036854775809".into()), 1, 2),
+            tok(TokenKind::Eof, 1, 22),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::IntegerOutOfRange, 1, 2);
+    }
+
+    #[test]
+    fn int_literal_i64_min_behind_paren_is_error() {
+        // `-(9223372036854775808)` → `-` 不紧邻 INT → 括号内超界 → IntegerOutOfRange。
+        let err = parse(&[
+            tok(TokenKind::Minus, 1, 1),
+            tok(TokenKind::LParen, 1, 2),
+            tok(TokenKind::Int("9223372036854775808".into()), 1, 3),
+            tok(TokenKind::RParen, 1, 22),
+            tok(TokenKind::Eof, 1, 23),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::IntegerOutOfRange, 1, 3);
+    }
+
+    #[test]
+    fn int_radix_literal_parses_as_u64() {
+        // `0xFFFFFFFFFFFFFFFF`（u64::MAX，radix 形式按 u64 解析后按位重解释）→ Int(-1)。
+        let p = parse(&[
+            tok(TokenKind::Int("0xFFFFFFFFFFFFFFFF".into()), 1, 1),
+            tok(TokenKind::Eof, 1, 19),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        assert_eq!(e.node, ExprKind::Int(-1));
+    }
+
+    #[test]
+    fn int_radix_literal_out_of_u64_is_error() {
+        // `0x1FFFFFFFFFFFFFFFF`（2^64）→ radix 形式超出 u64 → IntegerOutOfRange。
+        let err = parse(&[
+            tok(TokenKind::Int("0x1FFFFFFFFFFFFFFFF".into()), 1, 1),
+            tok(TokenKind::Eof, 1, 20),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::IntegerOutOfRange, 1, 1);
+    }
+
+    #[test]
+    fn int_plain_neg_small_still_unary() {
+        // 回归：`-5` 仍为 Unary(Neg, Int(5))（2^63 特判不误伤普通负号）。
+        let p = parse(&[
+            tok(TokenKind::Minus, 1, 1),
+            tok(TokenKind::Int("5".into()), 1, 2),
+            tok(TokenKind::Eof, 1, 3),
+        ])
+        .unwrap();
+        let e = expr_of(&p);
+        assert!(matches!(
+            &e.node,
+            ExprKind::Unary { op: UnaryOp::Neg, operand }
+                if matches!(operand.node, ExprKind::Int(5))
+        ));
+    }
+
+    #[test]
+    fn int_pipe_and_dump_regression_with_existing_constructs() {
+        // 综合回归：管道脱糖 + 边界整数 + `;;` 共存。
+        let p = parse(&[
+            tok(TokenKind::Ident("xs".into()), 1, 1),
+            tok(TokenKind::Pipe, 1, 4),
+            tok(TokenKind::Ident("sum".into()), 1, 7),
+            tok(TokenKind::Newline, 1, 10),
+            tok(TokenKind::Minus, 2, 1),
+            tok(TokenKind::Int("9223372036854775808".into()), 2, 2),
+            tok(TokenKind::Newline, 2, 22),
+            tok(TokenKind::Dump, 3, 1),
+            tok(TokenKind::Eof, 3, 3),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 3);
+        assert!(matches!(p.stmts[0].node, StmtKind::Expr(_)));
+        match &p.stmts[1].node {
+            StmtKind::Expr(e) => assert_eq!(e.node, ExprKind::Int(i64::MIN)),
+            other => panic!("应为 Int(i64::MIN) 表达式语句，得到 {other:?}"),
+        }
+        assert!(matches!(p.stmts[2].node, StmtKind::Dump { .. }));
     }
 }

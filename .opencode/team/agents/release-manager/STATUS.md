@@ -1,10 +1,10 @@
 # release-manager — 工作状态
-> 最后更新: 2026-09-24 00:06 by release-manager
+> 最后更新: 2026-09-24 00:21 by release-manager
 ## 当前状态
-**P3.4b3b（parser：`fn`/`struct` 声明 + 函数字面量）：单个原子提交并推送至 origin**（工作区干净、本地 HEAD = `refs/heads/main`）。
+**P3.5（parser 特色四件套：管道脱糖 / `;;`→`Dump` / 富插值 / `i64::MIN`）：单个原子提交并推送至 origin**（工作区干净、本地 HEAD = `refs/heads/main`）。**P3 全部实现子阶段到此收官。**
 - **远程仓库 URL：https://github.com/NeitherTourRest/lfz-programing-language**（Public，默认分支 `main`）。
-- **本轮提交（1 个原子提交）**：`feat(p3): parser fn/struct declarations and function literals`（仅 `src/parser.rs` + 本角色 `{STATUS,JOURNAL}.md` 收工文档并入；`git show --stat` 口径见汇报）。
-- 前置核验（team-lead 提供）：`src/parser.rs` **156262 B**（parser 测试 73→99，+26 测）；`cargo build` **0 warning**；测试 **319（库）+ 8 + 7（集成）全绿**。
+- **本轮提交（1 个原子提交）**：`feat(p3): parser v1 features (pipe desugaring, dump, interpolation, i64::MIN)`（仅 `src/parser.rs` + 本角色 `{STATUS,JOURNAL}.md` 收工文档并入；`git show --stat` 口径见汇报）。
+- 前置核验（team-lead 提供）：`src/parser.rs` **199552 B**（parser 测试 99→134，+35 测）；`cargo build` **0 warning**；测试 **354（库）+ 8 + 7（集成）全绿**。
 - ⚠️ **入清单门禁**：动手前 `git status --short --untracked-files=all` 恰为任务书预期 **1 项**（`M src/parser.rs`）；**无清单外条目、无未跟踪文件**，门禁未触发。
 - ⚠️ **本轮仅含 `src/parser.rs`**（外部执行者交付，未更新任何团队文档——符合预期）；除此之外只并入本角色收工文档。
 - ⚠️ **暂存纪律**：全程 `git add <显式文件>`（未用 `git add -A`）；提交前 `git diff --cached --name-only` 逐条核对。
@@ -28,7 +28,7 @@
 - **⚠️ 提交体量数字核对**：`core.autocrlf=false` 下 `git commit` **自身打印**的 insertions/deletions 可能因行尾转换而**虚高**——**判据一律以 `git show --stat HEAD` / `git show HEAD~1..HEAD --numstat` 为准**。**逐文件铁证**：`git hash-object <file>` 与 `git rev-parse HEAD:<file>` 相等 ⇒ 工作区/索引/提交三者一致。
 - **多行提交信息 + 非 ASCII 字符**：body 含 `<`/`>`/`§` 时，**写 UTF-8 信息文件**（`C:\Users\19170\AppData\Local\Temp\opencode\lfz_msg*.txt`）→ `git -c core.autocrlf=false commit -F <file>`，提交后 `git log -1 --format=%B` 复核正文完整。
 - **新增目录入清单门禁**：任务书给 `?? examples/`、`?? tests/` 这类**目录**条目时，**先 `Get-ChildItem -Recurse` 展开目录内容逐项复核**（确认归属正确、无意外文件），再 `git add <目录>`；提交前 `git diff --cached --name-only` 会展开为具体文件路径，逐条核对。
-- **基线事实（更新后）**：提交链 …→ `c7627a6`(P3.10 CLI) → `3e1085c`(P3.10 CLI ADR) → `53ca3e2`(P3.4b3a parser control-flow) → **本轮 `feat(p3): parser fn/struct declarations and function literals`（短哈希见汇报）**；附注标签 `v0.1.0` 指向 `e060b21`；远程 `refs/heads/main`=本轮 HEAD。
+- **基线事实（更新后）**：提交链 …→ `53ca3e2`(P3.4b3a parser control-flow) → `0ce5123`(P3.4b3b parser fn/struct) → **本轮 `feat(p3): parser v1 features (pipe desugaring, dump, interpolation, i64::MIN)`（短哈希见汇报）**；附注标签 `v0.1.0` 指向 `e060b21`；远程 `refs/heads/main`=本轮 HEAD。
 - **撤单核对流程**：先 `git status --short --untracked-files=all` 与任务书预期清单逐条比对，出现清单外文件即停止汇报；暂存后 `git diff --cached --name-only` 确认暂存集精确。
 - **多提交任务**：一逻辑变更一提交；连续提交时每次单独 `git add` + 单独 `git diff --cached --name-only` 核对，再 `commit -F`；最后一个提交按 team-lead 要求并入本角色收工文档，保持工作区干净。
 - **禁区确认**：本轮未 force-push、未改默认分支、未打 tag、未 `git add -A`、未提交 `target/`/密钥/临时文件、未改清单外文件（除本角色收工文档）。

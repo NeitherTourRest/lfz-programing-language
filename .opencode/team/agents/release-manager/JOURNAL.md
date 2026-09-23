@@ -1,5 +1,19 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 00:21] P3.5（parser 特色四件套：管道脱糖 / `;;`→`Dump` / 富插值 / `i64::MIN`）：单个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；已核验：`src/parser.rs` 199552 B（parser 测试 99→134，+35 测）、`cargo build` 0 warning、测试 354(库)+8+7(集成) 全绿；P3 全部实现子阶段到此收官；本轮**只有 1 个**已修改文件 `src/parser.rs`（外部执行者交付、**未**更新任何团队文档，符合预期）；做单个原子提交并 push，收工文档并入同一提交；禁区：禁 force-push、不打 tag（`v0.2.0` 待 P3.11）、不提交 target/密钥/临时文件、不改清单外文件；出现清单外条目即停止）
+- 完成:
+  - 入清单门禁：`git status --short --untracked-files=all` 复核恰为任务书预期 **1 项**（`M src/parser.rs`），**无清单外条目、无未跟踪文件**；门禁未触发。
+  - 基线/尺寸复核：`git rev-parse --abbrev-ref HEAD` = `main`；push 前本地基线 HEAD = 远程 `refs/heads/main` = `0ce5123 feat(p3): parser fn/struct declarations and function literals`；`(Get-Item src\parser.rs).Length` = **199552 B**，与任务书一致。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入同一提交（保持工作区干净）。
+  - **单个原子提交**：`git add src/parser.rs .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（`git diff --cached --name-only` 核对：`src/parser.rs` + 本角色两文档，无清单外文件）→ `git -c core.autocrlf=false commit -F lfz_p35_msg.txt`（标题 `feat(p3): parser v1 features (pipe desugaring, dump, interpolation, i64::MIN)`，正文 `|> desugars to Call with data-last injection and _ placeholder rules; ;; -> Dump; rich string interpolation with format_spec; i64::MIN literal rule; 35 new tests.`）→ 短哈希见汇报；`git log -1 --format=%B` 复核标题/正文完整无损。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 一个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -3`（顶部为本轮提交，其下 `0ce5123`、`53ca3e2`）；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag，`v0.2.0` 待 P3.11）。
+- 决策: 无新 ADR。
+- 下一步: P3 全部实现子阶段收官；P3.11 收口核对通过条件后打附注标签 `v0.2.0`；P10 交付清单核对。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-24 00:06] P3.4b3b（parser：`fn`/`struct` 声明 + 函数字面量）：单个原子提交并推送
 - 来源: team-lead 任务书（轻量启动；已核验：`src/parser.rs` 156262 B（parser 测试 73→99，+26 测）、`cargo build` 0 warning、测试 319(库)+8+7(集成) 全绿；本轮**只有 1 个**已修改文件 `src/parser.rs`（外部执行者交付、**未**更新任何团队文档，符合预期）；做单个原子提交并 push，收工文档并入同一提交；禁区：禁 force-push、不打 tag（`v0.2.0` 待 P3.11）、不提交 target/密钥/临时文件、不改清单外文件；出现清单外条目即停止）
 - 完成:
