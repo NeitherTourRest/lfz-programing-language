@@ -1,5 +1,19 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 23:50] P3.4b3a（parser 控制流语句）：单个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；已核验：`src/parser.rs` 110031 B（parser 测试 57→73，+16 测）、`cargo build` 0 warning、测试 293(库)+8+7(集成) 全绿；本轮**只有 1 个**已修改文件 `src/parser.rs`（外部执行者交付、**未**更新任何团队文档，符合预期）；做单个原子提交并 push，收工文档并入同一提交；禁区：禁 force-push、不打 tag（`v0.2.0` 待 P3.11）、不提交 target/密钥/临时文件、不改清单外文件；出现清单外条目即停止）
+- 完成:
+  - 入清单门禁：`git status --short --untracked-files=all` 复核恰为任务书预期 **1 项**（`M src/parser.rs`），**无清单外条目、无未跟踪文件**；门禁未触发。
+  - 基线/尺寸复核：`git rev-parse --abbrev-ref HEAD` = `main`；push 前本地基线 HEAD = 远程 `refs/heads/main` = `3e1085c docs(team): record P3.10 CLI contract ADR`；`(Get-Item src\parser.rs).Length` = **110031 B**，与任务书一致；`git diff --stat -- src/parser.rs` = 1 file changed, 665 insertions(+), 17 deletions(-)（`git show --stat` 口径为准）。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入同一提交（保持工作区干净）。
+  - **单个原子提交**：`git add src/parser.rs .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（`git diff --cached --name-only` 核对：`src/parser.rs` + 本角色两文档，无清单外文件）→ `git -c core.autocrlf=false commit -F lfz_p3b3a_msg.txt`（标题 `feat(p3): parser control-flow statements`，正文 `if/else/else-if, while, for-in, break/continue/return with outside-loop and outside-function errors carrying spans; 16 new tests.`）→ 短哈希见汇报；`git log -1 --format=%B` 复核标题/正文完整无损。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 一个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -3`（顶部为本轮提交，其下 `3e1085c`、`c7627a6`）；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag，`v0.2.0` 待 P3.11）。
+- 决策: 无新 ADR。
+- 下一步: P3.11 收口时打附注标签 `v0.2.0`；后续子阶段按模块原子提交。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-23 23:45] P3.10（最小 CLI + 端到端）：两个原子提交并推送
 - 来源: team-lead 任务书（轻量启动；已核验：`cargo run -- run examples/hello.lfz` → `Hello, LFZ!` + 退出码 0、缺 `#42` → `CosmosAnswerError: 你忘记了宇宙的答案` + 退出码 2、`cargo build` 0 warning、测试 277(库)+8+7(集成) 全绿；工作区 6 组（7 文件）改动：`M src/main.rs`、`?? src/cli.rs`、`?? examples/`、`?? tests/`、`M .opencode/team/DECISIONS.md`、`M agents/tooling-dev/{STATUS,JOURNAL}.md`；做两个原子提交并 push；禁区：禁 force-push、不打 tag（`v0.2.0` 待 P3.11）、不提交 `src/parser.rs`/target/密钥/临时文件、不改清单外文件；出现清单外条目即停止）
 - 完成:

@@ -1,6 +1,6 @@
-//! 语法分析器（递归下降）—— 第三批：二元运算符 + 赋值。
+//! 语法分析器（递归下降）—— 第四批：控制流语句（if / while / for / break / continue / return）。
 //!
-//! 契约：`docs/spec/interface-contract.md` §10.6；语法：`docs/spec/syntax.md` §3.1 / §3.2 / §4.1 / §7。
+//! 契约：`docs/spec/interface-contract.md` §10.6；语法：`docs/spec/syntax.md` §3.1 / §3.2 / §3.4 / §3.5 / §4.1 / §7。
 //!
 //! # 已实现（本批 + 前批；其余构造在后续批次实现，当前一律报 `UnexpectedToken`）
 //!
@@ -9,6 +9,11 @@
 //! - 语句：`let` / `var` 声明、**赋值语句**（`assign_stmt`：`= += -= *= /= %=`，
 //!   目标为 `IDENT` / `self` + `. 字段` / `[ 下标 ]` 链，A21）、表达式语句、
 //!   块 `{ ... }`、程序（`Program`）本身。
+//! - **控制流（本批）**：`if` / `else` / `else if` 链（条件走 §3.4 NO_BRACE_LITERAL、
+//!   §3.5 块前 / else 前换行、A4 悬挂 else 绑定最近 if）、`while`（§7 `while_stmt`）、
+//!   `for IDENT in expr`（§7 `for_stmt`）、`break` / `continue`（循环外 →
+//!   `BreakContinueOutsideLoop`）、`return [expr]`（A19 行尾 = 返回 nil；函数外 →
+//!   `ReturnOutsideFunction`）。
 //! - 表达式：字面量（Int / Float / 纯字符串 / true / false / nil）、标识符、
 //!   括号分组 `( expr )`、一元 `-` / `!`（§4.1 级别 2）、
 //!   后缀链（调用 `f(a, …)` / 索引 `xs[i]` / 字段 `s.k`，可任意链式，§4.1 级别 1）、
@@ -16,18 +21,22 @@
 //!   以及 §4.1 优先级表的二元层（全部左结合）：`* / %`（级别 3）→ `+ -`（级别 4）→
 //!   比较 `< <= > >=`（级别 6）→ 相等 `== !=`（级别 7）→ 短路逻辑 `&&`（级别 8）→
 //!   `||`（级别 9）。
-//! - 错误：`UnexpectedToken` / `IncompleteExpr` / `LoneSemicolon` / `InvalidAssignTarget`，
-//!   语句终结检查（§3.2 同逻辑行两条语句）报 `TwoStatements`。
+//! - 错误：`UnexpectedToken` / `IncompleteExpr` / `LoneSemicolon` / `InvalidAssignTarget` /
+//!   `BreakContinueOutsideLoop` / `ReturnOutsideFunction`；语句终结检查
+//!   （§3.2 同逻辑行两条语句）报 `TwoStatements`。
 //!
 //! # 本批已知简化
 //!
 //! 1. 语句起始处的 `{ ... }` 仍按**裸块语句**解析并内联进外层语句序列
 //!    （AST 的 `StmtKind` 无 Block 变体）；§3.3 / A9「语句首 `{` 恒为匿名
-//!    struct 字面量」留待语句形态补齐批次一并处理。表达式位置的 `{`
-//!   一律为 struct 字面量（NO_BRACE_LITERAL：块起始位不受影响）。
-//! 2. `;;`→`Dump`、管道（`|>` 级别 5）、插值、`i64::MIN` 特判等均为后续批次；
-//!   语句 `if` / `while` / `for` / `break` / `continue` / `return` / `fn` / `struct`
-//!   仍报 `UnexpectedToken`。
+//!    struct 字面量」留待语句形态补齐批次一并处理。
+//! 2. `if` 仅支持**语句形态**（`StmtKind::If` 包裹 `if_expr`）；表达式位置的
+//!    `if_expr`（§7 `unary` 层）属后续批次。
+//! 3. 循环 / 函数体深度由 `loop_depth` / `fn_depth` 计数；`fn` 声明与 lambda 是
+//!    下一批，故本批任何源码级 `return` 都在顶层报 `ReturnOutsideFunction`
+//!    （测试以直置 `fn_depth` 模拟函数体）。
+//! 4. `;;`→`Dump`、管道（`|>` 级别 5）、插值、`i64::MIN` 特判、`fn` / `struct`
+//!    声明、lambda 均为后续批次。
 
 use crate::ast::*;
 use crate::error::{syntax, LzError, R, SyntaxMsg};
@@ -43,12 +52,20 @@ enum NlMode {
     Ign,
 }
 
-/// 递归下降解析器：`tokens` + 游标 + 换行模式栈。
+/// 递归下降解析器：`tokens` + 游标 + 换行模式栈 + 控制流上下文。
 pub struct Parser<'a> {
     tokens: &'a [Token],
     pos: usize,
     /// 换行模式栈（§3.2），栈顶 = 当前模式；初始 `[Sig]`。
     nl_stack: Vec<NlMode>,
+    /// 循环嵌套深度（`while` / `for` 体 +1）：`break` / `continue` 合法性判定。
+    loop_depth: u32,
+    /// 函数嵌套深度（`fn` 声明体 / lambda 体 +1，构造属下一批）：`return` 合法性判定。
+    fn_depth: u32,
+    /// 正在解析控制流头（if / while 条件、for 可迭代位）的表达式（§3.4）。
+    cond_restrict: bool,
+    /// 控制流头表达式中 `(` / `[` 嵌套深度：`>0` 时 NO_BRACE_LITERAL 临时解除（§3.4）。
+    group_depth: u32,
 }
 
 /// 解析记号流为一个程序（`Program` = 顶层语句序列；即任务书所称 module）。
@@ -69,6 +86,10 @@ impl<'a> Parser<'a> {
             tokens,
             pos: 0,
             nl_stack: vec![NlMode::Sig],
+            loop_depth: 0,
+            fn_depth: 0,
+            cond_restrict: false,
+            group_depth: 0,
         }
     }
 
@@ -180,11 +201,16 @@ impl<'a> Parser<'a> {
         Ok(stmts)
     }
 
-    /// 解析一条语句（`let` / `var` 声明、赋值、表达式语句；`;` → `LoneSemicolon`）。
+    /// 解析一条语句（`let` / `var` 声明、控制流、赋值、表达式语句；`;` → `LoneSemicolon`）。
     fn parse_stmt(&mut self) -> R<Stmt> {
         let span = self.peek_span();
         match self.peek().clone() {
             TokenKind::KwLet | TokenKind::KwVar => self.parse_decl(span),
+            TokenKind::KwIf => self.parse_if_stmt(span),
+            TokenKind::KwWhile => self.parse_while(span),
+            TokenKind::KwFor => self.parse_for(span),
+            TokenKind::KwReturn => self.parse_return(span),
+            TokenKind::KwBreak | TokenKind::KwContinue => self.parse_break_continue(span),
             TokenKind::Semi => Err(syntax(SyntaxMsg::LoneSemicolon, span)),
             _ => {
                 // `assign_stmt = lvalue , assign_op , expression`（§7；A21 先试 lvalue 头部）。
@@ -324,6 +350,135 @@ impl<'a> Parser<'a> {
     }
 
     // ------------------------------------------------------------------
+    // 控制流语句（§7：if / while / for / return / break / continue）
+    // ------------------------------------------------------------------
+
+    /// `if <expr> <block> [else ...]` 的**语句形态**：`StmtKind::If` 包裹 `if_expr`。
+    fn parse_if_stmt(&mut self, span: Span) -> R<Stmt> {
+        let expr = self.parse_if_expr(span)?;
+        Ok(Spanned::new(StmtKind::If(expr), span))
+    }
+
+    /// `if_expr = "if" , expression , block , [ "else" , ( if_expr | block ) ]`（§7）。
+    ///
+    /// 条件走 NO_BRACE_LITERAL（§3.4）；块前换行跳过（§3.5）；`else` 前换行
+    /// 先试探、无 `else` 则回退（§3.5；A4 悬挂 else 绑定最近的 if）。
+    fn parse_if_expr(&mut self, span: Span) -> R<Expr> {
+        self.bump(); // if
+        let cond = self.parse_cond()?;
+        self.skip_newlines();
+        let then_block = self.parse_block()?;
+        let else_branch = self.try_parse_else()?;
+        Ok(Spanned::new(
+            ExprKind::If(IfExpr {
+                cond: Box::new(cond),
+                then_block,
+                else_branch,
+            }),
+            span,
+        ))
+    }
+
+    /// `else` 分支（§3.5）：跳过换行看 `else`；命中则消费并解析
+    /// `else if`（递归）或 `else { ... }`；未命中回退游标与模式栈。
+    fn try_parse_else(&mut self) -> R<Option<ElseBranch>> {
+        let save_pos = self.pos;
+        let save_stack = self.nl_stack.len();
+        self.skip_newlines();
+        if *self.peek() != TokenKind::KwElse {
+            self.reset(save_pos, save_stack);
+            return Ok(None);
+        }
+        self.bump(); // else
+        self.skip_newlines();
+        if *self.peek() == TokenKind::KwIf {
+            let span = self.peek_span();
+            let inner = self.parse_if_expr(span)?;
+            Ok(Some(ElseBranch::If(Box::new(inner))))
+        } else {
+            let block = self.parse_block()?;
+            Ok(Some(ElseBranch::Block(block)))
+        }
+    }
+
+    /// `while <expr> <block>`（§7 `while_stmt`）：条件走 NO_BRACE_LITERAL，体内 `loop_depth` +1。
+    fn parse_while(&mut self, span: Span) -> R<Stmt> {
+        self.bump(); // while
+        let cond = self.parse_cond()?;
+        self.skip_newlines();
+        self.loop_depth += 1;
+        let body = self.parse_block()?;
+        self.loop_depth -= 1;
+        Ok(Spanned::new(StmtKind::While { cond, body }, span))
+    }
+
+    /// `for <id> in <expr> <block>`（§7 `for_stmt`）：可迭代表达式走 NO_BRACE_LITERAL。
+    fn parse_for(&mut self, span: Span) -> R<Stmt> {
+        self.bump(); // for
+        let var = match self.peek().clone() {
+            TokenKind::Ident(name) => {
+                self.bump();
+                name
+            }
+            _ => return Err(self.unexpected("迭代变量名")),
+        };
+        self.expect(&TokenKind::KwIn)?;
+        let iter = self.parse_cond()?;
+        self.skip_newlines();
+        self.loop_depth += 1;
+        let body = self.parse_block()?;
+        self.loop_depth -= 1;
+        Ok(Spanned::new(StmtKind::For { var, iter, body }, span))
+    }
+
+    /// `return [expr]`（§7；A19：行尾 / `}` / EOF 即返回 nil，返回值须同行）。
+    fn parse_return(&mut self, span: Span) -> R<Stmt> {
+        if self.fn_depth == 0 {
+            return Err(syntax(SyntaxMsg::ReturnOutsideFunction, span));
+        }
+        self.bump(); // return
+        let value = match self.peek() {
+            TokenKind::Newline | TokenKind::RBrace | TokenKind::Eof => None,
+            _ => Some(self.parse_expr()?),
+        };
+        Ok(Spanned::new(StmtKind::Return(value), span))
+    }
+
+    /// `break` / `continue`（§7；循环外 → `BreakContinueOutsideLoop`）。
+    fn parse_break_continue(&mut self, span: Span) -> R<Stmt> {
+        let kw = match self.peek() {
+            TokenKind::KwBreak => "break",
+            TokenKind::KwContinue => "continue",
+            _ => unreachable!("调用方保证当前是 break/continue"),
+        };
+        if self.loop_depth == 0 {
+            return Err(syntax(
+                SyntaxMsg::BreakContinueOutsideLoop { kw: kw.to_string() },
+                span,
+            ));
+        }
+        self.bump();
+        let node = if kw == "break" { StmtKind::Break } else { StmtKind::Continue };
+        Ok(Spanned::new(node, span))
+    }
+
+    /// 控制流头的表达式（if / while 条件、for 可迭代位）：
+    /// 置 NO_BRACE_LITERAL（§3.4）后解析，结束恢复原状。
+    fn parse_cond(&mut self) -> R<Expr> {
+        let saved = self.cond_restrict;
+        self.cond_restrict = true;
+        let result = self.parse_expr();
+        self.cond_restrict = saved;
+        result
+    }
+
+    /// §3.4：NO_BRACE_LITERAL 生效且处于最外层（不在任何 `(` / `[` 内）时，
+    /// 裸 `{` 不再作为 struct 字面量，而是终止条件表达式、交给块。
+    fn no_brace_literal(&self) -> bool {
+        self.cond_restrict && self.group_depth == 0
+    }
+
+    // ------------------------------------------------------------------
     // 表达式（§4.1 优先级分层：or → and → eq → cmp → add → mul → unary → postfix）
     // ------------------------------------------------------------------
 
@@ -451,8 +606,10 @@ impl<'a> Parser<'a> {
                 TokenKind::LParen => {
                     self.bump();
                     self.nl_stack.push(NlMode::Ign);
+                    self.group_depth += 1; // §3.4：实参表内临时解除 NO_BRACE_LITERAL
                     let args = self.parse_args(TokenKind::RParen)?;
                     self.expect(&TokenKind::RParen)?;
+                    self.group_depth -= 1;
                     self.nl_stack.pop();
                     expr = Spanned::new(ExprKind::Call { callee: Box::new(expr), args }, span);
                 }
@@ -460,9 +617,11 @@ impl<'a> Parser<'a> {
                 TokenKind::LBracket => {
                     self.bump();
                     self.nl_stack.push(NlMode::Ign);
+                    self.group_depth += 1; // §3.4：下标内临时解除 NO_BRACE_LITERAL
                     let inner = self.parse_expr()?;
                     self.skip_ign_newlines();
                     self.expect(&TokenKind::RBracket)?;
+                    self.group_depth -= 1;
                     self.nl_stack.pop();
                     expr = Spanned::new(
                         ExprKind::Index { object: Box::new(expr), index: Box::new(inner) },
@@ -534,16 +693,25 @@ impl<'a> Parser<'a> {
             TokenKind::Ident(name) => {
                 self.bump();
                 // `IDENT {`：具名 struct 字面量（§3.3 规则 2、§7 `struct_lit`）。
-                // 仅当 `{` 紧随其后（`IGN` 内换行忽略，`SIG` 下换行即拆句，A3）。
+                // 仅当 `{` 紧随其后（`IGN` 内换行忽略，`SIG` 下换行即拆句，A3）；
+                // 但 NO_BRACE_LITERAL（§3.4）最外层禁用：`{` 交给块。
                 self.skip_ign_newlines();
-                if *self.peek() == TokenKind::LBrace {
+                if *self.peek() == TokenKind::LBrace && !self.no_brace_literal() {
                     self.parse_struct_lit(Some(name), span)
                 } else {
                     Ok(Spanned::new(ExprKind::Ident(name), span))
                 }
             }
             TokenKind::LBracket => self.parse_array(span),
-            TokenKind::LBrace => self.parse_struct_lit(None, span),
+            TokenKind::LBrace => {
+                if self.no_brace_literal() {
+                    // §3.4：条件 / 可迭代位最外层的裸 `{` 终止表达式；此处表达式
+                    // 尚未开始（或无法继续）→ 不完整。
+                    Err(syntax(SyntaxMsg::IncompleteExpr, span))
+                } else {
+                    self.parse_struct_lit(None, span)
+                }
+            }
             TokenKind::LParen => self.parse_group(span),
             TokenKind::Newline => Err(syntax(SyntaxMsg::IncompleteExpr, span)),
             _ => Err(self.unexpected("表达式")),
@@ -583,9 +751,11 @@ impl<'a> Parser<'a> {
     fn parse_group(&mut self, span: Span) -> R<Expr> {
         self.bump(); // LParen
         self.nl_stack.push(NlMode::Ign);
+        self.group_depth += 1; // §3.4：括号内临时解除 NO_BRACE_LITERAL
         let inner = self.parse_expr()?;
         self.skip_ign_newlines();
         self.expect(&TokenKind::RParen)?;
+        self.group_depth -= 1;
         self.nl_stack.pop();
         Ok(Spanned::new(inner.node, span))
     }
@@ -621,8 +791,10 @@ impl<'a> Parser<'a> {
     fn parse_array(&mut self, span: Span) -> R<Expr> {
         self.bump(); // LBracket
         self.nl_stack.push(NlMode::Ign);
+        self.group_depth += 1; // §3.4：方括号内临时解除 NO_BRACE_LITERAL
         let elems = self.parse_args(TokenKind::RBracket)?;
         self.expect(&TokenKind::RBracket)?;
+        self.group_depth -= 1;
         self.nl_stack.pop();
         Ok(Spanned::new(ExprKind::Array(elems), span))
     }
@@ -1070,7 +1242,8 @@ mod tests {
     }
 
     #[test]
-    fn unexpected_keyword_if() {
+    fn if_without_condition_is_error() {
+        // 本批起 `if` 是合法语句头；`if` 后跟 EOF 即条件表达式缺失。
         let err = parse(&[
             tok(TokenKind::KwIf, 1, 1),
             tok(TokenKind::Eof, 1, 3),
@@ -1080,10 +1253,10 @@ mod tests {
             &err,
             SyntaxMsg::UnexpectedToken {
                 expected: "表达式".to_string(),
-                got: "'if'".to_string(),
+                got: "'文件末尾'".to_string(),
             },
             1,
-            1,
+            3,
         );
     }
 
@@ -2254,6 +2427,481 @@ mod tests {
                 assert_eq!(type_name.as_deref(), Some("Point"));
             }
             other => panic!("应为 StructLit，得到 {other:?}"),
+        }
+    }
+
+    // ---- 控制流语句（§7：if / while / for / return / break / continue）----
+
+    #[test]
+    fn if_without_else() {
+        // `if c { x }`：then 块；无 else 分支。
+        let p = parse(&[
+            tok(TokenKind::KwIf, 1, 1),
+            tok(TokenKind::Ident("c".into()), 1, 4),
+            tok(TokenKind::LBrace, 1, 6),
+            tok(TokenKind::Ident("x".into()), 1, 8),
+            tok(TokenKind::RBrace, 1, 10),
+            tok(TokenKind::Eof, 1, 11),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 1);
+        assert_eq!(p.stmts[0].span, Span::new(1, 1));
+        match &p.stmts[0].node {
+            StmtKind::If(e) => {
+                assert_eq!(e.span, Span::new(1, 1));
+                match &e.node {
+                    ExprKind::If(IfExpr { cond, then_block, else_branch }) => {
+                        assert_eq!(cond.node, ExprKind::Ident("c".into()));
+                        assert_eq!(then_block.span, Span::new(1, 6));
+                        assert_eq!(then_block.stmts.len(), 1);
+                        assert!(matches!(then_block.stmts[0].node, StmtKind::Expr(_)));
+                        assert!(else_branch.is_none());
+                    }
+                    other => panic!("应为 If 表达式，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 If 语句，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn if_else_block_branch() {
+        // `if a { 1 } else { 2 }`。
+        let p = parse(&[
+            tok(TokenKind::KwIf, 1, 1),
+            tok(TokenKind::Ident("a".into()), 1, 4),
+            tok(TokenKind::LBrace, 1, 6),
+            tok(TokenKind::Int("1".into()), 1, 8),
+            tok(TokenKind::RBrace, 1, 10),
+            tok(TokenKind::KwElse, 1, 12),
+            tok(TokenKind::LBrace, 1, 17),
+            tok(TokenKind::Int("2".into()), 1, 19),
+            tok(TokenKind::RBrace, 1, 21),
+            tok(TokenKind::Eof, 1, 22),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 1);
+        match &p.stmts[0].node {
+            StmtKind::If(e) => match &e.node {
+                ExprKind::If(IfExpr { else_branch, .. }) => match else_branch {
+                    Some(ElseBranch::Block(b)) => {
+                        assert_eq!(b.span, Span::new(1, 17));
+                        assert_eq!(b.stmts.len(), 1);
+                    }
+                    other => panic!("应为 else 块，得到 {other:?}"),
+                },
+                other => panic!("应为 If 表达式，得到 {other:?}"),
+            },
+            other => panic!("应为 If 语句，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn if_else_if_chain() {
+        // `if a {1} else if b {2} else {3}`（A4：else if 链绑定最近 if）。
+        let p = parse(&[
+            tok(TokenKind::KwIf, 1, 1),
+            tok(TokenKind::Ident("a".into()), 1, 4),
+            tok(TokenKind::LBrace, 1, 6),
+            tok(TokenKind::Int("1".into()), 1, 7),
+            tok(TokenKind::RBrace, 1, 8),
+            tok(TokenKind::KwElse, 1, 10),
+            tok(TokenKind::KwIf, 1, 15),
+            tok(TokenKind::Ident("b".into()), 1, 18),
+            tok(TokenKind::LBrace, 1, 20),
+            tok(TokenKind::Int("2".into()), 1, 21),
+            tok(TokenKind::RBrace, 1, 22),
+            tok(TokenKind::KwElse, 1, 24),
+            tok(TokenKind::LBrace, 1, 29),
+            tok(TokenKind::Int("3".into()), 1, 30),
+            tok(TokenKind::RBrace, 1, 31),
+            tok(TokenKind::Eof, 1, 32),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::If(e) => match &e.node {
+                ExprKind::If(IfExpr { else_branch, .. }) => {
+                    let inner = match else_branch {
+                        Some(ElseBranch::If(inner)) => inner,
+                        other => panic!("应为 else if，得到 {other:?}"),
+                    };
+                    assert_eq!(inner.span, Span::new(1, 15)); // 内层 `if` 关键字位置
+                    match &inner.node {
+                        ExprKind::If(IfExpr { cond, else_branch, .. }) => {
+                            assert_eq!(cond.node, ExprKind::Ident("b".into()));
+                            assert!(matches!(else_branch, Some(ElseBranch::Block(_))));
+                        }
+                        other => panic!("应为 If 表达式，得到 {other:?}"),
+                    }
+                }
+                other => panic!("应为 If 表达式，得到 {other:?}"),
+            },
+            other => panic!("应为 If 语句，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn if_newline_before_block_and_else() {
+        // `if c\n{ 1 }\nelse\n{ 2 }`（§3.5：块前换行与 else 前换行均跳过）。
+        let p = parse(&[
+            tok(TokenKind::KwIf, 1, 1),
+            tok(TokenKind::Ident("c".into()), 1, 4),
+            tok(TokenKind::Newline, 1, 5),
+            tok(TokenKind::LBrace, 2, 1),
+            tok(TokenKind::Int("1".into()), 2, 3),
+            tok(TokenKind::RBrace, 2, 5),
+            tok(TokenKind::Newline, 2, 6),
+            tok(TokenKind::KwElse, 3, 1),
+            tok(TokenKind::Newline, 3, 5),
+            tok(TokenKind::LBrace, 4, 1),
+            tok(TokenKind::Int("2".into()), 4, 3),
+            tok(TokenKind::RBrace, 4, 5),
+            tok(TokenKind::Eof, 4, 6),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 1);
+        match &p.stmts[0].node {
+            StmtKind::If(e) => match &e.node {
+                ExprKind::If(IfExpr { then_block, else_branch, .. }) => {
+                    assert_eq!(then_block.span, Span::new(2, 1));
+                    assert!(matches!(
+                        else_branch,
+                        Some(ElseBranch::Block(ref b)) if b.span == Span::new(4, 1)
+                    ));
+                }
+                other => panic!("应为 If 表达式，得到 {other:?}"),
+            },
+            other => panic!("应为 If 语句，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn while_loop() {
+        // `while i < 10 { i += 1 }`。
+        let p = parse(&[
+            tok(TokenKind::KwWhile, 1, 1),
+            tok(TokenKind::Ident("i".into()), 1, 7),
+            tok(TokenKind::Lt, 1, 9),
+            tok(TokenKind::Int("10".into()), 1, 11),
+            tok(TokenKind::LBrace, 1, 14),
+            tok(TokenKind::Ident("i".into()), 1, 16),
+            tok(TokenKind::PlusAssign, 1, 18),
+            tok(TokenKind::Int("1".into()), 1, 21),
+            tok(TokenKind::RBrace, 1, 23),
+            tok(TokenKind::Eof, 1, 24),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts[0].span, Span::new(1, 1));
+        match &p.stmts[0].node {
+            StmtKind::While { cond, body } => {
+                assert_eq!(cond.span, Span::new(1, 7));
+                match &cond.node {
+                    ExprKind::Binary { op, left, right } => {
+                        assert_eq!(*op, BinaryOp::Lt);
+                        assert_eq!(left.node, ExprKind::Ident("i".into()));
+                        assert_eq!(right.node, ExprKind::Int(10));
+                    }
+                    other => panic!("应为 Lt，得到 {other:?}"),
+                }
+                assert_eq!(body.span, Span::new(1, 14));
+                assert_eq!(body.stmts.len(), 1);
+                assert!(matches!(body.stmts[0].node, StmtKind::Assign { .. }));
+            }
+            other => panic!("应为 While，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn for_in_loop() {
+        // `for s in xs { print(s) }`。
+        let p = parse(&[
+            tok(TokenKind::KwFor, 1, 1),
+            tok(TokenKind::Ident("s".into()), 1, 5),
+            tok(TokenKind::KwIn, 1, 7),
+            tok(TokenKind::Ident("xs".into()), 1, 10),
+            tok(TokenKind::LBrace, 1, 13),
+            tok(TokenKind::Ident("print".into()), 1, 15),
+            tok(TokenKind::LParen, 1, 20),
+            tok(TokenKind::Ident("s".into()), 1, 21),
+            tok(TokenKind::RParen, 1, 22),
+            tok(TokenKind::RBrace, 1, 24),
+            tok(TokenKind::Eof, 1, 25),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 1);
+        match &p.stmts[0].node {
+            StmtKind::For { var, iter, body } => {
+                assert_eq!(var, "s");
+                assert_eq!(iter.node, ExprKind::Ident("xs".into()));
+                assert_eq!(body.span, Span::new(1, 13));
+                assert_eq!(body.stmts.len(), 1);
+                assert!(matches!(body.stmts[0].node, StmtKind::Expr(_)));
+            }
+            other => panic!("应为 For，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn break_and_continue_inside_loop() {
+        // `while true { break }` 与 `for i in xs { continue }`。
+        let p = parse(&[
+            tok(TokenKind::KwWhile, 1, 1),
+            tok(TokenKind::KwTrue, 1, 7),
+            tok(TokenKind::LBrace, 1, 12),
+            tok(TokenKind::KwBreak, 1, 14),
+            tok(TokenKind::RBrace, 1, 19),
+            tok(TokenKind::Newline, 1, 20),
+            tok(TokenKind::KwFor, 2, 1),
+            tok(TokenKind::Ident("i".into()), 2, 5),
+            tok(TokenKind::KwIn, 2, 7),
+            tok(TokenKind::Ident("xs".into()), 2, 10),
+            tok(TokenKind::LBrace, 2, 13),
+            tok(TokenKind::KwContinue, 2, 15),
+            tok(TokenKind::RBrace, 2, 23),
+            tok(TokenKind::Eof, 2, 24),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 2);
+        match &p.stmts[0].node {
+            StmtKind::While { body, .. } => {
+                assert_eq!(body.stmts.len(), 1);
+                assert!(matches!(body.stmts[0].node, StmtKind::Break));
+            }
+            other => panic!("应为 While，得到 {other:?}"),
+        }
+        match &p.stmts[1].node {
+            StmtKind::For { body, .. } => {
+                assert_eq!(body.stmts.len(), 1);
+                assert!(matches!(body.stmts[0].node, StmtKind::Continue));
+            }
+            other => panic!("应为 For，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn break_inside_if_inside_loop_is_ok() {
+        // `while c { if d { break } }`：break 合法性只看循环深度，if 不影响。
+        let p = parse(&[
+            tok(TokenKind::KwWhile, 1, 1),
+            tok(TokenKind::Ident("c".into()), 1, 7),
+            tok(TokenKind::LBrace, 1, 9),
+            tok(TokenKind::KwIf, 1, 11),
+            tok(TokenKind::Ident("d".into()), 1, 14),
+            tok(TokenKind::LBrace, 1, 16),
+            tok(TokenKind::KwBreak, 1, 18),
+            tok(TokenKind::RBrace, 1, 23),
+            tok(TokenKind::RBrace, 1, 25),
+            tok(TokenKind::Eof, 1, 26),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::While { body, .. } => {
+                assert_eq!(body.stmts.len(), 1);
+                match &body.stmts[0].node {
+                    StmtKind::If(e) => match &e.node {
+                        ExprKind::If(IfExpr { then_block, .. }) => {
+                            assert!(matches!(then_block.stmts[0].node, StmtKind::Break));
+                        }
+                        other => panic!("应为 If 表达式，得到 {other:?}"),
+                    },
+                    other => panic!("应为 If 语句，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 While，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn return_with_and_without_value_in_function() {
+        // `fn` 声明属下一批：直置 `fn_depth = 1` 模拟函数体，验证
+        // `return x`（带值）与行尾 `return`（A19：返回 nil）两种形态。
+        let toks = vec![
+            tok(TokenKind::KwReturn, 1, 1),
+            tok(TokenKind::Ident("x".into()), 1, 8),
+            tok(TokenKind::Newline, 1, 9),
+            tok(TokenKind::KwReturn, 2, 1),
+            tok(TokenKind::Newline, 2, 7),
+            tok(TokenKind::Eof, 3, 1),
+        ];
+        let mut parser = Parser::new(&toks);
+        parser.fn_depth = 1;
+        let p = parser.parse_program().unwrap();
+        assert_eq!(p.stmts.len(), 2);
+        match &p.stmts[0].node {
+            StmtKind::Return(Some(e)) => assert_eq!(e.node, ExprKind::Ident("x".into())),
+            other => panic!("应为 Return(Some)，得到 {other:?}"),
+        }
+        assert_eq!(p.stmts[0].span, Span::new(1, 1));
+        match &p.stmts[1].node {
+            StmtKind::Return(None) => {}
+            other => panic!("应为 Return(None)，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn break_outside_loop_is_error() {
+        let err = parse(&[
+            tok(TokenKind::KwBreak, 1, 1),
+            tok(TokenKind::Eof, 1, 6),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::BreakContinueOutsideLoop { kw: "break".to_string() },
+            1,
+            1,
+        );
+    }
+
+    #[test]
+    fn continue_outside_loop_is_error() {
+        let err = parse(&[
+            tok(TokenKind::KwContinue, 1, 1),
+            tok(TokenKind::Eof, 1, 9),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::BreakContinueOutsideLoop { kw: "continue".to_string() },
+            1,
+            1,
+        );
+    }
+
+    #[test]
+    fn return_outside_function_is_error() {
+        let err = parse(&[
+            tok(TokenKind::KwReturn, 1, 1),
+            tok(TokenKind::Eof, 1, 7),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::ReturnOutsideFunction, 1, 1);
+    }
+
+    // ---- NO_BRACE_LITERAL（§3.4：条件 / 可迭代位最外层禁用裸 struct 字面量）----
+
+    #[test]
+    fn bare_struct_literal_condition_is_incomplete_expr() {
+        // `if { k: 1 }`：最外层裸 `{` 终止条件 → 条件缺失 → IncompleteExpr。
+        let err = parse(&[
+            tok(TokenKind::KwIf, 1, 1),
+            tok(TokenKind::LBrace, 1, 4),
+            tok(TokenKind::Ident("k".into()), 1, 6),
+            tok(TokenKind::Colon, 1, 7),
+            tok(TokenKind::Int("1".into()), 1, 9),
+            tok(TokenKind::RBrace, 1, 10),
+            tok(TokenKind::Eof, 1, 11),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::IncompleteExpr, 1, 4);
+    }
+
+    #[test]
+    fn struct_literal_in_parenthesized_condition_is_ok() {
+        // `if ({ k: 1 } == nil) { }`：括号解除 NO_BRACE_LITERAL（§3.4 / A6）。
+        let p = parse(&[
+            tok(TokenKind::KwIf, 1, 1),
+            tok(TokenKind::LParen, 1, 4),
+            tok(TokenKind::LBrace, 1, 5),
+            tok(TokenKind::Ident("k".into()), 1, 7),
+            tok(TokenKind::Colon, 1, 8),
+            tok(TokenKind::Int("1".into()), 1, 10),
+            tok(TokenKind::RBrace, 1, 11),
+            tok(TokenKind::EqEq, 1, 13),
+            tok(TokenKind::KwNil, 1, 16),
+            tok(TokenKind::RParen, 1, 19),
+            tok(TokenKind::LBrace, 1, 21),
+            tok(TokenKind::RBrace, 1, 22),
+            tok(TokenKind::Eof, 1, 23),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::If(e) => match &e.node {
+                ExprKind::If(IfExpr { cond, .. }) => match &cond.node {
+                    ExprKind::Binary { op, left, .. } => {
+                        assert_eq!(*op, BinaryOp::Eq);
+                        assert!(matches!(left.node, ExprKind::StructLit(_)));
+                    }
+                    other => panic!("应为 Eq，得到 {other:?}"),
+                },
+                other => panic!("应为 If 表达式，得到 {other:?}"),
+            },
+            other => panic!("应为 If 语句，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn named_struct_brace_in_condition_goes_to_block() {
+        // `if Point { x: 1 }`：`Point` 后 `{` 交块（§3.4），块内 `x: 1` 两句
+        // 无换行 → TwoStatements（A6 反例，SyntaxError）。
+        let err = parse(&[
+            tok(TokenKind::KwIf, 1, 1),
+            tok(TokenKind::Ident("Point".into()), 1, 4),
+            tok(TokenKind::LBrace, 1, 10),
+            tok(TokenKind::Ident("x".into()), 1, 12),
+            tok(TokenKind::Colon, 1, 13),
+            tok(TokenKind::Int("1".into()), 1, 15),
+            tok(TokenKind::RBrace, 1, 16),
+            tok(TokenKind::Eof, 1, 17),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::TwoStatements, 1, 13);
+    }
+
+    // ---- 回归：控制流与既有构造（声明 / 赋值 / 二元 / 调用 / 后缀链）混用 ----
+
+    #[test]
+    fn control_flow_regression_with_existing_constructs() {
+        // let n = 0
+        // while n < 3 {
+        //     n += 1
+        //     if n == 2 { break }
+        // }
+        let p = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("n".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::Int("0".into()), 1, 9),
+            tok(TokenKind::Newline, 1, 10),
+            tok(TokenKind::KwWhile, 2, 1),
+            tok(TokenKind::Ident("n".into()), 2, 7),
+            tok(TokenKind::Lt, 2, 9),
+            tok(TokenKind::Int("3".into()), 2, 11),
+            tok(TokenKind::LBrace, 2, 13),
+            tok(TokenKind::Ident("n".into()), 2, 15),
+            tok(TokenKind::PlusAssign, 2, 17),
+            tok(TokenKind::Int("1".into()), 2, 20),
+            tok(TokenKind::Newline, 2, 21),
+            tok(TokenKind::KwIf, 3, 3),
+            tok(TokenKind::Ident("n".into()), 3, 6),
+            tok(TokenKind::EqEq, 3, 8),
+            tok(TokenKind::Int("2".into()), 3, 11),
+            tok(TokenKind::LBrace, 3, 13),
+            tok(TokenKind::KwBreak, 3, 15),
+            tok(TokenKind::RBrace, 3, 20),
+            tok(TokenKind::RBrace, 3, 22),
+            tok(TokenKind::Eof, 3, 23),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 2);
+        assert!(matches!(p.stmts[0].node, StmtKind::Decl { .. }));
+        match &p.stmts[1].node {
+            StmtKind::While { cond, body } => {
+                assert!(matches!(cond.node, ExprKind::Binary { op: BinaryOp::Lt, .. }));
+                assert_eq!(body.stmts.len(), 2);
+                assert!(matches!(body.stmts[0].node, StmtKind::Assign { .. }));
+                match &body.stmts[1].node {
+                    StmtKind::If(e) => match &e.node {
+                        ExprKind::If(IfExpr { then_block, else_branch, .. }) => {
+                            assert!(matches!(then_block.stmts[0].node, StmtKind::Break));
+                            assert!(else_branch.is_none());
+                        }
+                        other => panic!("应为 If 表达式，得到 {other:?}"),
+                    },
+                    other => panic!("应为 If 语句，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 While，得到 {other:?}"),
         }
     }
 }
