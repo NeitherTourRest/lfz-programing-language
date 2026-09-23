@@ -37,14 +37,22 @@ enum Slot {
     Shared(Cell),
 }
 
-/// 运行时词法作用域：作用域链 + 变量槽位。
+/// 运行时词法作用域：作用域链 + 变量槽位 + `名字 → 槽位` 表（P3.7 运行时查名）。
 ///
 /// 槽位下标为**绝对下标** = `first_slot + 本作用域内偏移`，与 [`ScopeDebug::first_slot`]
 /// 同一编号空间，便于 `;;` 由槽位读回值。读写沿作用域链**内→外**查找（内层遮蔽外层）。
+///
+/// `names` 为 P3.7 求值器新增的 **per-scope 名字表**（`(名字, 绝对槽位, 是否可变)`，
+/// 按声明序）。它支撑 **运行时查名**：求值器沿链查找名字 → 得本作用域槽位下标 →
+/// 经 [`Env::get_local`] / [`Env::set_local`] / [`Env::capture_local`] **直读本作用域槽位**，
+/// 不再依赖「按绝对槽位沿链走」的旧路径（避免不同作用域 `first_slot` 区间重叠时的歧义）。
+/// 未使用 `define_named` 的作用域（既有测试）`names` 为空，行为与旧版一致。
 #[derive(Debug)]
 pub struct Env {
     first_slot: u32,
     slots: Vec<Slot>,
+    /// `(名字, 绝对槽位, 是否可变)`，按声明序。
+    names: Vec<(String, u32, bool)>,
     parent: Option<Rc<RefCell<Env>>>,
 }
 
@@ -55,6 +63,7 @@ impl Env {
         Rc::new(RefCell::new(Env {
             first_slot: 0,
             slots: Vec::new(),
+            names: Vec::new(),
             parent: None,
         }))
     }
@@ -65,6 +74,7 @@ impl Env {
         Rc::new(RefCell::new(Env {
             first_slot,
             slots: Vec::new(),
+            names: Vec::new(),
             parent: Some(Rc::clone(parent)),
         }))
     }
@@ -87,6 +97,88 @@ impl Env {
         let slot = self.first_slot + self.slots.len() as u32;
         self.slots.push(Slot::Direct(value));
         slot
+    }
+
+    // =======================================================================
+    // P3.7：per-scope 名字表（运行时查名）
+    // =======================================================================
+
+    /// 在**当前作用域**定义具名绑定（`let`/`var`/参数/`fn`/`struct` 名），返回绝对槽位。
+    ///
+    /// 同名可重复定义（同作用域内**后者遮蔽前者**，见 [`Env::local_index`]）。
+    pub fn define_named(&mut self, name: &str, value: Value, mutable: bool) -> u32 {
+        let slot = self.define(value);
+        self.names.push((name.to_string(), slot, mutable));
+        slot
+    }
+
+    /// 在当前作用域按名查找槽位**下标**（`0` 起，作用域内偏移）。
+    ///
+    /// **从后往前**搜索，使同作用域内后定义的绑定遮蔽先定义的（重定义语义）。
+    #[must_use]
+    pub fn local_index(&self, name: &str) -> Option<usize> {
+        self.names
+            .iter()
+            .rev()
+            .find(|(n, _, _)| n == name)
+            .map(|(_, slot, _)| (slot - self.first_slot) as usize)
+    }
+
+    /// 槽位 `idx` 的绑定是否可变（`var` = `true`）；不存在 → `None`。
+    #[must_use]
+    pub fn local_mutable(&self, idx: usize) -> Option<bool> {
+        self.names
+            .iter()
+            .find(|(_, slot, _)| (slot - self.first_slot) as usize == idx)
+            .map(|(_, _, m)| *m)
+    }
+
+    /// 按**下标**读本作用域槽位（不做链式回落；调用方自行沿链查找）。
+    #[must_use]
+    pub fn get_local(&self, idx: usize) -> Option<Value> {
+        self.slots.get(idx).map(|s| match s {
+            Slot::Direct(v) => v.clone(),
+            Slot::Shared(c) => c.borrow().clone(),
+        })
+    }
+
+    /// 按**下标**写本作用域槽位（**原地**；`Shared` 则写共享 cell）。返回是否找到。
+    pub fn set_local(&mut self, idx: usize, value: Value) -> bool {
+        match self.slots.get_mut(idx) {
+            Some(Slot::Direct(v)) => {
+                *v = value;
+                true
+            }
+            Some(Slot::Shared(c)) => {
+                *c.borrow_mut() = value;
+                true
+            }
+            None => false,
+        }
+    }
+
+    /// 把**下标** `idx` 的槽位**原地升级**为共享 [`Cell`] 并返回（A2）；已共享则返回同一 cell。
+    ///
+    /// 与 [`Env::capture`] 的区别：本方法**只在本作用域内**操作（不做链式查找），
+    /// 由求值器在「已知名字属于哪个作用域」时直接调用，避免绝对槽位跨作用域歧义。
+    pub fn capture_local(&mut self, idx: usize) -> Option<Cell> {
+        let value = match self.slots.get(idx)? {
+            Slot::Shared(c) => return Some(Rc::clone(c)),
+            Slot::Direct(v) => v.clone(),
+        };
+        let cell: Cell = Rc::new(RefCell::new(value));
+        self.slots[idx] = Slot::Shared(Rc::clone(&cell));
+        Some(cell)
+    }
+
+    /// 本作用域**具名绑定的下标**列表（**后定义者在前**），供闭包按「内层 / 后者优先」捕获。
+    #[must_use]
+    pub fn named_indices(&self) -> Vec<(String, usize)> {
+        self.names
+            .iter()
+            .rev()
+            .map(|(n, slot, _)| (n.clone(), (slot - self.first_slot) as usize))
+            .collect()
     }
 
     /// 读取槽位（沿链内→外；已升级为 cell 的槽位读其当前值）。

@@ -1,5 +1,25 @@
 # runtime-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 01:30] P3.7 — `src/evaluator.rs` 核心（树遍历求值器：表达式 / 语句 / 控制流 / 函数与闭包 / 调用）
+- 来源: team-lead 任务书「P3.7 — `src/evaluator.rs` 核心」，依据 `docs/spec/semantics.md` §3.6/§3.7/§4/§4.2/§4.5.1–§4.5.11，`interface-contract.md` §10.2/§10.3/§10.5/§10.6/§10.7/§10.8。
+- 完成:
+  - **公开入口**：`pub fn eval_module(&Program) -> R<Value>`（返回最后一条语句值）、`pub fn run(&Program) -> R<()>`。（AST 类型名为 `Program`，非 `Module`。）
+  - **表达式**：字面量（Int/Float/Str/Bool/Nil）、标识符、`self`、数组、struct 字面量/实例化、字段、下标、调用、一元（`-`/`!`）、二元（算术/比较/相等）、短路逻辑、`if`、插值（含格式说明符子集 `[fill]align/sign/0/width/.precision/type`）、lambda。
+  - **语句**：`let`/`var`、赋值（`=`/`+=`/`-=`/`*=`/`/=`/`%=`；`a[i]=v`/`s.k=v` **原地修改** A1；嵌套路径写入）、`if`、`while`、`for…in`（array 元素快照 / struct 数据字段键字节序快照，§4.5.4）、`break`/`continue`/`return`、`fn` 声明（递归）、`struct` 声明（默认值 + 方法）、块作用域。
+  - **A2 捕获**：闭包创建时对非顶层具名局部 `Env::capture_local` 原地升级为共享 `Cell`，闭包与定义作用域共享；`for`/`while` 每轮新子作用域 → **每轮独立 cell**。
+  - **调用**：用户函数（新帧挂在 `globals` 下 + 参数绑定 + 返回）、内置（ABI `fn(&[Value], Span) -> R<Value>`，**`Span` 取调用点**）、方法（`recv.m()` 绑定 `self`）。
+  - **错误**：`R<T>` 冒泡，位置取节点 / 调用点 `Span`（新增测试锁定非 `Span::START`）。
+  - **名字解析 = 运行时查名**（见 ADR）：`env.rs` 增 per-scope 名字表（`define_named`/`local_index`/`get_local`/`set_local`/`capture_local`/`named_indices`），查名顺序 调用帧/块 → 捕获 cell → globals。
+  - **跨模块扩展**：`value.rs` `Closure` 增 `user: Option<Rc<UserFn>>`、新增 `UserFn`、`StructDef` 扩为 `{name, fields, methods}` + `Value::struct_template`；`Closure::named/anonymous`、`Value::struct_def` 签名不变。
+- 产出:
+  - `Get-ChildItem src\evaluator.rs` → **`evaluator.rs  79980`**（原 182 B；合法 UTF-8）。
+  - `cargo build --message-format=json 2>$null | Select-String '"level":"warning"'` → **0 warning**。
+  - `cargo test` → **`195 passed; 0 failed; 0 ignored`**（新增 `evaluator::tests::*` **26** 个，全绿）。
+  - 新增测试名（26）：arithmetic_precedence_and_string_concat / int_overflow_and_division_by_zero / modulo_python_semantics / comparisons_and_nan_ieee / equality_is_deep_and_cycle_safe / logical_short_circuits / if_expression_yields_branch_value / while_loop_accumulates / for_loop_with_break_and_continue / for_over_struct_iterates_keys_sorted / factorial_recursion / closure_counter_shares_cell / loop_iterations_get_independent_cells / user_fn_arity_mismatch_is_type_error / array_index_read_and_negative / a1_array_write_is_visible_through_alias / a1_struct_field_write_through_alias_and_dynamic_add / nested_index_write_through_path / struct_template_method_binds_self / struct_template_defaults_are_reevaluated_per_instance / builtins_len_push_str_range / builtin_call_span_is_call_site_and_argcount_checks / interpolation_plain_and_format_spec / function_body_block_value_is_last_expr / return_propagates_out_of_loops_and_branches / runtime_errors_carry_node_span。
+- 决策: 追加 ADR [2026-09-24 01:30]（运行时查名策略 + A2 捕获 + `Env`/`value.rs` 扩展 + 4 项规范缺口）。**未**改 `docs/spec/`、`error.rs`、`ast.rs`、`parser.rs`、`span.rs`、`lexer.rs`、`loader.rs`、`Cargo.toml`。
+- 缺口（上报，不自行发明）: (1) `let` 重绑定的错误类 §8.1 未定义 → 本批**存储** `mutable` 但**暂不强制**；(2) `;;`（`Dump`）输出、`ScopeDebug`/`def_scope` 可见链 → P3.8；(3) `RecursionError`（帧深上限）与 `TraceFrame`/traceback 组装 → P3.8（当前无限递归无保护）；(4) §4.5.5 深结构 10000 层上限仍未施加（承 P3.6b 遗留）。
+- 下一步: P3.8（`Dump`/`;;`、`check` 专项、`RecursionError`、traceback、`let` 不可变性）；P3.9b（HOF 需将 `call_user` 提升为可复用 ABI）。
+- 阻塞: 无。
 ## [2026-09-24 00:40] P3.6b — `src/value.rs` 值语义辅助（A6 环安全深相等 + §4.5.6 全序）唯一共享实现
 - 来源: team-lead 任务书「P3.6b — 值语义辅助落 `src/value.rs`」，依据 `docs/spec/semantics.md` §4.5.6（全序）/§4.5.7（精确比较）/§4.5.9（A5/A6）/§3.7，`interface-contract.md` §10.7。
 - 完成:

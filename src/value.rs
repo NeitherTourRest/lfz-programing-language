@@ -21,7 +21,8 @@
 //! （A1：`a` 与 `b` 是同一容器）。标量按值拷贝。
 //! **唯一**允许的隐式转换 `int → float` 集中入口是 [`Value::as_f64`]（§4.5.7）——禁止在别处散落。
 
-use crate::env::ScopeChain;
+use crate::ast::{Body, Expr};
+use crate::env::{Cell, ScopeChain};
 use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::fmt;
@@ -88,7 +89,27 @@ impl Value {
 
     /// 构造 `struct` **模板**。
     pub fn struct_def(name: impl Into<Rc<str>>) -> Self {
-        Value::StructDef(Rc::new(StructDef { name: name.into() }))
+        Value::StructDef(Rc::new(StructDef {
+            name: name.into(),
+            fields: Vec::new(),
+            methods: Vec::new(),
+        }))
+    }
+
+    /// 构造带字段默认值 / 方法的 `struct` **模板**（P3.7 求值器用于 `struct` 声明）。
+    ///
+    /// - `fields`：`(字段名, 默认值表达式)`，按**声明序**；实例化时逐次重新求值（§4.5.8）。
+    /// - `methods`：`(方法名, 闭合的函数值)`；调用时绑定 `self`（§3.7 / A5）。
+    pub fn struct_template(
+        name: impl Into<Rc<str>>,
+        fields: Vec<(Rc<str>, Expr)>,
+        methods: Vec<(Rc<str>, Rc<Closure>)>,
+    ) -> Self {
+        Value::StructDef(Rc::new(StructDef {
+            name: name.into(),
+            fields,
+            methods,
+        }))
     }
 
     // ----- 类型名（§10.7 `type`） -------------------------------------------
@@ -605,39 +626,74 @@ impl StructObj {
 
 /// `struct` **模板**（非实例）。`type` 报 `"struct"`；显示 `<struct 名字>`（§3.7 / §4.5.0）。
 ///
-/// P3.6 仅承载模板名；字段声明 / 默认值 / 方法表由 P3.8 实例化语义（§4.5.8）落地时扩展本结构。
+/// P3.7 起携带**字段默认值表达式**（按声明序；实例化时重新求值，§4.5.8）与**方法表**
+/// （函数值；A5 数据面**不含**，但 `s.m` 仍可取到并调用，`self` 绑定）。
 #[derive(Clone, Debug)]
 pub struct StructDef {
     /// 模板名（`;;` 可见绑定，§3.6）。
     pub name: Rc<str>,
+    /// `(字段名, 默认值表达式)`，按声明序（实例化时求值）。
+    pub fields: Vec<(Rc<str>, Expr)>,
+    /// `(方法名, 函数值)`，按声明序（调用时绑定 `self`）。
+    pub methods: Vec<(Rc<str>, Rc<Closure>)>,
+}
+
+/// 用户函数 / 闭包 / lambda 的**运行时载荷**（P3.7 求值器）。
+///
+/// 只读 AST（`params` / `body`）+ A2 **captured cell 列表** + traceback 用的 `func_id`。
+#[derive(Clone, Debug)]
+pub struct UserFn {
+    /// 形参名，按声明序。
+    pub params: Vec<String>,
+    /// 函数体 AST。
+    pub body: Body,
+    /// A2 捕获的自由局部变量：`(名字, 共享 cell)`；`Rc` 共享以省 clone。
+    pub captured: Rc<Vec<(Rc<str>, Cell)>>,
+    /// traceback 帧用的函数表下标（P3.8 组装；本批仅分配不复用）。
+    pub func_id: u32,
+    /// 定义处捕获的 `self`（方法体内嵌套的闭包沿用）；非方法内为 `None`。
+    pub self_val: Option<Value>,
 }
 
 /// 函数 / 闭包值（可调用）。
 ///
-/// P3.6 仅承载**显示名**与**词法定义处的 [`ScopeChain`]**（§10.5）；形参、函数体 AST、
-/// 捕获 cell 列表等由 P3.7 / P3.8 在求值器落地时扩展本结构。
+/// - `name` / `def_scope`：显示名与词法定义处的 [`ScopeChain`]（§10.5，供 `;;` 看到捕获名）。
+/// - `user`：用户函数载荷；`None` 表示**无函数体的函数值**（仅作显示占位，P3.7 起测试用）。
 #[derive(Clone, Debug)]
 pub struct Closure {
     /// 显示名：命名函数 `Some("inc")` → `<fn inc>`；匿名 `None` → `<fn>`（§3.7）。
     pub name: Option<Rc<str>>,
     /// 词法定义处的 `ScopeDebug` 可见链（`Rc` 共享，§10.5）：供函数体内 `;;` 看到闭包捕获到的外层名字。
     pub def_scope: Rc<ScopeChain>,
+    /// 用户函数载荷（形参 / 体 / 捕获 cell）；占位闭包为 `None`。
+    pub user: Option<Rc<UserFn>>,
 }
 
 impl Closure {
-    /// 命名函数 / 闭包。
+    /// 命名函数 / 闭包（无函数体占位）。
     pub fn named(name: impl Into<Rc<str>>, def_scope: Rc<ScopeChain>) -> Self {
         Self {
             name: Some(name.into()),
             def_scope,
+            user: None,
         }
     }
 
-    /// 匿名函数 / λ / 闭包。
+    /// 匿名函数 / λ / 闭包（无函数体占位）。
     pub fn anonymous(def_scope: Rc<ScopeChain>) -> Self {
         Self {
             name: None,
             def_scope,
+            user: None,
+        }
+    }
+
+    /// 带**用户函数载荷**的函数值（P3.7 求值器创建）。
+    pub fn user(name: Option<Rc<str>>, def_scope: Rc<ScopeChain>, user: Rc<UserFn>) -> Self {
+        Self {
+            name,
+            def_scope,
+            user: Some(user),
         }
     }
 }
