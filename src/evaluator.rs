@@ -982,7 +982,16 @@ impl Interp {
                         Step::Flow(f) => return Ok(f),
                     };
                     // 位置红线：内置 Span 取**调用点**（`Call` 节点 span）。
-                    return Ok(Flow::Value(builtins::call(name, &argv, span)?));
+                    //
+                    // P3.9b：高阶内置（map/filter/reduce/sortBy/minBy/maxBy/each）需要「调用用户函数」
+                    // 的能力——注入一个经 [`Interp::call_value`] 调用回调的闭包（窄 ABI，见 builtins
+                    // 的 `Invoke`）。
+                    let mut invoke = |f: &Value, a: &[Value], s: Span| -> R<Value> {
+                        self.call_value(f, a, s)
+                    };
+                    return Ok(Flow::Value(builtins::call_with(
+                        name, &argv, span, &mut invoke,
+                    )?));
                 }
                 Err(name_error(name.clone(), callee.span))
             }
@@ -1036,6 +1045,23 @@ impl Interp {
     ) -> R<Flow> {
         match callee {
             Value::Func(cl) => Ok(Flow::Value(self.call_user(&cl, argv, span, self_override)?)),
+            other => Err(type_error(
+                TypeMsg::NotCallable {
+                    t: other.type_name().to_string(),
+                },
+                span,
+            )),
+        }
+    }
+
+    /// 调用一个**函数值**并解包结果（P3.9b 高阶内置回调的注入点，见 `builtins::Invoke`）。
+    ///
+    /// 与 [`Interp::call_func`] 同口径：非函数 → `TypeError::NotCallable`；函数值 → [`Interp::call_user`]
+    /// （其 `Return` / 函数体末值 / `Break`/`Continue` 已在 `call_user` 内收口为 `R<Value>`）。
+    /// 位置取**回调调用点**（内置的 `Call` 节点 span），满足「运行时错误必须带位置」。
+    fn call_value(&mut self, callee: &Value, args: &[Value], span: Span) -> R<Value> {
+        match callee {
+            Value::Func(cl) => self.call_user(cl, args.to_vec(), span, None),
             other => Err(type_error(
                 TypeMsg::NotCallable {
                     t: other.type_name().to_string(),
@@ -2965,5 +2991,79 @@ mod tests {
         );
         // 语法错误经 `R` 冒泡（`SyntaxError`）。
         assert_eq!(eval_src("1 2").unwrap_err().class_name(), "SyntaxError");
+    }
+
+    // ---- P3.9b 高阶内置：端到端 / 求值器集成 ---------------------------------
+
+    /// P3.9b 端到端（`lex` + `parse` + `eval_module`）：`map` 经求值器**路由到高阶表**；
+    /// 回调非函数 → `TypeError`（而非 `NameError`，证明 `is_builtin` / `call_with` 已接通）。
+    #[test]
+    fn e2e_hof_map_routes_and_rejects_non_function_callback() {
+        let e = eval_src("map(1, [1, 2])").unwrap_err();
+        assert_eq!(e.class_name(), "TypeError");
+        assert_eq!(e.message(), "不可调用：int 不是函数");
+    }
+
+    /// P3.9b 端到端（`lex` + `parse` + `eval_module`）：高阶内置的 `data-last` 容器类型与
+    /// 参数个数校验（`TypeError`）。
+    #[test]
+    fn e2e_hof_data_last_and_arg_count_checks() {
+        assert_eq!(eval_src("sortBy(nil, [3, 1])").unwrap_err().class_name(), "TypeError");
+        assert_eq!(eval_src("each(1)").unwrap_err().class_name(), "TypeError");
+        assert_eq!(eval_src("reduce(nil, 0)").unwrap_err().class_name(), "TypeError");
+    }
+
+    /// P3.9b：真实用户**闭包**经求值器（`Invoke` 注入）驱动 `map` / `reduce` / 闭包捕获 / `filter`。
+    ///
+    /// 说明：本机 parser 仍在并行实现 lambda 语法（`core-dev` P3.4/P3.5），故用**程序化 AST**
+    /// 构造闭包（`eval_src` 的 lex+parse 路径暂无法产生 lambda）；HOF 的**路由**已由上面两条
+    /// `lex+parse+eval` 用例覆盖。本用例端到端验证「闭包捕获 + 调用帧 + 回调注入」全链路。
+    #[test]
+    fn hof_drives_user_closures_through_evaluator() {
+        // map(fn(x) x * 2, [1, 2, 3]) → [2, 4, 6]
+        let map_prog = prog(vec![
+            ldecl(
+                "double",
+                lambda(&["x"], Body::Expr(bin(BinaryOp::Mul, ident("x"), int(2)))),
+            ),
+            expr_stmt(call(
+                "map",
+                vec![ident("double"), arr(vec![int(1), int(2), int(3)])],
+            )),
+        ]);
+        assert_eq!(eval_module(&map_prog).unwrap().to_string(), "[2, 4, 6]");
+
+        // reduce(fn(a, b) a + b, 0, [1, 2, 3]) → 6
+        let reduce_prog = prog(vec![
+            ldecl(
+                "add",
+                lambda(&["a", "b"], Body::Expr(bin(BinaryOp::Add, ident("a"), ident("b")))),
+            ),
+            expr_stmt(call(
+                "reduce",
+                vec![ident("add"), int(0), arr(vec![int(1), int(2), int(3)])],
+            )),
+        ]);
+        assert_eq!(eval_module(&reduce_prog).unwrap().to_string(), "6");
+
+        // 闭包捕获外层变量（A2）：k = 10; map(fn(x) x + k, [1, 2]) → [11, 12]
+        let cap_prog = prog(vec![
+            ldecl("k", int(10)),
+            ldecl(
+                "addk",
+                lambda(&["x"], Body::Expr(bin(BinaryOp::Add, ident("x"), ident("k")))),
+            ),
+            expr_stmt(call("map", vec![ident("addk"), arr(vec![int(1), int(2)])])),
+        ]);
+        assert_eq!(eval_module(&cap_prog).unwrap().to_string(), "[11, 12]");
+
+        // filter 谓词经求值器返回非 bool → TypeError（ConditionNotBool）。
+        let bad_prog = prog(vec![
+            ldecl("bad", lambda(&["x"], Body::Expr(ident("x")))),
+            expr_stmt(call("filter", vec![ident("bad"), arr(vec![int(1)])])),
+        ]);
+        let e = eval_module(&bad_prog).unwrap_err();
+        assert_eq!(e.class_name(), "TypeError");
+        assert_eq!(e.message(), "条件必须是 bool，得到 int");
     }
 }

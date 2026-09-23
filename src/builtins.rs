@@ -1,4 +1,4 @@
-//! 内置函数表（`data-last`，契约 §10.7 全表；本批 P3.9a 实现**非高阶**部分）。
+//! 内置函数表（`data-last`，契约 §10.7 全表 **54 个**；P3.9a 非高阶 47 + P3.9b 高阶 7）。
 //!
 //! 单一事实源（本模块**只读消费**，不得偏离）：
 //! - `docs/spec/interface-contract.md` §10.7（内置表 + 「数值内置形参加宽」规范性补钉）、§8.1（错误类 ↔ 变体）、
@@ -11,11 +11,23 @@
 //! # 调用约定（稳定 ABI，供 P3.7 求值器调用）
 //!
 //! ```text
-//! pub type BuiltinFn = fn(&[Value], Span) -> R<Value>;
-//! pub fn lookup(name: &str) -> Option<Builtin>;   // 未实现的名字（含 7 个高阶内置）→ None
-//! pub fn call(name: &str, args: &[Value], span: Span) -> R<Value>;
-//! pub const BUILTIN_NAMES: &[&str];               // 本批全部 47 个名字（字母序）
+//! pub type BuiltinFn = fn(&[Value], Span) -> R<Value>;                      // 非高阶（47，TABLE）
+//! pub type Invoke<'a> = &'a mut dyn FnMut(&Value, &[Value], Span) -> R<Value>;
+//! pub type HofFn = fn(&[Value], Span, Invoke<'_>) -> R<Value>;              // 高阶（7，HOF_TABLE）
+//! pub fn lookup(name: &str) -> Option<Builtin>;   // 非高阶表；名字不在其中 → None
+//! pub fn lookup_hof(name: &str) -> Option<Hof>;   // 高阶表；名字不在其中 → None
+//! pub fn is_builtin(name: &str) -> bool;          // 两表并集（54）
+//! pub fn call(name: &str, args: &[Value], span: Span) -> R<Value>;                        // 仅非高阶
+//! pub fn call_with(name, args, span, invoke) -> R<Value>;                                 // 全部 54（求值器入口）
+//! pub const BUILTIN_NAMES: &[&str];               // 全表 54 个名字（字母序）
 //! ```
+//!
+//! - **高阶内置的「调用能力」注入（P3.9b 关键 ABI）**：`map` / `filter` / `reduce` / `sortBy` /
+//!   `minBy` / `maxBy` / `each` 必须能调用**用户函数 / 闭包**。求值器的用户函数调用需要
+//!   `&mut self`（维护递归深度与 traceback 帧栈），故调用能力以
+//!   **[`Invoke`]（`&mut dyn FnMut(&Value, &[Value], Span) -> R<Value>`）** 作为窄接口注入：
+//!   求值器在派发内置时提供该闭包（`evaluator::eval_call` → [`call_with`]）。HOF 只依赖此接口，
+//!   因而**可脱离完整求值器**做单测（传 stub 回调）。设计裁决见 `DECISIONS.md` P3.9b ADR。
 //!
 //! - **位置（位置红线）**：`Span` 为**调用点**位置，由求值器在脱糖后的 `Call` 节点处传入；每个内置的
 //!   所有 `LfzError` 均携带该 `Span`（`print`/`eprint`/`input` 的 `IOError` 亦然）。
@@ -26,18 +38,14 @@
 //! - **参数类型**：不符 → `TypeError::BadOperands`（§8.1 唯一的通用「类型不符」消息模板；
 //!   以 `op = 内置名`、`lt = 实参类型`、`rt = 期望类型` 填槽）。
 //!
-//! # 本批范围
+//! # 范围
 //!
-//! 实现 §10.7 中**全部非高阶**内置（**47 个**）。以下 **7 个高阶内置**（须调用用户函数）**留待 P3.9b**
-//! （求值器 P3.7/P3.8 就绪后落地）：
+//! §10.7 全表 **54 个**内置齐备：非高阶 **47 个**（[`TABLE`]，P3.9a）+ 高阶 **7 个**
+//! （[`HOF_TABLE`]，P3.9b）：
 //!
 //! `map` `filter` `reduce` `sortBy` `minBy` `maxBy` `each`
 //!
-//! （`sort` 本身**非**高阶，已在本批实现。）
-//
-// TODO(P3.9b): map / filter / reduce / sortBy / minBy / maxBy / each —— 需要 `call_user_fn` 能力与
-//               `Env`/闭包调用帧（P3.7/P3.8）。签名与语义见 §10.7；`filter` 谓词须返回 `bool` 否则
-//               `TypeError`；`sortBy` 稳定、按 `keyFn` 全序（§4.5.6）。
+//! （`sort` 本身**非**高阶，在 [`TABLE`] 中。高阶的语义 / 边界见各 `h_*` 实现与 §10.7。）
 
 use crate::error::{
     assert_fail, div_zero, field as field_error, index as index_error, io as io_error, name as name_error,
@@ -98,19 +106,19 @@ impl Builtin {
     }
 }
 
-/// 本批实现的内置名（字母序，与 [`TABLE`] **逐项对应**）。
+/// §10.7 全表 **54 个**内置名（字母序；= [`TABLE`] 的 47 个非高阶 + [`HOF_TABLE`] 的 7 个高阶）。
 pub const BUILTIN_NAMES: &[&str] = &[
-    "abs", "assert", "ceil", "check", "del", "div", "drop", "entries", "eprint", "fail", "float",
-    "floor", "has", "input", "insert", "int", "join", "keys", "len", "lower", "max", "min", "pop",
-    "pow", "print", "push", "rand", "randInt", "range", "removeAt", "repeat", "replace", "round",
-    "seed", "slice", "sort", "split", "sqrt", "startsWith", "str", "sum", "swap", "take", "trim",
-    "type", "upper", "values",
+    "abs", "assert", "ceil", "check", "del", "div", "drop", "each", "entries", "eprint", "fail",
+    "filter", "float", "floor", "has", "input", "insert", "int", "join", "keys", "len", "lower",
+    "map", "max", "maxBy", "min", "minBy", "pop", "pow", "print", "push", "rand", "randInt",
+    "range", "reduce", "removeAt", "repeat", "replace", "round", "seed", "slice", "sort", "sortBy",
+    "split", "sqrt", "startsWith", "str", "sum", "swap", "take", "trim", "type", "upper", "values",
 ];
 
 /// 变参内置的「无上界」哨兵。
 const VARIADIC: usize = usize::MAX;
 
-/// 内置函数表（字母序，与 [`BUILTIN_NAMES`] 逐项对应；由测试锁定一致性）。
+/// **非高阶**内置函数表（字母序；与 [`HOF_TABLE`] 的并集逐项对应 [`BUILTIN_NAMES`]，由测试锁定一致性）。
 static TABLE: [Builtin; 47] = [
     Builtin { name: "abs", min_args: 1, max_args: 1, func: b_abs },
     Builtin { name: "assert", min_args: 1, max_args: 2, func: b_assert },
@@ -161,26 +169,113 @@ static TABLE: [Builtin; 47] = [
     Builtin { name: "values", min_args: 1, max_args: 1, func: b_values },
 ];
 
-/// 按名字查内置（线性扫描，47 项；字母序便于短路）。未实现 / 非内置名字（含 7 个高阶内置）→ `None`。
+// ---------------------------------------------------------------------------
+// 高阶内置（P3.9b）：调用能力注入 + 独立表
+// ---------------------------------------------------------------------------
+
+/// **调用能力**（高阶内置的注入接口）：调用一个函数值 `callee`（实参 `args`，位置 `span`）并返回其值。
+///
+/// 由**求值器**提供（`evaluator::eval_call`）——它知道如何建调用帧 / 绑定参数 / 执行函数体 / 维护
+/// 递归深度与 traceback。因该过程需要 `&mut`（非纯 `Fn`），故类型为 `&mut dyn FnMut(...)`。
+///
+/// 单测可传入 **stub 回调**（如 `|_, a, _| Ok(a[0].clone())`），从而**无需完整求值器**即可覆盖 HOF。
+pub type Invoke<'a> = &'a mut dyn FnMut(&Value, &[Value], Span) -> R<Value>;
+
+/// 高阶内置统一 ABI：`fn(实参, 调用点 Span, 调用能力) -> R<Value>`。
+pub type HofFn = fn(&[Value], Span, Invoke<'_>) -> R<Value>;
+
+/// 一个**高阶**内置的注册条目（与 [`Builtin`] 同构，多一项 [`Invoke`]）。
+#[derive(Clone, Copy)]
+pub struct Hof {
+    /// §10.7 中的内置名（`data-last`）。
+    pub name: &'static str,
+    /// 最少实参数。
+    pub min_args: usize,
+    /// 最多实参数。
+    pub max_args: usize,
+    /// 实现；私有，外部只能经 [`Hof::call`] 调用（统一做参数个数校验）。
+    func: HofFn,
+}
+
+impl Hof {
+    /// 校验参数个数后调用本高阶内置。规则与 [`Builtin::call`] 一致（`TypeError::ArgCount`）。
+    #[must_use]
+    pub fn call(self, args: &[Value], span: Span, invoke: Invoke<'_>) -> R<Value> {
+        let m = args.len();
+        if m < self.min_args || m > self.max_args {
+            let n = if m < self.min_args {
+                self.min_args
+            } else {
+                self.max_args
+            };
+            return Err(type_error(
+                TypeMsg::ArgCount {
+                    name: self.name.to_string(),
+                    n,
+                    m,
+                },
+                span,
+            ));
+        }
+        (self.func)(args, span, invoke)
+    }
+}
+
+/// 高阶内置名（字母序；与 [`HOF_TABLE`] 逐项对应）。
+pub const HOF_NAMES: &[&str] =
+    &["each", "filter", "map", "maxBy", "minBy", "reduce", "sortBy"];
+
+/// 高阶内置函数表（字母序；签名 / 语义见 §10.7）。
+static HOF_TABLE: [Hof; 7] = [
+    Hof { name: "each", min_args: 2, max_args: 2, func: h_each },
+    Hof { name: "filter", min_args: 2, max_args: 2, func: h_filter },
+    Hof { name: "map", min_args: 2, max_args: 2, func: h_map },
+    Hof { name: "maxBy", min_args: 2, max_args: 2, func: h_max_by },
+    Hof { name: "minBy", min_args: 2, max_args: 2, func: h_min_by },
+    Hof { name: "reduce", min_args: 3, max_args: 3, func: h_reduce },
+    Hof { name: "sortBy", min_args: 2, max_args: 2, func: h_sort_by },
+];
+
+/// 按名字查**非高阶**内置（线性扫描，47 项；字母序便于短路）。名字不在非高阶表 → `None`
+/// （高阶内置见 [`lookup_hof`]）。
 #[must_use]
 pub fn lookup(name: &str) -> Option<Builtin> {
     TABLE.iter().copied().find(|b| b.name == name)
 }
 
-/// 是否为已实现的内置。
+/// 按名字查**高阶**内置（线性扫描，7 项）。
 #[must_use]
-pub fn is_builtin(name: &str) -> bool {
-    lookup(name).is_some()
+pub fn lookup_hof(name: &str) -> Option<Hof> {
+    HOF_TABLE.iter().copied().find(|h| h.name == name)
 }
 
-/// 按名字调用内置（供 P3.7 求值器）。
+/// 是否为已实现的内置（非高阶 + 高阶**并集**，共 54）。
+#[must_use]
+pub fn is_builtin(name: &str) -> bool {
+    lookup(name).is_some() || lookup_hof(name).is_some()
+}
+
+/// 按名字调用**非高阶**内置（含参数个数校验）。名字不在非高阶表 → `NameError`。
 ///
-/// - 名字非内置 → `NameError`（求值器据此在全局找不到名字时统一报未定义）；
-/// - 已找到 → 交 [`Builtin::call`]（含参数个数校验）。
+/// 注：本入口**不覆盖** 7 个高阶内置（它们需要调用能力注入）；求值器与需要高阶的调用方请用
+/// [`call_with`]。
 pub fn call(name: &str, args: &[Value], span: Span) -> R<Value> {
     match lookup(name) {
         Some(b) => b.call(args, span),
         None => Err(name_error(name.to_string(), span)),
+    }
+}
+
+/// 按名字调用内置（**非高阶 + 高阶**，共 54）—— 求值器的统一入口（`evaluator::eval_call`）。
+///
+/// - 名字属高阶表 → 交 [`Hof::call`]（含参数个数校验），并把 `invoke` 传给 HOF 调用回调；
+/// - 否则 → 回落 [`call`]（非高阶表；名字完全未知则 `NameError`）。
+///
+/// `invoke` 为求值器提供的**调用能力**（见 [`Invoke`]）：调用一个函数值 `f`、实参 `args`、位置 `span`。
+pub fn call_with(name: &str, args: &[Value], span: Span, invoke: Invoke<'_>) -> R<Value> {
+    match lookup_hof(name) {
+        Some(h) => h.call(args, span, invoke),
+        None => call(name, args, span),
     }
 }
 
@@ -265,6 +360,24 @@ fn need_bool(name: &str, args: &[Value], i: usize, span: Span) -> R<bool> {
             span,
         )
     })
+}
+
+/// 第 `i` 个实参须为**函数值**（高阶内置的回调 `f` / `pred` / `keyFn`）。
+///
+/// 非函数 → `TypeError::NotCallable`（§8.1「不可调用：{t} 不是函数」）——与求值器调用非函数的
+/// 口径一致。**先校验后遍历**：即使容器为空，类型不符也报 `TypeError`（§10.7「参数类型不符 →
+/// `TypeError`」）。
+fn need_func<'a>(name: &str, args: &'a [Value], i: usize, span: Span) -> R<&'a Value> {
+    let v = at(name, args, i, span)?;
+    match v {
+        Value::Func(_) => Ok(v),
+        other => Err(type_error(
+            TypeMsg::NotCallable {
+                t: other.type_name().to_string(),
+            },
+            span,
+        )),
+    }
 }
 
 /// 取 `array` 实参的**元素克隆**（浅拷贝；嵌套容器仍共享 `Rc`）——所有「返回新数组」的内置从此起步，
@@ -541,6 +654,139 @@ fn b_drop(args: &[Value], span: Span) -> R<Value> {
     let items = array_snapshot("drop", args, 1, span)?;
     let k = n.clamp(0, items.len() as i64) as usize;
     Ok(Value::array(items[k..].to_vec()))
+}
+
+// ===========================================================================
+// 高阶内置（P3.9b，契约 §10.7）：map / filter / reduce / sortBy / minBy / maxBy / each
+//
+// 约定：回调经注入的 [`Invoke`] 调用（求值器提供）；data-last（容器恒为末参）；
+// 容器更新返回**新值**、不改原容器（A1）；错误均携带**调用点** `span`。
+// ===========================================================================
+
+/// `map(f, xs) -> array`：对每个元素调用 `f`，返回结果**新**数组（不改 `xs`，A1）。
+fn h_map(args: &[Value], span: Span, call: Invoke<'_>) -> R<Value> {
+    let f = need_func("map", args, 0, span)?;
+    let xs = array_snapshot("map", args, 1, span)?;
+    let mut out = Vec::with_capacity(xs.len());
+    for x in &xs {
+        out.push(call(f, std::slice::from_ref(x), span)?);
+    }
+    Ok(Value::array(out))
+}
+
+/// `filter(pred, xs) -> array`：保留 `pred` 返回 `true` 的元素（**新**数组）。
+///
+/// `pred` 结果须为 `bool`，否则 `TypeError::ConditionNotBool`（§8.1 / §10.7）。
+fn h_filter(args: &[Value], span: Span, call: Invoke<'_>) -> R<Value> {
+    let pred = need_func("filter", args, 0, span)?;
+    let xs = array_snapshot("filter", args, 1, span)?;
+    let mut out = Vec::new();
+    for x in &xs {
+        match call(pred, std::slice::from_ref(x), span)? {
+            Value::Bool(true) => out.push(x.clone()),
+            Value::Bool(false) => {}
+            other => {
+                return Err(type_error(
+                    TypeMsg::ConditionNotBool {
+                        t: other.type_name().to_string(),
+                    },
+                    span,
+                ))
+            }
+        }
+    }
+    Ok(Value::array(out))
+}
+
+/// `reduce(f, init, xs) -> value`：左折叠 `acc = f(acc, x)`（**左→右**求值序，B1）。
+///
+/// 空数组 → 直接返回 `init`（不调用 `f`）。
+fn h_reduce(args: &[Value], span: Span, call: Invoke<'_>) -> R<Value> {
+    let f = need_func("reduce", args, 0, span)?;
+    let init = at("reduce", args, 1, span)?;
+    let xs = array_snapshot("reduce", args, 2, span)?;
+    let mut acc = init.clone();
+    for x in &xs {
+        acc = call(f, &[acc, x.clone()], span)?;
+    }
+    Ok(acc)
+}
+
+/// `sortBy(keyFn, xs) -> array`：按 `keyFn` 结果**升序稳定**排序的**新**数组（不改 `xs`，A1）。
+///
+/// 键须可全序比较且同类（§4.5.6），否则 `TypeError`（承 `sort` 口径）。稳定性由
+/// `slice::sort_by`（稳定）+ 初始下标序保证：等键元素保持输入相对次序。
+fn h_sort_by(args: &[Value], span: Span, call: Invoke<'_>) -> R<Value> {
+    let key_fn = need_func("sortBy", args, 0, span)?;
+    let xs = array_snapshot("sortBy", args, 1, span)?;
+    let mut keys = Vec::with_capacity(xs.len());
+    for x in &xs {
+        keys.push(call(key_fn, std::slice::from_ref(x), span)?);
+    }
+    validate_orderable(&keys, "sortBy", span)?;
+    let mut order: Vec<usize> = (0..xs.len()).collect();
+    order.sort_by(|&a, &b| {
+        keys[a]
+            .total_cmp(&keys[b])
+            .expect("已通过 validate_orderable 的全序比较必为 Some")
+    });
+    Ok(Value::array(order.into_iter().map(|i| xs[i].clone()).collect()))
+}
+
+/// `minBy` / `maxBy` 共用：空 → `ValueError`（`空数组没有极值（{func}）`）；否则按 `keyFn` 结果取
+/// 极值，返回**原元素**（等键取**首个**，与 `min` / `max` 一致）。
+fn extremum_by(
+    args: &[Value],
+    span: Span,
+    call: Invoke<'_>,
+    want_max: bool,
+    name: &str,
+) -> R<Value> {
+    let key_fn = need_func(name, args, 0, span)?;
+    let xs = array_snapshot(name, args, 1, span)?;
+    if xs.is_empty() {
+        return Err(empty_collection_value_error(name, span));
+    }
+    let mut keys = Vec::with_capacity(xs.len());
+    for x in &xs {
+        keys.push(call(key_fn, std::slice::from_ref(x), span)?);
+    }
+    validate_orderable(&keys, name, span)?;
+    let mut best = 0usize;
+    for i in 1..xs.len() {
+        let ord = keys[i]
+            .total_cmp(&keys[best])
+            .expect("已通过 validate_orderable 的全序比较必为 Some");
+        let better = if want_max {
+            ord == Ordering::Greater
+        } else {
+            ord == Ordering::Less
+        };
+        if better {
+            best = i;
+        }
+    }
+    Ok(xs[best].clone())
+}
+
+/// `minBy(keyFn, xs) -> value`：以 `keyFn` 结果为准的最小元素；空 → `ValueError`。
+fn h_min_by(args: &[Value], span: Span, call: Invoke<'_>) -> R<Value> {
+    extremum_by(args, span, call, false, "minBy")
+}
+
+/// `maxBy(keyFn, xs) -> value`：以 `keyFn` 结果为准的最大元素；空 → `ValueError`。
+fn h_max_by(args: &[Value], span: Span, call: Invoke<'_>) -> R<Value> {
+    extremum_by(args, span, call, true, "maxBy")
+}
+
+/// `each(f, xs) -> nil`：仅副作用遍历（逐个调用 `f`，忽略其返回值）；返回 `nil`。
+fn h_each(args: &[Value], span: Span, call: Invoke<'_>) -> R<Value> {
+    let f = need_func("each", args, 0, span)?;
+    let xs = array_snapshot("each", args, 1, span)?;
+    for x in &xs {
+        let _ = call(f, std::slice::from_ref(x), span)?;
+    }
+    Ok(Value::Nil)
 }
 
 // ===========================================================================
@@ -1046,6 +1292,34 @@ mod tests {
     }
     fn st(fields: Vec<(&str, Value)>) -> Value {
         Value::object(fields.into_iter().map(|(k, v)| (k.to_string(), v)).collect())
+    }
+
+    /// 调用高阶内置并注入 `stub` 回调（**无需完整求值器**，P3.9b 可测性要求）。
+    fn hof(
+        name: &str,
+        args: &[Value],
+        mut stub: impl FnMut(&Value, &[Value], Span) -> R<Value>,
+    ) -> R<Value> {
+        call_with(name, args, Span::START, &mut stub)
+    }
+    fn cls_hof(
+        name: &str,
+        args: &[Value],
+        stub: impl FnMut(&Value, &[Value], Span) -> R<Value>,
+    ) -> &'static str {
+        hof(name, args, stub).unwrap_err().class_name()
+    }
+    fn msg_hof(
+        name: &str,
+        args: &[Value],
+        stub: impl FnMut(&Value, &[Value], Span) -> R<Value>,
+    ) -> String {
+        hof(name, args, stub).unwrap_err().message()
+    }
+
+    /// stub 回调：`key = -x`（`int`）；fn item 可 Copy 复用。
+    fn neg_int_key(_: &Value, a: &[Value], _: Span) -> R<Value> {
+        Ok(i(-a[0].as_int().unwrap()))
     }
 
     // ---- 核心 / 数组 ------------------------------------------------------
@@ -1572,7 +1846,7 @@ mod tests {
         assert!(is_builtin("push"));
         assert!(!is_builtin("nope"));
         assert!(lookup("nope").is_none());
-        assert_eq!(BUILTIN_NAMES.len(), 47);
+        assert_eq!(BUILTIN_NAMES.len(), 54);
         // 字母序。
         let mut sorted = BUILTIN_NAMES.to_vec();
         sorted.sort_unstable();
@@ -1580,18 +1854,27 @@ mod tests {
         // 无重复。
         let mut dedup = sorted.clone();
         dedup.dedup();
-        assert_eq!(dedup.len(), 47);
-        // 表与名单逐项一致。
-        let table_names: Vec<&str> = TABLE.iter().map(|b| b.name).collect();
+        assert_eq!(dedup.len(), 54);
+        // 两表（非高阶 + 高阶）名字并集与全表名单逐项一致。
+        let mut table_names: Vec<&str> = TABLE.iter().map(|b| b.name).collect();
+        table_names.extend(HOF_TABLE.iter().map(|h| h.name));
+        table_names.sort_unstable();
         assert_eq!(table_names.as_slice(), BUILTIN_NAMES);
+        // HOF_NAMES 与 HOF_TABLE 逐项一致。
+        let hof_names: Vec<&str> = HOF_TABLE.iter().map(|h| h.name).collect();
+        assert_eq!(hof_names.as_slice(), HOF_NAMES);
+        // §10.7 全表 54 个（47 非高阶 + 7 高阶）齐备。
+        assert_eq!(TABLE.len() + HOF_TABLE.len(), 54);
     }
 
     #[test]
-    fn hof_deferred_names_are_absent() {
-        for name in ["map", "filter", "reduce", "sortBy", "minBy", "maxBy", "each"] {
-            assert!(lookup(name).is_none(), "{name} 应留待 P3.9b（高阶内置）");
-            assert!(!is_builtin(name));
+    fn hof_names_are_registered() {
+        for name in HOF_NAMES {
+            assert!(lookup_hof(name).is_some(), "{name} 应已实现（高阶表，P3.9b）");
+            assert!(is_builtin(name), "{name} 应为内置");
+            assert!(lookup(name).is_none(), "{name} 属高阶表，不在非高阶表");
         }
+        assert_eq!(HOF_NAMES.len(), 7);
     }
 
     #[test]
@@ -1652,5 +1935,146 @@ mod tests {
         assert_eq!(cls("check", &[Value::Nil]), "TypeError");
         assert_eq!(cls("fail", &[i(1)]), "TypeError");
         assert_eq!(cls("input", &[Value::Nil]), "TypeError");
+    }
+
+    // ---- 高阶内置（P3.9b，§10.7） ----------------------------------------
+
+    #[test]
+    fn hof_map_returns_new_array_and_leaves_original() {
+        let xs = arr(vec![i(1), i(2), i(3)]);
+        let out = hof("map", &[fnval(), xs.clone()], |_, a, _| {
+            Ok(i(a[0].as_int().unwrap() * 2))
+        })
+        .unwrap();
+        assert_eq!(out.to_string(), "[2, 4, 6]");
+        assert_eq!(xs.to_string(), "[1, 2, 3]"); // 原容器不变（A1）
+        match (&out, &xs) {
+            (Value::Array(a), Value::Array(b)) => assert!(!Rc::ptr_eq(a, b)),
+            _ => panic!("应为 array"),
+        }
+        // 空数组 → 空新数组（不调用回调）。
+        assert_eq!(
+            hof("map", &[fnval(), arr(vec![])], |_, _, _| panic!("空数组不应调用 f"))
+                .unwrap()
+                .to_string(),
+            "[]"
+        );
+    }
+
+    #[test]
+    fn hof_filter_requires_bool_predicate() {
+        let xs = arr(vec![i(1), i(2), i(3), i(4)]);
+        let evens = hof("filter", &[fnval(), xs.clone()], |_, a, _| {
+            Ok(Value::Bool(a[0].as_int().unwrap() % 2 == 0))
+        })
+        .unwrap();
+        assert_eq!(evens.to_string(), "[2, 4]");
+        assert_eq!(xs.to_string(), "[1, 2, 3, 4]"); // 原容器不变（A1）
+        // 谓词返回非 bool → TypeError（ConditionNotBool，§8.1 / §10.7）。
+        let e = hof("filter", &[fnval(), arr(vec![i(1)])], |_, _, _| Ok(i(1))).unwrap_err();
+        assert_eq!(e.class_name(), "TypeError");
+        assert_eq!(e.message(), "条件必须是 bool，得到 int");
+    }
+
+    #[test]
+    fn hof_reduce_folds_left_to_right() {
+        // 左折叠 ((0-1)-2)-3 = -6；右折叠会得 2，故锁定求值序（B1）。
+        let xs = arr(vec![i(1), i(2), i(3)]);
+        let out = hof("reduce", &[fnval(), i(0), xs.clone()], |_, a, _| {
+            Ok(i(a[0].as_int().unwrap() - a[1].as_int().unwrap()))
+        })
+        .unwrap();
+        assert_eq!(out.to_string(), "-6");
+        assert_eq!(xs.to_string(), "[1, 2, 3]"); // 原容器不变（A1）
+        // 空数组 → 直接返回 init（不调用 f）。
+        let out = hof("reduce", &[fnval(), i(7), arr(vec![])], |_, _, _| {
+            panic!("空数组不应调用 f")
+        })
+        .unwrap();
+        assert_eq!(out.to_string(), "7");
+    }
+
+    #[test]
+    fn hof_sort_by_is_stable_and_uses_key() {
+        // key = -x → 升序 key 即降序 x；证明使用 keyFn 结果而非元素本身。
+        let xs = arr(vec![i(3), i(1), i(2)]);
+        let out = hof("sortBy", &[fnval(), xs.clone()], neg_int_key).unwrap();
+        assert_eq!(out.to_string(), "[3, 2, 1]");
+        assert_eq!(xs.to_string(), "[3, 1, 2]"); // 原容器不变（A1）
+        // 稳定性：`-0.0` 与 `0.0` 全序相等但可区分 → 须保持输入序（同 `sort` 口径）。
+        let a = arr(vec![f(-0.0), f(0.0)]);
+        let b = arr(vec![f(0.0), f(-0.0)]);
+        assert_eq!(
+            hof("sortBy", &[fnval(), a], |_, x, _| Ok(x[0].clone()))
+                .unwrap()
+                .to_string(),
+            "[-0.0, 0.0]"
+        );
+        assert_eq!(
+            hof("sortBy", &[fnval(), b], |_, x, _| Ok(x[0].clone()))
+                .unwrap()
+                .to_string(),
+            "[0.0, -0.0]"
+        );
+        // 键不可全序 → TypeError。
+        assert_eq!(
+            cls_hof("sortBy", &[fnval(), arr(vec![Value::Bool(true)])], |_, x, _| Ok(x[0].clone())),
+            "TypeError"
+        );
+    }
+
+    #[test]
+    fn hof_min_by_max_by_and_empty_value_error() {
+        // key = -x：元素 3,1,2 → 键 -3,-1,-2；minBy → 3，maxBy → 1。
+        let xs = arr(vec![i(3), i(1), i(2)]);
+        assert_eq!(hof("minBy", &[fnval(), xs.clone()], neg_int_key).unwrap().to_string(), "3");
+        assert_eq!(hof("maxBy", &[fnval(), xs.clone()], neg_int_key).unwrap().to_string(), "1");
+        assert_eq!(xs.to_string(), "[3, 1, 2]"); // 原容器不变（A1）
+        // 空 → ValueError，且用**新消息** `空数组没有极值（{func}）`（§8.1 / §10.7 补钉）。
+        let e = hof("minBy", &[fnval(), arr(vec![])], neg_int_key).unwrap_err();
+        assert_eq!(e.class_name(), "ValueError");
+        assert_eq!(e.message(), "空数组没有极值（minBy）");
+        let e = hof("maxBy", &[fnval(), arr(vec![])], neg_int_key).unwrap_err();
+        assert_eq!(e.class_name(), "ValueError");
+        assert_eq!(e.message(), "空数组没有极值（maxBy）");
+    }
+
+    #[test]
+    fn hof_each_visits_all_and_returns_nil() {
+        let seen = RefCell::new(Vec::new());
+        let xs = arr(vec![i(1), i(2), i(3)]);
+        let out = hof("each", &[fnval(), xs.clone()], |_, a, _| {
+            seen.borrow_mut().push(a[0].as_int().unwrap());
+            Ok(Value::Nil)
+        })
+        .unwrap();
+        assert_eq!(out.to_string(), "nil"); // 仅副作用遍历，返回 nil
+        assert_eq!(*seen.borrow(), vec![1, 2, 3]); // 左→右访问全部元素
+        assert_eq!(xs.to_string(), "[1, 2, 3]"); // 原容器不变（A1）
+    }
+
+    #[test]
+    fn hof_callback_type_and_arg_count_checks() {
+        // 回调非函数 → TypeError（NotCallable）；**先校验**，即使容器为空也报错。
+        assert_eq!(cls_hof("map", &[i(1), arr(vec![])], |_, _, _| Ok(Value::Nil)), "TypeError");
+        assert_eq!(
+            msg_hof("map", &[i(1), arr(vec![])], |_, _, _| Ok(Value::Nil)),
+            "不可调用：int 不是函数"
+        );
+        // 容器非 array → TypeError。
+        assert_eq!(
+            cls_hof("reduce", &[fnval(), i(0), i(1)], |_, _, _| Ok(Value::Nil)),
+            "TypeError"
+        );
+        // 参数个数（data-last：f 在前、容器在末）。
+        assert_eq!(cls_hof("map", &[fnval()], |_, _, _| Ok(Value::Nil)), "TypeError");
+        assert_eq!(
+            msg_hof("map", &[fnval()], |_, _, _| Ok(Value::Nil)),
+            "函数 map 期待 2 个参数，得到 1"
+        );
+        assert_eq!(
+            msg_hof("reduce", &[fnval(), i(0)], |_, _, _| Ok(Value::Nil)),
+            "函数 reduce 期待 3 个参数，得到 2"
+        );
     }
 }

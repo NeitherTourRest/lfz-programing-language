@@ -1,5 +1,22 @@
 # runtime-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 04:00] P3.9b — `src/builtins.rs`：7 个高阶内置（§10.7 全表 54/54 齐备）
+- 来源: team-lead 任务书「P3.9b — `src/builtins.rs`：7 个高阶内置」；依据 `docs/spec/interface-contract.md` §10.7（HOF 签名/语义 + 边界补钉）、§8.1（错误类↔消息）、§10.8（`R<T>`），`semantics.md` §4.5.6（全序）、§8.1。
+- 完成:
+  - **调用能力注入（关键决策）**：新增 `pub type Invoke<'a> = &'a mut dyn FnMut(&Value, &[Value], Span) -> R<Value>` 与 `HofFn`；7 个 HOF 只依赖此窄接口。**为何 `&mut dyn FnMut` 而非任务书推荐的 `&dyn Fn`**：`call_user` 需 `&mut self`（改递归深度 `depth` + 压/弹 `trace` 帧栈），共享借用无法表达可变能力。**为何不做求值器特判**：会割裂内置表并破坏「脱离 evaluator 可测」。
+  - **求值器侧**：新增 `Interp::call_value`（非函数 → `NotCallable`；函数 → `call_user`）；`eval_call` 内置派发由 `builtins::call` 改调 `builtins::call_with(..., &mut invoke)`（`invoke` = 就地闭包）。
+  - **表结构**：保留 `TABLE: [Builtin; 47]` 与 `lookup` / `call` **语义与签名不变**；新增 `HOF_TABLE: [Hof; 7]`、`lookup_hof`、`HOF_NAMES`、`call_with`；`is_builtin` = 两表并集；`BUILTIN_NAMES` 47 → **54**。
+  - **7 个 HOF 语义**（全部 data-last、A1 返回新值、错误带调用点 span）：`map` 逐元素；`filter` 谓词须 `bool` 否则 `TypeError::ConditionNotBool`；`reduce` 左折叠 `f(acc,x)`、空→`init`；`sortBy` 按 key 升序**稳定**；`minBy`/`maxBy` 空→`ValueError`「空数组没有极值（{func}）」、非空返回原元素；`each` 仅副作用、返回 `nil`。回调**先校验**为函数（空容器也对非法 `f` 报错）。
+- 产出:
+  - `Get-ChildItem src\builtins.rs,src\evaluator.rs` → builtins.rs **90390 B**、evaluator.rs **119972 B**（合法 UTF-8）。
+  - `cargo build` → `Finished`（**0 warning**）；`cargo build --tests --message-format=json 2>$null` → `warnings=0 errors=0`。
+  - `cargo test` → **`256 passed; 0 failed; 0 ignored`**（基线 246 + 净新增 10）。
+  - 新增测试（11；替换 1 条过时断言）：builtins `hof_map_returns_new_array_and_leaves_original` / `hof_filter_requires_bool_predicate` / `hof_reduce_folds_left_to_right` / `hof_sort_by_is_stable_and_uses_key` / `hof_min_by_max_by_and_empty_value_error` / `hof_each_visits_all_and_returns_nil` / `hof_callback_type_and_arg_count_checks` / `hof_names_are_registered`；evaluator `e2e_hof_map_routes_and_rejects_non_function_callback` / `e2e_hof_data_last_and_arg_count_checks` / `hof_drives_user_closures_through_evaluator`。单测均传 **stub 回调**（不依赖 evaluator）；另含 2 条 `lex+parse+eval` + 1 条程序化 AST 闭包全链路。
+- 决策: 追加 ADR `[2026-09-24 04:00] [runtime-dev] P3.9b 高阶内置：调用能力注入（Invoke ABI）+ §10.7 全表 54/54 齐备`。**未**改 `docs/spec/`、`error.rs`、`span.rs`、`loader.rs`、`lexer.rs`、`ast.rs`、`parser.rs`、`Cargo.toml`。
+- 缺口（上报，不自行发明）: (1) parser 尚无 lambda → HOF 成功路径暂以程序化 AST 覆盖，待 lambda 落地改回 e2e；(2) 请 architect 确认「回调先校验 / `filter` 非 bool 用 `ConditionNotBool`」； (3) v1 内置非一等值 → `map(len, xs)` 不可写（与 spec §9 样例一致）。
+- 下一步: 待 team-lead 核验；parser lambda 落地后补成功路径 e2e。
+- 阻塞: 无。
+
 ## [2026-09-24 02:30] P3.8 — `src/evaluator.rs` 语义定稿（§4.5 确定性八项 / A4 / A5 / A6 / RecursionError / `;;` / traceback）
 - 来源: team-lead 任务书「P3.8 — `src/evaluator.rs` 语义定稿」，依据 `docs/spec/semantics.md` §4.5（全节）/§3.6/§3.7/§8，`interface-contract.md` §10.3/§10.4/§10.5/§10.8。
 - 完成:
