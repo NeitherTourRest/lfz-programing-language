@@ -1,20 +1,28 @@
-//! 语法分析器（递归下降）—— 第四批：控制流语句（if / while / for / break / continue / return）。
+//! 语法分析器（递归下降）—— 第五批：声明与函数字面量（fn / struct / lambda / self）。
 //!
 //! 契约：`docs/spec/interface-contract.md` §10.6；语法：`docs/spec/syntax.md` §3.1 / §3.2 / §3.4 / §3.5 / §4.1 / §7。
 //!
 //! # 已实现（本批 + 前批；其余构造在后续批次实现，当前一律报 `UnexpectedToken`）
 //!
-//! - 换行模式栈（§3.2）：`(` / `[` / 字面量成员表 `{` 内 `NEWLINE` 忽略（`IGN`），
+//! - 换行模式栈（§3.2）：`(` / `[` / 字面量与声明成员表 `{` 内 `NEWLINE` 忽略（`IGN`），
 //!   语句层生效（`SIG`）。
 //! - 语句：`let` / `var` 声明、**赋值语句**（`assign_stmt`：`= += -= *= /= %=`，
 //!   目标为 `IDENT` / `self` + `. 字段` / `[ 下标 ]` 链，A21）、表达式语句、
 //!   块 `{ ... }`、程序（`Program`）本身。
-//! - **控制流（本批）**：`if` / `else` / `else if` 链（条件走 §3.4 NO_BRACE_LITERAL、
+//! - 控制流：`if` / `else` / `else if` 链（条件走 §3.4 NO_BRACE_LITERAL、
 //!   §3.5 块前 / else 前换行、A4 悬挂 else 绑定最近 if）、`while`（§7 `while_stmt`）、
 //!   `for IDENT in expr`（§7 `for_stmt`）、`break` / `continue`（循环外 →
 //!   `BreakContinueOutsideLoop`）、`return [expr]`（A19 行尾 = 返回 nil；函数外 →
 //!   `ReturnOutsideFunction`）。
-//! - 表达式：字面量（Int / Float / 纯字符串 / true / false / nil）、标识符、
+//! - **声明与函数字面量（本批）**：命名函数声明 `fn name(params) body`（§7 `fn_decl`；
+//!   头部与块间允许换行，§3.3 / §3.5）、结构体模板 `struct Name { … }`（§7
+//!   `struct_decl`；成员表 `{ … }` 内换行忽略；成员 = 字段 `IDENT : expr` 或方法
+//!   `fn …`，逗号必填、尾逗号可选）、函数字面量（§7 `lambda`）两种形式
+//!   `fn (params) body` 与 `(params) => (block | expression)`（A20 前瞻 `=>` 判定，
+//!   未命中回退为括号分组；M3 `=> {` 恒为块；A26 lambda 不作后缀基）、
+//!   表达式位置的 `self`（§7 `primary`）。函数体 / lambda 体解析期间 `fn_depth` +1，
+//!   `return` 由此合法。
+//! - 表达式：字面量（Int / Float / 纯字符串 / true / false / nil / self）、标识符、
 //!   括号分组 `( expr )`、一元 `-` / `!`（§4.1 级别 2）、
 //!   后缀链（调用 `f(a, …)` / 索引 `xs[i]` / 字段 `s.k`，可任意链式，§4.1 级别 1）、
 //!   数组字面量 `[a, b, c]`、struct 字面量 `{ k: v }` 与 `Name { k: v }`（§7）、
@@ -32,11 +40,11 @@
 //!    struct 字面量」留待语句形态补齐批次一并处理。
 //! 2. `if` 仅支持**语句形态**（`StmtKind::If` 包裹 `if_expr`）；表达式位置的
 //!    `if_expr`（§7 `unary` 层）属后续批次。
-//! 3. 循环 / 函数体深度由 `loop_depth` / `fn_depth` 计数；`fn` 声明与 lambda 是
-//!    下一批，故本批任何源码级 `return` 都在顶层报 `ReturnOutsideFunction`
-//!    （测试以直置 `fn_depth` 模拟函数体）。
-//! 4. `;;`→`Dump`、管道（`|>` 级别 5）、插值、`i64::MIN` 特判、`fn` / `struct`
-//!    声明、lambda 均为后续批次。
+//! 3. 循环 / 函数体深度由 `loop_depth` / `fn_depth` 计数（本批起 `fn` 声明、
+//!    lambda 体真正 +1）。
+//! 4. `;;`→`Dump`、管道（`|>` 级别 5）、插值、`i64::MIN` 特判为后续批次（P3.5）。
+//! 5. `self` 与形参重名不作语法级限制（§7 无规则）；`self` 归属方法体的语义校验
+//!    在求值期。
 
 use crate::ast::*;
 use crate::error::{syntax, LzError, R, SyntaxMsg};
@@ -105,6 +113,11 @@ impl<'a> Parser<'a> {
     /// 当前 token 的 `Span`。
     fn peek_span(&self) -> Span {
         self.tokens[self.pos].span
+    }
+
+    /// 下一个 token 的种类（不消费；当前已是末位 `Eof` 时为 `None`）。
+    fn peek_next(&self) -> Option<&TokenKind> {
+        self.tokens.get(self.pos + 1).map(|t| &t.kind)
     }
 
     /// 消费当前 token（不越过末尾 `Eof`）。
@@ -211,6 +224,11 @@ impl<'a> Parser<'a> {
             TokenKind::KwFor => self.parse_for(span),
             TokenKind::KwReturn => self.parse_return(span),
             TokenKind::KwBreak | TokenKind::KwContinue => self.parse_break_continue(span),
+            // `fn` + IDENT → 命名函数声明；`fn` + `(` → 函数字面量表达式语句（走表达式路径）。
+            TokenKind::KwFn if matches!(self.peek_next(), Some(TokenKind::Ident(_))) => {
+                self.parse_fn_decl(span)
+            }
+            TokenKind::KwStruct => self.parse_struct_decl(span),
             TokenKind::Semi => Err(syntax(SyntaxMsg::LoneSemicolon, span)),
             _ => {
                 // `assign_stmt = lvalue , assign_op , expression`（§7；A21 先试 lvalue 头部）。
@@ -336,6 +354,175 @@ impl<'a> Parser<'a> {
         self.expect(&TokenKind::Assign)?;
         let init = self.parse_expr()?;
         Ok(Spanned::new(StmtKind::Decl { mutable, name, init }, span))
+    }
+
+    // ------------------------------------------------------------------
+    // 声明：fn / struct（§7：fn_decl / struct_decl / member / params / body）
+    // ------------------------------------------------------------------
+
+    /// `fn name ( params ) body`（§7 `fn_decl`）：函数体内 `fn_depth` +1（`return` 合法）。
+    fn parse_fn_decl(&mut self, span: Span) -> R<Stmt> {
+        let (name, params, body) = self.parse_fn_components()?;
+        Ok(Spanned::new(StmtKind::FnDecl(FnDecl { span, name, params, body }), span))
+    }
+
+    /// `fn` 头 + 参数表 + 函数体（`fn_decl` 与 struct 方法成员共用）。
+    fn parse_fn_components(&mut self) -> R<(String, Vec<String>, Body)> {
+        self.bump(); // fn
+        let name = match self.peek().clone() {
+            TokenKind::Ident(name) => {
+                self.bump();
+                name
+            }
+            _ => return Err(self.unexpected("函数名")),
+        };
+        let params = self.parse_params_parens()?;
+        let body = self.parse_fn_body()?;
+        Ok((name, params, body))
+    }
+
+    /// 参数表 `( params )`：`(` 内压 `IGN`（换行忽略，§3.2）。
+    fn parse_params_parens(&mut self) -> R<Vec<String>> {
+        self.expect(&TokenKind::LParen)?;
+        self.nl_stack.push(NlMode::Ign);
+        let params = self.parse_params()?;
+        self.skip_ign_newlines();
+        self.expect(&TokenKind::RParen)?;
+        self.nl_stack.pop();
+        Ok(params)
+    }
+
+    /// `params = IDENT , { "," , IDENT }`（§7）：空表合法；逗号必填、无尾逗号。
+    fn parse_params(&mut self) -> R<Vec<String>> {
+        let mut params = Vec::new();
+        self.skip_ign_newlines();
+        if *self.peek() == TokenKind::RParen {
+            return Ok(params);
+        }
+        loop {
+            self.skip_ign_newlines();
+            match self.peek().clone() {
+                TokenKind::Ident(name) => {
+                    self.bump();
+                    params.push(name);
+                }
+                _ => return Err(self.unexpected("形参名")),
+            }
+            self.skip_ign_newlines();
+            if *self.peek() == TokenKind::Comma {
+                self.bump();
+                continue;
+            }
+            break;
+        }
+        Ok(params)
+    }
+
+    /// 函数体 `body = block | "=>" , ( block | expression )`（§7；§3.5 块前换行；M3）。
+    ///
+    /// 解析期间 `fn_depth` +1：体内 `return` 合法；错误路径亦先回退深度再上抛。
+    fn parse_fn_body(&mut self) -> R<Body> {
+        self.fn_depth += 1;
+        let result = self.parse_body_forms();
+        self.fn_depth -= 1;
+        result
+    }
+
+    /// `parse_fn_body` 的形态判定：`{` 块 / `=> {` 块（M3）/ `=> expr`。
+    fn parse_body_forms(&mut self) -> R<Body> {
+        self.skip_newlines(); // §3.5：块前换行
+        if *self.peek() == TokenKind::LBrace {
+            let block = self.parse_block()?;
+            return Ok(Body::Block(block));
+        }
+        self.expect(&TokenKind::Arrow)?;
+        self.parse_arrow_body()
+    }
+
+    /// `=>` 之后的体：`( block | expression )`；`=> {` 恒为块（M3）。
+    fn parse_arrow_body(&mut self) -> R<Body> {
+        self.skip_newlines();
+        if *self.peek() == TokenKind::LBrace {
+            let block = self.parse_block()?;
+            Ok(Body::Block(block))
+        } else {
+            let expr = self.parse_expr()?;
+            Ok(Body::Expr(expr))
+        }
+    }
+
+    /// 箭头 lambda 的体（`=>` 已由 `try_parse_arrow_lambda` 消费）：
+    /// 仅补 `fn_depth` 管理后解析 `( block | expression )`。
+    fn parse_arrow_fn_body(&mut self) -> R<Body> {
+        self.fn_depth += 1;
+        let result = self.parse_arrow_body();
+        self.fn_depth -= 1;
+        result
+    }
+
+    /// `struct Name { members }`（§7 `struct_decl`）：成员表 `{ … }` 内换行忽略
+    /// （§3.2）；头部与 `{` 之间允许换行（§3.3 / §3.5）。
+    fn parse_struct_decl(&mut self, span: Span) -> R<Stmt> {
+        self.bump(); // struct
+        let name = match self.peek().clone() {
+            TokenKind::Ident(name) => {
+                self.bump();
+                name
+            }
+            _ => return Err(self.unexpected("结构体名")),
+        };
+        self.skip_newlines();
+        self.expect(&TokenKind::LBrace)?;
+        self.nl_stack.push(NlMode::Ign);
+        let members = self.parse_member_list()?;
+        self.skip_ign_newlines();
+        self.expect(&TokenKind::RBrace)?;
+        self.nl_stack.pop();
+        Ok(Spanned::new(StmtKind::StructDecl(StructDecl { span, name, members }), span))
+    }
+
+    /// `member_list = member , { "," , member } , [ "," ]`（§7；A7 尾逗号可选）。
+    fn parse_member_list(&mut self) -> R<Vec<StructMember>> {
+        let mut members = Vec::new();
+        self.skip_ign_newlines();
+        if *self.peek() == TokenKind::RBrace {
+            return Ok(members);
+        }
+        loop {
+            self.skip_ign_newlines();
+            members.push(self.parse_member()?);
+            self.skip_ign_newlines();
+            if *self.peek() == TokenKind::Comma {
+                self.bump();
+                self.skip_ign_newlines();
+                if *self.peek() == TokenKind::RBrace {
+                    break; // 尾逗号
+                }
+                continue;
+            }
+            break;
+        }
+        Ok(members)
+    }
+
+    /// `member = fn_decl | IDENT , ":" , expression`（§7）。
+    fn parse_member(&mut self) -> R<StructMember> {
+        let span = self.peek_span();
+        if *self.peek() == TokenKind::KwFn {
+            let (name, params, body) = self.parse_fn_components()?;
+            Ok(StructMember::Method(FnDecl { span, name, params, body }))
+        } else {
+            let name = match self.peek().clone() {
+                TokenKind::Ident(name) => {
+                    self.bump();
+                    name
+                }
+                _ => return Err(self.unexpected("字段名或方法")),
+            };
+            self.expect(&TokenKind::Colon)?;
+            let value = self.parse_expr()?;
+            Ok(StructMember::Field(FieldInit { span, name, value }))
+        }
     }
 
     /// 块 `{ ... }`：压入 `SIG` 模式，解析到匹配的 `}`。
@@ -573,22 +760,79 @@ impl<'a> Parser<'a> {
     }
 
     /// 一元 `-` / `!`（§4.1 级别 2）；否则降级到后缀表达式。
+    ///
+    /// `fn (…)` / `(…) => …` 在此层识别为函数字面量（§7 `unary` 层含 `lambda`；
+    /// A26：lambda 不作后缀基，故不进入 `parse_postfix` 链）。
     fn parse_unary(&mut self) -> R<Expr> {
         self.skip_ign_newlines();
         let span = self.peek_span();
-        let op = match self.peek() {
-            TokenKind::Minus => Some(UnaryOp::Neg),
-            TokenKind::Bang => Some(UnaryOp::Not),
-            _ => None,
-        };
-        match op {
-            Some(op) => {
+        match self.peek() {
+            TokenKind::Minus => {
                 self.bump();
                 let operand = self.parse_unary()?;
-                Ok(Spanned::new(ExprKind::Unary { op, operand: Box::new(operand) }, span))
+                Ok(Spanned::new(
+                    ExprKind::Unary { op: UnaryOp::Neg, operand: Box::new(operand) },
+                    span,
+                ))
             }
-            None => self.parse_postfix(),
+            TokenKind::Bang => {
+                self.bump();
+                let operand = self.parse_unary()?;
+                Ok(Spanned::new(
+                    ExprKind::Unary { op: UnaryOp::Not, operand: Box::new(operand) },
+                    span,
+                ))
+            }
+            TokenKind::KwFn => self.parse_fn_lambda(span),
+            TokenKind::LParen => match self.try_parse_arrow_lambda(span)? {
+                Some(lambda) => Ok(lambda),
+                None => self.parse_postfix(),
+            },
+            _ => self.parse_postfix(),
         }
+    }
+
+    /// 函数字面量 `fn ( params ) body`（§7 `lambda` 形式一；表达式位置）。
+    fn parse_fn_lambda(&mut self, span: Span) -> R<Expr> {
+        self.bump(); // fn
+        let params = self.parse_params_parens()?;
+        let body = self.parse_fn_body()?;
+        Ok(Spanned::new(ExprKind::Lambda(Box::new(Lambda { params, body })), span))
+    }
+
+    /// 试探 `( params ) =>` lambda（§7 `lambda` 形式二；A20）：`(` 后若能按参数表
+    /// 解析且 `)` 后紧跟 `=>` 则提交；否则**回滚**游标与换行模式栈，由调用方按
+    /// 括号分组继续（`(a + b) => c` 因此回退为分组、随后在 `=>` 处报
+    /// `TwoStatements`，符合 A20 反例）。
+    fn try_parse_arrow_lambda(&mut self, span: Span) -> R<Option<Expr>> {
+        let save_pos = self.pos;
+        let save_stack = self.nl_stack.len();
+        self.bump(); // (
+        self.nl_stack.push(NlMode::Ign);
+        let params = match self.parse_params() {
+            Ok(p) => p,
+            Err(_) => {
+                self.reset(save_pos, save_stack);
+                return Ok(None);
+            }
+        };
+        self.skip_ign_newlines();
+        if self.expect(&TokenKind::RParen).is_err() {
+            self.reset(save_pos, save_stack);
+            return Ok(None);
+        }
+        self.nl_stack.pop();
+        self.skip_ign_newlines(); // 外层模式：`SIG` 下不吞换行（`=>` 须与 `)` 同逻辑行）
+        if *self.peek() != TokenKind::Arrow {
+            self.reset(save_pos, save_stack);
+            return Ok(None);
+        }
+        self.bump(); // =>
+        let body = self.parse_arrow_fn_body()?;
+        Ok(Some(Spanned::new(
+            ExprKind::Lambda(Box::new(Lambda { params, body })),
+            span,
+        )))
     }
 
     /// 后缀表达式 `postfix = primary , { call | index | field }`（§4.1 级别 1，左结合）。
@@ -689,6 +933,10 @@ impl<'a> Parser<'a> {
             TokenKind::KwNil => {
                 self.bump();
                 Ok(Spanned::new(ExprKind::Nil, span))
+            }
+            TokenKind::KwSelf => {
+                self.bump();
+                Ok(Spanned::new(ExprKind::SelfRef, span))
             }
             TokenKind::Ident(name) => {
                 self.bump();
@@ -2903,5 +3151,926 @@ mod tests {
             }
             other => panic!("应为 While，得到 {other:?}"),
         }
+    }
+
+    // ---- fn 声明（§7 fn_decl）----
+
+    #[test]
+    fn fn_decl_zero_params_block_body() {
+        // fn f() { 1 }
+        let p = parse(&[
+            tok(TokenKind::KwFn, 1, 1),
+            tok(TokenKind::Ident("f".into()), 1, 4),
+            tok(TokenKind::LParen, 1, 5),
+            tok(TokenKind::RParen, 1, 6),
+            tok(TokenKind::LBrace, 1, 8),
+            tok(TokenKind::Int("1".into()), 1, 10),
+            tok(TokenKind::RBrace, 1, 11),
+            tok(TokenKind::Eof, 1, 12),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 1);
+        assert_eq!(p.stmts[0].span, Span::new(1, 1));
+        match &p.stmts[0].node {
+            StmtKind::FnDecl(FnDecl { span, name, params, body }) => {
+                assert_eq!(*span, Span::new(1, 1));
+                assert_eq!(name, "f");
+                assert!(params.is_empty());
+                match body {
+                    Body::Block(block) => {
+                        assert_eq!(block.span, Span::new(1, 8));
+                        assert_eq!(block.stmts.len(), 1);
+                        assert_eq!(block.stmts[0].node, StmtKind::Expr(Spanned::new(ExprKind::Int(1), Span::new(1, 10))));
+                    }
+                    other => panic!("应为块体，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 FnDecl，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fn_decl_one_param_arrow_expr() {
+        // fn double(x) => x * 2
+        let p = parse(&[
+            tok(TokenKind::KwFn, 1, 1),
+            tok(TokenKind::Ident("double".into()), 1, 4),
+            tok(TokenKind::LParen, 1, 10),
+            tok(TokenKind::Ident("x".into()), 1, 11),
+            tok(TokenKind::RParen, 1, 12),
+            tok(TokenKind::Arrow, 1, 14),
+            tok(TokenKind::Ident("x".into()), 1, 17),
+            tok(TokenKind::Star, 1, 19),
+            tok(TokenKind::Int("2".into()), 1, 21),
+            tok(TokenKind::Eof, 1, 22),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::FnDecl(FnDecl { name, params, body, .. }) => {
+                assert_eq!(name, "double");
+                assert_eq!(params, &vec!["x".to_string()]);
+                match body {
+                    Body::Expr(e) => match &e.node {
+                        ExprKind::Binary { op, left, right } => {
+                            assert_eq!(*op, BinaryOp::Mul);
+                            assert!(matches!(left.node, ExprKind::Ident(ref n) if n == "x"));
+                            assert_eq!(right.node, ExprKind::Int(2));
+                        }
+                        other => panic!("应为 Mul，得到 {other:?}"),
+                    },
+                    other => panic!("应为箭头表达式体，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 FnDecl，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fn_decl_many_params_arrow_block_is_block_by_m3() {
+        // fn add3(a, b, c) => { a + b + c } —— M3：`=> {` 恒为块体。
+        let p = parse(&[
+            tok(TokenKind::KwFn, 1, 1),
+            tok(TokenKind::Ident("add3".into()), 1, 4),
+            tok(TokenKind::LParen, 1, 8),
+            tok(TokenKind::Ident("a".into()), 1, 9),
+            tok(TokenKind::Comma, 1, 10),
+            tok(TokenKind::Ident("b".into()), 1, 12),
+            tok(TokenKind::Comma, 1, 13),
+            tok(TokenKind::Ident("c".into()), 1, 15),
+            tok(TokenKind::RParen, 1, 16),
+            tok(TokenKind::Arrow, 1, 18),
+            tok(TokenKind::LBrace, 1, 21),
+            tok(TokenKind::Ident("a".into()), 1, 23),
+            tok(TokenKind::Plus, 1, 25),
+            tok(TokenKind::Ident("b".into()), 1, 27),
+            tok(TokenKind::Plus, 1, 29),
+            tok(TokenKind::Ident("c".into()), 1, 31),
+            tok(TokenKind::RBrace, 1, 32),
+            tok(TokenKind::Eof, 1, 33),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::FnDecl(FnDecl { name, params, body, .. }) => {
+                assert_eq!(name, "add3");
+                assert_eq!(params, &vec!["a".to_string(), "b".to_string(), "c".to_string()]);
+                match body {
+                    Body::Block(block) => {
+                        assert_eq!(block.span, Span::new(1, 21));
+                        assert_eq!(block.stmts.len(), 1);
+                        match &block.stmts[0].node {
+                            StmtKind::Expr(e) => {
+                                assert!(matches!(e.node, ExprKind::Binary { op: BinaryOp::Add, .. }));
+                            }
+                            other => panic!("应为 Expr，得到 {other:?}"),
+                        }
+                    }
+                    other => panic!("应为块体（M3），得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 FnDecl，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fn_decl_newline_before_block_and_nested_reused_param() {
+        // fn outer(x)
+        // {
+        //     fn inner(x) => x + 1
+        //     inner(x)
+        // }
+        // §3.5 块前换行；§7 无形参重名限制 → 嵌套 fn 可复用外层形参名。
+        let p = parse(&[
+            tok(TokenKind::KwFn, 1, 1),
+            tok(TokenKind::Ident("outer".into()), 1, 4),
+            tok(TokenKind::LParen, 1, 9),
+            tok(TokenKind::Ident("x".into()), 1, 10),
+            tok(TokenKind::RParen, 1, 11),
+            tok(TokenKind::Newline, 1, 12),
+            tok(TokenKind::LBrace, 2, 1),
+            tok(TokenKind::KwFn, 3, 5),
+            tok(TokenKind::Ident("inner".into()), 3, 8),
+            tok(TokenKind::LParen, 3, 13),
+            tok(TokenKind::Ident("x".into()), 3, 14),
+            tok(TokenKind::RParen, 3, 15),
+            tok(TokenKind::Arrow, 3, 17),
+            tok(TokenKind::Ident("x".into()), 3, 20),
+            tok(TokenKind::Plus, 3, 22),
+            tok(TokenKind::Int("1".into()), 3, 24),
+            tok(TokenKind::Newline, 3, 25),
+            tok(TokenKind::Ident("inner".into()), 4, 5),
+            tok(TokenKind::LParen, 4, 10),
+            tok(TokenKind::Ident("x".into()), 4, 11),
+            tok(TokenKind::RParen, 4, 12),
+            tok(TokenKind::Newline, 4, 13),
+            tok(TokenKind::RBrace, 5, 1),
+            tok(TokenKind::Eof, 5, 2),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::FnDecl(FnDecl { name, params, body, .. }) => {
+                assert_eq!(name, "outer");
+                assert_eq!(params, &vec!["x".to_string()]);
+                match body {
+                    Body::Block(block) => {
+                        assert_eq!(block.stmts.len(), 2);
+                        match &block.stmts[0].node {
+                            StmtKind::FnDecl(inner) => {
+                                assert_eq!(inner.name, "inner");
+                                assert_eq!(inner.params, vec!["x".to_string()]);
+                                assert!(matches!(&inner.body, Body::Expr(_)));
+                            }
+                            other => panic!("应为嵌套 FnDecl，得到 {other:?}"),
+                        }
+                        assert!(matches!(block.stmts[1].node, StmtKind::Expr(_)));
+                    }
+                    other => panic!("应为块体，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 FnDecl，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn return_inside_fn_decl_is_legal() {
+        // fn f() { return 1 } —— 本批起 fn 体真正 fn_depth +1，源码级 return 不再报错。
+        let p = parse(&[
+            tok(TokenKind::KwFn, 1, 1),
+            tok(TokenKind::Ident("f".into()), 1, 4),
+            tok(TokenKind::LParen, 1, 5),
+            tok(TokenKind::RParen, 1, 6),
+            tok(TokenKind::LBrace, 1, 8),
+            tok(TokenKind::KwReturn, 1, 10),
+            tok(TokenKind::Int("1".into()), 1, 17),
+            tok(TokenKind::RBrace, 1, 18),
+            tok(TokenKind::Eof, 1, 19),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::FnDecl(FnDecl { body, .. }) => match body {
+                Body::Block(block) => {
+                    assert_eq!(block.stmts.len(), 1);
+                    match &block.stmts[0].node {
+                        StmtKind::Return(Some(e)) => assert_eq!(e.node, ExprKind::Int(1)),
+                        other => panic!("应为 Return(Some)，得到 {other:?}"),
+                    }
+                }
+                other => panic!("应为块体，得到 {other:?}"),
+            },
+            other => panic!("应为 FnDecl，得到 {other:?}"),
+        }
+    }
+
+    // ---- struct 声明（§7 struct_decl）----
+
+    #[test]
+    fn struct_decl_empty() {
+        // struct Empty {}
+        let p = parse(&[
+            tok(TokenKind::KwStruct, 1, 1),
+            tok(TokenKind::Ident("Empty".into()), 1, 8),
+            tok(TokenKind::LBrace, 1, 14),
+            tok(TokenKind::RBrace, 1, 15),
+            tok(TokenKind::Eof, 1, 16),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::StructDecl(StructDecl { span, name, members }) => {
+                assert_eq!(*span, Span::new(1, 1));
+                assert_eq!(name, "Empty");
+                assert!(members.is_empty());
+            }
+            other => panic!("应为 StructDecl，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn struct_decl_fields() {
+        // struct Point { x: 0, y: 0 }
+        let p = parse(&[
+            tok(TokenKind::KwStruct, 1, 1),
+            tok(TokenKind::Ident("Point".into()), 1, 8),
+            tok(TokenKind::LBrace, 1, 14),
+            tok(TokenKind::Ident("x".into()), 1, 16),
+            tok(TokenKind::Colon, 1, 17),
+            tok(TokenKind::Int("0".into()), 1, 19),
+            tok(TokenKind::Comma, 1, 20),
+            tok(TokenKind::Ident("y".into()), 1, 22),
+            tok(TokenKind::Colon, 1, 23),
+            tok(TokenKind::Int("0".into()), 1, 25),
+            tok(TokenKind::RBrace, 1, 26),
+            tok(TokenKind::Eof, 1, 27),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::StructDecl(StructDecl { name, members, .. }) => {
+                assert_eq!(name, "Point");
+                assert_eq!(members.len(), 2);
+                match &members[0] {
+                    StructMember::Field(fi) => {
+                        assert_eq!(fi.span, Span::new(1, 16));
+                        assert_eq!(fi.name, "x");
+                        assert_eq!(fi.value.node, ExprKind::Int(0));
+                    }
+                    other => panic!("应为字段成员，得到 {other:?}"),
+                }
+                match &members[1] {
+                    StructMember::Field(fi) => {
+                        assert_eq!(fi.name, "y");
+                        assert_eq!(fi.value.span, Span::new(1, 25));
+                    }
+                    other => panic!("应为字段成员，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 StructDecl，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn struct_decl_members_across_newlines_with_trailing_comma() {
+        // struct P {
+        //     x: 0,
+        //     y: 0,
+        // }
+        // 成员表 `{ … }` 内换行忽略（§3.2）、尾逗号可选（A7）。
+        let p = parse(&[
+            tok(TokenKind::KwStruct, 1, 1),
+            tok(TokenKind::Ident("P".into()), 1, 8),
+            tok(TokenKind::LBrace, 1, 10),
+            tok(TokenKind::Newline, 1, 11),
+            tok(TokenKind::Ident("x".into()), 2, 5),
+            tok(TokenKind::Colon, 2, 6),
+            tok(TokenKind::Int("0".into()), 2, 8),
+            tok(TokenKind::Comma, 2, 9),
+            tok(TokenKind::Newline, 2, 10),
+            tok(TokenKind::Ident("y".into()), 3, 5),
+            tok(TokenKind::Colon, 3, 6),
+            tok(TokenKind::Int("0".into()), 3, 8),
+            tok(TokenKind::Comma, 3, 9),
+            tok(TokenKind::Newline, 3, 10),
+            tok(TokenKind::RBrace, 4, 1),
+            tok(TokenKind::Eof, 4, 2),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::StructDecl(StructDecl { members, .. }) => {
+                assert_eq!(members.len(), 2);
+                assert!(matches!(members[0], StructMember::Field(_)));
+                assert!(matches!(members[1], StructMember::Field(_)));
+            }
+            other => panic!("应为 StructDecl，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn struct_decl_with_methods_self_access() {
+        // struct Student {
+        //     name: "",
+        //     fn isTop() => self.score >= 90,
+        //     fn bump() { self.count += 1 },
+        // }
+        let p = parse(&[
+            tok(TokenKind::KwStruct, 1, 1),
+            tok(TokenKind::Ident("Student".into()), 1, 8),
+            tok(TokenKind::LBrace, 1, 16),
+            tok(TokenKind::Ident("name".into()), 2, 5),
+            tok(TokenKind::Colon, 2, 9),
+            tok(TokenKind::StrBegin, 2, 11),
+            tok(TokenKind::StrEnd, 2, 13),
+            tok(TokenKind::Comma, 2, 14),
+            tok(TokenKind::KwFn, 3, 5),
+            tok(TokenKind::Ident("isTop".into()), 3, 8),
+            tok(TokenKind::LParen, 3, 13),
+            tok(TokenKind::RParen, 3, 14),
+            tok(TokenKind::Arrow, 3, 16),
+            tok(TokenKind::KwSelf, 3, 19),
+            tok(TokenKind::Dot, 3, 23),
+            tok(TokenKind::Ident("score".into()), 3, 24),
+            tok(TokenKind::Ge, 3, 30),
+            tok(TokenKind::Int("90".into()), 3, 33),
+            tok(TokenKind::Comma, 3, 35),
+            tok(TokenKind::KwFn, 4, 5),
+            tok(TokenKind::Ident("bump".into()), 4, 8),
+            tok(TokenKind::LParen, 4, 12),
+            tok(TokenKind::RParen, 4, 13),
+            tok(TokenKind::LBrace, 4, 15),
+            tok(TokenKind::KwSelf, 4, 17),
+            tok(TokenKind::Dot, 4, 21),
+            tok(TokenKind::Ident("count".into()), 4, 22),
+            tok(TokenKind::PlusAssign, 4, 28),
+            tok(TokenKind::Int("1".into()), 4, 31),
+            tok(TokenKind::RBrace, 4, 32),
+            tok(TokenKind::Comma, 4, 33),
+            tok(TokenKind::RBrace, 5, 1),
+            tok(TokenKind::Eof, 5, 2),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::StructDecl(StructDecl { members, .. }) => {
+                assert_eq!(members.len(), 3);
+                match &members[0] {
+                    StructMember::Field(fi) => {
+                        assert_eq!(fi.name, "name");
+                        assert_eq!(fi.value.node, ExprKind::Str(String::new()));
+                    }
+                    other => panic!("应为字段成员，得到 {other:?}"),
+                }
+                match &members[1] {
+                    StructMember::Method(m) => {
+                        assert_eq!(m.span, Span::new(3, 5));
+                        assert_eq!(m.name, "isTop");
+                        assert!(m.params.is_empty());
+                        match &m.body {
+                            Body::Expr(e) => match &e.node {
+                                ExprKind::Binary { op, left, .. } => {
+                                    assert_eq!(*op, BinaryOp::Ge);
+                                    assert!(matches!(
+                                        left.node,
+                                        ExprKind::Field { ref object, ref name } if name == "score" && matches!(object.node, ExprKind::SelfRef)
+                                    ));
+                                }
+                                other => panic!("应为 Ge，得到 {other:?}"),
+                            },
+                            other => panic!("应为箭头表达式体，得到 {other:?}"),
+                        }
+                    }
+                    other => panic!("应为方法成员，得到 {other:?}"),
+                }
+                match &members[2] {
+                    StructMember::Method(m) => {
+                        assert_eq!(m.name, "bump");
+                        match &m.body {
+                            Body::Block(block) => {
+                                assert_eq!(block.stmts.len(), 1);
+                                match &block.stmts[0].node {
+                                    StmtKind::Assign { target, op, value } => {
+                                        assert_eq!(*op, AssignOp::AddAssign);
+                                        assert!(matches!(target.base, LvalueBase::SelfValue));
+                                        assert_eq!(target.path.len(), 1);
+                                        assert!(matches!(
+                                            target.path[0].kind,
+                                            LvalueSegKind::Field(ref n) if n == "count"
+                                        ));
+                                        assert_eq!(value.node, ExprKind::Int(1));
+                                    }
+                                    other => panic!("应为 Assign，得到 {other:?}"),
+                                }
+                            }
+                            other => panic!("应为块体，得到 {other:?}"),
+                        }
+                    }
+                    other => panic!("应为方法成员，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 StructDecl，得到 {other:?}"),
+        }
+    }
+
+    // ---- 函数字面量（§7 lambda）----
+
+    #[test]
+    fn fn_lambda_as_expression_statement() {
+        // fn (x) { x } —— 语句位置的匿名函数字面量（§3.3 块判定）。
+        let p = parse(&[
+            tok(TokenKind::KwFn, 1, 1),
+            tok(TokenKind::LParen, 1, 4),
+            tok(TokenKind::Ident("x".into()), 1, 5),
+            tok(TokenKind::RParen, 1, 6),
+            tok(TokenKind::LBrace, 1, 8),
+            tok(TokenKind::Ident("x".into()), 1, 10),
+            tok(TokenKind::RBrace, 1, 11),
+            tok(TokenKind::Eof, 1, 12),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts[0].span, Span::new(1, 1));
+        match &p.stmts[0].node {
+            StmtKind::Expr(e) => match &e.node {
+                ExprKind::Lambda(l) => {
+                    assert_eq!(l.params, vec!["x".to_string()]);
+                    match &l.body {
+                        Body::Block(block) => {
+                            assert_eq!(block.span, Span::new(1, 8));
+                            assert_eq!(block.stmts.len(), 1);
+                        }
+                        other => panic!("应为块体，得到 {other:?}"),
+                    }
+                }
+                other => panic!("应为 Lambda，得到 {other:?}"),
+            },
+            other => panic!("应为 Expr，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fn_lambda_in_decl_init() {
+        // let f = fn (a, b) => a + b
+        let p = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("f".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::KwFn, 1, 9),
+            tok(TokenKind::LParen, 1, 12),
+            tok(TokenKind::Ident("a".into()), 1, 13),
+            tok(TokenKind::Comma, 1, 14),
+            tok(TokenKind::Ident("b".into()), 1, 16),
+            tok(TokenKind::RParen, 1, 17),
+            tok(TokenKind::Arrow, 1, 19),
+            tok(TokenKind::Ident("a".into()), 1, 22),
+            tok(TokenKind::Plus, 1, 24),
+            tok(TokenKind::Ident("b".into()), 1, 26),
+            tok(TokenKind::Eof, 1, 27),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::Decl { init, .. } => match &init.node {
+                ExprKind::Lambda(l) => {
+                    assert_eq!(l.params, vec!["a".to_string(), "b".to_string()]);
+                    assert!(matches!(l.body, Body::Expr(_)));
+                }
+                other => panic!("应为 Lambda，得到 {other:?}"),
+            },
+            other => panic!("应为 Decl，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn arrow_lambda_zero_params() {
+        // let f = () => 42
+        let p = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("f".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::LParen, 1, 9),
+            tok(TokenKind::RParen, 1, 10),
+            tok(TokenKind::Arrow, 1, 12),
+            tok(TokenKind::Int("42".into()), 1, 15),
+            tok(TokenKind::Eof, 1, 17),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::Decl { init, .. } => match &init.node {
+                ExprKind::Lambda(l) => {
+                    assert!(l.params.is_empty());
+                    match &l.body {
+                        Body::Expr(e) => assert_eq!(e.node, ExprKind::Int(42)),
+                        other => panic!("应为箭头表达式体，得到 {other:?}"),
+                    }
+                }
+                other => panic!("应为 Lambda，得到 {other:?}"),
+            },
+            other => panic!("应为 Decl，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn arrow_lambda_as_call_argument() {
+        // f((x) => x * 2) —— 实参位置的箭头 lambda。
+        let p = parse(&[
+            tok(TokenKind::Ident("f".into()), 1, 1),
+            tok(TokenKind::LParen, 1, 2),
+            tok(TokenKind::LParen, 1, 3),
+            tok(TokenKind::Ident("x".into()), 1, 4),
+            tok(TokenKind::RParen, 1, 5),
+            tok(TokenKind::Arrow, 1, 7),
+            tok(TokenKind::Ident("x".into()), 1, 10),
+            tok(TokenKind::Star, 1, 12),
+            tok(TokenKind::Int("2".into()), 1, 14),
+            tok(TokenKind::RParen, 1, 15),
+            tok(TokenKind::Eof, 1, 16),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::Expr(e) => match &e.node {
+                ExprKind::Call { callee, args } => {
+                    assert!(matches!(callee.node, ExprKind::Ident(ref n) if n == "f"));
+                    assert_eq!(args.len(), 1);
+                    match &args[0].node {
+                        ExprKind::Lambda(l) => {
+                            assert_eq!(l.params, vec!["x".to_string()]);
+                            assert!(matches!(l.body, Body::Expr(_)));
+                        }
+                        other => panic!("应为 Lambda，得到 {other:?}"),
+                    }
+                }
+                other => panic!("应为 Call，得到 {other:?}"),
+            },
+            other => panic!("应为 Expr，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn nested_arrow_lambda_currying() {
+        // let f = (x) => (y) => x + y —— 柯里化：体内再嵌 lambda。
+        let p = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("f".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::LParen, 1, 9),
+            tok(TokenKind::Ident("x".into()), 1, 10),
+            tok(TokenKind::RParen, 1, 11),
+            tok(TokenKind::Arrow, 1, 13),
+            tok(TokenKind::LParen, 1, 16),
+            tok(TokenKind::Ident("y".into()), 1, 17),
+            tok(TokenKind::RParen, 1, 18),
+            tok(TokenKind::Arrow, 1, 20),
+            tok(TokenKind::Ident("x".into()), 1, 23),
+            tok(TokenKind::Plus, 1, 25),
+            tok(TokenKind::Ident("y".into()), 1, 27),
+            tok(TokenKind::Eof, 1, 28),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::Decl { init, .. } => match &init.node {
+                ExprKind::Lambda(outer) => {
+                    assert_eq!(outer.params, vec!["x".to_string()]);
+                    match &outer.body {
+                        Body::Expr(inner_e) => match &inner_e.node {
+                            ExprKind::Lambda(inner) => {
+                                assert_eq!(inner.params, vec!["y".to_string()]);
+                                assert!(matches!(inner.body, Body::Expr(_)));
+                            }
+                            other => panic!("应为内层 Lambda，得到 {other:?}"),
+                        },
+                        other => panic!("应为箭头表达式体，得到 {other:?}"),
+                    }
+                }
+                other => panic!("应为 Lambda，得到 {other:?}"),
+            },
+            other => panic!("应为 Decl，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn paren_group_still_group_not_lambda() {
+        // let x = (1 + 2) —— 无 `=>` 的括号仍是分组（A20 前瞻失败回退）。
+        let p = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("x".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 7),
+            tok(TokenKind::LParen, 1, 9),
+            tok(TokenKind::Int("1".into()), 1, 10),
+            tok(TokenKind::Plus, 1, 12),
+            tok(TokenKind::Int("2".into()), 1, 14),
+            tok(TokenKind::RParen, 1, 15),
+            tok(TokenKind::Eof, 1, 16),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::Decl { init, .. } => {
+                assert_eq!(init.span, Span::new(1, 9)); // 分组保留外层 span
+                assert!(matches!(init.node, ExprKind::Binary { op: BinaryOp::Add, .. }));
+            }
+            other => panic!("应为 Decl，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn self_reference_expression() {
+        // self.score —— 方法体内的字段访问（§7 primary 含 self）。
+        let p = parse(&[
+            tok(TokenKind::KwSelf, 1, 1),
+            tok(TokenKind::Dot, 1, 5),
+            tok(TokenKind::Ident("score".into()), 1, 6),
+            tok(TokenKind::Eof, 1, 11),
+        ])
+        .unwrap();
+        match &p.stmts[0].node {
+            StmtKind::Expr(e) => match &e.node {
+                ExprKind::Field { object, name } => {
+                    assert!(matches!(object.node, ExprKind::SelfRef));
+                    assert_eq!(name, "score");
+                }
+                other => panic!("应为 Field，得到 {other:?}"),
+            },
+            other => panic!("应为 Expr，得到 {other:?}"),
+        }
+    }
+
+    // ---- 回归：声明 / lambda 与既有构造混用 ----
+
+    #[test]
+    fn decl_and_lambda_regression_with_existing_constructs() {
+        // let xs = [1, 2]
+        // let f = (x) => x + 1
+        // f(10)
+        // struct P { x: 0 }
+        // fn g() => 7
+        let p = parse(&[
+            tok(TokenKind::KwLet, 1, 1),
+            tok(TokenKind::Ident("xs".into()), 1, 5),
+            tok(TokenKind::Assign, 1, 8),
+            tok(TokenKind::LBracket, 1, 10),
+            tok(TokenKind::Int("1".into()), 1, 11),
+            tok(TokenKind::Comma, 1, 12),
+            tok(TokenKind::Int("2".into()), 1, 14),
+            tok(TokenKind::RBracket, 1, 15),
+            tok(TokenKind::Newline, 1, 16),
+            tok(TokenKind::KwLet, 2, 1),
+            tok(TokenKind::Ident("f".into()), 2, 5),
+            tok(TokenKind::Assign, 2, 7),
+            tok(TokenKind::LParen, 2, 9),
+            tok(TokenKind::Ident("x".into()), 2, 10),
+            tok(TokenKind::RParen, 2, 11),
+            tok(TokenKind::Arrow, 2, 13),
+            tok(TokenKind::Ident("x".into()), 2, 16),
+            tok(TokenKind::Plus, 2, 18),
+            tok(TokenKind::Int("1".into()), 2, 20),
+            tok(TokenKind::Newline, 2, 21),
+            tok(TokenKind::Ident("f".into()), 3, 1),
+            tok(TokenKind::LParen, 3, 2),
+            tok(TokenKind::Int("10".into()), 3, 3),
+            tok(TokenKind::RParen, 3, 5),
+            tok(TokenKind::Newline, 3, 6),
+            tok(TokenKind::KwStruct, 4, 1),
+            tok(TokenKind::Ident("P".into()), 4, 8),
+            tok(TokenKind::LBrace, 4, 10),
+            tok(TokenKind::Ident("x".into()), 4, 12),
+            tok(TokenKind::Colon, 4, 13),
+            tok(TokenKind::Int("0".into()), 4, 15),
+            tok(TokenKind::RBrace, 4, 16),
+            tok(TokenKind::Newline, 4, 17),
+            tok(TokenKind::KwFn, 5, 1),
+            tok(TokenKind::Ident("g".into()), 5, 4),
+            tok(TokenKind::LParen, 5, 5),
+            tok(TokenKind::RParen, 5, 6),
+            tok(TokenKind::Arrow, 5, 8),
+            tok(TokenKind::Int("7".into()), 5, 11),
+            tok(TokenKind::Eof, 5, 12),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 5);
+        assert!(matches!(p.stmts[0].node, StmtKind::Decl { .. }));
+        match &p.stmts[1].node {
+            StmtKind::Decl { init, .. } => assert!(matches!(init.node, ExprKind::Lambda(_))),
+            other => panic!("应为 Decl(Lambda)，得到 {other:?}"),
+        }
+        assert!(matches!(p.stmts[2].node, StmtKind::Expr(_)));
+        assert!(matches!(p.stmts[3].node, StmtKind::StructDecl(_)));
+        match &p.stmts[4].node {
+            StmtKind::FnDecl(FnDecl { name, body, .. }) => {
+                assert_eq!(name, "g");
+                match body {
+                    Body::Expr(e) => assert_eq!(e.node, ExprKind::Int(7)),
+                    other => panic!("应为箭头表达式体，得到 {other:?}"),
+                }
+            }
+            other => panic!("应为 FnDecl，得到 {other:?}"),
+        }
+    }
+
+    // ---- 错误：fn / struct / lambda 的语法违规（含 span）----
+
+    #[test]
+    fn fn_decl_missing_rparen_is_error() {
+        // fn f(x { 1 } —— 缺 `)`。
+        let err = parse(&[
+            tok(TokenKind::KwFn, 1, 1),
+            tok(TokenKind::Ident("f".into()), 1, 4),
+            tok(TokenKind::LParen, 1, 5),
+            tok(TokenKind::Ident("x".into()), 1, 6),
+            tok(TokenKind::LBrace, 1, 8),
+            tok(TokenKind::Int("1".into()), 1, 10),
+            tok(TokenKind::RBrace, 1, 11),
+            tok(TokenKind::Eof, 1, 12),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "')'".to_string(),
+                got: "'{'".to_string(),
+            },
+            1,
+            8,
+        );
+    }
+
+    #[test]
+    fn fn_decl_missing_arrow_or_block_is_error() {
+        // fn f(x) 1 —— 体位置既无 `{` 也无 `=>`。
+        let err = parse(&[
+            tok(TokenKind::KwFn, 1, 1),
+            tok(TokenKind::Ident("f".into()), 1, 4),
+            tok(TokenKind::LParen, 1, 5),
+            tok(TokenKind::Ident("x".into()), 1, 6),
+            tok(TokenKind::RParen, 1, 7),
+            tok(TokenKind::Int("1".into()), 1, 9),
+            tok(TokenKind::Eof, 1, 10),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "'=>'".to_string(),
+                got: "'1'".to_string(),
+            },
+            1,
+            9,
+        );
+    }
+
+    #[test]
+    fn fn_decl_unterminated_block_is_error() {
+        // fn f() { 1 —— 缺 `}`。
+        let err = parse(&[
+            tok(TokenKind::KwFn, 1, 1),
+            tok(TokenKind::Ident("f".into()), 1, 4),
+            tok(TokenKind::LParen, 1, 5),
+            tok(TokenKind::RParen, 1, 6),
+            tok(TokenKind::LBrace, 1, 8),
+            tok(TokenKind::Int("1".into()), 1, 10),
+            tok(TokenKind::Eof, 1, 11),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "'}'".to_string(),
+                got: "'文件末尾'".to_string(),
+            },
+            1,
+            11,
+        );
+    }
+
+    #[test]
+    fn fn_decl_missing_param_name_is_error() {
+        // fn f(, x) { 1 } —— 形参表以逗号开头。
+        let err = parse(&[
+            tok(TokenKind::KwFn, 1, 1),
+            tok(TokenKind::Ident("f".into()), 1, 4),
+            tok(TokenKind::LParen, 1, 5),
+            tok(TokenKind::Comma, 1, 6),
+            tok(TokenKind::Ident("x".into()), 1, 8),
+            tok(TokenKind::RParen, 1, 9),
+            tok(TokenKind::LBrace, 1, 11),
+            tok(TokenKind::Int("1".into()), 1, 13),
+            tok(TokenKind::RBrace, 1, 14),
+            tok(TokenKind::Eof, 1, 15),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "形参名".to_string(),
+                got: "','".to_string(),
+            },
+            1,
+            6,
+        );
+    }
+
+    #[test]
+    fn struct_decl_missing_name_is_error() {
+        // struct { x: 1 }
+        let err = parse(&[
+            tok(TokenKind::KwStruct, 1, 1),
+            tok(TokenKind::LBrace, 1, 8),
+            tok(TokenKind::Ident("x".into()), 1, 10),
+            tok(TokenKind::Colon, 1, 11),
+            tok(TokenKind::Int("1".into()), 1, 13),
+            tok(TokenKind::RBrace, 1, 14),
+            tok(TokenKind::Eof, 1, 15),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "结构体名".to_string(),
+                got: "'{'".to_string(),
+            },
+            1,
+            8,
+        );
+    }
+
+    #[test]
+    fn struct_decl_missing_rbrace_is_error() {
+        // struct P { x: 1 —— 缺 `}`。
+        let err = parse(&[
+            tok(TokenKind::KwStruct, 1, 1),
+            tok(TokenKind::Ident("P".into()), 1, 8),
+            tok(TokenKind::LBrace, 1, 10),
+            tok(TokenKind::Ident("x".into()), 1, 12),
+            tok(TokenKind::Colon, 1, 13),
+            tok(TokenKind::Int("1".into()), 1, 15),
+            tok(TokenKind::Eof, 1, 16),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "'}'".to_string(),
+                got: "'文件末尾'".to_string(),
+            },
+            1,
+            16,
+        );
+    }
+
+    #[test]
+    fn struct_member_missing_colon_is_error() {
+        // struct P { x 1 } —— 字段缺 `:`。
+        let err = parse(&[
+            tok(TokenKind::KwStruct, 1, 1),
+            tok(TokenKind::Ident("P".into()), 1, 8),
+            tok(TokenKind::LBrace, 1, 10),
+            tok(TokenKind::Ident("x".into()), 1, 12),
+            tok(TokenKind::Int("1".into()), 1, 14),
+            tok(TokenKind::RBrace, 1, 15),
+            tok(TokenKind::Eof, 1, 16),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "':'".to_string(),
+                got: "'1'".to_string(),
+            },
+            1,
+            14,
+        );
+    }
+
+    #[test]
+    fn struct_method_missing_body_is_error() {
+        // struct P { fn f() } —— 方法缺体（无 `{` 无 `=>`）。
+        let err = parse(&[
+            tok(TokenKind::KwStruct, 1, 1),
+            tok(TokenKind::Ident("P".into()), 1, 8),
+            tok(TokenKind::LBrace, 1, 10),
+            tok(TokenKind::KwFn, 1, 12),
+            tok(TokenKind::Ident("f".into()), 1, 15),
+            tok(TokenKind::LParen, 1, 16),
+            tok(TokenKind::RParen, 1, 17),
+            tok(TokenKind::RBrace, 1, 19),
+            tok(TokenKind::Eof, 1, 20),
+        ])
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "'=>'".to_string(),
+                got: "'}'".to_string(),
+            },
+            1,
+            19,
+        );
+    }
+
+    #[test]
+    fn arrow_after_group_expr_is_two_statements() {
+        // (a + b) => c —— A20 反例：分组后 `=>` 处 TwoStatements。
+        let err = parse(&[
+            tok(TokenKind::LParen, 1, 1),
+            tok(TokenKind::Ident("a".into()), 1, 2),
+            tok(TokenKind::Plus, 1, 4),
+            tok(TokenKind::Ident("b".into()), 1, 6),
+            tok(TokenKind::RParen, 1, 7),
+            tok(TokenKind::Arrow, 1, 9),
+            tok(TokenKind::Ident("c".into()), 1, 12),
+            tok(TokenKind::Eof, 1, 13),
+        ])
+        .unwrap_err();
+        assert_syntax(&err, SyntaxMsg::TwoStatements, 1, 9);
     }
 }
