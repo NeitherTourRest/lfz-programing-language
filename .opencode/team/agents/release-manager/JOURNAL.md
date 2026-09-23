@@ -1,5 +1,19 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 01:05] P3.1 span/error 模型：两个原子提交并推送
+- 来源: team-lead 任务书（P3.1 已由 core-dev 完成并经 team-lead 独立核验：`cargo build` 0 warning、`cargo test` 15 passed / 0 failed、`E-xxx` = 0、`Span` 为唯一位置类型；本轮把代码 + 团队文档做两个原子提交并 push）
+- 完成:
+  - `git status --short` 复核：恰为预期 4 项（`M src/error.rs`、`M src/span.rs`、`M core-dev/STATUS.md`、`M core-dev/JOURNAL.md`），**无清单外文件**；`--untracked-files=all` 亦无未跟踪文件（无 `target/`、无密钥）。
+  - **提交 1（代码）**：`git add src/span.rs src/error.rs`（`git diff --cached --name-only` 精确为 2 文件）→ `git -c core.autocrlf=false commit -m 'feat(p3): span and error model' -m 'Span{line,col} (unique position type) + LzError 12 variants with class_name/message/span, sub-message enums (Syntax/Type/Overflow/Value), TraceFrame, R<T>=Result<T,Box<LzError>>; 15 unit tests.'` → **短哈希 `4035f86`**（2 files changed, 966 insertions, 3 deletions）；`git log -1 --format=%H%n%s%n%b` 复核标题/正文完整。
+  - 先完成收工协议（覆盖更新本 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 2。
+  - **提交 2（团队文档）**：`git add .opencode/team/agents/core-dev/STATUS.md .opencode/team/agents/core-dev/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md` → 提交 `docs(team): sync core-dev status after P3.1`（本提交即本条日志所在提交，短哈希见汇报）。
+  - `git push`（非 force）。
+- 产出:
+  - 两条新提交；`git status --short` 空；`git ls-remote origin` 的 `refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline`（顶部两条为本轮提交）；`git ls-remote origin`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag）。
+- 决策: 无新增 ADR（常规提交，非跨角色新决策）。owner 偏差仍为遗留待确认项。
+- 下一步: P3 后续子阶段继续按模块原子提交；P3.11 收口时打附注标签 `v0.2.0`。
+- 阻塞: 无。
 ## [2026-09-24 00:40] P3.0 Cargo 骨架：两个原子提交并推送
 - 来源: team-lead 任务书（P3.0 已由 core-dev 完成并经 team-lead 核验：`cargo build` EXIT=0、`cargo test` 0 tests ok、`cargo tree` 仅 `lfz v0.1.0`；本轮把代码 + 团队文档做两个原子提交并 push）
 - 完成:
