@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 > 最后更新: 2026-09-23 by release-manager
+> 仓库地址: https://github.com/NeitherTourRest/lfz-programing-language
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
@@ -32,6 +33,10 @@ LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、�
 
 ## 快速开始
 ```bash
+# 克隆仓库
+git clone https://github.com/NeitherTourRest/lfz-programing-language.git
+cd lfz-programing-language
+
 # 占位：安装与运行命令待工具链阶段（P4）确定
 # lfz run <file>   运行 LFZ 脚本
 # lfz test         一键执行全部测试
