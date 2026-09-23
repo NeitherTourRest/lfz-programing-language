@@ -355,3 +355,35 @@
   - **P3.9b HOF**：`sortBy`/`minBy`/`maxBy` 复用 `Value::total_cmp`。
   - **core-dev / tooling-dev / test-engineer**：无接口变更（`value.rs` 为运行时内部类型）。
 - **证据**：`git diff --stat -- src/value.rs src/builtins.rs` → `2 files changed, 462 insertions(+), 100 deletions(-)`；`cargo build --tests --message-format=json` → `warnings=0 errors=0`；`cargo test` → `169 passed; 0 failed`（新增 value 测试 15 个）。
+
+---
+
+### [2026-09-24 01:30] [runtime-dev] P3.7 `src/evaluator.rs` 核心（名字解析策略 / A2 捕获 / 调用 / `Env` 与 `value.rs` 扩展）
+
+- **背景**：P3.7 需把 `ast.rs`（core-dev P3.4a）与 `value.rs`/`env.rs`/`builtins.rs`（runtime-dev）接起来。任务书「推荐编译期解析为 `(scope_depth, slot)`」，但本批 **AST 只承载 `String` 名字**（无 `(depth, slot)`），且 `parser.rs`（P3.4b）由 core-dev 并行开发、**不得依赖**。本 ADR 固化本批的选择、跨模块扩展与规范缺口。
+
+- **决定 1（名字解析 = 运行时查名，非编译期槽位）**：在 `env.rs` 的 `Env` 上新增 **per-scope 名字表**（`names: Vec<(String, abs_slot, mutable)>` + `define_named` / `local_index`（后定义者优先）/ `get_local` / `set_local` / `capture_local` / `named_indices`）。求值器**沿词法链内→外**按名字查所属作用域后**直读该作用域槽位**（**不**走「按绝对槽位沿链走」，避免不同作用域 `first_slot` 区间重叠时的歧义）。查名顺序：**调用帧 / 块（不含模块顶层）→ 捕获 cell → 模块顶层（globals）**。
+  - **理由**：编译期槽位需一次独立的名字决议 pass，而本批 AST 无槽位字段、parser 未就绪；自行在运行时模块里内置编译器越界且脆弱。运行时查名在 `Env` 上落地，**A2 语义不被破坏**（见决定 2）。性能代价（查名线性扫描）留 P6 视基准再定。
+  - **不变量**：模块顶层**不参与 cell 捕获**（§4.5.3），顶层绑定经共享 `globals` 直接访问。
+
+- **决定 2（A2 捕获）**：创建闭包时沿 env 链（**不含 globals**）对每个未捕获的具名局部调用 `Env::capture_local`，把槽位**原地升级**为共享 `Cell`（`Rc<RefCell<Value>>`），存入闭包载荷；再继承父闭包的捕获（内层名字优先）。`for`/`while` 每轮**新建子作用域**，故当轮闭包捕获**当轮** cell（互不影响，§4.5.3）。命名 `fn` 采用「**先以 `nil` 预绑定 → 建闭包捕获自身名 → 写回闭包**」以支持递归（自引用经 cell 成立）。
+
+- **决定 3（跨模块扩展；只改 runtime-dev 自有模块）**：
+  - `value.rs`：`Closure` 增 `user: Option<Rc<UserFn>>`；新增 `pub struct UserFn { params, body: Body, captured: Rc<Vec<(Rc<str>, Cell)>>, func_id, self_val }`；`StructDef` 由仅名字扩展为 `{ name, fields: Vec<(Rc<str>, Expr)>, methods: Vec<(Rc<str>, Rc<Closure>)> }`；新增 `Value::struct_template(...)`。既有 `Closure::named/anonymous` 与 `Value::struct_def` **签名不变**（占位载荷）。
+  - `env.rs`：`Env` 增 `names` 字段（既有 `define`/`get`/`set`/`capture` 行为不变；`names` 对旧路径为空）。
+
+- **决定 4（管道）**：`ast.rs` 无 `Pipe` 节点，`syntax.md` §4.3 / 契约 §10.6 规定**解析期脱糖**为 `Call`。求值器无管道分支；data-last 注入由 parser 完成。**本项为对既有契约的确认，非新决定。**
+
+- **规范缺口（上报 language-architect，未自行发明）**：
+  1. **`let` 重绑定的错误类未定义**：§4.5.2 称 `a = []` 对 `let`「**非法**」，但 §8.1 未给错误类/消息，且 `error.rs` 为 runtime-dev **只读**。本批**存储** `mutable` 标志（`define_named` 第三参）**但暂不强制**，待 architect 指定错误类后于 P3.8 落地。
+  2. **`;;`（`Dump`）输出**：契约 §10.5 / §3.6 要求逐 scope 可见链；依赖 `ScopeDebug`/`ScopeId` 表（`def_scope` 现为空链占位）。**留 P3.8**。
+  3. **`RecursionError`**（§4.5.5 帧深 10000）与 **`TraceFrame`/traceback 组装**：本批 `func_id` 仅分配不复用；**留 P3.8**。当前对无限递归无保护（会栈溢出）。
+  4. **`==`（A6）边界审计**：本批已接线 `Value::deep_eq`（§4.5.9 主算法），但§4.5.5 深结构 10000 层上限仍未施加（与 P3.6b 遗留一致）。
+
+- **下游影响**：
+  - **core-dev（parser）**：求值器按 `ast.rs` 类型实现，无需新字段；**管道 / `_` / `;;`/`Dump.scope` 仍由 parser 产出**。若 `format_spec` 是否含前导 `:` 有变，请知会（本实现已做 `:` 容错剥离）。
+  - **tooling-dev**：入口 `pub fn eval_module(&Program) -> R<Value>` 与 `pub fn run(&Program) -> R<()>`。
+  - **P3.8**：`Dump`/`;;`、`check` 专项、`RecursionError`、traceback、`let` 不可变性。
+  - **P3.9b（HOF）**：`call_user` 为本批 `Interp` 私有；HOF 需将「调用用户函数」能力提升为可复用 ABI（P3.9b 处理）。
+
+- **证据**：`src/evaluator.rs` **79980 B**（原 182 B）；`cargo build --message-format=json` → `warnings=0`；`cargo test` → **`195 passed; 0 failed`**（新增 `evaluator::tests::*` **26**）；`src/evaluator.rs` 为合法 UTF-8。

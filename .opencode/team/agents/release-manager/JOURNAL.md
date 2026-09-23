@@ -1,5 +1,20 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 22:45] P3.7 求值器核心（tree-walking evaluator）+ P3.7 ADR：两个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；已核验：`cargo build` 0 warning、`cargo test` 195 passed / 0 failed（evaluator 新增 26 测）；工作区恰 **6 个**已修改文件；本轮做两个原子提交并 push；`src/parser.rs` 不在清单内、不得提交；出现清单外条目即停止）
+- 完成:
+  - 入清单门禁：`git status --short --untracked-files=all` 复核恰为任务书预期 **6 项**（`M src/evaluator.rs`、`M src/value.rs`、`M src/env.rs`、`M .opencode/team/DECISIONS.md`、`M agents/runtime-dev/STATUS.md`、`M agents/runtime-dev/JOURNAL.md`），**无清单外条目、无未跟踪文件**；门禁未触发。
+  - 基线复核：`git rev-parse --abbrev-ref HEAD` = `main`；push 前本地基线 HEAD = `846a9b5 docs(team): record value semantics helper ADR`；`git status --short -- src/parser.rs` **为空**（parser.rs 未改动）。
+  - **提交 1（求值器代码 + runtime-dev 文档）**：`git add src/evaluator.rs src/value.rs src/env.rs .opencode/team/agents/runtime-dev/STATUS.md .opencode/team/agents/runtime-dev/JOURNAL.md`（`git diff --cached --name-only` 精确 5 文件，`.opencode/team/DECISIONS.md` 未入暂存）→ `git -c core.autocrlf=false commit -F lfz_msg_c1.txt`（标题 `feat(p3): tree-walking evaluator core`）→ **短哈希 `cab79ba`**（5 files changed, 2406 insertions, 45 deletions）；`git log -1 --format=%B` 复核标题/正文完整无损。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 2。
+  - **提交 2（决策 + 收工文档）**：`git add .opencode/team/DECISIONS.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md` → 提交 `docs(team): record evaluator name-resolution strategy ADR`（`DECISIONS.md` 本轮含 runtime-dev 的 P3.7 求值器核心 ADR，由其撰写、我仅代为入库；本提交即本条日志所在提交，短哈希见汇报）。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 两个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD；`git log --name-only -2` 中不含 `src/parser.rs`。
+  - 证据: `git log --oneline -4`（顶部两条为本轮提交，位于 `846a9b5` 之上）；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag，`v0.2.0` 待 P3.11）。
+- 决策: 提交沿用「作者写内容、release-manager 代为入库」的 DECISIONS 单一写者规则；未打 tag、未 force-push。
+- 下一步: 等 team-lead 收口 P3.11 后核对并打 `v0.2.0`；后续子阶段交付按模块切分原子提交。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-23 22:45] P3.4a（AST 定义 + Span）+ P3.6b（值语义 A6 深相等 + 全序）+ 决策入库：三个原子提交并推送
 - 来源: team-lead 任务书（已核验：`cargo build` 0 warning、`cargo test` 169 passed / 0 failed（ast 19 测、value 28 测）；工作区恰 **8 个**已修改文件；本轮做三个原子提交并 push；出现清单外条目即停止）
 - 完成:
