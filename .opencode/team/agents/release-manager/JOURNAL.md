@@ -1,5 +1,20 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 00:40] P3.0 Cargo 骨架：两个原子提交并推送
+- 来源: team-lead 任务书（P3.0 已由 core-dev 完成并经 team-lead 核验：`cargo build` EXIT=0、`cargo test` 0 tests ok、`cargo tree` 仅 `lfz v0.1.0`；本轮把代码 + 团队文档做两个原子提交并 push）
+- 完成:
+  - `git status --short` 复核：恰为预期 6 项（`M core-dev/{STATUS,JOURNAL}.md`、`?? PLAN-P3.md`、`?? Cargo.lock`、`?? Cargo.toml`、`?? src/`），**无清单外文件**。
+  - 基线与忽略复核：分支 `main`；`git check-ignore -v target/` → `.gitignore:25:/target/`（`target/` 已被忽略）。
+  - **提交 1（代码）**：`git add Cargo.toml Cargo.lock src/`（暂存集精确为 14 文件：2 + 12 个 `src/*.rs`）→ `git -c core.autocrlf=false commit -m "chore(p3): cargo skeleton" -m "Cargo lib+bin scaffold (std only), 10 empty modules per interface-contract §10; build/test green."` → **短哈希 `69a57d7`**（14 files changed, 72 insertions）。
+  - 先完成收工协议（覆盖更新本 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 2。
+  - **提交 2（团队文档）**：`git add .opencode/team/PLAN-P3.md .opencode/team/agents/core-dev/STATUS.md .opencode/team/agents/core-dev/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md` → 提交 `docs(team): add P3 phase plan and sync core-dev status`（本提交即本条日志所在提交，短哈希见汇报）。
+  - `git push`（非 force）。
+- 产出:
+  - 两条新提交；`git status --short` 空；`git ls-remote origin` 的 `refs/heads/main` = 本地 HEAD；`git ls-files | Select-String '^target/'` = 0。
+  - 证据: `git log --oneline`（顶部两条为本轮提交，位于 `caa66b4` 之上）；`git ls-remote origin`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag）。
+- 决策: 无新增 ADR（常规提交，非跨角色新决策）。owner 偏差仍为遗留待确认项。
+- 下一步: P3 后续子阶段继续按模块原子提交；P3.11 收口时打附注标签 `v0.2.0`。
+- 阻塞: 无。
 ## [2026-09-23 23:55] P0.5 团队文档同步提交并推送
 - 来源: team-lead 任务书（P0.5 收尾——将团队记忆文档原子提交并 `git push`，恢复工作区干净、本地=远程）
 - 完成:
