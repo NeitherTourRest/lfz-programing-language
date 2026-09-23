@@ -27,7 +27,7 @@
 | `FieldError` | `LfzError::Field { name, span }` | 运行 | `结构体没有字段 '{name}'` |
 | `ZeroDivisionError` | `LfzError::DivZero { modulo, span }` | 运行 | `除以零` / `对零取模` |
 | `OverflowError` | `LfzError::Overflow { span, msg: OverflowMsg }` | 运行 | `整数溢出：结果超出 i64 范围` |
-| `ValueError` | `LfzError::Value { msg: ValueMsg, span }` | 运行 | `无法把 {src} 转换为 {dst}（'{text}'）` / `格式说明符非法：'{spec}'` |
+| `ValueError` | `LfzError::Value { msg: ValueMsg, span }` | 运行 | `无法把 {src} 转换为 {dst}（'{text}'）` / `格式说明符非法：'{spec}'` / **`空数组没有极值（{func}）`** / **`区间非法：{lo} >= {hi}`** |
 | `IOError` | `LfzError::Io { msg: String, span: Option<Span> }` | 运行 | `输入结束（EOF）` / `无法读取：{path}` |
 | `AssertionError` | `LfzError::Assert { msg: String, span }` | 运行 | `断言失败：{msg}` / `{msg}` |
 | `RecursionError` | `LfzError::Recursion { depth, limit, span }` | 运行 | `递归深度超限（超过 10000 层）` |
@@ -210,6 +210,15 @@ enum LfzError {
 - **同型（不加宽）的数值内置** —— `abs`：**参数与返回值同型**（`int → int`、`float → float`），**绝不加宽**：`abs(-3) == 3`（`int`）、`abs(-3.0) == 3.0`（`float`）。
 - **一句话钉死差异**：`floor` / `ceil` / `round` / `sqrt` / `pow` **接受 `int` 并把其实参加宽为 `float`**（返回类型见上表：前三者 `int`，后二者 `float`）；**`abs` 接受什么类型就返回什么类型，从不加宽**。全文关于数值内置的实参处理**以此为准**，不再有"未声明是否加宽"的情形。
 
+**内置边界补钉（v1，规范性；v1 补钉，与 [semantics.md](./semantics.md) §8.1 同源）**：
+
+- **`min` / `max` / `minBy` / `maxBy` 收到空 `array`** → `ValueError`，消息 **`空数组没有极值（{func}）`**（`{func}` = 内置名）。
+- **`randInt(lo, hi)` 且 `lo >= hi`** → `ValueError`，消息 **`区间非法：{lo} >= {hi}`**。
+- **`floor` / `ceil` / `round` 的 `NaN` / `±Inf` / 超界** → **复用 `int(float)` 口径**（[semantics.md](./semantics.md) §4.5.7）：`NaN` → `ValueError`（`ValueMsg::Convert`，`src="float"`、`dst="int"`、`text="nan"`）；`±Inf` 或取整后结果超 `[i64::MIN, i64::MAX]` → `OverflowError`。实参 `int` 先加宽为 `float`。
+- **`IndexError` 的 `idx` / `len`（钉死）**：`idx` = 触发越界的下标（**有实参者用实参原值**；`pop` 无实参 → 隐含末元素下标 `-1`）；`len` = **越界时**容器长度。故 **`pop([])` → `Index { idx: -1, len: 0 }`**（消息 `下标 -1 越界（长度 0）`）。
+- **`insert` 不支持负索引（钉死）**：合法域恒为 `i ∈ [0, len]`（`len = len(xs)`）；`i < 0` 或 `i > len` → `Index { idx: i, len }`。**与 `removeAt` / `swap` 的支持负索引显式区分**。
+- **`del(k, s)` 仅作用于数据字段（钉死；A5 数据面，与 `keys` / `has` / `len` 同集合）**：`k` 为方法字段（函数值字段）→ **`FieldError`**（现有 `LfzError::Field`，消息 `结构体没有字段 '{name}'`）；即 **`del(k, s)` 成功 ⟺ `has(k, s) == true`**。
+
 ### 10.8 错误实现建议（v0.5，B11 / B12 / B13）
 
 - **返回类型**：`type R<T> = Result<T, Box<LfzError>>` —— `Err` 侧为 `Box`，使 `R<Value>` 保持寄存器友好（避免 `Result` 膨胀）。★ 已由 runtime-dev 确认。
@@ -222,6 +231,7 @@ enum LfzError {
   - 例：`-9223372036854775808` **合法**；`9223372036854775808`（无负号）→ `SyntaxError`。
 - **`s[k]` 与 `.k` 的键统一为 string**；`has` / `keys` 只认数据字段（A5）。
 - **int→float 加宽（B13）**：见 [semantics.md](./semantics.md) §4.5.7（加宽可能不精确；混合比较按数学精确值）。
+- **`ValueMsg` 变体（实现侧，v1 补钉）**：`Convert { src, dst, text }`、`BadFormatSpec { spec }`、**`EmptyExtremum { func: String }`**（消息 `空数组没有极值（{func}）`）、**`BadRange { lo: i64, hi: i64 }`**（消息 `区间非法：{lo} >= {hi}`）。后两者为本轮补钉**新增**，供 core-dev 在 `src/error.rs` 落地；均归类 `ValueError`（**不新增错误类**）。
 
 ---
 

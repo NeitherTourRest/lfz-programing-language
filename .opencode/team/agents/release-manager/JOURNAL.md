@@ -1,5 +1,20 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 23:05] P3.3a（lexer CODE 模式核心）+ 6 处契约缺口闭合：两个原子提交并推送
+- 来源: team-lead 任务书（P3.3a 由 core-dev 完成、缺口闭合由 language-architect 完成，均经 team-lead 核验：`src/lexer.rs` 27396 B（+886 行，31 个 lexer 测试）、`cargo build` 0 warning、`cargo test` 113 passed / 0 failed；`DECISIONS.md` +67 行 ADR、`docs/spec/semantics.md` +25 行、`docs/spec/interface-contract.md` +12 行；本轮把两组改动做两个原子提交并 push）
+- 完成:
+  - `git status --short` 复核：恰为任务书预期 **8 项**（`M src/lexer.rs`、`M .opencode/team/DECISIONS.md`、`M docs/spec/semantics.md`、`M docs/spec/interface-contract.md`、`M agents/core-dev/{STATUS,JOURNAL}.md`、`M agents/language-architect/{STATUS,JOURNAL}.md`），**无清单外文件、无未跟踪文件**；出现清单外条目即停止的门禁未触发。
+  - 尺寸/分支基线复核：`(Get-Item src\lexer.rs).Length` = 27396 B，与任务书一致；`git branch --show-current` = `main`；`git rev-parse HEAD` = `git ls-remote origin refs/heads/main` = `bb3e4b4`（push 前本地=远程）。
+  - **提交 1（P3.3a 代码 + core-dev 文档）**：`git add src/lexer.rs .opencode/team/agents/core-dev/STATUS.md .opencode/team/agents/core-dev/JOURNAL.md`（`git diff --cached --name-only` 精确为 3 文件）→ `git -c core.autocrlf=false commit -F lfz_msg_p33a_c1.txt`（标题 `feat(p3): lexer CODE-mode core tokens`，正文 1 行长句、纯 ASCII）→ **短哈希 `4c68d18`**（3 files changed, 924 insertions, 31 deletions）；`git log -1 --format=%H%n%s%n%b` 复核标题/正文完整无损。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 2。
+  - **提交 2（规范 + 决策 + 团队文档）**：`git add .opencode/team/DECISIONS.md docs/spec/semantics.md docs/spec/interface-contract.md .opencode/team/agents/language-architect/STATUS.md .opencode/team/agents/language-architect/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md` → 提交 `docs(spec): close 6 P3.9a contract gaps (ADR + v1 pins)`（标题含 `(`/`)`，正文含 `ValueMsg::EmptyExtremum/BadRange`；本提交即本条日志所在提交，短哈希见汇报）。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 两个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -5`（顶部两条为本轮提交，位于 `bb3e4b4` 之上）；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag，`v0.2.0` 待 P3.11）。
+- 决策: 无新 ADR（DECISIONS.md 本轮改动由 language-architect 追加、我仅代为入库；本轮 `docs/spec/**` 为冻结文档的合法补钉，已先有 ADR 授权）。owner 偏差仍为遗留待确认项。
+- 下一步: P3.3b（strings/interp）、P3.9b（HOF 内置）继续按模块原子提交；P3.11 收口时打附注标签 `v0.2.0`。
+- 阻塞: 无。
 ## [2026-09-23 22:14] P3.9a 内置函数第一批（47 个非高阶内置）：两个原子提交并推送
 - 来源: team-lead 任务书（P3.9a 已由 runtime-dev 完成并经 team-lead 核验：`cargo build` 0 warning、`cargo test` 82 passed / 0 failed（builtins 新增 35 测）、`src/builtins.rs` 72102 B；本轮把代码 + 团队文档做两个原子提交并 push）
 - 完成:

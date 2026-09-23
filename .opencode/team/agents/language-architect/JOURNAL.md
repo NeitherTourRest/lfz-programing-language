@@ -1,5 +1,24 @@
 # language-architect — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 00:20] P3.9a 契约缺口闭合（6 项，v1 补钉）
+- 来源: team-lead 下达「闭合 runtime-dev 上报的 6 处契约缺口」任务（先读 DECISIONS 末条 ADR + `semantics.md` §8.1 + `interface-contract.md` §8.1/§10.7）
+- 完成:
+  - **逐项裁定**（最小改动优先；6 项中 4 项零代码变更）：
+    1. `min`/`max`/`minBy`/`maxBy` 空 → `ValueError`：**新增 `ValueMsg::EmptyExtremum { func }`**，消息 `空数组没有极值（{func}）`（现有 `Convert`/`BadFormatSpec` 两模板不适用）。
+    2. `randInt(lo,hi)` 且 `lo >= hi` → `ValueError`：**新增 `ValueMsg::BadRange { lo, hi }`**，消息 `区间非法：{lo} >= {hi}`。
+    3. `pop([])` → `IndexError`：**复用现有 `Index{idx,len}`、不新增变体**，钉死 `idx = -1`、`len = 0`（消息 `下标 -1 越界（长度 0）`），并补通用 idx/len 取值规则。
+    4. `floor`/`ceil`/`round` 的 `NaN`/`±Inf`/超界：**复用 `int(float)` 口径**（`NaN`→`ValueError`、`±Inf`/取整后超 i64→`OverflowError`），写成 §4.5.7 规范（新增一条）。
+    5. `del(k,s)` 对方法字段：裁定 **`del` 属数据面、仅作用于数据字段**（与 `keys`/`has`/`len` 同集合），方法字段键 → `FieldError`（不变量 `del(k,s) 成功 ⟺ has(k,s)==true`）；**runtime-dev 需改 `del` 判定**（`raw_fields`「存在即删」→ 数据字段集合）。
+    6. `insert` 负索引：裁定 **不支持负索引**，合法域 `i ∈ [0, len]`，`i < 0` 或 `i > len` → `Index{idx:i,len}`；与 `removeAt`/`swap`（支持负索引）显式区分。
+  - **纪律**：先追加 ADR，后改 `docs/spec/`；三件套头部「冻结于 2026-09-23」不变，改动均为**补充钉死**；不新增错误类（仍 12 类 + 基类）、不引入 `E-xxx`。
+  - 只改 `semantics.md`（§4.5.7 / §4.5.9 / §8.1）与 `interface-contract.md`（§8.1 / §10.7 / §10.8）；`syntax.md` **无需改动**。
+- 产出: `.opencode/team/DECISIONS.md` 追加 ADR「P3.9a 契约缺口闭合（6 项）」；`docs/spec/semantics.md`（382→**403 行**）、`docs/spec/interface-contract.md`（298→**308 行**）、`docs/spec/syntax.md` 不变（910 行）。三者 UTF-8 无 BOM。
+- 证据: 行数 910/403/308、BOM=False；错误类计数 `共 12 类` 与 `运行期…10 类` 保持；`E-xxx` 仅存于既有 §13 附录（11 处，未新增）；新增串 `EmptyExtremum`/`BadRange`/`空数组没有极值`/`区间非法`/`不支持负索引` 均命中；ADR 标题行位于 `DECISIONS.md` L223。
+- 决策: ADR「P3.9a 契约缺口闭合（6 项）」（逐项裁定 + 待执行代码变更清单 + 下游影响）
+- 待执行代码变更（本轮未写代码）: `src/error.rs` 加 2 变体（`EmptyExtremum`/`BadRange`）；`src/builtins.rs` 改用新变体 + `del` 改数据面判定 + 确认 `pop`/`insert`/`floor` 口径。
+- 下一步: 通知 team-lead 转 core-dev（`src/error.rs`）+ runtime-dev（`src/builtins.rs`）落地；test-engineer 可解除「暂不 snapshot 缺口 1–5」禁令。
+- 阻塞: 无
+
 ## [2026-09-23 22:00] spec v1 冻结（3 处补钉闭合 + docs/spec 三件套 + ADR D-016）
 - 来源: team-lead 下达「收尾定稿」任务（core-dev 可解析性 PASS；runtime-dev 可求值性 CONCERNS 仅 3 项且非架构级，要求拆分 spec 时一并闭合）
 - 完成:

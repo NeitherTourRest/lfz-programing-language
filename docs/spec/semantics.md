@@ -164,6 +164,7 @@
   - 例：`int(2.9) == 2`、`int(-2.9) == -2`（向零，非向下取整）；`int(1e30)` → `OverflowError`；`int(float("nan"))` → `ValueError`；`int(float("inf"))` → `OverflowError`。
   - 与 [interface-contract.md](./interface-contract.md) §10.7 `int` 行、§8.1 `ValueError`/`OverflowError` 行口径一致；`string`/`bool` 实参不涉及本条。
 - **数值内置形参加宽（v1 冻结，规范性；与 §1「唯一隐式转换」同源；冻结前补钉）**：`floor` / `ceil` / `round` / `sqrt` / `pow` 的 `int` 实参**先加宽为 `float`**；`abs` **同型不加宽**。逐条全文见 [interface-contract.md](./interface-contract.md) §10.7「数值内置形参加宽」。
+- **`floor` / `ceil` / `round` 的 `NaN` / `±Inf` / 超界边界（v1 冻结，规范性；v1 补钉）**：三者返回 `int`，其边界**完全复用上条 `int(x)` 口径**——`NaN` → **`ValueError`**（经 `ValueMsg::Convert`：`src="float"`、`dst="int"`、`text="nan"`，消息 `无法把 float 转换为 int（'nan'）`）；`±Inf` → **`OverflowError`**；有限浮点**取整（floor/ceil/round）后结果超出 `[i64::MIN, i64::MAX]`** → **`OverflowError`**（消息 `整数溢出：结果超出 i64 范围`）。例：`floor(float("nan"))` → `ValueError`；`ceil(float("inf"))` → `OverflowError`；`round(1e30)` → `OverflowError`。实参为 `int` 时先按上条加宽为 `float`（不会落入本边界）；`abs` **不受本条约束**（同型：`float` 的 `NaN` 原样返回）。口径与 [interface-contract.md](./interface-contract.md) §10.7 `floor`/`ceil`/`round` 行一致。
 
 #### 4.5.8 struct 模板实例化 = 平拷贝（B7）
 
@@ -186,6 +187,7 @@
      d. **不报错、不死循环**。
   4. struct 相等**忽略函数值字段**（A5）。
 - **显示**（`print` / `str` / `;;`）：递归渲染时维护「**路径访问集合**」（当前路径上的容器身份）；容器**已在路径上** → 输出字面量 **`<cycle>`**；离开时从集合移除。**不报错、不死循环**。
+- **`del` 与数据面（A5 扩展补钉，v1 补钉）**：`del(k, s)`（[interface-contract.md](./interface-contract.md) §10.7）**同属数据面操作，仅作用于数据字段**——字段集合与 `keys` / `has` / `len` **完全一致**；`k` 为**方法字段**（函数值字段）时**视为缺失** → **`FieldError`**（消息 `结构体没有字段 '{name}'`）。不变量：**`del(k, s)` 成功 ⟺ `has(k, s) == true`**。字段是否为数据字段**只看值的类型**（函数值字段即方法字段，不论来自模板还是动态添加）。
 
 #### 4.5.10 非致命 `check` 与致命 `assert`（A4）
 
@@ -215,10 +217,10 @@
 | `NameError` | 引用未定义的名字 | `未定义的名字 '{name}'` | 运行 |
 | `TypeError` | 运算符/条件/调用/参数/格式说明符的**类型**不符；调用非函数；管道右侧非函数；参数个数不符 | 见下表 | 运行 |
 | `IndexError` | 数组下标越界（含负索引规范化后越界） | `下标 {i} 越界（长度 {n}）` | 运行 |
-| `FieldError` | struct 不存在该字段（`.字段` 或 `["键"]` 读取缺失键） | `结构体没有字段 '{name}'` | 运行 |
+| `FieldError` | struct 不存在该字段（`.字段` 或 `["键"]` 读取缺失键）；**`del(k, s)` 的键不是数据字段**（方法字段视为缺失，v1 补钉） | `结构体没有字段 '{name}'` | 运行 |
 | `ZeroDivisionError` | 整数/浮点 `/`、`%` 或 `div(a,b)` 的除数为零（**含 float**，B5） | `除以零` / `对零取模` | 运行 |
 | `OverflowError` | `int` 运算结果超出 i64 范围；`int(float)` 遇 `±Inf` 或有限浮点截断后超 i64 范围（§4.5.7） | `整数溢出：结果超出 i64 范围` | 运行 |
-| `ValueError` | 显式转换失败（`int("abc")`、`int(NaN)` 等）；格式说明符语法非法 | `无法把 {src} 转换为 {dst}（'{text}'）` / `格式说明符非法：'{spec}'` | 运行 |
+| `ValueError` | 显式转换失败（`int("abc")`、`int(NaN)` 等）；格式说明符语法非法；**空数组取极值**（`min`/`max`/`minBy`/`maxBy`）；**`randInt` 区间非法**（`lo >= hi`） | `无法把 {src} 转换为 {dst}（'{text}'）` / `格式说明符非法：'{spec}'` / **`空数组没有极值（{func}）`** / **`区间非法：{lo} >= {hi}`** | 运行 |
 | `IOError` | `input()` 遇 EOF；不可读文件等 | `输入结束（EOF）` / `无法读取：{path}` | 运行 |
 | `AssertionError` | **仅** `assert(cond, msg)` 失败 或 `fail(msg)`（`check` 失败**不**抛此错，A4） | `断言失败：{msg}`（省略时 `断言失败`）/ `{msg}`（`fail` 省略时 `fail()`） | 运行 |
 | `RecursionError` | 求值帧深度超限（默认 10000 层）或深结构处理超限（A7/B4） | `递归深度超限（超过 10000 层）` | 运行 |
@@ -256,6 +258,25 @@
 | 管道右侧非函数 | `管道右侧必须是函数，得到 {t}` |
 | 参数个数不符 | `函数 {name} 期待 {n} 个参数，得到 {m}` |
 | 格式说明符与值类型不符 | `格式说明符 '{spec}' 不适用于 {t}` |
+
+**`ValueError` 新增子场景（v1 补钉，规范性；冻结前补钉的延续，不新增错误类）**：
+
+| 子场景 | 消息模板 | 触发 |
+|---|---|---|
+| 空数组取极值 | `空数组没有极值（{func}）` | `min` / `max` / `minBy` / `maxBy` 收到空 `array`（[interface-contract.md](./interface-contract.md) §10.7） |
+| 随机区间非法 | `区间非法：{lo} >= {hi}` | `randInt(lo, hi)` 且 `lo >= hi`（[interface-contract.md](./interface-contract.md) §10.7） |
+
+> 二者**均为 `ValueError`**（不新增错误类）；消息经 `ValueMsg` 承载（实现变体 `EmptyExtremum { func }` / `BadRange { lo, hi }` 见 [interface-contract.md](./interface-contract.md) §10.8）。`{func}` = 内置名（`min`/`max`/`minBy`/`maxBy`）；`{lo}`/`{hi}` = 实参十进制原文。
+
+**`IndexError` 的 `idx` / `len` 取值（v1 补钉，规范性）**：`LfzError::Index { idx, len }`（[interface-contract.md](./interface-contract.md) §10.4）两字段取值钉死如下（消息恒为 `下标 {i} 越界（长度 {n}）`，其中 `i = idx`、`n = len`）：
+
+| 触发 | `idx` | `len` |
+|---|---|---|
+| `pop([])`（无实参） | `-1`（隐含末元素下标） | `0`（容器长度） |
+| 支持负索引的内置（`removeAt` / `swap`）越界 | 触发越界的**实参原值** | 越界时容器长度 |
+| `insert(i, v, xs)` 且 `i < 0` 或 `i > len(xs)`（**不支持负索引**） | 实参 `i` | `len(xs)` |
+
+> **通用规则**：`idx` = 触发越界的下标（**有实参者用实参原值**；`pop` 无实参 → 隐含末元素下标 `-1`）；`len` = **越界时**容器长度。
 
 > **hint 行策略（v0.4 定案）**：v1 用户可见输出**明确不输出**任何 `hint`/`提示：` 行（保证黑盒测试逐字符稳定）；`CosmosAnswerError` 亦**禁止**任何 hint。原 v0.3 §14-4 的"是否附可选提示行"议题**已关闭（已定）**；可选 hint 能力**列入 v1.1 backlog**（不在 v1 输出契约内）。结构化错误（特色 4）由「类名 + 中文消息 + 位置 + traceback + `--json` 字段」满足。
 

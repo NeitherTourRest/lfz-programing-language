@@ -219,3 +219,70 @@
   - 建议 language-architect 为 1/2 在 §8.1 补一条 `ValueError` 消息（或新增 `ValueMsg` 变体），并确认 3–6。
 - **影响**：P3.7 求值器按本 ABI 调用内置；test-engineer / docs / ai-dx 若需 snapshot 上述 1–5 的消息文本，须待补钉后定稿（**建议暂不 snapshot**）。
 - **证据**：`src/builtins.rs` 72102 B / 1549 行；`cargo build --tests --message-format=json` → `warnings=0 errors=0`；`cargo test` → `82 passed; 0 failed`（本轮新增 35 测，覆盖 §10.7 全部 47 个非高阶内置，含 A1/A5、`sort` 稳定性与全序、`int(NaN)`/`int(±Inf)` 边界、`floor(3)`/`abs(-3.0)` 加宽对比、`check` 非致命）。
+
+### [2026-09-24 00:20] [language-architect] P3.9a 契约缺口闭合（6 项）
+
+- **性质**：**闭合 runtime-dev 上报的 6 处非阻塞契约缺口**（见上一条 [2026-09-23 23:59] ADR）。本轮**只出规范与决策**（先本 ADR、后改 `docs/spec/`），**不写生产代码**；需落地代码的部分列于「待执行代码变更清单」。三件套头部「冻结于 2026-09-23」**保持不变**，本轮改动一律为 **v1 补钉（补充钉死）**，不推翻任何既有冻结规则；**不新增错误类**（仍 12 类 + 基类）、**不引入 `E-xxx` 码**。
+- **裁定原则**：**最小改动优先**——能用现有 `ValueMsg` / `TypeMsg` / `Index{idx,len}` 字段表达者**只补钉消息文本、不新增枚举变体**；确不能表达者才新增变体（本轮仅 2 个，均属 `ValueError`）。
+
+- **逐项裁定（缺口 → 裁定 → 落地方式）**：
+
+  1. **`min([])` / `max([])`（及 `minBy` / `maxBy` 空）→ `ValueError`**
+     - 缺口：现有 `ValueMsg` 两模板（`Convert` / `BadFormatSpec`）均不适用「空集合取极值」；runtime-dev 暂以 `Convert{src:"array", dst:"min", text:"空数组"}` 承载（消息语义错误）。
+     - 裁定：**新增 `ValueMsg::EmptyExtremum { func: String }`**，消息模板 **`空数组没有极值（{func}）`**（`func` ∈ `min`/`max`/`minBy`/`maxBy`）；仍归类 `ValueError`（**不新增错误类**）。
+     - 落地：`src/error.rs`（core-dev 新增变体 + `message()` 分支）；`src/builtins.rs`（runtime-dev 改用它）；`docs/spec/semantics.md` §8.1 + `docs/spec/interface-contract.md` §10.7/§10.8 已补钉。
+     - 代码变更：**需**（新增变体）。
+  2. **`randInt(lo, hi)` 且 `lo >= hi` → `ValueError`**
+     - 缺口：同 1；runtime-dev 暂以 `Convert{src:"int", dst:"int", text:"{lo} >= {hi}"}` 承载（消息语义错误）。
+     - 裁定：**新增 `ValueMsg::BadRange { lo: i64, hi: i64 }`**，消息模板 **`区间非法：{lo} >= {hi}`**；仍归类 `ValueError`。
+     - 落地：`src/error.rs`（core-dev）；`src/builtins.rs`（runtime-dev）；两 spec 已补钉。
+     - 代码变更：**需**（新增变体）。
+  3. **`pop([])` → `IndexError` 的 `idx` / `len`**
+     - 裁定：**能用现有 `Index{idx,len}` 表达，不新增变体**；钉死 **`idx = -1`、`len = 0`**（`pop` 无实参 → 取隐含末元素下标 `-1`；`len` = 越界时容器长度），消息即现有模板 `下标 -1 越界（长度 0）`。一并补钉**通用取值规则**：`idx` = 触发越界的实参下标（有实参者用**实参原值**）、`len` = 越界时容器长度（`removeAt` / `swap` / `insert` 同理）。
+     - 落地：`docs/spec/semantics.md` §8.1（`IndexError` 补钉表）+ `interface-contract.md` §10.7。
+     - 代码变更：**无**（runtime-dev 现值 `idx=-1,len=0` 与裁定一致）。
+  4. **`floor` / `ceil` / `round` 的 `NaN` / `±Inf` / 结果超 i64**
+     - 裁定：**复用 `int(float)` 口径**（§4.5.7，含冻结前补钉）——`NaN` → `ValueError`（经 `ValueMsg::Convert`：`src="float"`、`dst="int"`、`text="nan"`，消息 `无法把 float 转换为 int（'nan'）`）；`±Inf` → `OverflowError`；取整后结果超出 `[i64::MIN, i64::MAX]` → `OverflowError`（消息 `整数溢出：结果超出 i64 范围`）。该口径**写成规范**（§4.5.7 新增一条），v1 不再有"未规定"。
+     - 落地：`docs/spec/semantics.md` §4.5.7 + `interface-contract.md` §10.7；**不改** `src/error.rs`（复用现有 `ValueMsg::Convert` 与 `OverflowMsg`）。
+     - 代码变更：**无**（runtime-dev 现有实现已复用该口径，仅需按 §4.5.7 文本确认）。
+  5. **`del(k, s)` 对方法字段的判定（A5 未列 `del`）**
+     - 缺口：A5 只列 `keys/values/entries/display/==/has/len`，未列 `del`；runtime-dev 暂按 `raw_fields`「存在即删」（方法字段可删）。
+     - 裁定：**`del` 属数据面操作，仅作用于数据字段**（字段集合与 `keys`/`has`/`len` 一致）；`k` 为方法字段（函数值字段）→ **视为缺失 → `FieldError`**。不变量：**`del(k, s)` 成功 ⟺ `has(k, s) == true`**。字段是否为数据字段**只看值的类型**（函数值字段即方法字段，不论来自模板还是动态添加）。理由：`del` 是 struct-as-dictionary 的数据面运算，须与 `has`/`keys` 同集合以保持单一口径；且模板方法本不应从实例删除。此为 A5 的**扩展补钉**（A5 未涉及 `del`，非推翻）。
+     - 落地：`docs/spec/semantics.md` §4.5.9 + §8.1 `FieldError` 行 + `interface-contract.md` §10.7；**`src/builtins.rs` 需将 `del` 的判定由 `raw_fields`（存在即删）改为「数据字段集合」**（复用 `has`/`keys` 谓词）。
+     - 代码变更：**需**（`src/builtins.rs` 行为变更；**不改** `src/error.rs`——复用现有 `LfzError::Field`）。
+  6. **`insert(i, …)` 的负索引**
+     - 裁定：**不支持负索引**；合法域恒为 **`i ∈ [0, len]`**（`len = len(xs)`）；`i < 0` 或 `i > len` → `IndexError{ idx: i, len }`（`idx` = 实参原值）。与 `removeAt` / `swap`（支持负索引）**显式区分**。
+     - 落地：`docs/spec/semantics.md` §8.1 + `interface-contract.md` §10.7（§10.7 `insert` 行原文 `i ∈ [0, len]` **保持不变**，仅在补钉块中明确负索引不合法）。
+     - 代码变更：**无**（runtime-dev 现值 `i < 0 → IndexError` 与裁定一致；仅需确认 `idx = 实参 i`）。
+
+- **待执行代码变更清单**（仅 `src/**`，由 core-dev / runtime-dev 落地；language-architect 不写代码）：
+  | # | 文件 | 变更 | 变体 / 字段 | 消息模板 |
+  |---|---|---|---|---|
+  | 1 | `src/error.rs`（core-dev） | 新增枚举变体 + `message()` 分支 | `ValueMsg::EmptyExtremum { func: String }` | `空数组没有极值（{func}）` |
+  | 2 | `src/error.rs`（core-dev） | 新增枚举变体 + `message()` 分支 | `ValueMsg::BadRange { lo: i64, hi: i64 }` | `区间非法：{lo} >= {hi}` |
+  | 3 | `src/builtins.rs`（runtime-dev） | 1/2 改用新变体（`min`/`max`/`minBy`/`maxBy` 空、`randInt` 非法区间） | — | 同 1 / 2 |
+  | 4 | `src/builtins.rs`（runtime-dev） | `del` 判定由 `raw_fields` 改为**数据字段集合**（复用 `has`/`keys` 谓词） | — | 缺失时 `结构体没有字段 '{name}'`（现有 `LfzError::Field`） |
+  | 5 | `src/builtins.rs`（runtime-dev） | 确认 `pop` → `Index{idx:-1,len:0}`；`insert` 越界/负索引 → `Index{idx:i,len}`；`floor`/`ceil`/`round` 复用 `int(float)` 口径 | — | 现有 `下标 {i} 越界（长度 {n}）` / `整数溢出：结果超出 i64 范围` / `无法把 float 转换为 int（'nan'）` |
+
+- **变更纪律**：本轮**先追加本 ADR，后改 `docs/spec/`**（顺序可核）；三件套头部「冻结于 2026-09-23」**保持不变**，改动均为**补充钉死**（新增模板 / 规则 / 交叉引用），**未改动任何已冻结的关键词、计数与规则**（§8.1 错误类仍 12 类 + 基类、运行期仍 10 类、§8.2/§8.3 计数不变）。**不新增错误类**、**不引入 `E-xxx`**。
+
+- **影响（下游评估）**：
+  - **core-dev**：`src/error.rs` 新增 2 个 `ValueMsg` 变体（清单 1/2）；无其他契约变更。
+  - **runtime-dev**：`src/builtins.rs` 按清单 3/4/5 调整；`del` 行为变更为**数据面**（须补/改单测：`del("方法名", s)` → `FieldError`）；其余缺口恢复规范文本（pop / insert / floor 等）。
+  - **test-engineer**：上一条 ADR「建议暂不 snapshot 缺口 1–5 消息文本」的禁令**解除**——1/2 的新消息模板、3/6 的 `idx`/`len`、4 的 `int(float)` 口径、5 的 `del → FieldError` 均已定稿，可据此写精确断言（逐字符例：`空数组没有极值（min）`、`区间非法：3 >= 3`、`下标 -1 越界（长度 0）`、`结构体没有字段 'get'`）。
+  - **docs-writer / ai-dx-engineer**：手册 / AI 指南补 4 点——`min`/`max` 空数组报 `ValueError`（新消息）、`randInt` 区间非法（新消息）、`insert` 不支持负索引（与 `removeAt`/`swap` 对比）、`del` 只删数据字段（方法字段报 `FieldError`）；`floor`/`ceil`/`round` 的 `NaN`/`±Inf` 边界同 `int()`。
+  - **app-dev / perf-engineer**：无行为影响（不涉及 6 项边界）；应用 / 基准若用到 `min`/`max`/`randInt`/`insert`/`del` 不必改代码，仅错误路径行为更明确。
+  - **spec 三件套**：`semantics.md`（§4.5.7 / §4.5.9 / §8.1）+ `interface-contract.md`（§8.1 / §10.7 / §10.8）已同步；`syntax.md` **无需改动**（6 项均非形式 / 文法问题）。
+
+- **证据**：本 ADR 标题行（`DECISIONS.md`）+ `docs/spec/` 6 项改动点逐条（见本轮汇报）。
+
+### [2026-09-23 23:58] [core-dev] lexer CODE 模式记号接口（P3.3a）+ 3 条消歧回退 + 1 处契约缺口
+- **背景**：P3.3a 落地 `src/lexer.rs` 第一批（CODE 模式核心记号），冻结对下游可消费的记号接口。
+- **接口约定（供 parser / runtime 消费）**：
+  - `pub fn lex(text: &str, line_base: u32) -> R<Vec<Token>>`；返回流**以 `TokenKind::Eof` 结尾**。
+  - `TokenKind` 的字符串/插值 8 变体（`StrBegin/StrEnd/Text/InterpBegin/InterpEnd/FormatSpec`）**已定义但本批不产生**（P3.3b 填充）。
+  - `Int(String)` / `Float(String)` 保存**原文**（B12），不做进制归一、不做 i64 范围检查（`IntegerOutOfRange` 由后续阶段判定）。
+  - `line = 本地行号(1-based) + line_base`；`col` = 1-based **Unicode 标量**计数。
+- **消歧回退（3 条，按 §2.3/§2.7 最小读法）**：`1e` → `Int("1")`+`Ident("e")`；`1.` → `Int("1")`+`Dot`（A23）；`0x`（无进制位）→ `Int("0")`+`Ident("x")`。
+- **契约缺口（1 处，待 language-architect 裁定）**：未闭合块注释 `/*`（至 EOF 仍无 `*/`）在 `SyntaxMsg` 16 变体中**无对应条目**。core-dev 口径：**消费至 EOF、等价一个空白、不报错**（不自造错误码/文案）。若期望报错，请指定码/文案。
+- **影响**：无 spec 改动；`runtime-dev` 当前不消费 lexer；`tooling-dev` 经 parser 间接消费。**不阻塞** P3.3b。
