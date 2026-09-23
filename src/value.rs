@@ -2,7 +2,8 @@
 //!
 //! 依据（只读消费）：
 //! - `docs/spec/semantics.md` §4.5.0（值模型总览）、§4.5.2（A1 引用语义）、§4.5.3（A2 闭包捕获）、
-//!   §4.5.7（`int → float` 唯一隐式加宽）、§4.5.11（字符串不可变）、§3.7（显示形式）。
+//!   §4.5.6（`float` IEEE / 排序全序）、§4.5.7（`int → float` 唯一隐式加宽 + 精确比较）、
+//!   §4.5.9（A6 环安全 `==` / A5 数据面）、§4.5.11（字符串不可变）、§3.7（显示形式）。
 //! - `docs/spec/interface-contract.md` §10.5（闭包携带 `ScopeDebug` 链）、§10.7（`type` 依赖 `type_name`）。
 //!
 //! ## 内存布局
@@ -22,6 +23,7 @@
 
 use crate::env::ScopeChain;
 use std::cell::RefCell;
+use std::cmp::Ordering;
 use std::fmt;
 use std::rc::Rc;
 
@@ -191,6 +193,65 @@ impl Value {
         }
     }
 
+    // ----- 深相等（A6，§4.5.9） --------------------------------------------
+
+    /// **深结构相等**（A6，§4.5.9）：`==` / `!=` 标量 + 容器语义的**唯一**共享实现。
+    ///
+    /// - **身份优先**：两侧为同一 `Rc` 分配（`Rc::ptr_eq`）→ `true`（含自引用容器，直接短路）。
+    /// - **标量**：按 §4.2 / §4.5.6 / §4.5.7 比较——`NaN != NaN`、`+0.0 == -0.0`；
+    ///   `int`/`float` 混合按**数学精确值**（不先加宽）；`string` 按**内容**；`function` 仅**同一性**。
+    /// - **容器**（`array` / `struct`）：维护「**已访问有序对集合**」——`(a, b)` 已在集合中
+    ///   ⇒ **视为相等**（环安全，**不报错、不死循环**）；否则入集后比较形状（长度 / 数据字段键集）
+    ///   与逐元素 / 逐字段 `==`。
+    /// - **`struct` 数据面**（A5）：比较时**忽略函数值字段**，键集按 **UTF-8 字节序升序**、**键序无关**。
+    /// - 类型不同（如 `array` vs `struct`、`number` vs `string`）→ `false`。
+    ///
+    /// 注 1：`struct` **模板**（`StructDef`）的相等**规范未明确定义**（§4.5.9 未列该类）；
+    /// 本实现保守取**同一性**（同 `Rc` 分配 → `true`，否则 `false`），待规范补齐（见汇报）。
+    /// 注 2：本实现为**递归**（与 [`Display`](fmt::Display) 一致），未施加 §4.5.5 的 10000 层深度上限
+    /// （该上限需显式迭代栈 + `RecursionError`）；属 P3.7/P3.8 求值器接入时的遗留项（见汇报）。
+    #[must_use]
+    pub fn deep_eq(&self, other: &Value) -> bool {
+        let mut seen: Vec<(usize, usize)> = Vec::new();
+        eq_rec(self, other, &mut seen)
+    }
+
+    // ----- 全序比较（§4.5.6 / §4.5.7） --------------------------------------
+
+    /// 本值可参与**全序比较**的**类别**（§4.5.6）：数值组（`int` / `float` 混用）或字符串组；
+    /// 其余类型（`bool` / `nil` / `array` / `struct` / `function`）不可全序 → `None`。
+    #[must_use]
+    pub fn order_kind(&self) -> Option<OrderKind> {
+        match self {
+            Value::Int(_) | Value::Float(_) => Some(OrderKind::Num),
+            Value::Str(_) => Some(OrderKind::Str),
+            _ => None,
+        }
+    }
+
+    /// **全序比较**（§4.5.6 / §4.5.7）：`sort` / `sortBy` / `min` / `max` / `minBy` / `maxBy` 的
+    /// **唯一**共享实现。
+    ///
+    /// - **仅同类别可比较**：数值组 ↔ 数值组、字符串组 ↔ 字符串组；否则 → `None`
+    ///   （调用方据 §10.7 转 `TypeError`）。
+    /// - 数值：`-Inf < 任何有限值 < +Inf < NaN`（`NaN` 排最后）；此全序与 `==` 的 IEEE 语义
+    ///   **并存**（`==` 仍 `NaN != NaN`）；`int`/`float` 混合按 §4.5.7 **数学精确**比较（不先加宽）。
+    /// - 字符串：UTF-8 字节序（§4.2）。
+    ///
+    /// 注：本全序**仅**服务排序 / 极值；运算符 `< <= > >=` 的 IEEE 语义（涉及 `NaN` → `false`）
+    /// **不**由本函数承担——P3.7 求值器须另行处理。
+    #[must_use]
+    pub fn total_cmp(&self, other: &Value) -> Option<Ordering> {
+        match (self, other) {
+            (Value::Int(x), Value::Int(y)) => Some(x.cmp(y)),
+            (Value::Str(x), Value::Str(y)) => Some(x.as_bytes().cmp(y.as_bytes())),
+            (Value::Int(_) | Value::Float(_), Value::Int(_) | Value::Float(_)) => {
+                Some(num_order(self, other))
+            }
+            _ => None,
+        }
+    }
+
     // ----- 显示（§3.7） -----------------------------------------------------
 
     /// 顶层显示形式（§3.7）：`string` **原样不加引号**。等价于 `Value::to_string()`。
@@ -309,6 +370,151 @@ fn fmt_quoted(f: &mut fmt::Formatter<'_>, s: &str) -> fmt::Result {
         }
     }
     f.write_str("\"")
+}
+
+// ===========================================================================
+// 相等（A6）与全序（§4.5.6）辅助
+// ===========================================================================
+
+/// 可全序比较的**类别**（§4.5.6）。见 [`Value::total_cmp`] / [`Value::order_kind`]。
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum OrderKind {
+    /// 数值组（`int` / `float` 混用，按 §4.5.7 数学精确比较）。
+    Num,
+    /// 字符串组（UTF-8 字节序，§4.2）。
+    Str,
+}
+
+/// `2^63`：`i64` 上下界的 `f64` 表示。
+///
+/// `int(float)` 越界判定（`floor` / `ceil` / `round` / `int`）与 `int`/`float` 精确比较共用同一常量。
+pub(crate) const TWO_POW_63: f64 = 9_223_372_036_854_775_808.0;
+
+/// 两侧是否**同一 `Rc` 分配**（A6 步骤 3a「身份优先」）。
+fn same_identity(a: &Value, b: &Value) -> bool {
+    match (a, b) {
+        (Value::Str(x), Value::Str(y)) => Rc::ptr_eq(x, y),
+        (Value::Array(x), Value::Array(y)) => Rc::ptr_eq(x, y),
+        (Value::Struct(x), Value::Struct(y)) => Rc::ptr_eq(x, y),
+        (Value::StructDef(x), Value::StructDef(y)) => Rc::ptr_eq(x, y),
+        (Value::Func(x), Value::Func(y)) => Rc::ptr_eq(x, y),
+        _ => false,
+    }
+}
+
+/// [`Value::deep_eq`] 的递归内核；`seen` 为**已访问有序对集合**（`(a, b)` 的身份地址对）。
+///
+/// 重访一对 ⇒ 视为相等（**环安全**，A6 步骤 3b/3d）。
+fn eq_rec(a: &Value, b: &Value, seen: &mut Vec<(usize, usize)>) -> bool {
+    if same_identity(a, b) {
+        return true; // 身份优先（含自引用容器，直接短路）
+    }
+    match (a, b) {
+        (Value::Nil, Value::Nil) => true,
+        (Value::Bool(x), Value::Bool(y)) => x == y,
+        (Value::Int(x), Value::Int(y)) => x == y,
+        // IEEE（§4.5.6）：`NaN != NaN`、`+0.0 == -0.0`。
+        (Value::Float(x), Value::Float(y)) => x == y,
+        // `int`/`float` 混合按数学精确值（§4.5.7）；`NaN` → `false`。
+        (Value::Int(x), Value::Float(y)) => num_eq_int_float(*x, *y),
+        (Value::Float(x), Value::Int(y)) => num_eq_int_float(*y, *x),
+        (Value::Str(x), Value::Str(y)) => x == y, // 按内容（`Rc` 不同亦可）
+        (Value::Array(x), Value::Array(y)) => {
+            let key = (Rc::as_ptr(x) as usize, Rc::as_ptr(y) as usize);
+            if seen.contains(&key) {
+                return true; // 重访 ⇒ 视为相等
+            }
+            seen.push(key);
+            let (bx, by) = (x.borrow(), y.borrow());
+            bx.len() == by.len() && bx.iter().zip(by.iter()).all(|(u, v)| eq_rec(u, v, seen))
+        }
+        (Value::Struct(x), Value::Struct(y)) => {
+            let key = (Rc::as_ptr(x) as usize, Rc::as_ptr(y) as usize);
+            if seen.contains(&key) {
+                return true; // 重访 ⇒ 视为相等
+            }
+            seen.push(key);
+            let (bx, by) = (x.borrow(), y.borrow());
+            let dx = bx.data_fields_sorted(); // 数据面：跳方法、键字节序升序（A5/B3）
+            let dy = by.data_fields_sorted();
+            dx.len() == dy.len()
+                && dx
+                    .iter()
+                    .zip(dy.iter())
+                    .all(|((kx, vx), (ky, vy))| kx == ky && eq_rec(vx, vy, seen))
+        }
+        // 类型不同（含 `array` vs `struct`）、`function` / `struct` 模板仅同一性 → 不相等。
+        _ => false,
+    }
+}
+
+/// `int i == float f`（§4.5.7 精确比较；`NaN` → `false`，§4.5.6）。
+fn num_eq_int_float(i: i64, f: f64) -> bool {
+    !f.is_nan() && cmp_int_float(i, f) == Ordering::Equal
+}
+
+/// `int i` 与 `float f`（**非 NaN**）的**数学精确**比较（§4.5.7 步骤 1–5）。
+fn cmp_int_float(i: i64, f: f64) -> Ordering {
+    if f == f64::INFINITY {
+        return Ordering::Less; // 任何 i64 < +Inf
+    }
+    if f == f64::NEG_INFINITY {
+        return Ordering::Greater; // 任何 i64 > -Inf
+    }
+    if f >= TWO_POW_63 {
+        return Ordering::Less; // §4.5.7 步骤 4
+    }
+    if f < -TWO_POW_63 {
+        return Ordering::Greater;
+    }
+    let t = f.trunc();
+    let ti = t as i64; // |t| < 2^63，安全
+    match i.cmp(&ti) {
+        Ordering::Equal => {
+            let r = f - t; // 精确
+            if r > 0.0 {
+                Ordering::Less
+            } else if r < 0.0 {
+                Ordering::Greater
+            } else {
+                Ordering::Equal
+            }
+        }
+        other => other,
+    }
+}
+
+/// 数值全序（§4.5.6）：`-Inf < 有限 < +Inf < NaN`（`NaN` 排最后）。
+fn num_order(a: &Value, b: &Value) -> Ordering {
+    match (a, b) {
+        (Value::Int(x), Value::Int(y)) => x.cmp(y),
+        (Value::Int(x), Value::Float(y)) => {
+            if y.is_nan() {
+                Ordering::Less
+            } else {
+                cmp_int_float(*x, *y)
+            }
+        }
+        (Value::Float(x), Value::Int(y)) => {
+            if x.is_nan() {
+                Ordering::Greater
+            } else {
+                cmp_int_float(*y, *x).reverse()
+            }
+        }
+        (Value::Float(x), Value::Float(y)) => {
+            if x.is_nan() && y.is_nan() {
+                Ordering::Equal
+            } else if x.is_nan() {
+                Ordering::Greater
+            } else if y.is_nan() {
+                Ordering::Less
+            } else {
+                x.partial_cmp(y).expect("非 NaN 的 f64 必然可全序")
+            }
+        }
+        _ => Ordering::Equal,
+    }
 }
 
 // ===========================================================================
@@ -616,5 +822,243 @@ mod tests {
         assert!(s.contains("m"));
         assert_eq!(s.get("a").map(|v| v.to_string()), Some("9".to_string()));
         assert_eq!(s.raw_fields().len(), 3);
+    }
+
+    // ---- P3.6b：深相等（A6，§4.5.9） --------------------------------------
+
+    /// 两个**独立的**自引用数组（结构相同）→ `==` 为 `true`，不报错、不死循环。
+    #[test]
+    fn deep_eq_self_referential_arrays_are_equal_and_terminate() {
+        let a = Value::array(vec![Value::Int(1)]);
+        if let Value::Array(rc) = &a {
+            rc.borrow_mut().push(a.clone()); // a = [1, a]
+        }
+        let b = Value::array(vec![Value::Int(1)]);
+        if let Value::Array(rc) = &b {
+            rc.borrow_mut().push(b.clone()); // b = [1, b]
+        }
+        assert!(a.deep_eq(&b));
+        assert!(b.deep_eq(&a));
+        assert!(a.deep_eq(&a)); // 身份优先
+    }
+
+    /// 单元素自引用数组（纯环）：`[a] == [b]`（重访 ⇒ 相等）。
+    #[test]
+    fn deep_eq_pure_cycle_arrays() {
+        let a = Value::array(vec![]);
+        if let Value::Array(rc) = &a {
+            rc.borrow_mut().push(a.clone()); // a = [a]
+        }
+        let b = Value::array(vec![]);
+        if let Value::Array(rc) = &b {
+            rc.borrow_mut().push(b.clone()); // b = [b]
+        }
+        assert!(a.deep_eq(&b));
+    }
+
+    /// 自引用结构体（环）：两个独立但结构相同的环 → `true`。
+    #[test]
+    fn deep_eq_self_referential_structs() {
+        let a = Value::empty_object();
+        if let Value::Struct(rc) = &a {
+            rc.borrow_mut().set("self", a.clone()); // a = {self: a}
+        }
+        let b = Value::empty_object();
+        if let Value::Struct(rc) = &b {
+            rc.borrow_mut().set("self", b.clone()); // b = {self: b}
+        }
+        assert!(a.deep_eq(&b));
+        assert!(a.deep_eq(&a));
+    }
+
+    /// 两个结构相同、**互为别名**的环（各自字段指向对方节点）：仍判相等。
+    #[test]
+    fn deep_eq_mutually_aliased_cycles() {
+        // a = {x: b}，b = {x: a} —— 互为别名的两节点环。
+        let a = Value::empty_object();
+        let b = Value::empty_object();
+        if let (Value::Struct(ra), Value::Struct(rb)) = (&a, &b) {
+            ra.borrow_mut().set("x", b.clone());
+            rb.borrow_mut().set("x", a.clone());
+        }
+        // c = {x: d}，d = {x: c} —— 与上环同构的另一环。
+        let c = Value::empty_object();
+        let d = Value::empty_object();
+        if let (Value::Struct(rc), Value::Struct(rd)) = (&c, &d) {
+            rc.borrow_mut().set("x", d.clone());
+            rd.borrow_mut().set("x", c.clone());
+        }
+        assert!(a.deep_eq(&c));
+        assert!(b.deep_eq(&d));
+        assert!(a.deep_eq(&a)); // 身份优先
+    }
+
+    /// struct 深相等**忽略函数值字段**（A5）。
+    #[test]
+    fn deep_eq_struct_ignores_method_fields() {
+        let s1 = Value::object(vec![
+            ("a".to_string(), Value::Int(1)),
+            ("m".to_string(), dummy_fn()),
+        ]);
+        let s2 = Value::object(vec![("a".to_string(), Value::Int(1))]);
+        assert!(s1.deep_eq(&s2)); // 方法字段不参与数据面
+        // 方法字段与数据字段同名但类型不同 → 数据面不同 → 不等。
+        let s3 = Value::object(vec![("a".to_string(), dummy_fn())]);
+        let s4 = Value::object(vec![("a".to_string(), Value::Int(1))]);
+        assert!(!s3.deep_eq(&s4));
+    }
+
+    /// struct 深相等**键序无关**，键集按字节序比较（B3）。
+    #[test]
+    fn deep_eq_struct_key_order_independent() {
+        let s1 = Value::object(vec![
+            ("b".to_string(), Value::Int(2)),
+            ("a".to_string(), Value::Int(1)),
+        ]);
+        let s2 = Value::object(vec![
+            ("a".to_string(), Value::Int(1)),
+            ("b".to_string(), Value::Int(2)),
+        ]);
+        assert!(s1.deep_eq(&s2));
+        let s3 = Value::object(vec![("a".to_string(), Value::Int(1))]);
+        assert!(!s1.deep_eq(&s3)); // 数据字段数不同
+    }
+
+    /// 标量深相等（§4.2 / §4.5.6 / §4.5.7）。
+    #[test]
+    fn deep_eq_scalars_and_exact_int_float() {
+        assert!(Value::Int(1).deep_eq(&Value::Int(1)));
+        assert!(!Value::Int(1).deep_eq(&Value::Int(2)));
+        assert!(Value::Int(1).deep_eq(&Value::Float(1.0)));
+        assert!(!Value::Int(1).deep_eq(&Value::Float(1.5)));
+        // §4.5.7 精确比较：大整数不因加宽丢精度而误判相等。
+        assert!(!Value::Int(9_007_199_254_740_993).deep_eq(&Value::Float(9_007_199_254_740_992.0)));
+        assert!(Value::string("a").deep_eq(&Value::string("a")));
+        assert!(!Value::string("a").deep_eq(&Value::string("b")));
+        assert!(Value::Nil.deep_eq(&Value::Nil));
+        assert!(Value::Bool(true).deep_eq(&Value::Bool(true)));
+        assert!(!Value::Bool(true).deep_eq(&Value::Int(1))); // 类型不同
+        // `+0.0 == -0.0`；`NaN != NaN`（§4.5.6）。
+        assert!(Value::Float(0.0).deep_eq(&Value::Float(-0.0)));
+        assert!(!Value::Float(f64::NAN).deep_eq(&Value::Float(f64::NAN)));
+        assert!(!Value::Float(f64::NAN).deep_eq(&Value::Int(0)));
+        assert!(!Value::Int(0).deep_eq(&Value::Float(f64::NAN)));
+    }
+
+    /// 函数值仅**同一性**（§4.2）。
+    #[test]
+    fn deep_eq_function_identity_only() {
+        let f = dummy_fn();
+        let g = dummy_fn();
+        assert!(f.deep_eq(&f));
+        assert!(!f.deep_eq(&g));
+    }
+
+    /// 类型不同（`array` vs `struct`）→ `false`。
+    #[test]
+    fn deep_eq_different_container_types_are_false() {
+        assert!(!Value::array(vec![]).deep_eq(&Value::empty_object()));
+        assert!(!Value::array(vec![Value::Int(1)]).deep_eq(&Value::empty_object()));
+    }
+
+    /// 嵌套容器深相等（无环）。
+    #[test]
+    fn deep_eq_nested_containers() {
+        let a = Value::array(vec![
+            Value::Int(1),
+            Value::array(vec![Value::Int(2), Value::Int(3)]),
+            Value::object(vec![("k".to_string(), Value::string("v"))]),
+        ]);
+        let b = a.clone(); // 身份优先
+        assert!(a.deep_eq(&b));
+        let c = Value::array(vec![
+            Value::Int(1),
+            Value::array(vec![Value::Int(2), Value::Int(4)]),
+            Value::object(vec![("k".to_string(), Value::string("v"))]),
+        ]);
+        assert!(!a.deep_eq(&c));
+    }
+
+    // ---- P3.6b：全序（§4.5.6 / §4.5.7） ----------------------------------
+
+    #[test]
+    fn total_cmp_numeric_group() {
+        use std::cmp::Ordering::{Equal, Greater, Less};
+        assert_eq!(Value::Int(1).total_cmp(&Value::Int(2)), Some(Less));
+        assert_eq!(Value::Int(2).total_cmp(&Value::Int(2)), Some(Equal));
+        // int / float 精确比较（§4.5.7）：不先加宽。
+        assert_eq!(Value::Int(1).total_cmp(&Value::Float(1.0)), Some(Equal));
+        assert_eq!(Value::Int(1).total_cmp(&Value::Float(1.5)), Some(Less));
+        assert_eq!(Value::Float(1.5).total_cmp(&Value::Int(1)), Some(Greater));
+        assert_eq!(
+            Value::Int(9_007_199_254_740_993).total_cmp(&Value::Float(9_007_199_254_740_992.0)),
+            Some(Greater)
+        );
+        // +0.0 与 -0.0 全序相等（稳定排序依赖此性质）。
+        assert_eq!(Value::Float(-0.0).total_cmp(&Value::Float(0.0)), Some(Equal));
+    }
+
+    #[test]
+    fn total_cmp_infinities_and_nan_last() {
+        use std::cmp::Ordering::{Equal, Greater, Less};
+        // -Inf < 任何有限值 < +Inf < NaN（§4.5.6）。
+        assert_eq!(
+            Value::Float(f64::NEG_INFINITY).total_cmp(&Value::Int(i64::MIN)),
+            Some(Less)
+        );
+        assert_eq!(
+            Value::Int(i64::MIN).total_cmp(&Value::Float(f64::NEG_INFINITY)),
+            Some(Greater)
+        );
+        assert_eq!(
+            Value::Float(f64::INFINITY).total_cmp(&Value::Int(i64::MAX)),
+            Some(Greater)
+        );
+        assert_eq!(
+            Value::Int(i64::MAX).total_cmp(&Value::Float(f64::INFINITY)),
+            Some(Less)
+        );
+        assert_eq!(Value::Float(1.0).total_cmp(&Value::Float(f64::NAN)), Some(Less));
+        assert_eq!(Value::Float(f64::NAN).total_cmp(&Value::Float(1.0)), Some(Greater));
+        assert_eq!(Value::Float(f64::NAN).total_cmp(&Value::Float(f64::NAN)), Some(Equal));
+        assert_eq!(Value::Int(5).total_cmp(&Value::Float(f64::NAN)), Some(Less));
+        assert_eq!(Value::Float(f64::NAN).total_cmp(&Value::Int(5)), Some(Greater));
+        assert_eq!(
+            Value::Float(f64::INFINITY).total_cmp(&Value::Float(f64::INFINITY)),
+            Some(Equal)
+        );
+    }
+
+    #[test]
+    fn total_cmp_strings_by_utf8_bytes() {
+        use std::cmp::Ordering::{Equal, Greater, Less};
+        assert_eq!(Value::string("a").total_cmp(&Value::string("b")), Some(Less));
+        assert_eq!(Value::string("b").total_cmp(&Value::string("a")), Some(Greater));
+        assert_eq!(Value::string("a").total_cmp(&Value::string("a")), Some(Equal));
+        // UTF-8 字节序（§4.2）：'Z'=0x5A < 'a'=0x61。
+        assert_eq!(Value::string("Z").total_cmp(&Value::string("a")), Some(Less));
+    }
+
+    /// 类别不同 / 不可比较 → `None`（调用方据 §10.7 转 `TypeError`）。
+    #[test]
+    fn total_cmp_incomparable_categories_return_none() {
+        assert_eq!(Value::Int(1).total_cmp(&Value::string("a")), None);
+        assert_eq!(Value::string("a").total_cmp(&Value::Int(1)), None);
+        assert_eq!(Value::Bool(true).total_cmp(&Value::Bool(false)), None);
+        assert_eq!(Value::Nil.total_cmp(&Value::Nil), None);
+        assert_eq!(Value::array(vec![]).total_cmp(&Value::array(vec![])), None);
+        assert_eq!(Value::empty_object().total_cmp(&Value::empty_object()), None);
+    }
+
+    #[test]
+    fn order_kind_classification() {
+        assert_eq!(Value::Int(1).order_kind(), Some(OrderKind::Num));
+        assert_eq!(Value::Float(1.0).order_kind(), Some(OrderKind::Num));
+        assert_eq!(Value::string("a").order_kind(), Some(OrderKind::Str));
+        assert_eq!(Value::Bool(true).order_kind(), None);
+        assert_eq!(Value::Nil.order_kind(), None);
+        assert_eq!(Value::array(vec![]).order_kind(), None);
+        assert_eq!(Value::empty_object().order_kind(), None);
+        assert_eq!(Value::struct_def("P").order_kind(), None);
     }
 }

@@ -1,5 +1,25 @@
 # runtime-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 00:40] P3.6b — `src/value.rs` 值语义辅助（A6 环安全深相等 + §4.5.6 全序）唯一共享实现
+- 来源: team-lead 任务书「P3.6b — 值语义辅助落 `src/value.rs`」，依据 `docs/spec/semantics.md` §4.5.6（全序）/§4.5.7（精确比较）/§4.5.9（A5/A6）/§3.7，`interface-contract.md` §10.7。
+- 完成:
+  - `src/value.rs` 新增**唯一**公开 ABI（P3.7/P3.9b 消费）:
+    - `pub fn Value::deep_eq(&self, other: &Value) -> bool` —— A6：`Rc::ptr_eq` 身份优先 → 标量（§4.2/§4.5.6/§4.5.7）/ 容器结构比较；容器维护「已访问有序对集合」，重访 ⇒ 相等（环安全）；struct 忽略函数值字段（A5）、键集字节序、键序无关。
+    - `pub fn Value::total_cmp(&self, other: &Value) -> Option<Ordering>` —— §4.5.6 全序：`-Inf<有限<+Inf<NaN`；int/float 混合按 §4.5.7 精确；仅同类别可比，否则 `None`。
+    - `pub fn Value::order_kind(&self) -> Option<OrderKind>` + `pub enum OrderKind { Num, Str }`。
+    - `pub(crate) const TWO_POW_63: f64`（与 `builtins` 共用）。
+  - 私有内核：`eq_rec`（有序对集合 `Vec<(usize,usize)>`，`Rc::as_ptr` 作身份）、`num_eq_int_float`、`cmp_int_float`、`num_order`。
+  - `src/builtins.rs` 改造：**删除**内联比较器 `Kind` / `order_kind` / `total_cmp_ok` / `num_order` / `cmp_int_float` + 本地 `TWO_POW_63`；`sort`/`min`/`max` 改调 `Value::total_cmp`，`validate_orderable` 改调 `Value::order_kind`（消除两份口径漂移）。
+- 产出:
+  - `git diff --stat -- src/value.rs src/builtins.rs` → `2 files changed, 462 insertions(+), 100 deletions(-)`（`value.rs 445+/1-`、`builtins.rs 17+/99-`）。
+  - `cargo build --tests --message-format=json 2>$null` → `warnings=0 errors=0`。
+  - `cargo test` → **`169 passed; 0 failed`**（新增 value 单测 **15**：`deep_eq_*` 10 + `total_cmp_*` 4 + `order_kind_classification` 1）。
+  - 既有 `builtins::tests::sort_is_stable` / `sort_stable_total_order_and_type_error` / `min_max_total_order_and_empty` 仍全绿（行为无冲突）。
+- 决策: 追加 ADR [2026-09-24 00:40]（共享 ABI + `StructDef` 相等保守口径 + §4.5.5 深度上限遗留项），供 P3.7/P3.9b/architect 对齐。**未**改 `docs/spec/`、`error.rs`、`env.rs`、`Cargo.toml`。
+- 缺口（上报，不自行发明）: (1) `StructDef`（模板）的 `==` 规范未定义——暂取**同一性**；(2) §4.5.5 深结构 10000 层上限（`RecursionError`）在 `deep_eq`/`Display` 中**未**实现（递归实现，无显式迭代栈/`Result`），建议随 P3.7 收口；(3) `< <= > >=` 的 IEEE `NaN→false` 语义**不**由 `total_cmp` 承担，P3.7 须自行处理。
+- 下一步: P3.7 求值器消费 `deep_eq`/`total_cmp`；P3.9b HOF 复用 `total_cmp`。
+- 阻塞: 无。
+
 ## [2026-09-24] P3.9a 契约缺口闭合 — `src/builtins.rs`（清单 3/4/5 落地）
 - 来源: team-lead 任务书「改造 `src/builtins.rs`（P3.9a 缺口的代码落地，清单 3/4/5）」，依据 ADR [2026-09-24 00:20] language-architect「P3.9a 契约缺口闭合（6 项）」。
 - 完成（逐条）:

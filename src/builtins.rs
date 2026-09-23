@@ -44,7 +44,7 @@ use crate::error::{
     overflow, type_error, value as value_error, LzError, R, TypeMsg, ValueMsg, OverflowMsg,
 };
 use crate::span::Span;
-use crate::value::{StructObj, Value};
+use crate::value::{OrderKind, StructObj, Value, TWO_POW_63};
 use std::cell::{Cell, RefCell};
 use std::cmp::Ordering;
 use std::io::{BufRead, Write};
@@ -287,11 +287,8 @@ fn normalize_index(i: i64, len: usize, span: Span) -> R<usize> {
 }
 
 // ===========================================================================
-// 数值辅助（§4.5.6 全序 / §4.5.7 加宽与精确比较）
+// 数值辅助（§4.5.7 加宽 / 转换；§4.5.6 全序由 `value::Value::total_cmp` 唯一承载）
 // ===========================================================================
-
-/// `2^63`：`i64` 上下界的 `f64` 表示（用于 `int(float)` / `floor` / `ceil` / `round` 的越界判定）。
-const TWO_POW_63: f64 = 9_223_372_036_854_775_808.0;
 
 /// **唯一** `int → float` 加宽（委托 [`Value::as_f64`]，§4.5.7）——禁止在别处散落 `as f64` 转换 `Value`。
 fn int_to_float(i: i64) -> f64 {
@@ -341,110 +338,26 @@ fn banker_round(x: f64) -> f64 {
     }
 }
 
-/// `int i` 与 `float f`（**非 NaN**）的**数学精确**比较（§4.5.7 步骤 1–5）。
-fn cmp_int_float(i: i64, f: f64) -> Ordering {
-    if f == f64::INFINITY {
-        return Ordering::Less; // 任何 i64 < +Inf
-    }
-    if f == f64::NEG_INFINITY {
-        return Ordering::Greater; // 任何 i64 > -Inf
-    }
-    if f >= TWO_POW_63 {
-        return Ordering::Less; // §4.5.7 步骤 4
-    }
-    if f < -TWO_POW_63 {
-        return Ordering::Greater;
-    }
-    let t = f.trunc();
-    let ti = t as i64; // |t| < 2^63，安全
-    match i.cmp(&ti) {
-        Ordering::Equal => {
-            let r = f - t; // 精确
-            if r > 0.0 {
-                Ordering::Less
-            } else if r < 0.0 {
-                Ordering::Greater
-            } else {
-                Ordering::Equal
-            }
-        }
-        other => other,
-    }
-}
-
-/// 数值全序（§4.5.6）：`-Inf < 有限 < +Inf < NaN`（NaN 排最后）。
-fn num_order(a: &Value, b: &Value) -> Ordering {
-    match (a, b) {
-        (Value::Int(x), Value::Int(y)) => x.cmp(y),
-        (Value::Int(x), Value::Float(y)) => {
-            if y.is_nan() {
-                Ordering::Less
-            } else {
-                cmp_int_float(*x, *y)
-            }
-        }
-        (Value::Float(x), Value::Int(y)) => {
-            if x.is_nan() {
-                Ordering::Greater
-            } else {
-                cmp_int_float(*y, *x).reverse()
-            }
-        }
-        (Value::Float(x), Value::Float(y)) => {
-            if x.is_nan() && y.is_nan() {
-                Ordering::Equal
-            } else if x.is_nan() {
-                Ordering::Greater
-            } else if y.is_nan() {
-                Ordering::Less
-            } else {
-                x.partial_cmp(y).expect("非 NaN 的 f64 必然可全序")
-            }
-        }
-        _ => Ordering::Equal, // 已由 validate_orderable 排除
-    }
-}
-
-/// 可排序元素类别：数值（`int` / `float` 混用）或 `string`。
-#[derive(Clone, Copy, PartialEq, Eq)]
-enum Kind {
-    Num,
-    Str,
-}
-
-fn order_kind(v: &Value) -> Option<Kind> {
-    match v {
-        Value::Int(_) | Value::Float(_) => Some(Kind::Num),
-        Value::Str(_) => Some(Kind::Str),
-        _ => None,
-    }
-}
-
 /// 校验 `items` 可全序比较（§4.5.6）：须全部为数值或全部为 `string`，否则 `TypeError`。
+///
+/// 类别判定走共享的 [`Value::order_kind`]，比较走共享的 [`Value::total_cmp`]（消除内联比较器）。
 fn validate_orderable(items: &[Value], name: &str, span: Span) -> R<()> {
     let Some(first) = items.first() else {
         return Ok(());
     };
-    let kind = order_kind(first).ok_or_else(|| bad_operands(name, first, "number / string", span))?;
+    let kind = first
+        .order_kind()
+        .ok_or_else(|| bad_operands(name, first, "number / string", span))?;
     for v in items {
-        if order_kind(v) != Some(kind) {
+        if v.order_kind() != Some(kind) {
             let expected = match kind {
-                Kind::Num => "number",
-                Kind::Str => "string",
+                OrderKind::Num => "number",
+                OrderKind::Str => "string",
             };
             return Err(bad_operands(name, v, expected, span));
         }
     }
     Ok(())
-}
-
-/// 已通过 [`validate_orderable`] 的全序比较（不会失败）：数值走 §4.5.6/§4.5.7，字符串走 UTF-8 字节序（§4.2）。
-fn total_cmp_ok(a: &Value, b: &Value) -> Ordering {
-    match (a, b) {
-        (Value::Int(x), Value::Int(y)) => x.cmp(y),
-        (Value::Str(x), Value::Str(y)) => x.as_bytes().cmp(y.as_bytes()),
-        _ => num_order(a, b),
-    }
 }
 
 // ===========================================================================
@@ -544,7 +457,9 @@ fn extremum(args: &[Value], span: Span, want_max: bool, name: &str) -> R<Value> 
     validate_orderable(&items, name, span)?;
     let mut best = first;
     for v in &items[1..] {
-        let ord = total_cmp_ok(v, best);
+        let ord = v
+            .total_cmp(best)
+            .expect("已通过 validate_orderable 的全序比较必为 Some");
         let better = if want_max {
             ord == Ordering::Greater
         } else {
@@ -605,7 +520,10 @@ fn b_sum(args: &[Value], span: Span) -> R<Value> {
 fn b_sort(args: &[Value], span: Span) -> R<Value> {
     let mut items = array_snapshot("sort", args, 0, span)?;
     validate_orderable(&items, "sort", span)?;
-    items.sort_by(total_cmp_ok); // `slice::sort_by` 稳定
+    items.sort_by(|a, b| {
+        a.total_cmp(b)
+            .expect("已通过 validate_orderable 的全序比较必为 Some")
+    }); // `slice::sort_by` 稳定
     Ok(Value::array(items))
 }
 
