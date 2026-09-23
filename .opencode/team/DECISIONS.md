@@ -463,3 +463,17 @@
   - **language-architect**：请确认「HOF 回调类型**先校验**（空容器也对非法 `f` 报 `TypeError`）」与「`filter` 非 bool 用 `ConditionNotBool`」两处口径；如另有指定请知会。
 
 - **证据**：`Get-ChildItem src\builtins.rs` → **90390 B**（合法 UTF-8）；`cargo build` → `Finished`（**0 warning**）；`cargo build --tests --message-format=json 2>$null` → `warnings=0 errors=0`；`cargo test` → **`256 passed; 0 failed; 0 ignored`**（基线 246 + 新增 10：`builtins::tests::hof_*` 8 + `evaluator::tests::{e2e_hof_*,hof_drives_user_closures_through_evaluator}` 3，另**替换** 1 条过时的「高阶留待」断言）。未改 `docs/spec/`、`error.rs`、`span.rs`、`loader.rs`、`lexer.rs`、`ast.rs`、`parser.rs`、`Cargo.toml`。
+
+---
+
+### [2026-09-23 23:40] [tooling-dev] P3.10 CLI 输出契约落地：错误流 = stderr、Traceback 按阶段判定、CosmosAnswerError 单行
+- **背景**：P3.10 实现最小 CLI，须把 `semantics.md` §8.2/§8.3 的显示契约映射为**稳定字节输出**；spec 未明示三处细节，须定案冻结 CLI 行为（test-engineer / verifier / docs-writer 均据此写用例与文档）。
+- **决定**：
+  1. **错误诊断流 = stderr**；`--help`/`--version` 与程序自身输出（`print`/`eprint`/`;;`）= stdout。理由：spec 未规定错误流，采用 Python 约定；程序输出由 builtins 直接写 stdout/stderr，CLI 不接管、不缓冲。
+  2. **`Traceback` 头按「阶段」而非「类」判定**：`load_file`/`lex`/`parse` 阶段错误一律**无**头（含加载期 `IOError`、`NotUtf8` 这类「运行期类」）；`eval_module_traced` 阶段错误一律**有**头 + 逐帧（最外层→最内层）。理由：§8.2 的二分本就是阶段二分，且可避免「零帧 Traceback」的不合理输出。
+  3. **`CosmosAnswerError` 只输出一行 `File "<path>", line 1`（无缩进、无源码行、无插入符）**，严格照 §8.3 示例 3。其余帧：`File` 行前缀 **2 空格**；源码行前缀 **4 空格**；插入符 = 4 空格 + (col-1) 空格 + `^`（§8.2 通用帧格式）。
+  4. **位置表达**：行号显式在 `File "...", line N`；列号由**插入符位置**表达（**不**在 `File` 行追加 `col M`，以保 §8.3 逐字符一致）。`--json` 的 `line`/`col` 字段留 P4。
+  5. **退出码**（重申 D-008）：`0` 成功；`1` 测试失败（`lfz test` 专用，P4）；`2` CLI 参数错误 / LFZ 语法或运行时错误 / 运行环境错误。
+- **影响**：**test-engineer** 黑盒用例按 stderr 抓错误、按阶段判有无 `Traceback` 头、按上述逐字符格式断言；**verifier** 验收命令 3–5 以此为输出基线；**docs-writer** 运行/错误章节据此撰写；**ai-dx-engineer / app-dev** 示例输出对齐；**language-architect** 需知悉下方 spec 排版瑕疵。
+- **发现的 spec 排版瑕疵（未改 spec，仅记录待 language-architect 裁定）**：`semantics.md` §8.3 示例 2 的**内层帧**（`n / 0`）源码行与插入符均比 §8.2 通用帧格式**少 4 空格**缩进（外层帧 `let r = half(10)` 与示例 1 均符合通用格式）。本实现按 §8.2 通用规则统一处理（内层帧源码行前缀 4 空格、插入符 = 4+(col-1)），故内层帧输出会比示例 2 多 4 空格前缀；若要与示例 2 逐字符一致，须先改 §8.3。
+- **证据**：产出与命令见 `agents/tooling-dev/JOURNAL.md` 2026-09-23 条目；`cargo build` → `Finished`（**0 warning**）；`cargo test` → **292 passed / 0 failed**（lib 277 + bin 8 + `tests/cli.rs` 7）。未改任何他人模块与 `Cargo.toml`。

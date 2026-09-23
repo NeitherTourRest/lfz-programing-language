@@ -1,5 +1,21 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 23:45] P3.10（最小 CLI + 端到端）：两个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；已核验：`cargo run -- run examples/hello.lfz` → `Hello, LFZ!` + 退出码 0、缺 `#42` → `CosmosAnswerError: 你忘记了宇宙的答案` + 退出码 2、`cargo build` 0 warning、测试 277(库)+8+7(集成) 全绿；工作区 6 组（7 文件）改动：`M src/main.rs`、`?? src/cli.rs`、`?? examples/`、`?? tests/`、`M .opencode/team/DECISIONS.md`、`M agents/tooling-dev/{STATUS,JOURNAL}.md`；做两个原子提交并 push；禁区：禁 force-push、不打 tag（`v0.2.0` 待 P3.11）、不提交 `src/parser.rs`/target/密钥/临时文件、不改清单外文件；出现清单外条目即停止）
+- 完成:
+  - 入清单门禁：`git status --short --untracked-files=all` 复核恰为任务书预期 **6 组（7 个文件）**（`M src/main.rs`、`?? src/cli.rs`、`?? examples/hello.lfz`、`?? tests/cli.rs`、`M .opencode/team/DECISIONS.md`、`M .opencode/team/agents/tooling-dev/{STATUS,JOURNAL}.md`），**无清单外条目**；门禁未触发。
+  - 新增目录内容复核（任务书要求 1）：`Get-ChildItem -Recurse examples, tests` → `examples/hello.lfz`（唯一）、`tests/cli.rs`（唯一）；`Get-ChildItem -Recurse tests -Filter *.lfz` → **空**。确认 `tests/` 内为 **Rust 集成测试（`*.rs`）而非 `*.lfz` 黑盒测试**（后者属 test-engineer，P5），符合预期，未发现意外文件。
+  - 基线复核：`git branch --show-current` = `main`；push 前本地基线 HEAD = 远程 `refs/heads/main` = `f26ab80 docs(team): record HOF call-injection ADR`。
+  - **提交 1（CLI 代码 + 示例 + 集成测试 + tooling-dev 文档）**：`git add src/main.rs src/cli.rs examples tests .opencode/team/agents/tooling-dev/STATUS.md .opencode/team/agents/tooling-dev/JOURNAL.md`（`git diff --cached --name-only` 精确 6 文件：`src/main.rs`、`src/cli.rs`、`examples/hello.lfz`、`tests/cli.rs`、tooling-dev `{STATUS,JOURNAL}.md`）→ `git -c core.autocrlf=false commit -F lfz_p310_msg1.txt`（标题 `feat(p3): minimal CLI (lfz run <file>) and hello example`，正文 `load_file -> lex -> parse -> eval; Python-style error rendering with line/col + caret, Traceback only for runtime classes; exit codes 0/1/2; examples/hello.lfz; 15 integration tests.`）→ **短哈希 `c7627a6`**（`git show --stat` = 6 files changed, **639 insertions(+), 9 deletions(-)**）；`git log -1 --format=%B` 复核标题/正文完整无损。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 2。
+  - **提交 2（ADR + 收工文档）**：`git add .opencode/team/DECISIONS.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md` → 提交 `docs(team): record P3.10 CLI contract ADR`（`DECISIONS.md` 本轮含 tooling-dev 的 P3.10 CLI 输出契约 ADR，由其撰写、我仅代为入库；本提交即本条日志所在提交，短哈希见汇报）。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 两个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -4`（顶部两条为本轮提交，位于 `f26ab80` 之上）；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag，`v0.2.0` 待 P3.11）。
+- 决策: 无新 ADR（本轮 ADR 由 tooling-dev 撰写，仅代为入库）。owner 偏差仍为遗留待确认项。
+- 下一步: P3.11 收口时打附注标签 `v0.2.0`；后续子阶段按模块原子提交。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-23 23:26] P3.9b-integr（parser 运算符/赋值 + 高阶内置 + HOF ADR）：三个原子提交并推送
 - 来源: team-lead 任务书（轻量启动；已核验：`cargo build` 0 warning、`cargo test` 277 passed / 0 failed（parser 57 测、builtins 43 测、evaluator 44 测）；工作区恰 **6 个**已修改文件：`src/parser.rs`（外部执行者交付）、`src/builtins.rs`、`src/evaluator.rs`、`.opencode/team/DECISIONS.md`、`agents/runtime-dev/{STATUS,JOURNAL}.md`；做**三个原子提交**并 push；禁区：禁 force-push、不打 tag（`v0.2.0` 待 P3.11）、不提交 target/密钥/临时文件、不改清单外文件；出现清单外条目即停止）
 - 完成:
