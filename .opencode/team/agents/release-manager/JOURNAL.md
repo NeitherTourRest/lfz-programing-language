@@ -1,5 +1,21 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 22:25] P3.3b（lexer STR/INTERP）+ P3.9b（内置缺口裁定）+ 团队状态：三个原子提交并推送
+- 来源: team-lead 任务书（已核验：`cargo build` 0 warning、`cargo test` 135 passed / 0 failed（lexer 48 测、error 15 测、builtins 36 测）；工作区恰 9 个已修改文件；本轮做三个原子提交并 push）
+- 完成:
+  - 入清单门禁：`git status --short --untracked-files=all` 复核恰为任务书预期 **9 项**（`M src/lexer.rs`、`M src/error.rs`、`M src/builtins.rs`、`M .opencode/team/TEAM_BOARD.md`、`M .opencode/team/PROJECT_STATE.md`、`M agents/core-dev/{STATUS,JOURNAL}.md`、`M agents/runtime-dev/{STATUS,JOURNAL}.md`），**无清单外条目、无未跟踪文件**；门禁未触发。
+  - 基线复核：`git branch --show-current` = `main`；HEAD = `git ls-remote origin refs/heads/main` = `5cdcc1b`（push 前本地=远程）。
+  - **提交 1（P3.3b lexer 代码 + core-dev 文档）**：`git add src/lexer.rs src/error.rs .opencode/team/agents/core-dev/STATUS.md .opencode/team/agents/core-dev/JOURNAL.md`（`git diff --cached --name-only` 精确 4 文件）→ `git -c core.autocrlf=false commit -F lfz_msg1.txt`（标题 `feat(p3): lexer STR/INTERP modes and unterminated block comment error`，正文含 `§2.8`、`/*`）→ **短哈希 `4f2a22e`**（4 files changed, 609 insertions, 71 deletions）；`git log -1 --format=%B` 复核标题/正文完整无损。
+  - **提交 2（P3.9b 内置缺口裁定 + runtime-dev 文档）**：`git add src/builtins.rs .opencode/team/agents/runtime-dev/STATUS.md .opencode/team/agents/runtime-dev/JOURNAL.md`（精确 3 文件）→ `git -c core.autocrlf=false commit -F lfz_msg2.txt`（标题 `fix(p3): apply builtin gap rulings`，正文含 `ValueMsg::EmptyExtremum/BadRange`、`FieldError`）→ **短哈希 `eda649c`**（3 files changed, 100 insertions, 44 deletions）；`git log -1 --format=%B` 复核正文完整无损。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 3。
+  - **提交 3（团队状态）**：`git add .opencode/team/TEAM_BOARD.md .opencode/team/PROJECT_STATE.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md` → 提交 `docs(team): P3 sub-phase ledger and project state`（`TEAM_BOARD.md`/`PROJECT_STATE.md` 由 team-lead 本人撰写，我仅代为入库；本提交即本条日志所在提交，短哈希见汇报）。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 三个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -5`（顶部三条为本轮提交，位于 `5cdcc1b` 之上）；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`，本轮未打 tag，`v0.2.0` 待 P3.11）。
+- 决策: 无新 ADR（`TEAM_BOARD.md`/`PROJECT_STATE.md` 由 team-lead 撰写，我仅代为入库；常规提交非新跨角色决策）。owner 偏差仍为遗留待确认项。
+- 下一步: P3.11 收口核对通过条件后打附注标签 `v0.2.0`；P10 交付清单核对。
+- 阻塞: 无。
 ## [2026-09-23 23:40] P3.9a 缺口消息（EmptyExtremum/BadRange）+ 规范补钉（未终止块注释钉死）：两个原子提交并推送
 - 来源: team-lead 任务书（P3.9a 缺口消息由 core-dev 完成、规范补钉由 language-architect 完成，均经 team-lead 核验：`cargo build` 0 warning、`cargo test` 117 passed / 0 failed（缺口消息新增 4 测）；本轮把两组改动做两个原子提交并 push）
 - 完成:
