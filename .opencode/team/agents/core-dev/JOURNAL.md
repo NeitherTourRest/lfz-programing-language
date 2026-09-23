@@ -1,5 +1,20 @@
 # core-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-23 23:58] P3.3a lexer 第一批（CODE 模式核心记号）
+- 来源: team-lead 任务书「P3.3a — `src/lexer.rs` 第一批：CODE 模式核心记号（不含字符串/插值）」
+- 完成: **先落盘实现、再补测试**（遵守上轮教训：禁止长时间推演）。
+  - 先读 `syntax.md` §2.3–§2.8 → **立刻写 `src/lexer.rs`** → 编译 → 补单测 → 汇报。
+  - 一次定义完整 `TokenKind`（含 P3.3b 的 `StrBegin/StrEnd/Text/InterpBegin/InterpEnd/FormatSpec`）+ `Token{kind,span}` + `pub fn lex(text, line_base) -> R<Vec<Token>>`。
+  - 实现：空白跳过、`//` 行注释、`/* */` 块注释（等价空格、不产 Newline）、`\n`→`Newline`、标识符/16 关键字/14 保留字/`_`→`Placeholder`、数值（十/`0x`/`0b`/`0o`、浮点 `.digit` 与指数、原文保留、不完整指数回退）、运算符分隔符（§2.3 最大匹配）、`#`→`HashPosition`、其余→`IllegalChar`。
+  - 位置：`line=本地行号+line_base`，`col` 按 Unicode 标量计数。
+- 产出:
+  - `src/lexer.rs`（**27396B / 824 行**，含测试；原桩 143B）
+  - 证据：`Get-ChildItem src\lexer.rs`→Length=27396；`cargo build`（强制重编）→ `Finished`，**WARN=0**，exit 0；`cargo test` → `test result: ok. 113 passed; 0 failed; 0 ignored`，exit 0（新增 31 项 lexer 测试）。
+- 决策:
+  - **回退规则（消歧）**：`1e`→`Int("1")`+`Ident("e")`；`1.`→`Int("1")`+`Dot`（A23）；`0x`（无位）→`Int("0")`+`Ident("x")`。
+  - **契约缺口**：未闭合 `/*`（至 EOF）在 `SyntaxMsg` 无对应变体 → 本批「消费至 EOF、不报错、不自造消息」，请 architect 裁定。
+- 下一步: P3.3b 字符串/插值（模式栈 CODE/STR/INTERP、转义、未闭合/插值跨行错误）。
+- 阻塞: 无
 ## [2026-09-23 22:02] P3.2 加载器（loader.rs）
 - 来源: team-lead 任务书「P3.2 — `src/loader.rs`」（契约 §10.1 / syntax.md §2.2）
 - 完成: 实现 `src/loader.rs`（纯加载，不碰 lexer/parser/evaluator）。
