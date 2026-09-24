@@ -1,0 +1,3 @@
+#42
+// leading comment line
+print(42)

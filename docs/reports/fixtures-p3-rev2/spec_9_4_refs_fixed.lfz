@@ -1,0 +1,30 @@
+#42
+// refs.lfz — v0.5 语义演示（verifier rev.2 修正副本）
+// 本副本仅做两处“规范自洽化”修正，其余逐字同 syntax.md §9.4：
+//   (1) 把样例里与 A11「单个 ; 永远 SyntaxError」自相矛盾的 `n += 1; n`
+//       改为两条语句（换行分隔）；
+//   (2) 依 §9.4 v1 补钉把 `r.self` 改为非关键字字段 `r.me`（规范已改，夹具原样滞后）。
+fn makeCounter() {
+    var n = 0
+    fn inc() {
+        n += 1
+        n
+    }
+    inc
+}
+let c = makeCounter()
+print("${c()} ${c()} ${c()}")       // 1 2 3
+
+let a = [1, 2, 3]
+let b = a                            // 引用共享（A1）
+b[0] = 99
+print("${a[0]} ${b[0]}")            // 99 99（同一个 array）
+
+let xs = [3, 1, 2]
+let ys = sort(xs)                    // 返回新值，不改 xs（A1）
+print("${xs}  ${ys}")               // [3, 1, 2]  [1, 2, 3]
+
+let r = {}
+r.me = r                             // 自引用环（A6）
+print(r)                             // {me: <cycle>}
+print(r == r)                        // true（身份优先）

@@ -1,0 +1,7 @@
+#42
+
+fn f() {
+  // block-leading comment
+  print(7)
+}
+f()

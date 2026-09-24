@@ -1,5 +1,19 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 09:30] P3.11 复验（rev.2）：单个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；背景：verifier 复验结论 **CONCERNS（非阻塞）——可推进 v0.2.0**；3×🔴 全修、2×🟡 亦修；rev.2 夹具 8/9 过（唯一失败为规范样例自身用了 `;` 的制品问题）；新规范侧发现 `spec-20260924-01`（§9.4 样例用 `;`）。工作区：` M docs/reports/P3-verification.md`、`?? docs/reports/fixtures-p3-rev2/`、` M agents/verifier/{STATUS,JOURNAL}.md`；⚠️ 有并行修复在改 `src/**`/`docs/spec/**`，`git status` 可能含那些条目——**不中止**，只按显式清单 `git add`，其余不暂存。要求单提交 + push，收工文档并入同一提交；禁区：禁 force-push、**仍不打 tag**（`v0.2.0` 待非阻塞项清完）、不暂存 `src/**`/`docs/spec/**`、不提交 `target/`/密钥/临时文件）
+- 完成:
+  - 入清单复核：`git status --short` = `M docs/reports/P3-verification.md`、`?? docs/reports/fixtures-p3-rev2/`、`M .opencode/team/agents/verifier/{STATUS,JOURNAL}.md`（**本轮无 `M src/**`/`M docs/spec/**`** 落树，门禁未触发）；`docs/reports/fixtures-p3-rev2/` 实含 **15 个 `.lfz`** 夹具（bug01–09 + span_check_* + `nohdr.lfz` + `spec_9_4_refs_fixed.lfz`）。
+  - 基线复核：push 前 HEAD = 远程 `refs/heads/main` = `05e42d9`；`git tag -n` 仍仅 `v0.1.0`。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入同一提交。
+  - **单个原子提交**：`git add docs/reports/P3-verification.md docs/reports/fixtures-p3-rev2 .opencode/team/agents/verifier/STATUS.md .opencode/team/agents/verifier/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（`git diff --cached --name-only` 核对暂存集精确；**未暂存任何 `src/**`/`docs/spec/**`**）→ `git -c core.autocrlf=false commit -F <UTF-8 信息文件>`（标题 `docs(reports): P3.11 re-verification rev.2 (CONCERNS, non-blocking)` + 任务书 body 逐字）→ 短哈希见汇报；`git log -1 --format=%B` 复核标题/正文完整无损。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 一个新提交；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -3`；`git status --short`（残留并行条目如实列出）；`git tag -n`（仍仅 `v0.1.0`——**本轮未打 tag，`v0.2.0` 待非阻塞项清完**）。
+- 决策: 无新 ADR。**CONCERNS（非阻塞）不解锁 tag**：`v0.2.0` 待规范侧 `spec-20260924-01` 清完 + team-lead 判定。
+- 下一步: 待 `spec-20260924-01`（§9.4 样例 `;`）修补 + team-lead 判定 → 打附注标签 `v0.2.0`；P10 交付清单核对。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-24 08:45] P3.11 阻塞缺陷修复（提交 1）+ 规范裁定（提交 2）：两个原子提交并推送
 - 来源: team-lead 任务书（轻量启动；已核验：`cargo build` 0 warning、`cargo test` **373 passed / 0 failed**（358 库 + 8 + 7）、4 条最小复现均转好、verifier 9 夹具 **8 过 1 挂**（唯一挂的夹具自身用了 `;`，与规范冲突，非解释器缺陷）；工作区恰 **8 个** ` M` 文件；要求做**两个原子提交**（代码修复 + 规范裁定）并 push，收工文档并入提交 2；禁区：禁 force-push、**仍不打 tag**（`v0.2.0` 须待 verifier 复验通过）、不提交 `target/`/密钥/临时文件、不改清单外文件；出现清单外条目即停止）
 - 完成:

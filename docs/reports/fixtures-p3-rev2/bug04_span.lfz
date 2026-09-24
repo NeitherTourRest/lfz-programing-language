@@ -1,0 +1,3 @@
+#42
+let s = { a: 1 }
+s.missing

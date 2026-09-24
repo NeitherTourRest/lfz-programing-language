@@ -546,3 +546,262 @@ BOM：`<BOM>#42\n…` → 运行；`<BOM>\n#42…` → `CosmosAnswerError` ✅�
 > **【验收结论】FAIL（阻塞项：bug-20260924-01 多行块解析、bug-20260924-02 插值 format_spec、bug-20260924-03 `if` 表达式；均须 core-dev 修复并补回归用例，修复后由 verifier 复验；**不得**打 `v0.2.0` 标签。）**
 
 *（报告完。夹具与原始输出见 `docs/reports/fixtures-p3/`。）*
+
+---
+---
+
+# 复验（rev.2）
+
+> 复验人: verifier（模拟助教视角，独立验收）｜ 复验日期: **2026-09-24**
+> 复验提交: **`1e8fd5f`**（`fix(p3): blocking defects + runtime error spans`）＋ **`05e42d9`**（`docs(spec): rule on 3 P3.11 gaps`，规范裁定，无代码）
+> 复验时仓库 **HEAD = `05e42d9`**（工作树 clean；`05e42d9` 仅改 `docs/spec/**` 与 `.opencode/team/**`，生产代码状态 = `1e8fd5f`）
+> 依据: 上一轮 §6【验收结论】FAIL 的 3×🔴 + 4×🟡 + 2×🟢；本轮仅复验**已声明修复项**并区分「解释器缺陷 / 规范缺陷 / 夹具缺陷」。
+> 纪律声明: **只验证、不修复**。本轮**未改** `src/**`、**未改** `docs/spec/**`、未改他人交付物；新增仅 `docs/reports/P3-verification.md` 本节与夹具目录 `docs/reports/fixtures-p3-rev2/`。
+> 环境: Windows（win32）；`$env:Path += ";$env:USERPROFILE\.cargo\bin"`；所有命令行均为 `cargo run --quiet -- run <file>`（真实 CLI 全链路，非单测）。
+
+## 7.1 复验基线与两条总命令
+
+**`cargo build`（clean 全量重编）** —— 通过：
+```
+PS> cargo clean
+     Removed 1157 files, 279.1MiB total
+PS> cargo build
+   Compiling lfz v0.1.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.94s
+=== BUILD EXIT: 0 ===
+warning:/error: 命中数 = 0
+```
+**结论：通过**（0 warning / 0 error）。
+
+**`cargo test`** —— 通过：
+```
+running 358 tests
+test result: ok. 358 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+running 8 tests
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+running 7 tests
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+=== TEST EXIT: 0 ===
+```
+**结论：通过**。合计 **373 passed / 0 failed**（358 lib + 8 bin + 7 `tests/cli.rs`）= rev.1 的 369 **+4**，与「新增 4 个经 lexer 的真实源码回归用例」一致（见 §7.6）。
+
+## 7.2 逐项复验（原 🔴 三项 + 原 🟡 两项）
+
+### 7.2.1 bug-20260924-01（🔴 多行块）—— **已修复**
+修复声明：`parse_stmt_seq` 现于序列开头 `skip_newlines()`。已核 `git show 1e8fd5f -- src/parser.rs`：`parse_stmt_seq` 循环体首行新增 `self.skip_newlines();`，并附注释（`bug-01 修复`）。
+
+**最小复现**（`docs/reports/fixtures-p3-rev2/bug01_multiline.lfz`）：
+```
+#42
+fn f() {
+  print(1)
+}
+f()
+```
+```
+PS> cargo run --quiet -- run docs\reports\fixtures-p3-rev2\bug01_multiline.lfz
+1
+=== EXIT: 0 ===
+```
+**期望 `1` / 退出码 0 → 实测一致**。
+
+**补强抽查**（独立，非仅最小复现）：
+| 用例 | 文件 | 期望 | 实测 |
+|---|---|---|---|
+| 程序体首行注释 | `bug01_leading_comment.lfz` | `42` / 0 | `42` / 0 ✅ |
+| 程序体首行空行 + 块首注释 | `bug01_leading_blank_block.lfz` | `7` / 0 | `7` / 0 ✅ |
+
+**结论：已修复**（`{` 后换行、块首/程序首空行或注释行均可解析）。
+
+### 7.2.2 bug-20260924-02（🔴 插值 `format_spec`）—— **已修复**
+修复声明：`parse_string` 先消费 `Colon` 再取 `FormatSpec`。已核 diff：新增 `if *self.peek() == TokenKind::Colon { self.bump(); ... }` 分支。
+
+**最小复现**（`bug02_format_spec.lfz`：`print("${1:>3}")`）：
+```
+PS> cargo run --quiet -- run docs\reports\fixtures-p3-rev2\bug02_format_spec.lfz
+  1
+=== EXIT: 0 ===
+```
+**期望 `  1`（宽 3 右对齐）/ 退出码 0 → 实测一致**。
+
+**更广格式说明符**：夹具 `06_interp.lfz` 现整体通过（rev.1 为失败），实测输出：
+```
+hello LFZ
+n=00042
+hex=2a HEX=2A oct=52 bin=101010
+pi=3.142
+right=    42 left=42     center=  42  
+sign=+42
+s=LFZ
+esc ${n}
+```
+（`:05d`、`:x`/`:X`/`:o`/`:b`、`:.3f`、`:>6`/`:<6`/`:^6`、`:+d`、`:s`、`\${n}` 转义均正确。）
+**结论：已修复**。
+
+### 7.2.3 bug-20260924-03（🔴 `if` 作表达式）—— **已修复**
+修复声明：`parse_unary` 新增 `TokenKind::KwIf => self.parse_if_expr(span)`。已核 diff：`unary` 层确新增该分支。
+
+**最小复现**（`bug03_if_expr.lfz`）：
+```
+#42
+let x = if true { 1 } else { 2 }
+print(x)
+```
+```
+PS> cargo run --quiet -- run docs\reports\fixtures-p3-rev2\bug03_if_expr.lfz
+1
+=== EXIT: 0 ===
+```
+**期望 `1` / 退出码 0 → 实测一致**。修复侧另有 `print(if false { 1 } else { 2 })`（`if` 作实参）经 lexer 回归用例（见 §7.6）。
+**结论：已修复**。
+
+### 7.2.4 bug-20260924-04（🟡 traceback 位置过期）—— **已修复**
+修复声明：新增 `note_error_span`，在 `eval_expr`/`exec_stmt` 出错时把当前帧 `span` 覆盖为错误 `span`。已核 diff：`eval_expr`/`exec_stmt` 改为委托 `*_inner` 并在 `Err` 分支 `note_error_span`。
+
+**最小复现**（`bug04_span.lfz`：第 2 行 `let s = { a: 1 }`、第 3 行 `s.missing`）：
+```
+PS> cargo run --quiet -- run docs\reports\fixtures-p3-rev2\bug04_span.lfz
+Traceback (most recent call last):
+  File "docs\reports\fixtures-p3-rev2\bug04_span.lfz", line 3, in <module>
+    s.missing
+    ^
+FieldError: 结构体没有字段 'missing'
+=== EXIT: 2 ===
+```
+**期望 位置 = line 3（`s.missing`）→ 实测 line 3，插入符指向 `s`（`s.missing` 起始）**。消息字节级校验：`FieldError: ` 后 `E7 BB 93 E6 9E 84 E4 BD 93 E6 B2 A1 E6 9C 89 E5 AD 97 E6 AE B5` = 结构体没有字段 ✅。
+
+**回归抽查**（确认覆盖策略未把别处位置改坏）：
+| 用例 | 期望位置 | 实测 |
+|---|---|---|
+| `div(1, 0)`（line 2） | line 2 | line 2 ✅ |
+| `print(s.missing)`（line 3，**作实参**） | line 3 | line 3 ✅ |
+| `print(undefinedName)`（line 2） | line 2 | line 2 ✅ |
+
+**结论：已修复**（且未观察到位置回归）。
+
+### 7.2.5 bug-20260924-05（🟡 管道右侧非函数消息不符）—— **已修复**
+修复声明：`call_func` 依据 `is_pipe_desugared` 改报 `PipeRhsNotFunction`。已核 diff：新增 `is_pipe_desugared` / `non_function_call_msg`，`call_func` 增 `piped` 形参。
+
+**最小复现**（`bug05_pipe_rhs.lfz`：`print(3 |> 5)`）：
+```
+PS> cargo run --quiet -- run docs\reports\fixtures-p3-rev2\bug05_pipe_rhs.lfz
+Traceback (most recent call last):
+  File "docs\reports\fixtures-p3-rev2\bug05_pipe_rhs.lfz", line 2, in <module>
+    print(3 |> 5)
+          ^
+TypeError: 管道右侧必须是函数，得到 int
+=== EXIT: 2 ===
+```
+**期望 `TypeError: 管道右侧必须是函数，得到 int` → 实测一致**。消息字节级校验：`TypeError: ` 后 `E7 AE A1 E9 81 93 E5 8F B3 E4 BE A7 E5 BF 85 E9 A1 BB E6 98 AF E5 87 BD E6 95 B0 EF BC 8C E5 BE 97 E5 88 B0` = `管道右侧必须是函数，得到`，尾 ` int` ✅。（插入符指向管道脱糖 `Call.span` = 左操作数 `3`，属该项设计，不在原缺陷范围。）
+**结论：已修复**。
+
+## 7.3 残留项独立确认（未修复，逐条复核"声称"）
+
+> 对「bug-07 未修 / bug-06·08·09 规范裁定未落地代码」——**不采信声明**，逐条实测。
+
+| 项 | 声称 | 实测命令与结果 | 与声称一致? |
+|---|---|---|---|
+| bug-06 `let` 重绑定 | 规范已裁定（`05e42d9`），**代码未落地** | `bug06_let_rebind.lfz`：`let a = 1` / `a = 2` / `print(a)` → **EXIT=0，输出 `2`**（无 `TypeError`）| ✅ 未落地 |
+| bug-07 语句首 `{` | **有意推迟**，仍按裸块内联 | `bug07_stmt_brace.lfz`：`{ "k": 1 }` → **EXIT=2**，`SyntaxError: 语句之间必须有换行`（插入符指向 `"k"`）| ✅ 未修 |
+| bug-08 `.self` | 规范改样例（`r.self`→`r.me`），**实现本就正确** | `05e42d9` diff 确认 §9.4 样例与预期输出已改 `me`；`interface-contract.md` §10.6 记 `.self → SyntaxError` 为**正确行为**；实测 `spec_9_4_refs_fixed.lfz` 用 `r.me` → `{me: <cycle>}` / `true` ✅ | ✅ 已由规范侧闭合 |
+| bug-09 `RecursionError` 巨量帧 | 规范已裁定折叠（K=10/M=30/阈值 40，落点 `cli.rs`，tooling-dev），**代码未落地** | `bug09_recursion.lfz`：深递归 → **EXIT=2**，stderr **共 30005 行**（约 10000 帧 ×3），末行 `RecursionError: 递归深度超限（超过 10000 层）`；**未见** `  ... 省略 N 帧...` 折叠行 | ✅ 未落地 |
+
+> 结论：四项残留状态与修复侧声明**完全一致**；其中 bug-06/09 已从「实现疑点」转为「**规范已定、待落地的实现 backlog**」，bug-08 属**规范侧闭合（实现无误）**，bug-07 为**有意推迟**。四项均为**非阻塞**（不使解释器不可用、不影响 P3 核心评分项）。
+
+## 7.4 夹具复跑（`docs/reports/fixtures-p3/`，全部 9 份）
+
+| 夹具 | rev.1 | rev.2（本次） | 说明 |
+|---|---|---|---|
+| `01_arith.lfz` | 通过 | **通过**（exit 0，19 行输出不变） | — |
+| `02_control.lfz` | 通过 | **通过**（exit 0） | — |
+| `03_functions.lfz` | 通过 | **通过**（exit 0：`120 / 55 / 1 2 3`） | — |
+| `04_containers.lfz` | 通过 | **通过**（exit 0，14 行输出不变） | — |
+| `05_pipe.lfz` | 通过 | **通过**（exit 0：`4 / 3 / 15 / 15 / 5 / [0,2,4,6,8] / [1,2,3] / [2,4] / ABC`） | — |
+| `06_interp.lfz` | **失败**（bug-02） | **通过**（exit 0，10 行富插值输出全对） | bug-02 修复直接收益 |
+| `07_dump.lfz` | 通过 | **通过**（exit 0，`outer ： 100 …` 掩蔽去重不变） | 分隔符 `U+0020 U+FF1A U+0020` 保持 |
+| `08_builtins.lfz` | 通过 | **通过**（exit 0，58 行输出不变） | — |
+| `spec_9_4_refs.lfz` | **失败**（归因 bug-01） | **失败**（**原因改变**，见下） | **夹具/规范冲突，非解释器缺陷** |
+
+**`spec_9_4_refs.lfz` 的失败性质（重要区分）**：
+```
+PS> cargo run --quiet -- run docs\reports\fixtures-p3\spec_9_4_refs.lfz
+  File "...\spec_9_4_refs.lfz", line 5
+      fn inc() { n += 1; n }          // 闭包按 cell 捕获 n（A2）
+                       ^
+SyntaxError: 语句之间必须有换行
+=== EXIT: 2 ===
+```
+- rev.1 时该夹具在 **line 2**（首行注释）即撞上 bug-01（`IncompleteExpr`）；**bug-01 修复后**它已能解析到 **line 5**，却因 §9.4 样例**自身使用单个 `;`** 而在 line 5 报 `SyntaxError`。
+- 该 `;` 触发的是 `syntax.md` **A11**（第 373 行）：「单个 `;` 词法合法（`SEMI`）但**文法从不接受** → `SyntaxError`」。**解释器行为与 A11 一致（正确）**。
+- **判定：这是夹具（逐字复制自规范 §9.4）与规范自身的冲突 → 夹具/规范问题，不是解释器缺陷。**（rev.1 曾把它并入 bug-01 结论，此处予以修正与区分。）
+- **反证**：我另建 `spec_9_4_refs_fixed.lfz`（仅两处自洽化：① 把 `n += 1; n` 改为换行分割；② 依 §9.4 v1 补钉把 `r.self` 改为 `r.me`），实测**退出码 0**，输出与 §9.4「预期输出」**逐行一致**：
+  ```
+  1 2 3
+  99 99
+  [3, 1, 2]  [1, 2, 3]
+  {me: <cycle>}
+  true
+  ```
+  → 证明**解释器本身正确**，失败根因在样例文本。
+
+## 7.5 【规范侧发现】spec-20260924-01 —— `syntax.md` §9.4 样例自相矛盾（使用单个 `;`）🟡
+
+- **交付物**: `docs/spec/syntax.md`（**规范**，非代码）
+- **摘要**: `syntax.md` §9.4 样例第 **787 行** 写作 `fn inc() { n += 1; n }`，用**单个 `;`** 分隔两条语句；但同一规范 **A11（第 373 行）** 明定「单个 `;` 词法合法（`SEMI`）但**文法从不接受** → `SyntaxError`（提示改用 `;;`）」。**样例与规则自相矛盾**。
+- **最小复现步骤**:
+  1. `docs/reports/fixtures-p3/spec_9_4_refs.lfz`（= §9.4 逐字复制）
+  2. `cargo run --quiet -- run docs\reports\fixtures-p3\spec_9_4_refs.lfz`
+- **期望（按 A11）**: 该样例**不应**包含单个 `;`；应能以换行分隔正常解析并输出 §9.4「预期输出」。
+- **实际**: 退出码 2；
+  ```
+    File "...\spec_9_4_refs.lfz", line 5
+      fn inc() { n += 1; n }          // 闭包按 cell 捕获 n（A2）
+                       ^
+  SyntaxError: 语句之间必须有换行
+  ```
+- **影响**: ① 规范**唯一的引用语义/闭包/环安全综合样例**按原文**无法运行**——文档示例与规则冲突会被评分项 4（语法说明 20 分）与人工复核直接扣分；② 直接导致我的夹具 `spec_9_4_refs.lfz` 失败（夹具逐字复制样例）；③ 会误导 test-engineer（若把 §9.4 当黑盒用例，将得到与规范矛盾的期望）。
+- **严重度**: 🟡 非阻塞（**规范文档缺陷**，非解释器缺陷；解释器按 A11 行为正确）。
+- **建议 owner**: **language-architect**（改 §9.4 样例：`n += 1; n` → 两行 `n += 1` / `n`；或明确 A11 例外——后者须改冻结点 A11，不推荐；建议改样例）。
+- **关联遗留**: rev.1 夹具 `spec_9_4_refs.lfz` 的失败**归因于本发现 + 旧 bug-01**；bug-01 已修，本发现取代其为该夹具失败的当前根因（且属规范侧，非实现侧）。
+
+## 7.6 修复质量旁证（不替代本报告结论，仅交叉印证）
+
+- `git show 1e8fd5f` 显示：`src/parser.rs` +95/−? 、`src/evaluator.rs` +87/−?；四处声明的代码改动均**真实存在**（非仅注释）。
+- **新增回归用例为"经 lexer 的真实源码"**：diff 中新增 `fn parse_src(body) { ... crate::lexer::lex(body, 1)?; crate::parser::parse(&toks) }`，四个用例 `reg_multi_line_blocks_parse` / `reg_leading_blank_and_comment_lines_parse` / `reg_interp_format_spec_through_lexer` / `reg_if_as_expression_through_lexer` 均**先 lex 再 parse**（修复了 rev.1 指出的"手工构造 token 流绕过 lexer"盲区）。
+- 两处旧 parser 单测（`interp_with_format_spec_some` / `interp_empty_format_spec_is_some_empty`）已补 `Colon`——与修复声明一致。
+- 计数吻合：lib 测试 354→**358**（+4），总 369→**373**。
+- **无回归**：rev.1 通过的 5 条验收命令相关项（`cargo build` 0 warning、`hello.lfz`→`Hello, LFZ!` exit 0、无 `#42`→`CosmosAnswerError: 你忘记了宇宙的答案` line 1 exit 2、`div(1,0)`/`undefinedName` 位置与消息）本次复跑**全部保持**。
+
+## 7.7 回归记录（更新版）
+
+| 缺陷 | 首次发现 | rev.1 | **rev.2（本次复验）** | 复验证据 |
+|---|---|---|---|---|
+| bug-20260924-01 多行块 🔴 | 2026-09-24 | 未修复 | **已修复** | §7.2.1（exit 0）|
+| bug-20260924-02 插值 format_spec 🔴 | 2026-09-24 | 未修复 | **已修复** | §7.2.2（exit 0）|
+| bug-20260924-03 `if` 表达式 🔴 | 2026-09-24 | 未修复 | **已修复** | §7.2.3（exit 0）|
+| bug-20260924-04 traceback 位置 🟡 | 2026-09-24 | 未修复 | **已修复** | §7.2.4（line 3）|
+| bug-20260924-05 管道右侧消息 🟡 | 2026-09-24 | 未修复 | **已修复** | §7.2.5（消息逐字节一致）|
+| bug-20260924-06 `let` 重绑定 🟡 | 2026-09-24 | 未修复 | **仍失败**（规范已裁定，代码未落地）| §7.3（exit 0/输出 `2`）|
+| bug-20260924-07 语句首 `{` 🟡 | 2026-09-24 | 未修复 | **仍失败**（有意推迟，待 A9 确认）| §7.3（SyntaxError）|
+| bug-20260924-08 `.self` 🟢 | 2026-09-24 | 未修复 | **已闭合（规范侧）**（改样例 `r.me`；实现无误）| §7.3（`{me: <cycle>}`）|
+| bug-20260924-09 RecursionError 巨量帧 🟢 | 2026-09-24 | 未修复 | **仍失败**（规范已裁定折叠，代码未落地）| §7.3（30005 行）|
+| **spec-20260924-01 §9.4 样例含 `;`**（新） | 2026-09-24 | — | **新发现（规范侧）** | §7.5 |
+
+**本轮新发现数**：**1**（spec-20260924-01，规范侧 🟡，owner: language-architect）。
+**原 3×🔴 是否全修**：**是，3/3 全修**（且原 🟡 bug-04/05 亦全修）。
+**是否有残留/回归**：**无阻塞残留、无回归**；非阻塞残留 3 项（bug-06/07/09）+ 新增规范侧 1 项（spec-01）。
+
+## 7.8 复验总结论
+
+- ✅ **原 3×🔴 全部修复**（多行块 / 插值 `format_spec` / `if` 表达式），并经真实 CLI 端到端复现通过。
+- ✅ **原 🟡 bug-04 / bug-05 亦已修复**（traceback 位置、管道右侧消息），位置与消息经字节级校验通过。
+- ✅ `cargo build` 0 warning；`cargo test` **373 passed / 0 failed**（+4 真实源码回归用例）；修复未引入回归。
+- ⚠️ **非阻塞残留**：bug-06（`let` 重绑定，规范已定 `TypeError`，待 core-dev/runtime-dev 落地）、bug-07（语句首 `{`，有意推迟）、bug-09（traceback 折叠，规范已定，待 tooling-dev 在 `cli.rs` 落地）；bug-08 已由规范侧闭合。
+- ⚠️ **新发现（规范侧）**：`syntax.md` §9.4 样例使用单个 `;`，与 A11 自相矛盾（owner: language-architect）；它同时解释了我的夹具 `spec_9_4_refs.lfz` 为何失败——**属夹具/规范问题，非解释器缺陷**。
+
+> **【复验结论】CONCERNS（列非阻塞）——可推进 `v0.2.0`。**
+> 3×🔴 与 2×🟡 修复项**全部复验通过**，已无阻塞项，解释器核心端到端可用；但仍有**非阻塞遗留**（bug-06/bug-07/bug-09 的实现落地）与**一项规范侧缺陷**（spec-20260924-01，`docs/spec/syntax.md` §9.4 样例自相矛盾）需在后续阶段（P4/P7 前）闭合。**建议：`v0.2.0` 可打；上述非阻塞项与规范侧发现转交对应 owner（language-architect / core-dev / runtime-dev / tooling-dev），由 verifier 后续抽验闭环。**
+
+*（复验（rev.2）完。本轮夹具与捕获输出见 `docs/reports/fixtures-p3-rev2/`。）*

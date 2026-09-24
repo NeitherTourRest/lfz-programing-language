@@ -1,5 +1,19 @@
 # verifier — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 09:20] P3.11 复验（rev.2）—— 原 3×🔴 + 2×🟡 修复项独立复验
+- 来源: 任务书 P3.11 复验（team-lead 调度）；被验提交 `1e8fd5f`（代码修复）+ `05e42d9`（规范裁定）；复验时 HEAD=`05e42d9`，工作树 clean。
+- 完成（**只验证不修复**，全部走真实 CLI `cargo run -- run`）:
+  - **原 3×🔴 全修**（复现通过）: 多行块 `bug01_multiline.lfz`→exit 0/`1`；插值 `print("${1:>3}")`→exit 0/`  1`；`if` 表达式→exit 0/`1`。
+  - **原 🟡 bug-04/05 亦修**: `s.missing` 位置→**line 3**（rev.1 为 line 2）；`3 |> 5` 消息→`管道右侧必须是函数，得到 int`（字节级校验通过）。
+  - **基线**: `cargo build` clean 0 warning；`cargo test` **373 passed / 0 failed**（358+8+7，=369+4）。
+  - **残留独立确认（与声明一致）**: bug-06 `let` 重绑定→仍 exit 0/`2`；bug-07 语句首 `{`→仍 SyntaxError；bug-09 深递归→stderr **30005 行**（无折叠）；bug-08 由规范侧改样例 `r.me` 闭合（实现无误）。
+  - **夹具复跑**: `fixtures-p3/` 9 份中 8 份通过（含 rev.1 失败的 `06_interp.lfz`）；`spec_9_4_refs.lfz` 仍失败，但根因改变——**夹具/规范自身的 `;` 冲突，非解释器缺陷**（反证：`spec_9_4_refs_fixed.lfz` 输出与 §9.4 预期逐行一致）。
+- 产出: 更新 `docs/reports/P3-verification.md`（追加「复验（rev.2）」§7.1–§7.8）；新增夹具 `docs/reports/fixtures-p3-rev2/*.lfz`（15 份，含最小复现/前导换行与注释回归/span 回归/残留确认/`spec_9_4_refs_fixed.lfz`）。
+- 决策: **【复验结论】CONCERNS（列非阻塞）——可推进 `v0.2.0`**（3×🔴 已清零，无阻塞；非阻塞残留 bug-06/07/09 + 新规范侧 spec-01）。
+- **新发现（规范侧，本角色不修）**: `spec-20260924-01` —— `docs/spec/syntax.md` §9.4 第 787 行样例 `fn inc() { n += 1; n }` 用单个 `;`，与 A11「单个 `;` 永远 SyntaxError」自相矛盾；建议 owner **language-architect**（改样例）。该冲突同时是夹具 `spec_9_4_refs.lfz` 失败根因。
+- 下一步: 等 team-lead 转交 spec-01 与 bug-06/09 落地；后续对上述项做闭环抽验。
+- 阻塞: 无。
+
 ## [2026-09-24 00:28] P3.11 对 P3 解释器核心独立验收（模拟助教）
 - 来源: 任务书 P3.11（team-lead 调度）
 - 完成: 复现任务书 6 条验收命令 + 自建 9 份 LFZ 夹具 + 逐项对照 `docs/spec/` 三件套抽查。**只验证不修复**。
