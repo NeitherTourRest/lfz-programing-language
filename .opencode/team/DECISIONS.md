@@ -632,3 +632,18 @@
 - **影响**：全体 agent（节流）｜release-manager（提交/推送可在任意时段）｜用户（**需重启 opencode** 使插件生效）。
 - **证据**：`scripts/offpeak.ps1`（退出码语义 + 距窗口时间）；`.opencode/plugin/offpeak.ts`（钩子签名取自 `@opencode-ai/plugin` 类型定义：`"tool.execute.before": (input: { tool; sessionID; callID }, output: { args }) => Promise<void>`，本插件据 `input.tool` 判定并 `throw` 拦截）。
 - **待确认**：窗口是否就是 00:30–08:30（本机联网搜索配额已用尽，未能复核官方页）；若 DeepSeek 调整，改环境变量即可，无需改代码。
+
+### [2026-09-24 12:40] [team-lead] 错峰窗口更正为官方口径（**作废**上一条 ADR 的默认值）
+
+- **来源**：用户要求「自己去 DeepSeek 官网看」。已用 `webfetch` 取官方定价页 `https://api-docs.deepseek.com/quick_start/pricing` 原文（不走搜索）。
+- **官方原文（Pricing 页脚注 2）**：> Off-peak rates are **half** of peak rates. **Peak hours are 01:00–04:00 and 06:00–10:00 UTC, Monday through Friday, excluding Chinese public holidays. All other hours are off-peak, including weekends and Chinese public holidays in full.**
+- **更正**：上一条 ADR 的「低谷 00:30–08:30（北京）」**作废**。正确模型：
+  - **高峰** = 周一至周五 **01:00–04:00 与 06:00–10:00 UTC** ＝ 北京 **09:00–12:00 与 14:00–18:00**；
+  - **其余全部低谷**（含北京 **12:00–14:00 午休**、**18:00–次日 09:00 夜间**、**周末**、**中国法定节假日**全天）；
+  - 错峰价 = 高峰价 **5 折**（deepseek-flash：输入缓存命中 $0.006→$0.003、未命中 $0.30→$0.15、输出 $1.20→$0.60，每 1M tokens）。
+- **落地（已重写）**：`scripts/offpeak.ps1` 改为**多区间 + 星期 + 节假日**模型，`LFZ_PEAK_UTC`（默认 `01:00-04:00,06:00-10:00`）/ `LFZ_PEAK_DAYS`（默认 `1-5`）/ `LFZ_HOLIDAYS` 可覆盖；`.opencode/plugin/offpeak.ts` 同模型，高峰拦截 `task` / `call_omo_agent`。
+- **新增自动化（落实用户「全自动、到点开工、其余停工、我可撒手」）**：
+  - `scripts/offpeak-runner.ps1`：低谷窗口内自动跑 `opencode run --agent team-lead --dir <repo> --auto "<继续推进>"`；高峰自动停手并每 5 分钟轮询等待；日志 `%TEMP%\lfz-offpeak-runner.log`；`-Once` / `-Guard` / `-MaxRuns` / `-DryRun` / `-NoAuto` 可控。
+  - `scripts/offpeak-task.ps1`：注册/卸载/查询 Windows 计划任务 `LFZ-offpeak-runner`（登录时随起、`-Guard` 常驻）。
+- **影响**：全体 agent 调度节奏；用户可撒手（仅重大决策需介入）。
+- **证据**：官方页原文（上文引用）；`scripts/offpeak.ps1` 实测 `now UTC 2026-09-24 04:35 (Thursday) → OFF-PEAK, peak starts in 1h 25m`（exit 0）；三个 `.ps1` 实测 `bytes>127 = 0`（纯 ASCII，避开 PS 5.1 的 BOM-less ANSI 解码坑）。

@@ -1,5 +1,21 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 12:37] 错峰自动化入库并推送：官方向正闸门 + 无人值守 runner + 自启安装器（单个原子提交）
+- 来源: team-lead 任务书（轻量启动；team-lead 按用户要求「自己去官网看」+「全自动，到点开工、其余停工」重做：**重写** `scripts/offpeak.ps1`（官方口径：高峰=周一至周五 01:00-04:00,06:00-10:00 UTC；`LFZ_PEAK_UTC`/`LFZ_PEAK_DAYS`/`LFZ_HOLIDAYS` 可覆盖；纯 ASCII）、**重写** `.opencode/plugin/offpeak.ts`（同模型、拦 `task`/`call_omo_agent`、无 import）、**新增** `scripts/offpeak-runner.ps1`（低谷自动 `opencode run --agent team-lead --dir <repo> --auto`，高峰停手轮询）、**新增** `scripts/offpeak-start.cmd`、**新增** `scripts/offpeak-task.cmd`（autostart 免管理员 / install 走计划任务）、`.opencode/team/DECISIONS.md`（+ADR 官方向正，作废上一条 00:30–08:30 默认值）。预计工作区 6 项；⚠️ 可能含并行/既有改动——仅按显式清单 `git add`，清单外不中止但如实报告。要求：单提交 + push；验收取证 status / log -3 / ls-remote 一致 / 复议 `offpeak.ps1` 与 `offpeak-task.cmd status`；收工文档并入同一提交。禁区：禁 force-push、**不打 tag**、不改 `src/**`·`docs/spec/**`、不提交 `target/`·密钥·临时文件）
+- 完成:
+  - **入清单门禁（通过，未触发停止）**：`git status --short` 复核恰为任务书预期 **6 项**（`M scripts/offpeak.ps1`、`M .opencode/plugin/offpeak.ts`、`M .opencode/team/DECISIONS.md`、`?? scripts/offpeak-runner.ps1`、`?? scripts/offpeak-start.cmd`、`?? scripts/offpeak-task.cmd`），**无清单外条目**。`git diff --stat` = `.opencode/plugin/offpeak.ts`(110) + `.opencode/team/DECISIONS.md`(15) + `scripts/offpeak.ps1`(89) = **3 files changed, 142 insertions(+), 72 deletions(-)**（3 个新文件尚未入 diff）。
+  - 内容取证（**未改内容，仅代为入库**）：四脚本**纯 ASCII** 实测——`offpeak.ps1` 3331B / `offpeak-runner.ps1` 2791B / `offpeak-start.cmd` 429B / `offpeak-task.cmd` 2735B，**均 `bytes>127 = 0`**；`offpeak-runner.ps1` 含 `-Once/-Guard/-MaxRuns/-DryRun/-NoAuto`，低谷 `opencode run ... --auto`、高峰 `Start-Sleep 300` 轮询，日志 `%TEMP%\lfz-offpeak-runner.log`；`offpeak-task.cmd` 支持 `autostart/noautostart/start/status`（免管理员）+ `install/uninstall/taskstatus`（计划任务）；`DECISIONS.md` 新增 ADR「错峰窗口更正为官方口径（作废上一条默认值）」，含官方页原文与更正模型。
+  - 关检复议：`powershell -NoProfile -File scripts/offpeak.ps1` → `now UTC 2026-09-24 04:37 (Thursday)` / `peak = Mon-Fri 01:00-04:00,06:00-10:00 UTC (Beijing 09:00-12:00 & 14:00-18:00), holidays excluded` / `status: OFF-PEAK (may work, 50% price) - peak starts in 1h 23m` / **`$LASTEXITCODE = 0`**；`cmd /c "scripts\offpeak-task.cmd status"` → `auto-start : ENABLED -> ...\Startup\LFZ-offpeak-runner.cmd` + `scheduled : none`。
+  - 基线复核：提交前 HEAD = 远程 `refs/heads/main` = `5a6fbe5`；`git tag -n` 仍仅 `v0.1.0`/`v0.2.0`。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入同一提交（工作区保持干净）。
+  - **单个原子提交**：`git add scripts/offpeak.ps1 scripts/offpeak-runner.ps1 scripts/offpeak-start.cmd scripts/offpeak-task.cmd .opencode/plugin/offpeak.ts .opencode/team/DECISIONS.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（**显式 8 文件**，未 `git add -A`）→ `git -c core.autocrlf=false commit -F <UTF-8 信息文件>`（标题 + 任务书 body 逐字）。
+  - `git push`（非 force，`http.proxy=127.0.0.1:7890`，`$LASTEXITCODE=0` 判据）。
+- 产出:
+  - 一个新提交（短哈希见汇报）；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD；`git tag -n` 仍仅 `v0.1.0`/`v0.2.0`（**本轮未打新 tag**）。
+  - 取证证据：`git status --short`；`git log --oneline -3`；`git ls-remote origin refs/heads/main`；`powershell -NoProfile -File scripts/offpeak.ps1; $LASTEXITCODE`（=0，OFF-PEAK）；`cmd /c "scripts\offpeak-task.cmd status"`（autostart ENABLED）。
+- 决策: 无新 ADR 由本角色撰写（`DECISIONS.md` 本轮 ADR 由 team-lead 追加、我仅代为入库）。
+- 下一步: 用户重启 opencode 使重写后的插件生效并自助验收；通过后进入 P10 交付清单核对 `docs/reports/delivery-checklist.md`。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-24 12:35] 错峰闸门机制入库并推送：脚本 + opencode 插件 + ADR（单个原子提交）
 - 来源: team-lead 任务书（轻量启动；team-lead 新增 `scripts/offpeak.ps1`（纯 ASCII、`0`=低谷可开工 / `3`=高峰应停工）、`.opencode/plugin/offpeak.ts`（opencode 自动发现、高峰 `throw` 拦 `task`/`call_omo_agent`、不 import 任何包）、`.opencode/team/DECISIONS.md`（+ADR「错峰开工纪律 + 自动闸门」）。预计工作区恰 **3 项**：`?? scripts/offpeak.ps1`、`?? .opencode/plugin/`、` M .opencode/team/DECISIONS.md`；**出现清单外条目即停止并汇报**。要求：`git add <显式文件>`；信息 `chore(team): DeepSeek off-peak work gate (script + opencode plugin)` + 指定 body；`git push`；取证 status 空 / log -3 / ls-remote 一致 / 额外复跑脚本退出码；收工文档并入同一提交。禁区：禁 force-push、**不打 tag**、不改 `src/**`·`docs/spec/**`、不提交 `target/`·密钥·临时文件）
 - 完成:
