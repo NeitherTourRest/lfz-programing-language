@@ -620,3 +620,15 @@
 - **解除阻塞（runtime-dev）**：上文 `[2026-09-24 08:46]` 决策 2 的阻塞（变体不存在 → 停工）**已解除**。runtime-dev 可执行 tri-state `assign_name` + `exec_assign` 接线 + 「捕获 cell 携带可变性」，并移除负例 `let_rebind_is_type_error` 的 `#[ignore]`；`span = target.span`（变量名首字符，裁定 1）。
 - **影响**：**runtime-dev**（唯一被解除的跨角色依赖）；**test-engineer**（bug-06 黑盒负例待 runtime-dev 完成后可绿）；**verifier**（bug-06 复验入口）。
 - **证据**：`git diff --stat -- src/error.rs`（`1 file changed, 60 insertions(+), 2 deletions(-)`，**仅此文件**）；`cargo build`（`WARN_COUNT=0`，exit 0）；`cargo test` lib harness `test result: ok. 359 passed; 0 failed; 1 ignored`（`1 ignored` 为 runtime-dev 占位，**未动**）。
+
+### [2026-09-24 09:20] [team-lead] 错峰开工纪律（DeepSeek 低谷窗口）+ 自动闸门
+
+- **背景**：用户要求「每天在 DeepSeek 低谷期开工、高峰期停工」以省钱。
+- **决策**：
+  1. **窗口（可配置）**：低谷 = **北京时间 00:30–08:30（UTC+8）**；由环境变量 `LFZ_OFFPEAK_START` / `LFZ_OFFPEAK_END` / `LFZ_OFFPEAK_UTC_OFFSET` 覆盖，**支持跨午夜**窗口（如 23:00–07:00）。
+  2. **闸门脚本** `scripts/offpeak.ps1`：退出码 **`0` = 在低谷（可开工）/ `3` = 高峰（应停工）**；`-Quiet` 只返回退出码，便于人、脚本或计划任务调用。
+  3. **自动拦截（强制，非"靠记得"）**：opencode 插件 **`.opencode/plugin/offpeak.ts`**（自动发现）在**高峰时段阻止 `task` / `call_omo_agent`** —— 即"派发子智能体"这一最耗 token 的动作；被拦时给出明确原因与距窗口开启时间。`LFZ_OFFPEAK_ENFORCE=0` 可临时关闭。**只拦"派发"**；本地读写/构建/测试/提交不受影响。
+  4. **调度纪律（team-lead 遵守）**：派发前先判窗口；高峰时段只做**本地/离线**动作（读状态、整理看板、写计划与文档草稿），把**批量派发**留到低谷；窗口结束前**不再开新任务**，只收尾在途任务。
+- **影响**：全体 agent（节流）｜release-manager（提交/推送可在任意时段）｜用户（**需重启 opencode** 使插件生效）。
+- **证据**：`scripts/offpeak.ps1`（退出码语义 + 距窗口时间）；`.opencode/plugin/offpeak.ts`（钩子签名取自 `@opencode-ai/plugin` 类型定义：`"tool.execute.before": (input: { tool; sessionID; callID }, output: { args }) => Promise<void>`，本插件据 `input.tool` 判定并 `throw` 拦截）。
+- **待确认**：窗口是否就是 00:30–08:30（本机联网搜索配额已用尽，未能复核官方页）；若 DeepSeek 调整，改环境变量即可，无需改代码。

@@ -1,5 +1,20 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 12:35] 错峰闸门机制入库并推送：脚本 + opencode 插件 + ADR（单个原子提交）
+- 来源: team-lead 任务书（轻量启动；team-lead 新增 `scripts/offpeak.ps1`（纯 ASCII、`0`=低谷可开工 / `3`=高峰应停工）、`.opencode/plugin/offpeak.ts`（opencode 自动发现、高峰 `throw` 拦 `task`/`call_omo_agent`、不 import 任何包）、`.opencode/team/DECISIONS.md`（+ADR「错峰开工纪律 + 自动闸门」）。预计工作区恰 **3 项**：`?? scripts/offpeak.ps1`、`?? .opencode/plugin/`、` M .opencode/team/DECISIONS.md`；**出现清单外条目即停止并汇报**。要求：`git add <显式文件>`；信息 `chore(team): DeepSeek off-peak work gate (script + opencode plugin)` + 指定 body；`git push`；取证 status 空 / log -3 / ls-remote 一致 / 额外复跑脚本退出码；收工文档并入同一提交。禁区：禁 force-push、**不打 tag**、不改 `src/**`·`docs/spec/**`、不提交 `target/`·密钥·临时文件）
+- 完成:
+  - **入清单门禁（通过，未触发停止）**：`git status --short --untracked-files=all` 复核**恰为任务书预期 3 项**（`M .opencode/team/DECISIONS.md`、`?? .opencode/plugin/offpeak.ts`、`?? scripts/offpeak.ps1`），**无清单外条目**；`.opencode/plugin/` 内**仅** `offpeak.ts`；`scripts/` 下 `__pycache__` 被 `.gitignore` 覆盖（未出现在 status）。
+  - 内容取证（**未改内容，仅代为入库**）：`scripts/offpeak.ps1` 纯 ASCII 实测 **`bytes>127 = 0`**（总 2139 字节）；`powershell -NoProfile -File scripts/offpeak.ps1` → `local time (UTC+8): 2026-09-24 12:30` / `off-peak window: 00:30 - 08:30` / `status: PEAK (stop) - off-peak opens in 12h 0m` / **`$LASTEXITCODE = 3`**。`.opencode/plugin/offpeak.ts` 全文无 `import`（仅 `const`/`function`/`export`）；`GATED_TOOLS = {task, call_omo_agent}`；`LFZ_OFFPEAK_START/END/UTC_OFFSET/ENFORCE` 可配；高峰 `throw` 且错误含距窗口开启时间。`git diff .opencode/team/DECISIONS.md` = `1 file changed, 12 insertions(+)`，新增 ADR「错峰开工纪律（DeepSeek 低谷窗口）+ 自动闸门」（窗口 00:30–08:30 UTC+8、脚本退出码语义、插件只拦派发、`LFZ_OFFPEAK_ENFORCE=0` 可关）。
+  - 基线复核：提交前 HEAD = 远程 `refs/heads/main` = `7aab824`；`git tag -n` 仍仅 `v0.1.0`/`v0.2.0`。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入同一提交（工作区保持干净）。
+  - **单个原子提交**：`git add scripts/offpeak.ps1 .opencode/plugin/offpeak.ts .opencode/team/DECISIONS.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（**显式 5 文件**，未 `git add -A`）→ `git -c core.autocrlf=false commit -F <UTF-8 信息文件>`（标题 + 任务书 body 逐字）。
+  - `git push`（非 force，`http.proxy=127.0.0.1:7890`，`$LASTEXITCODE=0` 判据）。
+- 产出:
+  - 一个新提交（短哈希见汇报）；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD；`git tag -n` 仍仅 `v0.1.0`/`v0.2.0`（**本轮未打新 tag**）。
+  - 取证证据：`git status --short`；`git log --oneline -3`；`git ls-remote origin refs/heads/main`；`powershell -NoProfile -File scripts/offpeak.ps1; $LASTEXITCODE`（=3，PEAK）。
+- 决策: 无新 ADR（`DECISIONS.md` 本轮 ADR 由 team-lead 追加、我仅代为入库）。
+- 下一步: 用户自助验收（**需重启 opencode 使插件生效**）；通过后进入 P10 交付清单核对 `docs/reports/delivery-checklist.md`。
+- 阻塞: 无（owner 偏差为历史遗留；ADR 内「窗口待确认」为 team-lead 已注明事项，不影响本轮推送）。
 ## [2026-09-24 10:45] P3 后收尾：team-lead 状态/日志入库 + 工作区收拾到「干净且已推送」（交付用户自助验收）
 - 来源: team-lead 任务书（轻量启动；用户已下令**暂停开发、要求自行验收**，要求把工作区收拾到「干净且已推送」供用户在本地复现。预计工作区仅 **2 个**已修改文件：`M .opencode/team/agents/team-lead/{STATUS,JOURNAL}.md`，**由 team-lead 撰写、仅代为入库、不得改内容**；**出现清单外条目即停止并汇报**。要求：`git add <显式文件>` 绝不用 `git add -A`；提交信息 `docs(team): sync team-lead status/journal after P3`；`git push`；最终体检（status 空 / log -5 / tag -n 含 v0.1.0+v0.2.0 / ls-remote 一致 / `cargo build` 0 warning / `cargo test` 库 361 passed 0 failed 0 ignored / `cargo run --quiet -- run examples/hello.lfz` → `Hello, LFZ!` exit 0）；收工文档并入同一提交，不得留下未提交改动。禁区：禁 force-push、**不打任何新标签**、不改 `src/**`·`docs/spec/**`、不提交 `target/`·密钥·临时文件）
 - 完成:
