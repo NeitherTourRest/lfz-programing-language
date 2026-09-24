@@ -1,0 +1,404 @@
+=== P3.11 终验（rev.3）证据 —— verifier 独立复现 ===
+生成时间: 2026-09-24 by verifier
+
+=== [1] git 状态（验证结束时）===
+c6638cc7fa87ddb23685869536a547d60d216a80
+c6638cc fix(p3): enforce let immutability (ImmutableRebind)
+833901d fix(p3): statement-initial brace is an anonymous struct literal (A9)
+b08965c feat(p3): add TypeMsg::ImmutableRebind for let rebinding
+316abce docs(spec): fix 搂9.4 sample (self-contradictory ';') and rule on A9
+88a4477 feat(p3): traceback truncation for deep recursion
+8ec3c69 docs(reports): P3.11 re-verification rev.2 (CONCERNS, non-blocking)
+05e42d9 docs(spec): rule on 3 P3.11 gaps (let rebinding / .self / traceback truncation)
+1e8fd5f fix(p3): blocking defects + runtime error spans
+06f0878 docs(team): P3.11 verification report (FAIL: 3 blocking bugs) and board update
+682d1fb feat(p3): parser v1 features (pipe desugaring, dump, interpolation, i64::MIN)
+0ce5123 feat(p3): parser fn/struct declarations and function literals
+53ca3e2 feat(p3): parser control-flow statements
+
+
+=== [2] cargo test result 行 ===
+running 361 tests
+test result: ok. 361 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+running 9 tests
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+running 7 tests
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+=== [3] CLI 复现输出（fixtures-p3-rev2 + 独立用例）===
+----- bug01_leading_blank_block.out -----
+7
+----- bug01_leading_comment.out -----
+42
+----- bug01_multiline.out -----
+1
+----- bug02_format_spec.out -----
+  1
+----- bug03_if_expr.out -----
+1
+----- bug04_span.err -----
+Traceback (most recent call last):
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug04_span.lfz", line 3, in <module>
+    s.missing
+    ^
+FieldError: 结构体没有字段 'missing'
+----- bug05_pipe_rhs.err -----
+Traceback (most recent call last):
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug05_pipe_rhs.lfz", line 2, in <module>
+    print(3 |> 5)
+          ^
+TypeError: 管道右侧必须是函数，得到 int
+----- bug06_exact.err -----
+Traceback (most recent call last):
+  File "C:\Users\19170\AppData\Local\Temp\opencode\p3rev3\bug06_exact.lfz", line 3, in <module>
+    a = 2
+    ^
+TypeError: 不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容
+----- bug06_let_rebind.err -----
+Traceback (most recent call last):
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug06_let_rebind.lfz", line 3, in <module>
+    a = 2
+    ^
+TypeError: 不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容
+----- bug06_var_ok.out -----
+2
+----- bug07_neg1.err -----
+  File "C:\Users\19170\AppData\Local\Temp\opencode\p3rev3\bug07_neg1.lfz", line 2
+    { let x = 1 }
+      ^
+SyntaxError: 这里期待 字段名，但得到 'let'
+----- bug07_neg2.err -----
+  File "C:\Users\19170\AppData\Local\Temp\opencode\p3rev3\bug07_neg2.lfz", line 2
+    { ;; }
+      ^
+SyntaxError: 这里期待 字段名，但得到 ';;'
+----- bug07_pos.out -----
+{k: 1}
+----- bug08_me_ok.out -----
+{me: <cycle>}
+true
+----- bug08_self.err -----
+  File "C:\Users\19170\AppData\Local\Temp\opencode\p3rev3\bug08_self.lfz", line 3
+    r.self = r
+      ^
+SyntaxError: 这里期待 字段名，但得到 'self'
+----- bug09_recursion.err -----
+Traceback (most recent call last):
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 3, in <module>
+    print(r(0))
+          ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  ... 省略 9961 帧 ...
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+RecursionError: 递归深度超限（超过 10000 层）
+----- spec_9_4_refs_fixed.out -----
+1 2 3
+99 99
+[3, 1, 2]  [1, 2, 3]
+{me: <cycle>}
+true
+----- 01_arith.out -----
+3
+3.5
+1
+2
+-2
+-4
+14
+20
+1
+false
+true
+true
+ab
+ababab
+3.5
+true
+2.0
+-9223372036854775808
+false
+----- 02_control.out -----
+10
+1
+2
+3
+4
+a
+b
+big
+1
+2
+1
+3
+----- 03_functions.out -----
+120
+55
+1 2 3
+----- 04_containers.out -----
+[10, 2, 3]
+[10, 20, 3]
+3
+3
+a
+1
+{name: "a", score: 1, z: 9}
+true
+true
+["name", "score", "z"]
+["a", 1, 9]
+[["name", "a"], ["score", 1], ["z", 9]]
+2
+true
+----- 05_pipe.out -----
+4
+3
+15
+15
+5
+[0, 2, 4, 6, 8]
+[1, 2, 3]
+[2, 4]
+ABC
+----- 06_interp.out -----
+hello LFZ
+n=00042
+hex=2a HEX=2A oct=52 bin=101010
+pi=3.142
+right=    42 left=42     center=  42  
+sign=+42
+s=LFZ
+esc ${n}
+----- 07_dump.out -----
+outer ： 100
+x ： 1
+f ： <fn f>
+x ： 2
+outer ： 100
+f ： <fn f>
+outer ： 100
+x ： 1
+f ： <fn f>
+----- 08_builtins.out -----
+3
+5
+[0, 1, 2, 3]
+[]
+[1, 2, 3, 4]
+[1, 2]
+[1, 2]
+[1, 9, 2, 3]
+[3, 2, 1]
+[2, 3]
+1
+3
+6
+6.5
+[1, 2]
+[3]
+[1, 2, 3]
+[3, 2, 1]
+6
+3
+3
+[2, 3, 4]
+[2, 3]
+42
+1.0
+[1, "a"]
+42
+2
+1.5
+int
+array
+3
+3.0
+3
+4
+2
+4
+2.0
+nan
+1024.0
+3
+hi
+ABC
+abc
+bbb
+ababab
+
+true
+["a", "b", "c"]
+["a", "b", "c"]
+a-b-c
+true
+{j: 2}
+["a", "b"]
+[2, 1]
+[["a", 2], ["b", 1]]
+7
+8
+----- hello.out -----
+Hello, LFZ!
+----- nohdr.err -----
+File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\nohdr.lfz", line 1
+CosmosAnswerError: 你忘记了宇宙的答案
+----- reg_divzero.err -----
+Traceback (most recent call last):
+  File "C:\Users\19170\AppData\Local\Temp\opencode\p3rev3\reg_divzero.lfz", line 2, in <module>
+    div(1, 0)
+    ^
+ZeroDivisionError: 除以零
+----- reg_nameerr.err -----
+Traceback (most recent call last):
+  File "C:\Users\19170\AppData\Local\Temp\opencode\p3rev3\reg_nameerr.lfz", line 2, in <module>
+    print(undefinedName)
+          ^
+NameError: 未定义的名字 'undefinedName'
+----- reg_syntaxerr.err -----
+  File "C:\Users\19170\AppData\Local\Temp\opencode\p3rev3\reg_syntaxerr.lfz", line 2
+    let x = 1 $ 2
+              ^
+SyntaxError: 非法字符 '$'
+----- span_check_divzero.err -----
+Traceback (most recent call last):
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\span_check_divzero.lfz", line 2, in <module>
+    div(1, 0)
+    ^
+ZeroDivisionError: 除以零
+----- span_check_name.err -----
+Traceback (most recent call last):
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\span_check_name.lfz", line 2, in <module>
+    print(undefinedName)
+          ^
+NameError: 未定义的名字 'undefinedName'
+----- span_check_nested_field.err -----
+Traceback (most recent call last):
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3-rev2\span_check_nested_field.lfz", line 3, in <module>
+    print(s.missing)
+          ^
+FieldError: 结构体没有字段 'missing'
+----- spec_9_4_refs.err -----
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\fixtures-p3\spec_9_4_refs.lfz", line 5
+        fn inc() { n += 1; n }          // 闭包按 cell 捕获 n（A2）
+                         ^
+SyntaxError: 语句之间必须有换行
+
+=== [4] bug09 量化 ===
+stderr bytes=7152; total lines=123; frame lines=40; elision lines=1

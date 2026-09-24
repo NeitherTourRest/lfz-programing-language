@@ -1,5 +1,18 @@
 # verifier — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24] P3.11 终验（rev.3）—— 10 项缺陷最终状态独立核验（PASS）
+- 来源: 任务书 P3.11 终验（rev.3）（team-lead 调度）；被验状态 = **git HEAD `c6638cc`**（`fix(p3): enforce let immutability`），工作树 **clean**。
+- **并发写入记录**: 开工时 HEAD=`833901d` 且工作树含**未提交**的 bug-06 接线（`src/evaluator.rs`/`src/value.rs`）；验证中途 release-manager 提交为 `c6638cc`，随后 clean。两次 build/test（提交前后同内容）结果一致。最终结论对 `c6638cc` 负责；报告已注明「发版请打 clean HEAD `c6638cc`」。
+- 完成（**只验证不修复**，全部走真实 CLI `target\debug\lfz.exe run`）:
+  - **10/10 全闭环**: ①bug-01 多行块 exit 0/`1`；②bug-02 `print("${1:>3}")` exit 0/`  1`；③bug-03 `if` 表达式 exit 0/`1`；④bug-04 `s.missing`→**line 3**；⑤bug-05 `3 |> 5`→`管道右侧必须是函数，得到 int`；⑥bug-06 `let a=1;a=2`→**exit 2**+逐字符 TypeError，`var` 重绑定仍 exit 0/`2`；⑦bug-07 A9：`let s={"k":1}`→`{k: 1}`，`{ let x=1 }`/`{ ;; }`→SyntaxError；⑧bug-08 `r.me`→`{me: <cycle>}`（`.self`→SyntaxError，与修订后规范一致）；⑨bug-09 深递归 stderr **123 行**+`... 省略 9961 帧 ...`+末行 RecursionError；⑩spec-01 §9.4 现行样例逐字 exit 0、输出与预期逐行一致。
+  - **基线**: `cargo build` clean **0 warning / 0 error**；`cargo test` 库 **361 passed / 0 ignored** + bin **9** + cli **7** = **377 passed / 0 failed / 0 ignored**（上轮库 360/1 ignored 的阻塞占位已摘除）。
+  - **夹具复跑**: `fixtures-p3` 8/9 通过；`spec_9_4_refs.lfz`（旧拷贝）失败属**夹具遗留**（复制修订前 §9.4 的单 `;`），非解释器缺陷；`fixtures-p3-rev2` 全部符合期望；新增 `fixtures-p3-rev3/spec_9_4_current.lfz`（当前 §9.4 逐字）**通过**。
+  - **无回归**: hello / 缺 `#42` / 语法错 / `div(1,0)` / 未定义名 / 夹具 01–08 全部保持。
+- 产出: 更新 `docs/reports/P3-verification.md`（追加「终验（rev.3）」§8.0–§8.7）；新增 `docs/reports/fixtures-p3-rev3/spec_9_4_current.lfz`、`docs/reports/fixtures-p3-rev3/rev3-evidence.txt`。
+- 决策: **【终验结论】PASS（可打 `v0.2.0`）**（10 项全闭环、0 ignored、0 回归）。
+- 下一步: 待 team-lead 决策发 `v0.2.0`；P4/P5 起对工具链与黑盒测试集做阶段性抽查验收。
+- 阻塞: 无。
+
 ## [2026-09-24 09:20] P3.11 复验（rev.2）—— 原 3×🔴 + 2×🟡 修复项独立复验
 - 来源: 任务书 P3.11 复验（team-lead 调度）；被验提交 `1e8fd5f`（代码修复）+ `05e42d9`（规范裁定）；复验时 HEAD=`05e42d9`，工作树 clean。
 - 完成（**只验证不修复**，全部走真实 CLI `cargo run -- run`）:

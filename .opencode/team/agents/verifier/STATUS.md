@@ -1,26 +1,29 @@
 # verifier — 工作状态
-> 最后更新: 2026-09-24 09:20 by verifier
+> 最后更新: 2026-09-24 by verifier
 ## 当前状态
-**P3.11 复验（rev.2）已完成 → 结论 CONCERNS（列非阻塞），可推进 `v0.2.0`。** 被验提交 `1e8fd5f`（代码）+ `05e42d9`（规范裁定）；复验时 HEAD=`05e42d9`，工作树 clean。报告: `docs/reports/P3-verification.md` §7「复验（rev.2）」。
+**P3.11 终验（rev.3）已完成 → 结论 `PASS（可打 v0.2.0）`。** 被验状态 = **git HEAD `c6638cc`**（`fix(p3): enforce let immutability (ImmutableRebind)`），工作树 **clean**。10 项待验缺陷**全部闭环**，`cargo build` 0 warning、`cargo test` **377 passed / 0 failed / 0 ignored**、**无新增回归**。报告: `docs/reports/P3-verification.md` §8「终验（rev.3）」。
 ## 进行中
-- （无）
+- （无）—— P3.11 终验已出结论，待 team-lead 决策发 `v0.2.0`。
 ## 已交付（本次）
-- `docs/reports/P3-verification.md`（**追加 §7 复验（rev.2）**：逐项复验 + 残留独立确认 + 夹具复跑 + 新规范侧发现 + 更新回归表 + 新结论行）
-- `docs/reports/fixtures-p3-rev2/`（15 份：bug01–07·09 最小复现 / 前导空行·注释回归 / span 回归 / `nohdr.lfz` / `spec_9_4_refs_fixed.lfz`）
-## 复验结论要点（对 HEAD `05e42d9`，代码=`1e8fd5f`）
-- ✅ **原 3×🔴 全修**：多行块（exit 0）、插值 `format_spec`（`  1`）、`if` 表达式（`1`）；均经真实 CLI `cargo run -- run` 复现通过。
-- ✅ **原 🟡 bug-04/05 亦修**：`s.missing` 位置 line 3；`3 |> 5` → `管道右侧必须是函数，得到 int`（字节级校验）。
-- ✅ **基线**：`cargo build` clean **0 warning**；`cargo test` **373 passed / 0 failed**（358+8+7 = 369+4 真实源码回归用例）；无回归（hello/无 `#42`/运行错位置全部保持）。
-- ⚠️ **非阻塞残留**（已独立实测，与声明一致）：bug-06 `let` 重绑定→仍 exit 0/`2`；bug-07 语句首 `{`→仍 SyntaxError（有意推迟）；bug-09 深递归 stderr **30005 行**（折叠未落地）；bug-08 由规范侧闭合（改样例 `r.me`，实现无误）。
-- 🟡 **新发现（规范侧，非实现缺陷）**: **spec-20260924-01** —— `docs/spec/syntax.md` §9.4 第 787 行样例 `fn inc() { n += 1; n }` 用单个 `;`，与 A11「单个 `;` 永远 SyntaxError」自相矛盾。建议 owner **language-architect**。**同时是夹具 `spec_9_4_refs.lfz` 失败的根因**（bug-01 已修，此冲突取而代之；属夹具/规范问题，**非解释器缺陷**）。
+- `docs/reports/P3-verification.md`（**追加 §8 终验（rev.3）**：逐项复现 10 项 + 两命令 + 夹具复跑 + 回归 + 更新回归表 + 终验结论行）
+- `docs/reports/fixtures-p3-rev3/spec_9_4_current.lfz`（**当前** §9.4 样例逐字，实测 exit 0 且输出与「预期输出」逐行一致）
+- `docs/reports/fixtures-p3-rev3/rev3-evidence.txt`（本轮合并原始证据，14120 字节）
+## 终验结论要点（对 HEAD `c6638cc`，clean）
+- ✅ **10/10 全部闭环**：原 3×🔴（多行块/插值 `format_spec`/`if` 表达式）、原 4×🟡（span/管道消息/**bug-06 `let` 重绑定**/bug-07 A9）、1×🟢（bug-08 `.self`，规范侧闭合）、1 规范侧（spec-01 §9.4 `;`）。
+- ✅ **bug-06 首次落地并复验通过**：`let a = 1 / a = 2` → **exit 2** + `TypeError: 不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容`；`var` 重绑定仍 **exit 0/`2`**；`cargo test` **ignored = 0**（上轮 1）。
+- ✅ **bug-07 A9 落地**：`let s = { "k": 1 }`→`{k: 1}`；`{ let x=1 }` / `{ ;; }` → `SyntaxError`（与 §3.3 正/反例逐条一致）。
+- ✅ **bug-09 折叠落地**：深递归 stderr **123 行**、帧 40、含 `... 省略 9961 帧 ...`、末行 `RecursionError…`、exit 2（rev.1 = 30005 行）。
+- ✅ **spec-01 已修正**：§9.4 现以换行分隔、字段 `me`；逐字复跑 exit 0，输出与预期逐行一致。
+- ✅ **基线**：`cargo build` 0 warning；`cargo test` 库 **361/0 ignored** + bin **9** + cli **7** = 377 passed。
+- ℹ️ **过程记录（非缺陷）**：验证期间 release-manager 并发提交（HEAD 由 `833901d` → `c6638cc`）；发版请以 clean 的 `c6638cc` 为准。`fixtures-p3/spec_9_4_refs.lfz`（修订前 §9.4 的历史夹具）失败属夹具遗留且已说明（现行样例由 `spec_9_4_current.lfz` 验证通过）。
 ## 阻塞 / 需要支持
-- 无（验证本身不阻塞）。**3×🔴 已清零，无阻塞项**；`v0.2.0` 可打。
-- 需 team-lead 转交：spec-01 → language-architect；bug-06 → core-dev+runtime-dev；bug-09 → tooling-dev；bug-07 待 A9 确认后 → core-dev。
+- 无。**10 项全闭环、无阻塞项**；`v0.2.0` 可打（打 clean HEAD `c6638cc`）。
 ## 下一步计划
-- 收到 spec-01 修订 / bug-06·09 落地后：复现原用例并更新 §7.7 回归表（已修复 / 仍失败）。
-- P4 起对工具链（`lfz test`、`--json`、traceback 折叠渲染）做阶段性抽查验收。
+- P4/P5 起对工具链（`lfz test` 一键 runner、`--json`、打包）与黑盒测试集（覆盖矩阵 vs spec 特性清单）做阶段性抽查验收。
+- 若后续任何 `src/**` 再改动，按「复现原用例 + 反证新根因」复验并更新报告回归表。
 ## 关键经验（写给未来的自己）
-- **修复复验要"复现原用例 + 反证新根因"**：`spec_9_4_refs.lfz` 从"失败"到"失败"但**根因已换**（bug-01→规范自冲突）——只报"仍失败"会冤枉实现；必须用改写副本（`spec_9_4_refs_fixed.lfz`）反证解释器正确。
-- **区分三类缺陷**：解释器缺陷 / 规范缺陷 / 夹具缺陷——本轮的 §9.4 `;` 属**规范**缺陷，须与实现缺陷分开归因与派单。
-- 残留项独立实测（bug-06 输出 `2`、bug-09 30005 行）比采信"未修"声明更可靠；数字（行数/退出码/行号）是最硬的证据。
-- Windows 控制台会把原生进程中文输出按本地代码页重编码：**判定中文消息一律字节级 hexdump**（本轮 bug-04/05 均以此确认）。
+- **验证期间仓库可能被并发写入**：本轮开工 HEAD=`833901d`（工作树含未提交的 bug-06 接线），验证中途 release-manager 提交为 `c6638cc`。**必须两次核 HEAD/status**，并在报告写明「最终基线」与「发版请打哪个提交」——否则「工作树已修、提交未含」会被漏判。
+- **"已修复"复验要能区分合规面**：bug-06 证据 = **退出码 2 + 逐字符消息 + ignored 计数 0**；bug-09 证据 = **行数（123）+ 省略行 + 末行**；数字是最硬的证据。
+- **规范/夹具/实现三分归因**：`spec_9_4_refs.lfz` 失败是**历史夹具**（复制了修订前 §9.4），不是实现缺陷；正解是另建「当前 spec 逐字」夹具（`spec_9_4_current.lfz`）反证实现正确。
+- **高风险修复面必须查回归**：bug-07 改 parser、bug-06 改捕获变量类型，均可能波及 `if/while/for`/闭包/`;;`；本轮 `fixtures-p3 01–08` + `spec_9_4_current` 全绿方可判无回归。
+- Windows 控制台按本地代码页重编码中文：**判断中文消息一律 UTF-8 字节解码**（`[Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes())`），勿信控制台直显。

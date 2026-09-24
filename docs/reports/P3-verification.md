@@ -805,3 +805,254 @@ SyntaxError: 语句之间必须有换行
 > 3×🔴 与 2×🟡 修复项**全部复验通过**，已无阻塞项，解释器核心端到端可用；但仍有**非阻塞遗留**（bug-06/bug-07/bug-09 的实现落地）与**一项规范侧缺陷**（spec-20260924-01，`docs/spec/syntax.md` §9.4 样例自相矛盾）需在后续阶段（P4/P7 前）闭合。**建议：`v0.2.0` 可打；上述非阻塞项与规范侧发现转交对应 owner（language-architect / core-dev / runtime-dev / tooling-dev），由 verifier 后续抽验闭环。**
 
 *（复验（rev.2）完。本轮夹具与捕获输出见 `docs/reports/fixtures-p3-rev2/`。）*
+
+---
+---
+
+# 终验（rev.3）
+
+> 终验人: verifier（模拟助教视角，独立验收）｜ 终验日期: **2026-09-24**
+> 被验状态: **git HEAD `c6638cc`**（`fix(p3): enforce let immutability (ImmutableRebind)`）——工作树 **clean**。
+> 依据: 任务书 P3.11 终验（rev.3）「待验清单」10 项 + §6/§7.8 结论行。
+> 纪律声明: **只验证、不修复**。本轮**未改** `src/**`、**未改** `docs/spec/**`、未改他人交付物；新增仅 `docs/reports/P3-verification.md` 本节与夹具目录 `docs/reports/fixtures-p3-rev3/`。
+> 环境: Windows（win32）；`$env:Path += ";$env:USERPROFILE\.cargo\bin"`；CLI 复现一律 `target\debug\lfz.exe run <file>`（真实全链路）；中文 stderr 一律 **UTF-8 字节解码**判定。
+> 证据留存: 本轮原始输出合并存于 `docs/reports/fixtures-p3-rev3/rev3-evidence.txt`；新增夹具 `docs/reports/fixtures-p3-rev3/spec_9_4_current.lfz`。
+
+## 8.0 基线与「验证期间并发提交」说明（重要）
+
+- 本轮**开工时** HEAD = **`833901d`**，且工作树含**未提交**的 `src/evaluator.rs` / `src/value.rs`（bug-06 接线）与 runtime-dev 的 STATUS/JOURNAL。
+- 验证过程中，release-manager **并发提交** `c6638cc`（`fix(p3): enforce let immutability (ImmutableRebind)`）；随后 **HEAD = `c6638cc`、工作树 clean**。
+- 该提交内容 = 开工时看到的未提交改动（`git diff` 中 `src/evaluator.rs` / `src/value.rs` 全部 `+` 行）。**故本轮提交前的 `cargo build`/`cargo test` 与提交后的重跑针对同一份源码内容，结果一致（均 361/0 ignored）。**
+- **最终结论对 HEAD `c6638cc`（clean）负责。**
+- 过程提示（**非缺陷**）：若在**提交前**打标签会遗漏 bug-06；现已提交，**`v0.2.0` 打 `c6638cc` 即含全部修复**。
+
+## 8.1 两条总命令（HEAD `c6638cc`）
+
+**`cargo build`（clean 全量重编）—— 通过**：
+```
+PS> cargo clean
+     Removed 1163 files, 280.9MiB total
+PS> cargo build
+   Compiling lfz v0.1.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.07s
+=== BUILD EXIT: 0 ===
+```
+真实 `warning:`/`error[` 命中数 = **0**（另：`cargo build --tests --message-format=json` 的 `"level":"warning"` 计数 = **0**）。
+
+**`cargo test` —— 通过**：
+```
+running 361 tests
+test result: ok. 361 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+running 9 tests
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+running 7 tests
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+=== TEST EXIT: 0 ===
+```
+**结论：通过**。库 **361 passed / 0 failed / 0 ignored**（上一轮 360 passed / **1 ignored** → 阻塞占位已摘除 ✅）；集成 = bin **9** + `tests/cli.rs` **7**。合计 **377 passed / 0 failed / 0 ignored**，**全绿**。
+
+## 8.2 逐项终验表（10 项，全量逐条）
+
+| # | 缺陷 / 项 | 等级 | 复现命令（真实 CLI，`lfz.exe run`） | 实测（退出码 + 关键输出） | 结论 |
+|---|---|---|---|---|---|
+| 1 | bug-01 多行块 | 🔴 | `bug01_multiline.lfz`（`fn f(){\n print(1)\n}\nf()`） | **exit 0**，stdout `1` | **已修复** ✅ |
+| 2 | bug-02 插值 `format_spec` | 🔴 | `bug02_format_spec.lfz`（`print("${1:>3}")`） | **exit 0**，stdout `  1`（宽 3 右对齐） | **已修复** ✅ |
+| 3 | bug-03 `if` 表达式 | 🔴 | `bug03_if_expr.lfz`（`let x = if true {1} else {2}`） | **exit 0**，stdout `1` | **已修复** ✅ |
+| 4 | bug-04 帧 `span` | 🟡 | `bug04_span.lfz`（line2 `let s={a:1}` / line3 `s.missing`） | **exit 2**，位置 **line 3**（`s.missing`），`FieldError: 结构体没有字段 'missing'` | **已修复** ✅ |
+| 5 | bug-05 管道右侧消息 | 🟡 | `bug05_pipe_rhs.lfz`（`print(3 \|> 5)`） | **exit 2**，`TypeError: 管道右侧必须是函数，得到 int`（逐字节一致） | **已修复** ✅ |
+| 6 | bug-06 `let` 重绑定 | 🟡 | `#42` / `let a = 1` / `a = 2` | **exit 2**，`TypeError: 不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容`；`var b=1;b=2`→**exit 0/`2`** | **已修复** ✅ |
+| 7 | bug-07 语句首 `{`（A9） | 🟡 | `let s = { "k": 1 }\nprint(s)`；`{ let x=1 }`；`{ ;; }` | 正例 **exit 0/`{k: 1}`**；两负例均 **exit 2** `SyntaxError` | **已修复** ✅ |
+| 8 | bug-08 `.self` | 🟢 | `r.me = r` / `r.self = r` | `r.me`→**exit 0**`{me: <cycle>}`+`true`；`r.self`→**exit 2** `SyntaxError`（**与修订后规范一致**） | **规范侧已闭合** ✅ |
+| 9 | bug-09 traceback 截断 | 🟡 | `bug09_recursion.lfz`（`fn r(n){r(n+1)}` / `print(r(0))`） | **exit 2**，stderr **123 行**（40 帧），含 `  ... 省略 9961 帧 ...`，末行 `RecursionError: 递归深度超限（超过 10000 层）` | **已修复** ✅ |
+| 10 | spec-20260924-01（§9.4 含单 `;`） | 🟡 | `docs/spec/syntax.md` §9.4 逐字复跑（`spec_9_4_current.lfz`） | 样例现以**换行**分隔、字段 `me`；**exit 0**，输出与 §9.4「预期输出」**逐行一致** | **已修正** ✅ |
+
+**小结：10/10 全部闭环**（原 3×🔴 + 原 4×🟡 + 1×🟢 + 1 条规范侧，全部转「已修复/已闭合」）。
+
+## 8.3 逐条详细证据（原文粘贴）
+
+### 8.3.1 bug-01 多行块 —— 已修复
+```
+PS> lfz.exe run docs\reports\fixtures-p3-rev2\bug01_multiline.lfz
+1
+[exit 0]
+```
+补强（独立）：`bug01_leading_comment.lfz`（块前注释）→ exit 0/`42`；`bug01_leading_blank_block.lfz`（程序首空行 + 块首注释）→ exit 0/`7`。
+
+### 8.3.2 bug-02 插值 `format_spec` —— 已修复
+```
+PS> lfz.exe run docs\reports\fixtures-p3-rev2\bug02_format_spec.lfz
+  1
+[exit 0]
+```
+更广格式说明符：夹具 `06_interp.lfz` 整体通过（`n=00042`、`hex=2a HEX=2A oct=52 bin=101010`、`pi=3.142`、`right=    42 left=42     center=  42  `、`sign=+42`、`s=LFZ`、转义 `esc ${n}`）。
+
+### 8.3.3 bug-03 `if` 表达式 —— 已修复
+```
+PS> lfz.exe run docs\reports\fixtures-p3-rev2\bug03_if_expr.lfz
+1
+[exit 0]
+```
+
+### 8.3.4 bug-04 帧 `span` —— 已修复
+```
+Traceback (most recent call last):
+  File "...\bug04_span.lfz", line 3, in <module>
+    s.missing
+    ^
+FieldError: 结构体没有字段 'missing'
+[exit 2]
+```
+回归抽查：`span_check_divzero.lfz`→line 2；`span_check_name.lfz`→line 2；`span_check_nested_field.lfz`（`print(s.missing)` 作实参）→line 3，全部正确。
+
+### 8.3.5 bug-05 管道右侧消息 —— 已修复
+```
+  File "...\bug05_pipe_rhs.lfz", line 2, in <module>
+    print(3 |> 5)
+          ^
+TypeError: 管道右侧必须是函数，得到 int
+[exit 2]
+```
+
+### 8.3.6 bug-06 `let` 重绑定 —— 已修复
+独立复现文件 `bug06_exact.lfz`（内容恰为 `#42` / `let a = 1` / `a = 2`）：
+```
+  File "...\bug06_exact.lfz", line 3, in <module>
+    a = 2
+    ^
+TypeError: 不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容
+[exit 2]
+```
+正例（`var` 重绑定仍合法）：`var b = 1` / `b = 2` / `print(b)` → **exit 0**，stdout `2`。
+单测佐证：`evaluator::tests::let_rebind_is_type_error` **已摘除 `#[ignore]`** 并在 377 全绿中通过；`cargo test` 的 **ignored = 0**（上一轮 1）。消息与任务书逐字符一致。
+
+### 8.3.7 bug-07 语句首 `{`（A9）—— 已修复
+规范 `syntax.md` §3.3（第 283–285 行）钉死：语句位 `{ … }` ≡ `struct_lit`；正例 `{ "k": 1 }` 合法（值丢弃）；反例 `{ let x = 1 }` / `{ ;; }` → `SyntaxError`。实测：
+```
+PS> lfz.exe run <let s = { "k": 1 } / print(s)>        → {k: 1}      [exit 0]
+PS> lfz.exe run <语句 : { "k": 1 }>                     → （无输出） [exit 0]
+PS> lfz.exe run <{ let x = 1 }>   → SyntaxError: 这里期待 字段名，但得到 'let'   [exit 2]
+PS> lfz.exe run <{ ;; }>          → SyntaxError: 这里期待 字段名，但得到 ';;'    [exit 2]
+```
+与 §3.3 正/反例**逐条一致**。
+
+### 8.3.8 bug-08 `.self` —— 规范侧已闭合（实现一致）
+```
+PS> lfz.exe run <r.me = r ...        > [exit 0]  {me: <cycle>} / true
+PS> lfz.exe run <r.self = r ...     > [exit 2]  SyntaxError: 这里期待 字段名，但得到 'self'
+```
+`docs/spec/syntax.md` §9.4 已改样例为 `r.me`（第 783/810 行），并注明字段名不可用保留关键字、需要 "self" 键时写 `r["self"]`。**实现与修订后规范一致；原 `.self` 冲突属规范侧，已闭合。**
+
+### 8.3.9 bug-09 traceback 截断 —— 已修复
+```
+Traceback (most recent call last):
+  File "...\bug09_recursion.lfz", line 3, in <module>
+    print(r(0))
+          ^
+  File "...\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  ...（首 10 帧）...
+  ... 省略 9961 帧 ...
+  File "...\bug09_recursion.lfz", line 2, in r
+    fn r(n) { r(n + 1) }
+              ^
+  ...（尾 30 帧）...
+RecursionError: 递归深度超限（超过 10000 层）
+[exit 2]
+```
+量化：stderr **7152 字节 / 123 行**；帧行（`  File "`）= **40**（= 首 10 + 尾 30）；省略行 = **1**（`... 省略 9961 帧 ...`，T=10001）；末行 `RecursionError: 递归深度超限（超过 10000 层）`。**符合「百行量级 + 省略标记」要求**（rev.1 为 30005 行无折叠）。
+
+### 8.3.10 spec-20260924-01（§9.4 样例含单 `;`）—— 已修正
+`docs/spec/syntax.md` §9.4（第 786–813 行）现以**换行**分隔 `n += 1` / `n`（第 792–793 行，无单 `;`），并新增第 784 行补钉说明「单 `;` 永远 `SyntaxError`（A11），故 `fn inc()` 的块体不得写作 `{ n += 1; n }`」；字段已改 `r.me`。**全 §9.4 样例代码区已无单 `;`。**
+**逐字复跑**：我把**当前** §9.4 样例逐字复制为 `docs/reports/fixtures-p3-rev3/spec_9_4_current.lfz`，运行：
+```
+PS> lfz.exe run docs\reports\fixtures-p3-rev3\spec_9_4_current.lfz
+1 2 3
+99 99
+[3, 1, 2]  [1, 2, 3]
+{me: <cycle>}
+true
+[exit 0]
+```
+与 §9.4「预期输出」（第 817 行起）**逐行一致** → **规范文本与实现现已自洽**。
+
+## 8.4 夹具复跑（通过率汇总）
+
+**A) `docs/reports/fixtures-p3/`（rev.1 夹具，9 份）**
+
+| 夹具 | 结果 |
+|---|---|
+| `01_arith.lfz` | **通过**（exit 0，19 行） |
+| `02_control.lfz` | **通过**（exit 0） |
+| `03_functions.lfz` | **通过**（exit 0：`120 / 55 / 1 2 3`） |
+| `04_containers.lfz` | **通过**（exit 0，14 行） |
+| `05_pipe.lfz` | **通过**（exit 0） |
+| `06_interp.lfz` | **通过**（exit 0，10 行） |
+| `07_dump.lfz` | **通过**（exit 0） |
+| `08_builtins.lfz` | **通过**（exit 0，58 行） |
+| `spec_9_4_refs.lfz`（**旧拷贝**） | **失败**（exit 2）——**夹具遗留**，见下 |
+
+→ **8/9 通过**。
+
+**`spec_9_4_refs.lfz` 失败属「夹具遗留」的判定（非解释器缺陷）**：
+```
+  File "...\fixtures-p3\spec_9_4_refs.lfz", line 5
+      fn inc() { n += 1; n }          // 闭包按 cell 捕获 n（A2）
+                       ^
+SyntaxError: 语句之间必须有换行
+[exit 2]
+```
+该夹具是 **rev.1 时逐字复制「修订前」§9.4** 的产物，含当时的单 `;`（`n += 1; n`）与 `r.self`。规范 §9.4 **已在 `316abce` 修正**（改用换行 + `r.me`），而该旧夹具**未同步**，故按 A11 报错——**解释器行为与规范一致（正确）**。**已说明，属夹具/历史遗留，非解释器缺陷、非阻塞。**
+> 建议（非本角色交付物，仅记录）：`fixtures-p3/spec_9_4_refs.lfz` 为历史证据保留；当前规范样例的验证改由新增 `fixtures-p3-rev3/spec_9_4_current.lfz` 承担（已通过）。后续如需，可由 test-engineer 以现行规范重生成黑盒用例。
+
+**B) `docs/reports/fixtures-p3-rev2/`（rev.2 夹具，全部通过）**：`bug01_multiline` / `bug01_leading_comment` / `bug01_leading_blank_block` / `bug02_format_spec` / `bug03_if_expr` / `bug04_span` / `bug05_pipe_rhs` / `bug06_let_rebind` / `bug07_stmt_brace` / `bug09_recursion` / `spec_9_4_refs_fixed` / `nohdr` / `span_check_divzero` / `span_check_name` / `span_check_nested_field` —— **行为全部符合本轮期望**（正例 exit 0、错误例 exit 2 且定位/消息正确）。
+
+**C) 新增 `docs/reports/fixtures-p3-rev3/`**：`spec_9_4_current.lfz`（当前 §9.4 逐字）→ **通过**（见 §8.3.10）。
+
+## 8.5 回归检查（无新增回归）
+
+| 回归用例 | 期望 | 实测 | 结论 |
+|---|---|---|---|
+| `examples/hello.lfz` | `Hello, LFZ!` / exit 0 | `Hello, LFZ!` / exit 0 | ✅ 未回归 |
+| 缺 `#42`（`nohdr.lfz`） | exit 2 + `CosmosAnswerError: 你忘记了宇宙的答案` line 1 | 一致 | ✅ 未回归 |
+| 语法错误（`let x = 1 $ 2`） | exit 2 + `SyntaxError: 非法字符 '$'` + line 2 + 插入符 | 一致 | ✅ 未回归 |
+| 运行期 `div(1, 0)` | exit 2 + `ZeroDivisionError: 除以零` line 2 | 一致 | ✅ 未回归 |
+| 运行期 `print(undefinedName)` | exit 2 + `NameError: 未定义的名字 'undefinedName'` | 一致 | ✅ 未回归 |
+| `fixtures-p3/01–08`（含 `if/while/for`、`fn`、`;;` 块内、闭包、插值） | 全 exit 0 | 全 exit 0 | ✅ 未回归 |
+
+> bug-07（A9 解析器改动）与 bug-06（捕获变量可变性改动）均为**高风险面**，上表 `02_control` / `03_functions` / `07_dump` / `06_interp` / `spec_9_4_current` 全部通过，**确认无回归**。
+
+## 8.6 回归记录（最终版，P3 全程闭环）
+
+| 缺陷 | 首次发现 | rev.1 | rev.2 | **rev.3（终验）** | 终验证据 |
+|---|---|---|---|---|---|
+| bug-20260924-01 多行块 🔴 | 2026-09-24 | 未修复 | 已修复 | **已修复** | §8.3.1（exit 0） |
+| bug-20260924-02 插值 format_spec 🔴 | 2026-09-24 | 未修复 | 已修复 | **已修复** | §8.3.2（exit 0） |
+| bug-20260924-03 `if` 表达式 🔴 | 2026-09-24 | 未修复 | 已修复 | **已修复** | §8.3.3（exit 0） |
+| bug-20260924-04 帧 span 🟡 | 2026-09-24 | 未修复 | 已修复 | **已修复** | §8.3.4（line 3） |
+| bug-20260924-05 管道右侧消息 🟡 | 2026-09-24 | 未修复 | 已修复 | **已修复** | §8.3.5（逐字节一致） |
+| bug-20260924-06 `let` 重绑定 🟡 | 2026-09-24 | 未修复 | 仍失败 | **已修复** | §8.3.6（exit 2 + ignored=0） |
+| bug-20260924-07 语句首 `{` 🟡 | 2026-09-24 | 未修复 | 仍失败 | **已修复** | §8.3.7（正/反例一致） |
+| bug-20260924-08 `.self` 🟢 | 2026-09-24 | 未修复 | 已闭合（规范侧） | **已闭合（规范侧）** | §8.3.8（`r.me` 正确） |
+| bug-20260924-09 RecursionError 巨量帧 🟡 | 2026-09-24 | 未修复 | 仍失败 | **已修复** | §8.3.9（123 行 + 省略行） |
+| spec-20260924-01 §9.4 含单 `;` 🟡 | 2026-09-24 | — | 新发现 | **已修正** | §8.3.10（当前样例逐字 exit 0） |
+
+**终验闭环率：10/10（100%）。新增回归：0。**
+
+## 8.7 终验总结论
+
+- ✅ **原 3×🔴**（多行块 / 插值 `format_spec` / `if` 表达式）**复现全部通过**（真实 CLI 端到端）。
+- ✅ **原 4×🟡**（bug-04/05 已修；**bug-06 本轮首次落地**；bug-07 A9 落地）**全部闭环**。
+- ✅ **bug-08** 由规范侧闭合（样例改 `r.me`），实现与规范一致。
+- ✅ **🟡 bug-09** 深递归 traceback 折叠落地：**123 行** + 省略行 + 正确末行/退出码。
+- ✅ **规范侧 spec-20260924-01** 已修正：§9.4 现行样例**逐字可运行**，输出与「预期输出」逐行一致。
+- ✅ `cargo build` **0 warning / 0 error**；`cargo test` **377 passed / 0 failed / 0 ignored**（库 361/0 ignored，bin 9，cli 7）。
+- ✅ **无新增回归**（hello / 缺 `#42` / 语法错 / `div(1,0)` / 未定义名 / 夹具 01–08 全部保持）。
+- ℹ️ **非阻塞说明（不构成 CONCERN 缺陷）**：① 验证期间发生并发提交，最终基线为 clean 的 `c6638cc`（发版请以此为准）；② `fixtures-p3/spec_9_4_refs.lfz` 为「修订前 §9.4」的历史夹具，失败属夹具遗留且已说明（现行样例另以 `spec_9_4_current.lfz` 验证通过）。
+
+> **【终验结论】PASS（可打 `v0.2.0`）。**
+> 10 项待验缺陷**全部闭环**（原 3×🔴 + 4×🟡 + 1×🟢 + 1 规范侧），`cargo build` 0 warning、`cargo test` 全绿且 **ignored = 0**，**无新增回归**。建议 release-manager 在 **clean 的 HEAD `c6638cc`** 上打 `v0.2.0` 附注标签（该提交已含 bug-06 全部接线）。上述非阻塞说明仅作过程记录，**不影响发版**。
+
+*（终验（rev.3）完。本轮夹具与合并证据见 `docs/reports/fixtures-p3-rev3/`：`spec_9_4_current.lfz` + `rev3-evidence.txt`。）*
