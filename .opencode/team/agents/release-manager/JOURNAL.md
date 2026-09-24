@@ -392,3 +392,20 @@
 - 决策: 无新 ADR（常规提交，非跨角色新决策）。owner 偏差仍为遗留待确认项。
 - 下一步: 待 verifier 终验 → team-lead 判定 v0.2.0；P3 后续子阶段继续按模块原子提交；P10 交付清单核对。
 - 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
+## [2026-09-24 09:00] P3 收官：终验报告 + 团队状态入库、README 更新、附注标签 v0.2.0 打并推送
+- 来源: team-lead 任务书（轻量启动；已核验 verifier 终验 PASS 可打 v0.2.0；工作区预计 6 项；出现清单外条目即停止）
+- 完成:
+  - 入清单门禁：git status --short --untracked-files=all 复核恰为任务书预计 6 项（M docs/reports/P3-verification.md、?? docs/reports/fixtures-p3-rev3/、M .opencode/team/agents/verifier/{STATUS,JOURNAL}.md、M .opencode/team/TEAM_BOARD.md、M .opencode/team/PROJECT_STATE.md），无清单外条目；门禁未触发。
+  - 基线复核：分支 main；HEAD = c6638cc fix(p3): enforce let immutability (ImmutableRebind)；git remote origin = https://github.com/NeitherTourRest/lfz-programing-language.git。
+  - 先完成收工协议（覆盖更新本角色 STATUS.md、追加本 JOURNAL.md）。
+  - 更新 README.md（仅本角色职权）：当前状态表 → P3 ✅ 完成 · 里程碑 v0.2.0、P0.5 ✅；新增「验收证据」小节（终验 PASS、10/10 闭环、cargo build 0 warning、cargo test 377 passed / 0 failed / 0 ignored（库 361+bin 9+cli 7）、端到端 Hello, LFZ!）；「快速开始」补实际可运行命令（cargo build / cargo run -- run examples/hello.lfz / cargo test）与「.lfz 首行须 #42」提示。
+  - 提交 1：git add docs/reports/P3-verification.md docs/reports/fixtures-p3-rev3 .opencode/team/agents/verifier/STATUS.md .opencode/team/agents/verifier/JOURNAL.md → 提交 docs(reports): P3.11 final verification (rev.3 PASS, 10/10 closed)（短哈希见汇报）。
+  - 提交 2：git add .opencode/team/TEAM_BOARD.md .opencode/team/PROJECT_STATE.md README.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md → 提交 docs(team): mark P3 complete and update README for v0.2.0（team-lead 撰写的两文件仅代为入库、未改内容）。
+  - 打附注标签：git tag -a v0.2.0 -m "v0.2.0 — LFZ v1 interpreter core (P3): loader/lexer/ast/parser/evaluator/builtins(54)/cli; P3.11 final verification PASS (10/10 defects closed)"。
+  - 推送：git push（main）；git push origin v0.2.0（含 tags）。
+- 产出:
+  - 两个新提交（短哈希见汇报）；附注标签 v0.2.0 指向终态 HEAD；远程 refs/heads/main + refs/tags/v0.2.0 均到位；git status --short 空。
+  - 证据: git tag -n（含 v0.2.0 附注标题）；git ls-remote --tags origin（含 refs/tags/v0.2.0）；git log --oneline -4；两提交短哈希。
+- 决策: 无新 ADR（本轮为既有决策的里程碑执行，非新跨角色决策）。owner 偏差仍为遗留待确认项。
+- 下一步: P10 交付清单核对报告 docs/reports/delivery-checklist.md；后续里程碑 v0.3-tested / v0.4-app / v1.0-final 按需打附注标签。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。

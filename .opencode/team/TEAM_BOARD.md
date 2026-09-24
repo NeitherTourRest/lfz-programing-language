@@ -6,7 +6,7 @@
 ## 🔵 进行中
 | ID | 任务 | 负责 | 依赖 | 状态 | 产出/证据 |
 | -- | -- | -- | -- | -- | -- |
-| P3.11 | 独立验收（对照契约 + 6 条验收命令）→ 出 `docs/reports/P3-verification.md` → 打 `v0.2.0` | verifier | P3.10 | 🔄 进行中 | 见下方「P3 子阶段台账」 |
+| （无） |  |  |  |  |  |
 
 ## 🟡 待办
 | ID | 阶段 | 交付物 | 负责 | 映射评分项 | 通过条件 |
@@ -46,7 +46,7 @@
 | P3.9a | `builtins.rs` 非高阶 47 个 | runtime-dev | ✅ | `b81680b` |
 | P3.9b | `builtins.rs` 高阶 7 个（**§10.7 54/54**） | runtime-dev | ✅ | `d51755a` |
 | P3.10 | 最小 CLI + `examples/hello.lfz` | tooling-dev | ✅ | `c7627a6` |
-| **P3.11** | **独立验收 → 里程碑标签 `v0.2.0`** | verifier | 🔄 | — |
+| **P3.11** | **独立验收（rev.1 FAIL → rev.2 CONCERNS → rev.3 PASS，10/10 缺陷闭环、0 回归）→ 里程碑标签 `v0.2.0`** | verifier | ✅ | tag `v0.2.0` |
 | 规范 | 7 处契约缺口闭合（先 ADR 后改 `docs/spec`） | language-architect | ✅ | `711d6b9` `5cdcc1b` |
 
 > **执行者改派记录**：`parser.rs` 因原负责人 2 次未交付，自 P3.4b1 起由 team-lead 改派 **Sisyphus-Junior**（`unspecified-high`），并将任务切成 ≤1 模块的小批次，每个批次以「**必须贴出文件实际字节数**」为真假完成判据；改派后 6 个批次全部一次落地。

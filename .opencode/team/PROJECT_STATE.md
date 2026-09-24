@@ -11,7 +11,7 @@
 - **P2 语言设计已冻结**（DECISIONS **D-016**）：`docs/spec/{syntax,semantics,interface-contract}.md` 三件套定稿（60010/28153/26116 字节；910/382/298 行；UTF-8 无 BOM），冻结基线为 `DRAFT-LFZ-v0.5.md`（含 3 处补钉）。冻结门禁：core-dev 复审 **PASS**（文法无回溯可实现）；runtime-dev 复审 CONCERNS 3 项（非架构级，已闭合）。
 - **P0.5 版本基线已完成（本地 + 远程）**：`git init -b main`、初始提交 `e060b21`、附注标签 `v0.1.0`、版本管理纪律 ADR；远程仓库 **https://github.com/NeitherTourRest/lfz-programing-language**（**Public**，默认分支 `main`，`main` = `35e5f62`，`v0.1.0` 已推送）；本地与远程一致。⚠️ **认证账号 login = `NeitherTourRest`**（其 display name = `MakeChase`）——GitHub 上另有同名不同账号 `MakeChase`，故仓库 URL 用 `NeitherTourRest`。
 - **关键决策**：**实现语言 = Rust**（D-011，工具链已装并 `cargo build` 冒烟通过）；v1 = 5 特色 + `float`；`#42` 文件头 + Python 式中文错误；契约先行 + 双轨 TDD；阶段划分见 D-009；**协议 MIT**；**全程自动版本管理 + README 实时更新**。
-- **P3 实现全部完成（P3.0–P3.10），P3.11 验收进行中**：**LFZ 解释器已端到端可用** —— `cargo run -- run examples/hello.lfz` → `Hello, LFZ!`（退出码 0）；缺 `#42` → 退出码 2 + `CosmosAnswerError: 你忘记了宇宙的答案`。模块：`loader` / `lexer` / `ast` / `parser` / `value` / `env` / `evaluator` / `builtins`（**§10.7 54/54**）/ `cli`。**测试基线 369 passed / 0 failed / 0 warnings**。子阶段台账（含各提交哈希）见 `TEAM_BOARD.md`。
+- **P3 已收官（P3.11 终验 PASS）**：**LFZ v1 解释器端到端可用**。独立验收共发现 **10 项缺陷（3×🔴 + 4×🟡 + 2×🟢 + 1 规范侧）**，**全部闭环、无新增回归**（终验 rev.3：`10/10`）。质量基线：`cargo build` **0 warning**；`cargo test` **361 passed / 0 failed / 0 ignored**（+9+7 集成）。里程碑标签 **`v0.2.0`**。模块：`loader` / `lexer` / `ast` / `parser` / `value` / `env` / `evaluator` / `builtins`（**§10.7 54/54**）/ `cli`。子阶段台账见 `TEAM_BOARD.md`；缺陷清算表见 `docs/reports/P3-verification.md`。
 - **规范侧**：7 处契约缺口已按「先 ADR、后改 `docs/spec`」闭合（`ValueMsg::EmptyExtremum`/`BadRange`、`pop` 的 `idx/len`、`floor/ceil/round` 复用 `int(float)`、`del` 限数据面、`insert` 不接受负索引、未闭合块注释 → `SyntaxError`）。
 
 ## 3. 里程碑进度表
