@@ -1,5 +1,20 @@
 # core-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 08:49] P3.11 裁定 1 落地：`src/error.rs` 新增 `TypeMsg::ImmutableRebind { name }`
+- 来源: team-lead 轻量任务书「在 `src/error.rs` 新增 `TypeMsg::ImmutableRebind`，供 runtime-dev 接线 `exec_assign`」；依据 `DECISIONS.md` [2026-09-24 00:30] 裁定 1（表 #1）+ `semantics.md` §4.5.2 / §8.1。
+- 完成: 轻量启动（只读 `agents/core-dev/STATUS.md`）→ 读 `DECISIONS.md` 裁定 1/表 + `semantics.md` §4.5.2 / §8.1（`TypeError` 触发行 + 细分表 6→7）+ `src/error.rs` 现有变体与 `message()` 写法 → 落盘变体 + `message()` 分支 + 折入既有单测 → `cargo build` / `cargo test` 双绿 → 汇报。
+  - **A. 变体**（`src/error.rs`）：`TypeMsg::ImmutableRebind { name: String }`，字段名 `name` 照裁定/规范。
+  - **B. `message()` 分支**（逐字照抄规范）：`format!("不能重新赋值 let 变量 '{name}'；let 只锁重绑定，不锁内容")`。
+  - **C. 文档注释**：`TypeMsg` 枚举头「**6 条**」→「**7 条**」。
+  - **D. 单测（折入既有测试，保持 lib harness 计数 359）**：`type_msg_covers_all_seven_rows`（更名 + 新增 1 条 `assert_eq!` + 3 条 `assert_chars_eq`：`a` / `counter` / `_tmp`，逐字符）；`cold_constructors_build_correct_class`（新增 `class_name()=="TypeError"` 与 `to_string()` 断言）。
+- 产出:
+  - `src/error.rs`（**+60 / −2**，仅此文件）。
+  - 证据：`git --no-pager diff --stat -- src/error.rs` → `1 file changed, 60 insertions(+), 2 deletions(-)`；`cargo build` → `BUILD_EXIT=0`、`WARN_COUNT=0`；`cargo test` → lib harness `test result: ok. 359 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out`，`TEST_EXIT=0`。
+- 决策:
+  - **把新断言折入既有测试函数**（而非新增 `#[test]`），以精确匹配任务书「期望 `359 passed; 1 ignored`」；断言覆盖（逐字符 message + class_name）不缩水。
+  - **不改** `class_name()`（`TypeMsg` 仍 `"TypeError"`）、**不新增错误类**、**无 `E-xxx`**、**不改其它变体 / spec / Cargo.toml**。
+- 下一步: runtime-dev 解除 bug-06 阻塞后接线 tri-state `assign_name` + `exec_assign` + 移除负例 `#[ignore]`（`span = target.span`）；core-dev 待派 **P3.4b / P3.5 parser**。
+- 阻塞: 无。
 ## [2026-09-23 22:29] P3.4a `src/ast.rs`：AST 全节点定义（每节点携带 `Span`）
 - 来源: team-lead 轻量任务书「P3.4a — `src/ast.rs`：AST 全节点定义（每个节点携带 Span）」
 - 完成: 先落盘再测试（轻量启动，禁止长时间推演）。

@@ -107,7 +107,7 @@ impl SyntaxMsg {
     }
 }
 
-/// `TypeError` 细分消息 —— `semantics.md` §8.1「`TypeError` 细分消息」表，**6 条**。
+/// `TypeError` 细分消息 —— `semantics.md` §8.1「`TypeError` 细分消息」表，**7 条**。
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum TypeMsg {
     /// `运算符 '{op}' 不支持 {lt} 与 {rt}`
@@ -122,6 +122,9 @@ pub enum TypeMsg {
     ArgCount { name: String, n: usize, m: usize },
     /// `格式说明符 '{spec}' 不适用于 {t}`
     FormatSpecMismatch { spec: String, t: String },
+    /// 重绑定 `let` 变量（v1 补钉，`semantics.md` §4.5.2 / §8.1）：
+    /// `不能重新赋值 let 变量 '{name}'；let 只锁重绑定，不锁内容`。
+    ImmutableRebind { name: String },
 }
 
 impl TypeMsg {
@@ -142,6 +145,9 @@ impl TypeMsg {
             }
             TypeMsg::FormatSpecMismatch { spec, t } => {
                 format!("格式说明符 '{spec}' 不适用于 {t}")
+            }
+            TypeMsg::ImmutableRebind { name } => {
+                format!("不能重新赋值 let 变量 '{name}'；let 只锁重绑定，不锁内容")
             }
         }
     }
@@ -745,7 +751,7 @@ mod tests {
     }
 
     #[test]
-    fn type_msg_covers_all_six_rows() {
+    fn type_msg_covers_all_seven_rows() {
         assert_eq!(
             TypeMsg::BadOperands {
                 op: "+".to_string(),
@@ -792,6 +798,37 @@ mod tests {
             }
             .message(),
             "格式说明符 'd' 不适用于 string"
+        );
+        assert_eq!(
+            TypeMsg::ImmutableRebind {
+                name: "a".to_string(),
+            }
+            .message(),
+            "不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容"
+        );
+        // P3.11 裁定 1：`ImmutableRebind` 消息由规范逐字符锁定，再逐字符断言一遍
+        // （`semantics.md` §4.5.2 / §8.1，`DECISIONS.md` [2026-09-24 00:30]）。
+        assert_chars_eq(
+            &TypeMsg::ImmutableRebind {
+                name: "a".to_string(),
+            }
+            .message(),
+            "不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容",
+        );
+        // 多字符 / 下划线名字须原样嵌入（不截断、不加引号）。
+        assert_chars_eq(
+            &TypeMsg::ImmutableRebind {
+                name: "counter".to_string(),
+            }
+            .message(),
+            "不能重新赋值 let 变量 'counter'；let 只锁重绑定，不锁内容",
+        );
+        assert_chars_eq(
+            &TypeMsg::ImmutableRebind {
+                name: "_tmp".to_string(),
+            }
+            .message(),
+            "不能重新赋值 let 变量 '_tmp'；let 只锁重绑定，不锁内容",
         );
     }
 
@@ -1019,6 +1056,27 @@ mod tests {
             )
             .class_name(),
             "TypeError"
+        );
+        // P3.11 裁定 1：新变体 `ImmutableRebind` 仍归 `TypeError` 类（`class_name()` 映射**不改**）。
+        assert_eq!(
+            type_error(
+                TypeMsg::ImmutableRebind {
+                    name: "a".to_string()
+                },
+                Span::START
+            )
+            .class_name(),
+            "TypeError"
+        );
+        assert_eq!(
+            LzError::Type {
+                msg: TypeMsg::ImmutableRebind {
+                    name: "counter".to_string()
+                },
+                span: Span::START,
+            }
+            .to_string(),
+            "TypeError: 不能重新赋值 let 变量 'counter'；let 只锁重绑定，不锁内容"
         );
         assert_eq!(index(9, 1, Span::START).class_name(), "IndexError");
         assert_eq!(field("k".to_string(), Span::START).class_name(), "FieldError");
