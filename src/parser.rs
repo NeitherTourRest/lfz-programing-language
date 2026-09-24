@@ -8,8 +8,8 @@
 //! - 换行模式栈（§3.2）：`(` / `[` / 字面量与声明成员表 `{` 内 `NEWLINE` 忽略（`IGN`），
 //!   语句层生效（`SIG`）。
 //! - 语句：`let` / `var` 声明、**赋值语句**（`assign_stmt`：`= += -= *= /= %=`，
-//!   目标为 `IDENT` / `self` + `. 字段` / `[ 下标 ]` 链，A21）、表达式语句、
-//!   块 `{ ... }`、程序（`Program`）本身。
+//!   目标为 `IDENT` / `self` + `. 字段` / `[ 下标 ]` 链，A21）、表达式语句
+//!   （语句首 `{` 按 A9 为匿名 struct 字面量，无裸块语句）、程序（`Program`）本身。
 //! - 控制流：`if` / `else` / `else if` 链（条件走 §3.4 NO_BRACE_LITERAL、
 //!   §3.5 块前 / else 前换行、A4 悬挂 else 绑定最近 if）、`while`（§7 `while_stmt`）、
 //!   `for IDENT in expr`（§7 `for_stmt`）、`break` / `continue`（循环外 →
@@ -51,9 +51,9 @@
 //!
 //! # 本批已知简化
 //!
-//! 1. 语句起始处的 `{ ... }` 仍按**裸块语句**解析并内联进外层语句序列
-//!    （AST 的 `StmtKind` 无 Block 变体）；§3.3 / A9「语句首 `{` 恒为匿名
-//!    struct 字面量」留待语句形态补齐批次一并处理。
+//! 1. （已由 bug-07 修复）语句起始处的 `{ ... }` 按 §3.3 / A9 解析为**匿名
+//!    struct 字面量**（`expr_stmt` → `struct_lit`）；LFZ 无裸块语句，AST 的
+//!    `StmtKind` 无 Block 变体。原「裸块语句内联」特例分支已删除。
 //! 2. `if` 仅支持**语句形态**（`StmtKind::If` 包裹 `if_expr`）；表达式位置的
 //!    `if_expr`（§7 `unary` 层）属后续批次。
 //! 3. 循环 / 函数体深度由 `loop_depth` / `fn_depth` 计数（本批起 `fn` 声明、
@@ -252,8 +252,9 @@ impl<'a> Parser<'a> {
     /// 块 `{` 之后）的空行 / 注释行后的换行一律跳过，再决定是否解析语句
     /// （P3 验收 bug-01 修复）。
     ///
-    /// 注：语句首 `{` 仍按**裸块语句内联**处理；A9「语句首 `{` 为匿名 struct 字面量」
-    /// 属 P3 验收 🟡 bug-07，**待架构师确认 A9 后再单独修复并同步其回归用例**。
+    /// 注（A9 / §3.3 规则 2，bug-07 修复）：语句首 `{` 无特例分支，经正常语句
+    /// 路径解析为**匿名 struct 字面量**（`expr_stmt` → `struct_lit`）；
+    /// LFZ 无裸块语句，裸块语句与 AST `Block` 语句变体均不存在。
     fn parse_stmt_seq(&mut self) -> R<Vec<Stmt>> {
         let mut stmts = Vec::new();
         loop {
@@ -262,11 +263,8 @@ impl<'a> Parser<'a> {
             self.skip_newlines();
             match self.peek().clone() {
                 TokenKind::Eof | TokenKind::RBrace => break,
-                TokenKind::LBrace => {
-                    // 裸块语句（本批简化）：块内语句内联进外层语句序列。
-                    let block = self.parse_block()?;
-                    stmts.extend(block.stmts);
-                }
+                // 语句首 `{` 无裸块特例（A9 / §3.3）：落入正常语句路径，经表达式
+                // 路径的 `parse_struct_lit(None, …)` 解析为匿名 struct 字面量。
                 _ => stmts.push(self.parse_stmt()?),
             }
             // 语句终结检查（§3.2）：下个有效记号必须是 NEWLINE / `}` / EOF。
@@ -1673,8 +1671,11 @@ mod tests {
     }
 
     #[test]
-    fn block_statement_inlines_contents() {
-        let p = parse(&[
+    fn statement_start_brace_is_struct_literal_not_block() {
+        // bug-07 / A9：语句首 `{ let x = 1 }` 为 A9 反例——`let` 不是 `field_init`
+        // 的 (IDENT|STRING) 头 → `SyntaxError`（不再是「裸块语句内联」，见
+        // DECISIONS.md「bug-20260924-07 裁定」）。
+        let err = parse(&[
             tok(TokenKind::LBrace, 1, 1),
             tok(TokenKind::KwLet, 1, 3),
             tok(TokenKind::Ident("x".into()), 1, 7),
@@ -1683,9 +1684,16 @@ mod tests {
             tok(TokenKind::RBrace, 1, 13),
             tok(TokenKind::Eof, 1, 14),
         ])
-        .unwrap();
-        assert_eq!(p.stmts.len(), 1);
-        assert!(matches!(p.stmts[0].node, StmtKind::Decl { .. }));
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "字段名".to_string(),
+                got: "'let'".to_string(),
+            },
+            1,
+            3,
+        );
     }
 
     #[test]
@@ -2223,9 +2231,36 @@ mod tests {
     }
 
     #[test]
-    fn no_brace_literal_statement_start_is_block() {
-        // NO_BRACE_LITERAL：语句起始处的 `{` 仍是块（本批内联进外层语句序列）。
+    fn statement_start_brace_parses_as_struct_lit() {
+        // bug-07 / A9：语句首 `{ "k": 1 }` 是匿名 struct 字面量表达式语句；
+        // `{ let a=1 \n let b=2 }` 是 A9 反例 → `SyntaxError`（原「语句首 `{`
+        // 为块」的特例已删除，见 DECISIONS.md「bug-20260924-07 裁定」）。
         let p = parse(&[
+            tok(TokenKind::LBrace, 1, 1),
+            tok(TokenKind::StrBegin, 1, 3),
+            tok(TokenKind::Text("k".into()), 1, 4),
+            tok(TokenKind::StrEnd, 1, 5),
+            tok(TokenKind::Colon, 1, 6),
+            tok(TokenKind::Int("1".into()), 1, 8),
+            tok(TokenKind::RBrace, 1, 9),
+            tok(TokenKind::Eof, 1, 10),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 1);
+        match &p.stmts[0].node {
+            StmtKind::Expr(e) => match &e.node {
+                ExprKind::StructLit(StructLit { type_name, fields }) => {
+                    assert_eq!(*type_name, None);
+                    assert_eq!(fields.len(), 1);
+                    assert_eq!(fields[0].name, "k");
+                    assert_eq!(fields[0].value.node, ExprKind::Int(1));
+                }
+                other => panic!("应为 StructLit，得到 {other:?}"),
+            },
+            other => panic!("应为 Expr 语句，得到 {other:?}"),
+        }
+
+        let err = parse(&[
             tok(TokenKind::LBrace, 1, 1),
             tok(TokenKind::KwLet, 1, 3),
             tok(TokenKind::Ident("a".into()), 1, 7),
@@ -2239,10 +2274,16 @@ mod tests {
             tok(TokenKind::RBrace, 2, 13),
             tok(TokenKind::Eof, 2, 14),
         ])
-        .unwrap();
-        assert_eq!(p.stmts.len(), 2);
-        assert!(matches!(p.stmts[0].node, StmtKind::Decl { .. }));
-        assert!(matches!(p.stmts[1].node, StmtKind::Decl { .. }));
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "字段名".to_string(),
+                got: "'let'".to_string(),
+            },
+            1,
+            3,
+        );
     }
 
     #[test]
@@ -4422,16 +4463,50 @@ mod tests {
 
     #[test]
     fn dump_inside_block_is_legal() {
+        // bug-07 / A9：`;;` 在**真块体**（`fn` body）内仍合法（A10 不变）；
+        // 语句首 `{ ;; }` 现为 `SyntaxError`（`;;` 不能出现在 struct 字面量
+        // 成员表内）。见 DECISIONS.md「bug-20260924-07 裁定」。
         let p = parse(&[
+            tok(TokenKind::KwFn, 1, 1),
+            tok(TokenKind::Ident("f".into()), 1, 4),
+            tok(TokenKind::LParen, 1, 5),
+            tok(TokenKind::RParen, 1, 6),
+            tok(TokenKind::LBrace, 1, 8),
+            tok(TokenKind::Dump, 1, 10),
+            tok(TokenKind::Newline, 1, 12),
+            tok(TokenKind::RBrace, 1, 13),
+            tok(TokenKind::Eof, 1, 14),
+        ])
+        .unwrap();
+        assert_eq!(p.stmts.len(), 1);
+        match &p.stmts[0].node {
+            StmtKind::FnDecl(FnDecl { body, .. }) => match body {
+                Body::Block(Block { stmts, .. }) => {
+                    assert_eq!(stmts.len(), 1);
+                    assert!(matches!(&stmts[0].node, StmtKind::Dump { .. }));
+                }
+                other => panic!("应为块体，得到 {other:?}"),
+            },
+            other => panic!("应为 FnDecl，得到 {other:?}"),
+        }
+
+        let err = parse(&[
             tok(TokenKind::LBrace, 1, 1),
             tok(TokenKind::Dump, 1, 3),
             tok(TokenKind::Newline, 1, 5),
             tok(TokenKind::RBrace, 1, 6),
             tok(TokenKind::Eof, 1, 7),
         ])
-        .unwrap();
-        assert_eq!(p.stmts.len(), 1);
-        assert!(matches!(p.stmts[0].node, StmtKind::Dump { .. }));
+        .unwrap_err();
+        assert_syntax(
+            &err,
+            SyntaxMsg::UnexpectedToken {
+                expected: "字段名".to_string(),
+                got: "';;'".to_string(),
+            },
+            1,
+            3,
+        );
     }
 
     #[test]
@@ -4967,6 +5042,21 @@ mod tests {
         // bug-03：`if` 作表达式（初始化式 / 实参）。
         parse_src("let x = if true { 1 } else { 2 }\n").expect("if 应可作初始化式");
         parse_src("print(if false { 1 } else { 2 })\n").expect("if 应可作实参");
+    }
+
+    #[test]
+    fn reg_statement_start_brace_is_struct_literal_through_lexer() {
+        // bug-07 / A9（§3.3 规则 2）：经真实 lexer，语句首 `{ "k": 1 }` 为匿名
+        // struct 字面量表达式语句（值被丢弃）；反例 `{ let x = 1 }` / `{ ;; }`
+        // → `SyntaxError`。见 DECISIONS.md「bug-20260924-07 裁定」。
+        let p = parse_src("{ \"k\": 1 }\n").expect("语句首匿名 struct 字面量应可解析");
+        assert_eq!(p.stmts.len(), 1);
+        assert!(matches!(
+            &p.stmts[0].node,
+            StmtKind::Expr(e) if matches!(&e.node, ExprKind::StructLit(_))
+        ));
+        assert!(parse_src("{ let x = 1 }\n").is_err(), "A9 反例 `{{ let x = 1 }}` 应被拒");
+        assert!(parse_src("{ ;; }\n").is_err(), "A9 反例 `{{ ;; }}` 应被拒");
     }
 
     #[test]

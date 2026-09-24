@@ -610,3 +610,13 @@
 - **决策 2（bug-06 阻塞）**：裁定 1 需在 `src/error.rs`（属 **core-dev**）新增 `TypeMsg::ImmutableRebind { name }`；该变体当前**不存在**（`Select-String src\*.rs -Pattern ImmutableRebind` 无匹配），故 runtime-dev 按任务书 ⚠️ **停工**，**不写引用不存在变体的半成品**。core-dev 落地后，runtime-dev 执行 tri-state `assign_name` + `exec_assign` 接线 + 「捕获 cell 携带可变性」，并移除负例 `let_rebind_is_type_error` 的 `#[ignore]`。
 - **影响**：**core-dev**（`error.rs` 变体 #1）；**tooling-dev**（`cli.rs` 归属见决策 1）；**test-engineer**（bug-06 黑盒负例待 core-dev + runtime-dev 完成后可绿）。
 - **证据**：`agents/runtime-dev/STATUS.md` / `JOURNAL.md` 2026-09-24 08:46 条目；`git diff --stat -- src/cli.rs src/evaluator.rs`（cli.rs +102/−6、evaluator.rs +29）；`cargo build --tests`（warnings=0）；`cargo test`（**375 passed / 0 failed / 1 ignored**）；CLI 实测深递归 stderr 123 行 + 逐字符 `  ... 省略 9961 帧 ...` + exit 2。
+
+---
+
+### [2026-09-24 08:49] [core-dev] P3.11 裁定 1 落地：`TypeMsg::ImmutableRebind { name }` 已就绪（解除 runtime-dev bug-06 阻塞）
+
+- **来源**：team-lead 轻量任务书「`src/error.rs` 新增 `TypeMsg::ImmutableRebind`」；依据上文 `[2026-09-24 00:30]` 裁定 1 + `semantics.md` §4.5.2 / §8.1。
+- **变更**：`src/error.rs` 新增变体 `TypeMsg::ImmutableRebind { name: String }` + `message()` 分支 `不能重新赋值 let 变量 '{name}'；let 只锁重绑定，不锁内容`；枚举文档注释「**6 条**」→「**7 条**」。**不改** `class_name()`（`TypeMsg` 仍映射 `"TypeError"`）、**不新增错误类**、**无 `E-xxx`**、**不改其它变体**、**不改 spec / Cargo.toml**。
+- **解除阻塞（runtime-dev）**：上文 `[2026-09-24 08:46]` 决策 2 的阻塞（变体不存在 → 停工）**已解除**。runtime-dev 可执行 tri-state `assign_name` + `exec_assign` 接线 + 「捕获 cell 携带可变性」，并移除负例 `let_rebind_is_type_error` 的 `#[ignore]`；`span = target.span`（变量名首字符，裁定 1）。
+- **影响**：**runtime-dev**（唯一被解除的跨角色依赖）；**test-engineer**（bug-06 黑盒负例待 runtime-dev 完成后可绿）；**verifier**（bug-06 复验入口）。
+- **证据**：`git diff --stat -- src/error.rs`（`1 file changed, 60 insertions(+), 2 deletions(-)`，**仅此文件**）；`cargo build`（`WARN_COUNT=0`，exit 0）；`cargo test` lib harness `test result: ok. 359 passed; 0 failed; 1 ignored`（`1 ignored` 为 runtime-dev 占位，**未动**）。

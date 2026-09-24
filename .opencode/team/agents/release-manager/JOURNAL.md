@@ -1,5 +1,21 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 08:52] P3.13：`TypeMsg::ImmutableRebind` 落地（提交 1）+ A9 规范裁定（提交 2）：两个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；已核验：`cargo build` **0 warning**、`cargo test` **360 passed / 0 failed / 1 ignored**（+9+7）；`TypeMsg::ImmutableRebind` 已落地；A9 已生效（语句首 `{ "k": 1 }` → `{k: 1}` exit 0；`{ let x = 1 }` → `SyntaxError` exit 2）。预计工作区：`M src/error.rs`、`M src/parser.rs`、`M .opencode/team/DECISIONS.md`、`M agents/core-dev/{STATUS,JOURNAL}.md`；⚠️ 并行任务正在改 `src/evaluator.rs`——**若出现则不暂存、不中止**；其它意外条目 → 停止汇报。要求做**两个原子提交**并 push，收工文档并入提交 2；禁区：禁 force-push、**不打 tag**（`v0.2.0` 待 bug-06 接线 + 终验通过）、不暂存 `src/evaluator.rs`、不提交 `target/`·密钥·临时文件）
+- 完成:
+  - 入清单门禁：`git status --short` 复核恰为任务书预期 **5 项**（`M .opencode/team/DECISIONS.md`、`M .opencode/team/agents/core-dev/{STATUS,JOURNAL}.md`、`M src/error.rs`、`M src/parser.rs`），**无清单外条目、无未跟踪文件**；`src/evaluator.rs` **未出现**；门禁未触发。`git diff --stat` = 5 files changed, 225 insertions(+), 60 deletions(-)；未命中 `target/`·密钥·临时文件。
+  - 基线复核：push 前本地 HEAD = 远程 `refs/heads/main` = `316abce`；`git tag -n` 仍仅 `v0.1.0`。
+  - 内容抽查：`git diff src/error.rs` 仅 `TypeMsg::ImmutableRebind { name }` 新增 + `message()` 分支 + 测试「6 行→7 行」；`git diff src/parser.rs` 含 `parse_stmt_seq` 注释「LFZ 无裸块语句」+ `statement_start_brace_is_struct_literal_not_block` + `reg_statement_start_brace_is_struct_literal_through_lexer`；`DECISIONS.md` 追加 core-dev 条目（08:49）。
+  - **提交 1（代码）**：`git add src/error.rs .opencode/team/agents/core-dev/STATUS.md .opencode/team/agents/core-dev/JOURNAL.md`（`git diff --cached --name-only` 精确 3 文件）→ `git -c core.autocrlf=false commit -m "feat(p3): add TypeMsg::ImmutableRebind for let rebinding"` → 短哈希 `b08965c`；`git log -1 --format=%B` 复核标题完整。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 2。
+  - **提交 2（规范）**：`git add src/parser.rs .opencode/team/DECISIONS.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（任务书 2 项 + 本角色 2 收工文档）→ 提交 `fix(p3): statement-initial brace is an anonymous struct literal (A9)` + body（architect ruling 逐字）；短哈希见汇报。
+  - `git push`（非 force，`http.proxy=127.0.0.1:7890`，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 两个新提交；`git ls-remote origin refs/heads/main` = 本地 HEAD；`git status --short` 空。
+  - 证据: `git status --short`；`git log --oneline -4`；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`——**本轮未打 tag，`v0.2.0` 待 bug-06 接线 + 终验**）。
+- 决策: 无新 ADR（`DECISIONS.md` 本轮条目由 core-dev 追加、我仅代为入库）。**bug-06 仅完成 error 侧落地 → 解锁 runtime-dev，仍未清 → 不打 `v0.2.0`**。
+- 下一步: 待 runtime-dev 接线 `exec_assign` + 移除 `#[ignore]` + 终验通过 + team-lead 判定 → 打附注标签 `v0.2.0`；P10 交付清单核对。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-24 10:20] P3.12：bug-09 修复（提交 1）+ 规范 §9.4/A9 裁定（提交 2）：两个原子提交并推送
 - 来源: team-lead 任务书（轻量启动；已核验：`cargo build` 0 warning、`cargo test` **359 passed / 0 failed / 1 ignored**（+9+7）；`bug-09`（traceback 截断）已修（深递归输出 **123 行**）、`bug-06`（`let` 重绑定）**按指令停工**，留 1 条**带原因注解的 `#[ignore]` 测试** `evaluator::tests::let_rebind_is_type_error`（待 core-dev 落地 `TypeMsg::ImmutableRebind`）；工作区恰 **9 个** ` M` 文件；要求做**两个原子提交**（代码 + 规范）并 push，收工文档并入提交 2；禁区：禁 force-push、**仍不打 tag**（`v0.2.0` 待 bug-06/bug-07 清完）、不提交 `target/`·密钥·临时文件、不改清单外文件；出现清单外条目即停止）
 - 完成:
