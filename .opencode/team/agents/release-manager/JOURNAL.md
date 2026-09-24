@@ -1,5 +1,20 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 10:45] P3 后收尾：team-lead 状态/日志入库 + 工作区收拾到「干净且已推送」（交付用户自助验收）
+- 来源: team-lead 任务书（轻量启动；用户已下令**暂停开发、要求自行验收**，要求把工作区收拾到「干净且已推送」供用户在本地复现。预计工作区仅 **2 个**已修改文件：`M .opencode/team/agents/team-lead/{STATUS,JOURNAL}.md`，**由 team-lead 撰写、仅代为入库、不得改内容**；**出现清单外条目即停止并汇报**。要求：`git add <显式文件>` 绝不用 `git add -A`；提交信息 `docs(team): sync team-lead status/journal after P3`；`git push`；最终体检（status 空 / log -5 / tag -n 含 v0.1.0+v0.2.0 / ls-remote 一致 / `cargo build` 0 warning / `cargo test` 库 361 passed 0 failed 0 ignored / `cargo run --quiet -- run examples/hello.lfz` → `Hello, LFZ!` exit 0）；收工文档并入同一提交，不得留下未提交改动。禁区：禁 force-push、**不打任何新标签**、不改 `src/**`·`docs/spec/**`、不提交 `target/`·密钥·临时文件）
+- 完成:
+  - **入清单门禁（全项通过，未触发停止）**：`git status --short --untracked-files=all` 复核**恰为任务书预期 2 项**——`M .opencode/team/agents/team-lead/JOURNAL.md`、`M .opencode/team/agents/team-lead/STATUS.md`；**无清单外条目、无未跟踪文件、无 stash**（`git stash list` 空）。
+  - 基线复核：`git rev-parse HEAD` = `931e2b26fd6b06dd39e59847ca2b15a3b3edfacf`（短 `931e2b2`）= 远程 `git ls-remote origin refs/heads/main`；`git tag -n` = `v0.1.0`（→ `e060b21`）+ `v0.2.0`（→ 本轮终态 HEAD）；远程 `git ls-remote --tags origin` 含 `v0.1.0^{}` / `v0.2.0^{}`（**两枚均为附注标签**）。
+  - `git diff --numstat` 复核：`team-lead/JOURNAL.md` = 10/0、`team-lead/STATUS.md` = 21/16（仅 team-lead 状态/日志同步，符合任务书描述）。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入同一提交（保持工作区干净）。
+  - **单个提交**：`git add .opencode/team/agents/team-lead/STATUS.md .opencode/team/agents/team-lead/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（**显式 4 文件**，未 `git add -A`）→ `git commit -m "docs(team): sync team-lead status/journal after P3"`。
+  - `git push`（非 force，`$LASTEXITCODE=0` 判据）。
+- 产出:
+  - 一个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD；`git tag -n` 仍仅 `v0.1.0`/`v0.2.0`（**本轮未打新 tag**）。
+  - 体检证据：`cargo build`（0 warning）；`cargo test`（库 `361 passed; 0 failed; 0 ignored`，全量 377）；`cargo run --quiet -- run examples/hello.lfz` → `Hello, LFZ!`（exit 0）。
+- 决策: 无新 ADR（本轮仅团队状态/日志同步入库，无跨角色决策变更）。
+- 下一步: 用户自助验收；通过后进入 P10 交付清单核对 `docs/reports/delivery-checklist.md`。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响交付）。
 ## [2026-09-24 08:52] P3.13：`TypeMsg::ImmutableRebind` 落地（提交 1）+ A9 规范裁定（提交 2）：两个原子提交并推送
 - 来源: team-lead 任务书（轻量启动；已核验：`cargo build` **0 warning**、`cargo test` **360 passed / 0 failed / 1 ignored**（+9+7）；`TypeMsg::ImmutableRebind` 已落地；A9 已生效（语句首 `{ "k": 1 }` → `{k: 1}` exit 0；`{ let x = 1 }` → `SyntaxError` exit 2）。预计工作区：`M src/error.rs`、`M src/parser.rs`、`M .opencode/team/DECISIONS.md`、`M agents/core-dev/{STATUS,JOURNAL}.md`；⚠️ 并行任务正在改 `src/evaluator.rs`——**若出现则不暂存、不中止**；其它意外条目 → 停止汇报。要求做**两个原子提交**并 push，收工文档并入提交 2；禁区：禁 force-push、**不打 tag**（`v0.2.0` 待 bug-06 接线 + 终验通过）、不暂存 `src/evaluator.rs`、不提交 `target/`·密钥·临时文件）
 - 完成:
