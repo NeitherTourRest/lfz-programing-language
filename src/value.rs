@@ -673,6 +673,12 @@ pub struct StructDef {
     pub methods: Vec<(Rc<str>, Rc<Closure>)>,
 }
 
+/// 闭包捕获的一个自由变量：`(名字, 共享 cell, 是否可变)`（ADR P3.11 裁定 1 #2）。
+///
+/// 携带 `mutable` 标志以支持**闭包内**判定 `let` 重绑定（`semantics.md` §4.5.2）：
+/// 捕获自显式 `let` → `false`，捕获自 `var` / 形参等 → `true`。
+pub type CapturedVar = (Rc<str>, Cell, bool);
+
 /// 用户函数 / 闭包 / lambda 的**运行时载荷**（P3.7 求值器）。
 ///
 /// 只读 AST（`params` / `body`）+ A2 **captured cell 列表** + traceback 用的 `func_id`。
@@ -682,8 +688,8 @@ pub struct UserFn {
     pub params: Vec<String>,
     /// 函数体 AST。
     pub body: Body,
-    /// A2 捕获的自由局部变量：`(名字, 共享 cell)`；`Rc` 共享以省 clone。
-    pub captured: Rc<Vec<(Rc<str>, Cell)>>,
+    /// A2 捕获的自由局部变量：`(名字, 共享 cell, 是否可变)`；`Rc` 共享以省 clone。
+    pub captured: Rc<Vec<CapturedVar>>,
     /// traceback 帧用的函数表下标（P3.8 组装；本批仅分配不复用）。
     pub func_id: u32,
     /// 定义处捕获的 `self`（方法体内嵌套的闭包沿用）；非方法内为 `None`。

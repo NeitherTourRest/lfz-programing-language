@@ -1,5 +1,23 @@
 # runtime-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 08:54] P3.11 bug-06 接线完成 — `let` 重绑定检查落地，摘掉 `#[ignore]`（lib 361 passed / 0 ignored）
+- 来源: team-lead 任务书「完成 bug-20260924-06 的最后一步：接线 `let` 重绑定检查，并摘掉阻塞占位 `#[ignore]`」。依据 ADR `.opencode/team/DECISIONS.md` `[2026-09-24 00:30] …P3.11 验收 3 处规范裁定` 裁定 1 #2、`docs/spec/semantics.md` §4.5.2/§8.1、`docs/spec/interface-contract.md` §10.8。
+- 完成:
+  - **前提已满足**：core-dev 已在 `src/error.rs` 落地 `TypeMsg::ImmutableRebind { name: String }`（消息逐字符 `不能重新赋值 let 变量 '{name}'；let 只锁重绑定，不锁内容`，`class_name()` 仍映射 `TypeError`）。**未改 `error.rs`**（红线）。
+  - **`src/evaluator.rs` 接线（tri-state）**：新增模块级私有 `enum AssignOutcome { Assigned, Immutable, NotFound }`；`Interp::assign_name` 返回类型由 `bool` 改为 `AssignOutcome`，沿 **env 链 → 捕获 cell → globals** 内→外解析，命中 `Env::local_mutable(i) == Some(false)` / 捕获 `mutable == false` → `Immutable`（**不写入**）；`exec_assign` 无后缀分支 match 三态：`Assigned` → `Ok`，`NotFound` → 既有 `NameError`（`self` 保持 `NotFound`，行为不变），`Immutable` → `type_error(TypeMsg::ImmutableRebind { name }, target.span)`（`span` = 赋值目标首字符）。
+  - **捕获 cell 携带可变性**（ADR 裁定 1 #2 要求）：`src/value.rs` 新增 `pub type CapturedVar = (Rc<str>, Cell, bool)`，`UserFn.captured` 由 `Rc<Vec<(Rc<str>, Cell)>>` 改为 `Rc<Vec<CapturedVar>>`；`evaluator.rs` `Scope.captured` 同步改型；`make_closure` 捕获时读 `Env::local_mutable(idx)`（`unwrap_or(true)`）写入标志并随继承传递 → 支持**闭包内**判定捕获的 `let` 重绑定。
+  - **`let`/`var` 定义与 `a[i]=` / `s.k=` 容器路径不变**（A1；后两者不经 `assign_name`）。
+  - **摘除 `#[ignore]`**：`let_rebind_is_type_error` 移除 `#[ignore]` 及其注解，并扩充为覆盖两条路径（① 顶层 `let`（globals）；② 闭包捕获的 `let`（captured cell））——保持为**单个**测试函数以维持验收计数 **361**。消息断言以 `error.rs` 落地实现为准（逐字符）。
+- 产出:
+  - `git diff --stat -- src/value.rs src/evaluator.rs` → `2 files changed, 111 insertions(+), 38 deletions(-)`（evaluator.rs 139 行变动、value.rs 10 行）。**仅动自有模块**；未改 `src/span.rs`/`src/error.rs`/`src/loader.rs`/`src/lexer.rs`/`src/ast.rs`/`src/parser.rs`、未改 `docs/spec/`、`Cargo.toml`。
+  - `cargo build` → `Finished`（**0 warning**）；`cargo build --tests --message-format=json 2>$null` → `WARN_COUNT=0`。
+  - `cargo test` → lib **`361 passed; 0 failed; 0 ignored`**（基线 360 passed / **1 ignored** → ignored **1 → 0**）+ bin **9 passed** + `tests/cli.rs` **7 passed**（全绿）。
+  - `cargo test --lib let_rebind_is_type_error` → `1 passed; 0 ignored`；`cargo test --lib var_rebind_is_still_allowed` → `1 passed`。
+  - **bug-06 真实 CLI 证据**（临时文件置于预批准 `%TEMP%\opencode`，均以 `#42` 前缀）：`let a = 1; a = 2` → **EXIT=2**，stderr `TypeError: 不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容`；闭包捕获版 → **EXIT=2**，同消息（`'x'`）；`var b = 1; b = 2; print(b)` → **EXIT=0**、stdout `2`。
+  - **bug-09 未回归**：深递归 `.lfz` → **EXIT=2**，stderr **123 行**、`  File "` 帧行 **40**、第 32 行 `  ... 省略 9961 帧 ...`、末行 `RecursionError: 递归深度超限（超过 10000 层）`。
+- 决策: 无新增 ADR（严格落地既有裁定 1；`CapturedVar` 为裁定 1 #2 明令「捕获 cell 须携带可变性」的实现细节）。
+- 下一步: 待 team-lead 核验；建议 release-manager 提交 `fix(p3): enforce let rebind TypeError (bug-20260924-06)`。
+- 阻塞: 无。
 ## [2026-09-24 08:46] P3.11 缺陷落地 — bug-09（traceback 折叠）完成；bug-06（`let` 重绑定）阻塞于 core-dev
 - 来源: team-lead 任务书「落地架构师已裁定的两条非阻塞缺陷」；依据 ADR `.opencode/team/DECISIONS.md` `[2026-09-24 00:30] [language-architect] P3.11 验收 3 处规范裁定`（裁定 1 / 裁定 3）、`docs/spec/semantics.md` §4.5.2/§8.2/§8.4、`docs/spec/interface-contract.md` §10.3/§10.8。
 - 完成:

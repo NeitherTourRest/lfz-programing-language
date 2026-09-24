@@ -62,14 +62,14 @@ use crate::ast::{
     StructDecl, StructLit, StructMember, UnaryOp,
 };
 use crate::builtins;
-use crate::env::{Cell, Env, ScopeChain};
+use crate::env::{Env, ScopeChain};
 use crate::error::{
     div_zero, field as field_error, index as index_error, io as io_error, name as name_error,
     overflow, recursion, type_error, value as value_error, LzError, OverflowMsg, R, TraceFrame,
     TypeMsg, ValueMsg,
 };
 use crate::span::Span;
-use crate::value::{Closure, StructObj, UserFn, Value};
+use crate::value::{CapturedVar, Closure, StructObj, UserFn, Value};
 use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::io::Write;
@@ -278,11 +278,11 @@ enum Step<T> {
 
 /// 一次求值所处的**作用域上下文**：
 /// - `env`：当前词法环境（函数帧 / 块 / 顶层）；
-/// - `captured`：闭包定义处捕获的 `(名字, cell)`（调用帧内查名在 env 之后回落于此）；
+/// - `captured`：闭包定义处捕获的 `(名字, cell, 是否可变)`（调用帧内查名在 env 之后回落于此）；
 /// - `self_val`：`self` 绑定（仅方法调用帧有值）。
 struct Scope {
     env: Rc<RefCell<Env>>,
-    captured: Rc<Vec<(Rc<str>, Cell)>>,
+    captured: Rc<Vec<CapturedVar>>,
     self_val: Option<Value>,
 }
 
@@ -295,6 +295,17 @@ impl Scope {
             self_val: self.self_val.clone(),
         }
     }
+}
+
+/// 变量重绑定（`exec_assign` 无后缀路径）的三态结果 —— [`Interp::assign_name`] 返回值
+/// （ADR P3.11 裁定 1 #2）。
+enum AssignOutcome {
+    /// 命中**可变**绑定并写入成功（`var` / 形参 / `for` 变量 / `fn` / `struct` 名等）。
+    Assigned,
+    /// 命中**不可变** `let` 绑定，拒绝重绑定 → 报 `TypeError::ImmutableRebind`（§4.5.2）。
+    Immutable,
+    /// 沿词法可见链**未找到**该名字。
+    NotFound,
 }
 
 // ===========================================================================
@@ -359,7 +370,7 @@ impl Interp {
             }
             cur = e.borrow().parent();
         }
-        for (n, c) in scope.captured.iter() {
+        for (n, c, _) in scope.captured.iter() {
             if n.as_ref() == name {
                 return Some(c.borrow().clone());
             }
@@ -368,32 +379,51 @@ impl Interp {
         gi.and_then(|i| self.globals.borrow().get_local(i))
     }
 
-    /// 写名字（原地；捕获变量写共享 cell）。返回是否找到。
-    fn assign_name(&self, scope: &Scope, name: &str, value: Value) -> bool {
+    /// 写名字（原地；捕获变量写共享 cell）。返回三态结果（[`AssignOutcome`]）：
+    ///
+    /// - 沿 env 链 / 捕获 cell / globals **内→外**解析名字；
+    /// - 命中**不可变 `let`** 绑定 → [`AssignOutcome::Immutable`]（**不写入**）；
+    /// - 命中可变绑定（`var` / 形参 / `for` 变量 / `fn` / `struct` 名）→ 写入并返回
+    ///   [`AssignOutcome::Assigned`]；
+    /// - 全部未命中 → [`AssignOutcome::NotFound`]。
+    ///
+    /// `let` 只锁重绑定、不锁内容（`semantics.md` §4.5.2）：`a = v` 非法，但 `a[i] = v` /
+    /// `s.k = v` 走容器原地修改路径（A1），不经本方法。
+    fn assign_name(&self, scope: &Scope, name: &str, value: Value) -> AssignOutcome {
         let mut cur = Some(Rc::clone(&scope.env));
         while let Some(e) = cur {
             if Rc::ptr_eq(&e, &self.globals) {
                 break;
             }
+            // RefCell 陷阱：先取 `idx` 结束借用，再做可变性查询 / 写入。
             let idx = e.borrow().local_index(name);
             if let Some(i) = idx {
+                if e.borrow().local_mutable(i) == Some(false) {
+                    return AssignOutcome::Immutable;
+                }
                 e.borrow_mut().set_local(i, value);
-                return true;
+                return AssignOutcome::Assigned;
             }
             cur = e.borrow().parent();
         }
-        for (n, c) in scope.captured.iter() {
+        for (n, c, mutable) in scope.captured.iter() {
             if n.as_ref() == name {
+                if !*mutable {
+                    return AssignOutcome::Immutable;
+                }
                 *c.borrow_mut() = value;
-                return true;
+                return AssignOutcome::Assigned;
             }
         }
         let gi = self.globals.borrow().local_index(name);
         if let Some(i) = gi {
+            if self.globals.borrow().local_mutable(i) == Some(false) {
+                return AssignOutcome::Immutable;
+            }
             self.globals.borrow_mut().set_local(i, value);
-            return true;
+            return AssignOutcome::Assigned;
         }
-        false
+        AssignOutcome::NotFound
     }
 
     // -----------------------------------------------------------------------
@@ -432,7 +462,7 @@ impl Interp {
         }
 
         // 2) 闭包捕获 cell（定义作用域的外层自由变量）。
-        for (n, c) in scope.captured.iter() {
+        for (n, c, _) in scope.captured.iter() {
             if !seen.iter().any(|s| s == n.as_ref()) {
                 seen.push(n.to_string());
                 out.push((Rc::clone(n), c.borrow().clone()));
@@ -465,7 +495,7 @@ impl Interp {
         body: Body,
         scope: &Scope,
     ) -> Value {
-        let mut captured: Vec<(Rc<str>, Cell)> = Vec::new();
+        let mut captured: Vec<CapturedVar> = Vec::new();
         let mut cur = Some(Rc::clone(&scope.env));
         while let Some(e) = cur {
             if Rc::ptr_eq(&e, &self.globals) {
@@ -473,21 +503,23 @@ impl Interp {
             }
             let entries = e.borrow().named_indices();
             for (n, idx) in entries {
-                if captured.iter().any(|(k, _)| k.as_ref() == n.as_str()) {
+                if captured.iter().any(|(k, _, _)| k.as_ref() == n.as_str()) {
                     continue;
                 }
+                // 捕获时同步记录该绑定的可变性（`let` → `false`），供闭包内重绑定判定。
+                let mutable = e.borrow().local_mutable(idx).unwrap_or(true);
                 if let Some(cell) = e.borrow_mut().capture_local(idx) {
-                    captured.push((Rc::from(n.as_str()), cell));
+                    captured.push((Rc::from(n.as_str()), cell, mutable));
                 }
             }
             cur = e.borrow().parent();
         }
         // 继承父闭包的捕获（内层 env 名字已优先占位）。
-        for (n, c) in scope.captured.iter() {
-            if captured.iter().any(|(k, _)| k.as_ref() == n.as_ref()) {
+        for (n, c, mutable) in scope.captured.iter() {
+            if captured.iter().any(|(k, _, _)| k.as_ref() == n.as_ref()) {
                 continue;
             }
-            captured.push((Rc::clone(n), Rc::clone(c)));
+            captured.push((Rc::clone(n), Rc::clone(c), *mutable));
         }
         let func_id = self.next_func_id;
         self.next_func_id += 1;
@@ -729,16 +761,30 @@ impl Interp {
                 Step::Done(v) => v,
                 Step::Flow(f) => return Ok(f),
             };
-            let ok = match &target.base {
+            let outcome = match &target.base {
                 LvalueBase::Name(n) => self.assign_name(scope, n, newv),
-                LvalueBase::SelfValue => false,
+                // `self` 是只读绑定，不属可重绑定变量（保持报 `NameError`）。
+                LvalueBase::SelfValue => AssignOutcome::NotFound,
             };
-            if !ok {
-                let nm = match &target.base {
-                    LvalueBase::Name(n) => n.clone(),
-                    LvalueBase::SelfValue => "self".to_string(),
-                };
-                return Err(name_error(nm, target.span));
+            match outcome {
+                AssignOutcome::Assigned => {}
+                AssignOutcome::Immutable => {
+                    let nm = match &target.base {
+                        LvalueBase::Name(n) => n.clone(),
+                        LvalueBase::SelfValue => "self".to_string(),
+                    };
+                    return Err(type_error(
+                        TypeMsg::ImmutableRebind { name: nm },
+                        target.span,
+                    ));
+                }
+                AssignOutcome::NotFound => {
+                    let nm = match &target.base {
+                        LvalueBase::Name(n) => n.clone(),
+                        LvalueBase::SelfValue => "self".to_string(),
+                    };
+                    return Err(name_error(nm, target.span));
+                }
             }
             return Ok(Flow::Value(Value::Nil));
         }
@@ -1767,6 +1813,7 @@ fn format_mismatch(spec: &str, v: &Value, span: Span) -> Box<LzError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::env::Cell;
     use crate::ast::{FieldInit, Lambda, Spanned};
     use crate::env::ScopeId;
 
@@ -2347,20 +2394,40 @@ mod tests {
         assert_eq!(run_str(stmts), "2");
     }
 
-    /// bug-20260924-06 回归（**待启用**）：`let a = 1` 后 `a = 2` → `TypeError` +
-    /// 逐字符消息 `不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容`（ADR 2026-09-24 00:30 裁定 1）。
+    /// bug-20260924-06 回归：`let` 重绑定 → `TypeError` + 逐字符消息（ADR 2026-09-24 00:30 裁定 1 /
+    /// `semantics.md` §4.5.2「`let` 只锁重绑定，不锁内容」）。
     ///
-    /// **阻塞**：`TypeMsg::ImmutableRebind` 尚未在 `src/error.rs` 落地（属 core-dev）；本用例在
-    /// core-dev 完成该项、且 runtime-dev 接线 `exec_assign` 后应移除 `#[ignore]`。
+    /// 覆盖两条解析路径：① 顶层 `let`（globals 路径）；② 闭包**捕获**的 `let`（captured cell
+    /// 路径，验证捕获时携带的 `mutable = false`）。
     #[test]
-    #[ignore = "blocked: 需 core-dev 在 src/error.rs 落地 TypeMsg::ImmutableRebind（ADR P3.11 裁定 1 #1）"]
     fn let_rebind_is_type_error() {
-        let stmts = vec![ldecl("a", int(1)), assign_var("a", int(2))];
-        let e = eval_module(&prog(stmts)).expect_err("let 重绑定应报错");
+        // ① 顶层：let a = 1; a = 2 → TypeError
+        let top = vec![ldecl("a", int(1)), assign_var("a", int(2))];
+        let e = eval_module(&prog(top)).expect_err("let 重绑定应报错");
         assert_eq!(e.class_name(), "TypeError");
         assert_eq!(
             e.message(),
             "不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容"
+        );
+
+        // ② 闭包捕获：fn outer() { let x = 1; fn inner() { x = 2; } inner(); } outer()
+        let cap = vec![
+            fn_decl(
+                "outer",
+                &[],
+                Body::Block(block(vec![
+                    ldecl("x", int(1)),
+                    fn_decl("inner", &[], Body::Block(block(vec![assign_var("x", int(2))]))),
+                    expr_stmt(call("inner", vec![])),
+                ])),
+            ),
+            expr_stmt(call("outer", vec![])),
+        ];
+        let e = eval_module(&prog(cap)).expect_err("闭包内重绑定捕获的 let 应报错");
+        assert_eq!(e.class_name(), "TypeError");
+        assert_eq!(
+            e.message(),
+            "不能重新赋值 let 变量 'x'；let 只锁重绑定，不锁内容"
         );
     }
 
@@ -2990,7 +3057,7 @@ mod tests {
         let cell: Cell = Rc::new(RefCell::new(Value::Int(7)));
         let scope = Scope {
             env: Rc::clone(&child),
-            captured: Rc::new(vec![(Rc::from("z"), cell)]),
+            captured: Rc::new(vec![(Rc::from("z"), cell, true)]),
             self_val: None,
         };
         let entries = interp.visible_entries(&scope);

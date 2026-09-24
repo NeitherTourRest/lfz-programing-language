@@ -377,3 +377,18 @@
 - 决策: 无新 ADR（DECISIONS.md 本轮改动为 runtime-dev 追加、我仅代为入库；常规提交非新跨角色决策）。owner 偏差仍为遗留待确认项。
 - 下一步: P3.4b2（parser）/ P3.9b（HOF）按模块原子提交；P3.11 收口打附注标签 v0.2.0；P10 交付清单核对。
 - 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
+## [2026-09-24 08:56] bug-06 接线完成（let 重绑定强制）：一个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；已核验：cargo build 0 warning、cargo test 361 passed / 0 failed / 0 ignored；工作区 4 项改动；本轮做一个原子提交 + push；出现清单外条目即停止）
+- 完成:
+  - 入清单门禁：git status --short --untracked-files=all 复核恰为任务书预期 4 项（M src/evaluator.rs、M src/value.rs、M .opencode/team/agents/runtime-dev/{STATUS,JOURNAL}.md），无清单外条目、无未跟踪文件；门禁未触发。
+  - 基线复核：git branch --show-current = main；HEAD = 833901d fix(p3): statement-initial brace is an anonymous struct literal (A9)；git ls-remote origin refs/heads/main = 本地 HEAD（push 前）。
+  - 密文扫描（ghp_/gho_/github_pat_/Bearer/password=/token=/api_key）无命中；git check-ignore -v target/ → .gitignore:25:/target/（target/ 已忽略）。
+  - 提交（代码 + 双方收工文档）：git add src/evaluator.rs src/value.rs .opencode/team/agents/runtime-dev/STATUS.md .opencode/team/agents/runtime-dev/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md（git diff --cached --name-only 精确 6 文件）→ git -c core.autocrlf=false commit -F lfz_msg_bug06.txt（标题 fix(p3): enforce let immutability (ImmutableRebind)，正文含 §4.5.2）→ 短哈希见汇报；git log -1 --format=%B 复核标题/正文完整无损。
+  - 先完成收工协议（覆盖更新本角色 STATUS.md、追加本 JOURNAL.md），使收工改动并入同一提交。
+  - git push（非 force， 判据）。
+- 产出:
+  - 一个新提交；git status --short 空；git ls-remote origin refs/heads/main = 本地 HEAD。
+  - 证据: git log --oneline -3（顶部为本轮提交，位于 833901d 之上）；git ls-remote origin refs/heads/main；git tag -n（仍仅 v0.1.0，本轮未打 tag，v0.2.0 待 verifier 终验通过后由 team-lead 下令）。
+- 决策: 无新 ADR（常规提交，非跨角色新决策）。owner 偏差仍为遗留待确认项。
+- 下一步: 待 verifier 终验 → team-lead 判定 v0.2.0；P3 后续子阶段继续按模块原子提交；P10 交付清单核对。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
