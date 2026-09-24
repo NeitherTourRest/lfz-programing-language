@@ -1,5 +1,21 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 10:20] P3.12：bug-09 修复（提交 1）+ 规范 §9.4/A9 裁定（提交 2）：两个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；已核验：`cargo build` 0 warning、`cargo test` **359 passed / 0 failed / 1 ignored**（+9+7）；`bug-09`（traceback 截断）已修（深递归输出 **123 行**）、`bug-06`（`let` 重绑定）**按指令停工**，留 1 条**带原因注解的 `#[ignore]` 测试** `evaluator::tests::let_rebind_is_type_error`（待 core-dev 落地 `TypeMsg::ImmutableRebind`）；工作区恰 **9 个** ` M` 文件；要求做**两个原子提交**（代码 + 规范）并 push，收工文档并入提交 2；禁区：禁 force-push、**仍不打 tag**（`v0.2.0` 待 bug-06/bug-07 清完）、不提交 `target/`·密钥·临时文件、不改清单外文件；出现清单外条目即停止）
+- 完成:
+  - 入清单门禁：`git status --short` 复核恰为任务书预期 **9 项**（`M src/evaluator.rs`、`M src/cli.rs`、`M docs/spec/syntax.md`、`M docs/spec/interface-contract.md`、`M .opencode/team/DECISIONS.md`、`M .opencode/team/agents/runtime-dev/{STATUS,JOURNAL}.md`、`M .opencode/team/agents/language-architect/{STATUS,JOURNAL}.md`），**无清单外条目、无未跟踪文件**；门禁未触发。`git diff --name-only` 未命中 `target/`·密钥·临时文件。
+  - 修复内容取证：`git diff -U0 src/cli.rs` 含 `TRACEBACK_HEAD = 10`/`TRACEBACK_TAIL = 30`/`TRACEBACK_FOLD_THRESHOLD` 与 `push_frames`/`push_trace_frame` 折叠逻辑（`TracedRun.frames` 保持完整）；`git diff -U0 src/evaluator.rs` 含 `#[ignore = "blocked: 需 core-dev 在 src/error.rs 落地 TypeMsg::ImmutableRebind（ADR P3.11 裁定 1 #1）"]` 注解的 `let_rebind_is_type_error`——**有原因的阻塞占位**。
+  - 基线复核：`git branch --show-current` = `main`；`git fetch` 后 push 前本地 HEAD = 远程 `refs/heads/main` = `8ec3c69`。
+  - **提交 1（代码）**：`git add src/evaluator.rs src/cli.rs .opencode/team/agents/runtime-dev/STATUS.md .opencode/team/agents/runtime-dev/JOURNAL.md`（`git diff --cached --name-only` 精确 4 文件）→ `git -c core.autocrlf=false commit -F lfz_msg_p312_1.txt`（标题 `feat(p3): traceback truncation for deep recursion` + 任务书 body 逐字）→ 短哈希见汇报；`git log -1 --format=%B` 复核标题/正文完整无损。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 2。
+  - **提交 2（规范）**：`git add docs/spec/syntax.md docs/spec/interface-contract.md .opencode/team/DECISIONS.md .opencode/team/agents/language-architect/STATUS.md .opencode/team/agents/language-architect/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（任务书 5 项 + 本角色 2 收工文档）→ 提交 `docs(spec): fix §9.4 sample (self-contradictory ';') and rule on A9`（本提交即本条日志所在提交，短哈希见汇报）；`git log -1 --format=%B` 复核正文含 `spec-20260924-01`/`A9` 完整无损。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 两个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -4`；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`——**本轮未打 tag，`v0.2.0` 待 bug-06/bug-07 清完**）。
+- 决策: 无新 ADR（`DECISIONS.md` 本轮 A9 裁定由 language-architect 追加、我仅代为入库）。**bug-06 未清 + bug-07 未清 → 不打 `v0.2.0`**：`#[ignore]` 为有原因阻塞占位，非删测蒙混。
+- 下一步: 待 bug-06（core-dev 落地 `TypeMsg::ImmutableRebind`）/bug-07 清完 + team-lead 判定 → 打附注标签 `v0.2.0`；P10 交付清单核对。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-24 09:30] P3.11 复验（rev.2）：单个原子提交并推送
 - 来源: team-lead 任务书（轻量启动；背景：verifier 复验结论 **CONCERNS（非阻塞）——可推进 v0.2.0**；3×🔴 全修、2×🟡 亦修；rev.2 夹具 8/9 过（唯一失败为规范样例自身用了 `;` 的制品问题）；新规范侧发现 `spec-20260924-01`（§9.4 样例用 `;`）。工作区：` M docs/reports/P3-verification.md`、`?? docs/reports/fixtures-p3-rev2/`、` M agents/verifier/{STATUS,JOURNAL}.md`；⚠️ 有并行修复在改 `src/**`/`docs/spec/**`，`git status` 可能含那些条目——**不中止**，只按显式清单 `git add`，其余不暂存。要求单提交 + push，收工文档并入同一提交；禁区：禁 force-push、**仍不打 tag**（`v0.2.0` 待非阻塞项清完）、不暂存 `src/**`/`docs/spec/**`、不提交 `target/`/密钥/临时文件）
 - 完成:

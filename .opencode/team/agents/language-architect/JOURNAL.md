@@ -1,6 +1,19 @@
 # language-architect — 工作日志
 > 只追加，最新条目在最上方。
 
+## [2026-09-24 05:10] 规范侧收尾：spec-20260924-01（§9.4 样例自相矛盾）+ bug-20260924-07 / A9（语句首 `{`）裁定
+- 来源: team-lead 下达「两项规范侧收尾（不改 `src/**`）：修 §9.4 样例自相矛盾；就 A9 / bug-07 给出可直接落地的裁定；先 ADR 后改 spec」（轻量启动）
+- 完成:
+  - **spec-20260924-01（§9.4 样例）**：`fn inc() { n += 1; n }`（单 `;` 违反 §2.3/§3.2/A11）→ **改换行为多行块体**（`n += 1` / `n`），语义与预期输出**逐字符不变**（`1 2 3`）；加「语句分隔注（v1 补钉）」。同步核查：§9.1/§9.2/§9.3 无语句分隔 `;`；§9.4 `r.self`→`r.me` 已落地（第 810 行 `r.me = r`，输出 `{me: <cycle>}`）。→ §9 全样例自洽。
+  - **bug-20260924-07 / A9**：裁定 **A9 成立、不允许裸块语句**——语句位 `{ … }` ≡ `expr_stmt`→`struct_lit`（匿名）；`{ "k": 1 }` / `{ }` 合法，`{ let x = 1 }` / `{ ;; }` → `SyntaxError`；`;;` 在真块体内仍合法。**parser 的「裸块内联」简化是缺陷，须修**。依据：§3.3 规则 2 末句 / §5-A9 / EBNF `statement` 无 `block_stmt` 产生式。
+  - **纪律**：先追加 ADR（2 条），后改 `docs/spec/`；三件套头部「冻结于 2026-09-23」不变；未写生产代码、未改他人交付物、未 commit/tag/push；不新增错误类、不引入 `E-xxx`。
+- 产出: `.opencode/team/DECISIONS.md`（543→**602** 行，追加 2 条 ADR，标题行 L547/L566）；`docs/spec/syntax.md`（913→**920**）、`docs/spec/interface-contract.md`（311→**311**，单行扩写）、`docs/spec/semantics.md`（415，未改）
+- 证据: 字节级 `syntax.md` bytes=62389 LF=920 CR=0 BOM=False last=LF(10)；`interface-contract.md` bytes=30592 LF=311 CR=0；`semantics.md` bytes=33931 LF=415 CR=0；错误类计数 `12 类 + 基类`/`运行期 10 类` 不变；`n += 1;` 清零、`r.self` 仅存 §2.6 反例；新增串 `语句分隔注`/`无 block_stmt` 命中
+- 决策: ADR「spec-20260924-01 §9.4 样例自相矛盾修正（单 `;` → 换行）」+「bug-20260924-07 裁定：语句首 `{` 按 A9 作匿名 struct 字面量（parser 简化须修正）」
+- 待执行代码变更（本轮未写代码）: `src/parser.rs`（core-dev：删 `parse_stmt_seq` LBrace 内联分支 + 改头注释/文档注 + 有意识更新 3 测 `block_statement_inlines_contents`/`no_brace_literal_statement_start_is_block`/`dump_inside_block_is_legal`）
+- 下一步: 通知 team-lead 转 core-dev；test-engineer/verifier `spec_9_4_refs.lfz` 恢复正向夹具（期望 5 行）、`bug07_stmt_brace.lfz` 修复后应 EXIT=0；docs/ai-dx 同步「无裸块语句」与换行版 §9.4；verifier 更新 P3-verification §5/§7
+- 阻塞: 无
+
 ## [2026-09-24 00:30] P3.11 验收 3 处规范裁定（let 重绑定 / .self / traceback 截断；v1 补钉）
 - 来源: team-lead 下达「就 `docs/reports/P3-verification.md` 的 3 处规范裁定（bug-20260924-06 / -08 / -09）逐条裁定；先 ADR 后改 spec；不写生产代码」（轻量启动）
 - 完成:

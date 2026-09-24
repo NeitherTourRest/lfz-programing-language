@@ -541,3 +541,72 @@
 - **spec 三件套**：错误类计数不变（12 类 + 基类；运行期 10 类）；`TypeError` 细分消息 **6 → 7**；`E-xxx` 仍 **11** 处（§13 附录，未新增）。
 
 - **证据**：本 ADR 标题行 + `docs/spec/` 三件套本轮改动点（见结构化汇报）；命令与字节级计数见 `agents/language-architect/STATUS.md`。
+
+---
+
+### [2026-09-24 05:00] [language-architect] spec-20260924-01 §9.4 样例自相矛盾修正（单 `;` → 换行）
+
+- **来源**：verifier 缺陷单 **spec-20260924-01**（规范侧 🟡）——`docs/spec/syntax.md` §9.4 样例 `fn inc() { n += 1; n }` 以**单个 `;`** 分隔两条语句，但本规范写死「单个 `;` 永远 `SyntaxError`」（§2.3 / §3.2 / A11）；verifier 逐字复制该样例的夹具 `spec_9_4_refs.lfz` 因此退出码 2。该样例是规范**唯一**的「引用语义 + 闭包捕获 + 环安全」综合样例（A1/A2/A6），按原文**无法运行**。
+- **纪律**：**先追加本 ADR、后改 `docs/spec/`**；三件套头部「冻结于 2026-09-23」保持不变；本轮改动为 **v1 补钉（样例自洽化）**，**未推翻任何既有冻结规则**；**不新增错误类**、**不引入 `E-xxx`**。
+- **裁定：以规则为准，改样例**——把 `fn inc() { n += 1; n }` 改为**以换行分隔**两条语句的多行块体；**语义与「预期输出」逐字符不变**（`1 2 3`）。
+  - 修正前：`fn inc() { n += 1; n }          // 闭包按 cell 捕获 n（A2）`
+  - 修正后：
+    ```
+    fn inc() {                      // 闭包按 cell 捕获 n（A2）
+        n += 1
+        n
+    }
+    ```
+  - **理由**：① 单 `;` 是**冻结规则**（§2.3 / §3.2 / A11 / §14 遗留默认 4），规则正确、样例是瑕疵；② §9.4 是全规范唯一演示 A1/A2/A6 的综合样例，必须**可运行**（评分项「解释器 / 测试 / 文档 / 应用」共同引用）；③ 块体天然支持换行终结（§3.2 块 `{` push `SIG`），改换行为**最小且语义等价**的修法；④ 与 A5/A11「取消空语句、无语句分隔符」的设计一致。
+- **同步核查（§9 其它样例）**：§9.1 / §9.2 / §9.3 全样例**无**语句分隔 `;`（仅 `;;` dump 独立语句）；§9.4 内 `r.self`→`r.me` **已由 [2026-09-24 00:30] ADR（bug-08）落地**（本轮复核：第 803 行为 `r.me = r`、预期输出 `{me: <cycle>}`，`r.self` 已清零）。→ **§9 全样例现已自洽**。
+- **规范落地**：`docs/spec/syntax.md` §9.4（样例块体改换行 + 新增「语句分隔注（v1 补钉）」钉死「块内语句以换行分隔，不得用单 `;`」）。
+- **下游影响**：**test-engineer / verifier** 可恢复 `spec_9_4_refs.lfz`（逐字提取 §9.4）为**正向夹具**，期望 `1 2 3 / 99 99 / [3, 1, 2]  [1, 2, 3] / {me: <cycle>} / true`；**docs-writer / ai-dx-engineer / app-dev** 引用 §9.4 时须用换行版（不得复制旧 `;` 版）；**core-dev / runtime-dev** 无代码变更。
+- **代码变更**：**无**（纯 spec 样例修正）。
+
+### [2026-09-24 05:05] [language-architect] bug-20260924-07 裁定：语句首 `{` 按 A9 作匿名 struct 字面量（parser 简化须修正）
+
+- **来源**：verifier 缺陷单 **bug-20260924-07**（🟡）——A9 / §3.3 规定「语句首 `{` 恒为匿名 struct 字面量（LFZ 无裸块语句）」，但 `src/parser.rs` `parse_stmt_seq` 把语句首 `{` 当**裸块语句内联**（parser 头注释 #1 自述为「本批已知简化」），且 AST 无 `Block` 语句变体。
+- **纪律**：同上（先 ADR 后改 spec；不改冻结规则；不新增错误类；不引入 `E-xxx`；**不改 `src/**`**）。
+- **裁定：A9 成立（spec 正确、无歧义），不允许裸块语句；parser 的简化是缺陷，须修。**
+  - **依据（规范原文位置）**：① `syntax.md` §3.3 规则 2 末句「含**语句起始处**的 `{`：LFZ **没有"裸块语句"**，故语句首 `{` 恒为**匿名 struct 字面量**（A9）」；② §5 **A9**「语句首 `{`：恒为匿名 struct 字面量。反例 `{ let x = 1 }` → `SyntaxError`」；③ EBNF §7 `statement` 产生式**无** `block_stmt`（`block` 仅出现在 `body` / `if_stmt` / `while_stmt` / `for_stmt` 的 block-required 位）；④ §3.3 规则 2 覆盖「其余一切期待表达式之处」，语句位属 `expr_stmt`（§7）。
+  - **推论（可直接抄写）**：
+    - 语句位 `{ … }` **≡ `expr_stmt` → `expression` → … → `struct_lit`**（匿名，无前置类型名）。
+    - `{ "k": 1 }` 语句 → **合法**（匿名 struct 字面量表达式语句，值被丢弃）；`{ }` 语句 → 合法（**空**匿名 struct）。
+    - `{ let x = 1 }` → **`SyntaxError`**（`let` 非 `field_init` 的 `(IDENT|STRING)` 头；由 `struct_lit`→`field_init` 解析报「意外记号」，**不新增子消息变体**）。
+    - `{ ;; }` 语句 → **`SyntaxError`**（`;;` 不能出现在 struct 字面量成员表内）；`;;` 在**真块体**（`fn/if/while/for` 的 body）内**仍合法**（A10 不受影响）。
+    - 程序顶层 / 块体**不再有**「裸 `{` 开新作用域」语法；作用域仅由 `if/while/for/fn/lambda` 体与 struct 字面量成员表产生。
+  - **理由**：① 选择「允许裸块」需改**冻结** A9 + §3.3 + §3.2 + §7 EBNF（新增 `block_stmt` 产生式与 AST `Block` 变体），并制造 `{}` / `{k:v}` 的块↔字面量二义，**远超**「实现简化」的代价；② 选择「按 A9」只需删掉 parser 一处特例分支 + 有意识更新 3 个自证简化行为的测试，**最小且回归冻结设计**；③ 「无裸块语句」是**有意设计**（§3.3、A5、A9 三处重申），且与「块用 C 风格 `{}`、语句由换行终结」的 v0.2 定案一致；④ 与 Rust 一致（Rust 语句位 `{ … }` 是块表达式，但 LFZ 无块表达式 → 字面量）。
+
+- **待执行代码变更清单（仅 `src/**`，由 core-dev 落地；language-architect 不写代码）**：
+
+  | # | 文件 | 变更 | 说明 |
+  |---|---|---|---|
+  | 1 | `src/parser.rs` `parse_stmt_seq`（`:265-269`） | **删除** `TokenKind::LBrace => { let block = self.parse_block()?; stmts.extend(block.stmts); }` 分支，使语句首 `{` 落入 `_ => stmts.push(self.parse_stmt()?)`，经表达式路径 `primary` 的 `TokenKind::LBrace`（`:1127`）→ `parse_struct_lit(None, span)`（**该分支已存在，无需新增**） | 唯一行为变更点 |
+  | 2 | `src/parser.rs` 模块头「# 本批已知简化」#1（`:52-56`）与 `parse_stmt_seq` 文档注（`:255-256`） | **删除 / 改写**该简化说明为「语句首 `{` 按 A9 解析为匿名 struct 字面量」 | 注释与实现同步 |
+  | 3 | `src/parser.rs` 单测 `block_statement_inlines_contents`（`:1676`） | **改写**：输入 `{ let x = 1 }` → 断言 **`Err`（`SyntaxError`）**（A9 反例）；建议更名 `statement_start_brace_is_struct_literal_not_block` | 有意识更新 |
+  | 4 | `src/parser.rs` 单测 `no_brace_literal_statement_start_is_block`（`:2226`） | **改写**：`{ let a=1 \n let b=2 }` → 断言 **`Err`（`SyntaxError`）**；另加正例 `{ "k": 1 }` → `stmts.len()==1` 且 `StmtKind::Expr(ExprKind::StructLit(_))`；建议更名 `statement_start_brace_parses_as_struct_lit` | 有意识更新 |
+  | 5 | `src/parser.rs` 单测 `dump_inside_block_is_legal`（`:4424`） | **改写**：把「语句首 `{ ;; }`」改为**真块体**（如 `fn f() { ;; }` 或 `if true { ;; }`）→ 断言块体内 `Dump` 合法（保留原测试意图；语句首 `{ ;; }` 现应 `SyntaxError`） | 有意识更新 |
+
+- **规范落地（本轮已改 `docs/spec/`）**：
+  - `syntax.md` §3.3（规则 2 末句扩写为**规范性钉死**：语句位 `{` ≡ `expr_stmt`→`struct_lit`；给出 `{ "k": 1 }` 正例、`{ let x = 1 }` / `{ ;; }` 反例与 `SyntaxError` 结论）。
+  - `syntax.md` §5 A9（补「推论」一行，指向 §3.3 与 EBNF `statement`）。
+  - `interface-contract.md` §10.6（parser 条目补：`parse_stmt_seq` **不得**把语句首 `{` 当裸块；无 `Block` 语句变体；语句首 `{` → `struct_lit`）。
+- **下游影响**：
+  - **core-dev**：清单 #1–#5（唯一代码变更方）。
+  - **runtime-dev**：无影响（AST 无新节点；struct 字面量既有求值路径已就绪）。
+  - **verifier**：`bug07_stmt_brace.lfz`（`{ "k": 1 }`）修复后应**成功**（EXIT=0）；建议补负例 `{ let x = 1 }` → `SyntaxError`。复验后更新 `P3-verification.md` §5 / §7 回归表。
+  - **test-engineer**：黑盒可加正例 `{ "k": 1 }`（匿名 struct，值丢弃）与负例 `{ let x = 1 }` → `SyntaxError`；**既有黑盒夹具无裸块用法**（本轮已扫描 `tests/`、`app/`，零命中）。
+  - **docs-writer / ai-dx-engineer**：若述及「`{}` 双角色」须写明**无裸块语句**、语句首 `{` 为匿名 struct 字面量。
+  - **app-dev**：无影响（应用代码无裸块）。
+  - **spec 三件套**：`syntax.md` / `interface-contract.md` 已同步；`semantics.md` **无需改动**（未新增错误类 / 消息）；错误类计数不变（12 类 + 基类）。
+- **证据**：本 ADR 标题行 + parser 缺陷位置（`src/parser.rs:52-56`、`:255-256`、`:265-269`）与 3 测（`:1676` / `:2226` / `:4424`）+ verifier `docs/reports/P3-verification.md:383-394`。
+
+---
+
+### [2026-09-24 08:46] [runtime-dev] P3.11 bug-09 折叠在 `src/cli.rs` 由 runtime-dev 落地（本轮）；bug-06 待 core-dev `error.rs`
+
+- **来源**：team-lead 任务书「落地架构师已裁定的两条非阻塞缺陷」；裁定见上文 `[2026-09-24 00:30] P3.11 验收 3 处规范裁定`（裁定 1 / 裁定 3）。
+- **决策 1（跨角色：`src/cli.rs` 归属）**：裁定 3 的「待执行代码变更清单」#3 原指派 **tooling-dev** 在 `src/cli.rs` `render_error` 落地 traceback 折叠；本轮 team-lead 任务书改派 **runtime-dev** 落地，现已完成（规范常量 `TRACEBACK_HEAD = 10` / `TRACEBACK_TAIL = 30` / 阈值 40；新增 `push_frames` / `push_trace_frame`；`TracedRun`/`LzError` 不变）。**tooling-dev 请勿重复实现**；若后续 CLI 展示层需变更，请与 runtime-dev 协调或由 team-lead 明确归属。
+- **决策 2（bug-06 阻塞）**：裁定 1 需在 `src/error.rs`（属 **core-dev**）新增 `TypeMsg::ImmutableRebind { name }`；该变体当前**不存在**（`Select-String src\*.rs -Pattern ImmutableRebind` 无匹配），故 runtime-dev 按任务书 ⚠️ **停工**，**不写引用不存在变体的半成品**。core-dev 落地后，runtime-dev 执行 tri-state `assign_name` + `exec_assign` 接线 + 「捕获 cell 携带可变性」，并移除负例 `let_rebind_is_type_error` 的 `#[ignore]`。
+- **影响**：**core-dev**（`error.rs` 变体 #1）；**tooling-dev**（`cli.rs` 归属见决策 1）；**test-engineer**（bug-06 黑盒负例待 core-dev + runtime-dev 完成后可绿）。
+- **证据**：`agents/runtime-dev/STATUS.md` / `JOURNAL.md` 2026-09-24 08:46 条目；`git diff --stat -- src/cli.rs src/evaluator.rs`（cli.rs +102/−6、evaluator.rs +29）；`cargo build --tests`（warnings=0）；`cargo test`（**375 passed / 0 failed / 1 ignored**）；CLI 实测深递归 stderr 123 行 + 逐字符 `  ... 省略 9961 帧 ...` + exit 2。

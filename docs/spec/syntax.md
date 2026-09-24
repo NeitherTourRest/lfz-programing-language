@@ -280,7 +280,10 @@ STRING_BEGIN  TEXT(片段)  INTERP_BEGIN  <普通代码记号流>  [FORMAT_SPEC]
    `if <expr>`、`else`、`while <expr>`、`for <id> in <expr>`、`fn <name>(<params>)`、`fn (<params>)`、`(<params>) =>`、`struct <Name>`。
    → 此处 `{` **是块**。
 2. **表达式位置**：其余一切期待表达式之处遇到 `{`（可选前置类型名 `IDENT`）→ **struct 字面量**。
-   - 含**语句起始处**的 `{`：LFZ **没有"裸块语句"**，故语句首 `{` 恒为**匿名 struct 字面量**（A9）。
+   - 含**语句起始处**的 `{`：LFZ **没有"裸块语句"**，故语句首 `{` 恒为**匿名 struct 字面量**（A9）。**规范性钉死（v1 补钉）**：语句位 `{ … }` ≡ `expr_stmt` → `expression` → … → `struct_lit`（§7）；其成员按 `field_list` 解析，故
+     - 正例：`{ "k": 1 }`（合法，匿名 struct 字面量表达式语句，值被丢弃）、`{ }`（合法，**空**匿名 struct）。
+     - 反例：`{ let x = 1 }` → **`SyntaxError`**（`let` 非 `field_init` 的 `(IDENT|STRING)` 头）；`{ ;; }` → **`SyntaxError`**（`;;` 不能出现在成员表内；在 `fn`/`if`/`while`/`for` 的**真块体**内仍合法）。
+     - 程序顶层 / 块体**不存在**「裸 `{` 开新作用域」语法；作用域仅由 `if`/`while`/`for`/`fn`/`lambda` 体与 struct 字面量成员表产生。
    - **例外**：`if`/`while` 条件位与 `for` 可迭代位**禁止裸 struct 字面量**（§3.4 / A6）。
 
 **`=>` 后紧跟 `{` 的判定（M3，v0.5 定稿）**：在**箭头体位置**（`fn <name>(<params>) =>`、`fn (<params>) =>`、`(<params>) =>` 的 `=>` 之后），**若下一个有效记号是 `{`，该 `{` 一律解析为块（block）**，不是 struct 字面量——即 `=> { … }` **恒为块体**。若要在箭头位置**返回一个 struct 字面量**，必须加括号：`=> ({ k: 1 })`。此规则消除 `fn(...) => {…}` 与 `(<params>) => {…}` 的块/字面量歧义。
@@ -368,7 +371,7 @@ unary     = ("-"|"!") unary | postfix | if_expr | lambda ;
 - **A6 `if c { … }` 被吞块**：条件/可迭代位 NO_BRACE_LITERAL（§3.4）。反例 `if Point { x:1 }.x > 0 { }` → `SyntaxError`。
 - **A7 struct 成员分隔符**：**逗号必填**，尾逗号可选，声明体与字面体一致，其 `{}` 内换行忽略。反例 缺逗号 → `SyntaxError`。
 - **A8 数组元素 / 实参跨行**：同 A7（逗号必填，换行忽略，尾逗号可选）。
-- **A9 语句首 `{`**：恒为匿名 struct 字面量。反例 `{ let x = 1 }` → `SyntaxError`。
+- **A9 语句首 `{`**：恒为匿名 struct 字面量（语句位 ≡ `expr_stmt`→`struct_lit`，§3.3 规则 2；EBNF `statement` **无** `block_stmt` 产生式）。正例 `{ "k": 1 }`；反例 `{ let x = 1 }` / `{ ;; }` → `SyntaxError`。
 - **A10 `;;` 触发与位置**：`;;` 是相邻两 `;` 组成的单一记号、独立语句、独占逻辑行（允许行首/行尾空白与尾随 `//` 注释）。反例 `x = 1 ;;` → `SyntaxError`。
 - **A11 单个 `;`**：词法合法（`SEMI`）但**文法从不接受** → `SyntaxError`（提示改用 `;;`）。取消"空语句"。
 - **A12 `;;;` / `; ;`**：最长匹配。`;;;` = `DUMP`+`SEMI` → `SyntaxError`；`; ;` = `SEMI SEMI` → `SyntaxError`；`;;;;` = 两个 `DUMP` 同行 → `SyntaxError`。
@@ -778,13 +781,17 @@ print("排序完成")
 
 > 覆盖 A1（引用语义 + 内置返回新值）、A2（按 cell 捕获）、A6（环安全）。
 > **字段名注（v1 补钉）**：字段名**不可用保留关键字**（§2.6），故本样例用非关键字 `me` 演示自引用环；需要 "self" 作键时应写 `r["self"]`（字符串键不受限）。
+> **语句分隔注（v1 补钉）**：块体内两条语句以**换行**分隔（§3.1 / §3.2）；**单 `;` 永远 `SyntaxError`**（A11），故 `fn inc()` 的块体**不得**写作 `{ n += 1; n }`。
 
 ```
 #42
 // refs.lfz — v0.5 语义演示
 fn makeCounter() {
     var n = 0
-    fn inc() { n += 1; n }          // 闭包按 cell 捕获 n（A2）
+    fn inc() {                      // 闭包按 cell 捕获 n（A2）
+        n += 1
+        n
+    }
     inc
 }
 let c = makeCounter()

@@ -123,7 +123,7 @@ enum LfzError {
 ### 10.6 其它
 
 - lexer：模式栈 `CODE/STR/INTERP`（[syntax.md](./syntax.md) §2.8）；最大匹配表（§2.3）；CODE 模式下 `#` → `SyntaxError`。**未闭合块注释 `/*` 至 EOF → `SyntaxError`**（`SyntaxMsg::UnterminatedBlockComment`，消息 `块注释在此处未闭合（缺少 '*/'）`，`span` 指向 `/*` 中的 `/`）；**不得**静默消费至空白（[syntax.md](./syntax.md) §2.4、[semantics.md](./semantics.md) §8.1）。
-- parser：换行模式栈 `SIG/IGN`（§3.2）+ NO_BRACE_LITERAL 限制位（§3.4）；`;;` 生成 `Dump` 节点；管道脱糖为 `Call`；每节点填 `Span`。字段名须为 `IDENT`：**保留关键字不可作 `.字段` / `member` / `field_init` 的裸字段名**（如 `r.self` → `SyntaxError`；需要该键用 `r["self"]`，[syntax.md](./syntax.md) §2.6 / §9.4）——**此为正确行为，勿改 parser**。
+- parser：换行模式栈 `SIG/IGN`（§3.2）+ NO_BRACE_LITERAL 限制位（§3.4）；`;;` 生成 `Dump` 节点；管道脱糖为 `Call`；每节点填 `Span`。字段名须为 `IDENT`：**保留关键字不可作 `.字段` / `member` / `field_init` 的裸字段名**（如 `r.self` → `SyntaxError`；需要该键用 `r["self"]`，[syntax.md](./syntax.md) §2.6 / §9.4）——**此为正确行为，勿改 parser**。**语句首 `{` 不得按裸块处理**（v1 补钉，bug-20260924-07）：LFZ **无 `block_stmt`**（AST `StmtKind` **无 `Block` 变体**），`parse_stmt_seq` 遇语句首 `{` 须落表达式路径 → `struct_lit`（匿名；[syntax.md](./syntax.md) §3.3 规则 2 / §5-A9）；`{ let x = 1 }` / `{ ;; }` → `SyntaxError`；`{ "k": 1 }` / `{ }` → 合法匿名 struct 字面量表达式语句。
 - CLI：仅做**错误格式化**与**退出码映射**（0/1/2）；`--json` 输出 [semantics.md](./semantics.md) §8.3 示例 4 的字段。
 
 ### 10.7 内置函数表（v0.5 冻结，B9）
