@@ -152,6 +152,31 @@ fn body_first_span(body: &Body) -> Span {
     }
 }
 
+/// 判定一个 `Call` 是否由**管道脱糖**产生（`|>`；AST 无 `Pipe` 节点，§10.6）。
+///
+/// 依据 `parser.rs` 的 `Span` 不变量（`parse_postfix`：「每个后缀节点的 `span` 一律取基座
+/// （primary）的起始位置」）：
+/// - **普通调用**：`Call.span == callee.span`（同一基座起始位置）；
+/// - **管道脱糖**：`desugar_pipe` 把 `Call.span` 置为**左操作数**的 `span`、被调者为**右侧**，
+///   而 `|>` 左侧在右侧之前，故 `callee.span != expr.span`（严格在后）。
+///
+/// 该不变量用于把「管道右侧非函数」（`TypeMsg::PipeRhsNotFunction`，§8.1）与
+/// 「调用非函数」（`TypeMsg::NotCallable`）区分开；其它调用保持 `NotCallable` 不变。
+fn is_pipe_desugared(expr_span: Span, callee: &Expr) -> bool {
+    callee.span != expr_span
+}
+
+/// 被调值非函数时的 `TypeError` 细分（§8.1）：管道脱糖的 `Call` → `PipeRhsNotFunction`
+/// （`管道右侧必须是函数，得到 {t}`）；其余调用 → `NotCallable`（`不可调用：{t} 不是函数`）。
+fn non_function_call_msg(v: &Value, piped: bool) -> TypeMsg {
+    let t = v.type_name().to_string();
+    if piped {
+        TypeMsg::PipeRhsNotFunction { t }
+    } else {
+        TypeMsg::NotCallable { t }
+    }
+}
+
 // ===========================================================================
 // 公开入口
 // ===========================================================================
@@ -298,6 +323,23 @@ impl Interp {
             depth: 0,
             trace: Vec::new(),
             func_names: vec![None], // [0] = 模块帧（`<module>`）
+        }
+    }
+
+    /// 把当前帧 `span` 覆盖为错误的 `span`（§10.3 N1：「该帧当前正在求值的最小 AST 节点」）。
+    ///
+    /// 在 [`Interp::eval_expr`] / [`Interp::exec_stmt`] 的**错误冒泡处**调用：非 `Call` 节点
+    /// （字段 / 下标 / 一元 / 二元 / 语句级错误等）不经过 [`Interp::call_user`] 的「进入 Call
+    /// 先把当前帧 `span` 更新为调用点」路径，若不覆盖则会停留在帧初始 `span`，使 traceback
+    /// 位置过期（P3 验收 bug-20260924-04）。`Io` 等 `span = None` 的错误不改变帧 `span`。
+    ///
+    /// 错误最深处的 `span` 即「引发错误的最小 AST 节点」；错误沿调用链冒泡时该 `span` 不变，
+    /// 故重复覆盖到同一值是无害的（`call_user` 出错时不弹帧，当前帧恒为最内层帧）。
+    fn note_error_span(&mut self, e: &LzError) {
+        if let Some(span) = e.span() {
+            if let Some(top) = self.trace.last_mut() {
+                top.span = span;
+            }
         }
     }
 
@@ -483,6 +525,17 @@ impl Interp {
     }
 
     fn exec_stmt(&mut self, stmt: &Stmt, scope: &Scope) -> R<Flow> {
+        match self.exec_stmt_inner(stmt, scope) {
+            Ok(flow) => Ok(flow),
+            Err(e) => {
+                self.note_error_span(&e);
+                Err(e)
+            }
+        }
+    }
+
+    /// [`Interp::exec_stmt`] 的执行体（不含帧 `span` 覆盖）。
+    fn exec_stmt_inner(&mut self, stmt: &Stmt, scope: &Scope) -> R<Flow> {
         match &stmt.node {
             StmtKind::Decl {
                 mutable,
@@ -777,7 +830,23 @@ impl Interp {
     // 表达式求值
     // -----------------------------------------------------------------------
 
+    /// 求值一个表达式（**错误冒泡时**把当前帧 `span` 覆盖为该错误的 `span`，§10.3 N1）。
+    ///
+    /// 见 [`Interp::note_error_span`]：保证运行期错误（字段 / 下标 / 一元 / 二元 / 作实参求值等
+    /// **非 `Call`** 节点）的 traceback 指向引发错误的**最小 AST 节点**，而非停留在帧初始
+    /// `span`（P3 验收 bug-20260924-04）。
     fn eval_expr(&mut self, expr: &Expr, scope: &Scope) -> R<Flow> {
+        match self.eval_expr_inner(expr, scope) {
+            Ok(flow) => Ok(flow),
+            Err(e) => {
+                self.note_error_span(&e);
+                Err(e)
+            }
+        }
+    }
+
+    /// [`Interp::eval_expr`] 的求值体（不含帧 `span` 覆盖）。
+    fn eval_expr_inner(&mut self, expr: &Expr, scope: &Scope) -> R<Flow> {
         let span = expr.span;
         match &expr.node {
             ExprKind::Int(i) => Ok(Flow::Value(Value::Int(*i))),
@@ -966,6 +1035,10 @@ impl Interp {
         scope: &Scope,
     ) -> R<Flow> {
         let span = expr.span;
+        // P3 验收 bug-20260924-05：管道脱糖产生的 `Call`（`|>`）在右侧非函数时
+        // 应报 `TypeMsg::PipeRhsNotFunction`（`管道右侧必须是函数，得到 {t}`），
+        // 而非通用的 `NotCallable`。判据见 [`is_pipe_desugared`]。
+        let piped = is_pipe_desugared(expr.span, callee);
         match &callee.node {
             // `f(...)`：变量优先（可遮蔽同名内置），否则查内置表。
             ExprKind::Ident(name) => {
@@ -974,7 +1047,7 @@ impl Interp {
                         Step::Done(v) => v,
                         Step::Flow(f) => return Ok(f),
                     };
-                    return self.call_func(v, argv, span, None);
+                    return self.call_func(v, argv, span, None, piped);
                 }
                 if builtins::is_builtin(name) {
                     let argv = match self.eval_args(args, scope)? {
@@ -1006,7 +1079,7 @@ impl Interp {
                     Step::Done(v) => v,
                     Step::Flow(f) => return Ok(f),
                 };
-                self.call_func(func, argv, span, Some(recv))
+                self.call_func(func, argv, span, Some(recv), false)
             }
             // 一般被调表达式（如 `arr[0](...)`、`(fn(){...})()`）。
             _ => {
@@ -1018,7 +1091,7 @@ impl Interp {
                     Step::Done(v) => v,
                     Step::Flow(f) => return Ok(f),
                 };
-                self.call_func(cv, argv, span, None)
+                self.call_func(cv, argv, span, None, piped)
             }
         }
     }
@@ -1042,15 +1115,11 @@ impl Interp {
         argv: Vec<Value>,
         span: Span,
         self_override: Option<Value>,
+        piped: bool,
     ) -> R<Flow> {
         match callee {
             Value::Func(cl) => Ok(Flow::Value(self.call_user(&cl, argv, span, self_override)?)),
-            other => Err(type_error(
-                TypeMsg::NotCallable {
-                    t: other.type_name().to_string(),
-                },
-                span,
-            )),
+            other => Err(type_error(non_function_call_msg(&other, piped), span)),
         }
     }
 

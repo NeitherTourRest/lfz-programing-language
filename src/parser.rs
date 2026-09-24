@@ -247,9 +247,19 @@ impl<'a> Parser<'a> {
     }
 
     /// 语句序列（程序体 / 块体），直到 `}` 或 `Eof`（两者均不消费）。
+    ///
+    /// §3.2：`program` / `block` 允许 `NEWLINE` 自由出现——序列开头（程序体首行、
+    /// 块 `{` 之后）的空行 / 注释行后的换行一律跳过，再决定是否解析语句
+    /// （P3 验收 bug-01 修复）。
+    ///
+    /// 注：语句首 `{` 仍按**裸块语句内联**处理；A9「语句首 `{` 为匿名 struct 字面量」
+    /// 属 P3 验收 🟡 bug-07，**待架构师确认 A9 后再单独修复并同步其回归用例**。
     fn parse_stmt_seq(&mut self) -> R<Vec<Stmt>> {
         let mut stmts = Vec::new();
         loop {
+            // 跳过语句序列开头的换行（连续多个只跳一次；语句分隔的换行由
+            // 语句终结检查处理，此处对非开头位置为无操作）。
+            self.skip_newlines();
             match self.peek().clone() {
                 TokenKind::Eof | TokenKind::RBrace => break,
                 TokenKind::LBrace => {
@@ -932,6 +942,8 @@ impl<'a> Parser<'a> {
                     span,
                 ))
             }
+            // §7 `unary = … | if_expr | lambda`：`if` 可作表达式（P3 验收 bug-03 修复）。
+            TokenKind::KwIf => self.parse_if_expr(span),
             TokenKind::KwFn => self.parse_fn_lambda(span),
             TokenKind::LParen => match self.try_parse_arrow_lambda(span)? {
                 Some(lambda) => Ok(lambda),
@@ -1150,12 +1162,19 @@ impl<'a> Parser<'a> {
                         parts.push(StrPart::Text(std::mem::take(&mut cur_text)));
                     }
                     let expr = self.parse_expr()?;
-                    let format_spec = match self.peek().clone() {
-                        TokenKind::FormatSpec(spec) => {
-                            self.bump();
-                            Some(spec)
+                    // lexer 在 `${expr:spec}` 处先发 `Colon` 再发 `FormatSpec(text)`
+                    // （见 lexer.rs 及其单测）；此处必须消费 `Colon`（P3 验收 bug-02 修复）。
+                    let format_spec = if *self.peek() == TokenKind::Colon {
+                        self.bump(); // ':'
+                        match self.peek().clone() {
+                            TokenKind::FormatSpec(spec) => {
+                                self.bump();
+                                Some(spec)
+                            }
+                            _ => return Err(self.unexpected("格式说明符")),
                         }
-                        _ => None,
+                    } else {
+                        None
                     };
                     self.expect(&TokenKind::InterpEnd)?;
                     parts.push(StrPart::Expr { expr, format_spec });
@@ -4855,14 +4874,18 @@ mod tests {
     #[test]
     fn interp_with_format_spec_some() {
         // `"${x:>3}"` → format_spec = Some(">3")（M6）。
+        // 修正（P3 验收 bug-20260924-02）：lexer 在 `:` 处先发 `Colon` 再发
+        // `FormatSpec`（见 lexer 单测 `format_spec_is_raw_until_brace`）。本用例
+        // 原先省略 `Colon`，掩盖了 parser 未消费 `Colon` 的缺陷（已修）。
         let p = parse(&[
             tok(TokenKind::StrBegin, 1, 1),
             tok(TokenKind::InterpBegin, 1, 2),
             tok(TokenKind::Ident("x".into()), 1, 4),
-            tok(TokenKind::FormatSpec(">3".into()), 1, 5),
-            tok(TokenKind::InterpEnd, 1, 8),
-            tok(TokenKind::StrEnd, 1, 9),
-            tok(TokenKind::Eof, 1, 10),
+            tok(TokenKind::Colon, 1, 5),
+            tok(TokenKind::FormatSpec(">3".into()), 1, 6),
+            tok(TokenKind::InterpEnd, 1, 9),
+            tok(TokenKind::StrEnd, 1, 10),
+            tok(TokenKind::Eof, 1, 11),
         ])
         .unwrap();
         let e = expr_of(&p);
@@ -4880,14 +4903,16 @@ mod tests {
     #[test]
     fn interp_empty_format_spec_is_some_empty() {
         // `"${x:}"` → format_spec = Some("")（M6：`:` 后可空）。
+        // 修正（P3 验收 bug-20260924-02）：同 `interp_with_format_spec_some`，补 `Colon`。
         let p = parse(&[
             tok(TokenKind::StrBegin, 1, 1),
             tok(TokenKind::InterpBegin, 1, 2),
             tok(TokenKind::Ident("x".into()), 1, 4),
-            tok(TokenKind::FormatSpec(String::new()), 1, 5),
-            tok(TokenKind::InterpEnd, 1, 6),
-            tok(TokenKind::StrEnd, 1, 7),
-            tok(TokenKind::Eof, 1, 8),
+            tok(TokenKind::Colon, 1, 5),
+            tok(TokenKind::FormatSpec(String::new()), 1, 6),
+            tok(TokenKind::InterpEnd, 1, 7),
+            tok(TokenKind::StrEnd, 1, 8),
+            tok(TokenKind::Eof, 1, 9),
         ])
         .unwrap();
         let e = expr_of(&p);
@@ -4898,6 +4923,50 @@ mod tests {
             },
             other => panic!("应为 Interp，得到 {other:?}"),
         }
+    }
+
+    // ---- P3 验收（bug-01/02/03）回归：**经真实 lexer 的源码** ----
+    //
+    // 教训（docs/reports/P3-verification.md）：此前 parser 单测全部手工构造 token 流、
+    // 绕过 lexer，导致「`{` 后紧跟 NEWLINE」「插值 `:` 的 `Colon`」「表达式位置的 `if`」
+    // 三处 lexer↔parser 接缝无人校验。以下用例一律先 `crate::lexer::lex` 再 `parse`。
+    // 说明：`body` 为 loader 消费 `#42` 之后的程序体，`line_base = 1`。
+
+    /// 经真实 lexer 解析一段程序体（不含 `#42`），返回模块。
+    fn parse_src(body: &str) -> crate::error::R<crate::ast::Program> {
+        let toks = crate::lexer::lex(body, 1)?;
+        crate::parser::parse(&toks)
+    }
+
+    #[test]
+    fn reg_multi_line_blocks_parse() {
+        // bug-01：`{` 之后换行、惯用多行函数体/控制流体。
+        parse_src("fn f() {\n  print(1)\n}\nf()\n").expect("多行函数体应可解析");
+        parse_src("if true {\n  1\n} else {\n  2\n}\n").expect("多行 if/else 应可解析");
+        parse_src("while false {\n  1\n}\n").expect("多行 while 应可解析");
+        parse_src("for x in [1, 2] {\n  x\n}\n").expect("多行 for 应可解析");
+    }
+
+    #[test]
+    fn reg_leading_blank_and_comment_lines_parse() {
+        // bug-01：程序体首行空行 / 注释行、块首注释行。
+        parse_src("\nprint(1)\n").expect("前导空行应可解析");
+        parse_src("// 注释\nprint(1)\n").expect("前导注释行应可解析");
+        parse_src("fn f() {\n  // 注释\n  1\n}\n").expect("块首注释行应可解析");
+    }
+
+    #[test]
+    fn reg_interp_format_spec_through_lexer() {
+        // bug-02：经 lexer 的 `${x:spec}`（`Colon` + `FormatSpec`）。
+        parse_src("print(\"${1:>3}\")\n").expect("format_spec 应可解析");
+        parse_src("print(\"${1:.2f}\")\n").expect("format_spec 小数点形式应可解析");
+    }
+
+    #[test]
+    fn reg_if_as_expression_through_lexer() {
+        // bug-03：`if` 作表达式（初始化式 / 实参）。
+        parse_src("let x = if true { 1 } else { 2 }\n").expect("if 应可作初始化式");
+        parse_src("print(if false { 1 } else { 2 })\n").expect("if 应可作实参");
     }
 
     #[test]
