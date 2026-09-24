@@ -28,7 +28,7 @@
 //! `0` 成功；`1` 测试有用例失败（`lfz test` 专用，P4）；`2` CLI 参数错误 /
 //! LFZ 语法或运行时错误 / 运行环境错误。
 
-use lfz::error::LzError;
+use lfz::error::{LzError, TraceFrame};
 use lfz::evaluator::{self, TracedRun};
 use lfz::lexer;
 use lfz::loader::{self, Loaded};
@@ -43,6 +43,14 @@ pub const EXIT_OK: i32 = 0;
 pub const EXIT_TEST_FAIL: i32 = 1;
 /// CLI 参数错误 / LFZ 语法或运行时错误 / 运行环境错误。
 pub const EXIT_ERROR: i32 = 2;
+
+/// traceback 折叠（`semantics.md` §8.2 / `interface-contract.md` §10.3）：帧数 `T` **大于**
+/// [`TRACEBACK_FOLD_THRESHOLD`] 时，保留的**最外层**帧数（规范性常量 `TRACEBACK_HEAD = 10`）。
+pub const TRACEBACK_HEAD: usize = 10;
+/// traceback 折叠：保留的**最内层**帧数（规范性常量 `TRACEBACK_TAIL = 30`）。
+pub const TRACEBACK_TAIL: usize = 30;
+/// traceback 折叠阈值 = `TRACEBACK_HEAD + TRACEBACK_TAIL`（= 40）；`T ≤` 此值时逐帧原样输出。
+pub const TRACEBACK_FOLD_THRESHOLD: usize = TRACEBACK_HEAD + TRACEBACK_TAIL;
 
 /// `lfz --help` 文本（写 stdout）。
 const HELP: &str = "\
@@ -168,6 +176,8 @@ fn run_file(path: &str, err: &mut dyn Write) -> i32 {
 /// - `CosmosAnswerError`：仅 `File "<path>", line 1` → 末行（**无源码行 / 无插入符**）。
 /// - `SyntaxError`：`  File "<path>", line N` + 源码行 + 插入符 → 末行。
 /// - 运行期：`Traceback (most recent call last):` 头 + 逐帧（最外层→最内层）→ 末行。
+///   帧数 `T > [`TRACEBACK_FOLD_THRESHOLD`]` 时按 §8.2 **折叠**（首 10 帧 + 省略行 + 尾 30 帧），
+///   `T ≤ 阈值` 时逐帧原样输出（浅栈行为逐字节不变）。
 pub fn render_error(
     path: &str,
     source: Option<&Loaded>,
@@ -178,13 +188,10 @@ pub fn render_error(
     match traced {
         // 加载 / 解析期：无 `Traceback` 头。
         None => render_load_error(&mut out, path, source, err),
-        // 运行期：有 `Traceback` 头，逐帧最外层→最内层。
+        // 运行期：有 `Traceback` 头，逐帧最外层→最内层（深栈折叠，§8.2）。
         Some(run) => {
             out.push_str("Traceback (most recent call last):\n");
-            for frame in &run.frames {
-                let name = run.frame_name(frame);
-                push_frame(&mut out, path, frame.span, Some(name.as_ref()), source);
-            }
+            push_frames(&mut out, path, run, source);
         }
     }
     out.push_str(err.class_name());
@@ -207,6 +214,43 @@ fn render_load_error(out: &mut String, path: &str, source: Option<&Loaded>, err:
     if let Some(span) = err.span() {
         push_frame(out, path, span, None, source);
     }
+}
+
+/// 追加运行期**帧栈**（`semantics.md` §8.2 折叠）：帧数 `T ≤ 40` → 逐帧原样；`T > 40` →
+/// **首 10 帧** → **省略行** → **尾 30 帧**。
+///
+/// 折叠**仅作用于此处的人类可读渲染**；`TracedRun.frames` 本身保持完整（§10.3 / §8.4）。
+fn push_frames(out: &mut String, path: &str, run: &TracedRun, source: Option<&Loaded>) {
+    let frames = &run.frames;
+    let total = frames.len();
+    if total <= TRACEBACK_FOLD_THRESHOLD {
+        for frame in frames {
+            push_trace_frame(out, path, frame, run, source);
+        }
+        return;
+    }
+    for frame in &frames[..TRACEBACK_HEAD] {
+        push_trace_frame(out, path, frame, run, source);
+    }
+    // 省略行（逐字符，§8.2）：2 空格 + `... 省略 {N} 帧 ...`，`N = T − 40`（十进制）。
+    out.push_str("  ... 省略 ");
+    out.push_str(&(total - TRACEBACK_FOLD_THRESHOLD).to_string());
+    out.push_str(" 帧 ...\n");
+    for frame in &frames[total - TRACEBACK_TAIL..] {
+        push_trace_frame(out, path, frame, run, source);
+    }
+}
+
+/// 追加单个 traceback 帧（按 `func_id` 反查显示名，§8.4）。
+fn push_trace_frame(
+    out: &mut String,
+    path: &str,
+    frame: &TraceFrame,
+    run: &TracedRun,
+    source: Option<&Loaded>,
+) {
+    let name = run.frame_name(frame);
+    push_frame(out, path, frame.span, Some(name.as_ref()), source);
 }
 
 /// 追加一个「帧」（§8.2 通用三行格式；源码行 / 插入符仅在可取到源码行时输出）。
@@ -365,6 +409,52 @@ mod tests {
         );
         assert!(
             rendered.ends_with("ZeroDivisionError: 除以零\n"),
+            "{rendered}"
+        );
+    }
+
+    /// bug-20260924-09 回归：深递归（`RecursionError`）的**人类可读** traceback 按 §8.2 折叠：
+    /// 首 10 帧 → `  ... 省略 {T−40} 帧 ...` → 尾 30 帧；`TracedRun.frames` 本身保持**完整**。
+    #[test]
+    fn deep_recursion_traceback_is_folded() {
+        // `fn loop(n) { loop(n) }` 无限递归 → 命中 10000 层上限 → RecursionError。
+        let src = "fn loop(n) { loop(n) }\nloop(1)\n";
+        let tokens = lexer::lex(src, 0).expect("lex");
+        let program = parser::parse(&tokens).expect("parse");
+        let traced = evaluator::eval_module_traced(&program);
+        let err = traced
+            .result
+            .as_ref()
+            .expect_err("深递归应报 RecursionError");
+        assert_eq!(err.class_name(), "RecursionError");
+        // 数据层不折叠：完整帧栈（模块帧 + 10000 个用户帧）。
+        assert!(
+            traced.frames.len() >= 10_000,
+            "TracedRun.frames 应完整保留，实得 {}",
+            traced.frames.len()
+        );
+
+        let loaded = Loaded {
+            text: src.to_string(),
+            line_base: 0,
+        };
+        let rendered = render_error("deep.lfz", Some(&loaded), err, Some(&traced));
+
+        // 人类可读渲染：帧行数 = HEAD + TAIL（省略行不以 `  File "` 开头）。
+        let frame_lines = rendered
+            .lines()
+            .filter(|l| l.starts_with("  File \""))
+            .count();
+        assert_eq!(frame_lines, TRACEBACK_HEAD + TRACEBACK_TAIL, "{rendered}");
+
+        // 省略行逐字符：`  ... 省略 {T−40} 帧 ...`。
+        let omitted = traced.frames.len() - TRACEBACK_FOLD_THRESHOLD;
+        assert!(
+            rendered.contains(&format!("  ... 省略 {omitted} 帧 ...\n")),
+            "缺少逐字符省略行：{rendered}"
+        );
+        assert!(
+            rendered.ends_with("RecursionError: 递归深度超限（超过 10000 层）\n"),
             "{rendered}"
         );
     }

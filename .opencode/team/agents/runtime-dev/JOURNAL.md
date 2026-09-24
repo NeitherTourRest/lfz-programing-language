@@ -1,5 +1,19 @@
 # runtime-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 08:46] P3.11 缺陷落地 — bug-09（traceback 折叠）完成；bug-06（`let` 重绑定）阻塞于 core-dev
+- 来源: team-lead 任务书「落地架构师已裁定的两条非阻塞缺陷」；依据 ADR `.opencode/team/DECISIONS.md` `[2026-09-24 00:30] [language-architect] P3.11 验收 3 处规范裁定`（裁定 1 / 裁定 3）、`docs/spec/semantics.md` §4.5.2/§8.2/§8.4、`docs/spec/interface-contract.md` §10.3/§10.8。
+- 完成:
+  - **bug-20260924-09（完成）**：`src/cli.rs` `render_error` 的人类可读 traceback 增加**显示层折叠**（§8.2）：帧数 `T ≤ 40` 逐帧原样；`T > 40` → **首 10 帧** → 一行 `  ... 省略 {T−40} 帧 ...`（前缀 2 空格）→ **尾 30 帧**。新增规范常量 `TRACEBACK_HEAD=10` / `TRACEBACK_TAIL=30` / `TRACEBACK_FOLD_THRESHOLD=40`，新增 `push_frames` / `push_trace_frame`。**数据层不动**：`TracedRun.frames` / `LzError` 保持**完整不折叠**（§10.3 / §8.4）。
+  - **bug-20260924-06（阻塞，按任务书 ⚠️ 停工）**：ADR 裁定需**新增 `TypeMsg::ImmutableRebind { name: String }`**（`src/error.rs`，属 core-dev）。`Select-String src\*.rs -Pattern ImmutableRebind` 确认**当前不存在**（仅 `docs/spec/interface-contract.md` §10.8 有定义）→ 无法命名该变体 → 无法抛出 → 负例无法通过。**未改 `src/error.rs`**（红线）；求值器侧接线待 core-dev 落地后执行（清单见 STATUS「待办 / 阻塞」）。
+- 产出:
+  - `git diff --stat -- src/cli.rs src/evaluator.rs` → `cli.rs +102/−6`、`evaluator.rs +29`；仅动自有模块。
+  - `cargo build --tests --message-format=json` → **warnings=0 errors=0**。
+  - `cargo test` → **360 lib**（`359 passed / 1 ignored / 0 failed`）+ **9 bin**（全过）+ **7 tests/cli**（全过）= **375 passed / 0 failed / 1 ignored**（基线 `373 passed`，未破坏）。
+  - bug-09 回归 `cli::tests::deep_recursion_traceback_is_folded`（bin）→ **ok**；bug-06 正例 `evaluator::tests::var_rebind_is_still_allowed` → **ok**；bug-06 负例 `evaluator::tests::let_rebind_is_type_error` → **`#[ignore]`**（`--ignored` 运行证实当前因缺陷而 panic：`let 重绑定应报错`）。
+  - 真实 CLI 证据：`lfz run` 深递归文件 → stderr **123 行**（原 ~30000 行），`  File "` 帧行 **40**，含逐字符 `  ... 省略 9961 帧 ...`（T=10001，N=9961），末行 `RecursionError: 递归深度超限（超过 10000 层）`，退出码 **2**。
+- 决策: 无新增 ADR（严格照 language-architect 裁定，无自主设计）。
+- 阻塞: **bug-06 待 core-dev 在 `src/error.rs` 增 `TypeMsg::ImmutableRebind { name: String }`**。落地后 runtime-dev 接线 `exec_assign`（tri-state + captured 可变性）并移除 `#[ignore]`。
+- 下一步: 待 core-dev #1 → 完成 bug-06 求值器接线 + 启用负例。
 ## [2026-09-24 04:00] P3.9b — `src/builtins.rs`：7 个高阶内置（§10.7 全表 54/54 齐备）
 - 来源: team-lead 任务书「P3.9b — `src/builtins.rs`：7 个高阶内置」；依据 `docs/spec/interface-contract.md` §10.7（HOF 签名/语义 + 边界补钉）、§8.1（错误类↔消息）、§10.8（`R<T>`），`semantics.md` §4.5.6（全序）、§8.1。
 - 完成:

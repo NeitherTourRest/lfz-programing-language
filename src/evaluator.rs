@@ -2335,6 +2335,35 @@ mod tests {
         assert_eq!(run_str(stmts), "9");
     }
 
+    /// bug-20260924-06 回归（**可运行**部分）：`var` 绑定非 `let`，重绑定**合法**
+    /// （§4.5.2 可变性边界：`var` / 形参 / `for` 变量 / `fn` / `struct` 名一律可变）。
+    #[test]
+    fn var_rebind_is_still_allowed() {
+        let stmts = vec![
+            decl("b", int(1)),
+            assign_var("b", int(2)),
+            expr_stmt(ident("b")),
+        ];
+        assert_eq!(run_str(stmts), "2");
+    }
+
+    /// bug-20260924-06 回归（**待启用**）：`let a = 1` 后 `a = 2` → `TypeError` +
+    /// 逐字符消息 `不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容`（ADR 2026-09-24 00:30 裁定 1）。
+    ///
+    /// **阻塞**：`TypeMsg::ImmutableRebind` 尚未在 `src/error.rs` 落地（属 core-dev）；本用例在
+    /// core-dev 完成该项、且 runtime-dev 接线 `exec_assign` 后应移除 `#[ignore]`。
+    #[test]
+    #[ignore = "blocked: 需 core-dev 在 src/error.rs 落地 TypeMsg::ImmutableRebind（ADR P3.11 裁定 1 #1）"]
+    fn let_rebind_is_type_error() {
+        let stmts = vec![ldecl("a", int(1)), assign_var("a", int(2))];
+        let e = eval_module(&prog(stmts)).expect_err("let 重绑定应报错");
+        assert_eq!(e.class_name(), "TypeError");
+        assert_eq!(
+            e.message(),
+            "不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容"
+        );
+    }
+
     #[test]
     fn struct_template_method_binds_self() {
         let norm = StructMember::Method(FnDecl {
