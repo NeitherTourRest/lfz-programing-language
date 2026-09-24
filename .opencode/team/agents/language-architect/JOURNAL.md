@@ -1,5 +1,20 @@
 # language-architect — 工作日志
 > 只追加，最新条目在最上方。
+
+## [2026-09-24 00:30] P3.11 验收 3 处规范裁定（let 重绑定 / .self / traceback 截断；v1 补钉）
+- 来源: team-lead 下达「就 `docs/reports/P3-verification.md` 的 3 处规范裁定（bug-20260924-06 / -08 / -09）逐条裁定；先 ADR 后改 spec；不写生产代码」（轻量启动）
+- 完成:
+  - **裁定 1（bug-06 `let` 重绑定）**：归 **`TypeError`**（运行期），**新增 `TypeMsg::ImmutableRebind { name }`**，消息 `不能重新赋值 let 变量 '{name}'；let 只锁重绑定，不锁内容`；**不新增错误类**（复用现有类 + 子消息，对标 JS `const` 重赋值先例）。**边界钉死**：仅显式 `let` 绑定不可重绑；`var`/形参/`for` 变量/`fn` 名/`struct` 名均可变（与现有实现一致）；`a[i]=`/`s.k=` 不受限。
+  - **裁定 2（bug-08 `.self`）**：**改样例**（`r.self`→`r.me`、输出 `{self:<cycle>}`→`{me:<cycle>}`），**不允许 `.self`**（parser 现行为正确，**无代码变更**）；§2.6 补「关键字不可作裸字段名」规范条目（需要保留字作键用 `s["self"]`）。
+  - **裁定 3（bug-09 traceback）**：**序列化保持完整、显示层折叠**——`T>40` → 首 10 帧 + `  ... 省略 {T−40} 帧 ...` + 尾 30 帧；常量 `TRACEBACK_HEAD=10`/`TRACEBACK_TAIL=30`；`--json` 数组**不折叠**；落点 CLI `render_error`（tooling-dev），**无需 core/runtime 改动**。
+  - **纪律**：先追加 ADR，后改 `docs/spec/`；三件套头部「冻结于 2026-09-23」不变；未写生产代码、未改他人交付物、未 commit/tag/push。
+- 产出: `.opencode/team/DECISIONS.md`（479→**543** 行，追加 ADR，标题行 L483）；`docs/spec/syntax.md`（911→**913**）、`semantics.md`（404→**415**）、`interface-contract.md`（309→**311**）
+- 证据: 字节级 bytes=61290/33931/30190、LF=913/415/311、CR=**0**、末字节=LF(10)；错误类计数 `12 类 + 基类` / `运行期 10 类` 不变；`E-xxx` 仅 §13 附录（14 处命中行，未新增）；新增串 `ImmutableRebind`/`不能重新赋值 let 变量`/`TRACEBACK_HEAD`/`... 省略`/`r.me`/`{me: <cycle>}` 命中、`r.self` 清零
+- 决策: ADR「P3.11 验收 3 处规范裁定（let 重绑定 / .self / traceback 截断）」（逐条裁定 + 待执行代码变更清单 + 下游影响）
+- 待执行代码变更（本轮未写代码）: `src/error.rs`（core-dev）；`src/evaluator.rs`（runtime-dev）；`src/cli.rs`（tooling-dev）
+- 下一步: 通知 team-lead 转派；test-engineer 写负例/折叠快照；docs/ai-dx 同步；verifier 复验后更新 P3-verification §5
+- 阻塞: 无
+
 ## [2026-09-24 01:00] 未闭合块注释（/* 至 EOF）裁定（1 处契约缺口闭合，v1 补钉）
 - 来源: team-lead 下达「就 core-dev 上报的 1 处契约缺口（未闭合块注释 `/*` 至 EOF）给规范裁定」任务（轻量启动；依据 `syntax.md` §2.4/§2.5、`semantics.md` §8.1、`interface-contract.md` §10.6）
 - 完成:

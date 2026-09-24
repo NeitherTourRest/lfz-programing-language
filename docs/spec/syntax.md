@@ -194,6 +194,7 @@ letter = "a"…"z" | "A"…"Z" ;
   `let` `var` `fn` `return` `if` `else` `while` `for` `in` `break` `continue` `struct` `true` `false` `nil` `self`
 - **未来保留（当前使用即 `SyntaxError`）**：
   `match` `class` `import` `from` `try` `catch` `rescue` `yield` `async` `await` `and` `or` `not` `is`
+- **关键字不可作裸字段名（v1 补钉，规范性）**：**关键字**（上两段共 16 个 + 未来保留字）**不能**作为**点访问的字段名**（`.字段`）、**struct 成员名**（`member`）或**字面量字段名**（`field_init` 的 `IDENT` 形式）——这些位置要求 `IDENT`，关键字不满足，故 `r.self` 与 `{ self: 1 }` 均为 `SyntaxError`。需要以保留字为键时，用**字符串键**：`r["self"]` / `{ "self": v }`（`STRING` 键不受限；见 §7 `field`/`field_init`/`member`、§9.4 样例）。
 
 ### 2.7 数值字面量（沿用 v0.2 §2.6）
 
@@ -776,6 +777,7 @@ print("排序完成")
 ### 9.4 样例 D —— 引用语义 / 闭包捕获 / 环安全（v0.5 新语义演示）
 
 > 覆盖 A1（引用语义 + 内置返回新值）、A2（按 cell 捕获）、A6（环安全）。
+> **字段名注（v1 补钉）**：字段名**不可用保留关键字**（§2.6），故本样例用非关键字 `me` 演示自引用环；需要 "self" 作键时应写 `r["self"]`（字符串键不受限）。
 
 ```
 #42
@@ -798,8 +800,8 @@ let ys = sort(xs)                    // 返回新值，不改 xs（A1）
 print("${xs}  ${ys}")               // [3, 1, 2]  [1, 2, 3]
 
 let r = {}
-r.self = r                           // 自引用环（A6）
-print(r)                             // {self: <cycle>}
+r.me = r                           // 自引用环（A6）
+print(r)                             // {me: <cycle>}
 print(r == r)                        // true（身份优先）
 ```
 
@@ -809,7 +811,7 @@ print(r == r)                        // true（身份优先）
 1 2 3
 99 99
 [3, 1, 2]  [1, 2, 3]
-{self: <cycle>}
+{me: <cycle>}
 true
 ```
 

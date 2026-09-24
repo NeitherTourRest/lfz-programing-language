@@ -477,3 +477,67 @@
 - **影响**：**test-engineer** 黑盒用例按 stderr 抓错误、按阶段判有无 `Traceback` 头、按上述逐字符格式断言；**verifier** 验收命令 3–5 以此为输出基线；**docs-writer** 运行/错误章节据此撰写；**ai-dx-engineer / app-dev** 示例输出对齐；**language-architect** 需知悉下方 spec 排版瑕疵。
 - **发现的 spec 排版瑕疵（未改 spec，仅记录待 language-architect 裁定）**：`semantics.md` §8.3 示例 2 的**内层帧**（`n / 0`）源码行与插入符均比 §8.2 通用帧格式**少 4 空格**缩进（外层帧 `let r = half(10)` 与示例 1 均符合通用格式）。本实现按 §8.2 通用规则统一处理（内层帧源码行前缀 4 空格、插入符 = 4+(col-1)），故内层帧输出会比示例 2 多 4 空格前缀；若要与示例 2 逐字符一致，须先改 §8.3。
 - **证据**：产出与命令见 `agents/tooling-dev/JOURNAL.md` 2026-09-23 条目；`cargo build` → `Finished`（**0 warning**）；`cargo test` → **292 passed / 0 failed**（lib 277 + bin 8 + `tests/cli.rs` 7）。未改任何他人模块与 `Cargo.toml`。
+
+---
+
+### [2026-09-24 00:30] [language-architect] P3.11 验收 3 处规范裁定（let 重绑定 / .self / traceback 截断）
+
+- **来源**：`docs/reports/P3-verification.md`（verifier 独立验收）缺陷单 **bug-20260924-06 / -08 / -09**——verifier 明确标注为「**非实现 bug，需 language-architect 规范裁定**」。
+- **纪律**：本轮**先追加本 ADR、后改 `docs/spec/`**（本标题行先落地，再动三件套）；三件套头部「冻结于 2026-09-23」**保持不变**；三处改动均为 **v1 补钉（补充钉死）**，**未推翻任何既有冻结规则**；**不新增错误类**（仍 12 类 + 基类）、**不引入 `E-xxx`**。`docs/spec/` 由 language-architect 改；`src/**` 由对应开发者按文末清单落地（本 ADR **不含生产代码**）。
+
+#### 裁定 1 —— `let` 重绑定未被限制（bug-06）：归 `TypeError` + **新增子消息变体**（不新增错误类）
+
+- **缺口**：`semantics.md` §4.5.2 写死「`let` 只锁重绑定，不锁内容」（`a = []` 对 `let` 非法），但 §8.1 的 **12 类**中**无对应类/消息**；`SyntaxError` 细分表的「赋值目标非法」是**语法**规则（左侧须为变量/字段/下标），**不覆盖**「目标语法合法但绑定不可变」。→ **契约缺口**。
+- **裁定：判 `TypeError`（运行期），新增 `TypeMsg::ImmutableRebind { name }`**（复用现有类，**不新增错误类**；`LfzError::Type { msg, span }` 不变）。
+  - **类名**：`TypeError`。
+  - **消息模板**：`不能重新赋值 let 变量 '{name}'；let 只锁重绑定，不锁内容`（`{name}` = 被重绑定的绑定名）。
+  - **`span`**：= **赋值目标的 span**（变量名首字符；§8.2「引发错误的最小 AST 节点」）。
+  - **触发条件（充分必要）**：一条赋值语句，其 **lvalue 基为裸 `IDENT`（无 `.字段` / `[下标]` 后缀）** 且 op ∈ `{ = += -= *= /= %= }`，且该名字沿**词法可见链**解析到的绑定是**由显式 `let` 声明创建**的（含外层块/函数可见的 `let`、被当前闭包按 cell 捕获的 `let`）→ 抛 `TypeError`。
+  - **明确不触发**：① `a[i] = v` / `s.k = v` / `s["k"] = v`（容器原地修改，A1；`a`/`s` 为 `let` 亦合法）；② 对 **`var` 绑定 / 函数·λ 形参 / `for` 循环变量 / `fn` 名 / `struct` 模板名** 的赋值（这些绑定**非 `let`**）。
+  - **边界钉死（补 `semantics.md` 此前未言明处，不推翻任何规则）**：**仅显式 `let` 声明的绑定不可重绑定**；`var` / 形参 / `for` 变量 / `fn` 名 / `struct` 名一律**可变**——与现有实现一致（`src/ast.rs:90` `let→mutable:false / var→mutable:true`；`src/evaluator.rs:1110` 形参、`:596` `for` 变量、`:612/:625` `fn`/`struct` 名均 `mutable:true`）。
+- **理由**：① 本规则位于 §4.5 求值语义，是**运行期**行为（LFZ 名字运行时解析，parser 无作用域信息，无法解析期判定）；② 12 类中唯 `TypeError` 具「对某值/绑定执行了不允许操作」的兜底语义，与 **JS 先例**（`const` 重赋值 → `TypeError: Assignment to constant variable`）一致；③ `NameError`（名未定义）/`ValueError`（转换）语义均不符；④ 复用现有类 + 新增**子消息变体**，与 `UnterminatedBlockComment` / `EmptyExtremum` / `BadRange` 同法，守住「不新增错误类」红线。
+
+#### 裁定 2 —— `.self` 字段访问与 EBNF 冲突（bug-08）：**改样例**（`r.self`→`r.me`），**不允许 `.self`**
+
+- **缺口**：`syntax.md` §9.4 样例写 `r.self = r`，但 EBNF `field = "." IDENT`（§7）与 `self` 是保留关键字（§2.6）冲突 → **规则与样例自相矛盾**。
+- **裁定：以规则为准，改样例；`self` 保持保留关键字，不允许作裸字段名。** parser 拒绝 `.self` 是**正确**实现，**无需改代码**。
+- **理由**：① 最小改动，不触碰冻结 EBNF；② `self` 作方法接收者关键字是刻意设计，允许其作字段名会产生双重身份，并须在 `field`/`field_init`/`member` **三处**文法特例化；③ 需要 "self" 作键时**括号形式 `s["self"]` 仍可用**（字符串键不受限）；④ 样例目的是演示**环安全**（A6），与字段名无关；⑤ 行业一致（带 `self`/`this` 关键字的语言点访问成员一般不允许该关键字）。
+
+#### 裁定 3 —— `RecursionError` 的 traceback 帧数爆炸（bug-09）：加**首 K + 省略行 + 尾 M** 折叠规则
+
+- **缺口**：`interface-contract.md` §10.3 要求帧栈「**全部**序列化」，未规定截断；深递归（10000 层）→ CLI stderr 约 10000 帧 × 3 行 ≈ 数十万行，实用性差。
+- **裁定：序列化保持完整、显示层折叠**（分层，不矛盾）：
+  - 设帧总数 `T`。`T ≤ 40` → **原样逐帧**（浅栈行为逐字节不变）；`T > 40` → **首 10 帧**（最外层）→ **一行省略行** → **尾 30 帧**（最内层）。
+  - **省略行格式（逐字符）**：`  ... 省略 {N} 帧 ...`（前缀 **2 空格**，与 `File` 行缩进对齐；`N = T − 40`，十进制）。
+  - **建议值（规范性常量）**：**K = 10**、**M = 30**、**阈值 = 40**（`TRACEBACK_HEAD = 10` / `TRACEBACK_TAIL = 30`）。理由：traceback **尾部**（最内层）承载出错现场与紧邻调用链，信息量最大；**头部**仅需确立入口 → M > K；阈值 40 使**多数正常栈深 < 40 的 traceback 输出完全不变**。
+  - **`--json` 不折叠**：`traceback` 数组**完整**（§8.4 schema 与元素 `{file,line,func}` 不变）；机器可读契约须稳定，消费者自行折叠（已知：深递归 `--json` 仍给 ~10000 元素数组，属完整数据；如需折叠另立 v1.1）。
+  - **退出码不变**：仍 `2`。
+- **理由**：① 显示层策略不污染数据层（`LfzError`/`TracedRun` 保持完整、可测）；② 头+尾折叠为通行做法；③ 阈值 40 最小化对既有黑盒快照的影响。
+
+#### 规范落地（本轮已改 `docs/spec/`）
+
+- `syntax.md`：§2.6（新增「关键字不可作裸字段名」规范性条目）、§9.4（样例 `r.self`→`r.me`；预期输出 `{self: <cycle>}`→`{me: <cycle>}`；加字段名注）。
+- `semantics.md`：§4.5.2（重绑定错误类 + 可变性边界钉死）、§8.1（`TypeError` 触发行 + 细分消息表 **6 → 7**）、§8.2（**traceback 折叠**规则）、§8.4（`--json` traceback 不折叠）。
+- `interface-contract.md`：§10.3（折叠指针 + 常量）、§10.6（parser：`.self` 为**正确** `SyntaxError`，勿改）、§10.8（`TypeMsg::ImmutableRebind`）。
+
+#### 待执行代码变更清单（language-architect 不写代码）
+
+| # | 文件 | 负责人 | 变更 | 依据 |
+|---|---|---|---|---|
+| 1 | `src/error.rs` | **core-dev** | `TypeMsg` 增变体 `ImmutableRebind { name: String }` + `message()` 分支 `不能重新赋值 let 变量 '{name}'；let 只锁重绑定，不锁内容`；顶部注释「**6 条**」→「**7 条**」（`:110`）；`TypeMsg` 相关单测增断言 | 裁定 1 |
+| 2 | `src/evaluator.rs`（+ 视需要 `src/env.rs` / `src/value.rs`） | **runtime-dev** | `assign_name`（`:330`）命中 local / captured / globals 绑定时查其 `mutable` 标志（`Env::local_mutable`）；`false` → `TypeError::ImmutableRebind { name }`（`span = target.span`）。因其现返回 `bool`，需改为可区分「未找到 / 不可变 / 成功」；**捕获 cell 须携带可变性**（`Closure.captured` / `capture_local`）以支持闭包内重绑 `let`。`let`/`var` 定义与 `a[i]=`/`s.k=` 路径**不变** | 裁定 1 |
+| 3 | `src/cli.rs` `render_error`（`:171`） | **tooling-dev** | 运行期 traceback 折叠：`T>40` → 首 10 帧 + `  ... 省略 {T−40} 帧 ...` + 尾 30 帧；`T≤40` 原样。**仅改渲染**；`TracedRun`/`LfzError` 不变（**无需 core-dev/runtime-dev 改动**） | 裁定 3 |
+| 4 | `docs/spec/*` | **language-architect**（本轮已完成） | 见上「规范落地」 | 裁定 1/2/3 |
+
+> 裁定 2 **无代码变更**（parser 已按 EBNF 正确拒绝 `.self`）；仅改 `syntax.md` 样例。
+
+#### 下游影响
+
+- **core-dev**：`src/error.rs`（#1）。另：**勿**把 `.self` 改成合法（裁定 2）。
+- **runtime-dev**：`src/evaluator.rs`（#2）；此前 P3.7/P3.8 ADR 已上报的「`let` 重绑定错误类未定义」缺口**本轮闭合**（`mutable` 标志现可强制）。
+- **tooling-dev**：`src/cli.rs`（#3）；`--json` 的 `traceback` 保持完整。
+- **test-engineer**：① 新增负例 `let a = 1; a = 2` → `{"error":"TypeError"}` + 逐字符消息 `不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容`；② 深递归快照改为「≤40 帧原样；>40 帧含 `  ... 省略 N 帧 ...`」；③ 既有 RecursionError 全帧断言需更新。
+- **docs-writer / ai-dx-engineer**：手册/AI 指南「变量」节写明 `let` 不可重绑定（消息模板）、`self` 不可作字段名（用 `s["self"]`）；错误章加一条 traceback 折叠说明。
+- **spec 三件套**：错误类计数不变（12 类 + 基类；运行期 10 类）；`TypeError` 细分消息 **6 → 7**；`E-xxx` 仍 **11** 处（§13 附录，未新增）。
+
+- **证据**：本 ADR 标题行 + `docs/spec/` 三件套本轮改动点（见结构化汇报）；命令与字节级计数见 `agents/language-architect/STATUS.md`。

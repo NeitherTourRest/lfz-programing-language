@@ -1,5 +1,20 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-24 08:45] P3.11 阻塞缺陷修复（提交 1）+ 规范裁定（提交 2）：两个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；已核验：`cargo build` 0 warning、`cargo test` **373 passed / 0 failed**（358 库 + 8 + 7）、4 条最小复现均转好、verifier 9 夹具 **8 过 1 挂**（唯一挂的夹具自身用了 `;`，与规范冲突，非解释器缺陷）；工作区恰 **8 个** ` M` 文件；要求做**两个原子提交**（代码修复 + 规范裁定）并 push，收工文档并入提交 2；禁区：禁 force-push、**仍不打 tag**（`v0.2.0` 须待 verifier 复验通过）、不提交 `target/`/密钥/临时文件、不改清单外文件；出现清单外条目即停止）
+- 完成:
+  - 入清单门禁：`git status --short --untracked-files=all` 复核恰为任务书预期 **8 项**（`M src/parser.rs`、`M src/evaluator.rs`、`M docs/spec/{syntax,semantics,interface-contract}.md`、`M .opencode/team/DECISIONS.md`、`M .opencode/team/agents/language-architect/{STATUS,JOURNAL}.md`），**无清单外条目、无未跟踪文件**；门禁未触发。
+  - 基线复核：`git branch --show-current` = `main`；push 前本地基线 HEAD = 远程 `refs/heads/main` = `06f0878 docs(team): P3.11 verification report (FAIL: 3 blocking bugs) and board update`；`git tag -n` 仍仅 `v0.1.0`。
+  - **提交 1（代码修复）**：`git add src/parser.rs src/evaluator.rs`（`git diff --cached --name-only` 精确 2 文件）→ `git -c core.autocrlf=false commit -F lfz_msg1.txt`（标题 `fix(p3): blocking defects + runtime error spans` + 任务书正文逐字）→ **短哈希 `1e8fd5f`**；`git show --stat HEAD` = 2 files changed, **160 insertions(+), 22 deletions(-)**（`git commit` 自身打印 3220/3082 为 CRLF 虚高，未采信）；`git hash-object` 与 `git rev-parse HEAD:<file>` 对两文件均相等（工作区/索引/提交三者一致）；`git log -1 --format=%B` 复核正文含 `§7` 完整无损。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 2。
+  - **提交 2（规范裁定）**：`git add docs/spec/syntax.md docs/spec/semantics.md docs/spec/interface-contract.md .opencode/team/DECISIONS.md .opencode/team/agents/language-architect/STATUS.md .opencode/team/agents/language-architect/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（任务书 6 项 + 本角色 2 收工文档）→ 提交 `docs(spec): rule on 3 P3.11 gaps (let rebinding / .self / traceback truncation)`（本提交即本条日志所在提交，短哈希见汇报）。
+  - `git push`（非 force，`$LASTEXITCODE` 判据）。
+- 产出:
+  - 两个新提交；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `git log --oneline -4`；`git ls-remote origin refs/heads/main`；`git tag -n`（仍仅 `v0.1.0`——**本轮未打 tag，`v0.2.0` 待 verifier 复验通过**）。
+- 决策: 无新 ADR（`DECISIONS.md` 本轮 ADR 由 language-architect 追加、我仅代为入库）。**复验通过前严禁打 `v0.2.0`**：本轮修复仅入库、尚未经复验。
+- 下一步: 待 verifier 对修复复验通过 + team-lead 判定 → 打附注标签 `v0.2.0`；P10 交付清单核对。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-24 00:29] P3.11 验收报告 + 团队状态刷新：单个原子提交并推送
 - 来源: team-lead 任务书（轻量启动；背景：verifier 已出 `docs/reports/P3-verification.md`（31697 B，结论 **FAIL**：3×🔴/4×🟡/2×🟢）+ 夹具目录；team-lead 已刷新 `TEAM_BOARD.md`/`PROJECT_STATE.md`、verifier 已更新自身 `{STATUS,JOURNAL}.md`；**当前有并行修复任务在改 `src/**`，`git status` 可能含 `M src/**` 清单外条目——允许但不暂存**）；要求：`git add` 显式清单（`docs/reports` + 团队/verifier 三文档）+ 本身收工文档，信息 `docs(team): P3.11 verification report (FAIL: 3 blocking bugs) and board update` + 指定 body，`git push`，并做验收取证；禁区：禁 force-push、**严禁打 tag**（FAIL，`v0.2.0` 不得打）、不暂存 `src/**`/`docs/spec/**`、不提交 `target/`/密钥/临时文件）
 - 完成:

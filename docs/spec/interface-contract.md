@@ -77,6 +77,7 @@
   - `TraceFrame`（即语义上的「CallFrame」）：**traceback 帧** —— `{ func_id: u32, span: Span }`。`func_id` 是函数表下标（**不存 `Rc<str>`**，避免每次调用分配）；仅在**报错时**按 `func_id` 反查名字（`<module>` 顶层 / `<fn 名字>` / 匿名 `<fn>`）。
 - **`TraceFrame.span` 语义（N1，写死）**：= **该帧当前正在求值的最小 AST 节点的 `Span`**（初始为进入函数体的首节点 span）。**进入一次 Call 时：先把"当前帧"的 `span` 更新为该 `Call` 节点的 `span`（即调用点），再压入新帧**。这与 [semantics.md](./semantics.md) §8.3 示例 2 完全对齐：外层帧 span 指向 `half(10)` 调用点（line 5），内层帧 span 指向 `n`（line 3）。
 - 错误发生时把帧栈自**最外层到最内层**序列化进 `LfzError`；错误输出用 `line/col`（`Span{line,col}`），**不**使用字节偏移。
+- **traceback 折叠 = 显示层规则（v1 补钉；与序列化分层）**：`LfzError` / `TracedRun` 的帧栈**完整序列化、不折叠**（上一条不变）；**人类可读渲染**（CLI）按 [semantics.md](./semantics.md) §8.2 折叠——帧数 `T > 40` 时输出**首 10 帧** → `  ... 省略 {T−40} 帧 ...` → **尾 30 帧**。规范性常量 **`TRACEBACK_HEAD = 10` / `TRACEBACK_TAIL = 30`（阈值 = 40）**。`--json` 的 `traceback` 数组**不折叠**（[semantics.md](./semantics.md) §8.4）。落点：**tooling-dev** 的 CLI `render_error`；**不改** `LfzError` / `TracedRun`（故**无需 core-dev / runtime-dev 改动**）。
 - 闭包需保留**函数名**供 traceback（存 `func_id` → 函数表条目含名字）。
 
 ### 10.4 错误枚举
@@ -122,7 +123,7 @@ enum LfzError {
 ### 10.6 其它
 
 - lexer：模式栈 `CODE/STR/INTERP`（[syntax.md](./syntax.md) §2.8）；最大匹配表（§2.3）；CODE 模式下 `#` → `SyntaxError`。**未闭合块注释 `/*` 至 EOF → `SyntaxError`**（`SyntaxMsg::UnterminatedBlockComment`，消息 `块注释在此处未闭合（缺少 '*/'）`，`span` 指向 `/*` 中的 `/`）；**不得**静默消费至空白（[syntax.md](./syntax.md) §2.4、[semantics.md](./semantics.md) §8.1）。
-- parser：换行模式栈 `SIG/IGN`（§3.2）+ NO_BRACE_LITERAL 限制位（§3.4）；`;;` 生成 `Dump` 节点；管道脱糖为 `Call`；每节点填 `Span`。
+- parser：换行模式栈 `SIG/IGN`（§3.2）+ NO_BRACE_LITERAL 限制位（§3.4）；`;;` 生成 `Dump` 节点；管道脱糖为 `Call`；每节点填 `Span`。字段名须为 `IDENT`：**保留关键字不可作 `.字段` / `member` / `field_init` 的裸字段名**（如 `r.self` → `SyntaxError`；需要该键用 `r["self"]`，[syntax.md](./syntax.md) §2.6 / §9.4）——**此为正确行为，勿改 parser**。
 - CLI：仅做**错误格式化**与**退出码映射**（0/1/2）；`--json` 输出 [semantics.md](./semantics.md) §8.3 示例 4 的字段。
 
 ### 10.7 内置函数表（v0.5 冻结，B9）
@@ -233,6 +234,7 @@ enum LfzError {
 - **int→float 加宽（B13）**：见 [semantics.md](./semantics.md) §4.5.7（加宽可能不精确；混合比较按数学精确值）。
 - **`ValueMsg` 变体（实现侧，v1 补钉）**：`Convert { src, dst, text }`、`BadFormatSpec { spec }`、**`EmptyExtremum { func: String }`**（消息 `空数组没有极值（{func}）`）、**`BadRange { lo: i64, hi: i64 }`**（消息 `区间非法：{lo} >= {hi}`）。后两者为本轮补钉**新增**，供 core-dev 在 `src/error.rs` 落地；均归类 `ValueError`（**不新增错误类**）。
 - **`SyntaxMsg` 新增变体（实现侧，v1 补钉）**：**`UnterminatedBlockComment`**（**无字段**，消息 `块注释在此处未闭合（缺少 '*/'）`）——**未闭合块注释 `/*` 至 EOF**（[syntax.md](./syntax.md) §2.4、[semantics.md](./semantics.md) §8.1）；归 `LfzError::Syntax` → `SyntaxError`，`span` 指向 `/*` 中的 `/`（**不新增错误类**）。
+- **`TypeMsg` 新增变体（实现侧，v1 补钉；P3.11）**：**`ImmutableRebind { name: String }`**（消息 `不能重新赋值 let 变量 '{name}'；let 只锁重绑定，不锁内容`）——**对显式 `let` 绑定的重绑定**（[semantics.md](./semantics.md) §4.5.2 / §8.1）；归 `LfzError::Type` → **`TypeError`**（**不新增错误类**；`TypeMsg` 由 6 条增至 **7** 条），`span` = 赋值目标变量名首字符。
 
 ---
 
