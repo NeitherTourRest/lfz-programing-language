@@ -1,5 +1,21 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 13:05] ✅ 提交并推送 `bug-20260927-01` 修复（`s["k"]()` 绑定 `self`）
+- 来源: team-lead 任务书（轻量启动；提交 `bug-20260927-01` 修复并 push。要求：`git add src/evaluator.rs .opencode/team/agents/runtime-dev/{STATUS,JOURNAL}.md`（显式路径），信息 `fix: bind self for methods retrieved via ["k"] (spec s.k === s["k"])` + 指定 body；`git push`；本角色收工文档并入同一提交。禁区：禁 force-push、**不打 tag**（`v1.0-final` 待 verifier 复验 PASS 后由 team-lead 下令）、不改 `docs/spec/**`·README、不提交 `target/`·密钥·临时文件）
+- 完成:
+  - **入清单门禁（通过，未触发停止）**：`git status --short` 实测与任务书背景逐字一致——` M src/evaluator.rs`、` M .opencode/team/agents/runtime-dev/{STATUS,JOURNAL}.md`；**无清单外条目、无缺失条目**（任务书写 `agents/runtime-dev/...` = 仓库内 `.opencode/team/agents/runtime-dev/...`，同源）。
+  - 基线复核：提交前 HEAD = 远程 `refs/heads/main` = `4727726`；分支 `main`；`origin` = `https://github.com/NeitherTourRest/lfz-programing-language.git`。
+  - **diff 复核（只入库、不改内容）**：`git diff --stat` = 3 文件 / +142 −29。`src/evaluator.rs` 新增 `ExprKind::Index { object, index }` 分支（struct + string 键被调 → 绑定 `self`；其余沿用通用路径）+ 回归用例 `struct_method_via_bracket_index_call_binds_self`。无密钥/临时文件。
+  - **提交前防呆**：`cargo build` → `Finished dev profile`，**0 warning**。
+  - 先完成收工协议（覆盖 `STATUS.md`、置顶追加本 `JOURNAL.md`），使收工改动并入本提交。
+  - **提交**：`git add src/evaluator.rs .opencode/team/agents/runtime-dev/STATUS.md .opencode/team/agents/runtime-dev/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（**显式路径**，未 `git add -A`）→ `git commit -F <UTF-8 信息文件>`（信息逐字照录任务书）。
+  - `git push`（非 force）。
+- 产出:
+  - 一个新提交（短哈希见汇报）；`git status --short` 空；`git log --oneline -3`；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: 修复经 team-lead 独立复现（`p["get"]() == 42` → `dot ok, bracket ok`，EXIT 0；修复前 `NameError`）；`cargo test` 362+42+16+12 全绿；`cargo run --quiet -- test` 82/82 exit 0（数字由 team-lead/runtime-dev 提供，本角色未重跑全量）。
+- 决策: 无新增 release-manager ADR（本任务为缺陷修复入库，技术决策属 runtime-dev/architect 范畴）。
+- 下一步: `v1.0-final` 待 verifier 对 `bug-20260927-01` 复验 PASS 后由 team-lead 下令打标（本轮未打 tag）。
+- 阻塞: 无。
 ## [2026-09-27 12:28] ✅ P10（交付完整性）：提交 P9 报告与答辩材料；刷新 README；产出交付清单核对报告；推送
 - 来源: team-lead 任务书（轻量启动；P10 交付完整性——提交 P9 报告与答辩材料、刷新 README、产出 `docs/reports/delivery-checklist.md`（对照 `task-info.md` 8 项、≥3 轮核对）、推送。两个提交：`docs(p9): ...` + `docs(p10): ...`。禁区：禁 force-push、**不打 tag**（`v1.0-final` 待 verifier 复验 PASS 后由 team-lead 下令）、**不暂存 `src/**`**、不提交 `target/`·密钥·临时文件）
 - 完成:

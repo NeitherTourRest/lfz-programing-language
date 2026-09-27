@@ -1,5 +1,21 @@
 # runtime-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27] bug-20260927-01 修复 — `s["k"]()` 未绑定 `self`（`s.k ≡ s["k"]`）
+- 来源: team-lead 任务书「修 bug-20260927-01」（轻量启动）。依据 `docs/spec/semantics.md` §4.5（L51 明文 `s.k ≡ s["k"]` … 并调用（`self` 绑定））+ §3.7；缺陷单见 `docs/reports/P9-verification.md` §5。
+- 复现（修复前，`#42` 前缀临时文件置于预批准 `%TEMP%\opencode`）: `print(p.norm2())` / `print(p["norm2"]())` → stdout `25`，stderr `NameError: 未定义的名字 'self'`，`--json` = `{"ok":false,"error":"NameError",...}`，exit=2。修复后 → stdout `25\n25`，stderr 0 bytes，`--json` = `{"ok":true}`，exit=0。
+- 完成（`src/evaluator.rs` `eval_call`，改动最小，只补一条语义）:
+  - 在既有 `ExprKind::Field`（`recv.m(...)` 绑定 `self`）分支后，新增 `ExprKind::Index { object, index }` 分支：先求 object、再求 index；**仅当** 接收者为 `Value::Struct(_)` 且键为 string（`iv.as_str().is_some()`）时，`index_read` 取字段后以 `Some(recv)` 作 `self_override` 调用（与 `.字段()` 完全同路径，`piped=false`）；其余（数组下标、非 string 键）走原通用路径（`self_override=None`，保留 `piped`）——**不改变数组下标调用 / 非函数字段 / 数据面 A5 等任何既有行为**。
+  - 未改 `docs/spec/**`（规范已写明，只需实现对齐）、未改 `tests/**`、未改 `docs/guide/**`、README；未改他人模块（`error.rs`/`ast.rs`/`parser.rs`/`span.rs`/`lexer.rs`/`loader.rs`）。
+- 回归单测（TDD：先失败后通过）: `evaluator::tests::struct_method_via_bracket_index_call_binds_self` —— 断言 `p.norm2() == p["norm2"]()`（同 `self` 接收者，均为 25），且经方括号 / 点号各调一次写自身字段的 `bump()` 后 `p["n"] == 2`（`self` 生效的直接证据）。
+- 产出/证据:
+  - `git diff --stat` → `src/evaluator.rs | 99 +++...`（**1 file changed, 99 insertions(+)**），`git status --porcelain` 仅 `M src/evaluator.rs`。
+  - `cargo build --message-format=json 2>$null | Select-String '"level":"warning"'` → **WARNINGS=0**；`cargo build` → `Finished`（无 warning/error）。
+  - `cargo test` → lib **362 passed / 0 failed / 0 ignored**（基线 361 +1 新增）+ 42 + 16 + 12，合计 **432 → 0 failed**。
+  - `cargo run --quiet -- test` → **PASS 82 / 汇总 82 通过 0 失败 0 错误**，exit 0（未破坏、未新增黑盒用例）。
+  - 边界回归实跑：`fs[0]()`（数组下标调用）→ `ok:true`；`p["x"]()`（int 字段）→ `TypeError: 不可调用：int 不是函数`；`fs["0"]()`（数组 string 下标）→ 既有 `TypeError` 不变。
+- 决策: 无新增 ADR（纯实现对齐既有规范 §4.5，无跨角色契约变更）。
+- 下一步: 建议 team-lead 核验后由 release-manager 提交 `fix(runtime): bind self for s["k"]() method call (bug-20260927-01)`；由 verifier 复验并回归。
+- 阻塞: 无。
 ## [2026-09-24 08:54] P3.11 bug-06 接线完成 — `let` 重绑定检查落地，摘掉 `#[ignore]`（lib 361 passed / 0 ignored）
 - 来源: team-lead 任务书「完成 bug-20260924-06 的最后一步：接线 `let` 重绑定检查，并摘掉阻塞占位 `#[ignore]`」。依据 ADR `.opencode/team/DECISIONS.md` `[2026-09-24 00:30] …P3.11 验收 3 处规范裁定` 裁定 1 #2、`docs/spec/semantics.md` §4.5.2/§8.1、`docs/spec/interface-contract.md` §10.8。
 - 完成:

@@ -1127,6 +1127,34 @@ impl Interp {
                 };
                 self.call_func(func, argv, span, Some(recv), false)
             }
+            // `recv["m"](...)`：下标取到 struct 的字符串键字段（含方法字段）后调用，
+            // 与 `recv.m(...)` 等价（§4.5：`s.k ≡ s["k"]`）——同样绑定 `self` 为接收者。
+            // 仅 struct + string 键触发绑定；数组下标等其余被调表达式沿用通用路径。
+            ExprKind::Index { object, index } => {
+                let recv = match self.eval_expr(object, scope)? {
+                    Flow::Value(v) => v,
+                    f => return Ok(f),
+                };
+                let iv = match self.eval_expr(index, scope)? {
+                    Flow::Value(v) => v,
+                    f => return Ok(f),
+                };
+                if matches!(recv, Value::Struct(_)) && iv.as_str().is_some() {
+                    let func = self.index_read(&recv, &iv, callee.span)?;
+                    let argv = match self.eval_args(args, scope)? {
+                        Step::Done(v) => v,
+                        Step::Flow(f) => return Ok(f),
+                    };
+                    self.call_func(func, argv, span, Some(recv), false)
+                } else {
+                    let cv = self.index_read(&recv, &iv, callee.span)?;
+                    let argv = match self.eval_args(args, scope)? {
+                        Step::Done(v) => v,
+                        Step::Flow(f) => return Ok(f),
+                    };
+                    self.call_func(cv, argv, span, None, piped)
+                }
+            }
             // 一般被调表达式（如 `arr[0](...)`、`(fn(){...})()`）。
             _ => {
                 let cv = match self.eval_expr(callee, scope)? {
@@ -2459,6 +2487,77 @@ mod tests {
             expr_stmt(call_expr(field(ident("p"), "norm"), vec![])),
         ];
         assert_eq!(run_str(stmts), "7");
+    }
+
+    #[test]
+    fn struct_method_via_bracket_index_call_binds_self() {
+        // bug-20260927-01：`s["k"]()` 与 `s.k()` 必须等价（semantics.md §4.5 L51 / §3.7）——
+        // 经下标取到的方法字段被调用时同样绑定 `self`。
+        let norm2 = StructMember::Method(FnDecl {
+            span: sp(),
+            name: "norm2".to_string(),
+            params: vec![],
+            body: Body::Expr(bin(
+                BinaryOp::Add,
+                bin(BinaryOp::Mul, field(self_ref(), "x"), field(self_ref(), "x")),
+                bin(BinaryOp::Mul, field(self_ref(), "y"), field(self_ref(), "y")),
+            )),
+        });
+        // 写自身字段的方法：每次 `bump()` 令 `self.n += 1` 并返回新值，
+        // 证明方括号取到的方法在调用时 `self` 确为原接收者。
+        let bump = StructMember::Method(FnDecl {
+            span: sp(),
+            name: "bump".to_string(),
+            params: vec![],
+            body: Body::Block(block(vec![
+                st(StmtKind::Assign {
+                    target: Lvalue {
+                        span: sp(),
+                        base: LvalueBase::SelfValue,
+                        path: vec![LvalueSeg {
+                            span: sp(),
+                            kind: LvalueSegKind::Field("n".to_string()),
+                        }],
+                    },
+                    op: AssignOp::Assign,
+                    value: bin(BinaryOp::Add, field(self_ref(), "n"), int(1)),
+                }),
+                expr_stmt(field(self_ref(), "n")),
+            ])),
+        });
+        let stmts = vec![
+            struct_decl(
+                "Point",
+                vec![
+                    StructMember::Field(field_init("x", int(0))),
+                    StructMember::Field(field_init("y", int(0))),
+                    StructMember::Field(field_init("n", int(0))),
+                    norm2,
+                    bump,
+                ],
+            ),
+            ldecl(
+                "p",
+                lit_struct("Point", vec![field_init("x", int(3)), field_init("y", int(4))]),
+            ),
+            // 两种取法结果一致（同一 `self` 接收者）。
+            ldecl("a", call_expr(field(ident("p"), "norm2"), vec![])),
+            ldecl("b", call_expr(index(ident("p"), sstr("norm2")), vec![])),
+            // 经方括号与点号各调一次 `bump`：`self.n` 由 0 累计到 2（写自身字段生效）。
+            expr_stmt(call_expr(index(ident("p"), sstr("bump")), vec![])),
+            expr_stmt(call_expr(field(ident("p"), "bump"), vec![])),
+            // 断言：a == b（等价）且 a == 25 且 p["n"] == 2（self 生效）。
+            expr_stmt(logical(
+                LogicalOp::And,
+                bin(BinaryOp::Eq, ident("a"), ident("b")),
+                logical(
+                    LogicalOp::And,
+                    bin(BinaryOp::Eq, ident("a"), int(25)),
+                    bin(BinaryOp::Eq, index(ident("p"), sstr("n")), int(2)),
+                ),
+            )),
+        ];
+        assert_eq!(run_str(stmts), "true");
     }
 
     #[test]
