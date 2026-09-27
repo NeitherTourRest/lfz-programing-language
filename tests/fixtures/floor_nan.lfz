@@ -1,0 +1,3 @@
+#42
+// floor(NaN) → ValueError（复用 int(float) 口径）
+let x = floor(float("nan"))

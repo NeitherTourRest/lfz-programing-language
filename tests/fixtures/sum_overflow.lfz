@@ -1,0 +1,3 @@
+#42
+// sum 全 int 溢出 → OverflowError
+let x = sum([9223372036854775807, 1])

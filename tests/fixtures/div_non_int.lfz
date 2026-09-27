@@ -1,0 +1,3 @@
+#42
+// div 两参须 int：div(1.0, 2) → TypeError
+let x = div(1.0, 2)

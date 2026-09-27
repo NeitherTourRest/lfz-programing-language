@@ -1,0 +1,3 @@
+#42
+// randInt(lo, hi) 且 lo >= hi → ValueError「区间非法」
+let x = randInt(5, 5)

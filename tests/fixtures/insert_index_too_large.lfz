@@ -1,0 +1,3 @@
+#42
+// insert 合法域 i ∈ [0, len]：insert(9, 9, [1,2]) → IndexError
+let x = insert(9, 9, [1, 2])

@@ -39,6 +39,30 @@
     { "path": "fixtures/return_outside_fn.lfz",          "name": "syntax_return_outside_function",    "expect": { "error": "SyntaxError" } },
     { "path": "fixtures/deep_recursion.lfz",             "name": "deep_recursion_exceeds_limit",      "expect": { "error": "RecursionError" } },
 
+    { "path": "fixtures/pop_empty.lfz",                  "name": "builtin_pop_empty_index_error",     "expect": { "error": "IndexError" } },
+    { "path": "fixtures/removeAt_out_of_range.lfz",      "name": "builtin_removeAt_out_of_range",     "expect": { "error": "IndexError" } },
+    { "path": "fixtures/removeAt_negative_out_of_range.lfz","name": "builtin_removeAt_negative_out_of_range","expect": { "error": "IndexError" } },
+    { "path": "fixtures/insert_negative_index.lfz",      "name": "builtin_insert_negative_index",     "expect": { "error": "IndexError" } },
+    { "path": "fixtures/insert_index_too_large.lfz",     "name": "builtin_insert_index_too_large",   "expect": { "error": "IndexError" } },
+    { "path": "fixtures/swap_out_of_range.lfz",          "name": "builtin_swap_out_of_range",         "expect": { "error": "IndexError" } },
+    { "path": "fixtures/min_empty.lfz",                  "name": "builtin_min_empty_value_error",     "expect": { "error": "ValueError" } },
+    { "path": "fixtures/max_empty.lfz",                  "name": "builtin_max_empty_value_error",     "expect": { "error": "ValueError" } },
+    { "path": "fixtures/minBy_empty.lfz",                "name": "builtin_minBy_empty_value_error",   "expect": { "error": "ValueError" } },
+    { "path": "fixtures/maxBy_empty.lfz",                "name": "builtin_maxBy_empty_value_error",   "expect": { "error": "ValueError" } },
+    { "path": "fixtures/filter_predicate_not_bool.lfz",  "name": "builtin_filter_predicate_not_bool", "expect": { "error": "TypeError" } },
+    { "path": "fixtures/join_non_string_element.lfz",    "name": "builtin_join_non_string_element",   "expect": { "error": "TypeError" } },
+    { "path": "fixtures/int_nan.lfz",                    "name": "builtin_int_nan_value_error",       "expect": { "error": "ValueError" } },
+    { "path": "fixtures/int_inf.lfz",                    "name": "builtin_int_inf_overflow_error",    "expect": { "error": "OverflowError" } },
+    { "path": "fixtures/int_bad_string.lfz",             "name": "builtin_int_bad_string",            "expect": { "error": "ValueError" } },
+    { "path": "fixtures/float_bad_string.lfz",           "name": "builtin_float_bad_string",          "expect": { "error": "ValueError" } },
+    { "path": "fixtures/randInt_bad_range.lfz",          "name": "builtin_randInt_bad_range",         "expect": { "error": "ValueError" } },
+    { "path": "fixtures/fail_raises.lfz",                "name": "builtin_fail_assertion_error",      "expect": { "error": "AssertionError" } },
+    { "path": "fixtures/sort_mixed_types.lfz",           "name": "builtin_sort_mixed_types",          "expect": { "error": "TypeError" } },
+    { "path": "fixtures/sum_overflow.lfz",               "name": "builtin_sum_overflow",              "expect": { "error": "OverflowError" } },
+    { "path": "fixtures/floor_nan.lfz",                  "name": "builtin_floor_nan_value_error",     "expect": { "error": "ValueError" } },
+    { "path": "fixtures/ceil_inf.lfz",                   "name": "builtin_ceil_inf_overflow_error",   "expect": { "error": "OverflowError" } },
+    { "path": "fixtures/div_non_int.lfz",                "name": "builtin_div_non_int_type_error",    "expect": { "error": "TypeError" } },
+
     { "path": "fixtures/plain_ok.txt",                   "name": "non_lfz_file_no_preamble_required" }
   ]
 }

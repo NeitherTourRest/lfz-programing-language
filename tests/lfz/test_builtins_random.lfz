@@ -1,0 +1,57 @@
+#42
+// ============================================================
+// test_builtins_random.lfz — 随机内置（3）
+// 覆盖: seed rand randInt
+// spec: interface-contract.md §10.7（rand [0,1); randInt [lo,hi); seed 固定序列）
+// 负例: fixtures/randInt_bad_range.lfz
+// ============================================================
+
+// ---- seed 固定序列：同种子两次得到相同序列 ----
+seed(42)
+let r1 = rand()
+let r2 = rand()
+let r3 = rand()
+seed(42)
+let s1 = rand()
+let s2 = rand()
+let s3 = rand()
+assert(r1 == s1, "seed_reproducible_rand_1")
+assert(r2 == s2, "seed_reproducible_rand_2")
+assert(r3 == s3, "seed_reproducible_rand_3")
+
+// ---- rand 返回值范围 [0.0, 1.0) 与类型 ----
+seed(7)
+var i = 0
+var inUnit = true
+while i < 20 {
+    let v = rand()
+    if !(v >= 0.0 && v < 1.0) { inUnit = false }
+    i += 1
+}
+assert(inUnit, "rand_in_unit_interval")
+assert(type(rand()) == "float", "rand_returns_float")
+
+// ---- seed 返回 nil ----
+assert(seed(1) == nil, "seed_returns_nil")
+assert(type(seed(1)) == "nil", "seed_return_type_nil")
+
+// ---- randInt 落在 [lo, hi) 与类型 ----
+seed(99)
+var j = 0
+var inRange = true
+while j < 50 {
+    let v = randInt(3, 7)
+    if !(v >= 3 && v < 7) { inRange = false }
+    j += 1
+}
+assert(inRange, "randInt_in_half_open_range")
+assert(type(randInt(0, 10)) == "int", "randInt_returns_int")
+
+// ---- randInt 同种子可复现 ----
+seed(5)
+let q1 = randInt(0, 100)
+let q2 = randInt(0, 100)
+seed(5)
+let t1 = randInt(0, 100)
+let t2 = randInt(0, 100)
+assert(q1 == t1 && q2 == t2, "randInt_reproducible_after_seed")

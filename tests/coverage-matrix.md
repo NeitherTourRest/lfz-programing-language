@@ -1,6 +1,6 @@
 # LFZ 黑盒测试 — 覆盖矩阵
 
-> 唯一写者: test-engineer ｜ 最后更新: 2026-09-27（P5.2 控制流/函数/闭包/结构体/管道/插值/`;;`/A1/A6/RecursionError 批次）
+> 唯一写者: test-engineer ｜ 最后更新: 2026-09-27（P5.3 内置函数全表 54 个逐项覆盖批次；P5.1/P5.2 沿用）
 > 事实源: `docs/spec/{syntax,semantics,interface-contract}.md`（冻结 v1） ｜ runner 契约: `docs/tooling/runner-contract.md`（v1.2）
 > 运行命令: `cargo run --quiet -- test`（默认发现 `tests/**/*.lfz`，排除 `fixtures/`）
 
@@ -56,6 +56,112 @@
 
 ---
 
+## 2b. P5.3 覆盖矩阵（内置函数全表 **54** 个 — 逐个）
+
+> 契约：`interface-contract.md` **§10.7**（54 个，`data-last`、返回新值不改原容器 A1）、**§10.7「内置边界补钉」**、**§10.7「数值内置形参加宽」**；错误类见 `semantics.md` **§8.1**。
+> 用例组文件：`tests/lfz/test_builtins_{array,higher_order,struct,string,math,convert,random,io}.lfz` —— 共 **8** 文件 / **263** 条 `assert`。
+> 负例：`tests/cases.json` 本批新增 **23** 条 `expect.error` fixture；另复用 P5.1/P5.2 的 `div_zero`、`del_method_field`、`del_missing_data_field`。
+> 状态口径：`通过` = 有自动发现正向断言 +（如适用）`expect.error` 负例判 PASS；`跳过` = 环境相关/未声明，在「说明」列注明。
+
+### 2b.1 核心 / 数组（14 个，`tests/lfz/test_builtins_array.lfz`）
+
+| # | 内置 | 正常+边界断言 | 错误负例（fixture → 期望类） | 状态 | 说明 |
+|---|---|---|---|---|---|
+| 1 | `len` | 5 | — | 通过 | array 元素数 / struct 数据字段数 / string Unicode 标量数 |
+| 2 | `range` | 4 | — | 通过 | `n<0` → 空数组 |
+| 3 | `push` | 3 | — | 通过 | **A1** `push_does_not_mutate` |
+| 4 | `pop` | 4 | `pop_empty` → `IndexError` | 通过 | `pop([])` → `Index{idx:-1,len:0}`；**A1** |
+| 5 | `removeAt` | 4 | `removeAt_out_of_range` / `removeAt_negative_out_of_range` → `IndexError` | 通过 | 支持负索引；**A1** |
+| 6 | `insert` | 5 | `insert_negative_index` / `insert_index_too_large` → `IndexError` | 通过 | 合法域 `i∈[0,len]`，**不支持负索引**；**A1** |
+| 7 | `swap` | 4 | `swap_out_of_range` → `IndexError` | 通过 | 支持负索引；**A1** |
+| 8 | `slice` | 7 | — | 通过 | 下标夹取 `[0,len]`；`from>=to` → 空；**A1** |
+| 9 | `min` | 5 | `min_empty` → `ValueError` | 通过 | 确定性全序（-Inf<有限<+Inf<NaN） |
+| 10 | `max` | 5 | `max_empty` → `ValueError` | 通过 | 同上 |
+| 11 | `sum` | 7 | `sum_overflow` → `OverflowError` | 通过 | 全 int→int；含 float→float；空→`int 0` |
+| 12 | `sort` | 8 | `sort_mixed_types` → `TypeError` | 通过 | 升序新数组；NaN 排最后；**稳定性由 `sortBy` 举证**（同值不可区分） |
+| 13 | `take` | 5 | — | 通过 | `n` 夹取 `[0,len]` |
+| 14 | `drop` | 4 | — | 通过 | 去前 `n` 个 |
+
+### 2b.2 高阶（7 个，`tests/lfz/test_builtins_higher_order.lfz`）
+
+| # | 内置 | 正常+边界断言 | 错误负例（fixture → 期望类） | 状态 | 说明 |
+|---|---|---|---|---|---|
+| 15 | `map` | 4 | — | 通过 | 逐元素；**A1** |
+| 16 | `filter` | 5 | `filter_predicate_not_bool` → `TypeError` | 通过 | 谓词须返回 `bool`；**A1** |
+| 17 | `reduce` | 5 | — | 通过 | **左折叠顺序**已用 `acc*10+x`（=123）钉死；空→`init` |
+| 18 | `sortBy` | 4 | — | 通过 | **稳定性**：等键元素保持输入先后序；**A1** |
+| 19 | `minBy` | 3 | `minBy_empty` → `ValueError` | 通过 | 以 `keyFn` 结果为准 |
+| 20 | `maxBy` | 3 | `maxBy_empty` → `ValueError` | 通过 | 同上 |
+| 21 | `each` | 4 | — | 通过 | 仅副作用；返回 `nil` |
+
+### 2b.3 struct / 字典（5 个，`tests/lfz/test_builtins_struct.lfz`）
+
+| # | 内置 | 正常+边界断言 | 错误负例（fixture → 期望类） | 状态 | 说明 |
+|---|---|---|---|---|---|
+| 22 | `keys` | 5 | — | 通过 | **字节序升序**（`'A'<'a'<'z'`）；**A5** 不含方法字段 |
+| 23 | `values` | 3 | — | 通过 | 与 `keys` 同序；**A5** |
+| 24 | `entries` | 4 | — | 通过 | `[k,v]` 二元数组，按 `keys` 序；**A5** |
+| 25 | `has` | 6 | — | 通过 | 仅数据字段；方法字段 → `false`（**A5**） |
+| 26 | `del` | 5 | `del_method_field` / `del_missing_data_field` → `FieldError` | 通过 | 返回新 struct；**A5**：`del` 成功 ⟺ `has==true` |
+
+### 2b.4 字符串（8 个，`tests/lfz/test_builtins_string.lfz`）
+
+| # | 内置 | 正常+边界断言 | 错误负例（fixture → 期望类） | 状态 | 说明 |
+|---|---|---|---|---|---|
+| 27 | `split` | 5 | — | 通过 | `sep` 空串 → 按字符切分 |
+| 28 | `join` | 4 | `join_non_string_element` → `TypeError` | 通过 | 元素须为 string |
+| 29 | `trim` | 4 | — | 通过 | 去首尾空白 |
+| 30 | `upper` | 3 | — | 通过 | ASCII 大小写 |
+| 31 | `lower` | 2 | — | 通过 | 同上 |
+| 32 | `replace` | 4 | — | 通过 | 全部替换；返回新串（不可变 §4.5.11） |
+| 33 | `repeat` | 4 | — | 通过 | `n<=0` → 空串 |
+| 34 | `startsWith` | 5 | — | 通过 | 空前缀恒 `true` |
+
+### 2b.5 数学（7 个，`tests/lfz/test_builtins_math.lfz`）
+
+| # | 内置 | 正常+边界断言 | 错误负例（fixture → 期望类） | 状态 | 说明 |
+|---|---|---|---|---|---|
+| 35 | `abs` | 7 | — | 通过 | **同型不加宽**：`type(abs(-3))=="int"`、`type(abs(-3.0))=="float"` |
+| 36 | `floor` | 4 | `floor_nan` → `ValueError` | 通过 | `int` 实参加宽；返回 `int` |
+| 37 | `ceil` | 4 | `ceil_inf` → `OverflowError` | 通过 | 同上 |
+| 38 | `round` | 10 | — | 通过 | **四舍六入五成双**：`round(0.5)==0`、`round(2.5)==2`、`round(-2.5)==-2` |
+| 39 | `sqrt` | 6 | — | 通过 | 负数 → `NaN`（用 `sqrt(-1)!=sqrt(-1)` 断言）；返回 `float` |
+| 40 | `pow` | 6 | — | 通过 | 溢出 → `±Inf`（`pow(10.0,400.0)==inf`、`pow(-10.0,401.0)==-inf`） |
+| 41 | `div` | 6 | `div_zero`(P5.1) → `ZeroDivisionError`；`div_non_int` → `TypeError` | 通过 | **向下取整**（`div(-7,2)==-4`）；两参须 `int` |
+
+### 2b.6 随机（3 个，`tests/lfz/test_builtins_random.lfz`）
+
+| # | 内置 | 正常+边界断言 | 错误负例（fixture → 期望类） | 状态 | 说明 |
+|---|---|---|---|---|---|
+| 42 | `seed` | 5 | — | 通过 | `seed(42)` 两次得到**同一序列**（3 次 `rand` 比对）；返回 `nil` |
+| 43 | `rand` | 2 | — | 通过 | 落在 `[0.0,1.0)`（20 次循环断言）；返回 `float` |
+| 44 | `randInt` | 3 | `randInt_bad_range` → `ValueError` | 通过 | 落在 `[lo,hi)`（50 次循环断言）；同种子可复现 |
+
+### 2b.7 转换（4 个，`tests/lfz/test_builtins_convert.lfz`）
+
+| # | 内置 | 正常+边界断言 | 错误负例（fixture → 期望类） | 状态 | 说明 |
+|---|---|---|---|---|---|
+| 45 | `str` | 14 | — | 通过 | 显示形式（§3.7）：`nan`/`inf`/`-inf`/数组/struct |
+| 46 | `int` | 8 | `int_nan`→`ValueError`；`int_inf`→`OverflowError`；`int_bad_string`→`ValueError` | 通过 | float **向零截断**；`string`/`bool`→`int` |
+| 47 | `float` | 9 | `float_bad_string` → `ValueError` | 通过 | 支持 `"inf"`/`"-inf"`/`"nan"` |
+| 48 | `type` | 8 | — | 通过 | 8 种类型名（int/float/string/bool/nil/array/struct/function） |
+
+### 2b.8 IO / 断言（5 个，`tests/lfz/test_builtins_io.lfz`）+ `input`
+
+| # | 内置 | 正常+边界断言 | 错误负例（fixture → 期望类） | 状态 | 说明 |
+|---|---|---|---|---|---|
+| 49 | `print` | 4 | — | 通过（文本未断言，见 §3） | 仅断言返回 `nil`；stdout 文本不可捕获 |
+| 50 | `eprint` | 2 | — | 通过（文本未断言，见 §3） | 同上（stderr） |
+| 51 | `check` | 4 | — | 通过 | **失败非致命**：`check(false)==false` 后程序继续（A4） |
+| 52 | `assert` | 2 | `fail_raises` → `AssertionError`（`assert` 失败同为 `AssertionError`） | 通过 | 成功返回 `nil`；失败→`AssertionError`（致命） |
+| 53 | `fail` | 0 | `fail_raises` → `AssertionError` | 通过 | 纯负例（恒抛 `AssertionError`） |
+| 54 | `input` | 0 | — | **跳过（环境相关）** | runner 不提供 stdin（可能 EOF/阻塞），不稳定；明确**由 Rust 单测覆盖**：`src/builtins.rs::tests::input_reads_line_crlf_and_eof`（EOF→`IOError`）。见 §3 |
+
+> **54 个内置覆盖结论**：**53** 个由 LFZ 黑盒测试集（正向断言 + `expect.error` 负例）逐项覆盖；`input` 因环境依赖按任务授权**跳过并注明由 Rust 单测覆盖**（§3）。
+> **关键不变量覆盖**：A1「返回新值不改原容器」在 `push/pop/removeAt/insert/swap/slice/sort/map/filter/del` 均有 `*_does_not_mutate` 断言；A5 数据面在 `keys/values/entries/has/len/del` 均断言排除方法字段。`data-last` 经 P5.2 `test_pipe.lfz` 的 `xs |> map/filter/reduce/sum/take/slice` 组合验证。
+
+---
+
 ## 3. 诚实标注：本批**未做端到端断言**的项
 
 runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式下解释器内建 `print` / `;;`（含 `check` 警告）写 **stdout/stderr**，runner **不对程序 stdout 做捕获与比对**（报告本身也写 stdout）。故以下项**无法在黑盒 `assert` 中逐字判定**，本批采用「诚实标注 + 保底不报错」策略：
@@ -65,6 +171,9 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 | `;;` dump 的**文本**（`<name> ： <value>` 行、内→外顺序、遮蔽去重） | `;;` 写 stdout，runner 不捕获程序 stdout | 仅保证「执行到 `;;` 不报错」（`tests/lfz/test_dump.lfz` 全 PASS）；文本正确性**未**端到端断言 | semantics.md §3.6 |
 | 自引用容器的 **`<cycle>` 渲染字面量** | 显示写 stdout，同上；且渲染文本非 `assert` 可直接比对的值 | 仅断言 `==` 环等价（可返回值比对）+ `str(cycle)` 不抛错；`<cycle>` 字面量**未**逐字断言 | semantics.md §3.7 / §4.5.9 |
 | 所有错误用例的**中文消息文本** | 消息措辞的稳定性无契约保证 | 只断言**错误类**（§8.1 的 12 类之一），不逐字断言消息 | interface-contract.md §8.1 |
+| `input()` 的端到端行为 | runner 不提供 stdin（`input` 可能 EOF 或阻塞），结果不可复现 | **跳过自动发现用例**；明确由 Rust 单测覆盖：`src/builtins.rs::tests::input_reads_line_crlf_and_eof`（含 EOF→`IOError`） | interface-contract.md §10.7 `input`；semantics.md §8.1 `IOError` |
+| 内置名作为**一等值**传递（`type(type)` / `map(type, xs)`） | spec §10.7 仅给出调用签名，未声明内置名可作实参；实现将其作为「仅调用名」，作值引用即 `NameError` | 不作断言（`test_builtins_convert.lfz` 仅断言 `type(<lambda>)=="function"`） | interface-contract.md §10.7（示例均传 lambda） |
+| `print` / `eprint` / `check` 的**输出文本** | 写 stdout/stderr，runner 不捕获程序输出（契约 §6） | 仅断言返回值（`nil`/`bool`）与「执行不报错」 | semantics.md §4.5.10；interface-contract.md §10.7 |
 
 > 若后续需要端到端断言上述项，须由 tooling-dev 在 runner 侧提供「捕获/断言程序 stdout」能力（`--json` 模式下程序输出已重定向到 stderr，但 `--json` 仅给 verdict/错误字段，不含程序输出文本）。当前不扩权，故按上表标注。
 
@@ -78,7 +187,7 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 
 ---
 
-## 5. 负例清单（`tests/cases.json`，共 **33** 条 `expect.error` + 1 条正向豁免）
+## 5. 负例清单（`tests/cases.json`，共 **56** 条 `expect.error` + 1 条正向豁免）
 
 ### 5.1 P5.1（21 条）
 
@@ -123,6 +232,34 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 | 32 | `fixtures/return_outside_fn.lfz` | `syntax_return_outside_function` | `SyntaxError` | 函数外 `return` |
 | 33 | `fixtures/deep_recursion.lfz` | `deep_recursion_exceeds_limit` | `RecursionError` | 深递归 > 10000 帧 |
 
+### 5.3 P5.3（23 条，本批新增；内置函数边界/错误）
+
+| # | fixture 路径 | manifest 名 | 期望错误类 | 覆盖特性 |
+|---|---|---|---|---|
+| 34 | `fixtures/pop_empty.lfz` | `builtin_pop_empty_index_error` | `IndexError` | `pop([])` |
+| 35 | `fixtures/removeAt_out_of_range.lfz` | `builtin_removeAt_out_of_range` | `IndexError` | `removeAt(5,[1,2,3])` |
+| 36 | `fixtures/removeAt_negative_out_of_range.lfz` | `builtin_removeAt_negative_out_of_range` | `IndexError` | `removeAt(-9,…)` |
+| 37 | `fixtures/insert_negative_index.lfz` | `builtin_insert_negative_index` | `IndexError` | `insert` 不支持负索引 |
+| 38 | `fixtures/insert_index_too_large.lfz` | `builtin_insert_index_too_large` | `IndexError` | `insert(9,…)` 超 `len` |
+| 39 | `fixtures/swap_out_of_range.lfz` | `builtin_swap_out_of_range` | `IndexError` | `swap(0,9,…)` |
+| 40 | `fixtures/min_empty.lfz` | `builtin_min_empty_value_error` | `ValueError` | `min([])` |
+| 41 | `fixtures/max_empty.lfz` | `builtin_max_empty_value_error` | `ValueError` | `max([])` |
+| 42 | `fixtures/minBy_empty.lfz` | `builtin_minBy_empty_value_error` | `ValueError` | `minBy(_,[])` |
+| 43 | `fixtures/maxBy_empty.lfz` | `builtin_maxBy_empty_value_error` | `ValueError` | `maxBy(_,[])` |
+| 44 | `fixtures/filter_predicate_not_bool.lfz` | `builtin_filter_predicate_not_bool` | `TypeError` | `filter` 谓词非 `bool` |
+| 45 | `fixtures/join_non_string_element.lfz` | `builtin_join_non_string_element` | `TypeError` | `join` 元素非 string |
+| 46 | `fixtures/int_nan.lfz` | `builtin_int_nan_value_error` | `ValueError` | `int(NaN)` |
+| 47 | `fixtures/int_inf.lfz` | `builtin_int_inf_overflow_error` | `OverflowError` | `int(±Inf)` |
+| 48 | `fixtures/int_bad_string.lfz` | `builtin_int_bad_string` | `ValueError` | `int("abc")` |
+| 49 | `fixtures/float_bad_string.lfz` | `builtin_float_bad_string` | `ValueError` | `float("notanumber")` |
+| 50 | `fixtures/randInt_bad_range.lfz` | `builtin_randInt_bad_range` | `ValueError` | `randInt(5,5)`（`lo>=hi`） |
+| 51 | `fixtures/fail_raises.lfz` | `builtin_fail_assertion_error` | `AssertionError` | `fail(msg)` |
+| 52 | `fixtures/sort_mixed_types.lfz` | `builtin_sort_mixed_types` | `TypeError` | `sort([1,"a"])` |
+| 53 | `fixtures/sum_overflow.lfz` | `builtin_sum_overflow` | `OverflowError` | `sum([i64::MAX,1])` |
+| 54 | `fixtures/floor_nan.lfz` | `builtin_floor_nan_value_error` | `ValueError` | `floor(NaN)` |
+| 55 | `fixtures/ceil_inf.lfz` | `builtin_ceil_inf_overflow_error` | `OverflowError` | `ceil(±Inf)` |
+| 56 | `fixtures/div_non_int.lfz` | `builtin_div_non_int_type_error` | `TypeError` | `div(1.0,2)` 非 `int` |
+
 > 另有 `fixtures/plain_ok.txt` → `non_lfz_file_no_preamble_required`（**无** `expect`，正向豁免，判正常 PASS）。
 
 ---
@@ -146,30 +283,54 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 
 > P5.2 新增正向 **10** 文件 / **170** 条 `assert`；负例 **12** 条。P5.1 既有 **7** 文件 / **114** 条 `assert`（见 P5.1 批次记录）。
 
+### 6.3 P5.3 正向用例（内置函数全表，自动发现域 `tests/lfz/**/*.lfz`）
+
+| 文件 | 断言数 | 覆盖内置 |
+|---|---|---|
+| `tests/lfz/test_builtins_array.lfz` | 70 | `len` `range` `push` `pop` `removeAt` `insert` `swap` `slice` `min` `max` `sum` `sort` `take` `drop` |
+| `tests/lfz/test_builtins_higher_order.lfz` | 28 | `map` `filter` `reduce` `sortBy` `minBy` `maxBy` `each` |
+| `tests/lfz/test_builtins_struct.lfz` | 26 | `keys` `values` `entries` `has` `del`（A5 数据面） |
+| `tests/lfz/test_builtins_string.lfz` | 33 | `split` `join` `trim` `upper` `lower` `replace` `repeat` `startsWith` |
+| `tests/lfz/test_builtins_math.lfz` | 43 | `abs` `floor` `ceil` `round` `sqrt` `pow` `div` |
+| `tests/lfz/test_builtins_convert.lfz` | 39 | `str` `int` `float` `type` |
+| `tests/lfz/test_builtins_random.lfz` | 10 | `seed` `rand` `randInt` |
+| `tests/lfz/test_builtins_io.lfz` | 14 | `print` `eprint` `check` `assert`（`fail` 为负例） |
+
+> P5.3 新增正向 **8** 文件 / **263** 条 `assert`；负例 **23** 条。
+
 ### 6.2 P5.1 正向用例（沿用）
 
 `test_literals.lfz`(40) / `test_let_var.lfz`(12) / `test_arithmetic.lfz`(24) / `test_precedence.lfz`(11) / `test_division_modulo.lfz`(14) / `test_int_min.lfz`(8) / `test_preamble.lfz`(5)。
 
 ---
 
-## 7. 运行证据（P5.2）
+## 7. 运行证据（P5.3）
 
 ```
 $ cargo run --quiet -- test
 PASS  abs_i64_min_overflow
-PASS  syntax_break_outside_loop
-PASS  syntax_continue_outside_loop
-PASS  deep_recursion_exceeds_limit
-PASS  del_method_field_is_field_error
-...（共 51 行 PASS；其中 10 行 tests/lfz/*.lfz、41 行清单夹具）...
+PASS  builtin_ceil_inf_overflow_error
+PASS  builtin_div_non_int_type_error
+PASS  builtin_fail_assertion_error
+PASS  builtin_filter_predicate_not_bool
+...
+PASS  tests/lfz/test_builtins_array.lfz
+PASS  tests/lfz/test_builtins_convert.lfz
+PASS  tests/lfz/test_builtins_higher_order.lfz
+PASS  tests/lfz/test_builtins_io.lfz
+PASS  tests/lfz/test_builtins_math.lfz
+PASS  tests/lfz/test_builtins_random.lfz
+PASS  tests/lfz/test_builtins_string.lfz
+PASS  tests/lfz/test_builtins_struct.lfz
+PASS  tests/lfz/test_dump.lfz
 PASS  tests/lfz/test_structs.lfz
 
-汇总：共 51 个用例，通过 51，失败 0，错误 0
+汇总：共 82 个用例，通过 82，失败 0，错误 0
 $ echo $LASTEXITCODE
 0
 ```
 
-- **用例总数：51** = 正向自动发现 **17**（P5.1 的 7 + P5.2 的 10）+ 清单（负例 33 + 非 `.lfz` 正向豁免 1）。
+- **用例总数：82** = 正向自动发现 **25**（P5.1 的 7 + P5.2 的 10 + P5.3 的 8）+ 清单（负例 **56** + 非 `.lfz` 正向豁免 1）。
 - 退出码 **0**（全绿）。
 - 构建：`cargo clean -p lfz` 后 `cargo build` → **0 warning / 0 error**。
 - 回归：`cargo test` → **431 passed / 0 failed / 0 ignored**（361 + 42 + 16 + 12；未被本批破坏）。
@@ -192,10 +353,10 @@ $ echo $LASTEXITCODE
 | A1 引用语义（原地修改 + 内置返回新值） | semantics §4.5.2/§4.5.11 | **通过** | P5.2 ✅ |
 | A6 环安全（`==`；`<cycle>` 渲染文本未断言） | semantics §4.5.9 | **通过** | P5.2 ✅ |
 | `;;` dump（作用域链、内→外、slot 升序、遮蔽去重、通道=stdout） | semantics §3.6 | **部分**（执行不报错已覆盖；**文本通道未端到端断言**，见 §3） | P5.2 ✅ / 文本待工具支持 |
-| 数组：字面量、索引（含负索引）、越界、切片、元素赋值、快照迭代 | syntax §7；semantics §4.5.4 | **通过**（索引/切片/赋值/快照已在 P5.2 覆盖；越界负例见 P5.4 补） | P5.2 ✅ |
-| 内置函数 54 个（array/struct/string/math/转换/IO/断言，data-last） | interface-contract §10.7 | 待实现 | P5.4 |
+| 数组：字面量、索引（含负索引）、越界、切片、元素赋值、快照迭代 | syntax §7；semantics §4.5.4 | **通过**（索引/切片/赋值/快照已在 P5.2 覆盖；**越界 `IndexError` 负例已在 P5.3 补**） | P5.2 ✅ / P5.3 ✅ |
+| 内置函数 54 个（array/struct/string/math/转换/IO/断言，data-last） | interface-contract §10.7 | **通过**（53 个 LFZ 黑盒覆盖；`input` 因环境依赖跳过、由 Rust 单测覆盖 —— 见 §2b/§3） | P5.3 ✅ |
 | 值显示形式（嵌套引号、struct 键字节序、`<cycle>` 环安全） | semantics §3.7/§4.5.9 | 部分（struct 显示、匿名显示已测；`<cycle>` 文本未断言） | P5.4 |
 | 相等语义（深结构相等、环安全、function 同一性） | semantics §4.5.9（A6） | 部分（环安全 + function 同一性已测；标量/混合精确比较见 P5.4） | P5.4 |
-| 错误模型全量（12 类 + traceback 折叠 + `--json` 字段逐字符） | semantics §8；interface-contract §8.1 | 部分（已覆盖 `CosmosAnswerError`/`SyntaxError`/`NameError`/`TypeError`/`FieldError`/`ZeroDivisionError`/`OverflowError`/`ValueError`/`AssertionError`/`RecursionError`，缺 `IndexError`/`IOError` 负例与 traceback/`--json`） | P5.4 |
+| 错误模型全量（12 类 + traceback 折叠 + `--json` 字段逐字符） | semantics §8；interface-contract §8.1 | 部分（已覆盖 **11** 类负例：`CosmosAnswerError`/`SyntaxError`/`NameError`/`TypeError`/`IndexError`/`FieldError`/`ZeroDivisionError`/`OverflowError`/`ValueError`/`AssertionError`/`RecursionError`；`IOError` 的 `input` EOF 由 Rust 单测覆盖；**缺** traceback 折叠与 `--json` 字段逐字符） | P5.4 |
 | 可移植性（BOM、CRLF/LF/CR、非 UTF-8 → `SyntaxError`） | syntax §2.1、§6-B4/B7/B8 | 待实现 | P5.5 |
 | 入口一致性（REPL / stdin / `-e` 豁免前导；伪路径） | syntax §6-B9 | 待实现 | P5.5 |

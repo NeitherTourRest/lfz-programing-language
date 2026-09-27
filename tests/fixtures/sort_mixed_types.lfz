@@ -1,0 +1,3 @@
+#42
+// sort 元素类型须一致可比，否则 TypeError
+let x = sort([1, "a"])

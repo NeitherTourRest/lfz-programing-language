@@ -1,0 +1,3 @@
+#42
+// minBy(keyFn, []) → ValueError「空数组没有极值（minBy）」
+let x = minBy((v) => v, [])

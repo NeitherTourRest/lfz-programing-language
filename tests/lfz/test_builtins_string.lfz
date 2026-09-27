@@ -1,0 +1,58 @@
+#42
+// ============================================================
+// test_builtins_string.lfz — 字符串内置（8）
+// 覆盖: split join trim upper lower replace repeat startsWith
+// spec: interface-contract.md §10.7; semantics.md §4.5.11（字符串不可变）
+// 负例: fixtures/join_non_string_element.lfz
+// ============================================================
+
+// ---- split：sep 空串 → 按字符切分 ----
+assert(split(",", "a,b,c") == ["a", "b", "c"], "split_commas")
+assert(split(",", "a") == ["a"], "split_no_sep_single")
+assert(split("", "abc") == ["a", "b", "c"], "split_empty_sep_per_char")
+assert(split("-", "a-b") == ["a", "b"], "split_dash")
+assert(type(split(",", "a,b")) == "array", "split_returns_array")
+
+// ---- join：元素须为 string ----
+assert(join("-", ["a", "b", "c"]) == "a-b-c", "join_dash")
+assert(join(",", []) == "", "join_empty")
+assert(join("-", ["a"]) == "a", "join_single")
+assert(type(join(",", [])) == "string", "join_returns_string")
+
+// ---- trim：去首尾空白 ----
+assert(trim("  hi  ") == "hi", "trim_spaces")
+assert(trim("") == "", "trim_empty")
+assert(trim("\t x \n") == "x", "trim_whitespace_mix")
+assert(trim("nospace") == "nospace", "trim_noop")
+
+// ---- upper / lower：ASCII 大小写 ----
+assert(upper("abC") == "ABC", "upper_ascii")
+assert(upper("") == "", "upper_empty")
+assert(lower("AbC") == "abc", "lower_ascii")
+assert(lower("") == "", "lower_empty")
+assert(upper("abc123") == "ABC123", "upper_digits_unchanged")
+
+// ---- replace：全部替换 ----
+assert(replace("a", "b", "banana") == "bbnbnb", "replace_all_occurrences")
+assert(replace("x", "y", "abc") == "abc", "replace_no_match")
+assert(replace("ab", "", "abab") == "", "replace_with_empty")
+assert(type(replace("a", "b", "a")) == "string", "replace_returns_string")
+
+// ---- repeat：n <= 0 → 空串 ----
+assert(repeat(3, "ab") == "ababab", "repeat_three")
+assert(repeat(1, "x") == "x", "repeat_one")
+assert(repeat(0, "ab") == "", "repeat_zero_empty")
+assert(repeat(-1, "ab") == "", "repeat_negative_empty")
+
+// ---- startsWith ----
+assert(startsWith("ab", "abc") == true, "startsWith_true")
+assert(startsWith("x", "abc") == false, "startsWith_false")
+assert(startsWith("", "abc") == true, "startsWith_empty_prefix")
+assert(startsWith("abc", "abc") == true, "startsWith_whole")
+assert(type(startsWith("a", "abc")) == "bool", "startsWith_returns_bool")
+
+// ---- 不可变性：所有操作返回新字符串，不改原字符串 ----
+let s0 = "abc"
+let s1 = upper(s0)
+assert(s0 == "abc", "string_ops_do_not_mutate")
+assert(s1 == "ABC", "upper_returns_new")

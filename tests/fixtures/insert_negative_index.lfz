@@ -1,0 +1,3 @@
+#42
+// insert 不支持负索引：insert(-1, 9, [1,2]) → IndexError
+let x = insert(-1, 9, [1, 2])

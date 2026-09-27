@@ -1,0 +1,52 @@
+#42
+// ============================================================
+// test_builtins_struct.lfz — struct / 字典内置（5）
+// 覆盖: keys values entries has del；A5 数据面（不含方法字段）；键字节序升序
+// spec: interface-contract.md §10.7; semantics.md §4.5.9（A5）
+// 负例: fixtures/{del_method_field,del_missing_data_field}.lfz（P5.2 既有）
+// ============================================================
+
+// ---- keys：数据字段键，字节序升序 ----
+assert(keys({"b": 1, "a": 2}) == ["a", "b"], "keys_byte_order")
+assert(keys({}) == [], "keys_empty")
+assert(keys({"z": 1, "A": 2, "a": 3}) == ["A", "a", "z"], "keys_ascii_byte_order")
+assert(type(keys({})) == "array", "keys_returns_array")
+
+// ---- values：与 keys 同序 ----
+assert(values({"b": 1, "a": 2}) == [2, 1], "values_follow_keys_order")
+assert(values({}) == [], "values_empty")
+
+// ---- entries：[key, value] 二元数组，按 keys 序 ----
+assert(entries({"b": 1, "a": 2}) == [["a", 2], ["b", 1]], "entries_ordered")
+assert(entries({}) == [], "entries_empty")
+assert(type(entries({})) == "array", "entries_returns_array")
+
+// ---- has：仅数据字段 ----
+assert(has("a", {"a": 1}) == true, "has_existing")
+assert(has("z", {"a": 1}) == false, "has_missing")
+assert(has("", {}) == false, "has_in_empty")
+assert(type(has("a", {"a": 1})) == "bool", "has_returns_bool")
+
+// ---- del：返回新 struct；缺失 → FieldError ----
+assert(del("a", {"a": 1, "b": 2}) == {"b": 2}, "del_removes_field")
+assert(keys(del("a", {"a": 1, "b": 2})) == ["b"], "del_result_keys")
+let d0 = {"a": 1, "b": 2}
+let d1 = del("a", d0)
+assert(keys(d0) == ["a", "b"], "del_does_not_mutate")
+assert(del("a", {"a": 1}) == {}, "del_only_field_yields_empty")
+assert(has("b", del("a", {"a": 1, "b": 2})) == true, "del_keeps_other_data_fields")
+
+// ---- A5 数据面：方法字段不参与 keys/values/entries/has/len ----
+struct Box {
+    v: 1,
+    fn get() => self.v,
+}
+let box = Box { v: 7 }
+assert(keys(box) == ["v"], "keys_excludes_method_field")
+assert(values(box) == [7], "values_excludes_method_field")
+assert(entries(box) == [["v", 7]], "entries_excludes_method_field")
+assert(has("get", box) == false, "has_method_field_false")
+assert(len(box) == 1, "len_counts_data_fields_only")
+assert(has("v", box) == true, "has_data_field_true")
+assert(box.get() == 7, "method_still_callable_via_dot")
+assert(box["v"] == 7, "data_field_via_bracket")

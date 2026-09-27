@@ -1,0 +1,3 @@
+#42
+// ceil(+Inf) → OverflowError
+let x = ceil(float("inf"))

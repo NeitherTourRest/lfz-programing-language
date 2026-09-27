@@ -1,0 +1,3 @@
+#42
+// filter 谓词返回非 bool（int）→ TypeError
+let x = filter((v) => 1, [1, 2])

@@ -1,0 +1,63 @@
+#42
+// ============================================================
+// test_builtins_math.lfz — 数学内置（7）
+// 覆盖: abs floor ceil round sqrt pow div
+// spec: interface-contract.md §10.7（同型 / 加宽）; semantics.md §4.5.6/§4.5.7
+// 负例: fixtures/{div_zero,div_non_int,floor_nan,ceil_inf}.lfz
+// ============================================================
+
+// ---- abs：同型，绝不加宽（int→int、float→float） ----
+assert(abs(-3) == 3, "abs_int_value")
+assert(type(abs(-3)) == "int", "abs_int_stays_int")
+assert(abs(-3.0) == 3.0, "abs_float_value")
+assert(type(abs(-3.0)) == "float", "abs_float_stays_float")
+assert(abs(0) == 0, "abs_zero")
+assert(abs(0.0) == 0.0, "abs_zero_float")
+assert(abs(3) == 3, "abs_positive")
+
+// ---- floor / ceil / round：int 实参先加宽；返回 int ----
+assert(floor(3) == 3, "floor_int_widened")
+assert(floor(3.7) == 3, "floor_float")
+assert(floor(-3.2) == -4, "floor_negative")
+assert(type(floor(3.7)) == "int", "floor_returns_int")
+
+assert(ceil(3) == 3, "ceil_int_widened")
+assert(ceil(3.2) == 4, "ceil_float")
+assert(ceil(-3.7) == -3, "ceil_negative")
+assert(type(ceil(3.2)) == "int", "ceil_returns_int")
+
+// round：四舍六入五成双（banker's rounding）
+assert(round(2.4) == 2, "round_rounds_down")
+assert(round(2.6) == 3, "round_rounds_up")
+assert(round(0.5) == 0, "round_half_to_even_0")
+assert(round(1.5) == 2, "round_half_to_even_2")
+assert(round(2.5) == 2, "round_half_to_even_2_lower")
+assert(round(3.5) == 4, "round_half_to_even_4")
+assert(round(-0.5) == 0, "round_negative_half_to_even_0")
+assert(round(-2.5) == -2, "round_negative_half_to_even_2")
+assert(round(3) == 3, "round_int_widened")
+assert(type(round(2.5)) == "int", "round_returns_int")
+
+// ---- sqrt：返回 float；负数 → NaN ----
+assert(sqrt(4) == 2.0, "sqrt_int_widened")
+assert(sqrt(4.0) == 2.0, "sqrt_float")
+assert(sqrt(0.0) == 0.0, "sqrt_zero")
+assert(type(sqrt(4)) == "float", "sqrt_returns_float")
+assert(sqrt(-1) != sqrt(-1), "sqrt_negative_is_nan")
+assert(!(sqrt(-1) == sqrt(-1)), "sqrt_negative_not_equal_self")
+
+// ---- pow：数值幂；溢出 → ±Inf；返回 float ----
+assert(pow(2, 10) == 1024.0, "pow_int_widened")
+assert(pow(2.0, 10.0) == 1024.0, "pow_float")
+assert(pow(2.0, 0.0) == 1.0, "pow_zero_exponent")
+assert(type(pow(2, 3)) == "float", "pow_returns_float")
+assert(pow(10.0, 400.0) == float("inf"), "pow_overflow_positive_inf")
+assert(pow(-10.0, 401.0) == float("-inf"), "pow_overflow_negative_inf")
+
+// ---- div：两参须 int；向下取整；b == 0 → ZeroDivisionError ----
+assert(div(7, 2) == 3, "div_floor_positive")
+assert(div(-7, 2) == -4, "div_floor_negative")
+assert(div(6, 3) == 2, "div_exact")
+assert(div(0, 5) == 0, "div_zero_numerator")
+assert(div(-1, 2) == -1, "div_floor_negative_small")
+assert(type(div(7, 2)) == "int", "div_returns_int")

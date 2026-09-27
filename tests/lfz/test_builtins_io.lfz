@@ -1,0 +1,29 @@
+#42
+// ============================================================
+// test_builtins_io.lfz — IO / 断言内置（print eprint check assert）
+// 覆盖: print eprint 返回值；check 非致命；assert 成功返回 nil
+// spec: interface-contract.md §10.7; semantics.md §4.5.10（A4）
+// 说明: runner 契约 §6 —— 程序 stdout/stderr 文本不可端到端捕获，
+//       故本组仅断言「返回值 / 不报错」，不逐字断言输出文本。
+// 负例: fixtures/fail_raises.lfz（fail → AssertionError）
+// ============================================================
+
+// ---- print / eprint：返回 nil（输出通道不可捕获） ----
+assert(print("") == nil, "print_returns_nil")
+assert(print("x") == nil, "print_one_arg_returns_nil")
+assert(print("a", "b") == nil, "print_multi_arg_returns_nil")
+assert(type(print("")) == "nil", "print_return_type_nil")
+assert(eprint("") == nil, "eprint_returns_nil")
+assert(type(eprint("")) == "nil", "eprint_return_type_nil")
+
+// ---- check：失败非致命，返回 false，程序继续（A4） ----
+assert(check(true) == true, "check_true_returns_true")
+assert(check(false) == false, "check_false_returns_false_nonfatal")
+assert(type(check(true)) == "bool", "check_returns_bool")
+// check(false) 之后控制流继续（能执行到此行即证明非致命）
+let afterCheck = 1
+assert(afterCheck == 1, "check_failure_does_not_abort")
+
+// ---- assert：成功返回 nil（失败 → AssertionError，见 fixtures/fail_raises） ----
+assert(assert(true) == nil, "assert_true_returns_nil")
+assert(type(assert(true)) == "nil", "assert_return_type_nil")

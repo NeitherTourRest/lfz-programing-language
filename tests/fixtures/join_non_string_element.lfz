@@ -1,0 +1,3 @@
+#42
+// join 元素非 string → TypeError
+let x = join(",", ["a", 1])

@@ -1,0 +1,3 @@
+#42
+// fail(msg) → AssertionError（致命）
+fail("boom")

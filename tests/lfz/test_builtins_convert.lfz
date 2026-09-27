@@ -1,0 +1,55 @@
+#42
+// ============================================================
+// test_builtins_convert.lfz — 转换内置（str / int / float / type）
+// 覆盖: str int float type
+// spec: interface-contract.md §10.7; semantics.md §3.7/§4.5.7
+// 负例: fixtures/{int_nan,int_inf,int_bad_string,float_bad_string}.lfz
+// ============================================================
+
+// ---- str：显示形式 ----
+assert(str(42) == "42", "str_int")
+assert(str(-7) == "-7", "str_negative_int")
+assert(str(3.5) == "3.5", "str_float")
+assert(str(2.0) == "2.0", "str_integral_float")
+assert(str(true) == "true", "str_true")
+assert(str(false) == "false", "str_false")
+assert(str(nil) == "nil", "str_nil")
+assert(str("x") == "x", "str_string")
+assert(str([1, 2]) == "[1, 2]", "str_array")
+assert(str({"k": 1}) == "{k: 1}", "str_struct")
+assert(str(float("nan")) == "nan", "str_nan")
+assert(str(float("inf")) == "inf", "str_inf")
+assert(str(float("-inf")) == "-inf", "str_neg_inf")
+assert(type(str(1)) == "string", "str_returns_string")
+
+// ---- type：8 种类型名 ----
+assert(type(1) == "int", "type_int")
+assert(type(1.5) == "float", "type_float")
+assert(type("s") == "string", "type_string")
+assert(type(true) == "bool", "type_bool")
+assert(type(nil) == "nil", "type_nil")
+assert(type([1]) == "array", "type_array")
+assert(type({"k": 1}) == "struct", "type_struct")
+assert(type((x) => x) == "function", "type_function")
+// 注：内置名不是一等值（spec 未声明可作实参传递），故不断言 type(type)。
+
+// ---- int：float 向零截断；string/bool → int ----
+assert(int(2.9) == 2, "int_truncates_toward_zero")
+assert(int(-2.9) == -2, "int_truncates_negative_toward_zero")
+assert(int(2.0) == 2, "int_exact_float")
+assert(int("42") == 42, "int_from_string")
+assert(int("-7") == -7, "int_from_negative_string")
+assert(int(true) == 1, "int_from_true")
+assert(int(false) == 0, "int_from_false")
+assert(type(int(2.9)) == "int", "int_returns_int")
+
+// ---- float：int/string/bool → float；支持 inf/-inf/nan ----
+assert(float(3) == 3.0, "float_from_int")
+assert(float(3.5) == 3.5, "float_from_float")
+assert(float("2.5") == 2.5, "float_from_string")
+assert(float("inf") == float("inf"), "float_string_inf")
+assert(float("-inf") < 0.0, "float_string_neg_inf")
+assert(float("nan") != float("nan"), "float_string_nan")
+assert(float(true) == 1.0, "float_from_true")
+assert(float(false) == 0.0, "float_from_false")
+assert(type(float(3)) == "float", "float_returns_float")

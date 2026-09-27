@@ -1,0 +1,62 @@
+#42
+// ============================================================
+// test_builtins_higher_order.lfz — 高阶内置（7）
+// 覆盖: map filter reduce sortBy minBy maxBy each
+// spec: interface-contract.md §10.7; semantics.md §4.5.5/§4.5.11
+// 负例: fixtures/{filter_predicate_not_bool,minBy_empty,maxBy_empty}.lfz
+// ============================================================
+
+// ---- map：逐元素映射 ----
+assert(map((x) => x * 2, [1, 2, 3]) == [2, 4, 6], "map_doubles")
+assert(map((x) => x + 1, []) == [], "map_empty")
+assert(type(map((x) => x, [1])) == "array", "map_returns_array")
+let mp0 = [1, 2, 3]
+let mp1 = map((x) => x * 10, mp0)
+assert(mp0 == [1, 2, 3], "map_does_not_mutate")
+
+// ---- filter：谓词须返回 bool ----
+assert(filter((x) => x > 1, [1, 2, 3]) == [2, 3], "filter_keeps_matching")
+assert(filter((x) => false, [1, 2, 3]) == [], "filter_all_false")
+assert(filter((x) => true, [1, 2, 3]) == [1, 2, 3], "filter_all_true")
+assert(filter((x) => true, []) == [], "filter_empty")
+let fl0 = [1, 2, 3]
+let fl1 = filter((x) => x > 1, fl0)
+assert(fl0 == [1, 2, 3], "filter_does_not_mutate")
+
+// ---- reduce：f(acc, x) 折叠；空 → init ----
+assert(reduce((acc, x) => acc + x, 0, [1, 2, 3]) == 6, "reduce_sum")
+assert(reduce((acc, x) => acc * x, 1, [2, 3, 4]) == 24, "reduce_product")
+assert(reduce((acc, x) => acc + x, 100, []) == 100, "reduce_empty_returns_init")
+// 左折叠顺序可判：acc*10+x 得到 123（若右折叠则为 321）
+assert(reduce((acc, x) => acc * 10 + x, 0, [1, 2, 3]) == 123, "reduce_left_fold_order")
+assert(reduce((acc, x) => push(x, acc), [], [1, 2, 3]) == [1, 2, 3], "reduce_builds_accumulator")
+
+// ---- sortBy：升序、稳定 ----
+assert(sortBy((x) => -x, [1, 2, 3]) == [3, 2, 1], "sortBy_descending_key")
+assert(sortBy((x) => x, []) == [], "sortBy_empty")
+// 稳定性：等键元素保持输入先后顺序（key 1 的 "a" 在 "b" 之前）
+let pairs = [[1, "a"], [1, "b"], [0, "c"]]
+assert(sortBy((p) => p[0], pairs) == [[0, "c"], [1, "a"], [1, "b"]], "sortBy_is_stable")
+let sb0 = [3, 1, 2]
+let sb1 = sortBy((x) => x, sb0)
+assert(sb0 == [3, 1, 2], "sortBy_does_not_mutate")
+
+// ---- minBy / maxBy：以 keyFn 结果为准 ----
+assert(minBy((x) => x, [3, 1, 2]) == 1, "minBy_identity")
+assert(maxBy((x) => x, [3, 1, 2]) == 3, "maxBy_identity")
+assert(minBy((x) => -x, [1, 2, 3]) == 3, "minBy_neg_key")
+assert(maxBy((x) => -x, [1, 2, 3]) == 1, "maxBy_neg_key")
+assert(minBy((p) => p[0], [[2, "x"], [1, "y"]]) == [1, "y"], "minBy_composite_key")
+assert(maxBy((p) => p[0], [[2, "x"], [1, "y"]]) == [2, "x"], "maxBy_composite_key")
+
+// ---- each：仅副作用遍历；返回 nil ----
+fn sumViaEach(xs) {
+    var total = 0
+    fn add(x) { total += x }
+    each(add, xs)
+    total
+}
+assert(sumViaEach([1, 2, 3]) == 6, "each_runs_side_effects")
+assert(sumViaEach([]) == 0, "each_empty_no_effect")
+assert(each((x) => nil, [1, 2, 3]) == nil, "each_returns_nil")
+assert(type(each((x) => nil, [])) == "nil", "each_return_type_nil")

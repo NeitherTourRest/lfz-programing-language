@@ -1,0 +1,3 @@
+#42
+// int("abc") 非法串 → ValueError
+let x = int("abc")
