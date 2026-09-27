@@ -1,5 +1,18 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 18:05] ✅ 补入 P4.4 ADR（清单遗漏已裁决）+ 打 `v1.1.0` 里程碑附注标签 + 推送（含 tag）
+- 来源: team-lead 任务书（轻量启动；**裁决「清单遗漏」**——上轮门禁停下的 `DECISIONS.md`（tooling-dev P4.4 ADR）不在清单内，本轮授权补入。要求：`git add .opencode/team/DECISIONS.md`；信息 `docs(adr): record P4.4 packaging decision`；**打附注标签 `v1.1.0`**（信息逐字）；`git push`；`git push origin v1.1.0`；收工文档并入本提交。门禁：`git status --short` 若非仅 ` M .opencode/team/DECISIONS.md` → 停止并汇报。禁区：禁 force-push、**只打 `v1.1.0` 一个标签**、不提交 `dist/`·`target/`·密钥·临时文件、不改 `src/**`·`docs/spec/**`）
+- 完成:
+  - **入清单门禁（通过，未触发停止）**：`git status --short` 实测 = **仅 1 项** ` M .opencode/team/DECISIONS.md`，与任务书预期逐字一致；**无清单外条目、无缺失条目**。基线：分支 `main`；提交前 HEAD = `413df43`；原 tags = 5（`v0.1.0`/`v0.2.0`/`v0.3-tested`/`v0.4-app`/`v1.0-final`）。
+  - 内容取证（**只入库、不改内容**）：`git diff -- .opencode/team/DECISIONS.md` = tooling-dev 1 条 ADR「[2026-09-27 17:30] P4.4：CLI 裸文件调用 `lfz <file>` + release 优化 + 打包/安装脚本」（+13 行）。无密钥/临时文件。
+  - 先完成收工协议（覆盖 `STATUS.md`、置顶追加本 `JOURNAL.md`），使收工改动并入本提交。
+  - **提交**：`git add .opencode/team/DECISIONS.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（**显式 3 文件**，未 `git add -A`）→ `git commit -m "docs(adr): record P4.4 packaging decision"`。
+  - **打标签**：`git tag -a v1.1.0 -m "v1.1.0 — P4.4 packaging: bare-file invocation (lfz <file>), release profile (lto/strip), self-contained dist/lfz.exe (~688 KB) plus build/install scripts (USER PATH installer is dry-run by default)."` → `git push` → `git push origin v1.1.0`。
+- 产出:
+  - 一个新提交（短哈希见汇报）+ 标签 `v1.1.0`；`git status --short` 空；`git log --oneline -3`；`git tag -n`（6 个，含 `v1.1.0`）；`git ls-remote --tags origin` 含 `refs/tags/v1.1.0`；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+- 决策: 无新增 release-manager ADR（本任务为裁决后补入库 + 里程碑打标，属发布簿记；`DECISIONS.md` 本轮条目由 tooling-dev 追加，我仅代为入库）。
+- 下一步: 交付完成；如需再打 tag，先取得授权。
+- 阻塞: 无（上轮「清单遗漏」阻塞经 team-lead 裁决闭合）。
 ## [2026-09-27 13:04] ✅ P4.4 收口：两个原子提交（代码与脚本 / README）+ 推送
 - 来源: team-lead 任务书（轻量启动；提交 P4.4「裸文件调用 + release 优化 + 打包/安装脚本」；刷新 README；push。**两个原子提交**。禁区：禁 force-push、**不打 tag**（`v1.1.0` 由 team-lead 决定）、不提交 `dist/`·`target/`·密钥·临时文件、不改 `src/**`（清单外）·`docs/spec/**`·`docs/guide/**`）
 - 完成:

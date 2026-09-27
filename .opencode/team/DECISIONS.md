@@ -724,3 +724,16 @@
 - **边界**：**仅改 `tests/**`**（新增 `tests/lfz/test_equivalence_paths.lfz`、补 `test_structs.lfz`、`cases.json` + 2 fixture、更新矩阵 / 报告）；**未改** `src/**`、`docs/spec/**`、`docs/tooling/runner-contract.md`、README；未 commit / tag / push。
 - **影响**：**verifier** 复验「`s["k"]()`」端到端后，黑盒侧证据由本批提供（原建议项已闭合）；**core-dev / runtime-dev** 后续若再改取方法路径，须复跑本批等价用例；**team-lead** 可将「等价双路」纳入黑盒验收口径。
 - **证据**：`cargo run --quiet -- test` → **85 PASS / 0 FAIL / 0 ERROR，exit 0**（82→85）；`cargo clean -p lfz; cargo build` → **0 warning / 0 error**；`cargo test` → **432 passed / 0 failed / 0 ignored**（lib 362）；新文件 41 `assert`，`test_structs` 27→36。
+
+### [2026-09-27 17:30] [tooling-dev] P4.4：CLI 裸文件调用 `lfz <file>` + release 优化 + 打包/安装脚本
+
+- **决策**：
+  1. CLI 新增**裸文件调用** `lfz <file>`，等价 `lfz run <file>`；`parse_args` 对**非 `-` 开头**的首个参数一律按脚本路径解析（恰一个参数）。`--help` 把 `lfz <file>` 置首行。
+  2. **裸文件入口校验收紧**：`<file>` 须以 `.lfz` 结尾（大小写不敏感），否则 `IOError: 只支持 .lfz 脚本文件：'<path>'` + 退出码 2；`.lfz` 不存在 → `IOError: 无法读取：<path>` + 退出码 2。`run` 子命令保持旧行为（不校验扩展名；非 `.lfz` 无 `#42` 要求）。
+  3. `--json` 位置不限：`lfz --json <f>`、`lfz <f> --json`、`lfz run [--json] <f>` 均支持；两形态共用 `report_eval`，故 `--json` 下 stdout 恒为唯一合法 JSON。
+  4. `Cargo.toml` 新增 `[profile.release]`：`lto=true` / `codegen-units=1` / `strip=true`。
+  5. 新增 `scripts/build-release.ps1`（打包到 `dist\lfz.exe` + 打印版本 + 冒烟；支持 `-OutDir`；失败非零退出）与 `scripts/install-lfz.ps1`（用户级安装；**默认 dry-run**，`-Apply` 才改；用 `[Environment]::SetEnvironmentVariable('Path',...,'User')` 而**非** `setx`；改前把旧用户 PATH 备份到 `%LOCALAPPDATA%\Programs\lfz\path-backup.txt`）。
+- **行为变更（向后兼容性）**：此前 `lfz frobnicate`（非子命令、非 flag）报「未知命令」，现按裸文件路径处理（随后因非 `.lfz` 报错并退出 2）。`lfz run <file>` / `lfz test` / `--help` / `--version` / 退出码语义（0/1/2）**不变**。凡依赖旧「未知命令」文案的调用方需知悉。
+- **边界**：仅改 `src/cli.rs`、`Cargo.toml`、`tests/cli.rs`，新增 `scripts/build-release.ps1` / `scripts/install-lfz.ps1`；**未改** `src/main.rs`、`docs/spec/**`、`app/**`、`tests/lfz/**`、`tests/fixtures/**`、`docs/guide/**`、`README.md`、`.gitignore`；无第三方依赖；未 commit / tag / push；**未真正修改用户 PATH**（install 仅 dry-run 验证）。
+- **影响**：**release-manager**（README 快速开始与交付物索引应加 `lfz <file>` 与 `scripts/`，建议文本随汇报提供）；**docs-writer**（`docs/guide/README.md` 运行章节加裸文件用法）；**verifier**（可直接用 `dist\lfz.exe Hello.lfz` 验收；退出码 0/1/2 不变）；**test-engineer**（`lfz test` 契约不变，黑盒集 85/85 不受影响）。
+- **证据**：`cargo build --all-targets` 与 `cargo build --release` 均 **0 warning**；`cargo test` → **445 passed / 0 failed**（原 432 零破坏，新增 13）；`cargo run --quiet -- test` → **85/85 PASS，exit 0**；`dist\lfz.exe` = **704000 B**，`dist\lfz.exe Hello.lfz` → `Hello, LFZ!` exit 0；`dist\lfz.exe --json Hello.lfz` → stdout 恰 12 B `{"ok":true}`（`Hello, LFZ!` 在 stderr）exit 0；`install-lfz.ps1`（无 `-Apply`）dry-run 后用户 PATH SHA256 与前一致（len=549）、安装目录未创建。
