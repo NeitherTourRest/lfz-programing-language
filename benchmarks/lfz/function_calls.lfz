@@ -1,0 +1,15 @@
+#42
+// function_calls: N high-frequency calls to a small pure function.
+// Isolates per-call overhead (no recursion, no builtins).
+// Usage: the size N is read from stdin (one integer line).
+let n = int(input())
+fn step(x) {
+    (x * 31 + 7) % 1000003
+}
+var acc = 1
+var i = 0
+while i < n {
+    acc = step(acc)
+    i += 1
+}
+print("RESULT acc=${acc}")

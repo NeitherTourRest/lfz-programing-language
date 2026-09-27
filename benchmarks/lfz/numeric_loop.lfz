@@ -1,0 +1,12 @@
+#42
+// numeric_loop: sum of integers 1..N using an explicit while loop.
+// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.
+// Usage: the size N is read from stdin (one integer line).
+let n = int(input())
+var i = 1
+var total = 0
+while i <= n {
+    total += i
+    i += 1
+}
+print("RESULT total=${total}")

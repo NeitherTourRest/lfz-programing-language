@@ -1,0 +1,17 @@
+#42
+// string_ops: build N strings with interpolation, trim/map them, join, replace,
+// split, repeat. Measures string building + the string builtins.
+// Usage: the size N is read from stdin (one integer line).
+let n = int(input())
+var parts = []
+var i = 0
+while i < n {
+    parts = push("  item${i}  ", parts)
+    i += 1
+}
+let cleaned = parts |> map((s) => trim(s))
+let joined = join(",", cleaned)
+let renamed = replace("item", "ITEM", joined)
+let words = split(",", renamed)
+let tag = repeat(3, "ab")
+print("RESULT chars=${len(joined)} words=${len(words)} tag=${tag}")

@@ -1,0 +1,8 @@
+#42
+// array_builtins: range -> map -> filter -> sort -> reduce chain.
+// LFZ side uses the native higher-order builtins; the Python side uses the
+// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.
+// Usage: the size N is read from stdin (one integer line).
+let n = int(input())
+let total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)
+print("RESULT total=${total}")

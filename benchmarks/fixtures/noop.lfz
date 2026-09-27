@@ -1,0 +1,3 @@
+#42
+// noop: minimal program used to measure interpreter startup overhead.
+print("RESULT ok=1")

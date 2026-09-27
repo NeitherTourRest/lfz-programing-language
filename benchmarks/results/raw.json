@@ -1,0 +1,724 @@
+{
+  "environment": {
+    "timestamp_utc": "2026-09-27T04:03:53+00:00",
+    "os": "Windows-11-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "cpu_count": 24,
+    "python": "3.13.9",
+    "python_exe": "D:\\app\\ANACONDA\\python.exe",
+    "lfz": "lfz 0.1.0",
+    "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
+    "cargo": "cargo 1.98.1 (797e8a9bc 2026-08-05)",
+    "warmup": 2,
+    "runs": 5,
+    "lfz_binary": "target\\release\\lfz.exe",
+    "startup": {
+      "lfz_median": 0.01167169999826001,
+      "python_median": 0.04233640000165906
+    }
+  },
+  "results": [
+    {
+      "benchmark": "numeric_loop",
+      "description": "while-loop sum 1..N (no builtins)",
+      "size": 10000,
+      "lfz": {
+        "median": 0.014852699998300523,
+        "min": 0.012051200006681029,
+        "max": 0.02157489999808604,
+        "runs": [
+          0.014853,
+          0.013349,
+          0.012051,
+          0.015804,
+          0.021575
+        ],
+        "stdout": "RESULT total=50005000",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.04373100000520935,
+        "min": 0.04118699999526143,
+        "max": 0.05386549999821,
+        "runs": [
+          0.043731,
+          0.043302,
+          0.046304,
+          0.053865,
+          0.041187
+        ],
+        "stdout": "RESULT total=50005000",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 0.33963778547326223,
+      "lfz_net_median": 0.0031810000000405125,
+      "python_net_median": 0.0013946000035502948
+    },
+    {
+      "benchmark": "numeric_loop",
+      "description": "while-loop sum 1..N (no builtins)",
+      "size": 100000,
+      "lfz": {
+        "median": 0.0305822000009357,
+        "min": 0.02804219999961788,
+        "max": 0.03177609999693232,
+        "runs": [
+          0.030582,
+          0.028573,
+          0.031754,
+          0.028042,
+          0.031776
+        ],
+        "stdout": "RESULT total=5000050000",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.051703199998883065,
+        "min": 0.04692510000313632,
+        "max": 0.05327270000270801,
+        "runs": [
+          0.053273,
+          0.051703,
+          0.046925,
+          0.048445,
+          0.052498
+        ],
+        "stdout": "RESULT total=5000050000",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 0.5914953039965875,
+      "lfz_net_median": 0.01891050000267569,
+      "python_net_median": 0.009366799997224007
+    },
+    {
+      "benchmark": "numeric_loop",
+      "description": "while-loop sum 1..N (no builtins)",
+      "size": 1000000,
+      "lfz": {
+        "median": 0.18975160000263713,
+        "min": 0.16497220000019297,
+        "max": 0.19729460000235122,
+        "runs": [
+          0.171886,
+          0.197295,
+          0.164972,
+          0.189752,
+          0.190164
+        ],
+        "stdout": "RESULT total=500000500000",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.15298020000045653,
+        "min": 0.14510700000391807,
+        "max": 0.19249719999788795,
+        "runs": [
+          0.192497,
+          0.15298,
+          0.159986,
+          0.145107,
+          0.149608
+        ],
+        "stdout": "RESULT total=500000500000",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 1.240367054050595,
+      "lfz_net_median": 0.17807990000437712,
+      "python_net_median": 0.11064379999879748
+    },
+    {
+      "benchmark": "function_calls",
+      "description": "N calls to a small pure function",
+      "size": 10000,
+      "lfz": {
+        "median": 0.019930199996451847,
+        "min": 0.014688199997181073,
+        "max": 0.029760700002952944,
+        "runs": [
+          0.019997,
+          0.01993,
+          0.014688,
+          0.029761,
+          0.016239
+        ],
+        "stdout": "RESULT acc=477891",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.046528099999704864,
+        "min": 0.042230500002915505,
+        "max": 0.050021999995806254,
+        "runs": [
+          0.045485,
+          0.050022,
+          0.046528,
+          0.046928,
+          0.042231
+        ],
+        "stdout": "RESULT acc=477891",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 0.4283476006236719,
+      "lfz_net_median": 0.008258499998191837,
+      "python_net_median": 0.004191699998045806
+    },
+    {
+      "benchmark": "function_calls",
+      "description": "N calls to a small pure function",
+      "size": 100000,
+      "lfz": {
+        "median": 0.058704400005808566,
+        "min": 0.05465449999610428,
+        "max": 0.06673869999940507,
+        "runs": [
+          0.058704,
+          0.058077,
+          0.054654,
+          0.066739,
+          0.062412
+        ],
+        "stdout": "RESULT acc=803074",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.059406200001831166,
+        "min": 0.05454089999693679,
+        "max": 0.07425320000038482,
+        "runs": [
+          0.063977,
+          0.074253,
+          0.059406,
+          0.054658,
+          0.054541
+        ],
+        "stdout": "RESULT acc=803074",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 0.988186418319957,
+      "lfz_net_median": 0.047032700007548556,
+      "python_net_median": 0.01706980000017211
+    },
+    {
+      "benchmark": "function_calls",
+      "description": "N calls to a small pure function",
+      "size": 1000000,
+      "lfz": {
+        "median": 0.4233710000044084,
+        "min": 0.41140029999951366,
+        "max": 0.4303245000046445,
+        "runs": [
+          0.430325,
+          0.4114,
+          0.422176,
+          0.426691,
+          0.423371
+        ],
+        "stdout": "RESULT acc=27055",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.23026860000391025,
+        "min": 0.21631759999581845,
+        "max": 0.23322560000087833,
+        "runs": [
+          0.216318,
+          0.217906,
+          0.233226,
+          0.230269,
+          0.232141
+        ],
+        "stdout": "RESULT acc=27055",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 1.8385963175058129,
+      "lfz_net_median": 0.4116993000061484,
+      "python_net_median": 0.1879322000022512
+    },
+    {
+      "benchmark": "recursion_fib",
+      "description": "naive recursive fib(n)",
+      "size": 20,
+      "lfz": {
+        "median": 0.023042400003760122,
+        "min": 0.021606800000881776,
+        "max": 0.023730199995043222,
+        "runs": [
+          0.023042,
+          0.021607,
+          0.023287,
+          0.02373,
+          0.021978
+        ],
+        "stdout": "RESULT fib=6765",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.04738599999836879,
+        "min": 0.04581290000351146,
+        "max": 0.050502899997809436,
+        "runs": [
+          0.048581,
+          0.045813,
+          0.046793,
+          0.050503,
+          0.047386
+        ],
+        "stdout": "RESULT fib=6765",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 0.48627020648616326,
+      "lfz_net_median": 0.011370700005500112,
+      "python_net_median": 0.0050495999967097305
+    },
+    {
+      "benchmark": "recursion_fib",
+      "description": "naive recursive fib(n)",
+      "size": 24,
+      "lfz": {
+        "median": 0.07201979999808827,
+        "min": 0.062223399996582884,
+        "max": 0.0730212999987998,
+        "runs": [
+          0.062223,
+          0.073021,
+          0.071066,
+          0.072184,
+          0.07202
+        ],
+        "stdout": "RESULT fib=46368",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.052261999997426756,
+        "min": 0.048647000003256835,
+        "max": 0.057132699999783654,
+        "runs": [
+          0.048647,
+          0.050662,
+          0.052262,
+          0.057133,
+          0.054896
+        ],
+        "stdout": "RESULT fib=46368",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 1.3780528874064204,
+      "lfz_net_median": 0.060348099999828264,
+      "python_net_median": 0.009925599995767698
+    },
+    {
+      "benchmark": "recursion_fib",
+      "description": "naive recursive fib(n)",
+      "size": 28,
+      "lfz": {
+        "median": 0.3442609999983688,
+        "min": 0.32913600000028964,
+        "max": 0.36211049999837996,
+        "runs": [
+          0.344261,
+          0.329136,
+          0.36211,
+          0.349761,
+          0.343791
+        ],
+        "stdout": "RESULT fib=317811",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.08895940000365954,
+        "min": 0.0812149000048521,
+        "max": 0.090332000007038,
+        "runs": [
+          0.081215,
+          0.088959,
+          0.090332,
+          0.089646,
+          0.0863
+        ],
+        "stdout": "RESULT fib=317811",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 3.8698664782384644,
+      "lfz_net_median": 0.3325893000001088,
+      "python_net_median": 0.04662300000200048
+    },
+    {
+      "benchmark": "array_builtins",
+      "description": "range|>map|>filter|>sort|>reduce",
+      "size": 1000,
+      "lfz": {
+        "median": 0.016875499997695442,
+        "min": 0.012132000003475696,
+        "max": 0.023764900004607625,
+        "runs": [
+          0.012132,
+          0.013913,
+          0.016875,
+          0.022944,
+          0.023765
+        ],
+        "stdout": "RESULT total=249500",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.04907640000601532,
+        "min": 0.04771249999612337,
+        "max": 0.05313190000015311,
+        "runs": [
+          0.048203,
+          0.049076,
+          0.047712,
+          0.053132,
+          0.050814
+        ],
+        "stdout": "RESULT total=249500",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 0.3438618153659805,
+      "lfz_net_median": 0.005203799999435432,
+      "python_net_median": 0.006740000004356261
+    },
+    {
+      "benchmark": "array_builtins",
+      "description": "range|>map|>filter|>sort|>reduce",
+      "size": 10000,
+      "lfz": {
+        "median": 0.020734699995955452,
+        "min": 0.015856600002734922,
+        "max": 0.02185789999930421,
+        "runs": [
+          0.021858,
+          0.015857,
+          0.020735,
+          0.020872,
+          0.020059
+        ],
+        "stdout": "RESULT total=24995000",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.0491016000014497,
+        "min": 0.04698610000195913,
+        "max": 0.05150609999691369,
+        "runs": [
+          0.051506,
+          0.049974,
+          0.048061,
+          0.046986,
+          0.049102
+        ],
+        "stdout": "RESULT total=24995000",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 0.4222815548850398,
+      "lfz_net_median": 0.009062999997695442,
+      "python_net_median": 0.006765199999790639
+    },
+    {
+      "benchmark": "array_builtins",
+      "description": "range|>map|>filter|>sort|>reduce",
+      "size": 100000,
+      "lfz": {
+        "median": 0.08248669999738922,
+        "min": 0.06469339999603108,
+        "max": 0.0877388000008068,
+        "runs": [
+          0.064693,
+          0.082487,
+          0.074406,
+          0.087739,
+          0.085434
+        ],
+        "stdout": "RESULT total=2499950000",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.06880950000049779,
+        "min": 0.06604730000253767,
+        "max": 0.07833799999934854,
+        "runs": [
+          0.078338,
+          0.066047,
+          0.072436,
+          0.06881,
+          0.066605
+        ],
+        "stdout": "RESULT total=2499950000",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 1.1987690652714014,
+      "lfz_net_median": 0.07081499999912921,
+      "python_net_median": 0.026473099998838734
+    },
+    {
+      "benchmark": "struct_ops",
+      "description": "struct/dict: N writes + keys() + sum",
+      "size": 5000,
+      "lfz": {
+        "median": 0.05655490000208374,
+        "min": 0.0476557000001776,
+        "max": 0.05851529999927152,
+        "runs": [
+          0.056555,
+          0.047656,
+          0.052463,
+          0.058515,
+          0.056939
+        ],
+        "stdout": "RESULT keys=5000 total=41654167500",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.0493309000012232,
+        "min": 0.04469760000210954,
+        "max": 0.05206270000053337,
+        "runs": [
+          0.050597,
+          0.049331,
+          0.052063,
+          0.049116,
+          0.044698
+        ],
+        "stdout": "RESULT keys=5000 total=41654167500",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 1.1464396554833058,
+      "lfz_net_median": 0.04488320000382373,
+      "python_net_median": 0.006994499999564141
+    },
+    {
+      "benchmark": "struct_ops",
+      "description": "struct/dict: N writes + keys() + sum",
+      "size": 15000,
+      "lfz": {
+        "median": 0.23013880000507925,
+        "min": 0.2200717000014265,
+        "max": 0.24479260000225622,
+        "runs": [
+          0.230139,
+          0.228948,
+          0.244793,
+          0.238712,
+          0.220072
+        ],
+        "stdout": "RESULT keys=15000 total=1124887502500",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.04670649999752641,
+        "min": 0.04345209999883082,
+        "max": 0.04973819999577245,
+        "runs": [
+          0.046706,
+          0.049738,
+          0.047216,
+          0.046618,
+          0.043452
+        ],
+        "stdout": "RESULT keys=15000 total=1124887502500",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 4.927339878116911,
+      "lfz_net_median": 0.21846710000681924,
+      "python_net_median": 0.004370099995867349
+    },
+    {
+      "benchmark": "struct_ops",
+      "description": "struct/dict: N writes + keys() + sum",
+      "size": 40000,
+      "lfz": {
+        "median": 1.7530924000020605,
+        "min": 1.6924773000064306,
+        "max": 1.8164343000025838,
+        "runs": [
+          1.771187,
+          1.745264,
+          1.753092,
+          1.692477,
+          1.816434
+        ],
+        "stdout": "RESULT keys=40000 total=21332533340000",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.06087410000327509,
+        "min": 0.05593569999473402,
+        "max": 0.06723480000073323,
+        "runs": [
+          0.055936,
+          0.059573,
+          0.060874,
+          0.067235,
+          0.061951
+        ],
+        "stdout": "RESULT keys=40000 total=21332533340000",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 28.798658212733205,
+      "lfz_net_median": 1.7414207000038004,
+      "python_net_median": 0.01853770000161603
+    },
+    {
+      "benchmark": "string_ops",
+      "description": "build/trim/join/replace/split strings",
+      "size": 3000,
+      "lfz": {
+        "median": 0.06533659999695374,
+        "min": 0.04825949999940349,
+        "max": 0.06683689999772469,
+        "runs": [
+          0.048259,
+          0.065337,
+          0.066837,
+          0.056494,
+          0.066271
+        ],
+        "stdout": "RESULT chars=25889 words=3000 tag=ababab",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.05022830000234535,
+        "min": 0.043511099996976554,
+        "max": 0.05209860000468325,
+        "runs": [
+          0.050228,
+          0.052099,
+          0.043511,
+          0.048419,
+          0.050241
+        ],
+        "stdout": "RESULT chars=25889 words=3000 tag=ababab",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 1.300792580953425,
+      "lfz_net_median": 0.05366489999869373,
+      "python_net_median": 0.007891900000686292
+    },
+    {
+      "benchmark": "string_ops",
+      "description": "build/trim/join/replace/split strings",
+      "size": 10000,
+      "lfz": {
+        "median": 0.26280270000279415,
+        "min": 0.23017390000313753,
+        "max": 0.28034260000276845,
+        "runs": [
+          0.261431,
+          0.280343,
+          0.271195,
+          0.262803,
+          0.230174
+        ],
+        "stdout": "RESULT chars=88889 words=10000 tag=ababab",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.044440199999371544,
+        "min": 0.04190779999771621,
+        "max": 0.04694200000085402,
+        "runs": [
+          0.046942,
+          0.04444,
+          0.04309,
+          0.0465,
+          0.041908
+        ],
+        "stdout": "RESULT chars=88889 words=10000 tag=ababab",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 5.913625501381871,
+      "lfz_net_median": 0.25113100000453414,
+      "python_net_median": 0.0021037999977124855
+    },
+    {
+      "benchmark": "string_ops",
+      "description": "build/trim/join/replace/split strings",
+      "size": 30000,
+      "lfz": {
+        "median": 1.6841161999982432,
+        "min": 1.661339999998745,
+        "max": 1.6963978000057978,
+        "runs": [
+          1.672846,
+          1.684116,
+          1.66134,
+          1.696398,
+          1.687025
+        ],
+        "stdout": "RESULT chars=288889 words=30000 tag=ababab",
+        "stderr": "",
+        "rc": 0
+      },
+      "python": {
+        "median": 0.05403169999772217,
+        "min": 0.05152009999437723,
+        "max": 0.0641613000043435,
+        "runs": [
+          0.064161,
+          0.054032,
+          0.05152,
+          0.056535,
+          0.053966
+        ],
+        "stdout": "RESULT chars=288889 words=30000 tag=ababab",
+        "stderr": "",
+        "rc": 0
+      },
+      "out_equal": true,
+      "ratio_median": 31.169039657631373,
+      "lfz_net_median": 1.6724444999999832,
+      "python_net_median": 0.011695299996063113
+    }
+  ]
+}

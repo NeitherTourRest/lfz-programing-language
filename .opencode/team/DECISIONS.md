@@ -696,3 +696,15 @@
 - **理由**：黑盒测试集只能断言 LFZ 程序内可观察量；把环境相关（stdin）与流捕获（stdout 文本）排除，是「稳定、可复现、失败可定位」的必要边界。任务书明确授权此跳过方式。
 - **影响**：**verifier** 验收评分项 2 时，`IOError` / `input` / 输出文本的覆盖证据应指向 Rust 单测（非黑盒），不应据此判黑盒缺失；**tooling-dev** 若未来提供 stdin / 捕获能力，test-engineer 可升级为端到端断言。
 - **证据**：`cargo run --quiet -- test` → 82/82 PASS，exit 0；`cargo clean -p lfz; cargo build` → 0 warning / 0 error；`cargo test` → 431 passed / 0 failed；覆盖矩阵 §3（12 类逐个）/§4（不可断言项）；报告 §5.3/§6。
+
+### [2026-09-27 12:06] [perf-engineer] P6 性能基准基线与两处超线性退化上报（影响 runtime-dev / verifier / team-lead）
+
+- **决策**：P6（评分项 3）首个性能基线冻结在 `benchmarks/`：6 个基准 × 3 个规模，每个都提供**功能等价**的 LFZ 与 Python 实现 + 一键 harness `run_all.py`（**仅标准库**）。正式报告 `docs/reports/performance.md`。方法学：**release 构建**、预热 2 轮、计时 5 轮取**中位数**（附 min/max）、**每轮**断言 `LFZ stdout == Python stdout`；口径为**整进程 wall time**，并单列 noop 启动基线与 net 值。
+- **关键数据**：启动 LFZ（11.67 ms）比 CPython 3.13（42.34 ms）**快 3.6×**；大规模纯执行 LFZ 比 CPython 慢 **1.2×–3.9×**（同数量级）；原生高阶内建（map/filter/sort/reduce）仅 **1.20×**。
+- **缺陷上报（perf-engineer 只报告、不改代码；建议 runtime-dev 实施）**：
+  1. 🔴 `push` 等"返回新容器"内建对大数组 **O(N²)**（整表拷贝）——`string_ops` 30k 处 **31.17×**；建议 copy-on-write / 持久化向量。
+  2. 🔴 struct **字符串键写/读疑似线性扫描（无哈希索引）O(N²）**——`struct_ops` 40k 处 **28.80×**；建议 `IndexMap` 式哈希索引 + 顺序数组。
+  3. 🟠 引入 **resolver / 槽位缓存**（当前树遍历 + 运行时按名字查链）以改善循环/调用/递归。
+- **理由**：如实呈现解释执行开销与瓶颈是评分项 3 的明确导向；只报告不改 `src/**`（无越权）。
+- **影响**：**runtime-dev** 接收 §6 优化建议；**team-lead** 决定是否排期；**verifier** 可用本套件复跑核验数据真实性；**test-engineer** 可用 6 基准作为回归素材。
+- **证据**：`cargo build --release`（全量重编 `Compiling lfz` → `Finished` 3.08 s，**0 warning / 0 error**）；`python benchmarks/run_all.py --warmup 2 --runs 5` → **18/18 输出一致**；原始逐轮数据 `benchmarks/results/raw.json`。

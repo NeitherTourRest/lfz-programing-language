@@ -1,0 +1,16 @@
+#42
+// struct_ops: build a struct/dict with N dynamic string keys, then read them
+// back using keys() and sum the values. Measures struct field write/read + keys().
+// Usage: the size N is read from stdin (one integer line).
+let n = int(input())
+var s = {}
+var i = 0
+while i < n {
+    s["k${i}"] = i * i
+    i += 1
+}
+var total = 0
+for k in keys(s) {
+    total += s[k]
+}
+print("RESULT keys=${len(s)} total=${total}")
