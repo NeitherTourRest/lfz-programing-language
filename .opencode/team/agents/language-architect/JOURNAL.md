@@ -1,6 +1,19 @@
 # language-architect — 工作日志
 > 只追加，最新条目在最上方。
 
+## [2026-09-27 22:50] T11-③ 语言侧：v1.1 七项补强 ADR + `docs/spec/` 规范文本（先 ADR 后改规范；只改 `docs/spec/**` + DECISIONS.md）
+- 来源: team-lead 下达「T11-③ 语言侧：为 v1.1 的 7 项补强写 ADR + 落 `docs/spec/` 规范文本」（完整启动；用户已授权本迭代）。依据 `FEATURE-AUDIT.md` §6.1（IN 7 项）/ §5（6 焦点裁定）/ §7（冻结约束兼容性）。**本轮只改 `docs/spec/**` + `DECISIONS.md`**，不碰 `src/**`/`tests/**`/`docs/guide/**`/`.opencode/skills/**`/`REQUIREMENTS.md`/看板；未 commit/tag/push。
+- 完成:
+  - **先追加 1 条综合 ADR**（DECISIONS.md 末条，标题 `[2026-09-27 22:50]`），逐项给出「精确签名 / data-last / 返回 / 错误类与精确消息 / 边界 / 复杂度 / 文法改动 / 落点」+ **兼容性核对表**（A1–A7 / §4.5 确定性 / M6 / §2.3 / 12 类错误类）+ **影响面** + **是否需用户追认**。
+  - **7 项裁定要点**：① `string` 取下标 → `TypeError`（固化既有 impl 行为，消息 `运算符 '[]' 不支持 string 与 array / struct`，读写同源；正解 `split("",s)` O(n)）；② `range(lo,hi)` 半开、`hi<=lo→[]`、1/2 参重载、**3 参 OUT**；③ 字符串方法族 `indexOf`/`endsWith`/`padEnd`/`padStart`/`substring`（data-last、返回新值；`indexOf` **最坏 O(n·m) 须标注**；`substring` 与 `slice` 同夹取口径；`pad*` 空 fill→`ValueError: 填充串不能为空`）；④ 文件 IO `readFile`/`writeFile`/`appendFile`（UTF-8、相对 CWD、不沙箱；`IOError` 三条新消息；与 `input()` 同属外部 IO；**不得隐式转换**）；⑤ `ord`/`chr`（O(1)；非 string/int→`TypeError`，长度/码点→`ValueError`）；⑥ math `sin`/`cos`/`log`/`exp`（O(1)、int→float 加宽；**`log(0)`→`-Inf`、`log(负)`→`NaN`**，IEEE 非报错）；⑦ `contains(v,xs)`（O(n) 线性、仅 array、struct 用 `has`、用 `==` 含环安全）。
+  - **规范落点（逐处）**：`semantics.md` §4.2（`[]` 补钉一条）、§4.5.6（NaN/Inf 产地扩 log/exp/sin/cos）、§4.5.7（加宽清单扩 4 math）、§8.1（`TypeError`/`ValueError`/`IOError` 三触发行 + `ValueError` 细分表 3 行）；`interface-contract.md` §8.1（`ValueError`/`IOError` 消息）、§10.7（`range` 拆两行 + 字符串 5 行 + math 4 行 + `ord`/`chr` 2 行 + `contains` 1 行 + **新增「文件 IO」段** + 更新 math 注/加宽清单 + **新增「v1.1 补钉内置的边界与复杂度」段**）、§10.8（`ValueMsg` 3 变体）。
+  - **无文法改动**：`docs/spec/syntax.md` **零改动**（7 项均为内置表 / 运算符语义，无新记号、无新优先级层）；`range(lo,hi)` 复用既有调用语法。**不新增错误类**（仍 12 类 + 基类）。**新增 15 内置**（54→69）。
+- 产出: `.opencode/team/DECISIONS.md`（+1 ADR，`+113/-0`）；`docs/spec/interface-contract.md`（`+48/-6`，37050→45098 B）；`docs/spec/semantics.md`（`+10/-6`，37929→41143 B）；`docs/spec/syntax.md`（**0 改动**，70043 B）。三文件 UTF-8 无 BOM、中文完好（`read` 复核）。
+- 证据: 一手实跑 `dist/lfz.exe`（`Temp/probe_*.lfz`，已清理）：`s[0]`/`s["k"]` → `TypeError: 运算符 '[]' 不支持 string 与 array / struct`（exit 2）；`range(1,4)` → `函数 range 期待 1 个参数，得到 2`（exit 2）；`ord("a")` → `NameError: 未定义的名字 'ord'`（exit 2，证 v1 无此内置）。`git diff --numstat`（我 3 文件）见上；`git diff --stat -- docs/spec/syntax.md` **为空**（证零文法改动）。逐处「原文 → 新文」见本轮结构化汇报。
+- 决策: ADR「v1.1 语言补强（T11-③）：7 项先 ADR 后改规范」（含 7 项总表 + 兼容性核对表 + 影响面 + 追认表）。
+- 下一步: team-lead 转 **core-dev**（`builtins.rs` 注册 15 内置 + `range` 2 参分支；`error.rs` 加 `ValueMsg` 三变体）、**runtime-dev**（15 内置语义实现；`push`+`join` O(n) 惯用法为可选优化）、**test-engineer**（15 内置黑盒正/负例 + `coverage-matrix.md` 加行；文件 IO 夹具用 `Temp/`）、**docs-writer / ai-dx-engineer**（guide/skill 同步 54→69 + 新消息 + D1–D7）；**verifier** 复验；**REQUIREMENTS.md R-401 spec 字节数再次陈旧** → requirements-analyst 刷新。
+- 阻塞: 无。**需用户追认**：仅 **#4 文件 IO**（新外部副作用面，建议明确追认）；#2（`range(lo,hi)` 使旧报错输入变合法）与 #6（`log(0)`→`-Inf` 语义口径）为提示项。
+
 ## [2026-09-27 22:15] 第 4 类残余裁定：`AST_DEPTH_LIMIT = 10000`（AST 深度上限，`SyntaxError`）+ 与解析嵌套「口径分离」（R-S3；v1.1 补钉，先 ADR 后改 spec）
 - 来源: team-lead 下达「裁定第 4 类残余崩溃（深左偏 AST / 表达式递归深度）」——即本架构师 `[21:40]` ADR「关联发现（另立，未裁定）」所标注、core-dev `[22:10]` 以数据上报的残余项（用户已批准"全修"）。本轮**只改 `docs/spec/**` + `DECISIONS.md`**，不碰 `src/**`/`tests/**`。
 - 完成:

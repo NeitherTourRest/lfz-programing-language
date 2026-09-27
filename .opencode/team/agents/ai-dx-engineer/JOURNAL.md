@@ -1,5 +1,21 @@
 # ai-dx-engineer — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 23:40] T11-③ P0 — skill 修订 7 条盲测缺口（D1–D7）+ O(n) 构建性能红线
+- 来源: team-lead 任务书「T11-③ P0：修订 AI 开发指南（skill）的 7 条盲测暴露缺口」；依据 `FEATURE-AUDIT.md` §6.2 / §0 / §7.1 + `docs/reports/blind-test/{knapsack_dp,maze_bfs}.report.md` + `docs/spec/**`（只读）。
+- 完成（**逐条实跑验证后落地**，仅改 skill 包 4 文件）:
+  - D1 字符串不可下标（`s[0]`→`TypeError`）+ `split("",s)` 惯用法（一次 O(n)，之后 O(1) 索引）
+  - D2 `range(n)` 完整签名（`[0,n)`；`n<0`→`[]`；**只 1 参**，**不写** v1.1 的 `range(lo,hi)`）
+  - D3 循环体 `let`/`var` 每轮新绑定（闭包输出 `0/10/20` 反证，引 §4.5.0/A2）
+  - D4 退出码语境（`lfz run` 下 assert→**2**；`lfz test` 下用例失败→**1**；消除 §0↔§5 歧义）
+  - D5 对齐 `align ∈ {<,>,^}` + fill（如 `:0>5`、`*^7`）；宽须字面数字、**无动态宽度**（用 `repeat`）
+  - D6 `len(string)` 合法、按 Unicode 标量计数（`"日本語"`→3、`"😀"`→1）；O(n) 提醒
+  - D7 隐性语法正面示例（链式下标赋值 / `else if` / 多 `${}` / 零参 `print()` / `&&`·`||` 短路）
+  - **新增 §4.6**「O(n) 字符串/数组构建性能红线」+ 复杂度实测表 + 正确惯用法
+- 产出: `.opencode/skills/lfz-programming/` — `SKILL.md` **37925 B**、`VERIFICATION.md` **23837 B**、`README.md` **5932 B**、`prompt-template.md` **3265 B**；`git diff --stat` = 仅这 4 文件。
+- 证据: `VERIFICATION.md` §8（逐条命令 + 输出 + 退出码 + 探针源码）；探针原在 `Temp\lfz-dx\`（**已清**，源码已内联进 §8.4）。
+- 决策: DECISIONS `### [2026-09-27 23:40] [ai-dx-engineer] …` —— **订正 `FEATURE-AUDIT §7.1` 的 `push+join` 建议**：实测 `s=s+c`（61/139/425/1582 ms @40k..320k）与 `push` 累积（251/674/4076 ms）**皆 O(n²)**；真 O(n) = `range|>map|>join`（25/35/56/104 ms）或「预分配 + 下标写」。
+- 下一步: T11-05 落地时同步 §6/§4.6；请 team-lead 派盲测重跑（T11-06）量测 2/8 → ?
+- 阻塞: 无。
 ## [2026-09-27 23:10] P7c — lfz-programming skill 包「可直接交付」升级（增量）
 - 来源: team-lead 任务书「升级 `.opencode/skills/lfz-programming/` 为可直接交付给编程 Agent 使用的 Skill 包」（对应 `task-info.md` 第 4 条 + `interface-contract.md` §11.1）
 - 完成（四件事，**未重做 P7b**）:

@@ -1,5 +1,16 @@
 # team-lead — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 23:50] 阶段收尾：T11-③ 第 1 波完成（skill D1–D7 ‖ 人类文档 ‖ v1.1 七项 ADR）
+- 来源: 用户「阶段性结束」（本阶段 = T11-① 审计 → ② 修复 → 发布 v1.2.1 → ③ v1.1 迭代第 1 波）
+- 完成:
+  - ai-dx-engineer: skill 的 D1–D7 修订（**每条 lfz 实跑验证**）→ SKILL +164 / VERIFICATION +157 行
+  - docs-writer: 人类向文档同步（零帧无 Traceback / float `.0` 仅定点 / 3 条新细分消息）→ docs/guide 5 文件
+  - language-architect: v1.1 七项 ADR + spec（**零文法改动**）→ 新增 15 内置（54→69）、range 1/2 参、6 条新消息、**错误类仍 12**、兼容性核对表全 ✅
+- 关键订正（跨角色 / 实测推翻审计建议）: `FEATURE-AUDIT §7.1` 的「`push`+`join` 替代字符串拼接」**错** —— `push` 遵 A1 每次整体克隆，实测 **也是 O(n²)**（320k=4076ms，比 `+` 的 1582ms 更慢）；真 O(n) = `range(n) |> map |> join`（104ms）或**预分配+下标写**（151ms）
+- 产出: 上述文件 + `docs/reports/T11-03-docs-evidence.md`；`DECISIONS.md` [23:40]（ai-dx）+ [22:50]（architect 7 项 ADR）
+- 决策: ① **v1.1 #4 文件 IO 需用户追认**（唯一一条标"是"：新外部副作用面 + 环境依赖）→ 追认前不实现；② 可选追认两项：`range(1,4)` 由报错变合法（行为面扩大）、`log(0)`→-Inf / `log(负)`→NaN（IEEE 非报错）
+- 下一步（下阶段，待用户发话）: T11-11 提交推送 → T11-12 实现七项 → T11-13/14 黑盒+文档 → T11-15 verifier 复验 + **同题 8 盲测重跑（基线 2/8）** → T11-16 刷新 REQUIREMENTS
+- 阻塞: v1.1 #4 文件 IO 待追认；`docs/spec` 领先于实现（正常中间态）
 ## [2026-09-27 22:40] T11-② 修复批次收口：4 类崩溃 + JSON 缺陷 + span 全修，6 条 ADR
 - 来源: 用户批准「全修 + 复验 + 再迭代」（基于 T11-① 条款级审计 157 条款 / 5 FAIL）
 - 完成: 4 波派发（架构师 ×3、runtime-dev、tooling-dev、test-engineer、core-dev ×2）

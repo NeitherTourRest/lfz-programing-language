@@ -6,8 +6,23 @@
 ## 🔵 进行中
 | ID | 任务 | 负责 | 依赖 | 状态 | 产出/证据 |
 | -- | -- | -- | -- | -- | -- |
-| T11-10 | 重建 `dist/lfz.exe` + 刷新 README/报告计数（445→**482** / 85→**90**）+ `Cargo.toml`→1.0.1 + 标签 **`v1.2.1`** + 原子提交并推送 | release-manager | T11-09 ✅ | **进行中** | `dist/` + README + git 提交 + tag |
-| （后续）T11-③ | **v1.1 迭代**：P0 文档 7 条（ai-dx-engineer ‖ docs-writer）+ 语言 7 项（architect → core/runtime）→ **同题盲测重跑** | 见 🟡 待办 T11-04/05/06 | T11-10 ✅ | 待派 | — |
+| T11-11 | 提交并推送 T11-③ 第 1 波产物（skill + guide + spec + ADR + 证据） | release-manager | 第 1 波 ✅ | 进行中 | git 提交 + push |
+| T11-12 | **实现 v1.1 七项**（15 个新内置 + `range` 2 参）—— **#4 文件 IO 待用户追认** | core-dev + runtime-dev | ADR ✅ | ⏸ **待追认后派** | `src/**` + 单测 |
+| T11-13 | 黑盒用例（v1.1 七项正/负例） | test-engineer | T11-12 | 待派 | `tests/**` |
+| T11-14 | 文档同步**已实现**的 v1.1 特性 | ai-dx-engineer ‖ docs-writer | T11-12 | 待派 | skill + guide |
+| T11-15 | verifier 复验 + **同题 8 盲测重跑**（基线 **2/8**） | verifier | T11-13/14 | 待派 | 报告 + 前后对比 |
+| T11-16 | 刷新 `REQUIREMENTS.md`（R-401 spec 字节数 + v1.1 新需求条目） | requirements-analyst | — | 待派 | `REQUIREMENTS.md` |
+
+### T11-③ v1.1 迭代（第 1 波 ✅ 完成，2026-09-27）
+| 交付 | 负责 | 结果 |
+| -- | -- | -- |
+| **skill 的 D1–D7 修订**（每条 `lfz` 实跑验证） | ai-dx-engineer | ✅ `SKILL.md` +164 行 / `VERIFICATION.md` +157 行；证据 `docs/reports/T11-03-docs-evidence.md` |
+| **人类向文档同步**（含零帧无 Traceback / `.0` 仅定点 / **3 条新消息**） | docs-writer | ✅ `docs/guide/**` 5 文件 |
+| **v1.1 语言 7 项 ADR + spec 文本**（**零文法改动**） | language-architect | ✅ `interface-contract.md` +54 / `semantics.md` +16；**新增 15 内置（54→69）**；`range` 1/2 参重载；6 条新消息（**错误类仍 12**）；兼容性核对表全 ✅ |
+
+> **🔬 重要订正（实测推翻审计建议）**：`FEATURE-AUDIT §7.1` 建议「`s = s + c` 是 O(n²) → 改 `push` + `join`」——**后半句错**：`push` 遵 A1 每次 `to_vec()` 整体克隆，**也是 O(n²)**（实测 320k：4076 ms，比 `+` 的 1582 ms **更慢**）。
+> **真正 O(n)**：① `range(n) |> map(f) |> join("")`（320k = 104 ms）② **预分配 + 下标写** `arr[i] = v`（320k = 151 ms）。证据：`DECISIONS.md` [2026-09-27 23:40]。
+> **⚠️ 当前状态**：`docs/spec/` 已写 v1.1 七项规范，但 `src/**` **尚未实现**（规范领先于实现，属"先 ADR 后改规范"的正常中间态）→ T11-12 落地前，**指南类文档不得描述这 7 项**（已约束）。
 
 ### T11-① 复验结论（verifier 独立验收，2026-09-27）
 | 条款 | 结果 |

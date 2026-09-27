@@ -1,72 +1,40 @@
 # language-architect — 工作状态
-> 最后更新: 2026-09-27 22:15 by language-architect
+> 最后更新: 2026-09-27 22:50 by language-architect
 
 ## 当前状态
-**✅ 已完成「第 4 类残余崩溃（深左偏 AST / 表达式递归深度）」裁定并落规范。** 本轮**只改 `docs/spec/**` + `.opencode/team/DECISIONS.md`**；`src/**` 零改动（实现由 core-dev 随后做）；spec v1 冻结不变，属 **v1.1 补钉**。
-- 承接：`[21:40]` ADR 的「关联发现（未裁定）」+ core-dev `[22:10]` 数据上报。
+**✅ 已完成 T11-③ 语言侧任务：v1.1 七项补强的 ADR + `docs/spec/` 规范文本落地（先 ADR、后改规范）。** 本轮**只改 `docs/spec/**` + `.opencode/team/DECISIONS.md`**；`src/**` 零改动（实现随后由 core-dev / runtime-dev 做）；spec v1 冻结不变，属 **v1.1 补钉**。**语法零改动**（`syntax.md` 字节数不变 70043）。
 
-## 本轮裁定（逐条给结论）
-| # | 问题 | 裁定 |
-|---|---|---|
-| 1 | **选定方案** | **(b) 主方案（解析期 AST 深度上限）**；(c) AST 迭代析构**列为可选加固**（非必需）；**(a) 否决**；(d) 实际落地 = (b)（+(c) 可选）。理由见下 |
-| 2 | **上限值** | **`AST_DEPTH_LIMIT = 10000`**（**独立**常量；与运行期 `RECURSION_LIMIT` 同值但**度量不同**：AST 节点深度 vs 函数调用帧深度） |
-| 3 | **错误类** | **复用 `SyntaxError`**（加载/解析期），实现侧新增 `SyntaxMsg::ExprTooDeep`（无字段，18→19）；**不新增第 13 类**（仍 12 类 + 基类）；**不改 `--json` 的 12 个 `error` 取值** |
-| 4 | **消息 + 头** | 逐字符 **`表达式嵌套过深（超过 10000 层）`**；**无 `Traceback` 头**（`SyntaxError` 属既有「2 类不带」之一） |
-| 5 | **`span`** | **首次使 AST 深度超过上限的节点首字符**（链式构造通常为链起点） |
-| 6 | **口径矛盾（关键）** | **不**把 `PARSE_DEPTH_LIMIT` 改为「AST 深度」；两度量**正交、分别设限**——`(((1)))`：解析嵌套 > AST 深度；`1+1+…`：AST 深度 > 解析嵌套。**§3.8 不能替代本条，反之亦然** |
-| 7 | **检查方式** | 解析期判定（构建中**自底向上累加**，或紧接解析后**显式栈迭代遍历**），**求值前**拒绝；**检查本身不得以 AST 深度递归** |
+## 本轮交付（7 项 1 表）
+| # | 特性 | 签名 / 关键裁定 | 错误类 + 精确消息 | 复杂度 | 需追认 |
+|---|---|---|---|---|---|
+| 1 | `string` 取下标 → `TypeError` | **不加 `s[i]`**，固化既有行为；`[]` 仅 array/struct；读写同源 | `TypeError: 运算符 '[]' 不支持 string 与 array / struct` | O(1) 报错；正解 `split("",s)` O(n)（不引入 O(n²)，反而消除） | 否 |
+| 2 | `range(lo,hi)` 半开 | `[lo,hi)`；`hi<=lo→[]`；1/2 参；**3 参 OUT** | 非 int→`TypeError`（`运算符 'range' 不支持 {t} 与 int`）；容量→`OverflowError` | O(hi−lo)，同阶 | 否（提示：旧报错输入变合法） |
+| 3 | 字符串方法族 | `indexOf/endsWith/padEnd/padStart/substring`；data-last、返回新值；`substring` 与 `slice` 同夹取 | 非 string/int→`TypeError`；空 fill→`ValueError: 填充串不能为空` | `indexOf` **最坏 O(n·m) 须标注**；其余 O(m)/O(width)/O(子串长) | 否 |
+| 4 | 文件 IO | `readFile→string` / `writeFile`·`appendFile→nil`；UTF-8、相对 CWD、不沙箱、不隐式转换 | `IOError`：`无法读取：{path}` / `无法读取：{path}（不是合法的 UTF-8 编码）` / `无法写入：{path}` / `无法追加：{path}` | O(文件大小) | **是**（新外部副作用面） |
+| 5 | `ord`/`chr` | `ord(c)→int`（恰 1 标量）；`chr(n)→string`（合法码点、非代理区） | 非 string/int→`TypeError`；`ValueError: ord 的参数必须是单个字符（Unicode 标量数 {n}）` / `chr 的参数不是合法的 Unicode 码点：{n}` | O(1) | 否 |
+| 6 | math `sin/cos/log/exp` | `f→float`；int→float 加宽 | IEEE：`log(0)→-Inf`、`log(负)→NaN`、`exp` 溢出→`+Inf`、`sin/cos(±Inf\|NaN)→NaN`（**非报错**） | O(1) | 否（提示：语义口径已定死） |
+| 7 | `contains(v,xs)` | 仅 array；用 `==`（深结构、环安全）；struct 用 `has` | 非 array→`TypeError`（`运算符 'contains' 不支持 {t} 与 array`） | **O(n) 须标注** | 否 |
 
-## 候选方案论证（要求 1）
-- **(a) 表达式递归计入运行期 `RecursionError`（10000）→ 否决**：① 把平凡表达式判为"递归超限"（名不符实）；② **不覆盖 `Drop`**（迭代解析仍可产任意深 AST，抛错后析构仍全深 ⇒ 仍需 c）；③ `eval_expr` 每个递归点 `depth++/--`（热路径侵入大）；④ 静态→运行期退化。
-- **(b) 解析期 AST 深度上限 → 采纳（主）**：静态确定；**一处同时护求值递归 + 析构递归**；复用 `SyntaxError` 子消息机制（不新增类）；**纯 parser 侧、零求值器改动**。
-- **(c) AST 迭代析构 → 可选加固（非规范要求）**：(b) 已使析构 ≤ 10000（≈2.7 MiB，≈95×）⇒ 冗余（YAGNI）；仅当日后**放宽** `AST_DEPTH_LIMIT` 时用（已写入 §10.9 R-S3 条件）。
-- **(d) 组合 → 部分采纳** = **(b)（+(c) 可选）**，**非** (a)+(b)+(c)。
+## 规范落点（逐处）
+- `docs/spec/semantics.md`：§4.2 新增 `[]` 索引补钉一条；§4.5.6 扩 NaN/Inf 产地；§4.5.7 扩加宽清单；§8.1 `TypeError`/`ValueError`/`IOError` 三触发行 + `ValueError` 细分表 3 行。`(+10/-6)`
+- `docs/spec/interface-contract.md`：§8.1 `ValueError`/`IOError` 消息；§10.7 `range` 拆行 + 字符串 5 行 + math 4 行 + `ord`/`chr` 2 行 + `contains` 1 行 + **新增「文件 IO」段** + 更新 math 注 / 加宽清单 + **新增「v1.1 补钉内置的边界与复杂度」段**；§10.8 `ValueMsg` 3 变体。`(+48/-6)`
+- `docs/spec/syntax.md`：**零改动**（`git diff --stat` 为空 ⇒ **无文法改动**）。
+- `.opencode/team/DECISIONS.md`：+1 条 ADR（标题 `[2026-09-27 22:50]`）。`(+113/-0)`
 
-## 量化论证（要求 4：实测 256 MiB 求值栈线程、debug；`上限 × 每层帧 ≤ 栈容量 / 安全系数`）
-| 路径 | 每层帧 | 上限 | 占用 | 安全系数 |
-|---|---|---|---|---|
-| 解析嵌套（R-S1，**未变**） | ≈18.3 KiB | 1000 | ≈17.9 MiB | **≥14×** |
-| **AST 求值递归（R-S3）** | ≈**2.93 KiB** | **10000** | **≈28.6 MiB** | **≈9×** |
-| AST 析构（`Drop`） | ≈0.27 KiB | 10000 | ≈2.7 MiB | **≈95×** |
-| 组合最坏（函数递归 + 深表达式） | 14.2 / 2.93 KiB | 10000 + 10000 | ≈167 MiB | **≈1.5×** |
-
-## 一手实测阈值（debug，256 MiB）
-| 构造 | 正常 | 崩溃（`-1073741571`） | 推出帧/层 |
-|---|---|---|---|
-| 纯 `1+1+…`（表达式语句） | T = **91650** | T = **91700**（`print` 前崩 ⇒ **求值递归**） | 求值 **2.93 KiB** |
-| 深链置于**未执行分支**（仅析构） | 800000 | 1600000 | 析构 **0.27 KiB** |
-| `9999` 层函数递归 + 深表达式 | + **42000** 项 | + 45000 项 | 函数帧 **14.2 KiB** |
-| `fn loop(9999)`（纯递归，达上限前） | exit 0 | — | — |
-- **订正**：[21:40] ADR 中"函数递归帧 ≈26 KiB / 10000 层需 256 MiB"为**粗估**；实测 ≈**14.2 KiB**，组合最坏 ≈**167 MiB**。
-
-## 规范落点（本轮，逐处；只改 `docs/spec/**` + `DECISIONS.md`）
-- `docs/spec/syntax.md`：新增 **§3.9 表达式 / 语句结构深度上限（AST 深度，v1.1 补钉，规范性）**（度量定义 + `AST_DEPTH_LIMIT = 10000` + 与 §3.8 分工 + 检查要求 + 正/反例）+ 内容映射 §3（`§3.1–§3.5、§3.8` → `§3.1–§3.5、§3.8、§3.9`）。**（`+42/-2` 累计）**
-- `docs/spec/semantics.md`：§4.5.5 新增「表达式 / 语句结构深度**不进入**运行期计数、由解析期 `AST_DEPTH_LIMIT` 约束」一条；§8.1 `SyntaxError` 触发列追加「AST / 结构嵌套过深」+ 细分消息表新增行 + 规范注。**（`+17/-3`）**
-- `docs/spec/interface-contract.md`：§10.8 新增 `SyntaxMsg::ExprTooDeep`（18→19）；§10.9 新增 **要求 R-S3（AST 深度）** + 扩充量化（求值/析构/调用帧）+ 原「关联残余（未裁定）」段替换为「**已裁定并收口**」+ 明确两度量口径不得合并。**（`+25/-5`）**
-- `.opencode/team/DECISIONS.md`：追加 ADR（标题 `[2026-09-27 22:15]`）。**（`+234/-0`）**
-
-## 影响面分析（只分析，未动其它文件）
-- **core-dev（唯一实现方，随后）**：`src/parser.rs` 加 `pub const AST_DEPTH_LIMIT: u32 = 10000` + 解析期**非递归**深度检查（自底向上累加 或 显式栈迭代遍历）+ 超限 `syntax(SyntaxMsg::ExprTooDeep, 节点 span)`；`src/error.rs` 加 `SyntaxMsg::ExprTooDeep` + `message()`（18→19，`class_name()` 仍 `SyntaxError`）。**零求值器改动**。
-- **unit（当前 474）**：`tests/unit/nesting_depth.rs` 的 `left_assoc_chains_are_not_counted`（5001 项 `+` / 1001 项 `[0]`）**均 < 10000 → 零影响**；其余无 >10000 深结构。建议补：常量断言 + `1+1+…`（10000 项 ⇒ 深度 10001）→ `SyntaxError` + 逐字符消息 + 9999 项 → 合法。
-- **黑盒（当前 87）**：无 >10000 深结构夹具（`deep_recursion.lfz` 是**函数**递归 → `RecursionError`，不属本条）⇒ **零失败**。建议 test-engineer（可选）补 1 负例 + `coverage-matrix.md` 加「结构深度（§3.8/§3.9）」行。
-- **docs-writer / ai-dx-engineer**：`docs/guide/errors.md`（细分表）、`README.md`、`ai/README.md`、skill 可补 `表达式嵌套过深（超过 10000 层）`（**本轮未改其文件**）。
-- **REQUIREMENTS.md**：**R-112（12 类）不受影响**；**R-401 的 spec 字节数再次陈旧**（本轮后 `syntax 70043 / semantics 37929 / interface 37050`）→ 建议 requirements-analyst 刷新。
+## 兼容性核对（全绿）
+A1 ✅ / A2 ✅ / A3 ✅（`log(0)` 明确非除零）/ A4 ✅ / A5 ✅ / A6 ✅（`contains` 继承环安全）/ A7 ✅ / §4.5 确定性 ✅（8 纯函数 + IO 排除）/ M6 ✅（动态宽度仍 OUT，`pad*` 替代）/ §2.3 ✅（无新记号）/ **12 类错误类 ✅（无第 13 类）**。唯一待核：既有单测中若有「`range` 二元报 `ArgCount`」断言 → 改 1 条（属 core/runtime 实现轮）。
 
 ## 进行中
 - （无）
 
 ## 阻塞 / 需要支持
-- 无。**需 team-lead 转派**：core-dev（R-S3 实现）、test-engineer（可选用例 + 覆盖矩阵行）、verifier（复现 `1+1+…`×10001 → exit 2 `SyntaxError`，非 `-1073741571`）、docs-writer / ai-dx-engineer（guide/skill 同步）。
-
-## 下一步计划
-- 待 core-dev 落地后，verifier 复现本 ADR 夹具（`1+1+…` 10000 项合法 / 10001 项 → `SyntaxError`；`a[0][0]…` 同理）；随后按 T11-05 v1.1 范围继续（`range(lo,hi)` / 字符串方法族 / 文件 IO 等，严格 ADR → spec → 实现 → 回归）。
+- 无。**需 team-lead 转派**：core-dev（`builtins.rs` 注册 15 内置 + `range` 2 参 + `error.rs` 3 个 `ValueMsg` 变体）、runtime-dev（15 内置语义 + 文件 IO）、test-engineer（黑盒正/负例 + coverage-matrix 行；文件 IO 夹具用 `Temp/`）、docs-writer / ai-dx-engineer（guide/skill 54→69 + 新消息 + D1–D7）、verifier（复验）、requirements-analyst（R-401 spec 字节数刷新）。
 
 ## 关键经验（写给未来的自己）
-- **"同一资源"才可合并上限；不同资源必须分别设限**：解析嵌套帧（18.3 KiB）与 AST 求值帧（2.93 KiB）差 ~6 倍，且两度量**正交**（`(((1)))` vs `1+1+…` 各偏一方）⇒ `PARSE_DEPTH_LIMIT` 与 `AST_DEPTH_LIMIT` **缺一不可**，不可互推。
-- **"报告的门槛"要自己二分**：core-dev 报"90000 正常 / 100000 崩"，二分后精确到 **91650/91700**；精确阈值才能反推每层帧大小。
-- **区分崩溃路径要设计夹具**：把深链放进**未执行分支**可隔离 `Drop`；把深表达式放进**递归最内层**可隔离"函数帧 + 表达式帧"叠加 ⇒ 一个缺陷、三条路径、三组帧大小。
-- **优先静态、确定、求值前拒绝**：解析期上限（`SyntaxError`）胜过运行期计数器——无热路径成本、无行为退化、且**一处同时护求值与析构**。
-- **错误类优先复用**：解析期已有 `SyntaxError` 子消息机制；让 `RecursionError` 出现在解析期会破坏「运行期 10 类都带 Traceback」的分类。
-- **YAGNI 也适用于加固**：上限已使析构有界（95× 余量）⇒ 不必额外实现 AST 迭代析构；只在放宽上限时才需要（条件已写进契约 R-S3）。
-- **订正旧粗估**：21:40 的"函数帧 ≈26 KiB"被本轮组合实测推翻（≈14.2 KiB）——**旧 ADR 的数字也要复核**。
-- **（沿用）深嵌套测试须在 `on_eval_stack` 大栈上跑**；**（沿用）绝不用 PowerShell `Set-Content`/`Out-File` 改源码/文档**（PS 5.1 ANSI 会毁 UTF-8 中文），只用 `edit`/`write`。
+- **"固化既有行为"也是规范工作**：`s[i]` 补钉不写一行代码，却把「未定义行为」变成「可判定条文」；**先读 `src/evaluator.rs` 的 `BadOperands` 调用点**才拿到精确消息模板（`{lt} 与 {rt}` 中 `rt` 在索引场景是**期望类型描述** `array / struct`，不是右操作数类型）——**规范必须照实现的事实写**。
+- **复杂度的"标注"和"隐藏"是两回事**：`indexOf` 最坏 O(n·m)、`contains` O(n) 是**显式标注**；真正的红线是**隐藏** O(n²)（如 `s[i]`、拼接循环）——7 项均不引入，且 #1 消除了一个。
+- **新增内置走 `[min,max]` 参数校验约定**：`range` 1/2 参无需新消息——`m<min→n=min`、`m>max→n=max`（源自 `Builtin::call`），照此写即可与既有 `input(prompt?)` 等一致。
+- **子消息可增、错误类不可增**：12 类红线用 `ValueMsg`/`IOError` 自由串承载新消息（6 条）全部落**既有类**内。
+- **外部 IO 与确定性的边界要写清**：文件 IO 与 `input()` 同属"环境依赖"，**不**动 §4.5「无魔法」纪律，也**不**改写 `seed` 的"唯一非确定源"表述。
+- **（沿用）绝不用 PowerShell `Set-Content`/`Out-File` 改源码/文档**（PS 5.1 ANSI 会毁 UTF-8 中文），只用 `edit`/`write`；**临时探针放 `Temp/` 并自清**。
+- **（观察）并发写者**：本轮期间 `docs/guide/{README,errors,reference,tutorial}.md` 被**他人在途**修改（非本架构师，疑 T11-04），`git diff --stat` 会一并显示——汇报时须显式区分。
