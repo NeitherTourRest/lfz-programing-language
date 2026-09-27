@@ -1,0 +1,325 @@
+=== T11 REVERIFICATION RAW EVIDENCE ===
+EXE: D:\XUE\2026fall\Program Design\lfz-programing language design\target\release\lfz.exe
+EXE_BYTES: 710144
+EXE_MTIME: 2026-09-27 22:26:59
+EXE_SHA256: 619AFD2ED0C194240A774D026C4B721A36384518D3899476A390BB118F433051
+
+### C1 repeat capacity
+CMD: lfz run t_repeat_big.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 190
+STDERR:
+Traceback (most recent call last):
+  File "t_repeat_big.lfz", line 2, in <module>
+    repeat(4611686018427387904, "ab")
+    ^
+OverflowError: 容量溢出：所需容量超出可分配上限
+
+### C2 range capacity
+CMD: lfz run t_range_big.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 182
+STDERR:
+Traceback (most recent call last):
+  File "t_range_big.lfz", line 2, in <module>
+    range(4611686018427387904)
+    ^
+OverflowError: 容量溢出：所需容量超出可分配上限
+
+### C3a par x1000 balanced
+CMD: lfz run t_par_1000_bal.lfz
+EXIT: 0  (0x00000000)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 0
+STDERR:
+
+
+### C3b par x1001 balanced
+CMD: lfz run t_par_1001_bal.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 3103
+STDERR:
+  File "t_par_1001_bal.lfz", line 2
+    (((…<1001 chars>…(((1)))…<1001 chars>…)))
+   …<1004 chars>…   ^
+SyntaxError: 嵌套深度超限（超过 1000 层）
+
+### C3c par x1001 prefix
+CMD: lfz run t_par_1001_pre.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 2101
+STDERR:
+  File "t_par_1001_pre.lfz", line 2
+    (((…<1001 chars>…(((
+   …<1004 chars>…   ^
+SyntaxError: 嵌套深度超限（超过 1000 层）
+
+### C3d brk x1001 prefix
+CMD: lfz run t_brk_1001_pre.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 2101
+STDERR:
+  File "t_brk_1001_pre.lfz", line 2
+    [[[…<1001 chars>…[[[
+   …<1004 chars>…   ^
+SyntaxError: 嵌套深度超限（超过 1000 层）
+
+### C3e brk x1001 balanced
+CMD: lfz run t_brk_1001_bal.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 3103
+STDERR:
+  File "t_brk_1001_bal.lfz", line 2
+    [[[…<1001 chars>…[[[1]]]…<1001 chars>…]]]
+   …<1004 chars>…   ^
+SyntaxError: 嵌套深度超限（超过 1000 层）
+
+### C3f struct x1001 prefix
+CMD: lfz run t_struct_1001_pre.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 10108
+STDERR:
+  File "t_struct_1001_pre.lfz", line 2
+    {"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{"a":{ …[line truncated, was 5009 chars]
+   …<5004 chars>…   ^
+SyntaxError: 嵌套深度超限（超过 1000 层）
+
+### C3g fn x1001 prefix
+CMD: lfz run t_fn_1001_pre.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 10108
+STDERR:
+  File "t_fn_1001_pre.lfz", line 2
+    fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){fn(){f …[line truncated, was 5009 chars]
+   …<5008 chars>…   ^
+SyntaxError: 嵌套深度超限（超过 1000 层）
+
+### C3h par x1001 json
+CMD: lfz --json run t_par_1001_bal.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 206
+STDOUT:
+{"ok":false,"error":"SyntaxError","message":"嵌套深度超限（超过 1000 层）","file":"t_par_1001_bal.lfz","line":2,"col":1001,"traceback":[{"file":"t_par_1001_bal.lfz","line":2,"func":"<module>"}]}
+STDERR_BYTES: 0
+STDERR:
+
+
+### C4a add 9999
+CMD: lfz run t_add_9999.lfz
+EXIT: 0  (0x00000000)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 0
+STDERR:
+
+
+### C4b add 10000
+CMD: lfz run t_add_10000.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 20100
+STDERR:
+  File "t_add_10000.lfz", line 2
+    1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+ …[line truncated, was 20003 chars]
+    ^
+SyntaxError: 表达式嵌套过深（超过 10000 层）
+
+### C4c add 10001
+CMD: lfz run t_add_10001.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 20102
+STDERR:
+  File "t_add_10001.lfz", line 2
+    1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+ …[line truncated, was 20005 chars]
+    ^
+SyntaxError: 表达式嵌套过深（超过 10000 层）
+
+### C4d add 100000
+CMD: lfz run t_add_100000.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 200101
+STDERR:
+  File "t_add_100000.lfz", line 2
+    1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+ …[line truncated, was 200003 chars]
+    ^
+SyntaxError: 表达式嵌套过深（超过 10000 层）
+
+### C4e idx 10001
+CMD: lfz run t_idx_10001.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 30102
+STDERR:
+  File "t_idx_10001.lfz", line 2
+    a[0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0 …[line truncated, was 30005 chars]
+    ^
+SyntaxError: 表达式嵌套过深（超过 10000 层）
+
+### C4f idx 100000
+CMD: lfz run t_idx_100000.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 300100
+STDERR:
+  File "t_idx_100000.lfz", line 2
+    a[0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0 …[line truncated, was 300002 chars]
+    ^
+SyntaxError: 表达式嵌套过深（超过 10000 层）
+
+### C4g add 10000 json
+CMD: lfz --json run t_add_10000.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 201
+STDOUT:
+{"ok":false,"error":"SyntaxError","message":"表达式嵌套过深（超过 10000 层）","file":"t_add_10000.lfz","line":2,"col":1,"traceback":[{"file":"t_add_10000.lfz","line":2,"func":"<module>"}]}
+STDERR_BYTES: 0
+STDERR:
+
+
+### C5a json run dump
+CMD: lfz --json run t_dumpjson.lfz
+EXIT: 0  (0x00000000)
+STDOUT_BYTES: 12
+STDOUT:
+{"ok":true}
+STDERR_BYTES: 8
+STDERR:
+z ： 5
+
+### C5b non-json run dump
+CMD: lfz run t_dumpjson.lfz
+EXIT: 0  (0x00000000)
+STDOUT_BYTES: 8
+STDOUT:
+z ： 5
+STDERR_BYTES: 0
+STDERR:
+
+
+### C5c json run dump interleave
+CMD: lfz --json run t_dumpjson_interleave.lfz
+EXIT: 0  (0x00000000)
+STDOUT_BYTES: 12
+STDOUT:
+{"ok":true}
+STDERR_BYTES: 4
+STDERR:
+A
+B
+
+### C6a write oob
+CMD: lfz run t_oob_write.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 142
+STDERR:
+Traceback (most recent call last):
+  File "t_oob_write.lfz", line 3, in <module>
+    a[5] = 9
+    ^
+IndexError: 下标 5 越界（长度 3）
+
+### C6b write oob json
+CMD: lfz --json run t_oob_write.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 186
+STDOUT:
+{"ok":false,"error":"IndexError","message":"下标 5 越界（长度 3）","file":"t_oob_write.lfz","line":3,"col":1,"traceback":[{"file":"t_oob_write.lfz","line":3,"func":"<module>"}]}
+STDERR_BYTES: 0
+STDERR:
+
+
+### C6c read oob
+CMD: lfz run t_oob_read.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 150
+STDERR:
+Traceback (most recent call last):
+  File "t_oob_read.lfz", line 3, in <module>
+    print(a[5])
+          ^
+IndexError: 下标 5 越界（长度 3）
+
+### C6d read oob json
+CMD: lfz --json run t_oob_read.lfz
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 184
+STDOUT:
+{"ok":false,"error":"IndexError","message":"下标 5 越界（长度 3）","file":"t_oob_read.lfz","line":3,"col":7,"traceback":[{"file":"t_oob_read.lfz","line":3,"func":"<module>"}]}
+STDERR_BYTES: 0
+STDERR:
+
+
+### C7 spec92 sample B
+CMD: lfz run t_s92_b.lfz
+EXIT: 0  (0x00000000)
+STDOUT_BYTES: 377
+STDOUT:
+Word ： <struct Word>
+countWords ： <fn countWords>
+text ： the quick the fox the dog a quick fox
+freq ： {a: {count: 1, text: "a"}, dog: {count: 1, text: "dog"}, fox: {count: 2, text: "fox"}, quick: {count: 2, text: "quick"}, the: {count: 3, text: "the"}}
+词频 Top 3
+         the │   3
+         fox │   2
+       quick │   2
+pi=3.142  n=00042  hex=2a  right=    42
+STDERR_BYTES: 0
+STDERR:
+
+
+### C9 json test
+CMD: lfz --json test
+EXIT: 2  (0x00000002)
+STDOUT_BYTES: 0
+STDOUT:
+
+STDERR_BYTES: 40
+STDERR:
+lfz test: 未发现测试目录 'tests'
+
+

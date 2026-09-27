@@ -1,0 +1,3 @@
+#42
+print("int5 = " + str(int("5")))
+print("intA = " + str(int("A")))

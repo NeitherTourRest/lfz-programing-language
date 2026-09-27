@@ -1,0 +1,200 @@
+#42
+// maze_bfs.lfz — randomized-DFS maze + BFS shortest path + ASCII render; assert() failure means exit 2.
+let W = 16
+let H = 12
+let START = 0
+let GOAL = W * H - 1
+// filled(n, v): return an array of n copies of value v
+fn filled(n, v) {
+    var xs = []
+    var i = 0
+    while i < n {
+        xs = push(v, xs)
+        i += 1
+    }
+    xs
+}
+seed(42)
+// per-cell walls: right[x+y*W] / down[x+y*W]; true = wall present. Border walls never carved.
+let right = filled(W * H, true)
+let down = filled(W * H, true)
+let visited = filled(W * H, false)
+// isLinked(a, b): is there a carved opening between adjacent cells a and b?
+fn isLinked(a, b) {
+    if div(a, W) == div(b, W) && abs(a - b) == 1 {
+        let lo = if a < b { a } else { b }
+        !right[lo]
+    } else {
+        if a % W == b % W && abs(a - b) == W {
+            let lo = if a < b { a } else { b }
+            !down[lo]
+        } else {
+            false
+        }
+    }
+}
+// ---- 1. generate the maze: iterative randomized DFS with an explicit stack ----
+visited[START] = true
+var stack = [START]
+while len(stack) > 0 {
+    var c = stack[len(stack) - 1]
+    var cx = c % W
+    var cy = div(c, W)
+    var ns = []
+    if cy > 0 {
+        if !visited[c - W] {
+            ns = push(c - W, ns)
+        }
+    }
+    if cy < H - 1 {
+        if !visited[c + W] {
+            ns = push(c + W, ns)
+        }
+    }
+    if cx > 0 {
+        if !visited[c - 1] {
+            ns = push(c - 1, ns)
+        }
+    }
+    if cx < W - 1 {
+        if !visited[c + 1] {
+            ns = push(c + 1, ns)
+        }
+    }
+    if len(ns) == 0 {
+        stack = pop(stack)
+    } else {
+        var pick = ns[randInt(0, len(ns))]
+        if pick == c - W {
+            down[pick] = false
+        }
+        if pick == c + W {
+            down[c] = false
+        }
+        if pick == c - 1 {
+            right[pick] = false
+        }
+        if pick == c + 1 {
+            right[c] = false
+        }
+        visited[pick] = true
+        stack = push(pick, stack)
+    }
+}
+var cnt = 0
+for v in visited {
+    if v {
+        cnt += 1
+    }
+}
+assert(cnt == W * H, "randomized DFS must visit every cell")
+// ---- 2. BFS shortest path from START to GOAL ----
+let dist = filled(W * H, -1)
+let prev = filled(W * H, -1)
+dist[START] = 0
+var queue = [START]
+var head = 0
+while head < len(queue) {
+    var c = queue[head]
+    head += 1
+    var cx = c % W
+    var cy = div(c, W)
+    if cy > 0 {
+        var n = c - W
+        if !down[n] && dist[n] == -1 {
+            dist[n] = dist[c] + 1
+            prev[n] = c
+            queue = push(n, queue)
+        }
+    }
+    if cy < H - 1 {
+        var n = c + W
+        if !down[c] && dist[n] == -1 {
+            dist[n] = dist[c] + 1
+            prev[n] = c
+            queue = push(n, queue)
+        }
+    }
+    if cx > 0 {
+        var n = c - 1
+        if !right[n] && dist[n] == -1 {
+            dist[n] = dist[c] + 1
+            prev[n] = c
+            queue = push(n, queue)
+        }
+    }
+    if cx < W - 1 {
+        var n = c + 1
+        if !right[c] && dist[n] == -1 {
+            dist[n] = dist[c] + 1
+            prev[n] = c
+            queue = push(n, queue)
+        }
+    }
+}
+assert(dist[GOAL] >= 0, "GOAL is unreachable from START")
+// ---- 3. reconstruct the path: walk prev[] from GOAL back to START, then reverse ----
+var path = []
+var cur = GOAL
+while cur != START {
+    path = push(cur, path)
+    cur = prev[cur]
+}
+path = push(START, path)
+var route = []
+var i = len(path) - 1
+while i >= 0 {
+    route = push(path[i], route)
+    i -= 1
+}
+// ---- 4. self-checks ----
+assert(len(route) == dist[GOAL] + 1, "path length must equal BFS distance")
+assert(route[0] == START, "path must start at START")
+assert(route[len(route) - 1] == GOAL, "path must end at GOAL")
+var j = 0
+while j + 1 < len(route) {
+    assert(isLinked(route[j], route[j + 1]), "path step must cross a carved wall")
+    j += 1
+}
+// ---- 5. render: (2W+1) x (2H+1) char grid; path cells marked with * ----
+var onpath = filled(W * H, false)
+for p in route {
+    onpath[p] = true
+}
+var rows = []
+rows = push(repeat(2 * W + 1, "#"), rows)
+var y = 0
+while y < H {
+    var row = "#"
+    var x = 0
+    while x < W {
+        row = row + (if onpath[x + y * W] { "*" } else { " " })
+        row = row + (if right[x + y * W] { "#" } else { " " })
+        x += 1
+    }
+    rows = push(row, rows)
+    var wrow = ""
+    x = 0
+    while x < W {
+        wrow = wrow + (if down[x + y * W] { "#" } else { " " })
+        wrow = wrow + "#"
+        x += 1
+    }
+    wrow = wrow + "#"
+    rows = push(wrow, rows)
+    y += 1
+}
+var routeStr = ""
+i = 0
+while i < len(route) {
+    if i > 0 {
+        routeStr = routeStr + " -> "
+    }
+    routeStr = routeStr + str(route[i])
+    i += 1
+}
+print("randomized-DFS maze " + str(W) + "x" + str(H) + " (seed 42); START=" + str(START) + " GOAL=" + str(GOAL))
+print(join("\n", rows))
+print("BFS distance (edges): " + str(dist[GOAL]))
+print("path: " + routeStr)
+print("OK: maze connected, path valid, all assertions passed")

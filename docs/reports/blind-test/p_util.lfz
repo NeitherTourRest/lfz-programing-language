@@ -1,0 +1,9 @@
+#42
+// string ordering single chars; repeat(); format specifiers
+let alpha = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_-"
+print("len alpha = " + str(len(alpha)))
+print("a vs z = " + str("a" < "z"))
+print("Z vs a = " + str("Z" < "a"))
+print("x vs A = " + str("x" > "A"))
+print("rep = " + repeat(5, "#"))
+print("fmt = ${42:>4}|${7:03d}|${3.14159:.2f}")

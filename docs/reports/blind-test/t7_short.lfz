@@ -1,0 +1,19 @@
+#42
+let a = []
+if len(a) == 5 && a[0] == 1 { print("BAD no-short-circuit") } else { print("short-circuits ok") }
+fn eat(cs, st, ch) {
+    if st.i < len(cs) && cs[st.i] == ch {
+        st.i += 1
+        return true
+    }
+    false
+}
+let st = { i: 0 }
+let cs = split("", "abc")
+print(eat(cs, st, "a"))
+print(st.i)
+print(eat(cs, st, "z"))
+print(st.i)
+print(eat(cs, st, "b"))
+print(eat(cs, st, "z"))
+print(st.i)

@@ -1,0 +1,5 @@
+#42
+let w = 5
+print("A=[${"ab":>5}]")
+print("B=[${"ab":>w}]")
+print("C=[${"ab":>${w}}]")

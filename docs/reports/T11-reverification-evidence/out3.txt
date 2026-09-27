@@ -1,0 +1,42 @@
+### t_deep_eq.lfz
+EXIT: 2 (0x00000002)  TIME: 1012ms
+STDOUT: 
+STDERR_FIRST: Traceback (most recent call last):
+STDERR_LAST: RecursionError: 递归深度超限（超过 10000 层）
+
+### t_deep_disp2.lfz
+EXIT: 0 (0x00000000)  TIME: 167374ms
+STDOUT: 2000002
+STDERR_FIRST: 
+STDERR_LAST: 
+
+### t_pipe_9000.lfz
+EXIT: 0 (0x00000000)  TIME: 1017ms
+STDOUT: 1
+STDERR_FIRST: 
+STDERR_LAST: 
+
+### t_pipe_100000.lfz
+EXIT: 2 (0x00000002)  TIME: 1020ms
+STDOUT: 
+STDERR_FIRST:   File "t_pipe_100000.lfz", line 3
+STDERR_LAST: SyntaxError: 表达式嵌套过深（超过 10000 层）
+
+### t_take_huge.lfz
+EXIT: 0 (0x00000000)  TIME: 1014ms
+STDOUT: 3
+STDERR_FIRST: 
+STDERR_LAST: 
+
+### t_replace.lfz
+EXIT: 0 (0x00000000)  TIME: 1027ms
+STDOUT: bbb
+STDERR_FIRST: 
+STDERR_LAST: 
+
+### t_split_empty.lfz
+EXIT: 0 (0x00000000)  TIME: 1028ms
+STDOUT: ["a", "b", "c"]
+STDERR_FIRST: 
+STDERR_LAST: 
+

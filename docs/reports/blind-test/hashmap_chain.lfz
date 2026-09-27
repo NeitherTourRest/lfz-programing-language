@@ -1,0 +1,311 @@
+#42
+// ============================================================
+// hashmap_chain.lfz — 从零实现哈希表（链地址法 / separate chaining）
+// ------------------------------------------------------------
+// 特性：
+//   * 桶数组 + 每条链是一个 [key, value] 对的数组
+//   * 自定义字符串哈希（djb2 变体）：字符先用"字母表 + 二分查找"
+//     得到索引（LFZ 没有 ord()，改用字符串比较实现）
+//   * put / get / remove / keys / size
+//   * 碰撞计数 + 负载因子统计
+//   * 负载因子 > 0.75 时自动扩容（resize + 全部 rehash）
+//   * 桶长度直方图 + assert 自检（全部可取出 / 删除后缺失 / size 正确）
+// 仅使用 lfz-programming skill 中列出的语法。
+// ============================================================
+
+// 参与哈希的字符表（已按字节序升序排列；'0'-'9' < 'A'-'Z' < '_' < 'a'-'z'）
+let ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-"
+let CAPACITY0 = 8        // 初始桶数
+let LOAD_LIMIT = 0.75    // 负载因子阈值
+let MOD = 1000003        // djb2 累加时的模（防 i64 溢出）
+
+// charIndex(c): 用二分查找在 ALPHABET 中找字符 c 的位置（0..63），找不到返回 -1。
+// 字符串比较就是字节序比较，所以单字符也能用 < / > / ==。
+fn charIndex(c) {
+    var lo = 0
+    var hi = len(ALPHABET) - 1
+    while lo <= hi {
+        var mid = div(lo + hi, 2)
+        var m = ALPHABET[mid]
+        if c == m {
+            return mid
+        } else {
+            if c < m {
+                hi = mid - 1
+            } else {
+                lo = mid + 1
+            }
+        }
+    }
+    -1
+}
+
+// hashStr(key, cap): 自定义字符串哈希（djb2 变体），返回 [0, cap) 的桶号。
+// 与 / 不同，% 是 Python 式取模（结果符号随除数），除数为正时结果恒 >= 0。
+fn hashStr(key, cap) {
+    var h = 5381
+    var i = 0
+    while i < len(key) {
+        var idx = charIndex(key[i])
+        if idx < 0 {
+            idx = 0
+        }
+        h = (h * 33 + idx) % MOD
+        i += 1
+    }
+    h % cap
+}
+
+// 哈希表本体：struct + 方法。所有状态都住在 self 里。
+struct HashMap {
+    buckets: [],
+    capacity: CAPACITY0,
+    size: 0,
+    collisions: 0,
+    resizes: 0,
+
+    // 初始化：cap 个空桶
+    fn init(cap) {
+        var bs = []
+        var i = 0
+        while i < cap {
+            bs = push([], bs)
+            i += 1
+        }
+        self.buckets = bs
+        self.capacity = cap
+    },
+
+    // 在链上找 key 的位置，找不到返回 -1
+    fn findIn(b, key) {
+        var i = 0
+        while i < len(b) {
+            if b[i][0] == key {
+                return i
+            }
+            i += 1
+        }
+        -1
+    },
+
+    // put(key, v): 新增返回 true；覆盖返回 false。记录碰撞、自动扩容。
+    fn put(key, v) {
+        var h = hashStr(key, self.capacity)
+        var b = self.buckets[h]
+        var at = self.findIn(b, key)
+        if at >= 0 {
+            b[at][1] = v
+            return false
+        } else {
+            // 新键：链非空 -> 记一次碰撞
+            if len(b) > 0 {
+                self.collisions += 1
+            }
+            b = push([key, v], b)
+            self.buckets[h] = b
+            self.size += 1
+            if self.load() > LOAD_LIMIT {
+                self.resize()
+            }
+            return true
+        }
+    },
+
+    // get(key): 命中返回 value，未命中返回 nil
+    fn get(key) {
+        var h = hashStr(key, self.capacity)
+        var b = self.buckets[h]
+        var at = self.findIn(b, key)
+        if at >= 0 {
+            b[at][1]
+        } else {
+            nil
+        }
+    },
+
+    // remove(key): 重建该链（去掉目标对），返回被删的值；不存在返回 nil
+    fn remove(key) {
+        var h = hashStr(key, self.capacity)
+        var b = self.buckets[h]
+        var at = self.findIn(b, key)
+        if at < 0 {
+            return nil
+        } else {
+            var removed = b[at][1]
+            var nb = []
+            var i = 0
+            while i < len(b) {
+                if i != at {
+                    nb = push(b[i], nb)
+                }
+                i += 1
+            }
+            self.buckets[h] = nb
+            self.size -= 1
+            return removed
+        }
+    },
+
+    // resize(): 容量翻倍 + 全量 rehash。旧碰撞计数作废后重算。
+    fn resize() {
+        var old = self.buckets
+        var oldCap = self.capacity
+        self.init(oldCap * 2)
+        var i = 0
+        while i < len(old) {
+            var j = 0
+            while j < len(old[i]) {
+                self.put(old[i][j][0], old[i][j][1])
+                j += 1
+            }
+            i += 1
+        }
+        self.resizes += 1
+    },
+
+    // load(): 当前负载因子 size / capacity
+    fn load() => self.size / self.capacity,
+
+    // keys(): 按插入顺序收集所有 key
+    fn keys() {
+        var ks = []
+        var i = 0
+        while i < len(self.buckets) {
+            var j = 0
+            while j < len(self.buckets[i]) {
+                ks = push(self.buckets[i][j][0], ks)
+                j += 1
+            }
+            i += 1
+        }
+        ks
+    },
+
+    // 自检：直方图推出的碰撞数 == 计数器；每个桶都是合法链
+    fn verify() {
+        var expect = 0
+        var i = 0
+        while i < len(self.buckets) {
+            var l = len(self.buckets[i])
+            if l > 1 {
+                expect += l - 1
+            }
+            i += 1
+        }
+        assert(expect == self.collisions, "collision counter vs histogram mismatch")
+        assert(self.size == len(self.keys()), "size vs keys mismatch")
+    },
+
+    // histogram(): 打印桶长度分布
+    fn histogram() {
+        var lens = []
+        var i = 0
+        while i < len(self.buckets) {
+            lens = push(len(self.buckets[i]), lens)
+            i += 1
+        }
+        // 找最长链（用于缩放条长）
+        var maxLen = 0
+        var m = 0
+        while m < len(lens) {
+            if lens[m] > maxLen {
+                maxLen = lens[m]
+            }
+            m += 1
+        }
+        print("bucket-length histogram (bar scaled to longest chain):")
+        var l = 0
+        while l <= maxLen {
+            // 统计长度为 l 的桶数
+            var cnt = 0
+            var k = 0
+            while k < len(lens) {
+                if lens[k] == l {
+                    cnt += 1
+                }
+                k += 1
+            }
+            if cnt > 0 {
+                print("  len ${l:>2}: ${cnt:>3} buckets  " + repeat(cnt, "#"))
+            }
+            l += 1
+        }
+    },
+}
+
+// ============================================================
+// 驱动：插入一批 key、验证、删除、再验证、输出报告
+// ============================================================
+
+let m = HashMap { buckets: [[]] }
+m.init(CAPACITY0)
+
+print("== LFZ hashmap (separate chaining) ==")
+print("initial capacity = ${m.capacity}")
+
+// --- 1. 插入 40 个数字键 + 6 个单词键 ---
+var n = 0
+while n < 40 {
+    var pad = if n < 10 { "0" } else { "" }
+    m.put("key${pad}${n}", n * 10)
+    n += 1
+}
+m.put("alpha", 100)
+m.put("beta", 200)
+m.put("gamma", 300)
+m.put("delta", 400)
+m.put("omega", 500)
+m.put("zeta", 600)
+
+// --- 2. 更新已有键（put 返回 false） ---
+let wasNew = m.put("key07", 777)
+assert(!wasNew, "update of existing key must not be a new insert")
+assert(m.get("key07") == 777, "updated value retrievable")
+
+// --- 3. 断言：46 个 key 全部可取出且值正确 ---
+var i = 0
+while i < 40 {
+    var p = if i < 10 { "0" } else { "" }
+    let got = m.get("key${p}${i}")
+    assert(type(got) != "nil", "key ${p}${i} must be present")
+    assert(got == i * 10, "value of key ${p}${i} is wrong")
+    i += 1
+}
+assert(m.get("alpha") == 100, "alpha retrievable")
+assert(m.get("beta") == 200, "beta retrievable")
+assert(m.get("gamma") == 300, "gamma retrievable")
+assert(m.get("delta") == 400, "delta retrievable")
+assert(m.get("omega") == 500, "omega retrievable")
+assert(m.get("zeta") == 600, "zeta retrievable")
+assert(m.size == 46, "size should be 46 after inserts")
+
+print("after insert: size=${m.size}, capacity=${m.capacity}, load=${m.load():.3f}, collisions=${m.collisions}, resizes=${m.resizes}")
+
+// --- 4. 删除若干 key，断言"被删者缺失、其余仍在" ---
+let rv1 = m.remove("key05")
+let rv2 = m.remove("beta")
+let rv3 = m.remove("gamma")
+assert(rv1 == 50, "remove returns removed value")
+assert(rv2 == 200, "remove returns removed value (beta)")
+assert(rv3 == 300, "remove returns removed value (gamma)")
+assert(type(m.get("key05")) == "nil", "removed key05 must be absent")
+assert(type(m.get("beta")) == "nil", "removed beta must be absent")
+assert(type(m.get("gamma")) == "nil", "removed gamma must be absent")
+assert(m.size == 43, "size should be 43 after 3 removals")
+assert(type(m.remove("no-such-key")) == "nil", "removing missing key returns nil")
+
+// --- 5. 剩余 43 个 key 必须全部还在 ---
+let allKeys = m.keys()
+assert(len(allKeys) == m.size, "keys() length equals size")
+var j = 0
+while j < len(allKeys) {
+    assert(type(m.get(allKeys[j])) != "nil", "all remaining keys retrievable")
+    j += 1
+}
+
+// --- 6. 内部一致性 + 报告 ---
+m.verify()
+print("after remove: size=${m.size}, capacity=${m.capacity}, load=${m.load():.3f}, collisions=${m.collisions}, resizes=${m.resizes}")
+m.histogram()
+print("first keys: " + allKeys[0] + " " + allKeys[1] + " " + allKeys[2])
+print("all self-checks passed")

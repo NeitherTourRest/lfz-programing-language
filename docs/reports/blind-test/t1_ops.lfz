@@ -1,0 +1,46 @@
+#42
+fn isDigit(c) => c >= "0" && c <= "9"
+print(isDigit("5"))
+print(isDigit("x"))
+print("abc" < "abd")
+print("abc" == "abc")
+let st = { i: 0 }
+st.i += 1
+print(st.i)
+let cs = split("", "ab")
+print(len(cs))
+print(join("-", cs))
+print(replace("\"", "\\\"", "a\"b"))
+print(int("-5"))
+print(float("-1.5"))
+print(str(2.5))
+print(str(7))
+let e1 = { t: "x", n: 1 }
+let e2 = { t: "x", n: 1 }
+print(e1 == e2)
+let e3 = { t: "y", n: 2 }
+print(e1 == e3)
+fn hasBreak(xs) {
+    var j = 0
+    while true {
+        if j >= len(xs) { break }
+        j += 1
+    }
+    j
+}
+print(hasBreak([9, 9, 9]))
+print(!true)
+fn okVal(v) => ({ ok: true, v: v })
+let r1 = okVal(42)
+print(r1.ok)
+print(r1.v)
+fn g(xs) => len(xs)
+print(g([1, 2, 3]))
+let nm = "inner"
+print("wrapped ${nm}")
+print("nested ${"deep"}")
+let x = [1, { a: 2 }, [3]]
+print(x[1].a)
+print(x[2][0])
+assert(true, "assert-with-msg works")
+print("done")

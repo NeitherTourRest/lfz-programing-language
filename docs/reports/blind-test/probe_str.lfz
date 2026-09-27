@@ -1,0 +1,7 @@
+#42
+let s = "abc"
+print("len=" + str(len(s)))
+let cs = split("", s)
+print("chars=" + str(cs))
+print("cs[0]=" + cs[0])
+print(s[0])

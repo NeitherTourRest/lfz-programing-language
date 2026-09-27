@@ -1,0 +1,130 @@
+#42
+fn isDigit(c) => c >= "0" && c <= "9"
+fn okVal(v) => ({ ok: true, v: v })
+fn errVal(msg) => ({ ok: false, msg: msg })
+fn missing() => ({ type: "missing" })
+fn eat(cs, st, ch) {
+    if st.i < len(cs) && cs[st.i] == ch {
+        st.i += 1
+        return true
+    }
+    false
+}
+fn eatLit(lit, cs, st) {
+    if st.i + len(lit) > len(cs) { return false }
+    var j = 0
+    while j < len(lit) {
+        if cs[st.i + j] != lit[j] { return false }
+        j += 1
+    }
+    st.i += len(lit)
+    true
+}
+fn skipWs(cs, st) {
+    while st.i < len(cs) {
+        let c = cs[st.i]
+        if c == " " || c == "\t" || c == "\n" || c == "\r" { st.i += 1 } else { break }
+    }
+}
+fn parseString(cs, st) {
+    var s = ""
+    while st.i < len(cs) {
+        let c = cs[st.i]
+        st.i += 1
+        if c == "\"" { return okVal({ type: "str", s: s }) }
+        if c == "\\" {
+            if st.i >= len(cs) { return errVal("bad escape at end of input") }
+            let e = cs[st.i]
+            s = s + (if e == "n" { "\n" } else if e == "t" { "\t" } else if e == "r" { "\r" } else if e == "\"" { "\"" } else if e == "\\" { "\\" } else { e })
+            st.i += 1
+        } else { s = s + c }
+    }
+    errVal("unterminated string")
+}
+fn parseNumber(cs, st) {
+    var s = ""
+    if eat(cs, st, "-") { s = "-" }
+    var digits = 0
+    while st.i < len(cs) {
+        if !isDigit(cs[st.i]) { break }
+        s = s + cs[st.i]
+        st.i += 1
+        digits += 1
+    }
+    var isF = false
+    if st.i < len(cs) && cs[st.i] == "." {
+        isF = true
+        s = s + "."
+        st.i += 1
+        while st.i < len(cs) {
+            if !isDigit(cs[st.i]) { break }
+            s = s + cs[st.i]
+            st.i += 1
+            digits += 1
+        }
+    }
+    if digits == 0 { return errVal("invalid number") }
+    if isF { return okVal({ type: "num", n: float(s) }) }
+    okVal({ type: "num", n: int(s) })
+}
+fn parseObj(cs, st) {
+    var pairs = []
+    while true {
+        skipWs(cs, st)
+        if eat(cs, st, "}") { return okVal({ type: "obj", pairs: pairs }) }
+        if st.i >= len(cs) { return errVal("unterminated object") }
+        if cs[st.i] != "\"" { return errVal("expected string key at ${st.i}") }
+        let kr = parseString(cs, st)
+        if !kr.ok { return kr }
+        skipWs(cs, st)
+        if !eat(cs, st, ":") { return errVal("expected ':' after key") }
+        let vr = parseValue(cs, st)
+        if !vr.ok { return vr }
+        pairs = push([kr.v.s, vr.v], pairs)
+        skipWs(cs, st)
+        if eat(cs, st, "}") { return okVal({ type: "obj", pairs: pairs }) }
+        if !eat(cs, st, ",") { return errVal("expected ',' or '}' in object") }
+    }
+}
+fn parseArr(cs, st) {
+    var items = []
+    while true {
+        skipWs(cs, st)
+        if eat(cs, st, "]") { return okVal({ type: "arr", items: items }) }
+        let vr = parseValue(cs, st)
+        if !vr.ok { return vr }
+        items = push(vr.v, items)
+        skipWs(cs, st)
+        if eat(cs, st, "]") { return okVal({ type: "arr", items: items }) }
+        if !eat(cs, st, ",") { return errVal("expected ',' or ']' in array") }
+    }
+}
+fn parseValue(cs, st) {
+    skipWs(cs, st)
+    if st.i >= len(cs) { return errVal("unexpected end of input") }
+    let c = cs[st.i]
+    if eat(cs, st, "{") { return parseObj(cs, st) }
+    if eat(cs, st, "[") { return parseArr(cs, st) }
+    if eat(cs, st, "\"") { return parseString(cs, st) }
+    if c == "-" || isDigit(c) { return parseNumber(cs, st) }
+    if eatLit(["t", "r", "u", "e"], cs, st) { return okVal({ type: "bool", b: true }) }
+    if eatLit(["f", "a", "l", "s", "e"], cs, st) { return okVal({ type: "bool", b: false }) }
+    if eatLit(["n", "u", "l", "l"], cs, st) { return okVal({ type: "null" }) }
+    errVal("unexpected character '" + c + "' at ${st.i}")
+}
+fn parse(src) {
+    let cs = split("", src)
+    let st = { i: 0 }
+    let r = parseValue(cs, st)
+    if !r.ok { return r }
+    skipWs(cs, st)
+    if st.i != len(cs) { return errVal("trailing characters at ${st.i}") }
+    r
+}
+let doc = "{\"name\": \"lfz\", \"version\": 1.5, \"stable\": true, \"notes\": null, \"tags\": [\"lang\", \"parser\"], \"nested\": {\"a\": [10, 20, {\"b\": \"deep\"}], \"c\": 0}}"
+let r = parse(doc)
+print("ok=${r.ok}")
+if !r.ok { print("MSG=${r.msg}") }
+let r2 = parse("{\"a\": 1}")
+print("simple ok=${r2.ok}")
+if !r2.ok { print("MSG2=${r2.msg}") }

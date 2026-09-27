@@ -1,0 +1,4 @@
+#42
+fn f(c) { if c { 1 } else { 2 } }
+print(f(true))
+print(f(false))

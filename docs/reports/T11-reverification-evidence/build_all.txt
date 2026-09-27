@@ -1,0 +1,8 @@
+﻿cargo :    Compiling lfz v1.0.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+所在位置 行:5 字符: 6
++ $b = cargo build --all-targets 2>&1
++      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (   Compiling lf...anguage design):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.89s

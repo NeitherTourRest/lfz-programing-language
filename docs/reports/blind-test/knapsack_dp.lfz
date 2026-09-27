@@ -1,0 +1,199 @@
+#42
+// 0/1 knapsack: dynamic programming + decision backtracking + ASCII table printing.
+// Built strictly from the syntax documented in the lfz-programming skill.
+
+struct Item {
+    name: "",
+    weight: 0,
+    value: 0,
+    fn tag() => "${self.name}(${self.weight},${self.value})",
+}
+struct Solution {
+    table: [],
+    chosen: [],
+    value: 0,
+}
+
+// Zero-filled row of length n+1 (capacities 0..n).
+fn make_row(n) {
+    var row = []
+    var i = 0
+    while i <= n {
+        row = push(0, row)
+        i += 1
+    }
+    row
+}
+
+// Right-pad a string with spaces to width w.
+fn padr(s, w) {
+    var r = s
+    while len(r) < w {
+        r = r + " "
+    }
+    r
+}
+
+// Sum of weights of a list of items.
+fn total_weight(xs) {
+    var s = 0
+    var i = 0
+    while i < len(xs) {
+        s += xs[i].weight
+        i += 1
+    }
+    s
+}
+
+// Sum of values of a list of items.
+fn total_value(xs) {
+    var s = 0
+    var i = 0
+    while i < len(xs) {
+        s += xs[i].value
+        i += 1
+    }
+    s
+}
+
+// DP over items x capacity, then backtrack the chosen set.
+fn solve(items, cap) {
+    let n = len(items)
+    var table = []
+    var i = 0
+    while i <= n {
+        table = push(make_row(cap), table)
+        i += 1
+    }
+    var it = nil
+    var j = 0
+    var skip = 0
+    var take = 0
+    i = 1
+    while i <= n {
+        it = items[i - 1]
+        j = 0
+        while j <= cap {
+            skip = table[i - 1][j]
+            if it.weight <= j {
+                take = table[i - 1][j - it.weight] + it.value
+                if take > skip {
+                    table[i][j] = take
+                } else {
+                    table[i][j] = skip
+                }
+            } else {
+                table[i][j] = skip
+            }
+            j += 1
+        }
+        i += 1
+    }
+    // Backtrack from table[n][cap]: keep item k iff taking it led here.
+    var chosen = []
+    var rem = cap
+    var k = n
+    while k > 0 {
+        it = items[k - 1]
+        if it.weight <= rem {
+            if table[k][rem] == table[k - 1][rem - it.weight] + it.value {
+                chosen = insert(0, it, chosen)
+                rem = rem - it.weight
+            }
+        }
+        k -= 1
+    }
+    Solution { table: table, chosen: chosen, value: table[n][cap] }
+}
+
+// Print the DP table as an aligned ASCII grid.
+// step == 1 prints every row; step > 1 prints every step-th row plus the last.
+fn print_table(table, items, cap, step) {
+    let n = len(items)
+    var head = "item"
+    var j = 0
+    while j <= cap {
+        head = head + "${j:>3}"
+        j += 1
+    }
+    print(head)
+    print(repeat(len(head), "-"))
+    var i = 0
+    var line = ""
+    var label = ""
+    while i <= n {
+        if i == 0 {
+            label = "none"
+        } else {
+            label = items[i - 1].name
+        }
+        line = padr(label, 5)
+        j = 0
+        while j <= cap {
+            line = line + "${table[i][j]:>3}"
+            j += 1
+        }
+        if step == 1 || i % step == 0 || i == n {
+            print(line)
+        }
+        i += 1
+    }
+}
+
+// Human-readable summary of a solution.
+fn report(sol, cap, label) {
+    print("== ${label} ==")
+    print("capacity ${cap}: optimum value = ${sol.value}")
+    print("chosen: ${len(sol.chosen)} item(s), weight ${total_weight(sol.chosen)} <= ${cap}, value ${total_value(sol.chosen)}")
+    var i = 0
+    while i < len(sol.chosen) {
+        print("  - " + sol.chosen[i].tag())
+        i += 1
+    }
+    if len(sol.chosen) == 0 {
+        print("  (no item fits)")
+    }
+}
+
+// instance 1: classic 4-item problem
+let cap1 = 10
+let items1 = [
+    Item { name: "A", weight: 5, value: 10 },
+    Item { name: "B", weight: 4, value: 7 },
+    Item { name: "C", weight: 6, value: 8 },
+    Item { name: "D", weight: 3, value: 6 },
+]
+let sol1 = solve(items1, cap1)
+print_table(sol1.table, items1, cap1, 1)
+report(sol1, cap1, "instance 1 (classic)")
+// instance 2: second instance, table printed as a slice
+let cap2 = 6
+let items2 = [
+    Item { name: "X", weight: 2, value: 3 },
+    Item { name: "Y", weight: 3, value: 4 },
+    Item { name: "Z", weight: 4, value: 5 },
+    Item { name: "W", weight: 1, value: 2 },
+]
+let sol2 = solve(items2, cap2)
+print_table(sol2.table, items2, cap2, 2)
+report(sol2, cap2, "instance 2 (slice view)")
+// instance 3: nothing fits
+let cap3 = 3
+let items3 = [
+    Item { name: "P", weight: 5, value: 100 },
+    Item { name: "Q", weight: 4, value: 50 },
+]
+let sol3 = solve(items3, cap3)
+print_table(sol3.table, items3, cap3, 1)
+report(sol3, cap3, "instance 3 (no item fits)")
+
+// self-checks
+assert(sol1.value == 17, "instance1 optimum should be 17")
+assert(sol2.value == 9, "instance2 optimum should be 9")
+assert(sol3.value == 0, "instance3 optimum should be 0")
+assert(total_weight(sol1.chosen) <= cap1, "instance1 chosen weight must fit")
+assert(total_weight(sol2.chosen) <= cap2, "instance2 chosen weight must fit")
+assert(total_weight(sol3.chosen) <= cap3, "instance3 chosen weight must fit")
+assert(total_value(sol1.chosen) == sol1.value, "instance1 chosen value must equal optimum")
+assert(len(sol3.chosen) == 0, "instance3 must pick nothing")
+print("all self-checks passed")

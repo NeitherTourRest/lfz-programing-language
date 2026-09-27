@@ -1,0 +1,3 @@
+#42
+let s = "hello world"
+print(str(s == "hello world"))

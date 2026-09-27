@@ -1,0 +1,13 @@
+#42
+// can a method reassign a whole field of self (e.g. buckets)?
+struct M {
+    xs: [],
+    fn grow(v) {
+        var ys = [v, v, v]
+        self.xs = ys
+    },
+}
+let m = M { xs: [1] }
+m.grow(7)
+print("self.xs after grow = " + str(m.xs))
+print("len = " + str(len(m.xs)))

@@ -1,0 +1,4 @@
+#42
+let xs = []
+let c = len(xs) > 0 && xs[0] == 1
+print("shortcircuit=" + str(c))

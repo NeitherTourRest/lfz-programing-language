@@ -1,0 +1,3 @@
+#42
+print("r1=" + str(range(3)))
+print("r2=" + str(range(1, 4)))

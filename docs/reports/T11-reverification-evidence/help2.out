@@ -1,0 +1,34 @@
+LFZ 解释器
+
+用法:
+  lfz <file>           运行 LFZ 脚本（裸调用；等价 lfz run <file>）
+  lfz run <file>       运行 LFZ 脚本
+  lfz test [路径...]   运行黑盒测试（默认发现 tests/**/*.lfz，排除 tests/fixtures）
+  lfz --help, -h       显示本帮助
+  lfz --version, -V    显示版本
+
+文件与前导（#42）:
+  裸调用 lfz <file> 等价 lfz run <file>，唯一差别是入口校验：
+    lfz <file>       要求 <file> 以 .lfz 结尾（大小写不敏感）；否则报错并退出码 2。
+    lfz run <file>   接受任意路径（不校验扩展名）。
+  是否要求 #42 前导按扩展名判定（§2.2.0）:
+    .lfz 文件        首行必须为 #42，否则 CosmosAnswerError（退出码 2）；
+    非 .lfz 文件     豁免 #42 前导（如 .txt / 无扩展名），按普通源加载执行。
+
+选项:
+  --json               以机器可读 JSON 输出（stdout 只写 JSON；程序输出与人类可读诊断转 stderr）
+                       位置不限，以下写法等价：
+                         lfz --json <file>       lfz <file> --json
+                         lfz run --json <file>   lfz run <file> --json
+
+退出码:
+  0  成功（所有用例通过）
+  1  测试有用例失败（assert / fail 抛 AssertionError）
+  2  CLI 参数错误 / LFZ 语法或运行时错误 / 用例 error / 运行环境错误
+
+示例:
+  lfz examples/hello.lfz
+  lfz run examples/hello.lfz
+  lfz --json examples/hello.lfz
+  lfz test
+  lfz test --json tests/smoke

@@ -1,0 +1,104 @@
+### t_fmt_width.lfz
+EXIT: 2 (0x00000002)  TIME: 1020 ms
+STDOUT: 
+STDERR: Traceback (most recent call last):
+  File "t_fmt_width.lfz", line 3, in <module>
+    print("${x:99999999}")
+          ^
+ValueError: 格式说明符非法：'99999999'
+
+### t_fmt_width2.lfz
+EXIT: 2 (0x00000002)  TIME: 1011 ms
+STDOUT: 
+STDERR: Traceback (most recent call last):
+  File "t_fmt_width2.lfz", line 3, in <module>
+    print("${x:1000001}")
+          ^
+ValueError: 格式说明符非法：'1000001'
+
+### t_fmt_width_ok.lfz
+EXIT: 0 (0x00000000)  TIME: 1030 ms
+STDOUT:   …<1000000 chars>…   5
+STDERR: 
+
+### t_fmt_prec.lfz
+EXIT: 2 (0x00000002)  TIME: 1021 ms
+STDOUT: 
+STDERR: Traceback (most recent call last):
+  File "t_fmt_prec.lfz", line 3, in <module>
+    print("${pi:.70000f}")
+          ^
+ValueError: 格式说明符非法：'.70000f'
+
+### t_fmt_prec2.lfz
+EXIT: 2 (0x00000002)  TIME: 1028 ms
+STDOUT: 
+STDERR: Traceback (most recent call last):
+  File "t_fmt_prec2.lfz", line 3, in <module>
+    print("${pi:.65536f}")
+          ^
+ValueError: 格式说明符非法：'.65536f'
+
+### t_fmt_prec_ok.lfz
+EXIT: 0 (0x00000000)  TIME: 1026 ms
+STDOUT: 3.140000000000000124344978758017532527446746826171875000…<65484 chars>…000
+STDERR: 
+
+### t_strrepeat.lfz
+EXIT: 2 (0x00000002)  TIME: 1024 ms
+STDOUT: 
+STDERR: Traceback (most recent call last):
+  File "t_strrepeat.lfz", line 2, in <module>
+    let s = "ab" * 4611686018427387904
+            ^
+OverflowError: 容量溢出：所需容量超出可分配上限
+
+### t_repeat_empty.lfz
+EXIT: 0 (0x00000000)  TIME: 1037 ms
+STDOUT: 
+STDERR: 
+
+### t_unary_1001.lfz
+EXIT: 2 (0x00000002)  TIME: 1025 ms
+STDOUT: 
+STDERR:   File "t_unary_1001.lfz", line 2
+    ---…<362 chars>…--- ...[trunc]
+
+### t_not_1001.lfz
+EXIT: 2 (0x00000002)  TIME: 1026 ms
+STDOUT: 
+STDERR:   File "t_not_1001.lfz", line 2
+    !!!…<364 chars>…!!! ...[trunc]
+
+### t_floor_huge.lfz
+EXIT: 2 (0x00000002)  TIME: 1015 ms
+STDOUT: 
+STDERR: Traceback (most recent call last):
+  File "t_floor_huge.lfz", line 2, in <module>
+    floor(1e300)
+    ^
+OverflowError: 整数溢出：结果超出 i64 范围
+
+### t_int_huge.lfz
+EXIT: 2 (0x00000002)  TIME: 1024 ms
+STDOUT: 
+STDERR: Traceback (most recent call last):
+  File "t_int_huge.lfz", line 2, in <module>
+    int(1e300)
+    ^
+OverflowError: 整数溢出：结果超出 i64 范围
+
+### t_deep_display.lfz
+EXIT: 0 (0x00000000)  TIME: 11118 ms
+STDOUT: 600002
+STDERR: 
+
+### t_deep_eq.lfz
+EXIT: 2 (0x00000002)  TIME: 1036 ms
+STDOUT: 
+STDERR:   File "t_deep_eq.lfz", line 4
+    for i in range(300000) { a = [a]; b = [b] }
+                                    ^
+SyntaxError: 语句之间必须有换行
+
+

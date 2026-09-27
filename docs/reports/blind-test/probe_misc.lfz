@@ -1,0 +1,9 @@
+#42
+print()
+let x = 3
+if x == 1 { print("one") } else if x == 2 { print("two") } else { print("other") }
+print("L=[${"ab":<5}]")
+print("D=[${"ab":>5}]")
+let t = [[0, 0], [0, 0]]
+t[1][0] = 7
+print("t=" + str(t))

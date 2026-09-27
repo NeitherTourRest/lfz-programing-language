@@ -1,0 +1,7 @@
+#42
+// probe: char->int conversions and misc hashmap needs
+print("type(nil) = " + type(nil))
+print("int(d5) = " + str(int("5")))
+// int on non-numeric char?
+let r = check(false, "probe int a")
+print("check ran = " + str(r))
