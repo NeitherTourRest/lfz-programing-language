@@ -220,7 +220,7 @@
 | 编号 | 事项 | 范畴 | 影响 | 处理 |
 |---|---|---|---|---|
 | `bug-20260927-01` | `s["k"]()` 取到方法后调用未绑定 `self`（与 `semantics.md` L51 冲突） | **功能正确性**（非完整性） | 评分项 1 的实质减分风险 | runtime-dev 修复中；修后 verifier 复验 |
-| `bug-20260927-02` | `lfz test --json` stdout 非单行（25 行，末行才是 JSON） | 功能正确性（低，已自认） | 极小 | 可选：tooling-dev 裁定 `;;` 通道 |
+| `bug-20260927-02` | `lfz test --json` stdout 非单行（25 行，末行才是 JSON） | 功能正确性（低，已自认） | **已闭合** | ✅ **closed（verifier T11 复验裁定不成立 / 不可复现）**：当前源码同源构建下 stdout 恒为单个 JSON（1 行）；见 [`T11-reverification.md`](T11-reverification.md) §⑥ |
 | `obs-03` | `Cargo.toml` `version = "0.1.0"` 未随标签升 | 元数据 | 无（不影响评分） | 可选对齐 |
 | `obs-05` | 语言命名「LFZ」是否符合课程「以本人名字命名」 | 需人工确认 | 需 team-lead/用户确认 | 上报 team-lead |
 

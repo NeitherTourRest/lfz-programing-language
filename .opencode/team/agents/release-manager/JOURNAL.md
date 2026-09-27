@@ -1,5 +1,26 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 23:55] ✅ T11-10 发布收口：重建 `dist/lfz.exe` + 刷新 README 计数 + `Cargo.toml`→1.0.1 + 打 `v1.2.1` 附注标签 + 5 原子提交 + 推送（含 tag）
+- 来源: team-lead 任务书（完整启动；T11-10 发布收口——verifier 已判 T11 修复批次通过 FAIL=0。要求：① 用 `scripts/build-release.ps1` 重建 `dist/lfz.exe`（当前仍 704000 B 修复前构建）并证明同源（字节数+mtime+3 冒烟）；② 刷新 README 陈旧计数（445→482 / 85→90 / P10→已完成 / 里程碑增标签 / 证据索引 / dist 体积）；③ `Cargo.toml` 1.0.0→1.0.1，提交后打附注标签 `v1.2.1`（消息列明 6 条 ADR + `;;`×`--json` + 越界写 span）；④ 5 组原子提交；⑤ 删除 `examples/test.lfz`（越界探针），提交 `examples/life.lfz`；⑥ `git push origin main` + `git push origin v1.2.1`。禁区：不改 `src/**` 行为（仅 Cargo.toml 版本）、不改 `docs/spec/**`·`tests/**`、不 force-push、不删既有标签、不提交 `Temp/`）
+- 完成:
+  - `Cargo.toml` version `1.0.0`→`1.0.1`；`scripts/build-release.ps1` 重建 → `dist\lfz.exe` **710144 B**（原 704000 B），`--version`=`lfz 1.0.1`，mtime `2026-09-27 22:37:49`；与 verifier 复验 `target/release/lfz.exe`（同 710144 B）一致 → **同源证明**。
+  - 冒烟 3 项（`dist\lfz.exe`）：`run examples\hello.lfz`→`Hello, LFZ!` exit 0；`test`→`共 90 个用例，通过 90，失败 0，错误 0` exit 0；`run app\sortviz.lfz`→exit 0（5 算法全 `[校验通过]`）。
+  - README 刷新：`cargo test` 445→**482**（lib 379+main 48+cli 28+test_runner 12+unit 15）、`cargo run -- test` 85→**90**、P5 行 26+58+1→27+62+1、P10「收尾中」→「已完成·v1.2.1」、版本里程碑补 `v1.1.0`/`v1.2.0`/`v1.2.1`、证据索引补 conformance-A/B/C + T11-reverification + FEATURE-AUDIT + blind-test、`dist\lfz.exe` 体积 688KB→710144 B。
+  - `docs/reports/delivery-checklist.md`：`bug-20260927-02` 行标注 **closed（verifier 复验裁定不成立）**（属我文件范围；`P9-verification.md` 属 verifier，仅报告不改）。
+  - 删除 `examples/test.lfz`（103 B，盲测 agent 越界写入的散落探针、非交付物）；提交 `examples/life.lfz`（3343 B）。
+  - **5 个原子提交**（显式 `git add`，`git commit -F <UTF-8>`）：
+    ① `docs(audit): add T11 conformance audit, feature audit and blind test`
+    ② `fix(interpreter): harden capacity overflow, depth limits and json channel`
+    ③ `docs(spec): pin parse/ast depth limits and record six ADRs`
+    ④ `chore(team): sync T11 team memory, ignore Temp/ and add life.lfz example`
+    ⑤ `chore(release): v1.2.1 - rebuild dist, refresh README counts, bump to 1.0.1`
+  - 打标签：`git tag -a v1.2.1 -m "..."`（附注）→ `git push origin main` → `git push origin v1.2.1`。
+- 产出:
+  - 新增 5 提交（短哈希见汇报）+ 标签 `v1.2.1`；`git status` 干净；`git log --oneline -8`；`git tag`（8 个含 `v1.2.1`）；`git ls-remote`（main HEAD = 本地；tag `v1.2.1` 存在）。
+  - 证据: `dist\lfz.exe` 710144 B / mtime 22:37:49；3 冒烟结果；README diff；临时证据 `Temp/T11-10/`（收工自清）。
+- 决策: 无新增 release-manager ADR（本轮为发布收口与簿记；6 条 ADR 由架构师追加，我仅代为入库）。
+- 下一步: 交付完成；等 team-lead 决定 T11-③ v1.1 迭代。
+- 阻塞: 无（上报非阻塞项：`P9-verification.md` 仍记 `bug-20260927-02` 为待裁定，属 verifier 文件，建议 team-lead 协调关闭）。
 ## [2026-09-27 23:30] ✅ 提交 `lfz-programming` skill 包升级（两个原子提交）+ 打 `v1.2.0` 附注标签 + 推送（含 tag）
 - 来源: team-lead 任务书（轻量启动；提交 skill 包升级；`git add <显式文件>`；**两个原子提交**；打附注标签 `v1.2.0`（信息逐字）；`git push` → `git push origin v1.2.0`；收工文档并入提交 2。门禁：`git status --short` 若不符背景 → 停止并汇报。禁区：禁 force-push、**只打 `v1.2.0` 一个标签**、**不做全局安装**、不改 `src/**`·`docs/spec/**`·仓库根 `README.md`、不提交 `dist/`·`target/`·密钥·临时文件）
 - 完成:
