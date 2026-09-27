@@ -379,3 +379,141 @@ fn json_run_print_before_error_redirects_to_stderr() {
         r.stderr
     );
 }
+
+// ---------------------------------------------------------------------------
+// P4.4：裸文件调用 `lfz <file>`（等价 `lfz run <file>`）
+// ---------------------------------------------------------------------------
+
+/// `lfz <file>` 与 `lfz run <file>` 行为一致：退出码 0 + 相同 stdout。
+#[test]
+fn bare_file_runs_like_run() {
+    let hello = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("examples")
+        .join("hello.lfz");
+    let hello = hello.to_str().expect("路径应为 UTF-8");
+
+    let bare = run_lfz(&[hello]);
+    assert_eq!(bare.code, 0, "stderr={}", bare.stderr);
+    assert!(
+        bare.stdout.contains("Hello, LFZ!"),
+        "stdout={:?}",
+        bare.stdout
+    );
+    assert!(bare.stderr.is_empty(), "stderr={:?}", bare.stderr);
+
+    let explicit = run_lfz(&["run", hello]);
+    assert_eq!(bare.code, explicit.code);
+    assert_eq!(bare.stdout, explicit.stdout);
+}
+
+/// 裸文件不存在（`.lfz`）→ 退出码 2 + 友好中文消息（IOError）。
+#[test]
+fn bare_missing_file_exits_2_with_friendly_message() {
+    let missing = std::env::temp_dir()
+        .join("lfz_bare_definitely_missing_24680.lfz")
+        .to_str()
+        .expect("路径应为 UTF-8")
+        .to_string();
+    let _ = std::fs::remove_file(&missing);
+
+    let r = run_lfz(&[&missing]);
+    assert_eq!(r.code, 2, "stderr={}", r.stderr);
+    assert!(
+        r.stderr.contains("IOError: 无法读取："),
+        "stderr={:?}",
+        r.stderr
+    );
+    assert!(r.stdout.is_empty(), "stdout={:?}", r.stdout);
+}
+
+/// 裸文件为非 `.lfz` 扩展名 → 退出码 2 + 友好中文「只支持 .lfz」消息（不执行）。
+#[test]
+fn bare_non_lfz_extension_rejected_exit_2() {
+    let p = std::env::temp_dir().join(format!("lfz_bare_nonlfz_{}.txt", std::process::id()));
+    std::fs::write(&p, "#42\nprint(\"should-not-run\")\n").expect("写文件");
+    let ps = p.to_str().expect("路径应为 UTF-8");
+
+    let r = run_lfz(&[ps]);
+    let _ = std::fs::remove_file(&p);
+
+    assert_eq!(r.code, 2, "stderr={}", r.stderr);
+    assert!(r.stderr.contains("只支持 .lfz"), "stderr={:?}", r.stderr);
+    assert!(
+        !r.stdout.contains("should-not-run"),
+        "非 .lfz 不得被执行：stdout={:?}",
+        r.stdout
+    );
+}
+
+/// 裸文件无扩展名 → 退出码 2 + 友好中文「只支持 .lfz」消息。
+#[test]
+fn bare_no_extension_rejected_exit_2() {
+    let p = std::env::temp_dir().join(format!("lfz_bare_noext_{}", std::process::id()));
+    std::fs::write(&p, "#42\nprint(\"should-not-run\")\n").expect("写文件");
+    let ps = p.to_str().expect("路径应为 UTF-8");
+
+    let r = run_lfz(&[ps]);
+    let _ = std::fs::remove_file(&p);
+
+    assert_eq!(r.code, 2, "stderr={}", r.stderr);
+    assert!(r.stderr.contains("只支持 .lfz"), "stderr={:?}", r.stderr);
+    assert!(
+        !r.stdout.contains("should-not-run"),
+        "无扩展名不得被执行：stdout={:?}",
+        r.stdout
+    );
+}
+
+/// 裸文件 + `--json` 位于文件**之前**：stdout 恰 `{"ok":true}`、退出码 0。
+#[test]
+fn bare_json_before_file_works() {
+    let f = TempLfz::new("#42\nlet x = 1\n");
+    let r = run_lfz(&["--json", &f.path()]);
+    assert_eq!(r.code, 0, "stderr={}", r.stderr);
+    assert_eq!(r.stdout, "{\"ok\":true}\n", "stdout={:?}", r.stdout);
+    assert!(r.stderr.is_empty(), "stderr={:?}", r.stderr);
+}
+
+/// 裸文件 + `--json` 位于文件**之后**：stdout 恰 `{"ok":true}`、退出码 0。
+#[test]
+fn bare_json_after_file_works() {
+    let f = TempLfz::new("#42\nlet x = 1\n");
+    let r = run_lfz(&[&f.path(), "--json"]);
+    assert_eq!(r.code, 0, "stderr={}", r.stderr);
+    assert_eq!(r.stdout, "{\"ok\":true}\n", "stdout={:?}", r.stdout);
+    assert!(r.stderr.is_empty(), "stderr={:?}", r.stderr);
+}
+
+/// 裸文件调用多参（`lfz a.lfz b.lfz`）→ CLI 参数错误，退出码 2。
+#[test]
+fn bare_two_files_is_usage_error_exit_2() {
+    let a = TempLfz::new("#42\nlet x = 1\n");
+    let b = TempLfz::new("#42\nlet y = 2\n");
+    let r = run_lfz(&[&a.path(), &b.path()]);
+    assert_eq!(r.code, 2, "stderr={}", r.stderr);
+    assert!(
+        r.stderr.contains("只接受一个 <file> 参数"),
+        "stderr={:?}",
+        r.stderr
+    );
+}
+
+/// `run` 后跟非 `.lfz` 文件仍按旧行为读取（不校验扩展名；非 `.lfz` 无 `#42` 要求）→ 正常执行。
+/// 证明裸文件入口的扩展名收紧**没有**波及 `run` 子命令（向后兼容）。
+#[test]
+fn run_subcommand_does_not_restrict_extension() {
+    let p = std::env::temp_dir().join(format!("lfz_run_nonlfz_{}.txt", std::process::id()));
+    std::fs::write(&p, "print(\"hi\")\n").expect("写文件");
+    let ps = p.to_str().expect("路径应为 UTF-8");
+
+    let r = run_lfz(&["run", ps]);
+    let _ = std::fs::remove_file(&p);
+
+    assert_eq!(r.code, 0, "stderr={}", r.stderr);
+    assert!(r.stdout.contains("hi"), "stdout={:?}", r.stdout);
+    assert!(
+        !r.stderr.contains("只支持 .lfz"),
+        "run 不应施加扩展名限制：stderr={:?}",
+        r.stderr
+    );
+}

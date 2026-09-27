@@ -13,3 +13,12 @@ path = "src/main.rs"
 
 # 仅用 std：无第三方依赖（D-011 / PLAN-P3 §1）。
 [dependencies]
+
+# release 构建优化（P4.4）：更小、更快的单文件可执行产物。
+# lto = true          —— 链接期优化，跨 crate 内联。
+# codegen-units = 1   —— 单编译单元，最大化优化（牺牲少量编译时间）。
+# strip = true        —— 去除符号表，显著减小体积。
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true

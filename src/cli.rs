@@ -13,10 +13,17 @@
 //!
 //! # 本批范围
 //!
-//! **已做**：`lfz run <file>`、`lfz run --json <file>`、`lfz test [路径...]`
+//! **已做**：`lfz <file>`（裸文件调用，P4.4，等价 `lfz run <file>`）、`lfz run <file>`、
+//! `lfz run --json <file>`、`lfz <file> --json`、`lfz test [路径...]`
 //! （实现见 [`crate::test_runner`]）、`lfz test --json`、`--help` / `-h`、`--version` / `-V`、
 //! 错误格式化、退出码、`--json` 机器可读输出（`semantics.md` §8.3 示例 4 / §8.4）。
 //! **不做**：REPL。
+//!
+//! # 裸文件调用（P4.4，像 Python 那样直接跑）
+//!
+//! `lfz <file>` 与 `lfz run <file>` 等价；差别仅在**入口校验收紧**：裸文件调用要求 `<file>`
+//! 以 `.lfz` 结尾（大小写不敏感），否则给出友好中文错误（退出码 [`EXIT_ERROR`]）。
+//! 文件不存在时走既有 `loader` → `IOError: 无法读取：<path>`。`run` 子命令保持旧行为（不校验扩展名）。
 //!
 //! # 流约定
 //!
@@ -60,16 +67,22 @@ pub const TRACEBACK_FOLD_THRESHOLD: usize = TRACEBACK_HEAD + TRACEBACK_TAIL;
 
 /// `lfz --help` 文本（写 stdout）。
 const HELP: &str = "\
-LFZ 解释器（最小命令行）
+LFZ 解释器
 
 用法:
+  lfz <file>           运行 LFZ 脚本（等价于 lfz run <file>）
   lfz run <file>       运行 LFZ 脚本（.lfz 文件要求首行为 #42）
   lfz test [路径...]   运行黑盒测试（默认发现 tests/**/*.lfz，排除 tests/fixtures）
   lfz --help, -h       显示本帮助
   lfz --version, -V    显示版本
 
+<file> 须以 .lfz 结尾；否则报错并退出码 2。
+
 选项:
   --json               以机器可读 JSON 输出（stdout 只写 JSON；人类可读诊断转 stderr）
+                       位置不限，以下写法等价：
+                         lfz --json <file>       lfz <file> --json
+                         lfz run --json <file>   lfz run <file> --json
 
 退出码:
   0  成功（所有用例通过）
@@ -77,8 +90,9 @@ LFZ 解释器（最小命令行）
   2  CLI 参数错误 / LFZ 语法或运行时错误 / 用例 error / 运行环境错误
 
 示例:
+  lfz examples/hello.lfz
   lfz run examples/hello.lfz
-  lfz run --json examples/hello.lfz
+  lfz --json examples/hello.lfz
   lfz test
   lfz test --json tests/smoke
 ";
@@ -91,6 +105,8 @@ const VERSION: &str = concat!("lfz ", env!("CARGO_PKG_VERSION"));
 enum Command {
     /// `lfz run <file>`。
     Run { path: String },
+    /// `lfz <file>`（裸文件调用，P4.4；等价 `lfz run <file>`，但入口须为 `.lfz`）。
+    Script { path: String },
     /// `lfz test [路径...]`。
     Test { paths: Vec<String> },
     /// `--help` / `-h`。
@@ -117,10 +133,14 @@ pub fn execute(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32
             EXIT_OK
         }
         Ok(Command::Run { path }) => run_file(&path, json, out, err),
+        Ok(Command::Script { path }) => run_script(&path, json, out, err),
         Ok(Command::Test { paths }) => crate::test_runner::run(&paths, json, out, err),
         Err(msg) => {
             let _ = writeln!(err, "lfz: {msg}");
-            let _ = writeln!(err, "用法: lfz run <file> | lfz test [路径...]（更多: lfz --help）");
+            let _ = writeln!(
+                err,
+                "用法: lfz <file> | lfz run <file> | lfz test [路径...]（更多: lfz --help）"
+            );
             EXIT_ERROR
         }
     }
@@ -150,7 +170,16 @@ fn parse_args(args: &[String]) -> Result<Command, String> {
         "test" => Ok(Command::Test {
             paths: it.cloned().collect(),
         }),
-        other => Err(format!("未知命令 '{other}'")),
+        // 裸文件调用：`lfz <file>`（等价 `lfz run <file>`）。以 `-` 开头者视为未知选项。
+        other if other.starts_with('-') => Err(format!("未知选项 '{other}'")),
+        other => {
+            if it.next().is_some() {
+                return Err("裸文件调用只接受一个 <file> 参数".to_string());
+            }
+            Ok(Command::Script {
+                path: other.to_string(),
+            })
+        }
     }
 }
 
@@ -339,7 +368,7 @@ pub(crate) fn eval_case(path: &str) -> CaseEval {
     }
 }
 
-/// 运行一个 LFZ 文件。
+/// 运行一个 LFZ 文件（显式 `lfz run <file>`）。
 ///
 /// - `json == false`：失败 → 按 §8.2/§8.3 渲染到 `err` 并返回 [`EXIT_ERROR`]；成功 → [`EXIT_OK`]。
 /// - `json == true`：stdout **只写一行 JSON**（成功 `{"ok":true}`；失败为 §8.3 示例 4 形状），
@@ -348,12 +377,57 @@ fn run_file(path: &str, json: bool, out: &mut dyn Write, err: &mut dyn Write) ->
     // P4.2-fix：`--json` 下把 `print` / `input` 提示重定向到 stderr，保证 stdout 恒为单个 JSON。
     lfz::builtins::set_stdout_to_stderr(json);
     let eval = eval_case(path);
+    report_eval(path, &eval, json, out, err)
+}
+
+/// 运行一次**裸文件调用**（`lfz <file>`，P4.4；等价 `lfz run <file>`）。
+///
+/// 与 [`run_file`] 的唯一差别：**入口校验收紧**——`<file>` 必须以 `.lfz` 结尾
+/// （大小写不敏感）；否则不做词法 / 语法 / 求值，直接给出友好中文错误（退出码 [`EXIT_ERROR`]）。
+/// 以 `.lfz` 结尾但**不存在**时，交由 [`eval_case`] → `loader` 产出既有
+/// `IOError: 无法读取：<path>`（同样退出码 [`EXIT_ERROR`]）。
+fn run_script(path: &str, json: bool, out: &mut dyn Write, err: &mut dyn Write) -> i32 {
+    lfz::builtins::set_stdout_to_stderr(json);
+    let eval = if is_lfz_path(path) {
+        eval_case(path)
+    } else {
+        // 与解释器错误**同源**渲染：`--json` 下得到唯一合法 JSON（`IOError` + `line/col:null`），
+        // 非 `--json` 下得到 `IOError: 只支持 .lfz 脚本文件：'<path>'`。
+        CaseEval::Failed {
+            err: LzError::Io {
+                msg: format!("只支持 .lfz 脚本文件：'{path}'"),
+                span: None,
+            },
+            loaded: None,
+            traced: None,
+        }
+    };
+    report_eval(path, &eval, json, out, err)
+}
+
+/// `<path>` 是否以 `.lfz` 结尾（大小写不敏感，如 `.LFZ` 亦接受）。
+fn is_lfz_path(path: &str) -> bool {
+    std::path::Path::new(path)
+        .extension()
+        .is_some_and(|ext| ext.eq_ignore_ascii_case("lfz"))
+}
+
+/// 把 [`CaseEval`] 渲染为输出并按 D-008 取退出码（[`run_file`] 与 [`run_script`] 共用）。
+///
+/// `json == true` → stdout 只写一行 JSON；否则人类可读块写 `err`。
+fn report_eval(
+    path: &str,
+    eval: &CaseEval,
+    json: bool,
+    out: &mut dyn Write,
+    err: &mut dyn Write,
+) -> i32 {
     if json {
-        let passed = matches!(&eval, CaseEval::Passed);
+        let passed = matches!(eval, CaseEval::Passed);
         let doc = if passed {
             success_json()
         } else {
-            error_json(path, &eval)
+            error_json(path, eval)
         };
         let _ = writeln!(out, "{}", json::encode(&doc));
         return if passed { EXIT_OK } else { EXIT_ERROR };
@@ -529,7 +603,44 @@ mod tests {
         assert!(parse_args(&args(&["run"])).is_err());
         assert!(parse_args(&args(&["run", "a.lfz", "b.lfz"])).is_err());
         assert!(parse_args(&args(&[])).is_err());
-        assert!(parse_args(&args(&["frobnicate"])).is_err());
+        // P4.4：非 flag 的首个参数 = 裸文件调用（不再是「未知命令」）。
+        assert_eq!(
+            parse_args(&args(&["frobnicate"])),
+            Ok(Command::Script {
+                path: "frobnicate".to_string()
+            })
+        );
+        // 以 `-` 开头者仍是未知选项 / 命令。
+        assert!(parse_args(&args(&["--frobnicate"])).is_err());
+    }
+
+    /// P4.4：`lfz <file>` 裸文件调用解析为 [`Command::Script`]（须恰一个参数）。
+    #[test]
+    fn parse_bare_file_is_script() {
+        assert_eq!(
+            parse_args(&args(&["examples/hello.lfz"])),
+            Ok(Command::Script {
+                path: "examples/hello.lfz".to_string()
+            })
+        );
+        assert_eq!(
+            parse_args(&args(&["hello.lfz"])),
+            Ok(Command::Script {
+                path: "hello.lfz".to_string()
+            })
+        );
+        assert!(parse_args(&args(&["a.lfz", "b.lfz"])).is_err());
+    }
+
+    /// `.lfz` 扩展名判定（大小写不敏感；非 `.lfz` / 无扩展名为假）。
+    #[test]
+    fn is_lfz_path_checks_extension() {
+        assert!(is_lfz_path("a.lfz"));
+        assert!(is_lfz_path("dir/a.lfz"));
+        assert!(is_lfz_path("A.LFZ"));
+        assert!(!is_lfz_path("a.txt"));
+        assert!(!is_lfz_path("a"));
+        assert!(!is_lfz_path("dir.with.dot/a"));
     }
 
     #[test]
@@ -552,6 +663,7 @@ mod tests {
         let mut err = Vec::new();
         assert_eq!(execute(&args(&["--help"]), &mut out, &mut err), EXIT_OK);
         let text = String::from_utf8(out).expect("UTF-8");
+        assert!(text.contains("lfz <file>"), "help 应把裸文件调用放最前: {text}");
         assert!(text.contains("lfz run <file>"), "help: {text}");
         assert!(text.contains("lfz test"), "help 应列出 test 子命令: {text}");
         assert!(err.is_empty());
@@ -785,6 +897,53 @@ mod tests {
             String::from_utf8(out).expect("UTF-8"),
             "{\"ok\":true}\n"
         );
+        assert!(err.is_empty(), "err={err:?}");
+
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    // ---- 裸文件调用（P4.4，`lfz <file>`） --------------------------------
+
+    /// 裸文件调用：非 `.lfz` → 友好中文错误（`IOError`），退出码 2，不读文件。
+    #[test]
+    fn execute_script_rejects_non_lfz() {
+        let mut out = Vec::new();
+        let mut err = Vec::new();
+        let code = execute(&args(&["notes.txt"]), &mut out, &mut err);
+        assert_eq!(code, EXIT_ERROR);
+        assert!(out.is_empty());
+        let e = String::from_utf8(err).expect("UTF-8");
+        assert!(e.contains("只支持 .lfz 脚本文件：'notes.txt'"), "{e}");
+    }
+
+    /// 裸文件调用 + `--json`：非 `.lfz` → stdout 唯一一行合法 JSON（`IOError`），退出码 2。
+    #[test]
+    fn execute_script_json_rejects_non_lfz() {
+        let mut out = Vec::new();
+        let mut err = Vec::new();
+        let code = execute(&args(&["--json", "notes.txt"]), &mut out, &mut err);
+        assert_eq!(code, EXIT_ERROR);
+        let s = String::from_utf8(out).expect("UTF-8");
+        assert_eq!(s.lines().count(), 1, "stdout={s:?}");
+        assert!(s.starts_with(r#"{"ok":false,"error":"IOError""#), "{s}");
+        assert!(s.contains(r#""message":"只支持 .lfz 脚本文件：'notes.txt'""#), "{s}");
+        assert!(err.is_empty(), "{err:?}");
+    }
+
+    /// 裸文件调用：`.lfz` 成功 → 退出码 0（与 `run` 同源渲染）。
+    #[test]
+    fn execute_script_lfz_success() {
+        let dir = std::env::temp_dir().join(format!("lfz_cli_script_ok_{}", std::process::id()));
+        std::fs::create_dir_all(&dir).expect("建临时目录");
+        let file = dir.join("ok.lfz");
+        std::fs::write(&file, "#42\nlet x = 1\n").expect("写文件");
+        let p = file.to_string_lossy().into_owned();
+
+        let mut out = Vec::new();
+        let mut err = Vec::new();
+        let code = execute(&args(&[&p]), &mut out, &mut err);
+        assert_eq!(code, EXIT_OK, "err={err:?}");
+        assert!(out.is_empty(), "非 json 成功不写 stdout: {out:?}");
         assert!(err.is_empty(), "err={err:?}");
 
         let _ = std::fs::remove_dir_all(&dir);

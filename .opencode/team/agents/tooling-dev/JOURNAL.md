@@ -1,5 +1,25 @@
 # tooling-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 17:30] P4.4 打包为可直接执行的 `lfz`（裸文件调用 + release 优化 + 打包/安装脚本）
+- 来源: team-lead 任务书「P4.4 — 打包为"可直接执行的 `lfz`"」（用户原话：像 Python 那样 `lfz Hello.lfz` 直接运行）。
+- 完成:
+  - `src/cli.rs`：新增 `Command::Script`（裸文件调用）。`parse_args` 去掉了「未知命令」分支——非 `-` 开头的首个参数一律视为脚本路径（恰一个参数）；`execute` 分派到新 `run_script`。
+  - `run_file` 抽出共用 `report_eval`（json / 人类可读两路），`run_script` 复用；裸文件入口**校验收紧**：须以 `.lfz` 结尾（`is_lfz_path`，大小写不敏感），否则 `IOError: 只支持 .lfz 脚本文件：'<path>'`（退出码 2）；`.lfz` 不存在 → 既有 `IOError: 无法读取：<path>`（退出码 2）。`run` 子命令**不**施加扩展名限制（向后兼容）。
+  - `--help` 重写：`lfz <file>` 置于首行；明确 `--json` 位置不限（`lfz --json <f>` / `lfz <f> --json` / `lfz run [--json] <f>`）。
+  - `Cargo.toml`：新增 `[profile.release]` = `lto=true` / `codegen-units=1` / `strip=true`。
+  - `scripts/build-release.ps1`（新，纯 ASCII 3047 B）：`cargo build --release` → 复制 `target\release\lfz.exe` → `<OutDir>\lfz.exe`（默认 `dist`）→ 打印 `--version` → 冒烟 `examples\hello.lfz`；`-OutDir` 支持；失败非零退出（实测 exit 1）。
+  - `scripts/install-lfz.ps1`（新，纯 ASCII 7354 B）：装到 `%LOCALAPPDATA%\Programs\lfz\`；用 `[Environment]::SetEnvironmentVariable('Path',...,'User')`（**非 setx**）追加 PATH；改前备份旧用户 PATH 到 `...\lfz\path-backup.txt`；`-Uninstall`（移目录 + 摘 PATH + 备份保留到 `...\Programs\lfz-path-backup.txt`）；**默认 dry-run**，`-Apply` 才执行。
+  - `tests/cli.rs`：+8 e2e（裸文件成功/等价 run、不存在、非 .lfz、无扩展名、`--json` 前置/后置、多参报错、`run` 不限制扩展名）；`src/cli.rs`：+5 单测（裸文件解析、`is_lfz_path`、非 .lfz 拒（含 --json）、裸文件成功），并同步改 1 处旧断言（`frobnicate` 由「未知命令」改为裸文件路径——CLI 契约有意变更）。
+- 产出（证据）:
+  - `cargo build --all-targets`（先 `cargo clean -p lfz` 全量重编）→ **0 warning**；`cargo build --release` → **0 warning**。
+  - `cargo test` → lib 362 + bin 47 + `tests/cli.rs` 24 + `tests/test_runner.rs` 12 = **445 passed / 0 failed**（原 432 零破坏，新增 13）。
+  - `cargo run --quiet -- test` → `汇总：共 85 个用例，通过 85，失败 0，错误 0`，exit 0。
+  - 裸 vs run：`cargo run --quiet -- examples/hello.lfz` 与 `... -- run examples/hello.lfz` 均 `Hello, LFZ!`，exit 0；裸缺文件 → `IOError: 无法读取：nope.lfz` exit 2；裸 `README.md` → `IOError: 只支持 .lfz 脚本文件：'README.md'` exit 2。
+  - `dist\lfz.exe` = **704000 B**；`dist\lfz.exe Hello.lfz` → `Hello, LFZ!` exit 0；`dist\lfz.exe --json Hello.lfz` → stdout 恰 12 B `{"ok":true}`、`Hello, LFZ!` 在 stderr、exit 0。
+  - `install-lfz.ps1`（无 `-Apply`）dry-run：打印计划；用户 PATH 前后 SHA256 相同（len=549）、InstallDir 未创建。
+- 决策: 写入 ADR `[2026-09-27 17:30] [tooling-dev] P4.4 …`。
+- 下一步: README / docs/guide 增补 `lfz <file>` 用法（分别由 release-manager / docs-writer 落地，建议文本见汇报）；PATH 实际修改需用户批准后由 team-lead 执行 `-Apply`。
+- 阻塞: 无。
 ## [2026-09-27 17:05] P4.2-fix：`--json` 下 `print` 重定向 stderr（stdout 恒为单个 JSON）
 - 来源: team-lead 任务书「P4.2-fix — 让 `--json` 模式下的 `stdout` 真正只含 JSON」；**唯一一次跨模块授权**（限 `src/builtins.rs` 输出目标切换）。
 - 完成:
