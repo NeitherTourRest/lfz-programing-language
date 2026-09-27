@@ -1131,12 +1131,38 @@ fn display_join(args: &[Value]) -> String {
     parts.join(" ")
 }
 
-/// `print(...) -> nil`：各参数显示形式、**空格连接** + 末尾 `\n`（stdout）。
+/// 进程级输出目标开关（P4.2-fix）：`false`（默认）→ `print` / `input` 提示写 **stdout**；
+/// `true` → 二者改写 **stderr**。**仅**由 CLI 在 `--json` 模式下置位：保证 stdout 只含唯一一行
+/// JSON，被运行程序的输出不与之交错。`eprint` / `check` 恒写 stderr，**不受此开关影响**。
+static STDOUT_TO_STDERR: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// 切换 `print` / `input` 提示的输出目标：`on == true` → 写 stderr；默认写 stdout。
+/// 进程级生效，供 CLI（`--json`）调用。（P4.2-fix）
+pub fn set_stdout_to_stderr(on: bool) {
+    STDOUT_TO_STDERR.store(on, std::sync::atomic::Ordering::Relaxed);
+}
+
+/// 当前 `print` / `input` 提示的输出目标是否已重定向到 stderr。
+fn stdout_to_stderr() -> bool {
+    STDOUT_TO_STDERR.load(std::sync::atomic::Ordering::Relaxed)
+}
+
+/// 向 `target` 写 `text` + 末尾 `\n`（`print` 内核）；写入失败 → `IOError`（带调用点 span）。
+fn write_line<T: Write>(mut target: T, text: &str, span: Span) -> R<Value> {
+    writeln!(target, "{text}").map_err(|e| io_error(format!("无法写入：{e}"), Some(span)))?;
+    Ok(Value::Nil)
+}
+
+/// `print(...) -> nil`：各参数显示形式、**空格连接** + 末尾 `\n`。
+/// 目标默认 stdout；`set_stdout_to_stderr(true)` 时改写 stderr（P4.2-fix）。
 fn b_print(args: &[Value], span: Span) -> R<Value> {
     let text = display_join(args);
-    let mut out = std::io::stdout();
-    writeln!(out, "{text}").map_err(|e| io_error(format!("无法写入：{e}"), Some(span)))?;
-    Ok(Value::Nil)
+    if stdout_to_stderr() {
+        write_line(std::io::stderr(), &text, span)
+    } else {
+        write_line(std::io::stdout(), &text, span)
+    }
 }
 
 /// `eprint(...) -> nil`：同 `print`，但写 **stderr**。
@@ -1187,8 +1213,14 @@ fn b_input(args: &[Value], span: Span) -> R<Value> {
     };
     let stdin = std::io::stdin();
     let mut lock = stdin.lock();
-    let mut out = std::io::stdout();
-    input_with(prompt, &mut out, &mut lock, span).map(Value::string)
+    // P4.2-fix：`--json` 下提示输出重定向到 stderr；默认仍为 stdout。
+    if stdout_to_stderr() {
+        let mut out = std::io::stderr();
+        input_with(prompt, &mut out, &mut lock, span).map(Value::string)
+    } else {
+        let mut out = std::io::stdout();
+        input_with(prompt, &mut out, &mut lock, span).map(Value::string)
+    }
 }
 
 // ===========================================================================
