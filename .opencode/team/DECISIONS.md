@@ -685,3 +685,14 @@
 - **理由**：满足「`--json` 下 stdout 只能是 JSON」硬约束；把「程序输出」与「工具 JSON」分离到不同流，是最小且不改变语言语义的实现。
 - **影响**：**test-engineer** —— 用例正文现可在 `--json` 下安全 `print`（内容进 stderr），旧「print 会污染 stdout」假设作废；**verifier** —— `lfz run/test --json` 的 stdout 可直接喂 JSON 解析器；**perf-engineer** —— 计时/多轮下程序输出不会污染机器可读结果；**docs-writer** —— 运行章节可说明 stdout/stderr 分流。
 - **证据**：`cargo build --all-targets` **0 warning**；`cargo test` **431 passed / 0 failed**（lib 361 + bin 42 + `tests/cli.rs` 16 + `tests/test_runner.rs` 12；原 428 零破坏，新增 3）。实测：`run --json examples/hello.lfz` → stdout 恰 `{"ok":true}`（`ConvertFrom-Json` 通过）、`Hello, LFZ!` 在 stderr、exit 0；`run --json <print+1/0>` → stdout 单行错误 JSON、marker 在 stderr、exit 2；`test --json <含 print 用例目录>` → stdout 恰唯一汇总 JSON、marker 在 stderr、exit 0。
+
+### [2026-09-27 18:20] [test-engineer] 黑盒测试集覆盖边界：`IOError` / `input` 交由 Rust 单测，stdout 文本 / 错误消息 / span 不作黑盒断言（影响 verifier）
+
+- **背景**：P5.4 定稿黑盒测试集。对照 `interface-contract.md` §8.1 的 12 个错误类与 §10.7 的 54 个内置逐项核对触发用例，发现：①错误类 `IOError` 无黑盒触发路径（唯一来源 `input()` / 读文件；v1 无读文件内置）；②内置 `input` 无法稳定端到端测试。
+- **决策（限定于测试范围，不改 spec / 不改 `src/**`）**：
+  1. **`input` / `IOError` 明确跳过黑盒**：runner 不提供 stdin 约定，`input()` 在非交互环境可能 EOF、在交互终端可能**阻塞**，结果不可复现 → 不做自动发现用例；在覆盖矩阵与报告中注明**由 Rust 单测覆盖**：`src/builtins.rs::tests::input_reads_line_crlf_and_eof`（EOF→`IOError`）、`src/error.rs::tests::class_name_all_twelve_match_spec_exactly`（12 类名逐一）。
+  2. **不可断言项按 spec 错误模型归类**：错误用例只断言**错误类**（§8.1 的 12 类名之一），**不逐字断言中文消息 / 行号 / 列号**；`;;` / `print` / `eprint` / `check` 的**输出文本**不做端到端断言（runner 不捕获程序 stdout，契约 §6）；`traceback` 折叠 / `--json` 逐字符属 CLI 契约，由 Rust 单测 + CLI e2e 覆盖。
+  3. 该边界**不改动** `docs/spec/**` 与 `docs/tooling/runner-contract.md`；仅在 `tests/coverage-matrix.md` §3/§4 与 `tests/REPORT.md` §5.3/§6 作为「不可断言 / 替代覆盖者」记录。
+- **理由**：黑盒测试集只能断言 LFZ 程序内可观察量；把环境相关（stdin）与流捕获（stdout 文本）排除，是「稳定、可复现、失败可定位」的必要边界。任务书明确授权此跳过方式。
+- **影响**：**verifier** 验收评分项 2 时，`IOError` / `input` / 输出文本的覆盖证据应指向 Rust 单测（非黑盒），不应据此判黑盒缺失；**tooling-dev** 若未来提供 stdin / 捕获能力，test-engineer 可升级为端到端断言。
+- **证据**：`cargo run --quiet -- test` → 82/82 PASS，exit 0；`cargo clean -p lfz; cargo build` → 0 warning / 0 error；`cargo test` → 431 passed / 0 failed；覆盖矩阵 §3（12 类逐个）/§4（不可断言项）；报告 §5.3/§6。

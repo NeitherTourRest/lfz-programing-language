@@ -1,5 +1,20 @@
 # test-engineer — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 18:20] P5.4 黑盒测试集定稿批（12 类错误核对 + 查漏补缺 + 覆盖矩阵定稿 + REPORT）
+- 来源: team-lead 任务书 **P5.4**（轻量启动；只读 STATUS.md + coverage-matrix.md）
+- 完成:
+  - **12 类错误矩阵核对**（对照 `interface-contract.md` §8.1）：逐类统计 `cases.json` 的 `expect.error`，确认 **11/12** 类有黑盒触发用例（`CosmosAnswerError`5 / `SyntaxError`11 / `NameError`1 / `TypeError`11 / `IndexError`6 / `FieldError`2 / `ZeroDivisionError`3 / `OverflowError`5 / `ValueError`10 / `AssertionError`1 / `RecursionError`1）；**`IOError` 黑盒跳过**（runner 不提供 stdin，`input()` 有阻塞/EOF 不可复现风险），按任务授权注明**由 Rust 单测覆盖**（`src/builtins.rs::tests::input_reads_line_crlf_and_eof` EOF→`IOError`、`src/error.rs::tests::class_name_all_twelve_match_spec_exactly`）；基类 `LfzError` 不直接抛出（spec §8.1）。
+  - **查漏补缺 §10.7 内置**：54 个逐项核对 → **53 黑盒 + 1 跳过（`input`）**；`print`/`eprint`/`check` 输出文本不可捕获 → 仅断言「返回值/不报错」，在矩阵/报告注明替代覆盖者。
+  - **`tests/coverage-matrix.md` 重构定稿**：§0 总览（用例构成/判定退出码/覆盖结论）、§1 特性覆盖表（词法/表达式/语句/函数/闭包/结构体/管道/插值/`;;`/A1/A6）+ 特性域状态总览、§2 内置 54 逐个、§3 **错误类 12 逐个**、§4 **不可断言项清单（8 条，逐条「为什么测不到 + 由谁覆盖」）**、§5 负例 56、§6 正向 25、§7 缺陷单、§8 运行证据、§9 后续批次。
+  - **新建 `tests/REPORT.md`**：测试方法（黑盒 + runner 契约 T-R1…T-R4）、运行方式（`cargo run --quiet -- test` + 退出码 0/1/2 语义）、用例总数与构成（82 = 正向 25 文件/547 assert + 负例 56 + 豁免 1）、覆盖矩阵摘要（特性/内置/错误类）、不可断言项与理由、如何复现（可复制命令）、回归记录。
+- 产出:
+  - `tests/coverage-matrix.md`（定稿，重构）
+  - `tests/REPORT.md`（新建）
+  - `.opencode/team/DECISIONS.md` 追加 ADR「黑盒覆盖边界：`IOError`/`input` 交由 Rust 单测」
+  - 证据: `cargo run --quiet -- test` → `汇总：共 82 个用例，通过 82，失败 0，错误 0`，exit **0**；`cargo clean -p lfz; cargo build` → **0 warning / 0 error**；`cargo test` → **431 passed / 0 failed / 0 ignored**（361+42+16+12）。
+- 决策: 新增条目见 `DECISIONS.md` [2026-09-27 18:20]；黑盒只断「错误类」不断消息/span/输出文本；`IOError`/`input` 由 Rust 单测覆盖（任务授权）。
+- 下一步: P5.5（可移植性 BOM/CRLF/非 UTF-8；入口一致性 REPL/stdin/`-e`）；bug-20260927-01 修复后补 `p["方法"]()` 端到端用例并回归。
+- 阻塞: 无（bug-20260927-01 仍待修，不影响定稿全绿；`src/**` 未改）
 ## [2026-09-27 15:00] P5.3 黑盒测试第三批（内置函数全表 54 个逐个覆盖）
 - 来源: team-lead 任务书 **P5.3**（轻量启动）
 - 完成: 新增 **8** 个正向用例文件（**263** 条 `assert`）+ **23** 条负例夹具；`cases.json` 扩充至 **56** 负例 + 1 正向豁免；`coverage-matrix.md` 新增 **§2b 内置 54 个逐个对照表**，并更新 §3 诚实标注 / §5.3 负例清单 / §6.3 正向清单 / §7 证据 / §8 骨架状态。

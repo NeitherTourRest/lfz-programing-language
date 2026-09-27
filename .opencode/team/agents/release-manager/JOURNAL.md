@@ -1,5 +1,20 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 18:35] ✅ P5.4（黑盒测试集定稿）原子提交 + P5 里程碑附注标签 `v0.3-tested` 已打并推送
+- 来源: team-lead 任务书（轻量启动；把 P5.4「黑盒测试集定稿」做单个原子提交并 push，并**打 P5 里程碑附注标签 `v0.3-tested`**、推送含 tag。`git add tests/coverage-matrix.md tests/REPORT.md .opencode/team/DECISIONS.md .opencode/team/agents/test-engineer/{STATUS,JOURNAL}.md` + 本角色收工文档；已核验：`cargo build` 0 warning、`cargo test` 431 全绿、`cargo run --quiet -- test` → `共 82 个用例，通过 82，失败 0，错误 0` exit 0；P5 通过条件「一个命令跑完全部且全绿 + 覆盖矩阵 + 测试报告齐备」已达成。禁区：禁 force-push、**只打 `v0.3-tested` 一个标签**、不改 `src/**`·`docs/spec/**`、不提交 `target/`·密钥·临时文件）
+- 完成:
+  - **入清单门禁（通过，未触发停止）**：`git status --short -uall` 复核实测 **5 项**（4 个 ` M` + 1 个 `??`），与任务书预期逐字一致：` M` = `tests/coverage-matrix.md`、`.opencode/team/DECISIONS.md`、`.opencode/team/agents/test-engineer/{STATUS,JOURNAL}.md`；`??` = `tests/REPORT.md`。**无清单外条目、无缺失条目**。
+  - 基线复核：提交前 HEAD = 远程 `refs/heads/main` = `f40419c test(p5): black-box suite — all 54 builtins covered`；分支 `main`；`git check-ignore -v target` = `.gitignore:25:/target/`；`git tag -n` 仍仅 `v0.1.0`/`v0.2.0`。
+  - 内容取证（**未改内容，仅代为入库**）：`tests/coverage-matrix.md`（+297/-134：features / 54 builtins / 12 error classes 三张表 + 显式「不可断言」清单及理由与替代覆盖者）；`tests/REPORT.md`（新增：方法 / 如何运行 / 用例分解 / 复现）；`.opencode/team/DECISIONS.md` 新增 test-engineer ADR「黑盒测试集覆盖边界：IOError/input 交由 Rust 单测，stdout 文本/错误消息/span 不作黑盒断言」。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、置顶追加本 `JOURNAL.md`），使收工改动并入同一提交（工作区提交后保持干净）。
+  - **提交（P5.4）**：`git add tests/coverage-matrix.md tests/REPORT.md .opencode/team/DECISIONS.md .opencode/team/agents/test-engineer/STATUS.md .opencode/team/agents/test-engineer/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（**显式路径**，未 `git add -A`）→ `git commit -F <UTF-8 信息文件>`（标题 + 任务书 body 逐字）。
+  - **打标签**：`git tag -a v0.3-tested -m "..."`（附注标签）→ `git push` → `git push origin v0.3-tested`。
+- 产出:
+  - 一个新提交（短哈希见汇报）；`git status --short` 空；`git log --oneline -3`；`git tag -n` 含 `v0.1.0`/`v0.2.0`/`v0.3-tested`；`git ls-remote --tags origin` 含 `refs/tags/v0.3-tested`；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `cargo run --quiet -- test` → `汇总：共 82 个用例，通过 82，失败 0，错误 0`，退出码 0。
+- 决策: 无新增 release-manager ADR（里程碑标签为 team-lead 判定后的执行动作）。owner 偏差仍为遗留待确认项。
+- 下一步: P10 交付清单核对；后续标签 P8 `v0.4-app` / P9-P10 `v1.0-final`。
+- 阻塞: 无。
 ## [2026-09-27 11:58] ✅ P5.3（黑盒测试集：§10.7 内置 54 个全覆盖）单个原子提交并推送
 - 来源: team-lead 任务书（轻量启动；把 P5.3「黑盒测试集：`§10.7` 内置 54 个全覆盖」做单个原子提交并 push。`git add tests/cases.json tests/coverage-matrix.md tests/lfz tests/fixtures .opencode/team/agents/test-engineer/{STATUS,JOURNAL}.md` + 本角色收工文档；已核验：`cargo build` 0 warning、`cargo test` 431 全绿、`cargo run --quiet -- test` → `共 82 个用例，通过 82，失败 0，错误 0` exit 0。验收取证 status 空 / `log --oneline -3` / `ls-remote` = 本地 HEAD / 新短哈希 / 复议 `cargo run --quiet -- test`。禁区：禁 force-push、**不打 tag**（P5 全部批次完成后由 team-lead 决定）、不改 `src/**`·`docs/spec/**`、不提交 `target/`·密钥·临时文件）
 - 完成:
