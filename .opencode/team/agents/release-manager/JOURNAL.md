@@ -733,3 +733,23 @@
 - 决策: 无新 ADR（本轮为既有决策的里程碑执行，非新跨角色决策）。owner 偏差仍为遗留待确认项。
 - 下一步: P10 交付清单核对报告 docs/reports/delivery-checklist.md；后续里程碑 v0.3-tested / v0.4-app / v1.0-final 按需打附注标签。
 - 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
+## [2026-09-27 23:05] T11-11 提交并推送 T11-③ 第 1 波产物（skill+guide+spec+ADR+团队记忆）
+- 来源: team-lead 任务书 T11-11（用户宣布"阶段性结束"，要求把本阶段成果入库；要求不打标签、不动版本号）
+- 完成:
+  - 启动协议：读 `PROJECT_STATE.md` / `TEAM_BOARD.md` / 本角色 `STATUS.md`。
+  - 基线复核：分支 `main`；push 前 HEAD = `8dc25c2`；`origin/main` = `8dc25c2`（本地=远程）；tags = 8。
+  - 入清单门禁：`git status` 实测 21 M + 1 ??（`docs/reports/T11-03-docs-evidence.md`），与任务书背景一致，无清单外条目；`docs/spec/syntax.md` 未出现在改动中（零改动，已核实）。
+  - Temp 门禁：`git check-ignore -v Temp/` → `.gitignore` 命中；`git ls-files Temp` = 空（未入库）。
+  - 4 个原子提交（`git commit -F Temp\commit-N.txt`，信息文件事后自清）：
+    ① `5aa321c` docs(skill): apply D1-D7 agent-ergonomics fixes to lfz-programming skill（skill 包 4 文件 + `docs/reports/T11-03-docs-evidence.md`；5 files +500/-12）
+    ② `9a7b763` docs(guide): sync human docs with T11-③ skill fixes（`docs/guide/**` 5 文件；+265/-16）
+    ③ `9a723ac` docs(spec): pin v1.1 seven builtins and record ADRs（`docs/spec/{interface-contract,semantics}.md` + `DECISIONS.md`；3 files +184/-12）
+    ④ `54092a8` chore(team): sync T11-③ stage memory（`TEAM_BOARD.md` + ai-dx/docs-writer/language-architect/team-lead 的 STATUS/JOURNAL；9 files +172/-115）
+  - 收工文档产生新改动 → 以独立第 ⑤ 提交 `chore(team): record T11-11 release closure` 收口（保持工作区干净并满足"至少 4 个原子提交"）。
+  - 推送：`git push origin main`（`8dc25c2..54092a8 main -> main`），⑤ 后再推一次。
+- 产出:
+  - 5 个新提交；`git status` 干净；`git ls-remote --heads origin` 的 `refs/heads/main` = 本地 HEAD；tags 仍 8（未增/未移）；`Cargo.toml` 仍 1.0.1（未动）。
+  - `Temp/` 自清：删除本次 4 个 `commit-*.txt` 草稿；`Temp/` 仍被忽略、未入库。
+- 决策: 无新 ADR（常规提交/推送，非跨角色新决策）。
+- 下一步: 待 team-lead 授权 T11-12（v1.1 实现）→ 实现+复验+盲测重跑完成后，再打 `v1.3.0`。
+- 阻塞: 无。
