@@ -1,0 +1,5 @@
+#42
+// FieldError 负例：读取缺失数据字段（`.字段` 路径）
+// spec: semantics.md §8.1（FieldError：`.字段` 或 `["键"]` 读取缺失键）
+let s = { "a": 1 }
+let v = s.missing

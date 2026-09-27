@@ -30,6 +30,8 @@
     { "path": "fixtures/for_over_string.lfz",            "name": "for_over_string_not_iterable",      "expect": { "error": "TypeError" } },
     { "path": "fixtures/del_method_field.lfz",           "name": "del_method_field_is_field_error",   "expect": { "error": "FieldError" } },
     { "path": "fixtures/del_missing_data_field.lfz",     "name": "del_missing_data_field",            "expect": { "error": "FieldError" } },
+    { "path": "fixtures/field_dot_missing.lfz",          "name": "field_dot_read_missing_field_error",    "expect": { "error": "FieldError" } },
+    { "path": "fixtures/field_bracket_missing.lfz",      "name": "field_bracket_read_missing_field_error", "expect": { "error": "FieldError" } },
     { "path": "fixtures/pipe_rhs_not_function.lfz",      "name": "pipe_rhs_not_function",             "expect": { "error": "TypeError" } },
     { "path": "fixtures/interp_format_type_mismatch.lfz","name": "interp_format_type_mismatch",       "expect": { "error": "TypeError" } },
     { "path": "fixtures/interp_bad_format.lfz",          "name": "interp_bad_format_specifier",       "expect": { "error": "ValueError" } },

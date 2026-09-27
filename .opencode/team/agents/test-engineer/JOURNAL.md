@@ -1,5 +1,20 @@
 # test-engineer — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 19:45] P5.6 等价路径双路补测（关闭接缝盲区；verifier P9 rev.2 §9.4 建议）
+- 来源: team-lead 任务书 **P5.6**（关闭「等价路径接缝盲区」；轻量启动）
+- 完成:
+  - **新增 `tests/lfz/test_equivalence_paths.lfz`（41 `assert`）**：`s.k≡s["k"]` 读 / 写 / 调用 / 改 `self`（同一实例）；复合赋值脱糖；管道 data-last 脱糖（sum/take/slice/map/filter/reduce/len/裸函数/占位符）；块注释 ≡ 空格；`a--b ≡ a-(-b)`；逻辑分组 + 短路；`/` vs `div` 非等价并置。
+  - **补强 `tests/lfz/test_structs.lfz`（27→36 `assert`）**：`p["norm2"]()==25`、`p["describe"]()`、`cc["bump"]()` 写回**同一实例**、两实例分别用点/方括号驱动最终值相同、数据字段写两路可见；改写过时注释（"仅在 `.字段()` 调用点绑定"）。
+  - **负例 +2**：`fixtures/{field_dot_missing,field_bracket_missing}.lfz` → `FieldError`（缺失键读取两取法等价报错）；`tests/cases.json` 56→58。
+  - **矩阵新增 §1.3「等价路径双路覆盖小节」**（E1–E11 + 诚实列出「未找到等价表述 / 无法断言」5 条）；`REPORT.md` / 矩阵数字全量同步；bug-20260927-01 标记**已修复**。
+  - **先行探针**：9 个临时 probe 验证 `a[i]+=`、`s.k+=`、`5--3`、内联 `/*c*/`、`p["k"]()`、管道等价全部可用（用完即删）。
+- 产出:
+  - `tests/lfz/test_equivalence_paths.lfz`（新）、`tests/lfz/test_structs.lfz`（改）、`tests/fixtures/field_{dot,bracket}_missing.lfz`（新）、`tests/cases.json`（改）、`tests/coverage-matrix.md`（改）、`tests/REPORT.md`（改）。
+  - 证据: `cargo run --quiet -- test` → **85 PASS / 0 FAIL / 0 ERROR，exit 0**（82→85）；`cargo clean -p lfz; cargo build` → **0 warning / 0 error**；`cargo test` → **432 passed / 0 failed / 0 ignored**（lib 362）；`git status --porcelain` 仅 `tests/**`（+他人 verifier 文件）。
+- 决策: ADR [2026-09-27 19:45] **等价双路纪律**（凡 spec 声明等价，两路都须有用例且结果一致）。
+- 下一步: P5.5（可移植性 / 入口一致性）；bug-02（`test --json` 多行）仍待 tooling 裁定。
+- 阻塞: 无（`src/**` 未改，无新缺陷单）。
+
 ## [2026-09-27 18:20] P5.4 黑盒测试集定稿批（12 类错误核对 + 查漏补缺 + 覆盖矩阵定稿 + REPORT）
 - 来源: team-lead 任务书 **P5.4**（轻量启动；只读 STATUS.md + coverage-matrix.md）
 - 完成:

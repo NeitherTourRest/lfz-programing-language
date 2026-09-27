@@ -21,14 +21,20 @@ assert(p.x == 3, "struct_dot_field")
 assert(p["y"] == 4, "struct_bracket_field")
 assert(p.x == p["x"], "struct_dot_bracket_equivalent")
 
-// ---- 方法字段 ----
+// ---- 数据字段 .k ≡ ["k"]：写亦等价（semantics §4.5.2：两写法均原地改容器） ----
+let rw = Point { x: 1, y: 2 }
+rw.x = 10
+assert(rw["x"] == 10, "struct_dot_write_seen_via_bracket")
+rw["y"] = 20
+assert(rw.y == 20, "struct_bracket_write_seen_via_dot")
+
+// ---- 方法字段：`.k()` 与 `["k"]()` 等价（semantics §3.7 L51 / §4.5.8；bug-20260927-01 已修复） ----
 assert(p.norm2() == 25, "struct_method_call_dot")
-// `p["norm2"]` 能取到方法函数值（spec semantics §3.7：s.k ≡ s["k"] 可取到该函数值）。
-// 注意：经方括号取得的方法值再调用时未绑定 self → 见缺陷单 bug-20260927-01
-// （spec 要求 s.k ≡ s["k"] 且调用时 self 绑定；实现仅在 `.字段()` 调用点绑定）。
-// 缺陷修复前此处只断言「可取到 function 值」，不调用（避免把缺陷行为固化为期望）。
+assert(p["norm2"]() == 25, "struct_method_call_bracket")
+assert(p.norm2() == p["norm2"](), "struct_method_two_call_forms_equivalent")
 assert(type(p["norm2"]) == "function", "struct_method_value_via_bracket")
 assert(p.describe() == "(3, 4)", "struct_method_uses_self")
+assert(p["describe"]() == "(3, 4)", "struct_method_bracket_uses_self")
 
 // ---- A5 数据面：函数值字段不参与 ----
 assert(keys(p) == ["x", "y"], "keys_excludes_methods")
@@ -78,6 +84,19 @@ let cc = Counter { n: 0 }
 cc.bump()
 cc.bump()
 assert(cc.value() == 2, "method_mutates_self")
+
+// ---- 方法改 self：两种写法绑定同一实例（bug-20260927-01 修复的端到端回归） ----
+cc["bump"]()
+assert(cc.value() == 3, "method_bracket_mutates_same_instance")
+assert(cc["value"]() == 3, "method_bracket_reads_same_self")
+let c1 = Counter { n: 0 }
+let c2 = Counter { n: 0 }
+c1.bump()
+c1.bump()
+c2["bump"]()
+c2["bump"]()
+assert(c1.n == c2.n, "method_two_call_forms_same_final_state")
+assert(c2.n == 2, "method_bracket_call_final_state")
 
 // ---- 匿名 struct（字典面孔） ----
 let d = { "k": 1, "name": "x" }

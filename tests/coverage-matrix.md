@@ -1,6 +1,6 @@
 # LFZ 黑盒测试 — 覆盖矩阵（定稿）
 
-> 唯一写者: test-engineer ｜ 状态: **定稿（P5.4）** ｜ 最后更新: 2026-09-27
+> 唯一写者: test-engineer ｜ 状态: **定稿（P5.4）+ 等价路径补测（P5.6）** ｜ 最后更新: 2026-09-27
 > 事实源: `docs/spec/{syntax,semantics,interface-contract}.md`（冻结 v1） ｜ runner 契约: `docs/tooling/runner-contract.md`（v1.2）
 > 断言方式: LFZ 内建 `assert(cond, msg)` / `check(cond, msg)`；负例经 `tests/cases.json` 的 `expect.error` 声明（§8.1 的 12 类名之一）
 > 运行命令: `cargo run --quiet -- test`（默认发现 `tests/**/*.lfz`，排除 `fixtures/`）
@@ -9,17 +9,18 @@
 
 ## 0. 定稿总览
 
-### 0.1 用例构成（合计 **82**）
+### 0.1 用例构成（合计 **85**）
 
 | 构成 | 数量 | 说明 |
 |---|---|---|
-| 正向自动发现 `.lfz` | **25 文件 / 547 `assert`** | `tests/lfz/**/*.lfz`；首行恒 `#42`；见 §1.1 / §6 |
+| 正向自动发现 `.lfz` | **26 文件 / 597 `assert`** | `tests/lfz/**/*.lfz`；首行恒 `#42`；见 §1.1 / §6 |
 | ├ P5.1 基础语言特性 | 7 文件 / 114 | `test_literals` `test_let_var` `test_arithmetic` `test_precedence` `test_division_modulo` `test_int_min` `test_preamble` |
-| ├ P5.2 控制流/函数/闭包/结构体/管道/插值/`;;`/A1/A6 | 10 文件 / 170 | `test_if_else` `test_loops` `test_functions` `test_closures` `test_structs` `test_pipe` `test_interpolation` `test_dump` `test_reference_semantics` `test_cycle_safety` |
-| └ P5.3 内置函数全表 | 8 文件 / 263 | `test_builtins_{array,higher_order,struct,string,math,convert,random,io}` |
-| 负例清单 `expect.error` | **56** fixture | `tests/fixtures/**`；逐个见 §5 |
+| ├ P5.2 控制流/函数/闭包/结构体/管道/插值/`;;`/A1/A6 | 10 文件 / 179 | `test_if_else` `test_loops` `test_functions` `test_closures` `test_structs` `test_pipe` `test_interpolation` `test_dump` `test_reference_semantics` `test_cycle_safety` |
+| ├ P5.3 内置函数全表 | 8 文件 / 263 | `test_builtins_{array,higher_order,struct,string,math,convert,random,io}` |
+| └ P5.6 等价路径双路补测 | 1 文件 / 41 | `test_equivalence_paths`（关闭接缝盲区；小节见 §1.3） |
+| 负例清单 `expect.error` | **58** fixture | `tests/fixtures/**`；逐个见 §5 |
 | 正向豁免（非 `.lfz`） | **1**（`fixtures/plain_ok.txt`） | 清单无 `expect`，判正常 PASS（非 `.lfz` 不要求前导） |
-| **合计** | **82** | `cargo run --quiet -- test` → **82 PASS / 0 FAIL / 0 ERROR**，exit 0 |
+| **合计** | **85** | `cargo run --quiet -- test` → **85 PASS / 0 FAIL / 0 ERROR**，exit 0 |
 
 ### 0.2 判定口径 / 退出码（runner 契约 §4/§5，D-008）
 
@@ -35,6 +36,7 @@
 ### 0.3 覆盖结论
 
 - **语言特性**：词法 / 表达式 / 语句 / 函数 / 闭包 / 结构体 / 管道 / 富插值 / `;;` / 引用语义（A1）/ 环安全（A6）等 `docs/spec/` 声明的语言特性**均有用例**（见 §1.1 / §1.2）。
+- **等价路径**：凡 spec 声明「两种写法等价」处均**双路覆盖**（`s.k ≡ s["k"]` 读 / 写 / 调用、复合赋值脱糖、管道 data-last 脱糖、块注释 ≡ 空格、`a--b`）——专节见 **§1.3**（P5.6，关闭 verifier P9 rev.2 §9.4 指出的接缝盲区）。
 - **内置函数**：`interface-contract.md` §10.7 全表 **54** 个 → **53 个**由 LFZ 黑盒覆盖，**1 个（`input`）跳过**并由 Rust 单测覆盖（见 §2 / §4）。
 - **错误模型**：§8.1 **12 个具体错误类** → **11 个**由黑盒负例覆盖，**1 个（`IOError`）** 由 Rust 单测覆盖（见 §3 / §4）；基类 `LfzError` 不直接抛出（spec §8.1），无触发用例。
 - **不可断言项**：`;;` 输出文本、错误消息文本、行号/列号、`input`、程序 stdout 捕获等 —— 逐条在 §4 给出「为什么测不到 + 由谁覆盖」。
@@ -45,11 +47,11 @@
 
 ### 1.1 特性 × 用例组（P5.1 + P5.2 合并）
 
-> 计数口径：**正常** = happy path；**边界** = 空 / 极值 / 单元素 / 嵌套 / 快照 / 极端形态；**错误** = 期望抛错的负例（经 `tests/cases.json` 的 `expect.error` 声明，判 PASS）。同一负例服务多个特性行时存在跨行重复计数——**去重后负例总数以 §5 为准（56）**。
+> 计数口径：**正常** = happy path；**边界** = 空 / 极值 / 单元素 / 嵌套 / 快照 / 极端形态；**错误** = 期望抛错的负例（经 `tests/cases.json` 的 `expect.error` 声明，判 PASS）。同一负例服务多个特性行时存在跨行重复计数——**去重后负例总数以 §5 为准（58）**。
 
 | 域 | 特性 | 用例组文件 | 正常 | 边界 | 错误 | 状态 | 证据 |
 |---|---|---|---|---|---|---|---|
-| 词法 | `int` 字面量（十进制 / 前缀 / 下划线 / 显示） | `tests/lfz/test_literals.lfz` | 6 | 4 | 0 | 通过 | `cargo run --quiet -- test` → 82/82 PASS，exit 0 |
+| 词法 | `int` 字面量（十进制 / 前缀 / 下划线 / 显示） | `tests/lfz/test_literals.lfz` | 6 | 4 | 0 | 通过 | `cargo run --quiet -- test` → 85/85 PASS，exit 0 |
 | 词法 | `float` 字面量（小数点 / 指数 / 整值显示 `.0`） | `tests/lfz/test_literals.lfz` | 5 | 3 | 0 | 通过 | 同上 |
 | 词法 | `string` 字面量与转义 `\n \t \r \\ \" \e \$` | `tests/lfz/test_literals.lfz` | 3 | 11 | 0 | 通过 | 同上 |
 | 词法 | `bool` | `tests/lfz/test_literals.lfz` | 5 | 0 | 0 | 通过 | 同上 |
@@ -62,7 +64,11 @@
 | 表达式 | 比较 `== != < <= > >=` | `tests/lfz/test_arithmetic.lfz` | 6 | 0 | 0 | 通过 | 同上 |
 | 表达式 | 逻辑 `&& \|\| !`（含短路） | `tests/lfz/test_arithmetic.lfz` | 7 | 2 | 0 | 通过 | 同上；短路用例内嵌 `1 / 0` 验证右操作数未求值 |
 | 表达式 | 一元 `-` | `tests/lfz/test_arithmetic.lfz` | 2 | 0 | 0 | 通过 | 同上 |
+| 表达式 | 复合赋值 `a[i] += v` / `s.k += v` ≡ 显式 读→算→写（§4.5.1） | `tests/lfz/test_equivalence_paths.lfz` | 4 | 0 | 0 | 通过 | 同上；`equiv_compound_*` |
+| 表达式 | `a--b` ≡ `a - (-b)`（A16） | `tests/lfz/test_equivalence_paths.lfz` | 2 | 0 | 0 | 通过 | 同上；`equiv_dashdash_*` |
+| 表达式 | 逻辑 `&&`/`||` 分组等价 + 短路跳过右操作数（§4.1/§4.5.1） | `tests/lfz/test_equivalence_paths.lfz` | 5 | 0 | 0 | 通过 | 同上；`equiv_*_grouping` / `equiv_short_circuit_*` |
 | 表达式 | 优先级与结合性 | `tests/lfz/test_precedence.lfz` | 8 | 3 | 0 | 通过 | 同上 |
+| 词法 | （已闭合）块注释 ≡ 一个空格（§2.3/A22） | `tests/lfz/test_equivalence_paths.lfz` | 3 | 0 | 0 | 通过 | 同上；`equiv_block_comment_*` |
 | 表达式 | `/` 恒为 `float` + `div(a,b)` 向下取整 | `tests/lfz/test_division_modulo.lfz` | 9 | 0 | 2 | 通过 | 同上；负例 `divide_by_zero` / `builtin_div_by_zero` → `ZeroDivisionError` |
 | 表达式 | `%` 符号随除数（Python 取模） | `tests/lfz/test_division_modulo.lfz` | 4 | 1 | 1 | 通过 | 同上；负例 `modulo_by_zero` → `ZeroDivisionError` |
 | 语句 | `if` / `else`（语句形态 + 表达式形态 + `else if` 链 + 嵌套 + 作实参） | `tests/lfz/test_if_else.lfz` | 9 | 2 | 1 | 通过 | 同上；负例 `if_condition_not_bool` → `TypeError`（无 truthiness） |
@@ -73,10 +79,14 @@
 | 函数 | `RecursionError`（深递归 > 10000 帧） | `tests/fixtures/deep_recursion.lfz` | 0 | 0 | 1 | 通过 | 同上；`expect.error = "RecursionError"` |
 | 闭包 | 闭包（A2）：counter 共享 cell / 多实例独立 / 多闭包共享 / 循环每轮独立 cell / 嵌套 / 捕获形参 | `tests/lfz/test_closures.lfz` | 11 | 3 | 0 | 通过 | 同上 |
 | 结构体 | struct：字面量 / 模板默认值 / 平拷贝（可变默认值不共享）/ 匿名 / 动态字段 | `tests/lfz/test_structs.lfz` | 12 | 5 | 0 | 通过 | 同上 |
-| 结构体 | struct 字段 `.k` ≡ `["k"]`（**数据面**） | `tests/lfz/test_structs.lfz` | 3 | 0 | 0 | 通过 | 同上；`p.x == p["x"]` |
+| 结构体 | struct 字段 `.k` ≡ `["k"]`（**读**，数据面） | `tests/lfz/test_structs.lfz` + `tests/lfz/test_equivalence_paths.lfz` | 6 | 0 | 0 | 通过 | `p.x == p["x"]`；`equiv_struct_read_two_forms_equal` |
+| 结构体 | struct 字段 `.k = v` ≡ `["k"] = v`（**写**，原地改容器 §4.5.2） | `tests/lfz/test_structs.lfz` + `tests/lfz/test_equivalence_paths.lfz` | 4 | 0 | 0 | 通过 | 两写法写后经另一写法可见；两实例最终值相同 |
+| 结构体 | 方法 `.k()` ≡ `["k"]()`（含 `self` 绑定 / 改 `self`；bug-20260927-01 回归） | `tests/lfz/test_structs.lfz` + `tests/lfz/test_equivalence_paths.lfz` | 11 | 0 | 0 | 通过 | `p["norm2"]()==25`、`cc["bump"]()` 写回同一实例 |
+| 结构体 | 缺失键读取 `.k` 与 `["k"]` 均 → `FieldError`（两取法等价报错） | `tests/fixtures/{field_dot_missing,field_bracket_missing}.lfz` | 0 | 0 | 2 | 通过 | `field_dot_read_missing_field_error` / `field_bracket_read_missing_field_error` |
 | 结构体 | 方法字段 vs 数据面（A5）：`keys/values/entries/has/len/显示` 均不含方法字段 | `tests/lfz/test_structs.lfz` | 7 | 0 | 0 | 通过 | 同上 |
 | 结构体 | `del` 仅作用数据面（删数据字段成功；删方法字段 → `FieldError`；删缺失键 → `FieldError`） | `tests/lfz/test_structs.lfz` + `tests/fixtures/*` | 3 | 0 | 2 | 通过 | 同上；负例 `del_method_field` / `del_missing_data_field` → `FieldError` |
 | 管道 | `\|>`：data-last 注入 / `_` 占位符 / 链式 / 与 `map/filter/reduce/sum/take/slice` 组合 / 优先级 | `tests/lfz/test_pipe.lfz` | 11 | 3 | 3 | 通过 | 同上；负例 `pipe_rhs_not_function`(TypeError)、`pipe_multiple_placeholders`(SyntaxError)、`pipe_underscore_in_lambda`(SyntaxError) |
+| 管道 | `L \|> F(...)` 脱糖 ≡ 直接调用（`L \|> f(_)` ≡ `f(L)`；data-last，§4.3/§4.4） | `tests/lfz/test_equivalence_paths.lfz` | 9 | 0 | 0 | 通过 | 同上；`equiv_pipe_*`（sum/take/slice/map/filter/reduce/len/裸函数/占位符 两条写法结果一致） |
 | 插值 | 富字符串插值：多段 / 嵌套字符串 / `format_spec`（`:>3` `:<4` `:05d` `:.2f` `:x` `:X`）/ `\$` 转义 | `tests/lfz/test_interpolation.lfz` | 10 | 6 | 2 | 通过 | 同上；负例 `interp_bad_format`(ValueError)、`interp_format_type_mismatch`(TypeError) |
 | 调试 | `;;` dump（顶层 / 函数 / 块作用域 / 遮蔽去重） | `tests/lfz/test_dump.lfz` | 5 | 2 | 0 | 通过（**文本未断言**，见 §4） | 同上；执行到 `;;` 不报错 |
 | 引用 | A1 引用语义：`a[i]=v` / `s.k=v` 原地可见；`push/pop/removeAt/insert/swap/slice/sort/map/filter/del` 返回新值不改原容器；负索引 | `tests/lfz/test_reference_semantics.lfz` | 20 | 9 | 0 | 通过 | 同上 |
@@ -93,7 +103,7 @@
 | 字面量 / 标识符 / let-var / 算术 / 比较 / 逻辑 / 优先级 / 除法取模 / i64 边界 / `#42` | syntax §2、§4、§6；semantics §4.2 | **通过** | P5.1 ✅ |
 | 控制流：`if/else`、`while`、`for`、`break`/`continue`、`return` | syntax §3、§7；semantics §4.5.1 | **通过** | P5.2 ✅ |
 | 函数：声明、参数、递归、闭包按 cell 捕获、lambda、`RecursionError` | syntax §7；semantics §4.5.3/§4.5.5 | **通过** | P5.2 ✅ |
-| 结构体：字面量/模板/实例化、`.字段`、`["键"]`、方法/`self`、动态字段、数据面（A5）、`del` | syntax §3.3、§7；semantics §4.5.8/§4.5.9 | **部分**（`["方法"]()` 绑定 `self` 见 §7 缺陷单 bug-20260927-01，未修前不作断言） | P5.2 ✅ |
+| 结构体：字面量/模板/实例化、`.字段`、`["键"]`、方法/`self`、动态字段、数据面（A5）、`del` | syntax §3.3、§7；semantics §4.5.8/§4.5.9 | **通过**（`s.k ≡ s["k"]` 读/写/调用**双路覆盖**；bug-20260927-01 已修复，见 §7） | P5.2 ✅ / P5.6 ✅ |
 | 管道 `\|>` 与 `_` 占位符（脱糖、data-last、多 `_` → `SyntaxError`、λ 内 `_` 非法） | syntax §4.3/§4.4（A24/M4） | **通过** | P5.2 ✅ |
 | 字符串插值 `${}` 与格式说明符（含非法说明符 → `ValueError`、类型不符 → `TypeError`） | syntax §2.8、§7；semantics §3.7 | **通过** | P5.2 ✅ |
 | 字符串/数组 `for` 迭代快照、struct 键字节序 | semantics §4.5.4 | **通过** | P5.2 ✅ |
@@ -104,9 +114,37 @@
 | 内置函数 54 个（array/struct/string/math/转换/IO/断言，data-last） | interface-contract §10.7 | **通过**（53 个黑盒；`input` 由 Rust 单测，见 §2/§4） | P5.3 ✅ |
 | 值显示形式（嵌套引号、struct 键字节序、`<cycle>` 环安全） | semantics §3.7/§4.5.9 | **部分**（struct/匿名/标量显示已测；`<cycle>` 文本见 §4） | P5.3 ✅ / 文本见 §4 |
 | 相等语义（深结构相等、环安全、function 同一性） | semantics §4.5.9（A6） | **部分**（标量/混合比较、环安全、function 同一性已测；其余见 §4） | P5.2/P5.3 ✅ |
+| 等价路径（`s.k≡s["k"]` 读/写/调用、复合赋值脱糖、管道 data-last 脱糖、块注释≡空格、`a--b`、短路） | semantics §3.7/§4.5.1/§4.5.2；syntax §2.3/§4.3/§4.4/A16/A22 | **通过**（两写法均有用例且结果一致；单路覆盖视为未覆盖） | P5.6 ✅（专节 §1.3） |
 | 错误模型全量（12 类 + traceback 折叠 + `--json` 字段逐字符） | semantics §8；interface-contract §8.1 | **部分**（**11/12 类**黑盒负例；`IOError` 由 Rust 单测；traceback 折叠 / `--json` 逐字符由 Rust 单测 + CLI e2e 覆盖，非黑盒范畴 —— 见 §3/§4） | P5.4 ✅ |
 | 可移植性（BOM、CRLF/LF/CR、非 UTF-8 → `SyntaxError`） | syntax §2.1、§6-B4/B7/B8 | 待实现 | P5.5 |
 | 入口一致性（REPL / stdin / `-e` 豁免前导；伪路径） | syntax §6-B9 | 待实现 | P5.5 |
+
+### 1.3 「等价路径」双路覆盖小节（P5.6，关闭接缝盲区）
+
+> **由来**：verifier《P9-verification.md》rev.2 §9.4 建议项——本项目第 3 次同类盲区：规范声明「两种写法 / 两个入口等价」，但黑盒集只测了一条路径。
+> **纪律**：凡 spec 出现「等价 / ≡ / 脱糖为 / 两写法」表述，**两条路径都必须有断言且结果一致**；单路覆盖视为未覆盖。
+> **用例文件**：`tests/lfz/test_equivalence_paths.lfz`（41 `assert`）+ `tests/lfz/test_structs.lfz` 补强（+9）。
+
+| # | 等价声明（spec 出处） | 路径 A | 路径 B | 用例文件 → 关键断言 | 状态 |
+|---|---|---|---|---|---|
+| E1 | `s.k ≡ s["k"]` 取函数值并调用（`self` 绑定）§3.7 L51 / §4.5.8 | `p.norm2()` / `cc.bump()` | `p["norm2"]()` / `cc["bump"]()` | `test_structs` → `struct_method_call_bracket` / `method_bracket_mutates_same_instance`；`test_equivalence_paths` → `equiv_method_two_call_forms_equal` / `equiv_self_mutation_*` | 通过 |
+| E2 | struct 数据字段读 `.k` ≡ `["k"]` §3.7 / §4.5.8 | `v.x` | `v["x"]` | `test_equivalence_paths` → `equiv_struct_read_two_forms_equal` | 通过 |
+| E3 | struct 数据字段写 `.k = v` ≡ `["k"] = v`（原地改容器）§4.5.2 | `rw.x = 10` | `rw["y"] = 20` | `test_structs` → `struct_dot_write_seen_via_bracket` / `struct_bracket_write_seen_via_dot`；`test_equivalence_paths` → `equiv_struct_write_two_forms_same_result` | 通过 |
+| E4 | 缺失键读取 `.k` 与 `["k"]` **同报** `FieldError` §8.1 | `s.missing` | `s["missing"]` | `tests/fixtures/{field_dot_missing,field_bracket_missing}.lfz` | 通过 |
+| E5 | 复合赋值 `a[i] += v` ≡ `a[i] = a[i] + v`（`s.k += v` 同理）§4.5.1 | `a1[0] += 10` / `f1.x += 6` | `a2[0] = a2[0] + 10` / `f2.x = f2.x + 6` | `test_equivalence_paths` → `equiv_compound_*` | 通过 |
+| E6 | 管道脱糖：`L \|> F(...)`（无 `_`）⇒ data-last ⇒ `F(..., L)` §4.3/§4.4 | `xs \|> sum()` / `xs \|> map(f)` / `xs \|> take(2)` / `xs \|> slice(1,3)` / `xs \|> filter(f)` / `xs \|> reduce(f,0)` | `sum(xs)` / `map(f, xs)` / `take(2, xs)` / `slice(1,3, xs)` / `filter(f, xs)` / `reduce(f,0, xs)` | `test_equivalence_paths` → `equiv_pipe_*_data_last` | 通过 |
+| E7 | 管道规则 1/2：`L \|> f(_)` ≡ `f(L)`；`L \|> f` ≡ `f(L)`（裸 RHS）§4.3 | `5 \|> inc1(_)` / `5 \|> inc1` / `xs \|> len` | `inc1(5)` / `len(xs)` | `test_equivalence_paths` → `equiv_pipe_placeholder_rhs` / `equiv_pipe_bare_rhs` / `equiv_pipe_len` | 通过 |
+| E8 | （已闭合）块注释 ≡ 一个空格 §2.3 / A22 | `1/*c*/+2` / `1 +/*x*/2` | `1 + 2` | `test_equivalence_paths` → `equiv_block_comment_*` | 通过 |
+| E9 | 一元负号：`a--b` ≡ `a - (-b)` A16 | `5--3` | `5 - (-3)` | `test_equivalence_paths` → `equiv_dashdash_minus_neg` | 通过 |
+| E10 | 逻辑分组等价 + 短路（`false && RHS` / `true \|\| RHS` 不求 RHS）§4.1/§4.5.1 | `(a && b) && c` / `a && (b && c)`；`false && (1/0==0)` | `false && true \|\| true` 组 | `test_equivalence_paths` → `equiv_*_grouping` / `equiv_short_circuit_*` | 通过 |
+| E11 | **非等价并置**：`/`（真除法，float）与 `div`（向下取整，int）**明确不同** §4.2 A3 | `7 / 2 == 3.5`、`type=="float"` | `div(7,2) == 3`、`type=="int"` | `test_division_modulo`（既有）+ `test_equivalence_paths` → `nonequiv_*`；**两者均有用例**，不混同 | 通过 |
+
+> **未在 spec 找到「等价」表述 / 无法断言者**（诚实列出）：
+> 1. **`&&`/`||` 与「括号写法」**：spec **未**声明二者为等价对象；仅声明短路（§4.2/§4.5.1）与结合性（§4.1）。本批补偿性断言「分组不改变结果 + 短路」，**不主张**其为规范意义下的等价声明。
+> 2. **`string * int` 重复 vs `repeat(n, s)`**：spec 分别定义（§4.2 / §10.7），**未**声明二者等价；不作等价断言（各自已有用例：`test_arithmetic` / `test_builtins_string`）。
+> 3. **`if` 表达式形态 vs 语句形态**：spec 分别定义（§3、§7），**未**声明等价；`test_if_else` 已覆盖两形态。
+> 4. **`has(k,s)` ⇔ `del` 成功的不变量**：一侧为抛错（`FieldError`），黑盒无法在 catch 中判定；`has==true` 正向 + `del` 失败负例（`del_missing_data_field` / `del_method_field`）合并覆盖。
+> 5. **入口一致性**（`.lfz` vs stdin/`-e` 前导豁免，B9）：属 P5.5，runner 暂无 stdin 约定，**待工具支持**（见 §4）。
 
 ---
 
@@ -220,7 +258,7 @@
 
 > 权威来源：错误类触发条件与消息由 `semantics.md` §8.1 规范性给出；本表为**黑盒触发证据**对照。
 > 断言口径：错误用例**只断言错误类**（§8.1 的 12 类名之一），**不逐字断言中文消息 / 行号 / 列号**（理由见 §4）。
-> 计数：`tests/cases.json` 中 `expect.error` 逐类出现次数，合计 **56**。
+> 计数：`tests/cases.json` 中 `expect.error` 逐类出现次数，合计 **58**。
 
 | # | 错误类（`--json` / `class_name()`） | 阶段 | 触发用例（fixture → manifest 名） | 数量 | 状态 |
 |---|---|---|---|---|---|
@@ -229,7 +267,7 @@
 | 3 | `NameError` | 运行 | `name_error`(undefined_name) | 1 | **通过** |
 | 4 | `TypeError` | 运行 | `let_rebind` / `let_compound_rebind` / `type_error_add` / `if_condition_not_bool` / `for_over_string` / `pipe_rhs_not_function` / `interp_format_type_mismatch` / `filter_predicate_not_bool` / `join_non_string_element` / `sort_mixed_types` / `div_non_int` | 11 | **通过** |
 | 5 | `IndexError` | 运行 | `pop_empty` / `removeAt_out_of_range` / `removeAt_negative_out_of_range` / `insert_negative_index` / `insert_index_too_large` / `swap_out_of_range` | 6 | **通过** |
-| 6 | `FieldError` | 运行 | `del_method_field` / `del_missing_data_field` | 2 | **通过** |
+| 6 | `FieldError` | 运行 | `del_method_field` / `del_missing_data_field` / `field_dot_missing`(field_dot_read_missing_field_error) / `field_bracket_missing`(field_bracket_read_missing_field_error) | 4 | **通过** |
 | 7 | `ZeroDivisionError` | 运行 | `zero_division` / `mod_zero` / `div_zero` | 3 | **通过** |
 | 8 | `OverflowError` | 运行 | `overflow_add` / `abs_i64_min` / `int_inf` / `sum_overflow` / `ceil_inf` | 5 | **通过** |
 | 9 | `ValueError` | 运行 | `interp_bad_format` / `min_empty` / `max_empty` / `minBy_empty` / `maxBy_empty` / `int_nan` / `int_bad_string` / `float_bad_string` / `randInt_bad_range` / `floor_nan` | 10 | **通过** |
@@ -237,7 +275,7 @@
 | 11 | `AssertionError` | 运行 | `fail_raises`(builtin_fail_assertion_error) | 1 | **通过**（`fail(msg)`；`assert(false)` 同类） |
 | 12 | `RecursionError` | 运行 | `deep_recursion`(deep_recursion_exceeds_limit) | 1 | **通过** |
 | — | `LfzError`（基类） | — | —（基类**不直接抛出**，spec §8.1） | — | **不适用** |
-| | | | | **合计 56** | **11/12 类黑盒覆盖 + 1 类（`IOError`）由 Rust 单测** |
+| | | | | **合计 58** | **11/12 类黑盒覆盖 + 1 类（`IOError`）由 Rust 单测** |
 
 > `check(false)` **不产生**任何 `LfzError`（非致命，A4）→ 不属于本表，其行为在 §1.1 / §2.8 以「返回值 + 不中断」断言。
 
@@ -262,7 +300,7 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 
 ---
 
-## 5. 负例清单（`tests/cases.json`，共 **56** 条 `expect.error` + 1 条正向豁免）
+## 5. 负例清单（`tests/cases.json`，共 **58** 条 `expect.error` + 1 条正向豁免）
 
 ### 5.1 P5.1（21 条）
 
@@ -335,6 +373,13 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 | 55 | `fixtures/ceil_inf.lfz` | `builtin_ceil_inf_overflow_error` | `OverflowError` | `ceil(±Inf)` |
 | 56 | `fixtures/div_non_int.lfz` | `builtin_div_non_int_type_error` | `TypeError` | `div(1.0,2)` 非 `int` |
 
+### 5.4 P5.6 等价路径补测（2 条；两取法等价报错）
+
+| # | fixture 路径 | manifest 名 | 期望错误类 | 覆盖特性 |
+|---|---|---|---|---|
+| 57 | `fixtures/field_dot_missing.lfz` | `field_dot_read_missing_field_error` | `FieldError` | 缺失键读取（`.字段` 路径） |
+| 58 | `fixtures/field_bracket_missing.lfz` | `field_bracket_read_missing_field_error` | `FieldError` | 缺失键读取（`["键"]` 路径，与 .字段 等价报错） |
+
 > 另有 `fixtures/plain_ok.txt` → `non_lfz_file_no_preamble_required`（**无** `expect`，正向豁免，判正常 PASS）。
 
 ---
@@ -353,7 +398,7 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 | `tests/lfz/test_int_min.lfz` | 8 | `i64::MIN`/`MAX` 边界 |
 | `tests/lfz/test_preamble.lfz` | 5 | `#42` 前导 |
 
-### 6.2 P5.2 正向（10 文件 / 170 条 `assert`）
+### 6.2 P5.2 正向（10 文件 / 179 条 `assert`）
 
 | 文件 | 断言数 | 覆盖特性 |
 |---|---|---|
@@ -361,7 +406,7 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 | `tests/lfz/test_loops.lfz` | 16 | `while` / `for` / `break` / `continue` / 快照 / struct 键序 |
 | `tests/lfz/test_functions.lfz` | 26 | `fn` / 递归 / 函数字面量 / 高阶 / 同一性 |
 | `tests/lfz/test_closures.lfz` | 14 | 闭包 cell 捕获（A2） |
-| `tests/lfz/test_structs.lfz` | 27 | struct / 字段 / 方法 vs 数据面（A5）/ `del` |
+| `tests/lfz/test_structs.lfz` | 36 | struct / 字段 / 方法 vs 数据面（A5）/ `del` / **`.k≡["k"]` 读·写·调用双路** |
 | `tests/lfz/test_pipe.lfz` | 15 | 管道 `\|>` / `_` / 链式 |
 | `tests/lfz/test_interpolation.lfz` | 16 | 富字符串插值 / `format_spec` / `\$` |
 | `tests/lfz/test_dump.lfz` | 7 | `;;` dump（保底不报错） |
@@ -381,7 +426,13 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 | `tests/lfz/test_builtins_random.lfz` | 10 | `seed` `rand` `randInt` |
 | `tests/lfz/test_builtins_io.lfz` | 14 | `print` `eprint` `check` `assert`（`fail` 为负例） |
 
-> 正向合计：**25 文件 / 547 条 `assert`**。
+### 6.4 P5.6 正向（1 文件 / 41 条 `assert`，等价路径双路补测）
+
+| 文件 | 断言数 | 覆盖等价性 |
+|---|---|---|
+| `tests/lfz/test_equivalence_paths.lfz` | 41 | `s.k≡s["k"]`（读/写/调用/改 self）、复合赋值脱糖、管道 data-last 脱糖、块注释≡空格、`a--b`、逻辑分组+短路、`/` vs `div` 非等价并置 |
+
+> 正向合计：**26 文件 / 597 条 `assert`**（114 + 179 + 263 + 41）。
 
 ---
 
@@ -389,30 +440,33 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 
 | 缺陷单 | 现象 | spec 依据 | 影响用例 | 状态 |
 |---|---|---|---|---|
-| **bug-20260927-01** | 经方括号取得的方法值**再调用时不绑定 `self`**：`p["norm2"]()` → `NameError: 未定义的名字 'self'`（`.字段()` 调用点则绑定正常） | semantics.md §3.7「`s.k ≡ s["k"]` 仍能取到该函数值并**调用（`self` 绑定）**」；§4.5.8「方法…访问时绑定 `self`」；ADR D-015 A5（DECISIONS.md） | `test_structs.lfz` 中「方括号调用方法」未断言（仅断言 `type(p["norm2"]) == "function"` 可取到函数值）；已提交 team-lead | **未修**（待 core/runtime 修复后补端到端用例并回归） |
+| **bug-20260927-01** | 经方括号取得的方法值**再调用时不绑定 `self`**：`p["norm2"]()` → `NameError: 未定义的名字 'self'`（`.字段()` 调用点则绑定正常） | semantics.md §3.7「`s.k ≡ s["k"]` 仍能取到该函数值并**调用（`self` 绑定）**」；§4.5.8「方法…访问时绑定 `self`」；ADR D-015 A5（DECISIONS.md） | `test_structs.lfz` 中「方括号调用方法」未断言（仅断言 `type(p["norm2"]) == "function"` 可取到函数值）；已提交 team-lead | ✅ **已修复**（commit `6aabdf5`，由 runtime-dev）→ **本批补端到端用例**：`struct_method_call_bracket` / `method_bracket_mutates_same_instance`（`test_structs.lfz`）+ `equiv_method_two_call_forms_equal` / `equiv_self_mutation_*`（`test_equivalence_paths.lfz`）；verifier P9 rev.2 §9.1 复验已闭合 |
 
 ---
 
-## 8. 运行证据（P5.4 定稿）
+## 8. 运行证据（P5.4 定稿 + P5.6 等价路径补测）
 
 ```
 $ cargo run --quiet -- test
 PASS  abs_i64_min_overflow
 PASS  syntax_break_outside_loop
 ...
-PASS  tests/lfz/test_builtins_io.lfz
+PASS  field_bracket_read_missing_field_error
+PASS  field_dot_read_missing_field_error
+...
 PASS  tests/lfz/test_structs.lfz
+PASS  tests/lfz/test_equivalence_paths.lfz
 
-汇总：共 82 个用例，通过 82，失败 0，错误 0
+汇总：共 85 个用例，通过 85，失败 0，错误 0
 $ echo $LASTEXITCODE
 0
 ```
 
-- **用例总数：82** = 正向自动发现 **25**（P5.1 的 7 + P5.2 的 10 + P5.3 的 8）+ 清单（负例 **56** + 非 `.lfz` 正向豁免 1）。
-- 正向断言总数：**547**（114 + 170 + 263）。
+- **用例总数：85** = 正向自动发现 **26**（P5.1 的 7 + P5.2 的 10 + P5.3 的 8 + P5.6 的 1）+ 清单（负例 **58** + 非 `.lfz` 正向豁免 1）。
+- 正向断言总数：**597**（114 + 179 + 263 + 41）。
 - 退出码 **0**（全绿）。
 - 构建：`cargo clean -p lfz` 后 `cargo build` → **0 warning / 0 error**。
-- 回归：`cargo test` → **431 passed / 0 failed / 0 ignored**（361 + 42 + 16 + 12；未被本批破坏）。
+- 回归：`cargo test` → **432 passed / 0 failed / 0 ignored**（lib **362** + 42 + 16 + 12；`src/**` 未改，未被本批破坏）。
 
 ---
 

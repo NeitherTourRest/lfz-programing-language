@@ -1,0 +1,118 @@
+#42
+// ============================================================
+// test_equivalence_paths.lfz — 「等价路径」双路回归（关闭接缝盲区）
+// 由来: verifier 《P9-verification.md》rev.2 §9.4 建议项；本项目第 3 次同类盲区。
+// 原则: 凡规范声明「两种写法等价」，两条路径都必须有用例且结果一致。
+// 覆盖的等价声明（spec 出处 → 断言）:
+//   1) semantics §3.7 L51 / §4.5.8   s.k ≡ s["k"]：取方法值 + 调用（self 绑定）
+//   2) semantics §4.5.2              s.k = v 与 s["k"] = v 均原地改容器
+//   3) semantics §4.5.1              a[i] += v ≡ a[i] = a[i] + v（复合赋值脱糖）
+//   4) syntax §4.3/§4.4              L |> F(...) 无 `_` ⇒ data-last ⇒ F(..., L)
+//   5) syntax §4.3 规则 1/2          L |> f(_) ≡ f(L)；L |> f ≡ f(L)
+//   6) syntax §2.3 / A22             （已闭合）块注释 ≡ 一个空格
+//   7) syntax A16                    a--b ≡ a - (-b)
+//   8) semantics §4.2                `/` 与 div 明确【非等价】——并置固化两条路径
+// 负例: fixtures/{field_dot_missing,field_bracket_missing}.lfz → FieldError（两取法等价报错）
+// 已修复缺陷: bug-20260927-01（commit 6aabdf5：["k"]() 绑定 self）
+// spec: docs/spec/{semantics,syntax}.md
+// ============================================================
+
+struct Vec {
+    x: 0,
+    n: 0,
+    fn get() => self.x,
+    fn inc() {
+        self.n += 1
+    },
+}
+
+// ---- 1a. 数据字段读：.k ≡ ["k"] ----
+let v = Vec { x: 10 }
+assert(v.x == 10, "equiv_struct_read_dot")
+assert(v["x"] == 10, "equiv_struct_read_bracket")
+assert(v.x == v["x"], "equiv_struct_read_two_forms_equal")
+
+// ---- 1b. 数据字段写：.k = v ≡ ["k"] = v（原地改容器，semantics §4.5.2） ----
+v.x = 21
+assert(v["x"] == 21, "equiv_struct_write_dot_visible_via_bracket")
+v["x"] = 32
+assert(v.x == 32, "equiv_struct_write_bracket_visible_via_dot")
+let wa = Vec { x: 0 }
+let wb = Vec { x: 0 }
+wa.x = 5
+wb["x"] = 5
+assert(wa.x == wb.x, "equiv_struct_write_two_forms_same_result")
+
+// ---- 1c. 方法调用：.get() ≡ ["get"]()（方法内读 self） ----
+let m = Vec { x: 7 }
+assert(m.get() == 7, "equiv_method_call_dot_reads_self")
+assert(m["get"]() == 7, "equiv_method_call_bracket_reads_self")
+assert(m.get() == m["get"](), "equiv_method_two_call_forms_equal")
+
+// ---- 1d. 方法改 self：两写法绑定同一实例（bug-20260927-01 回归） ----
+let c = Vec { n: 0 }
+c.inc()
+assert(c.n == 1, "equiv_self_mutation_dot")
+c["inc"]()
+assert(c.n == 2, "equiv_self_mutation_bracket_same_instance")
+let d1 = Vec { n: 0 }
+let d2 = Vec { n: 0 }
+d1.inc()
+d1.inc()
+d2["inc"]()
+d2["inc"]()
+assert(d1.n == 2, "equiv_self_mutation_dot_instance_final")
+assert(d2.n == 2, "equiv_self_mutation_bracket_instance_final")
+assert(d1.n == d2.n, "equiv_self_mutation_two_forms_same_final")
+
+// ---- 2. 复合赋值 ≡ 显式 读→算→写（semantics §4.5.1） ----
+let a1 = [1, 2, 3]
+let a2 = [1, 2, 3]
+a1[0] += 10
+a2[0] = a2[0] + 10
+assert(a1[0] == a2[0], "equiv_compound_array_element")
+assert(a1 == a2, "equiv_compound_array_whole")
+let f1 = Vec { x: 4 }
+let f2 = Vec { x: 4 }
+f1.x += 6
+f2.x = f2.x + 6
+assert(f1.x == f2.x, "equiv_compound_struct_field_two_forms")
+assert(f1.x == 10, "equiv_compound_struct_field_value")
+
+// ---- 3. 管道脱糖 ≡ 直接调用（syntax §4.3/§4.4；semantics §4.5.1） ----
+fn inc1(x) => x + 1
+assert((5 |> inc1) == inc1(5), "equiv_pipe_bare_rhs")
+assert((5 |> inc1(_)) == inc1(5), "equiv_pipe_placeholder_rhs")
+let xs = [1, 2, 3, 4]
+assert((xs |> len) == len(xs), "equiv_pipe_len")
+assert((xs |> sum()) == sum(xs), "equiv_pipe_sum_data_last")
+assert((xs |> take(2)) == take(2, xs), "equiv_pipe_take_data_last")
+assert((xs |> slice(1, 3)) == slice(1, 3, xs), "equiv_pipe_slice_data_last")
+assert((xs |> map(inc1)) == map(inc1, xs), "equiv_pipe_map_data_last")
+assert((xs |> filter((x) => x > 2)) == filter((x) => x > 2, xs), "equiv_pipe_filter_data_last")
+assert((xs |> reduce((a, b) => a + b, 0)) == reduce((a, b) => a + b, 0, xs), "equiv_pipe_reduce_data_last")
+
+// ---- 4. （已闭合）块注释 ≡ 一个空格（syntax §2.3 / A22） ----
+let bc1 = 1/*c*/+2
+let bc2 = 1 + 2
+assert(bc1 == bc2, "equiv_block_comment_equals_space")
+assert(bc1 == 3, "equiv_block_comment_value")
+assert(1 +/*x*/2 == 3, "equiv_block_comment_between_operators")
+
+// ---- 5. 一元负号：a--b ≡ a - (-b)（syntax A16） ----
+let dd = 5--3
+assert(dd == 5 - (-3), "equiv_dashdash_minus_neg")
+assert(dd == 8, "equiv_dashdash_value")
+
+// ---- 6. 逻辑：分组不改变结果 + 短路跳过右操作数（syntax §4.1；semantics §4.5.1） ----
+assert(((true && false) && true) == (true && (false && true)), "equiv_and_assoc_grouping")
+assert(((false || true) || false) == (false || (true || false)), "equiv_or_assoc_grouping")
+assert((false && true || true) == ((false && true) || true), "equiv_and_tighter_than_or")
+assert((false && (1 / 0 == 0)) == false, "equiv_short_circuit_and_skips_rhs")
+assert((true || (1 / 0 == 0)) == true, "equiv_short_circuit_or_skips_rhs")
+
+// ---- 7. 非等价并置：`/` 与 div 不同（semantics §4.2 A3），仅固化两条路径均有用例 ----
+assert(7 / 2 == 3.5, "nonequiv_divide_is_true_division")
+assert(div(7, 2) == 3, "nonequiv_div_floors")
+assert(type(7 / 2) == "float", "nonequiv_divide_type_float")
+assert(type(div(7, 2)) == "int", "nonequiv_div_type_int")
