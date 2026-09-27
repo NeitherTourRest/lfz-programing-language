@@ -1,0 +1,35 @@
+#42
+struct Counter {
+    counts: {},
+    total: 0,
+    fn bump(w) {
+        if has(w, self.counts) {
+            self.counts[w] = self.counts[w] + 1
+        } else {
+            self.counts[w] = 1
+        }
+        self.total += 1
+    },
+    fn top(n) => self.counts |> entries() |> sortBy((e) => -e[1]) |> take(n),
+    fn report() => "total=${self.total}, distinct=${len(self.counts)}",
+}
+
+fn count_all(ws) {
+    let c = Counter {}
+    var i = 0
+    while i < len(ws) {
+        c.bump(ws[i])
+        i += 1
+    }
+    c
+}
+
+let text = "the quick brown fox jumps over the lazy dog the fox jumps the"
+let words = text |> split(" ")
+
+let c = count_all(words)
+print(c.report())
+print("top 3 words (desc):")
+for e in c.top(3) {
+    print("  ${e[0]}: ${e[1]:>2}")
+}

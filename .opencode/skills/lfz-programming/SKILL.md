@@ -9,6 +9,8 @@ description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也�
 > 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（冻结 v1）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
 > 使用纪律：**只允许使用本文件列出的语法**。不要用 Python / C / JS 的规则去猜 LFZ——LFZ 在若干处刻意不同（见 §4）。
 
+> 🚫 **硬纪律：不要凭记忆写 LFZ。** 本文件**没写的语法一律视为不存在**；拿不准就先查 §10 列出的 spec，或改用本文件已列出的等价写法。宁可用保守写法，也不要"猜一个大概像 Python 的写法"。
+
 > ⚠️ **第一件事（置顶铁律）**：每个 `.lfz` 文件的**第一行必须是恰好 `#42`（三字符）+ 一个换行**，否则程序以 `CosmosAnswerError: 你忘记了宇宙的答案` 终止。**所有代码示例均须遵守**。详见 §1。
 
 ## 0. 触发与用法
@@ -22,6 +24,30 @@ description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也�
   ```
 - **退出码**：`0` 成功；`1` 测试失败（`assert` / `fail`）；`2` CLI 参数错误 / 语法或运行时错误 / 用例 error。
 - **本 CLI v1 只支持 `lfz run <file>` 与 `lfz test`**：没有 `-e`、没有 stdin 管道、没有 REPL（`run -` 会把 `-` 当文件名 → `IOError`）。**把程序写成 `.lfz` 文件再 `run`**。
+
+---
+
+## 0.5 Agent 标准工作流（5 步）——照做，别跳步
+
+> 目标：把"写 LFZ"变成一条**可执行流程**，每步都有**可验证产出**。任何一步没做，都算没完成。
+
+**第 1 步 · 确认头部**：新建的每个 `.lfz` 文件，**第一行恰好是 `#42` + 一个换行**（见 §1）。片段不算交付。
+
+**第 2 步 · 选特性**：只从本文件已有的语法里挑——变量/类型/运算符看 §3，要用的内置函数逐个到 §6 核对**名字、参数、data-last 顺序**。**这一步查不到的名字 = LFZ 没有这个功能**，不要猜、不要用别的语言替代。拿不准时回到顶部硬纪律。
+
+**第 3 步 · 写代码**：一条语句一行；把 §4 的 21 条陷阱当"负面清单"逐条回避。
+
+**第 4 步 · 立刻跑（强制，不可省）**：写完**马上**运行，**必须看到退出码 `0`**：
+
+```bash
+$env:Path += ";$env:USERPROFILE\.cargo\bin"
+cargo run --quiet -- run <file.lfz>   # 期望：正确 stdout + exit=0
+$LASTEXITCODE                         # 必须打印 0
+```
+
+出现报错（退出码 `2`）→ 用 **§4.5「错误类 → 原因 → 修法」**定位，改完**再跑**。**没跑过 = 没写完。**
+
+**第 5 步 · 交付前自检**：逐条过 **§8 自检清单**，全勾后再交。
 
 ---
 
@@ -230,6 +256,42 @@ let q = 10 |> push(_, [1, 2])      // _ 占位：注入到该位 → push(10, [1
 
 ---
 
+## 4.5 错误类 → 最常见原因 → 修法（把 §2 的错误类与 §4 的陷阱串起来）
+
+> 用法：**先看报错类名**（§2），再到本表定位"你大概率踩了哪条"，按"改法"动手，然后回 §0.5 第 4 步重跑。
+> 记住：**报错信息里没有编号**，只有**类名 + 中文消息**；消息里的中文关键字是排查的第一线索。
+
+| 你看到的（类名 / 消息关键字） | 大概率踩了 | 改法（正确写法） |
+|---|---|---|
+| `CosmosAnswerError: 你忘记了宇宙的答案` | 首行不是恰好 `#42`+换行（§1） | 首行**只有** `#42` 三字符（无空格、无尾随、无前导空行） |
+| `SyntaxError: 语句之间必须有换行` | 用 `;` 分隔语句 / 一行两语句（§4-1） | **一条语句一行**，删掉 `;` |
+| `SyntaxError: 单独的 ';' 非法；打印变量请用 ';;'` | 想用 `;` 打印变量（§4-1） | 打印变量用**独立一行的 `;;`** |
+| `SyntaxError: 非法字符 '\'` | `${...}` 内写了 `\"`（§4-8） | `${}` 内是 CODE 模式 → 用**普通双引号 `"`**；插值内禁止换行 |
+| `SyntaxError: 非法字符 '…'`（其它符号） | 用了别的语言的记号（`->` `++` `..` `\|` `&` `::` `>>` `'`）（§4-19） | 换 LFZ 等价写法；字符串**只用双引号** |
+| `SyntaxError` 出现在跨行处 | 行尾挂运算符 / 行首 `.` `\|>` 续行（§4-6） | 断行**必须放进括号内**（`()` `[]` `{}`） |
+| `SyntaxError: '#' 只能出现在文件首行的前导位…` | 在程序中间写了 `#`（§1） | `#` 只允许在 `.lfz` 首行前导位 |
+| `SyntaxError`（块注释/字符串未闭合相关） | 忘记 `*/` / `"`，或块注释嵌套（§3） | 补闭合；块注释**不可嵌套** |
+| `SyntaxError`（字段位） | `.self` / `{ self: 1 }` 等关键字当字段名（§4-15） | 用**字符串键**：`r["self"]` / `{ "self": 1 }` |
+| `SyntaxError`（管道内） | `_` 出现在多参 / 穿 lambda（§4-9） | `_` 只能在**管道右侧调用的实参**里，且**不得穿 lambda** |
+| `TypeError: 不能重新赋值 let 变量 'x'` | 对 `let` 变量重绑定（§4-4） | 需要重赋值改用 **`var`**；只改内容用 `a[i]=` / `s.k=`（合法，`let` 只锁重绑定） |
+| `TypeError: 条件必须是 bool，得到 int` | 用了 truthiness（§4-16） | 显式写 `x != 0` / `len(xs) > 0` |
+| `TypeError: 运算符 '+' 不支持 int 与 string` | 无隐式转换（§4-16） | 用 **`str(x)`** 显式转换再拼接 |
+| `TypeError`（调用非函数 / 参数个数不符 / 管道右侧非函数） | 名字拼错，或参数顺序没按 **data-last**（§3 管道、§6） | 到 **§6** 核对签名；管道默认把左值注入**末参** |
+| `NameError: 未定义的名字 'x'` | 变量/函数名拼错，或未定义就用（§2） | 先定义后使用；检查拼写与作用域 |
+| `IndexError: 下标 … 越界（长度 …）` | 下标越界 / `pop([])` / `insert` 负索引（§4-20） | 用 `len` 判界；`insert` 合法域 `[0, len]` |
+| `FieldError: 结构体没有字段 'k'` | 读了缺失键，或 `del` 的是方法字段（§4-21） | 先 **`has(k, s)`** 判断再读 |
+| `ZeroDivisionError: 除以零` / `对零取模` | `/` `%` `div` 除数为 0（§2） | 先判零；整除用 `div(a,b)` |
+| `OverflowError: 整数溢出…` | `int` 越 i64，或 `int(±Inf)` / `int(1e30)`（§2） | 收窄数值，或改用 `float` |
+| `ValueError: 无法把 string 转换为 int（'abc'）` | `int("abc")` 转换失败（§2） | 只对数字串 `int`，或先校验字符 |
+| `ValueError: 空数组没有极值（min）` | 对空数组 `min/max/minBy/maxBy`（§4-18） | 先判 `len(xs) > 0` |
+| `ValueError: 格式说明符非法：…` | 格式串拼错（§3 插值） | 用 `:>6` `:.2f` `:05d` `:x` 这些形式 |
+| `ValueError: 区间非法：lo >= hi` | `randInt(lo, hi)` 且 `lo >= hi`（§6） | 保证 `lo < hi`（区间为 `[lo, hi)`） |
+| `IOError: 输入结束（EOF）` | 在无输入环境用了 `input()`（§6） | 别依赖 stdin（本 CLI v1 无 stdin 管道） |
+| `AssertionError: 断言失败：…` | `assert`/`fail` 条件不成立（§5） | 复核条件；**软校验用 `check`**（非致命） |
+| `RecursionError: 递归深度超限（超过 10000 层）` | 递归无终止条件 / 太深（§2） | 补终止条件，或改写成 `while`/`for` 循环 |
+
+---
+
 ## 5. `check` 非致命 / `assert` 致命
 
 | 函数 | 失败时行为 |
@@ -380,6 +442,59 @@ average: 82.67
 top: Alice (93)
 ```
 
+### L4 — struct + 方法（带参）+ `while` + 管道 + 插值（词频统计，综合工作流范例）
+
+> 源文件：`docs/guide/ai/examples/04_wordcount.lfz`。演示 §0.5 工作流的完整闭环。
+
+```lfz
+#42
+struct Counter {
+    counts: {},
+    total: 0,
+    fn bump(w) {
+        if has(w, self.counts) {
+            self.counts[w] = self.counts[w] + 1
+        } else {
+            self.counts[w] = 1
+        }
+        self.total += 1
+    },
+    fn top(n) => self.counts |> entries() |> sortBy((e) => -e[1]) |> take(n),
+    fn report() => "total=${self.total}, distinct=${len(self.counts)}",
+}
+
+fn count_all(ws) {
+    let c = Counter {}
+    var i = 0
+    while i < len(ws) {
+        c.bump(ws[i])
+        i += 1
+    }
+    c
+}
+
+let text = "the quick brown fox jumps over the lazy dog the fox jumps the"
+let words = text |> split(" ")
+
+let c = count_all(words)
+print(c.report())
+print("top 3 words (desc):")
+for e in c.top(3) {
+    print("  ${e[0]}: ${e[1]:>2}")
+}
+```
+
+输出（实测，exit `0`）：
+```
+total=13, distinct=8
+top 3 words (desc):
+  the:  4
+  fox:  2
+  jumps:  2
+```
+
+> 注意点：`entries(s)` 返回 `[[key, value], ...]`，按**键升序**；`sortBy` 稳定，故并列计数按键序；`take(n, xs)` 用管道写作 `... |> take(n)`（data-last）。
+
 ---
 
 ## 8. 交付前自检清单（逐项打勾）
@@ -434,4 +549,6 @@ print(sum_even([1, 2, 3, 4, 5]))
 - 语法：`docs/spec/syntax.md`｜语义：`docs/spec/semantics.md`｜接口/错误/内置表：`docs/spec/interface-contract.md`（冻结 v1）。
 - runner/CLI 契约：`docs/tooling/runner-contract.md`。
 - 本指南的实测验证记录：同目录 `VERIFICATION.md`。
+- 本 skill 包的**安装与使用**：同目录 `README.md`（三种安装方式 + 运行前提 + 不做什么）。
+- 示例源码目录：`docs/guide/ai/examples/`（`01_hello` / `02_basics` / `03_students` / **`04_wordcount`**）。
 - 人类向正文档：`docs/guide/ai/README.md`（与本文件内容一致）。
