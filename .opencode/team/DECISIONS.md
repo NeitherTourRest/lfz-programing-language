@@ -1005,3 +1005,129 @@
   - **REQUIREMENTS.md**：R-112（12 类）不受影响；R-401 的 spec 字节数本轮后再次陈旧 → 建议 requirements-analyst 刷新。
 - **是否需用户追认**：否（用户已批准"全修"；严格实现 architect 已裁定的 v1.1 补钉，**不新增错误类**，新增 **1 条**用户可见消息模板 + **1 个**独立常量）。**请知悉**：(a) `AST_DEPTH_LIMIT = 10000` 与运行期 `RECURSION_LIMIT` **同值但度量不同**；(b) 与 `PARSE_DEPTH_LIMIT = 1000` **口径分离、不可合并**；(c) 第 4 类残余（深左偏 AST）**已收口**，**无需** AST 迭代析构。
 
+### [2026-09-27 22:50] [language-architect] v1.1 语言补强（T11-③）：7 项先 ADR 后改规范（1 条 spec 补钉 + `range(lo,hi)` + 字符串方法族 + 文件 IO + `ord`/`chr` + math 四则 + `contains`）
+
+- **来源**：team-lead 任务书「T11-③ 语言侧：为 v1.1 的 7 项补强写 ADR + 落 `docs/spec/` 规范文本」；依据 `.opencode/team/FEATURE-AUDIT.md` §6.1（IN 7 项）+ §5（6 焦点裁定）+ §7（与冻结约束兼容性），用户 2026-09-27「全修 + 复验 + 再迭代」授权。
+- **范围与纪律**：本轮**只改 `docs/spec/**` + 本文件**，`src/**` 零改动（实现随后由 core-dev / runtime-dev 按新契约落地）；**OUT 18 项一律不做**（`s[i]`、`range` 3 参、`in` 运算符、动态宽度、`charAt`、Unicode 折叠、`try/catch`、标签 break、`match`、生成器、`..` 区间、可选链、模块、类、类型注解、独立字典、二进制/目录 IO、工具链项）。**语法零改动**（7 项全为内置表 / 运算符语义，无新记号、无新优先级层）。
+- **冻结关系**：spec v1 冻结（D-016）不变；本条为 **v1.1 补钉**（先 ADR、后改文档）。**新增 15 个内置**（54 → **69**）：`indexOf endsWith padEnd padStart substring readFile writeFile appendFile ord chr sin cos log exp contains`；`range` 扩为 1/2 参重载。**不新增错误类**（仍 12 类 + 基类）；新增用户可见消息模板 **6 条**（见下）。
+
+#### 7 项总表（精确签名 / data-last / 返回 / 错误类与精确消息 / 边界 / 复杂度 / 文法 / 落点）
+
+**#1 `string` 取下标 → `TypeError`（spec 补钉，P1）**
+- 裁定：**不加 `s[i]`**；把既有实现行为**固化为规范文本**。`[]` 仅定义于 `array`（下标须 `int`）与 `struct`（键须 `string`）；**对其余任何类型（含 `string`）取下标 → `TypeError`**。
+- 精确消息：**`运算符 '[]' 不支持 {容器类型} 与 array / struct`** → 对 `string` 即 **`运算符 '[]' 不支持 string 与 array / struct`**（实测 `dist/lfz.exe`：`s[0]` 与 `s["k"]` 均此消息、exit 2）。**读写同源**（`s[0] = v` 与 `s[0]` 同一条）。
+- 边界：`array` 收到非 `int` 下标 → `运算符 '[]' 不支持 {下标类型} 与 int`；struct 收到非 `string` 键 → `运算符 '[]' 不支持 {键类型} 与 string`（均既有 `BadOperands` 模板）。
+- **复杂度（架构红线）**：LFZ `string` = 不可变 UTF-8 `Rc<String>`（§4.5.11）；按标量下标取字符的通用实现是 `chars().nth(i)` = **O(i)**，放进 `for i in range(len(s))` 即 **O(n²)**。**正解** `split("", s)` **一次 O(n)** 得单字符数组，之后索引 / 迭代 **O(1)** / 次 ⇒ 整段 **O(n)**。**本条不引入隐藏 O(n²)，反而消除之**。
+- **文法**：无（`[]` 记号与 §4.1 优先级不变）。
+- 落点：`semantics.md` §4.2（**新增一条**）；§8.1 `TypeError` 触发行补一句。
+
+**#2 `range(lo, hi)` 半开区间（P1）**
+- 签名：保留 `range(n) -> array[int]`；**新增** `range(lo, hi) -> array[int]` = `[lo, lo+1, …, hi-1]`。**data-last**：无容器数据，参数序即 `(lo, hi)`。
+- 边界：`hi <= lo` → 空数组；两参须 `int`。参数量仅 **1 或 2**（**3 参 OUT**）：`m < 1` → `函数 range 期待 1 个参数，得到 {m}`；`m > 2` → `函数 range 期待 2 个参数，得到 {m}`（沿用 §10.7 `[min,max]` 校验约定）。
+- 错误：非 `int` 参 → `TypeError`（`运算符 'range' 不支持 {t} 与 int`）；容量超运行时可分配上限 → `OverflowError: 容量溢出：所需容量超出可分配上限`（沿用 v1.1 补钉）。
+- **复杂度**：O(hi−lo) 时间 + O(hi−lo) 内存（**物化 array**，非惰性），与 `range(n)` 同阶 —— **不引入新复杂度阶**。
+- **文法**：无。
+- 落点：`interface-contract.md` §10.7 `range` 行（拆两行 + 注）。
+
+**#3 字符串方法族 `indexOf` / `endsWith` / `padEnd` / `padStart` / `substring`（P1）**
+- 签名（全 **data-last**，`s` 为末参；全**返回新值**，string 不可变 §4.5.11）：
+  - `indexOf(sub, s) -> int`：首次出现的**标量下标**（与 `len(string)`、`substring` 同口径）；未找到 → `-1`；`sub == ""` → `0`。
+  - `endsWith(suffix, s) -> bool`：`suffix == ""` → `true`。
+  - `padEnd(width, fill, s) -> string` / `padStart(width, fill, s) -> string`：补 `fill` 至**标量**总宽 `width`；`len(s) >= width` → 返回 `s`；`fill` 重复并**按标量截断**到恰好 `width`。
+  - `substring(from, to, s) -> string`：标量半开 `[from, to)`；下标**夹取**到 `[0, len(s)]`；`from >= to` → 空串（**与 `slice` 完全同口径**，负数一律夹取不作 `IndexError`）。
+- 错误：参数类型不符 → `TypeError`（通用模板，如 `运算符 'indexOf' 不支持 int 与 string`）；`padEnd`/`padStart` 的 `fill == ""` → **`ValueError: 填充串不能为空`**。
+- **复杂度**：`indexOf` **最坏 O(n·m)**（n=主串标量数、m=子串标量数）——**必须标注，不得宣称 O(n)**（实现若用 `str::find` 可期望 O(n+m)，但规范按保守最坏 O(n·m) 标注）；`endsWith` O(m)；`pad*` O(width)；`substring` O(to−from)。**不引入隐藏 O(n²)**（拼接循环 O(n²) 是既有 string 不可变问题，另见 `FEATURE-AUDIT` §7.1）。
+- **文法**：无。
+- 落点：`interface-contract.md` §10.7「字符串」段 + 边界注；`semantics.md` §8.1 `ValueError` 细分表加 `填充串不能为空`。
+
+**#4 文件 IO `readFile` / `writeFile` / `appendFile`（P1，最谨慎）**
+- 签名（**data-last**：被操作的 `string` 数据 `contents` 在末参）：
+  - `readFile(path) -> string`；`writeFile(path, contents) -> nil`；`appendFile(path, contents) -> nil`。
+- **路径语义**：`path` **原样**交操作系统；**相对路径**相对**解释器进程当前工作目录**解析；**不**规范化、**不**沙箱、**不**展开 `~`；**不**自动创建父目录。
+- **编码**：UTF-8。
+- 错误（均 **`IOError`**，运行期、带 `Traceback`）：读失败 → `无法读取：{path}`；读**非法 UTF-8** → `无法读取：{path}（不是合法的 UTF-8 编码）`；写失败 → `无法写入：{path}`；追加失败 → `无法追加：{path}`。**二进制 / 目录 IO → OUT**。
+- **与 `input()` 同属"外部 IO"**：结果依赖运行环境（文件系统 / CWD），**不在** §4.5 确定性「无魔法」纪律讨论内（该纪律约束**求值顺序 / 类型 / 无隐式转换**，外部 IO 从来排除）；`seed` 的"唯一非确定源"表述**不变**（文件 IO 是**环境依赖**，非随机性）。
+- **不得引入隐式转换**：`path` / `contents` 必须 `string`；`writeFile(p, 42)` → `TypeError`（**不**自动 `str`）。
+- **复杂度**：O(文件大小) 时间 + O(文件大小) 内存；**无隐藏 O(n²)**（但把多次读取结果 `s = s + chunk` 累积为 O(n²) 属既有陈规 → 用 `push` + `join("", arr)`）。
+- **文法**：无。
+- 落点：`interface-contract.md` §10.7 **新增「文件 IO」段** + 语义注；`semantics.md` §8.1 `IOError` 触发行扩展。
+
+**#5 `ord(c)` / `chr(n)`（P2）**
+- `ord(c) -> int`：`c` 须为**恰好 1 个 Unicode 标量**的 `string` → 码点。**O(1)**（仅窥前 2 标量）。
+- `chr(n) -> string`：`n` 须 `int` 且为**合法 Unicode 码点**（`0 <= n <= 0x10FFFF` 且非代理区 `0xD800..=0xDFFF`）。**O(1)**。
+- 错误：非 `string` / 非 `int` → `TypeError`（`运算符 'ord' 不支持 {t} 与 string` / `运算符 'chr' 不支持 {t} 与 int`）；`ord` 标量数 ≠ 1 → **`ValueError: ord 的参数必须是单个字符（Unicode 标量数 {n}）`**；`chr` 非法码点 → **`ValueError: chr 的参数不是合法的 Unicode 码点：{n}`**。
+- **文法**：无。落点：§10.7「数学/随机/转换」段 + `semantics.md` §8.1 `ValueError` 细分表。
+
+**#6 math `sin` / `cos` / `log` / `exp`（P2）**
+- 全 `f -> float`，**O(1)**，**沿用 int→float 加宽**（加入 §10.7 加宽清单）。
+- **IEEE 定死**（与既有 `sqrt(负)→NaN` / `pow` 同口径）：`log(x < 0)` → `NaN`；**`log(0)` → `-Inf`**（超越函数极限，**不是** `ZeroDivisionError`）；`exp` 溢出 → `+Inf`；`sin` / `cos` 遇 `±Inf` / `NaN` → `NaN`。
+- **文法**：无。落点：§10.7 + `semantics.md` §4.5.6（NaN/Inf 产地）+ §4.5.7（加宽清单）；**删除** §10.7 原「`sin`/`log`/`exp` v1 不提供」注。
+
+**#7 `contains(v, xs)`（P2）**
+- `contains(v, xs) -> bool`：`xs` 中是否存在与 `v` **相等**的元素；相等用 **`==`**（§4.5.9 深结构、环安全）。**data-last**（`xs` 末参）。
+- 边界：**仅 `array`**（非 array → `TypeError`，`运算符 'contains' 不支持 {t} 与 array`）；**struct 键判定用 `has(k, s)`**，二者不重叠；`v` 类型不限。
+- **复杂度**：**O(n)** 线性扫描（**必须标注**；元素为容器时每次 `==` 可 > O(1)）；**不得**放进 N 次循环对长数组反复调用（否则 O(N·M)）。
+- **文法**：无。落点：§10.7「核心/数组」段。
+
+#### 兼容性核对表（逐一核对 A1–A7 / §4.5 确定性 / M6 / §2.3 / 12 类错误类）
+
+| 冻结约束 | 本批影响 | 结论 |
+|---|---|---|
+| **A1 引用语义 / 内置返回新值** | 字符串方法 / `ord` / `chr` / math / `contains` / `range` 全**返回新值**、不改原容器；文件 IO 返回 `nil`（副作用同 `print`/`input`，不涉容器语义） | ✅ 兼容 |
+| **A2 按 cell 捕获 / 循环每轮新绑定** | 不触及 | ✅ 兼容 |
+| **A3 除法 / 取模** | `/`、`%`、`div` 语义不变；`log(0)` 明确定死为 `-Inf`（**超越函数**，**不是**除零） | ✅ 兼容 |
+| **A4 `check` 非致命 / `assert` 致命** | 不触及（无新断言路径） | ✅ 兼容 |
+| **A5 数据面** | 不触及（struct 仍 `keys`/`has`/`del`；`contains` 只吃 array） | ✅ 兼容 |
+| **A6 环安全** | `contains` 用 `==`，**继承** §4.5.9 环安全 | ✅ 兼容 |
+| **A7 `RecursionError`** | 不触及 | ✅ 兼容 |
+| **§4.5 确定性「无魔法」** | 8 个新**纯函数**（字符串方法 / `ord` / `chr` / math / `contains`）确定性不变；文件 IO 与 `input()` **同属外部 IO**，排除在纪律外；**无新隐式转换** | ✅ 兼容 |
+| **M6 `format_spec` 原始文本** | 不动；`padEnd`/`padStart` 是**动态宽度的替代**（动态宽度仍 OUT，保护 M6） | ✅ 兼容 |
+| **§2.3 记号表** | **无新记号**（全部为 `IDENT` 内置名）；`range(lo,hi)` 无新语法 | ✅ 兼容 |
+| **12 类错误类（不得新增第 13 类）** | 复用 `TypeError` / `ValueError` / `IOError`；**错误类仍 12 类 + 基类**；`--json` 的 `error` 12 取值不变 | ✅ 兼容 |
+| **既有 482 单测** | 新增内置为**可加性**；唯一待核：若有「`range` 二元报 `ArgCount`」断言 → 改 1 条（`PROJECT_STATE` 已记） | 🟡 1 处待核 |
+| **既有 90 黑盒** | 可加性，零影响；文件 IO 夹具须用 `Temp/` + 清理（交 test-engineer） | ✅ 兼容 |
+
+> **12 类错误类核对**：`CosmosAnswerError` / `SyntaxError` / `NameError` / `TypeError` / `IndexError` / `FieldError` / `ZeroDivisionError` / `OverflowError` / `ValueError` / `IOError` / `AssertionError` / `RecursionError`（+ `LfzError` 基类）—— **一个不增、一个不减**。新增消息模板 6 条全部落在**既有类**内：`ValueError` 3 条（`ord…`/`chr…`/`填充串不能为空`）+ `IOError` 3 条（`无法写入：{path}`/`无法追加：{path}`/`无法读取：{path}（不是合法的 UTF-8 编码）`）。
+
+#### 影响面分析（只分析，不动这些文件）
+
+- **core-dev**：`src/builtins.rs` 注册 15 个新内置 + `range` 加 2 参分支（`min_args:1, max_args:2`）；`src/error.rs` 加 `ValueMsg` 变体（`NotSingleScalar` / `BadCodepoint` / `EmptyFill`）。**零 lexer/parser/AST/evaluator 改动**（`s[i]` 补钉只固化既有 impl 行为，实现**不必改**）。
+- **runtime-dev**：实现 15 个内置语义（字符串方法按标量口径；文件 IO 用 `std::fs` + UTF-8 校验；`sin/cos/log/exp` 用 `f64` 硬件指令 + 加宽）。**零求值器改动**；`push`+`join` 的 O(n) 惯用法为**可选优化**（`Rc` 强计数为 1 时就地追加），不属于本轮。
+- **`tests/**`（交 test-engineer）**：新增黑盒正/负例 × 15 内置（含边界：`indexOf` 空子串、`pad*` 空 fill→ValueError、`substring` 负/越界夹取、`range(lo,hi)` `hi<=lo`、文件 IO 成功/失败/**非法 UTF-8**、`ord` 多字符、`chr` 代理区/越界、`contains` 深结构 / 环）；**文件 IO 夹具统一落 `Temp/` 并清理**；单测覆盖 `range` 2 参。
+- **`tests/coverage-matrix.md`**：加行「`range(lo,hi)` / 字符串方法族（`indexOf/endsWith/pad*/substring`）/ 文件 IO / `ord`·`chr` / math 四则 / `contains`」。
+- **`docs/guide/**`（docs-writer）**：`reference.md` 内置表（54→69）、`errors.md`（`ValueError`/`IOError` 新消息）、`tutorial.md`（文件 IO / 字符串方法示例）。
+- **`.opencode/skills/lfz-programming/**`（ai-dx-engineer）**：同步新内置签名与复杂度标注（`indexOf` 最坏 O(n·m)、`contains` O(n)）+ D1–D7 修订（与 T11-04 合流）。
+- **`REQUIREMENTS.md`**：**R-112（12 类）不受影响**；**R-401 的 spec 字节数再次陈旧**（本轮后须刷新）。
+
+#### 是否需用户追认
+
+| # | 特性 | 需追认 | 说明 |
+|---|---|---|---|
+| 1 | `string` 取下标 → `TypeError` | **否** | 固化既有实现行为，**零行为变化**（实现本已如此） |
+| 2 | `range(lo, hi)` | **否**（提示） | 用户已授权 IN；纯新增重载。**注意**：此前 `range(1,4)` 报错的输入现变合法（**行为面扩大**），如需严格追认可提请 |
+| 3 | 字符串方法族 | **否** | 纯新增纯函数 |
+| 4 | **文件 IO** | **是** | **引入文件系统读写 = 新外部副作用面 + 环境依赖**（安全/沙箱面最大）；建议用户**明确追认** |
+| 5 | `ord` / `chr` | **否** | 纯新增纯函数 |
+| 6 | math 四则 | **否**（提示） | 纯新增；**`log(0)`/`log(负)` 按 IEEE 出 `-Inf`/`NaN`（非报错）** 已定死 |
+| 7 | `contains` | **否** | 纯新增纯函数 |
+
+- **规范落点（逐处；本轮只改 `docs/spec/**` + 本文件）**：
+  - `semantics.md` §4.2 新增 `[]` 索引补钉一条；§4.5.6 扩 NaN/Inf 产地；§4.5.7 扩加宽清单；§8.1 三处触发行 + `ValueError` 细分表 3 行。
+  - `interface-contract.md` §8.1 `ValueError`/`IOError` 消息；§10.7 `range` 拆行 + 字符串 5 行 + math 4 行 + `ord`/`chr` 2 行 + `contains` 1 行 + 新增「文件 IO」段 + 更新 math 注 / 加宽清单；§10.8 `ValueMsg` 3 变体。
+  - `syntax.md`：**零改动**（**无文法改动** —— 7 项均无新记号 / 新优先级）。
+
+- **证据（实跑 `dist/lfz.exe`，冻结现行为）**：`s[0]` / `s["k"]` → `TypeError: 运算符 '[]' 不支持 string 与 array / struct`（exit 2）；`range(1,4)` → `函数 range 期待 1 个参数，得到 2`（exit 2）；`ord("a")` → `NameError: 未定义的名字 'ord'`（exit 2，证 v1 无此内置）。
+
+### [2026-09-27 23:40] [ai-dx-engineer] skill 修订 D1–D7 落地 +「字符串/数组循环累积 = O(n²)」实测裁定（订正 FEATURE-AUDIT §7.1 的 `push+join` 建议）
+
+- **背景**：T11-③ P0 文档修订（`FEATURE-AUDIT.md` §6.2 的 D1–D7 + §7.1 的 O(n) 构建惯用法）交 ai-dx-engineer 执行；硬要求「每条先用 `lfz` 实跑验证，再写入 skill」，且**不得写 v1.1 未实现特性**。
+- **落地**：D1 字符串不可下标 + `split("", s)` 惯用法（标注 O(n)）；D2 `range(n)` 完整签名（**只写已实现的 1 参**，**不写** v1.1 的 `range(lo,hi)`）；D3 循环体 `let` 每轮新绑定（引 §4.5.0/A2）；D4 退出码语境（`lfz run` 下 `assert` 失败 → 2；`lfz test` 下用例失败 → 1）；D5 对齐 `align ∈ {<,>,^}` + fill（宽须字面数字，动态宽度用 `repeat`）；D6 `len(string)` 合法、按 Unicode 标量计数（O(n)）；D7 隐性语法正面示例（链式下标赋值 / `else if` / 多 `${}` / 零参 `print()` / `&&`·`||` 短路）。全部实测通过，证据：`.opencode/skills/lfz-programming/VERIFICATION.md` §8。
+- **关键发现（跨角色，**订正审计建议**）**：`FEATURE-AUDIT.md` §7.1 建议「`s = s + c` 是 O(n²) → 改 `push` 到数组再 `join`（O(n)）」——**后半句不成立**。实测（循环 N 次，`dist\lfz.exe`，毫秒）：
+  - `s = s + "x"`：N=40k/80k/160k/320k = 61/139/425/1582 ⇒ **O(n²)**（前半句成立；源码 `src/evaluator.rs:1496` `Str+Str = format!("{a}{b}")` 复制整个前缀）。
+  - `a = push("x", a)` + `join`：251/674/4076（320k 超时）⇒ **亦 O(n²)**（`push` 遵 A1 返回新数组，内部 `src/builtins.rs:385` `xs.borrow().to_vec()` 整体克隆）。**把 `+` 换成 `push` 反而更慢。**
+  - **真正 O(n)**：① `range(n) |> map(f) |> join("")`（25/35/56/104 ms）；② 预分配 + 下标写 `arr[i] = v`（33/—/85/151 ms）。
+- **落点**：skill `SKILL.md` §4.6「O(n) 构建惯用法 + 复杂度实测表」（含「`push` 累积也是 O(n²)」反直觉点）；§4-22/23/24、§6、§8、§7 L5、`README.md`、`prompt-template.md`、`VERIFICATION.md` §1.4/§8 同步。
+- **边界**：仅改 `.opencode/skills/lfz-programming/**`；**未动** `docs/spec/**`、`src/**`、`tests/**`、`docs/guide/**`、`app/**`。
+- **致 downstream**：① **language-architect**：请复核 §7.1 的 `push+join` 建议（skill 已按实测订正）；② **runtime-dev**：若要真兑现 O(n)，只能「`Rc` 强计数为 1 时就地追加」（不改语义/A1）或提供原地 append 内置；③ **verifier**：T11-06 同题盲测重跑可用本表核对 O(n) 写法。
+- **影响面**：仅 skill 文档（4 文件）；**零语言/实现改动**；对 A1–A7 与 §4.5 确定性无影响。
+

@@ -72,6 +72,7 @@
 - 比较：数值之间、`string` 之间（UTF-8 字节序）；`bool` 仅 `== !=`；`nil` 仅 `== !=`。
 - `==`/`!=`：标量按值；`array`/`struct` **深结构相等**（**含环安全**，见 §4.5.9）；`function` **同一性**。
 - `&& ||`：两侧与结果都必须 `bool`，短路求值。
+- **`[]`（索引）仅适用于 `array` 与 `struct`（v1.1 补钉，规范性）**：`a[i]` 要求 `a` 为 `array`（`i` 须 `int`，支持负索引，越界 → `IndexError`）；`s[k]` 要求 `s` 为 struct 实例（键须 `string`，缺失 → `FieldError`）。**对其余任何类型（含 `string`）取下标 → `TypeError`**，消息 **`运算符 '[]' 不支持 {容器类型} 与 array / struct`**（`array` 收到非 `int` 下标 → `运算符 '[]' 不支持 {下标类型} 与 int`；struct 收到非 `string` 键 → `运算符 '[]' 不支持 {键类型} 与 string`）。**读写两个方向同源**（`s[0] = v` 与 `s[0]` 报同一条）。对 `string` 即逐字符 **`运算符 '[]' 不支持 string 与 array / struct`**（实测既有实现；本补钉把既有行为**固化为规范**，实现**无需改动**）。**`string` 不可下标是刻意的**：LFZ 的 `string` 是不可变 UTF-8 `Rc<String>`（§4.5.11），按标量下标取字符只能是 `chars().nth(i)` = **O(i)**，放进 `for i in range(len(s))` 即 **O(n²)**。**正解**：先 `split("", s)` **一次 O(n)** 得到单字符数组 `cs`，之后 `cs[i]` / `for c in cs` 均 **O(1)** / 次，整段遍历 **O(n)**（复杂度论证见 [interface-contract.md](./interface-contract.md) §10.7 `split` 行）。
 - **`int`/`float` 混合（v0.5 精确定稿，B13）**：
   - **算术**（`+ - * / %`）：`int` 按 IEEE-754 加宽为 `float`，结果 `float`。加宽在 `|int| > 2^53` 时**可能不精确**（**不再称"无损"**）；这是唯一允许的隐式转换。
   - **比较**（`== != < <= > >=`）：**按两数的数学精确值比较**，**不先加宽**（避免大整数误判）。算法见 §4.5.7。
@@ -148,7 +149,7 @@
 #### 4.5.6 `float` IEEE 规则（B5）
 
 - `float` 为 IEEE-754 双精度（f64）。
-- **NaN / Inf 产地**：`sqrt(x)` 当 `x < 0` → `NaN`；`pow(a, b)` 或算术溢出为无穷 → `±Inf`；显式构造 `float("inf")` / `float("-inf")` / `float("nan")` **支持**。**除零不产 Inf**：`a / 0.0`、`a % 0.0`（含 `div` 的 `b == 0`）→ `ZeroDivisionError`。
+- **NaN / Inf 产地**：`sqrt(x)` 当 `x < 0` → `NaN`；`pow(a, b)` 或算术溢出为无穷 → `±Inf`；**`log(x)` 当 `x < 0` → `NaN`、`log(0)` → `-Inf`（超越函数极限，**不属**下句「除零」故**不报** `ZeroDivisionError`）、`exp(x)` 溢出 → `+Inf`、`sin`/`cos` 遇 `±Inf`/`NaN` → `NaN`（v1.1 补钉，同 IEEE 口径）**；显式构造 `float("inf")` / `float("-inf")` / `float("nan")` **支持**。**除零不产 Inf**：`a / 0.0`、`a % 0.0`（含 `div` 的 `b == 0`）→ `ZeroDivisionError`。
 - **比较规则（IEEE）**：`NaN == NaN` → `false`；`NaN != NaN` → `true`；任何 `< <= > >=` 涉及 `NaN` → `false`。`Inf == Inf` → `true`；`+Inf` 大于任何有限值。
 - **显示**：`NaN` → `nan`，`±Inf` → `inf` / `-inf`（最短往返，§3.7）。
 - **排序 / `min` / `max` 的确定性全序**（仅用于 `sort` / `sortBy` / `min` / `max` / `minBy` / `maxBy`）：规定 `-Inf < 任何有限值 < +Inf < NaN`（NaN 排最后）。此全序与 `==` 的 IEEE 语义**并存**（`==` 仍 `NaN != NaN`，但排序结果确定）。
@@ -171,7 +172,7 @@
   3. `x` 有限 → **向零截断**（trunc）；截断结果**超出 `[i64::MIN, i64::MAX]`** → **`OverflowError`**。
   - 例：`int(2.9) == 2`、`int(-2.9) == -2`（向零，非向下取整）；`int(1e30)` → `OverflowError`；`int(float("nan"))` → `ValueError`；`int(float("inf"))` → `OverflowError`。
   - 与 [interface-contract.md](./interface-contract.md) §10.7 `int` 行、§8.1 `ValueError`/`OverflowError` 行口径一致；`string`/`bool` 实参不涉及本条。
-- **数值内置形参加宽（v1 冻结，规范性；与 §1「唯一隐式转换」同源；冻结前补钉）**：`floor` / `ceil` / `round` / `sqrt` / `pow` 的 `int` 实参**先加宽为 `float`**；`abs` **同型不加宽**。逐条全文见 [interface-contract.md](./interface-contract.md) §10.7「数值内置形参加宽」。
+- **数值内置形参加宽（v1 冻结，规范性；与 §1「唯一隐式转换」同源；冻结前补钉；v1.1 补钉扩列）**：`floor` / `ceil` / `round` / `sqrt` / `pow` / **`sin` / `cos` / `log` / `exp`（v1.1 补钉新增）** 的 `int` 实参**先加宽为 `float`**；`abs` **同型不加宽**。逐条全文见 [interface-contract.md](./interface-contract.md) §10.7「数值内置形参加宽」。
 - **`floor` / `ceil` / `round` 的 `NaN` / `±Inf` / 超界边界（v1 冻结，规范性；v1 补钉）**：三者返回 `int`，其边界**完全复用上条 `int(x)` 口径**——`NaN` → **`ValueError`**（经 `ValueMsg::Convert`：`src="float"`、`dst="int"`、`text="nan"`，消息 `无法把 float 转换为 int（'nan'）`）；`±Inf` → **`OverflowError`**；有限浮点**取整（floor/ceil/round）后结果超出 `[i64::MIN, i64::MAX]`** → **`OverflowError`**（消息 `整数溢出：结果超出 i64 范围`）。例：`floor(float("nan"))` → `ValueError`；`ceil(float("inf"))` → `OverflowError`；`round(1e30)` → `OverflowError`。实参为 `int` 时先按上条加宽为 `float`（不会落入本边界）；`abs` **不受本条约束**（同型：`float` 的 `NaN` 原样返回）。口径与 [interface-contract.md](./interface-contract.md) §10.7 `floor`/`ceil`/`round` 行一致。
 
 #### 4.5.8 struct 模板实例化 = 平拷贝（B7）
@@ -223,13 +224,13 @@
 | `CosmosAnswerError` | **`.lfz`** 文件缺少合法 `#42` 前导（[syntax.md](./syntax.md) §2.2.2 `is_lfz` 分支 a–c 任一失败） | **`你忘记了宇宙的答案`**（固定，无参数） | 加载 |
 | `SyntaxError` | 词法/语法错误：非法字符、字符串未闭合（含插值内裸换行）、块注释未闭合（`/*` 至 EOF 无 `*/` 匹配）、**未列举的转义**、**整数字面量超出 i64 范围**、意外记号、表达式未结束、单 `;`、同行两语句、赋值目标非法、`#` 位置非法、`_` 位置非法、管道多 `_`、break/continue 在循环外、return 在函数外、非 UTF-8 编码、**解析嵌套过深**（超过 `PARSE_DEPTH_LIMIT = 1000` 层，v1.1 补钉，见 [syntax.md](./syntax.md) §3.8）、**AST / 结构嵌套过深**（AST 节点深度超过 `AST_DEPTH_LIMIT = 10000` 层，v1.1 补钉，见 [syntax.md](./syntax.md) §3.9） | 见下表（细分消息） | 加载/解析 |
 | `NameError` | 引用未定义的名字 | `未定义的名字 '{name}'` | 运行 |
-| `TypeError` | 运算符/条件/调用/参数/格式说明符的**类型**不符；调用非函数；管道右侧非函数；参数个数不符；**重绑定 `let` 变量**（v1 补钉，见 §4.5.2） | 见下表 | 运行 |
+| `TypeError` | 运算符/条件/调用/参数/格式说明符的**类型**不符；调用非函数；管道右侧非函数；参数个数不符；**重绑定 `let` 变量**（v1 补钉，见 §4.5.2）；**对 `string` 取下标** / 索引键类型不符（v1.1 补钉，见 §4.2） | 见下表 | 运行 |
 | `IndexError` | 数组下标越界（含负索引规范化后越界） | `下标 {i} 越界（长度 {n}）` | 运行 |
 | `FieldError` | struct 不存在该字段（`.字段` 或 `["键"]` 读取缺失键）；**`del(k, s)` 的键不是数据字段**（方法字段视为缺失，v1 补钉） | `结构体没有字段 '{name}'` | 运行 |
 | `ZeroDivisionError` | 整数/浮点 `/`、`%` 或 `div(a,b)` 的除数为零（**含 float**，B5） | `除以零` / `对零取模` | 运行 |
 | `OverflowError` | `int` 运算结果超出 i64 范围；`int(float)` 遇 `±Inf` 或有限浮点截断后超 i64 范围（§4.5.7）；**容器 / 字符串构造所需容量超出可分配上限**（`range` 超大 `n` / `repeat` 结果过长，v1.1 补钉） | `整数溢出：结果超出 i64 范围` / **`容量溢出：所需容量超出可分配上限`** | 运行 |
-| `ValueError` | 显式转换失败（`int("abc")`、`int(NaN)` 等）；格式说明符语法非法；**空数组取极值**（`min`/`max`/`minBy`/`maxBy`）；**`randInt` 区间非法**（`lo >= hi`） | `无法把 {src} 转换为 {dst}（'{text}'）` / `格式说明符非法：'{spec}'` / **`空数组没有极值（{func}）`** / **`区间非法：{lo} >= {hi}`** | 运行 |
-| `IOError` | `input()` 遇 EOF；不可读文件等 | `输入结束（EOF）` / `无法读取：{path}` | 运行 |
+| `ValueError` | 显式转换失败（`int("abc")`、`int(NaN)` 等）；格式说明符语法非法；**空数组取极值**（`min`/`max`/`minBy`/`maxBy`）；**`randInt` 区间非法**（`lo >= hi`）；**`ord` 实参标量数 ≠ 1**；**`chr` 实参不是合法 Unicode 码点**；**`padEnd`/`padStart` 的 `fill` 为空串**（后三条 v1.1 补钉，见 [interface-contract.md](./interface-contract.md) §10.7） | `无法把 {src} 转换为 {dst}（'{text}'）` / `格式说明符非法：'{spec}'` / **`空数组没有极值（{func}）`** / **`区间非法：{lo} >= {hi}`** / **`ord 的参数必须是单个字符（Unicode 标量数 {n}）`** / **`chr 的参数不是合法的 Unicode 码点：{n}`** / **`填充串不能为空`** | 运行 |
+| `IOError` | `input()` 遇 EOF；不可读文件等；**文件 IO（v1.1 补钉，见 [interface-contract.md](./interface-contract.md) §10.7）**：`readFile` 读失败 / 读到非法 UTF-8、`writeFile` / `appendFile` 写失败 | `输入结束（EOF）` / `无法读取：{path}` / **`无法读取：{path}（不是合法的 UTF-8 编码）`** / **`无法写入：{path}`** / **`无法追加：{path}`** | 运行 |
 | `AssertionError` | **仅** `assert(cond, msg)` 失败 或 `fail(msg)`（`check` 失败**不**抛此错，A4） | `断言失败：{msg}`（省略时 `断言失败`）/ `{msg}`（`fail` 省略时 `fail()`） | 运行 |
 | `RecursionError` | 求值帧深度超限（默认 10000 层）或深结构处理超限（A7/B4） | `递归深度超限（超过 10000 层）` | 运行 |
 
@@ -281,8 +282,11 @@
 |---|---|---|
 | 空数组取极值 | `空数组没有极值（{func}）` | `min` / `max` / `minBy` / `maxBy` 收到空 `array`（[interface-contract.md](./interface-contract.md) §10.7） |
 | 随机区间非法 | `区间非法：{lo} >= {hi}` | `randInt(lo, hi)` 且 `lo >= hi`（[interface-contract.md](./interface-contract.md) §10.7） |
+| `ord` 实参不是单字符（v1.1 补钉） | `ord 的参数必须是单个字符（Unicode 标量数 {n}）` | `ord(c)` 且 `c` 的 Unicode 标量数 ≠ 1（[interface-contract.md](./interface-contract.md) §10.7） |
+| `chr` 实参非法码点（v1.1 补钉） | `chr 的参数不是合法的 Unicode 码点：{n}` | `chr(n)` 且 `n` 越出 `0..=0x10FFFF` 或落在代理区 `0xD800..=0xDFFF`（[interface-contract.md](./interface-contract.md) §10.7） |
+| `pad*` 填充串为空（v1.1 补钉） | `填充串不能为空` | `padEnd` / `padStart` 的 `fill` 为空串（[interface-contract.md](./interface-contract.md) §10.7） |
 
-> 二者**均为 `ValueError`**（不新增错误类）；消息经 `ValueMsg` 承载（实现变体 `EmptyExtremum { func }` / `BadRange { lo, hi }` 见 [interface-contract.md](./interface-contract.md) §10.8）。`{func}` = 内置名（`min`/`max`/`minBy`/`maxBy`）；`{lo}`/`{hi}` = 实参十进制原文。
+> 前二者与本表后三条**均为 `ValueError`**（不新增错误类）；消息经 `ValueMsg` 承载（实现变体 `EmptyExtremum { func }` / `BadRange { lo, hi }` / **`NotSingleScalar { n }` / `BadCodepoint { n }` / `EmptyFill`** 见 [interface-contract.md](./interface-contract.md) §10.8）。`{func}` = 内置名（`min`/`max`/`minBy`/`maxBy`）；`{lo}`/`{hi}` = 实参十进制原文；`{n}`（`ord`）= **标量数**（`usize`）、`{n}`（`chr`）= **整数原值**（`i64`）。
 
 **`IndexError` 的 `idx` / `len` 取值（v1 补钉，规范性）**：`LfzError::Index { idx, len }`（[interface-contract.md](./interface-contract.md) §10.4）两字段取值钉死如下（消息恒为 `下标 {i} 越界（长度 {n}）`，其中 `i = idx`、`n = len`）：
 

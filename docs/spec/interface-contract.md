@@ -27,8 +27,8 @@
 | `FieldError` | `LfzError::Field { name, span }` | 运行 | `结构体没有字段 '{name}'` |
 | `ZeroDivisionError` | `LfzError::DivZero { modulo, span }` | 运行 | `除以零` / `对零取模` |
 | `OverflowError` | `LfzError::Overflow { span, msg: OverflowMsg }` | 运行 | `整数溢出：结果超出 i64 范围` / `容量溢出：所需容量超出可分配上限`（容器/字符串构造，v1.1 补钉） |
-| `ValueError` | `LfzError::Value { msg: ValueMsg, span }` | 运行 | `无法把 {src} 转换为 {dst}（'{text}'）` / `格式说明符非法：'{spec}'` / **`空数组没有极值（{func}）`** / **`区间非法：{lo} >= {hi}`** |
-| `IOError` | `LfzError::Io { msg: String, span: Option<Span> }` | 运行 | `输入结束（EOF）` / `无法读取：{path}` |
+| `ValueError` | `LfzError::Value { msg: ValueMsg, span }` | 运行 | `无法把 {src} 转换为 {dst}（'{text}'）` / `格式说明符非法：'{spec}'` / **`空数组没有极值（{func}）`** / **`区间非法：{lo} >= {hi}`** / **`ord 的参数必须是单个字符（Unicode 标量数 {n}）`** / **`chr 的参数不是合法的 Unicode 码点：{n}`** / **`填充串不能为空`**（后三条 v1.1 补钉） |
+| `IOError` | `LfzError::Io { msg: String, span: Option<Span> }` | 运行 | `输入结束（EOF）` / `无法读取：{path}` / **`无法读取：{path}（不是合法的 UTF-8 编码）`** / **`无法写入：{path}`** / **`无法追加：{path}`**（后三条 v1.1 补钉，见 §10.7「文件 IO」） |
 | `AssertionError` | `LfzError::Assert { msg: String, span }` | 运行 | `断言失败：{msg}` / `{msg}` |
 | `RecursionError` | `LfzError::Recursion { depth, limit, span }` | 运行 | `递归深度超限（超过 10000 层）` |
 
@@ -135,7 +135,8 @@ enum LfzError {
 | 内置 | 签名 | 返回 | 说明 |
 |---|---|---|---|
 | `len` | `len(x) -> int` | `int` | array 元素数；struct **数据字段**数（不含方法，A5）；string 的 Unicode 标量数 |
-| `range` | `range(n) -> array` | `array[int]` | `[0, 1, …, n-1]`；`n < 0` → 空数组；若构造结果所需容量超出运行时可分配上限 → `OverflowError`（消息 `容量溢出：所需容量超出可分配上限`，v1.1 补钉）；**任何 `n` 均不得使进程 panic** |
+| `range` | `range(n) -> array` | `array[int]` | `[0, 1, …, n-1]`；`n < 0` → 空数组 |
+| `range` | `range(lo, hi) -> array` | `array[int]` | `[lo, lo+1, …, hi-1]`（**半开区间** `[lo, hi)`）；`hi <= lo` → 空数组（v1.1 补钉；**3 参 `range(lo,hi,step)` = OUT**） |
 | `push` | `push(v, xs) -> array` | `array` | 追加 `v` 的**新**数组（不改 `xs`） |
 | `pop` | `pop(xs) -> array` | `array` | 去掉末元素的**新**数组；空 → `IndexError` |
 | `removeAt` | `removeAt(i, xs) -> array` | `array` | 去掉下标 `i`（支持负索引）的**新**数组；越界 → `IndexError` |
@@ -155,6 +156,7 @@ enum LfzError {
 | `take` | `take(n, xs) -> array` | `array` | 前 `n` 个（`n` 夹取到 `[0, len]`） |
 | `drop` | `drop(n, xs) -> array` | `array` | 去前 `n` 个 |
 | `each` | `each(f, xs) -> nil` | `nil` | 仅副作用遍历 |
+| `contains` | `contains(v, xs) -> bool` | `bool` | `xs` 中是否存在与 `v` **相等**的元素；相等用 `==`（[semantics.md](./semantics.md) §4.5.9，深结构、环安全）。**仅 `array`**（非 array → `TypeError`）；struct 键判定用 `has(k, s)`。**O(n)** 线性扫描（v1.1 补钉；**须标注**，**不得**放进循环对长数组反复调用） |
 
 **struct / 字典**
 
@@ -177,6 +179,11 @@ enum LfzError {
 | `replace` | `replace(old, new, s) -> string` | `string` | 全部替换 |
 | `repeat` | `repeat(n, s) -> string` | `string` | `n <= 0` → 空串；结果所需容量（`n * len(s)` 字节）超出运行时可分配上限 → `OverflowError`（消息 `容量溢出：所需容量超出可分配上限`，v1.1 补钉）；**任何 `n` / `s` 均不得使进程 panic** |
 | `startsWith` | `startsWith(prefix, s) -> bool` | `bool` | |
+| `endsWith` | `endsWith(suffix, s) -> bool` | `bool` | `s` 是否以 `suffix` 结尾；`suffix == ""` → `true`。**O(m)**（v1.1 补钉） |
+| `indexOf` | `indexOf(sub, s) -> int` | `int` | `sub` 首次出现的**标量下标**（与 `len`/`substring` 同口径）；未找到 → `-1`；`sub == ""` → `0`。**最坏 O(n·m)**（n=主串标量数、m=子串标量数；**须标注**，不得宣称 O(n)）（v1.1 补钉） |
+| `padEnd` | `padEnd(width, fill, s) -> string` | `string` | 右侧补 `fill` 至**标量**总宽 `width`；`len(s) >= width` → 原串；`fill` 重复并**按标量截断**（v1.1 补钉） |
+| `padStart` | `padStart(width, fill, s) -> string` | `string` | 左侧补 `fill`（规则同 `padEnd`）（v1.1 补钉） |
+| `substring` | `substring(from, to, s) -> string` | `string` | `s` 在 `[from, to)` 的子串（**标量半开**）；下标**夹取**到 `[0, len(s)]`；`from >= to` → 空串（**与 `slice` 同口径**）（v1.1 补钉） |
 
 **数学 / 随机 / 转换 / IO / 断言**
 
@@ -188,6 +195,10 @@ enum LfzError {
 | `round` | `round(f) -> int` | `int` | **四舍六入五成双**（Python banker's rounding） |
 | `sqrt` | `sqrt(f) -> float` | `float` | `f < 0` → `NaN` |
 | `pow` | `pow(a, b) -> float` | `float` | 数值幂；溢出 → `±Inf` |
+| `sin` | `sin(f) -> float` | `float` | 正弦；`int` 实参加宽；IEEE（`sin(±Inf)`/`sin(NaN)` → `NaN`）。**O(1)**（v1.1 补钉） |
+| `cos` | `cos(f) -> float` | `float` | 余弦；口径同 `sin`。**O(1)**（v1.1 补钉） |
+| `log` | `log(f) -> float` | `float` | 自然对数；`int` 实参加宽；`log(x<0)` → `NaN`、**`log(0)` → `-Inf`**（超越函数极限，**非** `ZeroDivisionError`）。**O(1)**（v1.1 补钉） |
+| `exp` | `exp(f) -> float` | `float` | `e^f`；`int` 实参加宽；溢出 → `+Inf`。**O(1)**（v1.1 补钉） |
 | `div` | `div(a, b) -> int` | `int` | 两参须 `int`；**向下取整**；`b == 0` → `ZeroDivisionError` |
 | `rand` | `rand() -> float` | `float` | `[0.0, 1.0)` |
 | `randInt` | `randInt(lo, hi) -> int` | `int` | `[lo, hi)`；`lo >= hi` → `ValueError` |
@@ -195,6 +206,8 @@ enum LfzError {
 | `str` | `str(x) -> string` | `string` | 显示形式（[semantics.md](./semantics.md) §3.7） |
 | `int` | `int(x) -> int` | `int` | `string`/`float`/`bool` → `int`；`float` **向零截断**；**`NaN` → `ValueError`；`±Inf` → `OverflowError`；有限浮点截断后超 i64 → `OverflowError`**（[semantics.md](./semantics.md) §4.5.7）；非法串 → `ValueError` |
 | `float` | `float(x) -> float` | `float` | `int`/`string`/`bool` → `float`；非法串 → `ValueError`；支持 `"inf"`/`"-inf"`/`"nan"` |
+| `ord` | `ord(c) -> int` | `int` | `c` 须为**恰好 1 个 Unicode 标量**的 `string` → 其码点（`0..=0x10FFFF`）；非 `string` → `TypeError`；标量数 ≠ 1 → `ValueError`（消息 `ord 的参数必须是单个字符（Unicode 标量数 {n}）`）。**O(1)**（v1.1 补钉） |
+| `chr` | `chr(n) -> string` | `string` | `n` 须 `int` 且为**合法 Unicode 码点**（`0 <= n <= 0x10FFFF` 且非代理区 `0xD800..=0xDFFF`）→ 该字符；非 `int` → `TypeError`；非法码点 → `ValueError`（消息 `chr 的参数不是合法的 Unicode 码点：{n}`）。**O(1)**（v1.1 补钉） |
 | `type` | `type(x) -> string` | `string` | `"int"`/`"float"`/`"string"`/`"bool"`/`"nil"`/`"array"`/`"struct"`/`"function"` |
 | `print` | `print(...) -> nil` | `nil` | 各参数按显示形式拼接、**空格连接** + 末尾 `\n`（stdout） |
 | `eprint` | `eprint(...) -> nil` | `nil` | 同 `print`，但写 **stderr** |
@@ -203,13 +216,13 @@ enum LfzError {
 | `check` | `check(cond, msg?) -> bool` | `bool` | 失败 → stderr 警告 + 返回 `false`，**不中断**（A4） |
 | `fail` | `fail(msg?) -> never` | — | 抛 `AssertionError`（致命） |
 
-> **说明**：`sqrt` / `pow` 之外的 `math` 内置（如 `sin` / `log` / `exp`）**v1 不提供**（列 v1.1 backlog），故**不存在**这些函数的形参加宽问题。`div` 与 `/` 的区别见 [semantics.md](./semantics.md) §4.2；`minBy`/`maxBy` 因 §9 样例使用而保留（D-007 v1 IN 清单）。
+> **说明**：**v1.1 补钉已提供** `sin` / `cos` / `log` / `exp`（加宽口径见下「数值内置形参加宽」）；其余 `math` 内置（如 `tan` / `atan2` / `log2` / `log10`）仍属 v1.1 backlog。`div` 与 `/` 的区别见 [semantics.md](./semantics.md) §4.2；`minBy`/`maxBy` 因 §9 样例使用而保留（D-007 v1 IN 清单）。
 
 **数值内置形参加宽（v1 冻结，规范性；与 §1「唯一隐式转换」、[semantics.md](./semantics.md) §4.5.7 同源；冻结前补钉）**：
 
-- **加宽（int→float）的数值内置** —— `floor` / `ceil` / `round` / `sqrt` / `pow`：若实参为 `int`，先按 **§1 / §4.5.7 的全局唯一隐式转换 `int → float`** 加宽为 `float`，再执行；`float` 实参直接使用。故 `floor(3)` = `floor(3.0)` = `3`、`sqrt(4)` = `sqrt(4.0)` = `2.0`。加宽在 `|int| > 2^53` 时**可能不精确**（§4.5.7）。
+- **加宽（int→float）的数值内置** —— `floor` / `ceil` / `round` / `sqrt` / `pow` / **`sin` / `cos` / `log` / `exp`（v1.1 补钉新增）**：若实参为 `int`，先按 **§1 / §4.5.7 的全局唯一隐式转换 `int → float`** 加宽为 `float`，再执行；`float` 实参直接使用。故 `floor(3)` = `floor(3.0)` = `3`、`sqrt(4)` = `sqrt(4.0)` = `2.0`。加宽在 `|int| > 2^53` 时**可能不精确**（§4.5.7）。
 - **同型（不加宽）的数值内置** —— `abs`：**参数与返回值同型**（`int → int`、`float → float`），**绝不加宽**：`abs(-3) == 3`（`int`）、`abs(-3.0) == 3.0`（`float`）。
-- **一句话钉死差异**：`floor` / `ceil` / `round` / `sqrt` / `pow` **接受 `int` 并把其实参加宽为 `float`**（返回类型见上表：前三者 `int`，后二者 `float`）；**`abs` 接受什么类型就返回什么类型，从不加宽**。全文关于数值内置的实参处理**以此为准**，不再有"未声明是否加宽"的情形。
+- **一句话钉死差异**：`floor` / `ceil` / `round` / `sqrt` / `pow` / `sin` / `cos` / `log` / `exp` **接受 `int` 并把其实参加宽为 `float`**（返回类型见上表：`floor`/`ceil`/`round` 为 `int`，其余为 `float`）；**`abs` 接受什么类型就返回什么类型，从不加宽**。全文关于数值内置的实参处理**以此为准**，不再有"未声明是否加宽"的情形。
 
 **内置边界补钉（v1，规范性；v1 补钉，与 [semantics.md](./semantics.md) §8.1 同源）**：
 
@@ -219,6 +232,34 @@ enum LfzError {
 - **`IndexError` 的 `idx` / `len`（钉死）**：`idx` = 触发越界的下标（**有实参者用实参原值**；`pop` 无实参 → 隐含末元素下标 `-1`）；`len` = **越界时**容器长度。故 **`pop([])` → `Index { idx: -1, len: 0 }`**（消息 `下标 -1 越界（长度 0）`）。
 - **`insert` 不支持负索引（钉死）**：合法域恒为 `i ∈ [0, len]`（`len = len(xs)`）；`i < 0` 或 `i > len` → `Index { idx: i, len }`。**与 `removeAt` / `swap` 的支持负索引显式区分**。
 - **`del(k, s)` 仅作用于数据字段（钉死；A5 数据面，与 `keys` / `has` / `len` 同集合）**：`k` 为方法字段（函数值字段）→ **`FieldError`**（现有 `LfzError::Field`，消息 `结构体没有字段 '{name}'`）；即 **`del(k, s)` 成功 ⟺ `has(k, s) == true`**。
+
+**文件 IO（v1.1 补钉，规范性）**
+
+> 新增 3 个内置；**data-last**：被操作的 `string` 数据（`contents`）在末参。
+
+| 内置 | 签名 | 返回 | 说明 |
+|---|---|---|---|
+| `readFile` | `readFile(path) -> string` | `string` | 以 **UTF-8** 读入整个文件；`path` 须 `string` |
+| `writeFile` | `writeFile(path, contents) -> nil` | `nil` | 以 **UTF-8** **覆盖写**（创建 / 截断）；`path`、`contents` 须 `string` |
+| `appendFile` | `appendFile(path, contents) -> nil` | `nil` | 以 **UTF-8** **追加**（不存在则创建）；两参须 `string` |
+
+> **语义（规范性）**：
+> - **路径**：`path` **原样**交给操作系统；**相对路径**相对**解释器进程的当前工作目录**解析；**不**规范化、**不**沙箱、**不**展开 `~`、**不**自动创建父目录。
+> - **编码**：UTF-8。`readFile` 读到**非法 UTF-8** → `IOError: 无法读取：{path}（不是合法的 UTF-8 编码）`。
+> - **错误（均 `IOError`，运行期，帧栈非空时带 `Traceback`）**：`readFile` 失败 → `无法读取：{path}`；`writeFile` 失败 → `无法写入：{path}`；`appendFile` 失败 → `无法追加：{path}`。**二进制 / 目录 IO = OUT**。
+> - **返回值**：读 → `string`；写 / 追加 → `nil`。
+> - **与 `input()` 同属"外部 IO"**：结果依赖运行环境（文件系统 / 工作目录），**不在** [semantics.md](./semantics.md) §4.5 确定性「无魔法」纪律讨论内（该纪律约束**求值顺序 / 类型 / 无隐式转换**，外部 IO 从来排除）；`seed` 的"唯一非确定源"表述**不变**（文件 IO 是**环境依赖**，非随机性）。
+> - **不得引入隐式转换**：`path` / `contents` 必须 `string`；`writeFile(p, 42)` → `TypeError`（**不**自动 `str`），需写数字请先 `str(42)`。
+> - **复杂度**：O(文件大小) 时间 + O(文件大小) 内存；**无隐藏 O(n²)**。⚠️（既有陈规，见 `FEATURE-AUDIT` §7.1）把多次读取结果 `s = s + chunk` 累积为 **O(n²)**，应改用 `push` + `join("", arr)`（O(n)）。
+> - **`span`** = 调用节点（内置名）首字符；属**运行期 10 类**之一。
+
+**v1.1 补钉内置的边界与复杂度（规范性）**
+
+- **`range` 参数个数**：仅接受 **1 或 2** 个参数（`min_args = 1, max_args = 2`）；`m < 1` → `函数 range 期待 1 个参数，得到 {m}`；`m > 2` → `函数 range 期待 2 个参数，得到 {m}`；非 `int` 实参 → `TypeError`（`运算符 'range' 不支持 {t} 与 int`）。两形均**物化普通 `array[int]`**（沿用 §4.5.4 array 快照）；构造结果所需容量超上限 → `OverflowError: 容量溢出：所需容量超出可分配上限`；**任何 `n`/`lo`/`hi` 均不得使进程 panic**。**复杂度** `O(n)` / `O(hi−lo)` 时间与内存，与既有同阶。
+- **字符串方法族**（`indexOf` / `endsWith` / `padEnd` / `padStart` / `substring`）：全 **data-last**、**返回新值**（string 不可变 §4.5.11）。`padEnd`/`padStart` 的 `fill == ""` → `ValueError: 填充串不能为空`；`width`/`from`/`to` 非 `int` → `TypeError`；`substring` 下标**夹取**（负数 / 越界不作 `IndexError`，与 `slice` 同口径）。**复杂度**：`indexOf` **最坏 `O(n·m)`**（n=主串标量数、m=子串标量数；**必须标注**，不得宣称 `O(n)`；实现用 `str::find` 可期望 `O(n+m)`，但**规范按保守最坏 `O(n·m)` 标注**）；`endsWith` `O(m)`；`pad*` `O(width)`；`substring` `O(to−from)`。**不引入隐藏 `O(n²)`**。
+- **`ord` / `chr`**：**O(1)**（`ord` 仅窥前 2 个标量即可判「非单字符」）。`ord` 非 `string` → `TypeError`、标量数 ≠ 1 → `ValueError`；`chr` 非 `int` → `TypeError`、非法码点 → `ValueError`。
+- **`sin` / `cos` / `log` / `exp`**：**O(1)**；`int` 实参加宽；IEEE 口径（`log(0)` → `-Inf`、`log(x<0)` → `NaN`、`exp` 溢出 → `+Inf`、`sin`/`cos` 遇 `±Inf`/`NaN` → `NaN`），见 [semantics.md](./semantics.md) §4.5.6。
+- **`contains`**：**O(n)** 线性扫描（**必须标注**；元素为容器时每次 `==` 可 > O(1)，深结构比较继承 §4.5.9 环安全）；`xs` 非 `array` → `TypeError`；**不得**放进 N 次循环对长数组反复调用（否则 `O(N·M)`）；struct 键判定用 `has(k, s)`，二者不重叠。
 
 ### 10.8 错误实现建议（v0.5，B11 / B12 / B13）
 
@@ -234,6 +275,7 @@ enum LfzError {
 - **int→float 加宽（B13）**：见 [semantics.md](./semantics.md) §4.5.7（加宽可能不精确；混合比较按数学精确值）。
 - **`OverflowMsg` 新增变体（实现侧，v1.1 补钉）**：**`Capacity`**（**无字段**，消息 `容量溢出：所需容量超出可分配上限`）——**容器 / 字符串构造所需容量超出可分配上限**（`range` 超大 `n` / `repeat` 结果过长，见 §10.7）；归 `LfzError::Overflow` → **`OverflowError`**（**不新增错误类**；`OverflowMsg` 由 1 条增至 **2** 条，供 core-dev 在 `src/error.rs` 落地）。
 - **`ValueMsg` 变体（实现侧，v1 补钉）**：`Convert { src, dst, text }`、`BadFormatSpec { spec }`、**`EmptyExtremum { func: String }`**（消息 `空数组没有极值（{func}）`）、**`BadRange { lo: i64, hi: i64 }`**（消息 `区间非法：{lo} >= {hi}`）。后两者为本轮补钉**新增**，供 core-dev 在 `src/error.rs` 落地；均归类 `ValueError`（**不新增错误类**）。
+- **`ValueMsg` 新增变体（实现侧，v1.1 补钉）**：**`NotSingleScalar { n: usize }`**（消息 `ord 的参数必须是单个字符（Unicode 标量数 {n}）`）——`ord` 实参 Unicode 标量数 ≠ 1；**`BadCodepoint { n: i64 }`**（消息 `chr 的参数不是合法的 Unicode 码点：{n}`）——`chr` 实参越出 `0..=0x10FFFF` 或落在代理区；**`EmptyFill`**（**无字段**，消息 `填充串不能为空`）——`padEnd`/`padStart` 的 `fill` 为空串（§10.7）。三者均归类 `ValueError` → **`ValueError`**（**不新增错误类**；`ValueMsg` 由 4 条增至 **7** 条），供 core-dev 在 `src/error.rs` 落地。
 - **`SyntaxMsg` 新增变体（实现侧，v1 补钉）**：**`UnterminatedBlockComment`**（**无字段**，消息 `块注释在此处未闭合（缺少 '*/'）`）——**未闭合块注释 `/*` 至 EOF**（[syntax.md](./syntax.md) §2.4、[semantics.md](./semantics.md) §8.1）；归 `LfzError::Syntax` → `SyntaxError`，`span` 指向 `/*` 中的 `/`（**不新增错误类**）。
 - **`SyntaxMsg` 新增变体（实现侧，v1.1 补钉）**：**`NestingTooDeep`**（**无字段**，消息逐字符 `嵌套深度超限（超过 1000 层）`）——**解析嵌套深度超过 `PARSE_DEPTH_LIMIT = 1000`**（[syntax.md](./syntax.md) §3.8、[semantics.md](./semantics.md) §8.1）；归 `LfzError::Syntax` → **`SyntaxError`**（**不新增错误类**；`SyntaxMsg` 由 17 条增至 **18** 条），`span` = **第 1001 层嵌套的开启记号首字符**。
 - **`SyntaxMsg` 新增变体（实现侧，v1.1 补钉）**：**`ExprTooDeep`**（**无字段**，消息逐字符 `表达式嵌套过深（超过 10000 层）`）——**AST 节点深度超过 `AST_DEPTH_LIMIT = 10000`**（[syntax.md](./syntax.md) §3.9、[semantics.md](./semantics.md) §8.1）；归 `LfzError::Syntax` → **`SyntaxError`**（**不新增错误类**；`SyntaxMsg` 由 **18** 条增至 **19** 条），`span` = **首次使 AST 深度超过上限的节点首字符**。
