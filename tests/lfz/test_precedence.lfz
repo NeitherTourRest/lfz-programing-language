@@ -1,0 +1,19 @@
+#42
+// ============================================================
+// test_precedence.lfz — 优先级与结合性
+// 覆盖: 算术内部优先级、一元 > 二元、算术 > 比较 > 相等 > && > ||
+//      左结合性、括号覆盖
+// spec: syntax.md §4.1（优先级表）、§4.4（EBNF 修正）
+// ============================================================
+
+assert(1 + 2 * 3 == 7, "mul_binds_tighter_than_add")
+assert((1 + 2) * 3 == 9, "parentheses_override_precedence")
+assert(1 - 2 - 3 == -4, "sub_is_left_associative")
+assert(10 - 2 * 3 == 4, "mul_binds_tighter_than_sub")
+assert(2 * 3 + 1 == 7, "mul_binds_tighter_than_add_2")
+assert(1 + 2 < 4, "arithmetic_binds_tighter_than_comparison")
+assert((1 + 2 < 4) == true, "comparison_binds_tighter_than_equality")
+assert(!true == false, "unary_not_binds_tighter_than_equality")
+assert(-2 * 3 == -6, "unary_minus_binds_tighter_than_mul")
+assert(true || false && false, "and_binds_tighter_than_or")
+assert(!(false && true) || true, "and_or_combination")

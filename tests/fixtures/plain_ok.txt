@@ -1,0 +1,2 @@
+assert(1 + 1 == 2, "non_lfz_no_preamble_required")
+assert("#42" == "#42", "non_lfz_hash_in_string")

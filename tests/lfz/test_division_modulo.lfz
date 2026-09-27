@@ -1,0 +1,26 @@
+#42
+// ============================================================
+// test_division_modulo.lfz — `/` 恒为 float；`%` 符号随除数；div 向下取整 (A3)
+// spec: semantics.md §4.2; syntax.md §2.3
+// 负例（除零 / 取模零）见 fixtures/zero_division.lfz、mod_zero.lfz、div_zero.lfz
+// ============================================================
+
+// `/` 真除法，恒返回 float
+assert(7 / 2 == 3.5, "divide_is_true_division")
+assert(type(7 / 2) == "float", "divide_always_returns_float")
+assert(4 / 2 == 2.0, "divide_even_returns_float")
+assert(type(4 / 2) == "float", "divide_even_type_is_float")
+assert(-7 / 2 == -3.5, "divide_negative_float")
+assert(-4 / 2 == -2.0, "divide_negative_even")
+
+// div = 向下取整（Python //），两参 int，返回 int
+assert(div(7, 2) == 3, "builtin_div_floors_down")
+assert(div(-7, 2) == -4, "builtin_div_floors_down_negative")
+assert(type(div(7, 2)) == "int", "builtin_div_returns_int")
+
+// `%` 符号随除数（Python 取模）
+assert(7 % 3 == 1, "mod_positive")
+assert(-7 % 3 == 2, "mod_sign_follows_positive_divisor")
+assert(7 % -3 == -2, "mod_sign_follows_negative_divisor")
+assert(-7 % -3 == -1, "mod_both_negative")
+assert(6.0 % 4.0 == 2.0, "mod_float")

@@ -1,0 +1,57 @@
+#42
+// ============================================================
+// test_literals.lfz — 字面量与显示
+// 覆盖: int / float / string(含转义) / bool / nil
+// spec: syntax.md §2.7（数值字面量）、§2.8（字符串/转义）、semantics.md §3.7（显示形式）
+// 判定: 全部 assert 通过 → PASS；任一 assert 失败 → FAIL（runner 报位置）
+// ============================================================
+
+// ---- int ----
+assert(42 == 42, "int_literal: 42")
+assert(0 == 0, "int_literal: 0")
+assert(-7 == 0 - 7, "int_literal: -7")
+assert(1_000 == 1000, "int_literal: underscore 1_000")
+assert(255 == 0xFF, "int_literal: hex 0xFF == 255")
+assert(10 == 0b1010, "int_literal: binary 0b1010 == 10")
+assert(493 == 0o755, "int_literal: octal 0o755 == 493")
+assert(str(42) == "42", "int_display: str(42) == \"42\"")
+assert(str(0) == "0", "int_display: str(0) == \"0\"")
+assert(type(42) == "int", "int_type")
+
+// ---- float ----
+assert(3.14 == 3.14, "float_literal: 3.14")
+assert(0.5 == 0.5, "float_literal: 0.5 (leading zero required)")
+assert(1.0 == 1.0, "float_literal: 1.0")
+assert(0.0025 == 2.5e-3, "float_literal: exponent 2.5e-3")
+assert(10000000000.0 == 1e10, "float_literal: exponent 1e10")
+assert(str(2.0) == "2.0", "float_display: integer-valued float shows .0")
+assert(str(3.5) == "3.5", "float_display: 3.5")
+assert(type(3.14) == "float", "float_type")
+
+// ---- bool ----
+assert(true, "bool_literal: true")
+assert(!false, "bool_literal: false (via !)")
+assert(str(true) == "true", "bool_display: true")
+assert(str(false) == "false", "bool_display: false")
+assert(type(true) == "bool", "bool_type")
+
+// ---- nil ----
+assert(type(nil) == "nil", "nil_type")
+assert(str(nil) == "nil", "nil_display")
+assert(nil == nil, "nil_equality")
+
+// ---- string 与转义 \n \t \r \\ \" \e \$ ----
+assert("hello" == "hello", "string_literal")
+assert(len("abc") == 3, "string_len_ascii")
+assert(len("中文") == 2, "string_len_counts_unicode_scalars")
+assert(len("\n") == 1, "escape_newline_is_one_char")
+assert(len("\t") == 1, "escape_tab_is_one_char")
+assert(len("\r") == 1, "escape_cr_is_one_char")
+assert(len("\\") == 1, "escape_backslash_is_one_char")
+assert(len("\"") == 1, "escape_quote_is_one_char")
+assert(len("\e") == 1, "escape_esc_is_one_char")
+assert(len("\$") == 1, "escape_dollar_is_one_char")
+assert("\n" != "\\n", "escape_newline_distinct_from_backslash_n")
+assert("\t" != "t", "escape_tab_distinct_from_letter_t")
+assert(len("\${x}") == 4, "escaped_dollar_yields_literal_brace_text")
+assert("${1 + 1}" == "2", "string_interpolation")

@@ -1,0 +1,44 @@
+#42
+// ============================================================
+// test_let_var.lfz — 标识符与 let / var
+// 覆盖: let 绑定、var 重绑定、复合赋值、标识符命名、let 内容可变(A1)
+// spec: syntax.md §2.6 §7; semantics.md §4.5.2
+// 负例（let 重绑定 → TypeError）见 fixtures/let_rebind.lfz 与 let_compound_rebind.lfz
+// ============================================================
+
+let x = 1
+assert(x == 1, "let_binding")
+
+var y = 2
+assert(y == 2, "var_binding")
+
+y = 3
+assert(y == 3, "var_rebind")
+
+y += 4
+assert(y == 7, "var_compound_add")
+
+y -= 2
+assert(y == 5, "var_compound_sub")
+
+y *= 3
+assert(y == 15, "var_compound_mul")
+
+y /= 5
+assert(y == 3.0, "var_compound_div_is_float")
+
+y %= 2
+assert(y == 1.0, "var_compound_mod")
+
+let _x = 5
+assert(_x == 5, "identifier_leading_underscore")
+
+let x_ = 6
+assert(x_ == 6, "identifier_trailing_underscore")
+
+let arr = [1, 2, 3]
+arr[0] = 9
+assert(arr[0] == 9, "let_locks_rebinding_not_content")
+
+let st = "a"
+assert(st + "b" == "ab", "string_immutable_concat")

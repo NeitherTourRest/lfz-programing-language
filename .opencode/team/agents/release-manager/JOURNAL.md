@@ -1,5 +1,21 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 11:35] ✅ P1（需求基线同步）+ P5.1（黑盒测试集基础批）两个原子提交并推送
+- 来源: team-lead 任务书（轻量启动；把 **P1 需求基线同步** 与 **P5.1 黑盒测试集基础批** 做两个原子提交并 push。提交 1（P1）= `git add .opencode/team/REQUIREMENTS.md .opencode/team/agents/requirements-analyst/{STATUS,JOURNAL}.md`；提交 2（P5.1）= `git add tests/cases.json tests/coverage-matrix.md tests/fixtures tests/lfz .opencode/team/agents/test-engineer/{STATUS,JOURNAL}.md`；收工文档并入提交 2。已核验：`cargo build` 0 warning、`cargo test` 431 全绿（361+42+16+12）、`cargo run --quiet -- test` → `共 29 个用例，通过 29，失败 0，错误 0` exit 0。验收取证 status 空 / `log --oneline -4` / `ls-remote` 一致 / 两短哈希 / 复议 `cargo run --quiet -- test`。禁区：禁 force-push、**不打 tag**（P5 全部批次完成后由 team-lead 决定）、不改 `src/**`·`docs/spec/**`、不提交 `target/`·密钥·临时文件）
+- 完成:
+  - **入清单门禁（通过，未触发停止）**：`git status --short -uall` 复核实测 **36 文件**（5 个 ` M` + 31 个 `??`），与任务书清单逐字一致：提交 1 = `REQUIREMENTS.md`(M)、requirements-analyst `{STATUS,JOURNAL}.md`；提交 2 = `tests/cases.json`、`tests/coverage-matrix.md`、`tests/fixtures/`(22)、`tests/lfz/`(7)、test-engineer `{STATUS,JOURNAL}.md`。**无清单外条目、无缺失条目**。
+  - 基线复核：提交前 HEAD = 远程 `refs/heads/main` = `7527792`；`git diff --stat`（提交前）= 5 files changed, 364 insertions(+), 79 deletions(-)；`git check-ignore -v target` = `.gitignore:25:/target/`；`git tag -n` 仍仅 `v0.1.0`/`v0.2.0`。
+  - 内容取证（**未改内容，仅代为入库**）：`tests/fixtures/` **22 个**（`.lfz`×21 + `plain_ok.txt`）、`tests/lfz/` **7 个** `.lfz`；合计 **29** 用例，与 `cargo run -- test` 汇总「共 29 个用例」吻合。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 2（工作区提交后保持干净）。
+  - **提交 1**：`git add .opencode/team/REQUIREMENTS.md .opencode/team/agents/requirements-analyst/STATUS.md .opencode/team/agents/requirements-analyst/JOURNAL.md`（**显式 3 文件**，未 `git add -A`）→ `git commit -F <UTF-8 信息文件>`（标题 + 任务书 body 逐字）。
+  - **提交 2**：`git add tests/cases.json tests/coverage-matrix.md tests/fixtures tests/lfz .opencode/team/agents/test-engineer/STATUS.md .opencode/team/agents/test-engineer/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（**显式 35 文件**，未 `git add -A`）→ `git commit -F <UTF-8 信息文件>`（标题 + 任务书 body 逐字）。
+  - `git push`（非 force；`$LASTEXITCODE=0` 判据）。
+- 产出:
+  - 两个新提交（短哈希见汇报）；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD；`git tag -n` 仍仅 `v0.1.0`/`v0.2.0`（**本轮未打新 tag**）。
+  - 证据: `git status --short`；`git log --oneline -4`；`git ls-remote origin refs/heads/main`；`cargo run --quiet -- test`（汇总行 + 退出码）。
+- 决策: 无新 ADR（本轮仅代为入库，无跨角色新决策）。owner 偏差仍为遗留待确认项。
+- 下一步: P10 交付清单核对报告 `docs/reports/delivery-checklist.md`；P5 全部批次完成后由 team-lead 判定 `v0.3-tested`。
+- 阻塞: 无。
 ## [2026-09-27 11:29] ✅ P4.2 `--json` 两个原子提交并推送（清单已修正后执行）
 - 来源: team-lead 任务书（轻量启动；**裁决「清单已修正」**——上轮门禁停下的 3 个清单外文件 `src/json.rs`、`tests/cli.rs`、`tests/test_runner.rs` 确认同属 P4.2。要求按修正后完整清单做**两个原子提交**并 push：提交 1 = `git add src/builtins.rs`；提交 2 = `git add src/json.rs src/cli.rs src/main.rs src/test_runner.rs tests/cli.rs tests/test_runner.rs docs/tooling/runner-contract.md .opencode/team/DECISIONS.md .opencode/team/agents/tooling-dev/{STATUS,JOURNAL}.md .opencode/team/agents/release-manager/{STATUS,JOURNAL}.md`；收工文档并入提交 2。验收取证 status 空 / `log --oneline -4` / `ls-remote` 一致 / 短哈希 / `--json` 复议 `o.txt`=`{"ok":true}`、`e.txt`=`Hello, LFZ!`。禁区：禁 force-push、**不打 tag**、不改 `docs/spec/**`、不提交 `target/`·密钥·临时文件）
 - 完成:

@@ -1,0 +1,15 @@
+#42
+// ============================================================
+// test_preamble.lfz — `#42` 前导与 '#' 的词法边界（B6 / N2）
+// 覆盖: 合法 #42 首行；'#' 在字符串/注释/格式说明符内合法；第 2 行 //#42 合法
+// spec: syntax.md §2.2、§6-B6、§6-B12(N2)
+// 负例（缺首行 / 尾随空格 / 有尾随 Tab / 无换行 → CosmosAnswerError；
+//       第 1 行 //#42）见 fixtures/ 下对应夹具
+// ============================================================
+
+//#42 本行是第 2 行的合法行注释（N2：仅当 //#42 位于文件第 1 行才违规）
+assert(true, "preamble_present_and_valid")
+assert("#42" == "#42", "hash_is_ordinary_char_in_string")
+assert(len("#42") == 3, "hash_string_length")
+assert(len("# a # b") == 7, "hash_ok_inside_string_text")
+assert("${42:#>4}" == "##42", "hash_ok_inside_format_spec")

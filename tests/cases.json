@@ -1,0 +1,31 @@
+{
+  "cases": [
+    { "path": "fixtures/missing_preamble.lfz",           "name": "preamble_missing_first_line",       "expect": { "error": "CosmosAnswerError" } },
+    { "path": "fixtures/preamble_trailing_space.lfz",    "name": "preamble_trailing_space",           "expect": { "error": "CosmosAnswerError" } },
+    { "path": "fixtures/preamble_trailing_tab.lfz",      "name": "preamble_trailing_tab",             "expect": { "error": "CosmosAnswerError" } },
+    { "path": "fixtures/preamble_no_newline.lfz",        "name": "preamble_no_newline_eof",           "expect": { "error": "CosmosAnswerError" } },
+    { "path": "fixtures/empty.lfz",                      "name": "preamble_empty_file",               "expect": { "error": "CosmosAnswerError" } },
+
+    { "path": "fixtures/single_semi.lfz",                "name": "syntax_single_semicolon",           "expect": { "error": "SyntaxError" } },
+    { "path": "fixtures/hash_mid_program.lfz",           "name": "syntax_hash_mid_program",           "expect": { "error": "SyntaxError" } },
+    { "path": "fixtures/placeholder_binding.lfz",        "name": "syntax_placeholder_in_binding",     "expect": { "error": "SyntaxError" } },
+    { "path": "fixtures/break_outside_loop.lfz",         "name": "syntax_break_outside_loop",         "expect": { "error": "SyntaxError" } },
+    { "path": "fixtures/syntax_illegal_char.lfz",        "name": "syntax_illegal_character",          "expect": { "error": "SyntaxError" } },
+    { "path": "fixtures/syntax_unclosed_paren.lfz",      "name": "syntax_unclosed_paren",             "expect": { "error": "SyntaxError" } },
+    { "path": "fixtures/int_literal_overflow.lfz",       "name": "int_literal_exceeds_i64",           "expect": { "error": "SyntaxError" } },
+
+    { "path": "fixtures/let_rebind.lfz",                 "name": "let_rebind_is_type_error",          "expect": { "error": "TypeError" } },
+    { "path": "fixtures/let_compound_rebind.lfz",        "name": "let_compound_rebind_is_type_error", "expect": { "error": "TypeError" } },
+    { "path": "fixtures/type_error_add.lfz",             "name": "operator_type_mismatch",            "expect": { "error": "TypeError" } },
+    { "path": "fixtures/name_error.lfz",                 "name": "undefined_name",                    "expect": { "error": "NameError" } },
+
+    { "path": "fixtures/zero_division.lfz",              "name": "divide_by_zero",                    "expect": { "error": "ZeroDivisionError" } },
+    { "path": "fixtures/mod_zero.lfz",                   "name": "modulo_by_zero",                    "expect": { "error": "ZeroDivisionError" } },
+    { "path": "fixtures/div_zero.lfz",                   "name": "builtin_div_by_zero",               "expect": { "error": "ZeroDivisionError" } },
+
+    { "path": "fixtures/overflow_add.lfz",               "name": "int_overflow_add",                  "expect": { "error": "OverflowError" } },
+    { "path": "fixtures/abs_i64_min.lfz",                "name": "abs_i64_min_overflow",              "expect": { "error": "OverflowError" } },
+
+    { "path": "fixtures/plain_ok.txt",                   "name": "non_lfz_file_no_preamble_required" }
+  ]
+}
