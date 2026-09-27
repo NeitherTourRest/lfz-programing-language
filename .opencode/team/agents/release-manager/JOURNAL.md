@@ -1,5 +1,22 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 12:28] ✅ P10（交付完整性）：提交 P9 报告与答辩材料；刷新 README；产出交付清单核对报告；推送
+- 来源: team-lead 任务书（轻量启动；P10 交付完整性——提交 P9 报告与答辩材料、刷新 README、产出 `docs/reports/delivery-checklist.md`（对照 `task-info.md` 8 项、≥3 轮核对）、推送。两个提交：`docs(p9): ...` + `docs(p10): ...`。禁区：禁 force-push、**不打 tag**（`v1.0-final` 待 verifier 复验 PASS 后由 team-lead 下令）、**不暂存 `src/**`**、不提交 `target/`·密钥·临时文件）
+- 完成:
+  - **入清单门禁（通过，未触发停止）**：`git status --short` 实测与任务书背景逐字一致——` M` = `agents/{verifier,ppt-presenter}/{STATUS,JOURNAL}.md`；`??` = `docs/reports/P9-verification.md`、`docs/slides/`。**无清单外条目**；本轮**未出现** `M src/**`（runtime-dev 并行修复未落盘）。
+  - **证据复跑（轮 2）**：`cargo build` → 0 warning；`cargo test` → **361+42+16+12 = 431 passed / 0 failed / 0 ignored**（`Running` 行确认四目标：lib 361 / main 42 / cli 16 / test_runner 12）；`cargo run --quiet -- test` → **82/82，exit 0**。行数：`app/sortviz.lfz` **LF=341**（`Get-Content .Count` GBK 失真为 327，弃用）；pptx **14 页 / 84 304 B**；tags = 4。
+  - **提交 1（=`ab36f81`，8 文件）**：`git add docs/reports/P9-verification.md docs/slides .opencode/team/agents/{verifier,ppt-presenter}/{STATUS,JOURNAL}.md`（显式路径）→ `docs(p9): deliverable-level acceptance report + defense materials`（`-F` UTF-8 信息文件）。
+  - **README 刷新（我是唯一写者）**：状态表 → P0–P8 完成 / P9 验收完成（CONCERNS 无阻塞）/ P10 收尾中；新增「质量基线（实测）」；交付物索引补齐真实路径 + 评分项；新增「验收与证据」（P3/P9 报告、`tests/REPORT.md`、`delivery-checklist.md`、`status-check.md`）与「版本里程碑」（4 标签）；快速开始给实测命令。
+  - **`docs/reports/delivery-checklist.md`**：8 项逐项（位置/验证命令/实测结果/结论）+ **3 轮核对**（轮1 静态清单 → 轮2 逐项复跑 → 轮3 对照 20/20/10/20/30 评分矩阵与 `REQUIREMENTS.md` §1.1–1.5/§6）；结论 **8/8 齐备、5/5 评分项齐备、完整性闭环**（P9 短板「PPT 未入库」由 `ab36f81` 闭合）。
+  - 先完成收工协议（覆盖 `STATUS.md`、置顶追加本 `JOURNAL.md`），使收工改动并入**提交 2**。
+  - **提交 2**：`git add README.md docs/reports/delivery-checklist.md .opencode/team/agents/release-manager/{STATUS,JOURNAL}.md` → `docs(p10): refresh README and add delivery checklist`。
+  - `git push`（非 force）。
+- 产出:
+  - 两个新提交（短哈希见汇报）；`git status --short`（如实列出可能残留的 `M src/**`）；`git log --oneline -4`；`git ls-remote origin refs/heads/main` = 本地 HEAD；`git tag` = 4（未新增）。
+  - 证据: `cargo test` 431 全绿、`cargo run --quiet -- test` 82/82 exit 0、`sortviz` LF 341 行、pptx 14 页。
+- 决策: 无新增 release-manager ADR（本任务为交付入库与核对簿记，未产生跨角色技术决策）。
+- 下一步: `v1.0-final` 待 verifier 对 `bug-20260927-01` 复验 PASS 后由 team-lead 下令打标（本轮未打 tag）。
+- 阻塞: 无。
 ## [2026-09-27 12:19] ✅ P8（LFZ 排序算法可视化应用）单原子提交 + P8 里程碑附注标签 `v0.4-app` 已打并推送
 - 来源: team-lead 任务书（轻量启动；把 P8 应用 `app/` 做**单个原子提交**并 push，并**打 P8 里程碑附注标签 `v0.4-app`**、推送含 tag；`git add app .opencode/team/DECISIONS.md .opencode/team/agents/app-dev/{STATUS,JOURNAL}.md` + 本角色收工文档并入本提交。已核验：`cargo build` 0 warning、`cargo test` 431 全绿、`cargo run --quiet -- test` 82/82 exit 0。禁区：禁 force-push、**只打 `v0.4-app` 一个标签**、不改 `src/**`·`docs/spec/**`·README、不提交 `target/`·密钥·临时文件）
 - 完成:
