@@ -35,6 +35,21 @@
 
 两条来源的要求**均达标**（无缺口）。P7c 增量为强化 (c) 与"最后一公里"：新增 `SKILL.md` §0.5 工作流、§4.5 错误→修法表、顶部硬纪律，新增 `README.md`（三种安装方式），并把 §7 扩到 L4（新实跑程序）。
 
+### 1.4 T11-③ 增量 → 要求 (c) 追溯（D1–D7 + O(n) 构建）
+
+盲测 2/8 暴露的 7 条缺口（`FEATURE-AUDIT.md` §6.2）全部落在要求 **(c)「让 Agent 能顺利编写代码」**上；本次逐条落点与实测证据如下（证据全文见本文件 §8）：
+
+| 缺口 | SKILL 落点 | 实测证据 |
+|---|---|---|
+| D1 字符串不可下标 + `split("", s)` 惯用法 | §4-22 / §4.5 / §6 `split` / L5 | §8.1 |
+| D2 `range` 完整签名（`range(n)`，1 参） | §6 `range` | §8.1 |
+| D3 循环体 `let` 每轮新绑定 | §4-23 / §3 / L5 | §8.1 |
+| D4 退出码语境（`run`→2 / `test`→1） | §0 / §5 / §8 | §8.1 |
+| D5 对齐 `<`/`>`/`^`+fill；无动态宽度 | §3 / §4.5 | §8.1 |
+| D6 `len(string)` 合法 + O(n) 提醒 | §6 `len` / §4.6 | §8.1 |
+| D7 隐性语法正面示例（链式下标赋值 / `else if` / 多 `${}` / 零参 `print()` / 短路） | §3 / §4 / §7 L5 | §8.1 |
+| 新增：O(n) 字符串 / 数组构建惯用法 | §4.6 / §4-24 / §8 | §8.2 |
+
 ---
 
 ## 2. 实测程序（代码 + 真实输出 + 退出码）
@@ -309,3 +324,145 @@ json-exit=0
 ### 7.5 结论
 
 新增程序与 `§2` 的 3 个示例**不重复**（首次覆盖"struct 带参方法 + `while` 驱动 + 动态键 struct 计数"的组合），**一次跑通、exit 0**；暴露的 1 个真实坑（格式说明符位置）已回填到本节，并印证 §0.5 工作流有效。
+
+---
+
+## 8. T11-③ 修订实测（D1–D7 + O(n) 构建，2026-09-27）
+
+> 目的：把 skill 盲测 **2/8** 暴露的 7 条缺口（`FEATURE-AUDIT.md` §6.2 D1–D7）逐条落地——**每条先用 `lfz` 实跑验证，再写入 `SKILL.md`**。
+> 环境：`dist\lfz.exe`（v1.0.1，由当前源码重建）；控制台 `chcp 65001` 以正确显示中文；探针在 `Temp\lfz-dx\`（**临时件，收工已清**，源码见 §8.4）。
+
+### 8.1 逐条实测证据
+
+| # | 修订 | 探针命令（`dist\lfz.exe run …`） | 实测输出 | 退出码 | 写入 SKILL |
+|---|---|---|---|---|---|
+| **D1** | 字符串不可下标 | `d1_str_index.lfz`（`print("abc"[0])`） | `TypeError: 运算符 '[]' 不支持 string 与 array / struct` | **2** | §4-22 / §4.5 / §6 `split` |
+| D1 | `split("", s)` 惯用法 | `d1_split_idiom.lfz` | `["a", "b", "c"]` / `a` / `c` / `日` `本` `語` | **0** | §4-22 / §6 / L5 |
+| **D2** | `range(n)` 签名 | `d2_range.lfz`（`range(3)`/`range(0)`/`range(-1)`） | `[0, 1, 2]` / `[]` / `[]` | **0** | §6 `range` |
+| D2 | 只接受 1 参 | `d2_range2.lfz`（`range(1, 4)`） | `TypeError: 函数 range 期待 1 个参数，得到 2` | **2** | §6 `range`（**不写** `range(lo,hi)`） |
+| **D3** | 循环体 `let` 每轮新绑定 | `d3_letloop.lfz`（循环内 `let x` + 闭包） | `0` / `10` / `20`（共用 cell 会是 20/20/20） | **0** | §4-23 / §3 / L5 |
+| **D4** | `run` 下 assert 失败 → 2 | `d4_assert_run.lfz` | `AssertionError: 断言失败：boom` | **2** | §0 / §5 / §8 |
+| D4 | `test` 下用例失败 → 1 | `lfz test <含失败用例的目录>` | `汇总：共 1 个用例，通过 0，失败 1，错误 0` | **1** | §0 / §5 / §8 |
+| **D5** | 对齐 `<`/`>`/`^` + fill | `d5_align.lfz` | `[ab   ]` `[   ab]` `[ ab  ]` `[00042]` `[**ab***]` `[00005]` `[3.14]` `[ff]` | **0** | §3 / §4.5 |
+| D5 | 动态宽度不支持 | `d5_width_dynamic.lfz`（`${"ab":>w}`） | `ValueError: 格式说明符非法：'>w'` | **2** | §3 / §4.5 |
+| **D6** | `len(string)` 合法、按标量 | `d6_len_string.lfz` | `3` `0` `3` `1` `3` `5`（`"日本語"`→3、`"😀"`→1） | **0** | §6 `len` / §4.6 |
+| **D7** | 隐性语法合集 | `d7_misc.lfz` | `[[0, 0], [7, 0]]` / `B` / `A` / `x-y-xy` /（空行）/ `after-blank` / `false` / `true` | **0** | §3 / §4 / L5 |
+| 示例 | L5（内联示例） | `ex_l5.lfz` | 见 `SKILL.md` §7 L5（输出逐行一致） | **0** | §7 L5 |
+
+**D7 覆盖的 5 个构造**（均**一次跑通**）：链式下标赋值 `t[1][0] = 7`、`else if` 链、一条串多 `${}`、零参 `print()`（空行）、`&&`/`||` 短路（`xs == []` 时 `len(xs) > 0 && xs[0] == 1` 不越界）。
+
+### 8.2 新增：O(n) 字符串 / 数组构建（性能红线，**含一处与审计建议相反的实测发现**）
+
+`FEATURE-AUDIT.md` §7.1 指出「循环内 `s = s + c` 拼接是 O(n²)」，并**建议**改为「先 `push` 到数组再 `join`（O(n)）」。逐条实跑复核如下（循环 N 次，毫秒，≈值）：
+
+| 写法 | N=40000 | N=80000 | N=160000 | N=320000 | 实测复杂度 |
+|---|---|---|---|---|---|
+| `var s=""` + `s = s + "x"` | 61 | 139 | 425 | 1582 | **O(n²)**（审计说法**成立**） |
+| `var a=[]` + `a = push("x", a)` + `join` | 251 | 674 | 4076 | 超时 | **O(n²)**（审计**建议不成立**） |
+| `range(n) \|> map((i)=>"x") \|> join("")` | 25 | 35 | 56 | 104 | **O(n)** ✅ |
+| 预分配 `arr[i]="x"` + `join` | 33 | — | 85 | 151 | **O(n)** ✅ |
+| `split("", s)` + 逐字符遍历 | 30 | — | 71 | 127 | **O(n)** ✅ |
+
+**结论（与 `FEATURE-AUDIT.md` §7.1 的偏差，已报 team-lead）**：
+1. `s = s + c` 确为 O(n²) —— 源码：`Str + Str` 实现为 `format!("{a}{b}")`（复制整个前缀），`src/evaluator.rs:1496`。
+2. **但「`push` 到数组再 `join`」同样是 O(n²)**：`push` 遵守 A1 返回**新数组**，内部 `xs.to_vec()` 整体克隆（`src/builtins.rs:385`），循环累积常数更大、**更慢**。→ **不能照搬为 O(n) 建议**。
+3. **真正 O(n) 的惯用法**：①`range(n) |> map(f) |> join("")`（下标驱动，单次分配）；②**预分配 + 下标写** `arr[i] = v`（唯一原地写语法，条件累积）。已写入 `SKILL.md §4.6`。
+
+### 8.3 复现命令
+
+```powershell
+chcp 65001
+$env:Path += ";$env:USERPROFILE\.cargo\bin"
+$exe = "dist\lfz.exe"
+& $exe run Temp\lfz-dx\probes\d1_str_index.lfz      # exit 2 (TypeError)
+& $exe run Temp\lfz-dx\probes\d1_split_idiom.lfz    # exit 0
+& $exe run Temp\lfz-dx\probes\d2_range.lfz          # exit 0
+& $exe run Temp\lfz-dx\probes\d2_range2.lfz         # exit 2
+& $exe run Temp\lfz-dx\probes\d3_letloop.lfz        # exit 0
+& $exe run Temp\lfz-dx\probes\d4_assert_run.lfz     # exit 2
+& $exe test Temp\lfz-dx\testcases                   # exit 1
+& $exe run Temp\lfz-dx\probes\d5_align.lfz          # exit 0
+& $exe run Temp\lfz-dx\probes\d5_width_dynamic.lfz  # exit 2
+& $exe run Temp\lfz-dx\probes\d6_len_string.lfz     # exit 0
+& $exe run Temp\lfz-dx\probes\d7_misc.lfz           # exit 0
+& $exe run Temp\lfz-dx\probes\ex_l5.lfz             # exit 0 (L5)
+& $exe run Temp\lfz-dx\probes\snip1.lfz             # exit 0 -> 0,1,4,9,16
+& $exe run Temp\lfz-dx\probes\snip2.lfz             # exit 0 -> 0-10-20
+```
+
+### 8.4 探针源码（临时件已清，此处保留以便复现）
+
+```lfz
+// d1_str_index.lfz（expect exit 2）        // d1_split_idiom.lfz（expect exit 0）
+#42                                         #42
+let s = "abc"                               let s = "abc"
+print(s[0])                                 let cs = split("", s)
+                                            print(cs)
+                                            print(cs[0])            // a
+                                            print(cs[2])            // c
+                                            for c in split("", "日本語") { print(c) }
+```
+
+```lfz
+// d2_range.lfz（exit 0）                    // d2_range2.lfz（exit 2）
+#42                                         #42
+print(range(3))                             print(range(1, 4))
+print(range(0))
+print(range(-1))
+```
+
+```lfz
+// d3_letloop.lfz（exit 0 -> 0/10/20）        // d4_assert_run.lfz（exit 2）
+#42                                         #42
+var fns = []                                print("before")
+var i = 0                                   assert(1 == 2, "boom")
+while i < 3 {                               print("after")
+    let x = i * 10
+    let f = fn() => x
+    fns = push(f, fns)
+    i += 1
+}
+for f in fns { print(f()) }
+```
+
+```lfz
+// d5_align.lfz（exit 0）                    // d5_width_dynamic.lfz（exit 2）
+#42                                         #42
+let n = 5                                   let w = 5
+print("[${"ab":<5}]")    // [ab   ]         print("[${"ab":>w}]")
+print("[${"ab":>5}]")    // [   ab]
+print("[${"ab":^5}]")    // [ ab  ]
+print("[${42:0>5}]")     // [00042]
+print("[${"ab":*^7}]")   // [**ab***]
+print("[${n:05d}]")      // [00005]
+print("[${3.14159:.2f}]") // [3.14]
+print("[${255:x}]")      // [ff]
+```
+
+```lfz
+// d6_len_string.lfz（exit 0）               // d7_misc.lfz（exit 0）
+#42                                         #42
+print(len("abc"))        // 3               let t = [[0, 0], [0, 0]]
+print(len(""))           // 0               t[1][0] = 7
+print(len("日本語"))      // 3               print(t)                 // [[0, 0], [7, 0]]
+print(len("😀"))          // 1               fn grade(n) {
+print(len("a😀b"))        // 3                   if n >= 90 { "A" }
+print(len("hello"))      // 5                   else if n >= 80 { "B" }
+                                                else if n >= 70 { "C" }
+                                                else { "F" }
+                                            }
+                                            print(grade(85))         // B
+                                            print(grade(95))         // A
+                                            let a = "x"
+                                            let b = "y"
+                                            print("${a}-${b}-${a}${b}")  // x-y-xy
+                                            print()                  // 空行
+                                            print("after-blank")
+                                            let xs = []
+                                            print(len(xs) > 0 && xs[0] == 1)     // false
+                                            print(len(xs) == 0 || xs[0] == 1)    // true
+```
+
+> `d4` 的 `test` 侧探针：`Temp\lfz-dx\testcases\fail_case.lfz` = `#42` + `let x = 1` + `assert(x == 2, "…")`；`lfz test` 该目录 → `失败 1`、exit `1`。
+> 说明：上述探针均为**临时件**，已按团队约定从 `Temp/` 清理；本文保留命令与输出作为可复现证据。
+

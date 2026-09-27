@@ -8,6 +8,7 @@ description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也�
 > 读者：**未接触过 LFZ 的编程 Agent**。目标：只凭本文件写出**正确、可运行**的 LFZ 程序。
 > 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（冻结 v1）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
 > 使用纪律：**只允许使用本文件列出的语法**。不要用 Python / C / JS 的规则去猜 LFZ——LFZ 在若干处刻意不同（见 §4）。
+> **版本对齐**：本指南只描述**当前解释器（`dist\lfz.exe`，v1.0.1）已实现**的行为。`docs/spec/` 中标注「v1.1 补钉」但**尚未落地**的特性（新增内置、扩展签名等）**不在本指南范围**；只使用本指南 §6 列出的名字，不要用别处的内置名。
 
 > 🚫 **硬纪律：不要凭记忆写 LFZ。** 本文件**没写的语法一律视为不存在**；拿不准就先查 §10 列出的 spec，或改用本文件已列出的等价写法。宁可用保守写法，也不要"猜一个大概像 Python 的写法"。
 
@@ -22,7 +23,7 @@ description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也�
   cargo run --quiet -- run --json <file>    # 机器可读 JSON 输出
   cargo run --quiet -- test                 # 运行测试集
   ```
-- **退出码**：`0` 成功；`1` 测试失败（`assert` / `fail`）；`2` CLI 参数错误 / 语法或运行时错误 / 用例 error。
+- **退出码（按语境区分，详见 §5）**：`0` 成功；**`lfz run` 下 `assert` / `fail` 失败（运行期错误）→ `2`**；**`lfz test` 下有用例失败 → `1`**；CLI 参数错误 / 语法错误 / 运行时错误 / 用例 error → `2`。
 - **本 CLI v1 只支持 `lfz run <file>` 与 `lfz test`**：没有 `-e`、没有 stdin 管道、没有 REPL（`run -` 会把 `-` 当文件名 → `IOError`）。**把程序写成 `.lfz` 文件再 `run`**。
 
 ---
@@ -138,14 +139,21 @@ y = y + 1
 
 **运算符（高→低，全左结合）**：postfix `() [] .` > 一元 `- !` > `* / %` > `+ -` > `|>` > `< <= > >=` > `== !=` > `&&` > `||`。
 
-**字符串插值**：`"${expr}"`；可带格式说明符 `${x:>6}`、`${f:.2f}`、`${n:05d}`、`${n:x}`。
+**字符串插值**：`"${expr}"`；一条字符串可含**多个** `${}`（如 `"${a}-${b}-${a}"`，按书写序求值）。
+
+**格式说明符**（写在 `${}` **内**、紧跟 `:`）：
+- **对齐** `align` ∈ { `<` 左, `>` 右, `^` 居中 }，可带 **fill** 字符：`${"ab":<5}` → `[ab   ]`、`${"ab":>5}` → `[   ab]`、`${"ab":^5}` → `[ ab  ]`、`${42:0>5}` → `[00042]`、`"${"ab":*^7}"` → `[**ab***]`。
+- **宽度 / 精度 / 类型**：`${f:.2f}`、`${n:05d}`、`${n:x}`。
+- **宽度必须是字面数字**：`${"ab":>w}` → `ValueError: 格式说明符非法：'>w'`（**不支持动态宽度**）。需要变宽补齐 → 用 `repeat(n, fill)` 手工拼（注意 §4.6 的 O(n) 提醒）。
+
 转义仅这些：`\n \t \r \\ \" \e`（ESC）、`\$`。**未列出的转义（如 `\q`、`\{`）→ `SyntaxError`**。`{` / `}` 在字符串内是普通字符。
 
 **if（语句 / 表达式）**
 
 ```lfz
 if cond { ... } else { ... }
-let v = if cond { a } else { b }
+if a { ... } else if b { ... } else if c { ... } else { ... }   // else if 链：合法
+let v = if cond { a } else { b }                                 // if 是表达式，可赋值
 ```
 
 **while / for**
@@ -188,7 +196,11 @@ let q = 10 |> push(_, [1, 2])      // _ 占位：注入到该位 → push(10, [1
 
 **注释**：`//` 行注释；`/* ... */` 块注释（**不可嵌套**，未闭合到 EOF → `SyntaxError`）。
 
-**赋值**：`=` `+=` `-=` `*=` `/=` `%=`；左侧 lvalue 可为 `x`、`a[i]`、`s.k`。
+**赋值**：`=` `+=` `-=` `*=` `/=` `%=`；左侧 lvalue 可为 `x`、`a[i]`、`s.k`，**可链式**：`t[i][j] = v`、`p.inner.x = v`（合法；下标/字段赋值**就地修改**容器）。
+
+**零参 `print()` / `eprint()`**：合法，只打印一个换行（`print(...)` 空格连接各参 + 换行）。
+
+**`&&` / `||` 短路求值**：两侧与结果都必须是 `bool`；`len(xs) > 0 && xs[0] == 1` 在 `xs == []` 时**不会**求右侧（不越界）；`||` 同理。
 
 ---
 
@@ -254,6 +266,30 @@ let q = 10 |> push(_, [1, 2])      // _ 占位：注入到该位 → push(10, [1
 
 21. **`del(k, s)` 只作用于数据字段**（方法字段视为缺失 → `FieldError`）：不变量 `del(k,s) 成功 ⟺ has(k,s) == true`。
 
+22. **字符串不可下标**：`s[i]` 对 `string` → `TypeError: 运算符 '[]' 不支持 string 与 array / struct`。
+    - `[]` **只适用于** `array`（`int` 下标，支持负索引）与 `struct`（`string` 键）。**读写同源**（`s[0] = v` 与 `s[0]` 报同一条）。
+    - **正确**：先 `split("", s)` **一次性 O(n)** 拆成单字符数组，之后 `cs[i]` / `for c in cs` 都是 **O(1)**：
+      ```lfz
+      let cs = split("", "abc")   // ["a", "b", "c"]
+      print(cs[0])                // a
+      for c in cs { print(c) }    // 顺序遍历，整段 O(n)
+      ```
+    - 复杂度：`split("", s)` = O(n)（n = 字符数）。若改用 `s[i]`（必然实现为 `chars().nth(i)`）遍历会退化成 **O(n²)**——这正是 LFZ 刻意不提供 `s[i]` 的原因。
+
+23. **循环体内 `let` / `var` 每轮都是新绑定**（各自新 cell）：在 `while` / `for` 体里写 `let x = ...` **合法**，**无需**提升到循环外，也**不会**报「不能重新赋值 let」。闭包各自捕获**当轮** cell（A2）：
+    ```lfz
+    var fs = []
+    var i = 0
+    while i < 3 {
+        let x = i * 10
+        fs = push(fn() => x, fs)
+        i += 1
+    }
+    for f in fs { print(f()) }   // 0 / 10 / 20（若共用 cell 会是 20/20/20）
+    ```
+
+24. **容器内置返回新值 ⇒ 别在循环里用 `push` / `+` 累积**（A1）：`push(v, xs)` 每次克隆整个数组、`s = s + c` 每次复制整个前缀，**循环累积都是 O(n²)**。大 n 请用 **§4.6** 的 O(n) 写法。
+
 ---
 
 ## 4.5 错误类 → 最常见原因 → 修法（把 §2 的错误类与 §4 的陷阱串起来）
@@ -284,11 +320,53 @@ let q = 10 |> push(_, [1, 2])      // _ 占位：注入到该位 → push(10, [1
 | `OverflowError: 整数溢出…` | `int` 越 i64，或 `int(±Inf)` / `int(1e30)`（§2） | 收窄数值，或改用 `float` |
 | `ValueError: 无法把 string 转换为 int（'abc'）` | `int("abc")` 转换失败（§2） | 只对数字串 `int`，或先校验字符 |
 | `ValueError: 空数组没有极值（min）` | 对空数组 `min/max/minBy/maxBy`（§4-18） | 先判 `len(xs) > 0` |
-| `ValueError: 格式说明符非法：…` | 格式串拼错（§3 插值） | 用 `:>6` `:.2f` `:05d` `:x` 这些形式 |
+| `ValueError: 格式说明符非法：…` | 格式串拼错 / 用了**动态宽度**（§3 插值） | 用 `:>6` `:<6` `:^6` `:0>5`（fill+对齐）、`:.2f`、`:05d`、`:x`；**宽度须字面数字**，动态宽度用 `repeat` 手工补（§3） |
+| `TypeError: 运算符 '[]' 不支持 string 与 array / struct` | 对 **string** 取下标（§4-22） | 字符串不可下标 → 先 `split("", s)`，再对数组索引 |
 | `ValueError: 区间非法：lo >= hi` | `randInt(lo, hi)` 且 `lo >= hi`（§6） | 保证 `lo < hi`（区间为 `[lo, hi)`） |
 | `IOError: 输入结束（EOF）` | 在无输入环境用了 `input()`（§6） | 别依赖 stdin（本 CLI v1 无 stdin 管道） |
 | `AssertionError: 断言失败：…` | `assert`/`fail` 条件不成立（§5） | 复核条件；**软校验用 `check`**（非致命） |
 | `RecursionError: 递归深度超限（超过 10000 层）` | 递归无终止条件 / 太深（§2） | 补终止条件，或改写成 `while`/`for` 循环 |
+
+---
+
+## 4.6 性能红线：O(n) 字符串 / 数组构建（避免隐藏 O(n²)）
+
+> 背景：LFZ 的 `string` **不可变**（§4.5.11），`array` 内置**返回新值**（A1）。这两条叠加，使「在循环里逐步累积」极易写成 **O(n²)**。
+> 下表为**实测**（当前 `dist\lfz.exe`，循环 N 次，单位毫秒，≈值）。**关键反直觉结论：把 `s = s + c` 换成 `push` 累积并不会变快，反而更慢。**
+
+| 写法（循环 N 次） | N=40000 | N=80000 | N=160000 | N=320000 | 复杂度 |
+|---|---|---|---|---|---|
+| ❌ `var s=""` + `s = s + "x"` | 61 | 139 | 425 | 1582 | **O(n²)** |
+| ❌ `var a=[]` + `a = push("x", a)` + `join("", a)` | 251 | 674 | 4076 | —（超时） | **O(n²)** |
+| ✅ `range(n) |> map((i) => "x") |> join("")` | 25 | 35 | 56 | 104 | **O(n)** |
+| ✅ 预分配 + 下标写 `arr[i] = ...` + `join` | 33 | — | 85 | 151 | **O(n)** |
+
+**为什么 `s = s + c` 是 O(n²)**：`string + string` 的实现是 `format!("{a}{b}")`——每次生成**新串并复制整个前缀**（源码：`src/evaluator.rs:1496`）。循环 n 次 ⇒ 复制总量 `1+2+…+n = Θ(n²)`。
+**为什么 `push` 累积也是 O(n²)**：`push(v, xs)` 遵守 A1「返回新数组」，内部先 `xs.to_vec()` **整体克隆**（源码：`src/builtins.rs:385`）。循环 n 次同样是 Θ(n²)，且常数比字符串拼接更大。**这是最反直觉的点。**
+
+**正确的 O(n) 惯用法（二选一）：**
+
+1. **每段是下标的函数** → `range(n) |> map(f) |> join("")`（`range` + `map` + `join` 各 O(n)，全程只分配一次）：
+   ```lfz
+   #42
+   let n = 5
+   let s = range(n) |> map((i) => str(i * i)) |> join(",")
+   print(s)   // 0,1,4,9,16
+   ```
+2. **需要条件累积** → 先**预分配**长度为 n 的数组，再用**下标赋值**（唯一原地写语法 `a[i] = v`，O(1)）逐格写入，最后 `join`：
+   ```lfz
+   #42
+   let n = 3
+   let arr = range(n) |> map((i) => "")   // 预分配 n 个空串（O(n)）
+   var i = 0
+   while i < n {
+       arr[i] = str(i * 10)               // 原地写，O(1)
+       i += 1
+   }
+   print(arr |> join("-"))                // 0-10-20
+   ```
+
+> 小数据量（n ≤ 几千）差异可忽略；**大 n（≥ 10⁴）务必用上表的 ✅ 写法**。同理，`len(string)` 是 O(n)，长串循环里别反复调用（见 §6 `len`）。
 
 ---
 
@@ -299,6 +377,8 @@ let q = 10 |> push(_, [1, 2])      // _ 占位：注入到该位 → push(10, [1
 | `assert(cond, msg?)` | 抛 **`AssertionError`（致命）**，终止，退出码 `2` |
 | `check(cond, msg?)` | 向 **stderr** 写一行 `check 失败：{msg}`，返回 `false`，**继续运行**，**不改变退出码、不产生错误** |
 | `fail(msg?)` | 抛 **`AssertionError`（致命）** |
+
+> **退出码按语境区分（消除歧义，实测）**：**`lfz run`** 下 `assert` / `fail` 失败 → `AssertionError` → 退出码 **`2`**（它是一次运行期错误）；**`lfz test`** 下由 runner 把该用例记为 **failure** → 退出码 **`1`**。**同一个含 `assert(1 == 2)` 的程序**：`lfz run` → exit `2`；`lfz test <目录>` → exit `1`（报告 `失败 1`）。不要把两个语境的结果混为一谈。
 
 实测：
 
@@ -318,7 +398,9 @@ print("continue")
 
 **核心 / 数组（21）**：`len` `range` `push` `pop` `removeAt` `insert` `swap` `slice` `min` `max` `sum` `minBy` `maxBy` `sort` `sortBy` `map` `filter` `reduce` `take` `drop` `each`
 
-- `push(v, xs)`、`pop(xs)`、`removeAt(i, xs)`、`insert(i, v, xs)`、`swap(i, j, xs)`、`slice(from, to, xs)`
+- **`len(x) -> int`**：`array` 元素数 / `struct` **数据字段**数（不含方法）/ **`string` 的 Unicode 标量数**（**合法**：`len("abc") == 3`、`len("日本語") == 3`、`len("😀") == 1`、`len("") == 0`）。⚠️ `len(string)` 是 **O(n)**（需扫描标量，非字节数）；长串循环里别反复调用，先 `split("", s)` 后对数组求 `len`（O(1)）。
+- **`range(n) -> array[int]`**：`[0, 1, …, n-1]`（**半开区间**，物化为普通数组，O(n) 时间 + O(n) 内存）；`n < 0` → `[]`（`range(0)` 亦为 `[]`）。**只接受 1 个参数**：`range(1, 4)` → `TypeError: 函数 range 期待 1 个参数，得到 2`（**不要写** `range(lo, hi)`）。
+- `push(v, xs)`、`pop(xs)`、`removeAt(i, xs)`、`insert(i, v, xs)`、`swap(i, j, xs)`、`slice(from, to, xs)`（**均返回新数组**，见 §4-24 / §4.6）
 - `map(f, xs)`、`filter(pred, xs)`（`pred` 必须返回 `bool`）、`reduce(f, init, xs)`（`f(acc, x)`）、`take(n, xs)`、`drop(n, xs)`、`each(f, xs)`
 - `min(xs)`/`max(xs)`（全序；空 → `ValueError`）、`minBy(keyFn, xs)`/`maxBy(keyFn, xs)`、`sum(xs)`（全 `int` → `int`，含 `float` → `float`，空 → `0`）、`sort(xs)`/`sortBy(keyFn, xs)`（稳定升序）
 
@@ -329,7 +411,7 @@ print("continue")
 
 **字符串（8）**：`split` `join` `trim` `upper` `lower` `replace` `repeat` `startsWith`
 
-- `split(sep, s)`（`sep` 为空串 → 按字符）、`join(sep, xs)`（元素须为 string）、`replace(old, new, s)`、`repeat(n, s)`、`startsWith(prefix, s)`。
+- `split(sep, s)`（**`sep` 为空串 → 按字符拆成单字符数组**：`split("", "abc") == ["a", "b", "c"]`，一次 **O(n)**；这是字符串「取字符」的正解，见 §4-22）、`join(sep, xs)`（元素须为 string）、`replace(old, new, s)`、`repeat(n, s)`、`startsWith(prefix, s)`。
 
 **数值 / 转换 / IO / 断言（20）**：`abs` `floor` `ceil` `round` `sqrt` `pow` `div` `rand` `randInt` `seed` `str` `int` `float` `type` `print` `eprint` `input` `assert` `check` `fail`
 
@@ -495,6 +577,64 @@ top 3 words (desc):
 
 > 注意点：`entries(s)` 返回 `[[key, value], ...]`，按**键升序**；`sortBy` 稳定，故并列计数按键序；`take(n, xs)` 用管道写作 `... |> take(n)`（data-last）。
 
+### L5 — 字符串与索引惯用法（覆盖 §4-22 / §4-23 / §4.6 与插值对齐）
+
+> 本示例为 SKILL 内联（人类向示例在 `docs/guide/ai/examples/`）；实测证据见 `VERIFICATION.md` §8。
+
+```lfz
+#42
+// 字符串不可下标 → 先 split("", s)，之后索引 O(1)
+let cs = split("", "LFZ")            // ["L", "F", "Z"]
+print(cs)
+print(cs[0])
+print(cs[2])
+
+// 循环体内 let 每轮新绑定；闭包各自捕获当轮 cell
+var fs = []
+var i = 0
+while i < len(cs) {
+    let c = cs[i]
+    let f = fn() => upper(c)
+    fs = push(f, fs)
+    i += 1
+}
+for f in fs { print(f()) }
+
+// 对齐说明符（< 左 / > 右 / ^ 居中 + fill）；宽度须字面数字
+let rows = [["ab", 7], ["c", 128]]
+for r in rows {
+    print("[${r[0]:<4}|${r[1]:>5}|${r[0]:*^6}]")
+}
+
+// else if + 零参 print() + && / || 短路
+fn bucket(n) {
+    if n >= 100 { "big" }
+    else if n >= 10 { "mid" }
+    else { "small" }
+}
+print(bucket(7))
+print()
+let xs = []
+print(len(xs) > 0 && xs[0] == 1)     // false，短路不越界
+print(len(xs) == 0 || xs[0] == 1)    // true
+```
+
+输出（实测，exit `0`）：
+```
+["L", "F", "Z"]
+L
+Z
+L
+F
+Z
+[ab  |    7|**ab**]
+[c   |  128|**c***]
+small
+
+false
+true
+```
+
 ---
 
 ## 8. 交付前自检清单（逐项打勾）
@@ -512,6 +652,11 @@ top 3 words (desc):
 - [ ] 字符串是否用了**单引号**？（LFZ 只有双引号）
 - [ ] 是否写/期待了旧的编号错误码？（**禁止**；只有类名 + 中文消息）
 - [ ] 代码块是否都含 `#42` 首行？（片段是否注明）
+- [ ] **没有对 `string` 取下标**？（`s[i]` → `TypeError`；先 `split("", s)` 再对数组索引，见 §4-22）
+- [ ] **大 n 下没有在循环里用 `s = s + ...` 或 `push` 累积**？（O(n²)；用 §4.6 的 `range |> map |> join` 或「预分配 + 下标写」）
+- [ ] 循环体内用了 `let`？（**可以**，每轮新绑定——不要因此改用 `var` 提升到循环外，见 §4-23）
+- [ ] 退出码是否按语境理解？（`lfz run` 下 assert 失败 → `2`；`lfz test` 下用例失败 → `1`）
+- [ ] 格式说明符宽度是否为**字面数字**？（动态宽度不支持 → 用 `repeat` 手工补，见 §3）
 
 ---
 
@@ -527,7 +672,8 @@ top 3 words (desc):
 交付要求：
 1. 每个 `.lfz` 文件首行恰好为 #42；
 2. 自己对照指南 §8 自检清单逐项检查；
-3. 给出预期的 stdout 输出。
+3. **不要对字符串取下标**（`s[i]` 非法，用 `split("", s)`）；**大 n 时不要在循环里 `s = s + …` 或 `push` 累积**（O(n²)，见指南 §4.6）；
+4. 给出预期的 stdout 输出。
 ```
 
 **最小任务基线**（用来验证「只看指南能否写对」）：写一个函数，接收整数数组，返回偶数元素之和；用管道 `filter`/`reduce` 实现；打印结果。`[1,2,3,4,5]` → `6`。参考解（实测通过）：
@@ -548,7 +694,7 @@ print(sum_even([1, 2, 3, 4, 5]))
 
 - 语法：`docs/spec/syntax.md`｜语义：`docs/spec/semantics.md`｜接口/错误/内置表：`docs/spec/interface-contract.md`（冻结 v1）。
 - runner/CLI 契约：`docs/tooling/runner-contract.md`。
-- 本指南的实测验证记录：同目录 `VERIFICATION.md`。
+- 本指南的实测验证记录：同目录 `VERIFICATION.md`（§8 为 T11-③ 的 D1–D7 修订实测证据）。
 - 本 skill 包的**安装与使用**：同目录 `README.md`（三种安装方式 + 运行前提 + 不做什么）。
 - 示例源码目录：`docs/guide/ai/examples/`（`01_hello` / `02_basics` / `03_students` / **`04_wordcount`**）。
 - 人类向正文档：`docs/guide/ai/README.md`（与本文件内容一致）。
