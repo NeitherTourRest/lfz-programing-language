@@ -1,0 +1,19 @@
+#42
+// 02_basics.lfz — 类型 / 算术陷阱 / if 表达式 / 插值 / ;; dump
+// 首行必须是 #42（恰好三字符 + 换行）。
+
+let name = "LFZ"
+var count = 3
+count = count + 1                       // var 可重绑定（let 不行）
+
+print("hello, ${name}")
+print("7 / 2 = ${7 / 2}")               // / 恒为 float → 3.5
+print("div(7, 2) = ${div(7, 2)}")       // 整数向下取整 → 3
+print("-7 % 3 = ${-7 % 3}")             // 取模符号随除数 → 2
+print("round(2.5) = ${round(2.5)}")     // 银行家舍入 → 2
+print("round(3.5) = ${round(3.5)}")     // → 4
+
+let grade = if count > 3 { "high" } else { "low" }   // if 是表达式
+print("grade = ${grade}")
+
+;;                                       // dump 当前可见变量（独占一行）

@@ -1,5 +1,24 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 20:10] ✅ P6/P7a/P7b 按产出归属切分为三个原子提交并推送（未打 tag）
+- 来源: team-lead 任务书（轻量启动；把 P6（性能）/ P7a（人类文档）/ P7b（AI 指南+skill）按产出归属做**三个原子提交**并 push，收工文档并入提交 3；已核验：`cargo build` 0 warning、`cargo test` 431 全绿、`cargo run --quiet -- test` → 82/82 exit 0。禁区：禁 force-push、**不打 tag**（P8 收口再打 `v0.4-app`）、不改 `src/**`·`docs/spec/**`、不提交 `target/`·密钥·临时文件）
+- 完成:
+  - **入清单门禁（通过，未触发停止）**：`git status --short -uall` 复核实测与任务书预期逐字一致——` M` = `.opencode/team/DECISIONS.md` + `agents/{perf-engineer,docs-writer,ai-dx-engineer}/{STATUS,JOURNAL}.md`；`??` = `benchmarks/`、`docs/guide/`、`docs/reports/performance.md`、`.opencode/skills/`。**无清单外条目、无缺失条目**。
+  - 基线复核：提交前 HEAD = 远程 `refs/heads/main` = `f794d6c`；分支 `main`；`git check-ignore -v target` = `.gitignore:25:/target/`；`git tag -n` 仍 `v0.1.0`/`v0.2.0`/`v0.3-tested`。
+  - **归属修正**：`git diff .opencode/team/DECISIONS.md` 实测**只含 1 条 perf-engineer 的 P6 性能 ADR**（无三方 ADR）→ 按任务书预判「含性能专属 ADR 请拆分说明」，**改并入提交 1（P6）**而非提交 3。
+  - **提交信息路径修正**：任务书 body 写 `benchmarks/raw.json`，实测原始数据在 **`benchmarks/results/raw.json`**（与 ADR 一致）→ 提交 1 body 采用实际路径，其余逐字照录；如实上报。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、置顶追加本 `JOURNAL.md`），使收工改动并入**提交 3**（工作区提交后保持干净）。
+  - **三个原子提交**（均 `git add <显式路径>`，未 `git add -A`；`git commit -F <UTF-8 信息文件>`）：
+    1. `perf(p6): LFZ vs Python benchmark suite and report` = `958170c`（21 文件：`benchmarks/` 18 + `performance.md` + perf-engineer 文档 2 + `DECISIONS.md`）。
+    2. `docs(p7): human-facing guide (get started, tutorial, reference, errors, testing)` = `60cbb96`（7 文件）。
+    3. `feat(p7): LFZ AI development guide and lfz-programming skill`（`.opencode/skills/` 3 + `docs/guide/ai/` 4 + ai-dx-engineer 文档 2 + 本角色收工文档 2）= 见汇报。
+  - `git push`（非 force；`$LASTEXITCODE=0` 判据）。
+- 产出:
+  - 三个新提交（短哈希见汇报）；`git status --short` 空；`git log --oneline -5`；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `cargo run --quiet -- test` → `汇总：共 82 个用例，通过 82，失败 0，错误 0`，退出码 0。
+- 决策: 无新增 ADR；提交切分的归属修正（`DECISIONS.md` 随 P6 而非 P7b）属 release-manager 入库簿记判断，已在汇报与「归属修正」说明中留痕，不改任何他角色交付内容。
+- 下一步: P10 交付清单核对；P8 收口打 `v0.4-app`。
+- 阻塞: 无。
 ## [2026-09-27 18:35] ✅ P5.4（黑盒测试集定稿）原子提交 + P5 里程碑附注标签 `v0.3-tested` 已打并推送
 - 来源: team-lead 任务书（轻量启动；把 P5.4「黑盒测试集定稿」做单个原子提交并 push，并**打 P5 里程碑附注标签 `v0.3-tested`**、推送含 tag。`git add tests/coverage-matrix.md tests/REPORT.md .opencode/team/DECISIONS.md .opencode/team/agents/test-engineer/{STATUS,JOURNAL}.md` + 本角色收工文档；已核验：`cargo build` 0 warning、`cargo test` 431 全绿、`cargo run --quiet -- test` → `共 82 个用例，通过 82，失败 0，错误 0` exit 0；P5 通过条件「一个命令跑完全部且全绿 + 覆盖矩阵 + 测试报告齐备」已达成。禁区：禁 force-push、**只打 `v0.3-tested` 一个标签**、不改 `src/**`·`docs/spec/**`、不提交 `target/`·密钥·临时文件）
 - 完成:
