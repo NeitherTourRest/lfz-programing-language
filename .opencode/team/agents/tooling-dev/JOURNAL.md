@@ -1,5 +1,23 @@
 # tooling-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 11:16] P4.1 `lfz test` 一键测试 runner（评分项 2 基础设施）
+- 来源: team-lead 任务书「P4.1 — `lfz test` 一键测试 runner」；契约 = `docs/spec/interface-contract.md` §11.2（T-R1…T-R4）+ §8.1（退出码 D-008）。
+- 完成:
+  - `src/cli.rs`：新增 `lfz test [路径...]` 子命令（`Command::Test`）、更新 `--help`/用法/退出码文案；把执行链抽成 `pub(crate) fn eval_case() -> CaseEval`（`run_file` 改为复用）。
+  - `src/test_runner.rs`（新，bin 私有模块）：发现（默认 `tests/**/*.lfz`、跳过 `fixtures/`、显式路径/文件）+ `cases.json` 清单 + 判定 + 报告 + 退出码。
+  - `src/json.rs`（新，bin 私有模块）：std-only 递归下降 JSON（含 `\uXXXX`/代理对/BOM），用于读清单；**未引第三方依赖、未动 `lib.rs`**。
+  - `tests/test_runner.rs`（新）：7 个 e2e（默认发现/缺前导 ERROR/`check` 非致命/清单负例/显式目录/--help）。
+  - `src/test_runner.rs` 内 13 单测 + `src/json.rs` 内 4 单测（全部用系统临时目录，**不在 tests/ 留夹具**）。
+  - `docs/tooling/runner-contract.md`（新，派生契约：发现规则全文 / 清单 schema / 判定与退出码裁定 / 输出格式 / T-R1–T-R4 落点对照）。
+- 产出（证据）:
+  - `cargo build --all-targets`（先 `cargo clean -p lfz` 全量重编）→ **0 warning**。
+  - `cargo test` → lib `361 passed` + bin `27 passed` + `tests/cli.rs` `7 passed` + `tests/test_runner.rs` `7 passed`，**0 failed**（合计 402；原有 377 零破坏）。
+  - `cargo run -- test`（项目根，`tests/` 暂无 .lfz）→ stderr `未发现任何测试用例`，**退出码 2**。
+  - 临时混合套件（pass/assert-fail/1÷0/soft-check + 清单负例）→ `PASS 3 / FAIL(AssertionError,带§8.2位置) / ERROR(ZeroDivisionError)`，汇总 `共 5 通过 3 失败 1 错误 1`，**退出码 2**。
+  - 全通过套件 → `共 2 通过 2`，**退出码 0**；仅失败套件 → `共 1 失败 1`，**退出码 1**。
+- 决策（已提 ADR）: ① `ERROR` 优先于 `FAIL`（并存 → 退出 2）；② 清单 `expect` 类名不符 / 未报错 → `FAIL`；③ 发现 0 用例 → 环境错误退出 2；④ 报告写 stdout、runner 错误写 stderr；⑤ 自动发现跳过任意 `fixtures` 目录。
+- 下一步: 通知 test-engineer 契约就绪；P4 剩余 `--json` / REPL / 打包 / 启动器。
+- 阻塞: 无。契约 3 处歧义已按「最贴近原文」裁定并列为「待确认」，上报 team-lead。
 ## [2026-09-23 23:40] P3.10 最小 CLI + 端到端打通
 - 来源: team-lead 任务书「P3.10 — 最小 CLI + 端到端打通」
 - 完成:

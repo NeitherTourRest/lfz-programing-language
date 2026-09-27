@@ -13,8 +13,9 @@
 //!
 //! # 本批范围
 //!
-//! **已做**：`lfz run <file>`、`--help` / `-h`、`--version` / `-V`、错误格式化、退出码。
-//! **不做**（留 P4）：REPL、`--json`、`lfz test` runner。
+//! **已做**：`lfz run <file>`、`lfz test [路径...]`（实现见 [`crate::test_runner`]）、
+//! `--help` / `-h`、`--version` / `-V`、错误格式化、退出码。
+//! **不做**：REPL、`--json`。
 //!
 //! # 流约定
 //!
@@ -38,8 +39,7 @@ use std::io::Write;
 
 /// 成功。
 pub const EXIT_OK: i32 = 0;
-/// 测试有用例失败（`lfz test` 专用；P4 的 runner 使用，本批仅保留常量）。
-#[allow(dead_code)]
+/// 测试有用例失败（`lfz test` 专用；由 [`crate::test_runner`] 使用）。
 pub const EXIT_TEST_FAIL: i32 = 1;
 /// CLI 参数错误 / LFZ 语法或运行时错误 / 运行环境错误。
 pub const EXIT_ERROR: i32 = 2;
@@ -58,16 +58,19 @@ LFZ 解释器（最小命令行）
 
 用法:
   lfz run <file>       运行 LFZ 脚本（.lfz 文件要求首行为 #42）
+  lfz test [路径...]   运行黑盒测试（默认发现 tests/**/*.lfz，排除 tests/fixtures）
   lfz --help, -h       显示本帮助
   lfz --version, -V    显示版本
 
 退出码:
-  0  成功
-  1  测试失败（lfz test，P4）
-  2  CLI 参数错误 / LFZ 语法或运行时错误 / 运行环境错误
+  0  成功（所有用例通过）
+  1  测试有用例失败（assert / fail 抛 AssertionError）
+  2  CLI 参数错误 / LFZ 语法或运行时错误 / 用例 error / 运行环境错误
 
 示例:
   lfz run examples/hello.lfz
+  lfz test
+  lfz test tests/smoke
 ";
 
 /// `lfz --version` 文本（写 stdout）。
@@ -78,6 +81,8 @@ const VERSION: &str = concat!("lfz ", env!("CARGO_PKG_VERSION"));
 enum Command {
     /// `lfz run <file>`。
     Run { path: String },
+    /// `lfz test [路径...]`。
+    Test { paths: Vec<String> },
     /// `--help` / `-h`。
     Help,
     /// `--version` / `-V`。
@@ -98,9 +103,10 @@ pub fn execute(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32
             EXIT_OK
         }
         Ok(Command::Run { path }) => run_file(&path, err),
+        Ok(Command::Test { paths }) => crate::test_runner::run(&paths, out, err),
         Err(msg) => {
             let _ = writeln!(err, "lfz: {msg}");
-            let _ = writeln!(err, "用法: lfz run <file>（更多: lfz --help）");
+            let _ = writeln!(err, "用法: lfz run <file> | lfz test [路径...]（更多: lfz --help）");
             EXIT_ERROR
         }
     }
@@ -126,45 +132,125 @@ fn parse_args(args: &[String]) -> Result<Command, String> {
             }
             Ok(Command::Run { path })
         }
+        // `lfz test [路径...]`：零或多个路径参数（目录 → 递归发现；文件 → 直接运行）。
+        "test" => Ok(Command::Test {
+            paths: it.cloned().collect(),
+        }),
         other => Err(format!("未知命令 '{other}'")),
     }
 }
 
-/// 运行一个 LFZ 文件：`load_file → lex → parse → eval_module_traced`。
+/// 单个用例的执行结果：供 `run`（单文件）与 [`crate::test_runner`]（批量）共用。
 ///
-/// 任一阶段失败 → 按 §8.2/§8.3 渲染错误到 `err`，返回 [`EXIT_ERROR`]；成功 → [`EXIT_OK`]。
-fn run_file(path: &str, err: &mut dyn Write) -> i32 {
+/// **只有**「跑完全部阶段且无 `LfzError`」为 [`CaseEval::Passed`]；任一阶段报错都进
+/// [`CaseEval::Failed`] 并携带渲染所需的上下文（`loaded` / `traced` / `err`）。
+pub(crate) enum CaseEval {
+    /// 加载 → 词法 → 语法 → 求值全部成功（无任何 `LfzError`；`check` 失败不在此列）。
+    Passed,
+    /// 某阶段抛 `LfzError`。
+    Failed {
+        /// 该错误（已从 `Box` 解出）。
+        err: LzError,
+        /// 加载成功时的源码视图（加载期失败为 `None`）。
+        loaded: Option<Loaded>,
+        /// 运行期错误的帧栈（加载 / 解析期失败为 `None`）。
+        traced: Option<TracedRun>,
+    },
+}
+
+impl CaseEval {
+    /// 错误的**类名**（`Passed` → `None`）。
+    #[must_use]
+    pub(crate) fn error_class(&self) -> Option<&'static str> {
+        match self {
+            CaseEval::Passed => None,
+            CaseEval::Failed { err, .. } => Some(err.class_name()),
+        }
+    }
+
+    /// 错误对象（`Passed` → `None`）。
+    #[must_use]
+    pub(crate) fn error(&self) -> Option<&LzError> {
+        match self {
+            CaseEval::Passed => None,
+            CaseEval::Failed { err, .. } => Some(err),
+        }
+    }
+
+    /// 按 `semantics.md` §8.2 / §8.3 渲染该错误的完整输出块（`Passed` → `None`）。
+    #[must_use]
+    pub(crate) fn render(&self, path: &str) -> Option<String> {
+        match self {
+            CaseEval::Passed => None,
+            CaseEval::Failed { err, loaded, traced } => {
+                Some(render_error(path, loaded.as_ref(), err, traced.as_ref()))
+            }
+        }
+    }
+}
+
+/// 加载并执行一个 LFZ 文件：`load_file → lex → parse → eval_module_traced`。
+///
+/// 与 [`run_file`] 的差别：`run_file` 只关心成败与渲染，本函数把**中间上下文**带出，
+/// 供 runner 逐用例判定（类名 ↔ 期望、位置信息）。
+pub(crate) fn eval_case(path: &str) -> CaseEval {
     // 加载期：失败（IOError / NotUtf8 / CosmosAnswerError）时无源码视图。
     let loaded = match loader::load_file(path) {
         Ok(l) => l,
         Err(e) => {
-            let _ = write!(err, "{}", render_error(path, None, &e, None));
-            return EXIT_ERROR;
+            return CaseEval::Failed {
+                err: *e,
+                loaded: None,
+                traced: None,
+            }
         }
     };
     // 词法期。
     let tokens = match lexer::lex(&loaded.text, loaded.line_base) {
         Ok(t) => t,
         Err(e) => {
-            let _ = write!(err, "{}", render_error(path, Some(&loaded), &e, None));
-            return EXIT_ERROR;
+            return CaseEval::Failed {
+                err: *e,
+                loaded: Some(loaded),
+                traced: None,
+            }
         }
     };
     // 语法期。
     let program = match parser::parse(&tokens) {
         Ok(p) => p,
         Err(e) => {
-            let _ = write!(err, "{}", render_error(path, Some(&loaded), &e, None));
-            return EXIT_ERROR;
+            return CaseEval::Failed {
+                err: *e,
+                loaded: Some(loaded),
+                traced: None,
+            }
         }
     };
     // 运行期：用 `eval_module_traced` 取帧栈（§10.3 / D-008 影响段）。
     let traced = evaluator::eval_module_traced(&program);
-    if let Err(e) = &traced.result {
-        let _ = write!(err, "{}", render_error(path, Some(&loaded), e, Some(&traced)));
-        return EXIT_ERROR;
+    if traced.result.is_ok() {
+        return CaseEval::Passed;
     }
-    EXIT_OK
+    // 先把错误 clone 出来，再把 `traced`（含完整帧栈）移交出去。
+    let err = (**traced.result.as_ref().expect_err("已判定为 Err")).clone();
+    CaseEval::Failed {
+        err,
+        loaded: Some(loaded),
+        traced: Some(traced),
+    }
+}
+
+/// 运行一个 LFZ 文件：失败 → 按 §8.2/§8.3 渲染到 `err` 并返回 [`EXIT_ERROR`]；成功 → [`EXIT_OK`]。
+fn run_file(path: &str, err: &mut dyn Write) -> i32 {
+    let eval = eval_case(path);
+    match eval.render(path) {
+        None => EXIT_OK,
+        Some(block) => {
+            let _ = write!(err, "{block}");
+            EXIT_ERROR
+        }
+    }
 }
 
 /// 按 `semantics.md` §8.2 / §8.3 渲染错误输出（返回值以 `\n` 结尾）。
@@ -333,12 +419,27 @@ mod tests {
     }
 
     #[test]
+    fn parse_test_collects_paths() {
+        assert_eq!(
+            parse_args(&args(&["test"])),
+            Ok(Command::Test { paths: Vec::new() })
+        );
+        assert_eq!(
+            parse_args(&args(&["test", "a", "b"])),
+            Ok(Command::Test {
+                paths: vec!["a".to_string(), "b".to_string()]
+            })
+        );
+    }
+
+    #[test]
     fn help_and_version_exit_zero_on_stdout() {
         let mut out = Vec::new();
         let mut err = Vec::new();
         assert_eq!(execute(&args(&["--help"]), &mut out, &mut err), EXIT_OK);
         let text = String::from_utf8(out).expect("UTF-8");
         assert!(text.contains("lfz run <file>"), "help: {text}");
+        assert!(text.contains("lfz test"), "help 应列出 test 子命令: {text}");
         assert!(err.is_empty());
 
         let mut out = Vec::new();

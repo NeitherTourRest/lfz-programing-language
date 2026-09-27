@@ -1,11 +1,14 @@
-//! LFZ 解释器最小 CLI 入口（P3.10）。
+//! LFZ 解释器 CLI 入口。
 //!
-//! 命令行为见 [`cli`]：`lfz run <file>` / `lfz --help` / `lfz --version`。
-//! 错误格式化与退出码映射（`0/1/2`）同样在 [`cli`] 中。
+//! 命令行为见 [`cli`]：`lfz run <file>` / `lfz test [路径...]` / `lfz --help` / `lfz --version`。
+//! 错误格式化与退出码映射（`0/1/2`）在 [`cli`]；一键测试 runner 在 [`test_runner`]；
+//! `cases.json` 清单解析在 [`json`]。
 //!
-//! **本批不做**：REPL、`--json`、`lfz test` runner（留 P4）。
+//! **本批不做**：REPL、`--json`。
 
 mod cli;
+mod json;
+mod test_runner;
 
 use std::io::Write;
 

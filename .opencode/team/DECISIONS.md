@@ -647,3 +647,15 @@
   - `scripts/offpeak-task.ps1`：注册/卸载/查询 Windows 计划任务 `LFZ-offpeak-runner`（登录时随起、`-Guard` 常驻）。
 - **影响**：全体 agent 调度节奏；用户可撒手（仅重大决策需介入）。
 - **证据**：官方页原文（上文引用）；`scripts/offpeak.ps1` 实测 `now UTC 2026-09-24 04:35 (Thursday) → OFF-PEAK, peak starts in 1h 25m`（exit 0）；三个 `.ps1` 实测 `bytes>127 = 0`（纯 ASCII，避开 PS 5.1 的 BOM-less ANSI 解码坑）。
+
+### [2026-09-27 11:16] [tooling-dev] `lfz test` runner 契约落地与 3 处裁定（跨角色：影响 test-engineer）
+
+- **背景**：P4.1 实现 `lfz test`（评分项 2 基础设施）。硬契约 = `docs/spec/interface-contract.md` §11.2（T-R1…T-R4）+ §8.1（D-008 退出码）；其中「发现规则须写入契约」（T-R4）与三处判定细节规范未逐字钉死。
+- **决议（不改 `docs/spec/`，派生文档 `docs/tooling/runner-contract.md` 已定稿并生效）**：
+  1. **发现规则全文**（T-R4）：默认根 = cwd 下 `tests`；递归收集 `*.lfz`（`loader::is_lfz`，ASCII 大小写不敏感）；**跳过任何名为 `fixtures` 的目录**（规范原文 `tests/fixtures/**` 的统一化）；显式文件参数不做扩展名过滤；`<根>/cases.json` 附加 `expect` 或新增夹具；结果按路径（`/` 规范化）稳定排序。
+  2. **判定模型**（T-R1/T-R3 + D-008）：无 `LfzError` → `PASS`（`check` 失败非致命 = A4）；仅 `AssertionError`（`assert`/`fail`）→ `FAIL`（退出 1）；其余任一错误类（含缺 `#42` 的 `CosmosAnswerError`）→ `ERROR`（退出 2）。
+  3. **三处裁定（列为「契约待确认」，如 language-architect / team-lead 另有裁定即修订）**：① 同一轮 `FAIL` 与 `ERROR` 并存 → 退出码取 **`2`（ERROR 优先）**（D-008 并列「测试失败=1 / 所有错误类=2」，ERROR 更严重；T-R1 明定缺 `#42` → error(2)）；② 清单 `expect.error` 类名不符 / 期望错误未触发 → 判 **`FAIL`**（pytest `raises` 语义）；③ 发现 **0 个用例** → **环境错误，退出 `2`**（不静默成功）。
+  4. **流约定**：测试报告 → **stdout**；runner 自身错误（参数 / 缺目录 / 清单非法 / 无用例）→ **stderr**。内建 `print`/`check` 直接写进程流，runner 无法接管（已知限制）。
+- **理由**：契约先行（D-008）要求 runner 契约先于黑盒测试；test-engineer 需按固定「发现规则 + 判定 + 退出码 + 清单 schema」并行编写 P5 用例，避免接口误解。
+- **影响**：**test-engineer** 按 `docs/tooling/runner-contract.md` §7 编写用例（`.lfz` 首行须 `#42`；负例放 `tests/fixtures/` 并在 `tests/cases.json` 用 `expect.error` 声明）；**verifier** 以 `lfz test` 判定与退出码作为验收工具；**release-manager** 打包冒烟可用 `lfz test`。
+- **证据**：`cargo build --all-targets`（clean 全量）**0 warning**；`cargo test` **402 passed / 0 failed**（lib 361 + bin 27 + `tests/cli.rs` 7 + `tests/test_runner.rs` 7，原 377 零破坏）；`cargo run -- test` 三档退出码实测 `0`/`1`/`2`。

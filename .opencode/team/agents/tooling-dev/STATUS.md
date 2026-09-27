@@ -1,29 +1,30 @@
 # tooling-dev — 工作状态
-> 最后更新: 2026-09-23 by tooling-dev（P3.10 最小 CLI + 端到端打通）
+> 最后更新: 2026-09-27 11:16 by tooling-dev（P4.1 `lfz test` 一键测试 runner）
 
 ## 当前状态
-P3.10 **已完成**：`src/cli.rs` + `src/main.rs` 实现 `lfz run <file>`（含错误格式化 + 退出码 0/1/2 + `--help`/`--version`），`examples/hello.lfz` 产出，端到端链路（加载→词法→语法→求值→错误输出）真实打通。
-待 team-lead 交付 P3.11（verifier 独立验收）与后续 P4（runner / REPL / `--json` / 打包）。
+**P4.1 已完成**：`lfz test [路径...]` 一键黑盒测试 runner 落地，逐条实现 `interface-contract.md` §11.2 **T-R1…T-R4**，端到端可跑（发现→执行→断言→判定→汇总→退出码）。
+派生契约文档 `docs/tooling/runner-contract.md` 已就绪 → **请 team-lead 转告 test-engineer 按此编写 P5 黑盒测试集**。
+证据：`cargo build` **0 warning**；`cargo test` **402 passed / 0 failed**（lib 361 + bin 27 + `tests/cli.rs` 7 + `tests/test_runner.rs` 7；原有 377 用例零破坏）；`cargo run -- test` 三档退出码实测 0 / 1 / 2。
 
 ## 进行中
 - （无；本批任务已交付，等待调度）
 
 ## 阻塞 / 需要支持
 - （无）
-- 提示：`src/parser.rs` 由 core-dev 并行补齐（`fn`/`struct`/控制流/`--json` 语法面）。本 CLI 只依赖稳定库入口，未受其影响；P3.10 的 3 条验收命令在**当前** parser 状态下全部通过。
+- **需 team-lead 转达 test-engineer**：runner 契约就绪（`docs/tooling/runner-contract.md`），生效时间 = 本轮（2026-09-27）。test-engineer 可按 §7「最小接入清单」编写用例并就地联调。
+- **契约待确认（未自行发明，列此待仲裁）**：① 同一轮 `FAIL`+`ERROR` 并存时退出码取 `2`（ERROR 优先）；② 清单 `expect` 类名不符判 `FAIL`；③ 发现 0 用例判环境错误退出 `2`。详见派生文档 §5 与本轮 ADR。
 
-## 下一步计划（P4 待 team-lead 排期）
-1. **runner 契约先行**（铁律）：先写 `docs/tooling/runner-contract.md`（发现规则 / 断言接口 / 失败格式 / 退出码 / 汇总格式 + 2 个契约示例用例），再通知 team-lead 转 test-engineer。
-2. `lfz test` 一键 runner（承载评分项 2）+ `--json`（§8.3 示例 4 字段）+ REPL（可选）+ `scripts/package.ps1` + `scripts/lfz.ps1`/`lfz.bat` 启动器。
-3. 运行章节与 docs-writer 协作（Windows 优先，UTF-8，跨平台注意）。
+## 下一步计划（P4 剩余）
+1. `--json` 错误输出（semantics §8.4，示例 4 字段）。
+2. REPL（可选、非阻塞）+ `scripts/package.ps1` + `scripts/lfz.ps1`/`lfz.bat` 启动器（Windows 优先）。
+3. 运行章节与 docs-writer 协作（`lfz test` 用法 + 跨平台注意）。
+4. 与 test-engineer 联调 `lfz test` 跑其最小套件（P5 放量前）。
 
 ## 关键经验（写给未来的自己）
-- **实现落点**：CLI 作为 bin crate 的子模块（`main.rs` 内 `mod cli;`），**不改 `lib.rs`**（任务禁区边界）；`cli.rs` 用 `lfz::...` 路径引用库模块。
-- **错误渲染必须用 `eval_module_traced`**（`evaluator.rs`），拿 `TracedRun.frames` + `frame_name()` 组装 §8.3 traceback；`eval_module`/`run` 只返回结果、无帧栈（DECISIONS P3.8 影响段明确要求）。
-- **加载期 vs 运行期**：`CosmosAnswerError`/`SyntaxError` **无** Traceback 头；其余类 **有**。**加载期 IOError/NotUtf8 也无** Traceback（按「阶段」而非「类」判定；见本轮 ADR）。
-- **CosmosAnswerError 只有 `File "<path>", line 1` 一行**（无缩进、无源码行、无插入符）——严格照 `semantics.md` §8.3 示例 3。
-- **`line_base` 偏移**：`.lfz` 的 `Loaded.text` 首行 = 文件第 2 行 → 源码下标 = `line - line_base - 1`。
-- **错误流 = stderr，程序输出 = stdout**（spec 未规定错误流，采用 Python 约定；见本轮 ADR）。
-- **无第三方依赖的 e2e 测试**：`tests/cli.rs` 用 `env!("CARGO_BIN_EXE_lfz")` + `std::process::Command`；临时 `.lfz` 写系统 temp 目录并在 `Drop` 删除。
-- **PowerShell 5.1 抓 stderr 有坑**：`& exe ... 2>file` 会把原生 stderr 变成 PS ErrorRecord；要用 `Start-Process -RedirectStandardError`，并用 `[System.Text.UTF8Encoding]::new($false)` 读写以保证中文逐字节可比对。
-- **已知 spec 排版瑕疵（未改）**：`semantics.md` §8.3 示例 2 的内层帧（`n / 0`）比通用帧格式少 4 空格（源码行/插入符均少 4），与示例 1 及同例外层帧不一致；本实现按 §8.2 通用规则（源码行前缀 4 空格、插入符 = 4 + (col-1)）统一处理。已在汇报中提示 language-architect。
+- **runner 落点**：`src/test_runner.rs` + `src/json.rs` 是 **bin crate 私有模块**（`main.rs` 内 `mod`），**未动 `lib.rs`**。`src/cli.rs` 新增 `test` 子命令并把执行链抽成 `pub(crate) fn eval_case() -> CaseEval`（`Passed` / `Failed{err,loaded,traced}`），runner 复用之，**不复制** lexer/parser/evaluator 逻辑。
+- **失败渲染直接复用** `cli::render_error`（已有 §8.2/§8.3 逻辑）；runner 只负责「判定 + 缩进 2 格 + 汇总」，不另写格式化。
+- **无第三方 JSON**：std 无 JSON → 自写 `src/json.rs`（递归下降，含 `\uXXXX` / 代理对 / **容忍前导 BOM**）。踩坑：PowerShell 5.1 `Set-Content -Encoding utf8` 写 **BOM**，故 parser 必须 `strip_prefix('\u{FEFF}')`。
+- **判定模型**（对齐 pytest）：无错=PASS；仅 `AssertionError`=FAIL（退出 1）；其余错误类=ERROR（退出 2，优先于 FAIL）；`check` 失败非致命=PASS（A4）。
+- **发现规则**：默认根 `tests`，递归 `*.lfz`（`loader::is_lfz`），**跳过任何名为 `fixtures` 的目录**；`cases.json` 附加 `expect` / 新增夹具。路径统一规范化为 `/` 输出（跨平台一致）。
+- **流约定**：测试报告 → stdout；runner 自身错误（参数/缺目录/清单非法/无用例）→ stderr。**已知限制**：内建 `print`/`check` 直接写进程 stdout/stderr，无法接管，正文若有 `print` 会与报告交错。
+- **测试隔离**：单测与 e2e 全部用**系统临时目录**（`tests/` 下只留 `*.rs`），符合「不占 P5 领地」；e2e 用 `CARGO_BIN_EXE_lfz` + `Command::current_dir` 测默认发现。
