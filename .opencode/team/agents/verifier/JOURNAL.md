@@ -1,5 +1,17 @@
 # verifier — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 12:50] P9 复验（rev.2）—— bug-01 已闭合 / obs-01 残留 1 处数值 → 【CONCERNS】
+- 来源: 任务书「P9 复验（rev.2）」（team-lead 调度，轻量启动）；被验提交 = **`6aabdf5`**（`fix: bind self for methods retrieved via ["k"]`）。
+- **并发写入记录（第二次印证）**: 开工 HEAD=`4727726` 且工作树含**未提交** `M src/evaluator.rs`（bug-01 修复）。我 `cargo clean; cargo build`/`cargo test` 期间该修复被**并发提交为 `6aabdf5`**，其后 `git status` 清空。已核对提交内容与我 build 时所见一致（工作树==HEAD），故结论对 `6aabdf5` 成立。**未修改任何交付物**。
+- 完成（**只验证不修复**，一次性夹具置于 `%TEMP%\opencode\`）:
+  - **待闭项 1 `bug-20260927-01` → ✅ 已闭合**: 自建夹具（assert 版 + 显式值版）`cargo run -q -- run` → exit 0；`p.get()=42`、`p["get"]()=42`（取值等价）；`p.bump()=1`、`p["bump"]()=2`、`p.n=2`（经方括号调用方法**写回同一 `self` 接收者**，0→1→2）。修复前失败证据引用 P9 §5（`NameError: 未定义的名字 'self'`、exit 2）。修复因果：`git show 6aabdf5 -- src/evaluator.rs` 新增 `ExprKind::Index` 被调分支以 `Some(recv)` 传 `self` + 回归单测。
+  - **待闭项 2 `obs-01` → 🟡 未完全闭合**: README 主体已刷新（P10 阶段表、8 项交付物索引含真实路径、4 标签、82 用例、341 行均正确；旧值「377/P4」已消失），**但 L30/L86 仍写 `431 passed（lib 361）`**，实测为 **`432 passed（lib 362）`**（修复提交新增 1 条 lib 单测）→ 2 处残留数值。连带复核 **obs-02 已闭合**（`git ls-files docs/slides` 命中 3 文件、14 页）。
+  - **关键基线（HEAD `6aabdf5`）**: `cargo clean; cargo build` **0 warning**（exit 0）；`cargo test` = **362+42+16+12 = 432 passed / 0 failed / 0 ignored**；`cargo run -- test` **82/82 exit 0**；`cargo run -- run app/sortviz.lfz` **exit 0**（10×`[校验通过]`）；Git 68 commits、4 标签、`origin/main`=本地 HEAD。
+  - **额外检查 → ⚪ 建议项（owner: test-engineer）**: `tests/lfz/test_structs.lfz` L30 **只断言 `type(p["norm2"])=="function"`、未调用**，对 `s["k"]()` 调用形态**无黑盒覆盖**；修复后此路径值得补 `assert(p["norm2"]() == 25, …)`，且 L28–L29 注释（「实现仅在 `.字段()` 调用点绑定」）修复后已过时，宜同步更新。
+- 产出: `docs/reports/P9-verification.md` 追加「复验（rev.2）」§9.0–§9.5（含 4 项逐条结论表 + 升级结论行）。
+- 决策: **【复验结论】CONCERNS（无阻塞）** —— bug-01 已闭合；**唯一残留** = README L30/L86 的 `431（lib 361）` 应改 `432（lib 362）`；由 release-manager 修该 2 处即可升级 **`PASS（可打 v1.0-final）`**。建议项与 `bug-20260927-02`（低，已知自认）不阻塞打标。
+- 下一步: 待 release-manager 更新 README 测试数（+ 可选补黑盒用例）后，我复核该 2 处即出 PASS 升级结论。
+- 阻塞: 无。
 ## [2026-09-27] P9 交付物级独立验收（模拟助教）—— 8 项交付物逐项核验（CONCERNS）
 - 来源: 任务书 P9（team-lead 调度）；被验状态 = **git HEAD `c224adb`**（`feat(p8): LFZ sorting-visualizer app`）。
 - **并发写入记录**: 开工时 `docs/slides/` **不存在**；核验中途出现 `docs/slides/LFZ-defense.pptx`（84 152 bytes，14 页，**未提交 `??`**）；同时 `ppt-presenter` 的 STATUS/JOURNAL 被并发修改。HEAD 全程未漂移 = `c224adb`。另：我复跑基准覆写了 `benchmarks/results/raw.json`，**已 `git checkout` 还原**，工作树恢复 clean。

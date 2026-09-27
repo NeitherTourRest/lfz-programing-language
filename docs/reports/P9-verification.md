@@ -524,3 +524,167 @@ stderr contains expected tail? True
 ---
 
 > 报告完。证据原文均取自本轮实测转录；如需重跑，按 §3 表格命令逐条执行即可。
+
+---
+
+# 复验（rev.2）— 2026-09-27
+
+> **复验范围**：对 P9 报告的 2 项待闭项做**独立复验**并给出升级结论。**只验证、不修复**；本轮**未修改**任何 `src/**`、`docs/spec/**`、`app/**`、`tests/**`、`docs/guide/**`、`benchmarks/**`、`README.md`（仅追加本报告）。
+> 环境同 §0：Windows 11 / PowerShell 5.1 ｜ rustc/cargo 1.98.1 ｜ CPython 3.13.9 ｜ 命令均在**项目根**执行（先 `$env:Path += ";$env:USERPROFILE\.cargo\bin"`）。
+
+## 9.0 复验基线（先读：HEAD 发生了并发漂移）
+
+| 项 | 值 | 说明 |
+|---|---|---|
+| 复验开工 HEAD | `4727726`（`docs(p10): refresh README…`） | 开工时工作树含 **未提交** 的 `M src/evaluator.rs` |
+| 复验结束 HEAD | **`6aabdf5`**（`fix: bind self for methods retrieved via ["k"]`） | 我核验期间该修复被**并发提交**；工作树现 **clean** |
+| 基线锁定 | 已验证在 **HEAD `6aabdf5`** 上：`cargo test` = 432 passed；bug-01 复现用例 exit 0 | 我首次 `cargo clean; cargo build` 时文件内容**与提交后一致**（`git status` 现为空），故结论对 `6aabdf5` 成立 |
+| 远程一致性 | `origin/main` = 本地 HEAD = `6aabdf5`；`git rev-list --count HEAD` = **68** | 4 标签仍在 |
+
+> ⚠️ **并发写第二次印证**：我在核验 `M src/evaluator.rs` 期间，runtime-dev/release-manager 将其提交为 `6aabdf5`。**报告结论以结束时刻 `6aabdf5` 为准**，并对提交前后内容一致性做了核对（见上「基线锁定」）。
+
+---
+
+## 9.1 待闭项 1 — `bug-20260927-01`（`s["method"]()` 未绑定 `self`）
+
+- **原待闭项**：P9 §5 复现确认：`p["norm2"]()` 取到方法值后调用**未绑定 `self`** → `NameError: 未定义的名字 'self'`、exit 2；而 `p.norm2()` 正常。与 `semantics.md` §4.5(L51) 明文 `s.k ≡ s["k"]`（调用时 `self` 绑定）冲突。严重度 **中**，owner = runtime-dev。
+
+- **修复声明**：`6aabdf5 fix: bind self for methods retrieved via ["k"] (spec s.k === s["k"])`（commit message 原文："a method value obtained through the bracket form now binds self when called…Adds a regression test."）。
+
+- **复验命令（我独立构造，未经他人提供）**：
+  ```powershell
+  $env:Path += ";$env:USERPROFILE\.cargo\bin"
+  # 复现夹具（一次性，置于临时目录，不进入交付物）：
+  #   C:\Users\19170\AppData\Local\Temp\opencode\verifier_rev2_bug01.lfz        （assert 版）
+  #   C:\Users\19170\AppData\Local\Temp\opencode\verifier_rev2_bug01_values.lfz （显式打印值版）
+  cargo run -q -- run C:\Users\19170\AppData\Local\Temp\opencode\verifier_rev2_bug01.lfz
+  cargo run -q -- run C:\Users\19170\AppData\Local\Temp\opencode\verifier_rev2_bug01_values.lfz
+  ```
+
+  夹具（assert 版，含「经方括号调用方法应写自身字段」的**副作用**证明，而不只是取值相等）：
+  ```lfz
+  #42
+  struct P {
+      v: 41,
+      n: 0,
+      fn get() => self.v + 1,
+      fn bump() => {
+          self.n = self.n + 1
+          self.n
+      },
+  }
+  let p = P { v: 41 }
+  assert(p.get() == 42, "dot")
+  assert(p["get"]() == 42, "bracket")
+  assert(p.n == 0, "n0")
+  let b1 = p["bump"]()
+  let b2 = p.bump()
+  assert(b1 == 1, "b1")
+  assert(b2 == 2, "b2")
+  assert(p.n == 2, "n2")
+  print("bug01 bracket-call OK")
+  ```
+
+- **实测（原文）**：
+  ```
+  $ cargo run -q -- run ...\verifier_rev2_bug01.lfz
+  bug01 bracket-call OK
+  （ASSERT_EXIT=0，7 条 assert 全过）
+
+  $ cargo run -q -- run ...\verifier_rev2_bug01_values.lfz
+  42        ← p.get()
+  42        ← p["get"]()       （与上一行相等 → 等价）
+  1         ← p.bump()         （self.n: 0→1）
+  2         ← p["bump"]()      （self.n: 1→2，证明 self 确为同一接收者）
+  2         ← p.n              （副作用落在 p 上）
+  （EXIT=0）
+  ```
+  → 不仅 `p["get"]() == p.get() == 42`（**取值等价**），且经方括号取到的方法调用 `bump()` 能**写回原接收者** `p.n`（**`self` 绑定为同一对象**），两种取法共享同一 `self` 状态（1→2）。
+
+- **修复前证据（无法回退时引用）**：P9 §5 原始复现 —— `stdout: 25`（仅 `p.norm2()` 行）、`stderr: … NameError: 未定义的名字 'self'`、`exit=2`。该失败与规范 `semantics.md` §4.5(L51) 冲突；本轮同一路径的**修复后**复用同型代码全部通过。
+
+- **修复因果核对**：`git show 6aabdf5 -- src/evaluator.rs` 显示新增 `ExprKind::Index { object, index }` 被调分支：当被调对象为 `Value::Struct` 且下标为字符串键时，取出方法字段后以 `Some(recv)` 作为 `self` 传入 `call_func`；同时新增回归单测 `struct_method_via_bracket_index_call_binds_self`（即 `cargo test` 由 431→432 的 +1 来源）。
+
+- **结论**：✅ **已闭合**。`s.k() ≡ s["k"]()` 在取值与副作用（`self` 写回）两个维度均成立。
+
+---
+
+## 9.2 待闭项 2 — `obs-01`（根 `README.md` 陈旧）
+
+- **原待闭项**：P9 §5 obs-01：根 `README.md` 陈旧（命中「377 passed」「下一步 P4」）。owner = release-manager。
+- **修复声明**：`4727726 docs(p10): refresh README and add delivery checklist`。
+
+- **复验命令**：
+  ```powershell
+  Select-String -Path README.md -Pattern '431|361|432|362|377|个用例|341|v0\.4-app|LFZ-defense'
+  Get-ChildItem docs/slides -Force                       # 交付物 8 是否入库
+  git ls-files docs/slides
+  ```
+
+- **实测（逐条核对 README 与实测值）**：
+
+  | README 声明 | 实测值 | 一致？ |
+  |---|---|---|
+  | `cargo test` **431 passed（lib 361 + main 42 + cli 16 + test_runner 12）**（L30/L86） | **432 passed（lib 362 + main 42 + cli 16 + test_runner 12）** | ❌ **不一致（+1）** |
+  | `cargo run -- test` 82 个用例 | 82 PASS / 0 FAIL / 0 ERROR，exit 0 | ✅ |
+  | `app/sortviz.lfz` 341 行 | LF 计数 = **341** | ✅ |
+  | 4 个标签 | `v0.1.0`/`v0.2.0`/`v0.3-tested`/`v0.4-app` | ✅ |
+  | 8 项交付物索引含真实路径 | 逐项 `Test-Path`/`Get-ChildItem` 全部存在（`docs/spec/`、`src/` 15 文件、`tests/`、`benchmarks/`+`performance.md`、`docs/guide/`+`ai/`+skill、`app/`+`DEV_RECORD.md`、`.git/`、`docs/slides/`） | ✅ |
+  | 「377 passed / 下一步 P4」等旧值 | **已消失**（不再命中） | ✅ 已刷新 |
+  | 交付物 8 `docs/slides/`（14 页 + `demo-script.md` + `qa-prep.md`） | 三文件**均已 Git 跟踪**（`git ls-files` 命中）；pptx slide count = **14** | ✅（**obs-02 亦闭合**） |
+
+- **结论**：🟡 **未完全闭合（残留 1 处数值）**。README 主体已刷新到 P10（阶段表、8 项交付物索引含真实路径、4 标签、82 用例、341 行、`docs/slides/` 均正确），且连带闭合了 **obs-02**（PPT 入库）；**但测试数仍是修复前的旧值**：README L30 / L86 写 `431 passed（lib 361）`，而当前 HEAD `6aabdf5` 实测为 **`432 passed（lib 362）`**（修复提交 `6aabdf5` 新增 1 条 lib 回归单测所致）。发 `v1.0-final` 前应由 release-manager 将 L30/L86 改为 **432（lib 362）**。严重度 **低**（仅文档数值，不影响任何实跑）。
+
+  > 归因说明：README 刷新提交（`4727726`）早于 bug-01 修复提交（`6aabdf5`），故测试数在修复落地后自然失效——属**顺序性残留**，非 README 作者失误。
+
+---
+
+## 9.3 关键基线复核（本轮实测，HEAD `6aabdf5`）
+
+| # | 命令 | 期望 | 实测（原文） | 判定 |
+|---|---|---|---|---|
+| 1 | `cargo clean; cargo build` | 0 warning | `Removed 1578 files, 338.1MiB total` → `Compiling lfz v0.1.0` → `Finished dev profile … in 3.68s`（**无 warning 行**）；exit 0 | ✅ |
+| 2 | `cargo test` | 库侧 **362 passed** | `362 passed; 0 failed; 0 ignored`（lib）+ `42` + `16` + `12` = **432 passed / 0 failed / 0 ignored**；exit 0 | ✅ |
+| 3 | `cargo run -- test` | 82/82 exit 0 | `PASS` 行 **82**、`FAIL/ERROR` 行 **0**；`汇总：共 82 个用例，通过 82，失败 0，错误 0`；exit 0 | ✅ |
+| 4 | `cargo run -- run app/sortviz.lfz` | exit 0 | exit **0**（stdout 4170 bytes / 79 行）；阶段 1+2 共 **10 处 `[校验通过]`**；末行 `== 完成：5 种算法全部通过正确性校验 ==` | ✅ |
+
+- Git：`git rev-list --count HEAD` = **68**；`origin/main` = 本地 HEAD = `6aabdf5`；工作树 clean。
+
+---
+
+## 9.4 额外检查（并记录）— 黑盒测试集是否覆盖 `s["k"]()` 调用形态？
+
+**结论：❌ 未覆盖 → 记为建议项（owner: test-engineer）。**
+
+- 证据：`tests/lfz/test_structs.lfz` L26–L30 —— **只断言可取到函数值，不调用**：
+  ```
+  L26: // `p["norm2"]` 能取到方法函数值（spec semantics §3.7：s.k ≡ s["k"] 可取到该函数值）。
+  L28: // （spec 要求 s.k ≡ s["k"] 且调用时 self 绑定；实现仅在 `.字段()` 调用点绑定）。
+  L29: // 缺陷修复前此处只断言「可取到 function 值」，不调用（避免把缺陷行为固化为期望）。
+  L30: assert(type(p["norm2"]) == "function", "struct_method_value_via_bracket")
+  ```
+  对 `p["k"]()` 这一**调用**形态**无任何断言**（对比 L25 `assert(p.norm2() == 25, "struct_method_call_dot")` 有 `.字段()` 调用断言）。
+- 说明：该缺口在修复前是**刻意**的（避免固缺陷），但**修复（`6aabdf5`）落地后此路径已可正确执行**，**值得补一条黑盒端到端用例** `assert(p["norm2"]() == 25, …)`，将 §4.5 等价性纳入自动回归；且 L28–L29 注释所述「实现仅在 `.字段()` 调用点绑定」在修复后已**过时**，宜同步更新。
+- **性质**：建议项（非阻塞；不影响评分项硬性条件——解释器侧已由 `cargo test` 新增单测覆盖）。
+
+---
+
+## 9.5 复验结论行
+
+> ## 【复验结论】**CONCERNS** — 2 项待闭项中 `bug-20260927-01` **已闭合**、`obs-02` 连带闭合；`obs-01`（README）**未完全闭合**（残留 2 处数值：L30/L86 的 `431 passed（lib 361）` 应为 `432 passed（lib 362）`）。**无阻塞项**；打 `v1.0-final` 前由 release-manager 修上述 2 处数值即可升级为 **PASS**。
+
+**逐项结论**：
+
+| 待闭项 | 结论 | 证据 | 备注 |
+|---|---|---|---|
+| `bug-20260927-01`（`s["k"]()` 未绑定 `self`） | ✅ **已闭合** | §9.1：独立复现 exit 0；`p["get"]()==42`、`p["bump"]()` 写回 `self.n`（0→1→2） | 修复 `6aabdf5` 含回归单测；`cargo test` 431→432 |
+| `obs-01`（README 陈旧） | 🟡 **未完全闭合** | §9.2：主体已刷新（P10/8 交付物/4 标签/82 用例/341 行），**残留 L30/L86 测试数** | 435→432 的 2 处数值；低，仅文档 |
+| `obs-02`（PPT 未入库，连带复核） | ✅ **已闭合** | §9.2：`git ls-files docs/slides` 命中 3 文件；14 页 | 工作树 clean |
+| 黑盒覆盖 `s["k"]()`（额外检查） | ⚪ **建议项** | §9.4：`test_structs.lfz` 仅断言 `type(...)=="function"` | owner = test-engineer |
+| `bug-20260927-02`（`test --json` stdout 非单行，低） | ⚪ **仍打开（非本轮待闭项）** | P9 §5；低、已知并自认 | 非阻塞，可后置 |
+
+**关键基线（HEAD `6aabdf5`）**：`cargo build` **0 warning** ✅ ｜ `cargo test` **432 passed（lib 362）** ✅ ｜ `cargo run -- test` **82/82 exit 0** ✅ ｜ `cargo run -- run app/sortviz.lfz` **exit 0** ✅。
+
+**升级路径（唯一条件）**：release-manager 将 `README.md` L30 / L86 的 `431（lib 361）` 改为 `432（lib 362）` → 本报告 obs-01 即闭合 → 整体可升级为 **`PASS（可打 v1.0-final）`**。（建议项与 bug-02 不阻塞打标。）
+
+> 复验完。本轮复验脚本均为一次性、置于 `C:\Users\19170\AppData\Local\Temp\opencode\`，未进入任何交付物目录；未修改任何交付物。

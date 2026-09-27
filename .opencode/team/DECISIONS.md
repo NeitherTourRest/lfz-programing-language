@@ -716,3 +716,11 @@
 - **边界**：仅新增 `app/`；**未改** `src/**`、`docs/spec/**`、`tests/**`、`.opencode/skills/**`、README；无第三方依赖；未 commit / tag / push。
 - **影响**：**verifier** 验收评分项 5 以「可运行、≥200 行、开发记录完整」为准，运行命令与行数证据见 `app/DEV_RECORD.md` §0/§6；**ppt-presenter** 演示路径见 §7（3 分钟版，含终端编码提示）；**ai-dx-engineer** 收到 1 条指南补充建议（在 SKILL §0/§3 注明「LFZ v1 无模块、CLI 无参数入口；稍大应用应写为单文件 + 源码常量」），见 §8。
 - **证据**：`cargo run --quiet -- run app/sortviz.lfz` → 退出码 **0**（5 算法全部 `[校验通过]`，属性自测 150/150 失败 0）；`cargo run --quiet -- run --json app/sortviz.lfz` → stdout `{"ok":true}`；`cargo build` → **0 warning**；`cargo run --quiet -- test` → **82/82 PASS**；`git status --porcelain` → 仅 `?? app/`；`(Get-Content app\sortviz.lfz -Encoding UTF8).Count` → **341**，首行字节 `23 34 32 0A`。
+
+### [2026-09-27 19:45] [test-engineer] 黑盒测试纪律：规范声明「等价」处必须双路覆盖（影响 verifier / core-dev / runtime-dev）
+
+- **决策**：凡 `docs/spec/**` 出现「等价 / ≡ / 脱糖为 / 两写法」表述，黑盒测试集**两条路径都必须有断言且结果一致**；单路覆盖视为未覆盖。本批（P5.6）补齐：`s.k ≡ s["k"]`（读 / 写 / **调用含 `self` 绑定**）、复合赋值脱糖、管道 data-last 脱糖、块注释 ≡ 空格、`a--b`；并为缺失键读取 `.k` / `["k"]` 各加一条 `FieldError` 负例。专节 `tests/coverage-matrix.md` §1.3。
+- **背景**：verifier《P9-verification.md》rev.2 §9.4 指出 `tests/lfz/test_structs.lfz` 此前**只断言 `["k"]` 可取到函数值、未调用**——本项目第 3 次同类「等价路径接缝盲区」（前两次：`/` vs `div`、`_` 占位符）。
+- **边界**：**仅改 `tests/**`**（新增 `tests/lfz/test_equivalence_paths.lfz`、补 `test_structs.lfz`、`cases.json` + 2 fixture、更新矩阵 / 报告）；**未改** `src/**`、`docs/spec/**`、`docs/tooling/runner-contract.md`、README；未 commit / tag / push。
+- **影响**：**verifier** 复验「`s["k"]()`」端到端后，黑盒侧证据由本批提供（原建议项已闭合）；**core-dev / runtime-dev** 后续若再改取方法路径，须复跑本批等价用例；**team-lead** 可将「等价双路」纳入黑盒验收口径。
+- **证据**：`cargo run --quiet -- test` → **85 PASS / 0 FAIL / 0 ERROR，exit 0**（82→85）；`cargo clean -p lfz; cargo build` → **0 warning / 0 error**；`cargo test` → **432 passed / 0 failed / 0 ignored**（lib 362）；新文件 41 `assert`，`test_structs` 27→36。
