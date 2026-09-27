@@ -1,5 +1,23 @@
 # tooling-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 21:35] T11-CLI 修复：`;;`×`--json` 同通道（bug-B-20260927-01）+ `--help` 文案（obs-A-02）
+- 来源: team-lead 任务书「修 CLI 侧缺陷（用户批准全修）：`;;`×`--json` 输出通道 + `--help` 文案」；权威 = `semantics.md` §3.6 #7 / §8.3 / §8.4、`syntax.md` §2.2.0、`interface-contract.md` §10.6。
+- 完成:
+  - 先复现（修复前，`target\debug\lfz.exe --json run dumpjson.lfz`）：exit 0，stdout **20 B／2 行** = `z ： 5\n{"ok":true}\n`，stderr 0 B（缺陷确认）。
+  - `src/builtins.rs`：新增 `pub fn write_dump(text, span) -> R<()>`（`;;` 写通道，复用 `print` 的 `STDOUT_TO_STDERR` 开关）。
+  - `src/evaluator.rs`：`Interp::exec_stmt_inner` 的 `StmtKind::Dump` 分支由直写 stdout 改为 `builtins::write_dump(&text, stmt.span)?`；移除随之无用的导入 `std::io::Write` 与 `io as io_error`。
+  - `src/cli.rs`：`HELP` 文案对齐 §2.2.0（`.lfz` 要求 `#42`、非 `.lfz` 豁免），去掉一刀切「须以 .lfz 结尾」，明示裸调用等价；流约定文档补 `;;`；+1 单测 `help_text_matches_extension_exemption`。
+  - `tests/cli.rs`：+4 e2e（`json_run_dump_success_redirects_to_stderr` / `json_run_dump_and_print_share_channel_in_order` / `json_run_dump_before_error_redirects_to_stderr` / `dump_without_json_still_writes_stdout`）。
+  - `OBS-01`/`OBS-02`（`--help` 仅首参生效、`--json --version` 非 JSON）：查证**无 spec 依据**（`--json` 契约仅针对 `run`/`test`），**只汇报不动手**。
+- 产出（证据，逐字节）:
+  - 修复后 `--json run dumpjson.lfz`：exit 0；stdout **12 B** = `7B 22 6F 6B 22 3A 74 72 75 65 7D 0A`（`{"ok":true}\n` 单行合法 JSON，`ConvertFrom-Json` 解析通过）；stderr **8 B** = `7A 20 EF BC 9A 20 35 0A`（`z ： 5\n`）。
+  - `--json` 下 print/;; 同通道有序：stderr `A\nz ： 5\nB\n`（12 B），stdout 仍 12 B；非 `--json`：`;;` 写 stdout（8 B）、stderr 空。
+  - `--help` 新文案 stdout **1514 B**（exit 0）：含「裸调用 lfz <file> 等价 lfz run <file>」+「非 .lfz 文件 豁免 #42 前导（§2.2.0）」，**不含**旧句「<file> 须以 .lfz 结尾」。
+  - `cargo build` **0 warning**；`cargo test` **456 passed / 0 failed / 0 ignored**（lib 368 + main 48 + tests/cli 28 + tests/test_runner 12）；`lfz test` **87/87 exit 0**。
+  - 字节数：`src/cli.rs` 40548 / `src/builtins.rs` 96304 / `src/evaluator.rs` 141770 / `tests/cli.rs` 23476（后三者含 runtime-dev 并发改动）。
+- 决策: 写入 ADR `[2026-09-27 21:32] [tooling-dev] CLI 修复…`。
+- 下一步: verifier 复验（`--json run` 含 `;;` → stdout 单 JSON、`;;` 落 stderr；`--help` 无旧句）；黑盒可选补 1 条正向用例（test-engineer）。
+- 阻塞: 无。附注：默认 `target\` 被另一路只读深度探针脚本间歇占用（`cargo build` `os error 5`），本批曾用隔离 `CARGO_TARGET_DIR` 复现；探针结束后默认 `target\` 亦复跑通过（0 warning / 456 passed）。
 ## [2026-09-27 17:30] P4.4 打包为可直接执行的 `lfz`（裸文件调用 + release 优化 + 打包/安装脚本）
 - 来源: team-lead 任务书「P4.4 — 打包为"可直接执行的 `lfz`"」（用户原话：像 Python 那样 `lfz Hello.lfz` 直接运行）。
 - 完成:

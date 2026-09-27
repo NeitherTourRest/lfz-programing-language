@@ -37,5 +37,8 @@ Thumbs.db
 *.tmp
 ~$*
 
+# 团队临时工作区（用户 2026-09-27 指令：临时件一律放项目内 Temp/，勿用 C 盘 %TEMP%）
+Temp/
+
 # macOS
 .DS_Store

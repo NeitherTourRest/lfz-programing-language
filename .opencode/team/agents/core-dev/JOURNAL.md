@@ -1,5 +1,51 @@
 # core-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 22:40] 实现 `AST_DEPTH_LIMIT = 10000`（§3.9 / R-S3）——收口第 4 类残余「深左偏 AST」
+- 来源: team-lead 任务书「实现架构师刚裁定的 **`AST_DEPTH_LIMIT`（AST 深度上限）**——收口第 4 类残余崩溃（深左偏 AST）」；依据 `DECISIONS.md` [2026-09-27 22:15] [language-architect] ADR + `syntax.md` §3.9 + `semantics.md` §4.5.5 / §8.1 + `interface-contract.md` §10.8 / §10.9 R-S3。
+- 完成（严格按 ADR，不自行发明规则）:
+  - **A. 常量 + 检查**（`src/parser.rs`）：新增 `pub const AST_DEPTH_LIMIT: u32 = 10000;`；新增自由函数 `check_ast_depth(&Program) -> R<()>`（**显式栈迭代后序遍历**，帧 `{node, next_child, max_child}` 存**堆**，**绝不以 AST 深度递归**）；新增借用节点枚举 `DepthNode`（`span()` + `child(i) -> Option`，按 §3.9 规则 1 各产生式逐条列直接语法子节点；含 `Stmt/Expr/Block/FnDecl/StructDecl/Member/Field/Lvalue/Body`）；`parse()` 末尾 `check_ast_depth(&program)?`。
+  - **度量**（§3.9 规则 1）：`depth(n) = 1 + max(直接语法子节点 depth)`（叶 = 1）；程序深度 = 顶层语句最大值（空 = 0）；**括号分组透明**（分组不产生 AST 节点）；**左结合链深度 = 链长**。首个 `depth > 10000` 的节点（后序首次越限，链式构造取**链起点**）→ `syntax(SyntaxMsg::ExprTooDeep, node.span())`。
+  - **B. 新细分消息**（`src/error.rs`）：`SyntaxMsg::ExprTooDeep`（无字段，`SyntaxMsg` 18→19）→ `message()` 逐字符 `表达式嵌套过深（超过 10000 层）`；**不改** `class_name()`（仍 `SyntaxError`，12 类不变，无 `E-xxx`）；改 `mod tests`（`syntax_msg_covers_all_nineteen_rows` 补行 + 新增 `expr_too_deep_message_is_the_spec_text`）。
+  - **C. 单测**（`tests/unit/ast_depth.rs` 新，7 项；`tests/unit/main.rs` 注册 `mod ast_depth;`）：常量断言 + `1+1+…` 9999 项合法 / 10000 项报错（逐字符消息 + span=(2,1)）+ `a[0][0]…` 9998 合法 / 9999 报错 + 括号分组透明（900 层）+ `(`×1000 仍合法（口径分离回归）。
+  - **D. 零求值器改动**：`src/evaluator.rs` **本轮未动**；未改 `src/ast.rs`/`src/cli.rs`/`src/builtins.rs`/`docs/spec/**`/`tests/lfz/**`/`tests/cases.json`。
+- 产出（证据）:
+  - 改动字节数：`src/parser.rs` **232060 B**（基线 222111，+9949）、`src/error.rs` **44725 B**（基线 42911，+1814）、`tests/unit/ast_depth.rs` **4116 B**（新）、`tests/unit/main.rs` **460 B**（基线 445，+15）。
+  - `git diff --numstat`（工作区净）：`parser.rs +440/-17`（**我本轮 ≈ +229 行**；余为 22:10 上一任务 `PARSE_DEPTH_LIMIT` 的既有未提交改动）、`error.rs +117/-4`（**我本轮 ≈ +42 行**；余为 21:19 修复批次 `OverflowMsg::Capacity` 等既有改动）；`git diff --stat` 另含 30 文件（他人未提交：evaluator/cli/builtins、docs/spec、team 文档、tests/*，均**非本轮**所改）。
+  - **AST 深度边界**（`target\debug\lfz.exe run Temp\…lfz`，fresh `cargo clean -p lfz` 后重编译）：`1+1+…` **N=9999 → exit 0**；**N=10000 → exit 2** + 末行 `SyntaxError: 表达式嵌套过深（超过 10000 层）`；**N=10001 → exit 2**（同）；**旧崩溃点 N=100000 → exit 2（不再 `-1073741571`）**；索引链 `a[0][0]…` **9998 → 过解析**（后 `NameError: 未定义的名字 'a'`）、**9999 → exit 2 + 同 AST 消息**。
+  - **`--json`**（`Temp\add_10000.lfz`）：stdout 恰 **192 B 单行合法 JSON**，`"error":"SyntaxError"`（**12 取值不变**）、`"line":2,"col":1`、末行消息逐字符正确。
+  - **回归复核**：`(`×1000 → **exit 0**；`(`×1001 → **exit 2** + `SyntaxError: 嵌套深度超限（超过 1000 层）`（R-S1 行为保持，与 R-S3 口径分离）。
+  - `cargo build --all-targets`（`cargo clean -p lfz` 后）→ **0 warning / 0 error**；`cargo test` → **482 passed / 0 failed / 0 ignored**（lib 379 + main 48 + cli 28 + test_runner 12 + unit 15；基线 474，+8）；`cargo run -q -- test` → **87/87，exit 0**。
+- 决策:
+  - **口径分离**（ADR 决定 6 / 任务书要求）：`PARSE_DEPTH_LIMIT=1000`（护 parser 栈，计递归下降同时活跃层）与 `AST_DEPTH_LIMIT=10000`（护求值 / 析构栈，计 AST 节点深度）为**两个独立常量、正交不可互推，绝不合并**。
+  - **检查落点**：按 R-S3「紧接解析之后以显式栈迭代遍历」，落在 `parse()`（仍在解析期、求值之前），非递归自实现；`span` 取**后序首个越限节点**首字符（链式构造即链起点）。
+- 下一步: 等 verifier 复验（边界夹具 + `(`×1000/1001 回归 + 87 黑盒 + `tests/cli.rs` + `tests/unit/**`）；等 team-lead 派发下一项 v1.1 迭代。
+- 阻塞: 无。
+## [2026-09-27 22:10] 实现解析嵌套深度上限（§3.8）+ 流水线栈契约；测量左结合长链残余（N=100000 仍崩）
+- 来源: team-lead 任务书「实现架构师刚裁定的**解析嵌套深度上限**（收口第 3 类崩溃），并测量第 4 类（左结合长链递归 Drop）」；依据 `DECISIONS.md` [2026-09-27 21:40] [language-architect] ADR + `syntax.md` §3.8 + `semantics.md` §8.1 + `interface-contract.md` §10.8/§10.9（R-S1/R-S2）。
+- 完成（严格按 ADR，不自行发明规则）:
+  - **A. 深度计数器**（`src/parser.rs`）：新增 `pub const PARSE_DEPTH_LIMIT: u32 = 1000;` + `Parser.depth`；`enter_nesting(opener)`（+1，超限报 `SyntaxMsg::NestingTooDeep`，`span=` 开启记号首字符）/`leave_nesting()`（−1 饱和）。落在**嵌套构造**入口：分组 `(` / 调用实参 `(` / 下标 `[` / 数组 `[` / struct 字面量 `{` / 块 `{`（含 struct 体）/ 条件·可迭代表达式（`if`/`while`/`for`）/ 一元前缀 `-`·`!` / 字符串插值 `${`。**左结合链不计层**（迭代循环，不入 guard），符合 ADR 定义。
+  - **B. 新细分消息**（`src/error.rs`）：`SyntaxMsg::NestingTooDeep`（无字段，`SyntaxMsg` 17→18）→ `message()` 逐字符 `嵌套深度超限（超过 1000 层）`；**不改** `class_name()`（仍 `SyntaxError`，12 类不变，无 `E-xxx`）。
+  - **C. 栈契约 R-S2**（`src/evaluator.rs` + `src/cli.rs`，**未动 `src/main.rs`**）：evaluator 新增 `pub fn on_eval_stack<T,F>(f)`（在 256 MiB `EVAL_STACK_SIZE` 线程上运行闭包，经 `Transfer` 移交结果、支持含 `Rc` 的非 `Send` 返回；spawn 失败退化当前栈）+ `pub fn eval_module_traced_on_thread(&Program)`（当前线程求值体）；`eval_module_traced` 重构为 `on_eval_stack(|| eval_module_on_thread(program))`（行为等价，保 fallback）。`cli::eval_case` 包成 `evaluator::on_eval_stack(|| eval_case_on_stack(path))`，并在体内改用 `eval_module_traced_on_thread` —— 使 `load → lex → parse → eval`（含 `Program` 析构）整条流水线**同栈**。
+  - **D. 单测**：`src/parser.rs` 新增 9 项（`(`×1000 合法、`(`×1001 报错且 span=col1001、`[`×1001、`{"a":`×1001、`fn(){`×1001、`-`×1001、左结合 `+`×5000 与 `[0]`×1001 **不计层**）；`src/error.rs` 新增 `nesting_too_deep_message_is_the_spec_text`（逐字符）；新增 `tests/unit/main.rs` + `tests/unit/nesting_depth.rs`（Cargo 自动识别为 `unit` 目标，8 项）。
+- 产出（证据）:
+  - 改动字节数：`src/parser.rs` **222111 B**、`src/error.rs` **42911 B**、`src/evaluator.rs` **143643 B**、`src/cli.rs` **41198 B**、`tests/unit/main.rs` **445 B**（新）、`tests/unit/nesting_depth.rs` **3790 B**（新）。
+  - `git diff --numstat`（我改动部分；`error.rs`/`evaluator.rs`/`cli.rs` 另含 21:19–21:32 修复批次的既有未提交改动）：`parser.rs +211/-16`、`error.rs +75/-4`、`evaluator.rs +253/-26`、`cli.rs +48/-9`；`src/main.rs` **未改**。
+  - **解析嵌套边界**（`target\debug\lfz.exe run`，`target/debug` 构建）：`(`×1000 → **exit 0**；`(`×1001 / `[`×1001 / `{"a":`×1001 / `fn(){`×1001 → **exit 2** 且末行 `SyntaxError: 嵌套深度超限（超过 1000 层）`（**非** `-1073741571`）；`--json`：`{"ok":false,"error":"SyntaxError","line":2,"col":1001}`（struct 为 col 5001）。
+  - **第 4 类左结合长链实测**（256 MiB 同栈，`let x=1+1+…` / `let a=[1]` + `a[0][0]…`）：
+    | N | `1+1+…` | `a[0][0]…` |
+    |---|---|---|
+    | 5000 | exit 0 | exit 2（TypeError，正常） |
+    | 20000 | exit 0 | exit 2（TypeError） |
+    | **100000** | **exit -1073741571（栈溢出，eval 阶段）** | **exit -1073741571** |
+    | 补测 30000/50000/70000/80000/90000 | exit 0 | exit 2 | 
+    → **N=100000 仍崩溃**；`print` 前崩溃（`let x=…; print(x)` 无输出）证明**崩在 eval 递归**（非仅 Drop）。ADR 指明此为「关联残余，未裁定」，**未自行增设规则**，数据已上报 team-lead。
+  - `cargo build --all-targets` → **0 warning / 0 error**；`cargo test` → **474 passed / 0 failed / 0 ignored**（lib 378 + main 48 + cli 28 + test_runner 12 + unit 8）；`cargo run -q -- test` → **87/87，exit 0**。
+- 决策:
+  - 深度 guard 仅落在 ADR §3.8 规则 1 列举的**嵌套构造入口**（非优先级层），使 `(`×1000 恰为 1000、左结合链恒定低位；`span` 取该构造**自身开启记号**（故 `{"a":`×1001 → col 5001、`fn(){`×1001 → col 5005）。
+  - 栈契约**复用既有 256 MiB 求值线程**（同栈，避免嵌套开线程）；新增的 `on_eval_stack` / `eval_module_traced_on_thread` 为跨角色公开 API，走 ADR 记录。
+- 下一步: 等 team-lead 将「左结合长链 N≥100000 崩溃」交 language-architect 单列裁定（AST 迭代析构 / 表达式深度上限 / 其他）；core-dev 待命实现。
+- 阻塞: 无（第 4 类为**已知残余**，按任务书以数据上报，非阻塞本任务）。
+
 ## [2026-09-24 08:49] P3.11 裁定 1 落地：`src/error.rs` 新增 `TypeMsg::ImmutableRebind { name }`
 - 来源: team-lead 轻量任务书「在 `src/error.rs` 新增 `TypeMsg::ImmutableRebind`，供 runtime-dev 接线 `exec_assign`」；依据 `DECISIONS.md` [2026-09-24 00:30] 裁定 1（表 #1）+ `semantics.md` §4.5.2 / §8.1。
 - 完成: 轻量启动（只读 `agents/core-dev/STATUS.md`）→ 读 `DECISIONS.md` 裁定 1/表 + `semantics.md` §4.5.2 / §8.1（`TypeError` 触发行 + 细分表 6→7）+ `src/error.rs` 现有变体与 `message()` 写法 → 落盘变体 + `message()` 分支 + 折入既有单测 → `cargo build` / `cargo test` 双绿 → 汇报。

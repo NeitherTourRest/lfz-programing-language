@@ -1,36 +1,40 @@
 # tooling-dev — 工作状态
-> 最后更新: 2026-09-27 17:30 by tooling-dev（P4.4：裸文件调用 + release 优化 + 打包/安装脚本）
+> 最后更新: 2026-09-27 21:35 by tooling-dev（T11-CLI 修复：`;;`×`--json` 同通道 + `--help` 文案）
 
 ## 当前状态
-**P4.4 已完成**：`lfz <file>` 裸文件调用可用（**像 Python 那样 `lfz Hello.lfz` 直接运行**）；
-release 构建加 `lto/codegen-units/strip`；新增 `scripts/build-release.ps1`（一键打包 `dist\lfz.exe`）
-与 `scripts/install-lfz.ps1`（用户级安装，**默认 dry-run**，本次仅 dry-run 验证）。
+**T11 CLI 缺陷修复已完成（用户批准"全修"）**：修 `bug-B-20260927-01`（`;;` dump 在 `--json` 下未与
+`print` 同通道 → stdout 非单个 JSON）+ `obs-A-02`（`--help` 一刀切「须以 .lfz 结尾」与 §2.2.0 矛盾）。
+`OBS-01`/`OBS-02` 经查无 spec 依据，**只汇报不动手**。未 commit / tag / push。
 
-### 本批交付（唯一改动范围）
-- `src/cli.rs`：新增 `Command::Script`（裸文件调用）；`parse_args` 非 `-` 开头首参 = 脚本路径
-  （恰一个）；`run_file` 抽出共用 `report_eval`，新 `run_script` 复用；新 `is_lfz_path`。
-  裸文件入口收紧：须 `.lfz`（大小写不敏感），否则 `IOError: 只支持 .lfz 脚本文件：'<path>'`（exit 2）；
-  `.lfz` 不存在 → `IOError: 无法读取：<path>`（exit 2）。`--help` 把 `lfz <file>` 置首；
-  `--json` 位置不限（前置/后置/`run` 前后均可）。
-- `Cargo.toml`：`[profile.release]` = `lto=true` / `codegen-units=1` / `strip=true`。
-- `scripts/build-release.ps1`（新，**纯 ASCII** 3047 B）：`cargo build --release` → `dist\lfz.exe` →
-  打印 `--version` → 冒烟 `examples\hello.lfz`；`-OutDir` 支持；失败非零退出。
-- `scripts/install-lfz.ps1`（新，**纯 ASCII** 7354 B）：装到 `%LOCALAPPDATA%\Programs\lfz\`；
-  `[Environment]::SetEnvironmentVariable('Path',...,'User')`（**非 setx**）追加 PATH；改前备份用户 PATH；
-  `-Uninstall`；**默认 dry-run**，`-Apply` 才改（本次未跑 `-Apply`）。
-- `tests/cli.rs` +8 e2e；`src/cli.rs` +5 单测（并有意更新 1 处旧断言：`frobnicate` 由「未知命令」
-  改为裸文件路径——CLI 契约变更，已记 ADR）。
+### 本批改动（唯一范围；已逐一列函数供 verifier 定向复验）
+- `src/builtins.rs`：**新增** `pub fn write_dump(text: &str, span: Span) -> R<()>`（`;;` 写通道，复用
+  `print` 的进程级开关 `STDOUT_TO_STDERR`）。**除该新函数外，本文件其余 diff 属 runtime-dev（`b_range`/`b_repeat` 容量硬化），非本批。**
+- `src/evaluator.rs`：`Interp::exec_stmt_inner` 的 `StmtKind::Dump` 分支——原直写 `std::io::stdout()` 改为
+  `builtins::write_dump(&text, stmt.span)?`；移除随之无用的导入 `use std::io::Write` 与 `io as io_error`。
+  **除该分支/导入外，本文件其余 diff 属 runtime-dev（格式符上限 / 索引写 span），非本批。**
+- `src/cli.rs`：`HELP` 常量改写（对齐 §2.2.0 + 明示裸调用等价）；模块流约定文档补 `;;`；新增 1 单测
+  `cli::tests::help_text_matches_extension_exemption`。
+- `tests/cli.rs`：新增 4 条 e2e（`json_run_dump_success_redirects_to_stderr` /
+  `json_run_dump_and_print_share_channel_in_order` / `json_run_dump_before_error_redirects_to_stderr` /
+  `dump_without_json_still_writes_stdout`）。
+
+### 证据（逐字节）
+- **修复前** `target\debug\lfz.exe --json run dumpjson.lfz`：exit 0；stdout **20 B** = `7A 20 EF BC 9A 20 35 0A 7B 22 6F 6B 22 3A 74 72 75 65 7D 0A`（`z ： 5\n{"ok":true}\n`，2 行）；stderr 0 B。
+- **修复后**：exit 0；stdout **12 B** = `7B 22 6F 6B 22 3A 74 72 75 65 7D 0A`（`{"ok":true}\n`，单行合法 JSON）；stderr **8 B** = `7A 20 EF BC 9A 20 35 0A`（`z ： 5\n`）。
+- `--json` 下 print/;; 同通道且有序：stderr = `A\nz ： 5\nB\n`（12 B），stdout 仍 12 B。非 `--json`：`;;` 写 stdout（8 B），stderr 空。
+- `cargo build` **0 warning**；`cargo test` **456 passed / 0 failed / 0 ignored**（lib 368 + main 48 + tests/cli 28 + tests/test_runner 12）；`lfz test` **87/87 exit 0**。
+- 改动文件字节数：`src/cli.rs` 40548 B、`src/builtins.rs` 96304 B、`src/evaluator.rs` 141770 B、`tests/cli.rs` 23476 B（后三者含并发角色改动）。
 
 ## 进行中
-- （无；本批任务已交付，等待调度）
+- （无；等待调度/verifier 复验）
 
 ## 阻塞 / 需要支持
 - （无）
-- **需 team-lead 定夺**：① README（release-manager）与 `docs/guide/README.md`（docs-writer）需加
-  `lfz <file>` 用法——建议文本已随汇报给出；② 用户 PATH 的**实际**修改：`install-lfz.ps1 -Apply`
-  须经用户批准后由 team-lead 执行（本任务明令禁用 `-Apply`）。
-- 历史待仲裁项（沿用）：`test_runner` 汇总 schema 为 spec 外扩展、`FAIL`/`ERROR` 并存取 `2` 等，
-  见 ADR 2026-09-27 11:23；runner 契约 v1.2（§9.3 已解决）。
+- **环境事实（须转达）**：默认 `target\` 被另一路**只读**探针脚本持续占用（`%TEMP%\opencode\lfz-parsedepth`，
+  反复 `Start-Process target\debug\lfz.exe run q.lfz`），导致 `cargo build` 间歇 `os error 5`（无法删除
+  `target\debug\lfz.exe`）。本批曾用 `CARGO_TARGET_DIR=%TEMP%\opencode\lfz-verify-target` 隔离复现；
+  待并发探针结束后，默认 `target\` 的 `cargo build`/`cargo test` 亦已复跑通过（0 warning / 456 passed）。
+- **历史待仲裁项（沿用）**：`test_runner` 汇总 schema 为 spec 外扩展、`FAIL`/`ERROR` 并存取 `2` 等（ADR 2026-09-27 11:23）。
 
 ## 下一步计划（P4 剩余）
 1. REPL（可选、非阻塞）。
@@ -38,16 +42,13 @@ release 构建加 `lto/codegen-units/strip`；新增 `scripts/build-release.ps1`
 3. 运行章节与 docs-writer 协作（`lfz <file>` / `lfz run` / `lfz test` / `--json` 用法 + 跨平台注意）。
 
 ## 关键经验（写给未来的自己）
-- **裸文件 vs `run` 的边界**：裸 `lfz <file>` 收紧（须 `.lfz`）；`lfz run <file>` 保持旧行为
-  （允许非 `.lfz`，非 `.lfz` 无 `#42` 要求且能正常跑）。两台形态的 `--json` 都走同一 `report_eval`，
-  故 `--json` 下 stdout 恒为唯一合法 JSON；非 `.lfz` 用「与解释器错误同源」的 `LzError::Io` 渲染。
-- **`parse_args` 语义变更**：`lfz frobnicate` 不再是「未知命令」，而是脚本路径（随后因非 `.lfz` 报错）。
-  凡依赖旧「未知命令」文案的调用方需知悉；`-` 开头者仍是未知选项。
-- **PowerShell 5.1 纯 ASCII 坑**：无 BOM 的 `.ps1` 按 ANSI 解码，**任何非 ASCII 字节都会解析崩**。
-  两个新脚本非 ASCII 字节 = 0（用 `[IO.File]::ReadAllBytes` 计数 + `Parser::ParseFile` 双重确认）。
-- **改用户 PATH 的正确姿势**：`[Environment]::SetEnvironmentVariable('Path', <new>, 'User')`，
-  **禁用 `setx`**（会截断/合并）；改前备份；默认 dry-run，`-Apply` 才动。
-- **release 体积**：`lto+codegen-units=1+strip` 后 `dist\lfz.exe` = **704000 B**（约 687 KiB）。
-- **测试隔离**：单测与 e2e 依旧全部用系统临时目录（`tests/` 下只留 `*.rs`）。
-- **控制台不渲染 CJK（证据采集）**：含中文的 `lfz test` 汇总 / `--help` 用 `Start-Process
-  -RedirectStandardOutput <file>` 落原始字节，再用 Read 工具查看。
+- **`;;` 与 `print` 同通道 = 一个进程级开关**：`--json` 下 `print`/`input` 提示/`;;`(dump) **全部**经
+  `builtins::set_stdout_to_stderr(true)` 转 stderr；任何**绕开该开关直写 `std::io::stdout()`** 的程序输出都会
+  破坏「stdout 恒为单个 JSON」。新增输出通道时**必须**走 `builtins` 的写内核（`write_line` / `write_dump`）。
+- **help 文案的"作用域"陷阱**：`lfz <file>`（裸调用）要求 `.lfz`，而 `lfz run <file>` 接受任意扩展名并
+  按 §2.2.0 对非 `.lfz` 豁免 `#42`。给 `<file>` 写"须以 .lfz 结尾"必须**限定到裸调用形态**，否则与 run 矛盾。
+- **Rust 单元测试落点**：`src/cli.rs`/`src/test_runner.rs` 的内联 `#[cfg(test)]` 编译进 **bin** 目标
+  （`cargo test --bin lfz`），不在 `--lib`；本仓库**无** `tests/unit/` 目录，e2e 在 `tests/cli.rs`（cargo 只发现 `tests/*.rs`）。
+- **并发写者检测**：`git status` + 文件 mtime + `Get-CimInstance Win32_Process` 可快速判定有人同时在跑
+  `lfz.exe` 探针；`cargo build` 的 `os error 5`（拒绝访问）即"目标 exe 被占用"，用独立 `CARGO_TARGET_DIR` 绕开。
+- **控制台不渲染 CJK（证据采集）**：含中文输出用 `Start-Process -RedirectStandardOutput <file>` + `[IO.File]::ReadAllText(utf8)` / `Format-Hex` 落原始字节。

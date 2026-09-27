@@ -1,5 +1,22 @@
 # runtime-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 21:19] T11 修复批次 — runtime panic 硬化（bug-03/-04 + obs-B-03 + 抽样扩查全修）
+- 来源: team-lead 任务书「修复 runtime 侧缺陷 + 全量 panic 硬化排查（用户批准全修）」。依据 `docs/reports/conformance-C-builtins-cli.md` §③（bug-20260927-03/-04）、`docs/reports/conformance-B-semantics.md` §3（obs-B-03）、`docs/spec/interface-contract.md` §10.7/§10.8、`semantics.md` §8.1/§8.2；**range/repeat 行为按 architect ADR `[2026-09-27 21:10]` 落地**。
+- 修复（每条均先复现 panic/abort 并留原文）:
+  1. **bug-20260927-03** `repeat` 溢出 → panic（exit 101）→ `OverflowError`（`容量溢出：所需容量超出可分配上限`，`OverflowMsg::Capacity`）：`src/builtins.rs b_repeat` 补 `isize::MAX` 容量上界（原 `checked_mul` 仅挡 `usize` 溢出，漏 `(isize::MAX, usize::MAX]` 窄带）。**同源** `"s" * n`（`src/evaluator.rs repeat_str`）同修。
+  2. **bug-20260927-04** `range` 超大 n → panic（exit 101）→ `OverflowError`（同消息）：`b_range` 加「`n × size_of::<Value>()` 超 `isize::MAX`」容量预检（按 ADR）。
+  3. **obs-B-03** 索引越界**写入**插入符 col 2（`[`）→ 修为 col 1（基座 `a`），与**读取**（基座 `a`）一致：`exec_assign` 写路径统一用 `target.span`（基座 span）替代 `seg.span`，`read_segment` 增参 `err_span`。
+  4. **抽样扩查新发现 2 类可达 panic**（审计报告未列）：① 格式说明符**超大 width** → 分配 abort（`memory allocation of 99999999998 bytes failed`）；② 超大 **precision** → `core::fmt` panic（`Formatting argument out of range`，实测 ≥65536）。修为 `MAX_FMT_WIDTH=1_000_000` / `MAX_FMT_PRECISION=65535` → 受控 `ValueError`（`格式说明符非法：…`，syntax §2.8）。
+  5. `src/error.rs`：按 ADR 新增 `OverflowMsg::Capacity`（无字段）+ `message()` 分支（ADR 明示由 runtime-dev 落地）。
+- 产出/证据:
+  - 修复前（`target\debug\lfz.exe run`）：`repeat(2^62,"ab")` / `range(2^62)` / `"ab"*2^62` → `panicked ... capacity overflow`，exit **101**；`"${1:99999999999d}"` → `memory allocation of 99999999998 bytes failed`，exit **-1073740791**；`"${1.5:.999999999f}"` → `panicked at src\evaluator.rs:1768 ... Formatting argument out of range`，exit **101**。
+  - 修复后（同命令）：三条 → `OverflowError: 容量溢出：所需容量超出可分配上限`，exit **2**；两条 fmt → `ValueError: 格式说明符非法：…`，exit **2**（stderr 字节 hex 核验 UTF-8 `e5 ae b9 e9 87 8f …`）。
+  - obs-B-03：`a[5]=9` → `--json` `col:1`（基座 `a`）；`print(a[5])` → `col:7`（基座 `a`）——两形态插入符同指基座首字符。
+  - `cargo build` / `cargo build --all-targets` → **0 warning**；`cargo test` → **451 passed / 0 failed / 0 ignored**（lib 368 + main 47 + cli 24 + test_runner 12；新增 **6**）；`target\debug\lfz.exe test` → **PASS 85 / FAIL 0 / ERROR 0**，exit **0**。
+  - `git diff --stat -- src/` → `src/builtins.rs 60+/4-`、`src/error.rs 32+/2-`、`src/evaluator.rs 198+/10-`（合计 290+/16-）。新增/修改单测 6 条（repeat/range 容量溢出、`string*int` 容量溢出、写入 span、格式上限、`OverflowMsg::Capacity` 消息）。
+- 决策: 追加 ADR `[2026-09-27 21:19]`（runtime panic 硬化：两条容量溢出消息 + 格式说明符上限）。改动文件仅 `src/builtins.rs` / `src/evaluator.rs` / `src/error.rs`（`error.rs` 按 architect ADR 明示授权落地 `OverflowMsg::Capacity`）。
+- 未决（回报 team-lead，**未自行决定**）: ① **parser 深嵌套**（`((((…))))` / `[[[[…]]]]`，~2e5 层）→ **main 线程栈溢出**（exit -1073741571），属 `src/parser.rs`（core-dev），建议加解析深度上限 + `SyntaxError`；② `range` 容量预检边界 = `isize::MAX` 字节，仍存在 `n×16 ≤ isize::MAX` 但物理不可分配的 OOM-abort 窄带（ADR 所定边界；彻底可控需 `try_reserve`，待裁定）；③ `Display` 无深度上限（`a=[a]×2e5` 实测未溢出，仅理论残余）。
+- 阻塞: 无。
 ## [2026-09-27] bug-20260927-01 修复 — `s["k"]()` 未绑定 `self`（`s.k ≡ s["k"]`）
 - 来源: team-lead 任务书「修 bug-20260927-01」（轻量启动）。依据 `docs/spec/semantics.md` §4.5（L51 明文 `s.k ≡ s["k"]` … 并调用（`self` 绑定））+ §3.7；缺陷单见 `docs/reports/P9-verification.md` §5。
 - 复现（修复前，`#42` 前缀临时文件置于预批准 `%TEMP%\opencode`）: `print(p.norm2())` / `print(p["norm2"]())` → stdout `25`，stderr `NameError: 未定义的名字 'self'`，`--json` = `{"ok":false,"error":"NameError",...}`，exit=2。修复后 → stdout `25\n25`，stderr 0 bytes，`--json` = `{"ok":true}`，exit=0。

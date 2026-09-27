@@ -1,6 +1,64 @@
 # language-architect — 工作日志
 > 只追加，最新条目在最上方。
 
+## [2026-09-27 22:15] 第 4 类残余裁定：`AST_DEPTH_LIMIT = 10000`（AST 深度上限，`SyntaxError`）+ 与解析嵌套「口径分离」（R-S3；v1.1 补钉，先 ADR 后改 spec）
+- 来源: team-lead 下达「裁定第 4 类残余崩溃（深左偏 AST / 表达式递归深度）」——即本架构师 `[21:40]` ADR「关联发现（另立，未裁定）」所标注、core-dev `[22:10]` 以数据上报的残余项（用户已批准"全修"）。本轮**只改 `docs/spec/**` + `DECISIONS.md`**，不碰 `src/**`/`tests/**`。
+- 完成:
+  - **一手实测（本机 `target\debug\lfz.exe`，256 MiB 大栈线程，阈值二分）**：`1+1+…` **T=91650 正常 / T=91700 崩**（exit `-1073741571`，`print` 未执行 ⇒ **崩在求值递归**）；帧大小——解析嵌套 ≈**18.3 KiB/层**、AST 求值递归 ≈**2.93 KiB/层**（`256 MiB÷91675`）、AST 析构 ≈**0.27 KiB/层**（未执行分支：80 万项正常 / 160 万项崩）、函数调用帧 ≈**14.2 KiB/帧**（组合反推：9999 层递归 + 42000 项深表达式正常 / 45000 项崩）。
+  - **候选逐一论证**：(a) 表达式递归计入运行期 `RecursionError` → **否决**（语义错位、不覆盖析构、热路径侵入大、静态→动态退化）；(b) 解析期 AST 深度上限 → **采纳（主）**（静态确定、一处同时护求值+析构、复用 `SyntaxError`、零求值器改动）；(c) AST 迭代析构 → **列为可选加固**（(b) 已使析构 ≈2.7 MiB/95× 余量 ⇒ YAGNI，仅放宽上限时才用）；(d) 组合 → **=(b)（+(c) 可选）**，非 (a)+(b)+(c)。
+  - **裁定**：① 新增 **`AST_DEPTH_LIMIT = 10000`**（独立常量；与运行期同值但**度量不同**：AST 节点深度 vs 调用帧深度）；② 度量 = AST 节点深度（`depth(n)=1+直接语法子节点深度最大值`；**括号分组透明**；**左结合链深度=链长**）；③ 错误类**复用 `SyntaxError`**，新增 `SyntaxMsg::ExprTooDeep`（18→19），逐字符消息 **`表达式嵌套过深（超过 10000 层）`**；④ **无 `Traceback` 头**；⑤ `span` = 首次超限节点首字符；⑥ **口径分离**：`PARSE_DEPTH_LIMIT` **不**改为"AST 深度"，两度量正交（`(((1)))` 前者大；`1+1+…` 后者大）⇒ **分别设限**。
+  - **量化论证**：解析 1000×18.3 KiB ≈17.9 MiB（≥14×）；求值 10000×2.93 KiB ≈28.6 MiB（**≈9×**）；析构 10000×0.27 KiB ≈2.7 MiB（≈95×）；**组合最坏** 10000×14.2 + 10000×2.93 KiB ≈**167 MiB ≤256 MiB（≈1.5×）**。**结论：纯深链余量 ≈9×、组合最坏不溢出。**
+  - **订正**：21:40 ADR 中"函数递归帧 ≈26 KiB / 10000 层需 256 MiB"为粗估；实测函数帧 ≈**14.2 KiB**。
+  - **纪律**：先追加 ADR（DECISIONS.md 末条），后改 spec；spec v1 冻结不变（v1.1 补钉）；未改 `src/**`/`tests/**`/`REQUIREMENTS.md`/`TEAM_BOARD.md`/`PROJECT_STATE.md`；未 commit/tag/push。
+- 产出: `.opencode/team/DECISIONS.md`（+1 ADR，标题 `[2026-09-27 22:15]`）；`docs/spec/syntax.md`（**新增 §3.9** + 内容映射，`+42/-2` 本 scope 累计）、`docs/spec/semantics.md`（§4.5.5 一条 + §8.1 触发列/细分表/注，`+17/-3`）、`docs/spec/interface-contract.md`（§10.8 `ExprTooDeep` + §10.9 **R-S3** + 量化扩充 + 残余段改"已收口"，`+25/-5`）。
+- 证据: 本轮后 spec 字节数 `syntax 70043 / semantics 37929 / interface 37050`；`git diff --numstat -- docs/spec` = `42/2`、`17/3`、`25/5`（含 21:40 批次，未 commit）；`git diff --numstat -- DECISIONS.md` = `234/0`；`git diff --stat` 全量见本轮汇报（`src/**`/`tests/**` 的改动均为他人在途，非本架构师）。
+- 决策: ADR「第 4 类残余裁定：`AST_DEPTH_LIMIT = 10000`（AST 深度上限，`SyntaxError`，不新增错误类）+ 与解析嵌套「口径分离」（R-S3）」（含候选论证、量化、影响面、订正）。
+- 下一步: team-lead 转 **core-dev**（`parser.rs` 加 `AST_DEPTH_LIMIT` + 解析期非递归深度检查；`error.rs` 加 `SyntaxMsg::ExprTooDeep`）；**test-engineer**（可选补 `1+1+…`×10001 负例 + coverage-matrix 行）；**docs-writer / ai-dx-engineer**（guide/skill 补新消息）。
+- 阻塞: 无
+
+## [2026-09-27 21:40] 解析嵌套深度上限裁定（`PARSE_DEPTH_LIMIT = 1000` + 栈契约；v1.1 补钉，先 ADR 后改 spec）
+- 来源: team-lead 下达「裁定『解析深度上限』并写进规范」（用户已批准"全修"；本轮只改 `docs/spec/**` + `DECISIONS.md`，不碰 `src/**`）；输入 = runtime-dev panic 硬化排查新发现的第 3 类崩溃（深嵌套源码 → main 线程栈溢出）。
+- 完成:
+  - **一手复现 + 量化**（本机 `target\debug\lfz.exe` / `release\lfz.exe`，读 PE 头 + 阈值二分）：主线程栈 `SizeOfStackReserve = 1 MiB`（debug/release 同）；**真实最小触发远低于此前记录的 2e5**——debug 首个崩溃层数：struct `{"a":` **56**、插值 `"${` 58、数组 `[` 60、lambda `fn(){` 61、分组 `(` **62**、`if(true){` 178、一元 `-` 521；release `(` **228**、struct 200。退出码恒 `-1073741571`。每层最坏 ≈ **18.3 KiB**（debug）/ **5.1 KiB**（release）。
+  - **裁定**：① `PARSE_DEPTH_LIMIT = 1000`（**独立**于运行期 10000；度量为"解析嵌套深度"，左结合链不计层）；② 错误类**复用 `SyntaxError`**（加载/解析期），新增 `SyntaxMsg::NestingTooDeep`（17→18），逐字符消息 **`嵌套深度超限（超过 1000 层）`**；③ **无 `Traceback` 头**（属既有「2 类不带」）；④ `span` = 第 1001 层开启记号首字符；⑤ **栈契约**：解析须在 **≥64 MiB** 栈线程（推荐复用 256 MiB `EVAL_STACK_SIZE`）。**不新增第 13 类**。
+  - **量化论证**：`1000 × 20 KiB(保守) = 19.5 MiB` ⇒ 64 MiB 栈 ≥3.2×、256 MiB 栈 ≥13× 余量（debug 最坏）；release 余量更大。若改用 10000 则需 ~732 MiB 栈（4× 余量）→ 不经济，故弃"与运行期同值"。
+  - **关联新发现**：**左结合链**（`1+1+…`）由迭代解析（不受本上限约束）但产出深左偏 AST，其**递归 `Drop`** 在 1 MiB 主线程约 **5000 项**即溢出（实测 N=4000 打印后 exit 0；N=5000 **打印后**崩溃）→ 已记为**关联独立问题**，建议单列裁定（不属本轮范围）。
+  - **纪律**：先追加 ADR（DECISIONS.md 末条），后改 `docs/spec/`；spec v1 冻结不变（v1.1 补钉）；未改 `src/**`、`tests/**`、`app/**`、`docs/guide/**`、`.opencode/skills/**`、`REQUIREMENTS.md`；未 commit/tag/push。
+- 产出: `.opencode/team/DECISIONS.md`（+1 ADR，标题 `[2026-09-27 21:40]`）；`docs/spec/syntax.md`（**+§3.8**，20+/1-）、`docs/spec/semantics.md`（§8.1 触发列 + 细分表 + 注，4+/1-）、`docs/spec/interface-contract.md`（§10.8 新变体 + **新 §10.9**，15+/1-）。
+- 证据: 本轮 `docs/spec` 三文件与"本轮前快照"的 `git diff --no-index --stat` = **20 / 4 / 15 insertions**；逐处「原文 → 新文」见本轮结构化汇报；阈值实测表来自 `C:\Users\19170\AppData\Local\Temp\opencode\lfz-parsedepth\` 临时夹具。
+- 决策: ADR「解析嵌套深度上限裁定：`PARSE_DEPTH_LIMIT = 1000`（`SyntaxError`，不新增错误类）+ 解析栈契约」（含量化论证、影响面、关联发现）。
+- 下一步: team-lead 转 **core-dev**（`parser.rs` 深度计数器 + `error.rs` 新变体 + `load→lex→parse` 移入 ≥64 MiB 线程）、**test-engineer**（`(`×1001 负例 / `(`×1000 正例）、**verifier**（复现 exit 2 非 `-1073741571`）、**docs-writer / ai-dx-engineer**（guide/skill 补 `嵌套深度超限`）。**左结合链 Drop** 建议另派裁定。
+- 阻塞: 无
+
+## [2026-09-27 21:10] 4 项规范侧审计事项收尾（range/repeat 容量溢出 + §9.2 样例 + obs-B-01/02；先 ADR 后改 spec）
+- 来源: team-lead 下达「按『先 ADR、后改 `docs/spec/`』处理审计暴露的 **4 项规范侧事项**（用户已批准全修）；**本轮只改 `docs/spec/**` + `.opencode/team/DECISIONS.md`，绝对不碰 `src/**`**」（完整启动；输入 = conformance-A/B/C 三报告的缺陷单与观察节）
+- 完成:
+  - **① `range` 超大 n 裁定（bug-20260927-04）**：规范原静默、实现 panic（exit 101）。裁定 **统一为 `OverflowError`**，新增第二条逐字符消息 **`容量溢出：所需容量超出可分配上限`**；`range` 行补「构造结果所需容量超出运行时可分配上限 → `OverflowError`；**任何 `n` 均不得 panic**」。
+  - **② `repeat` 溢出文案（bug-20260927-03）**：原措辞「溢出 → `OverflowError`」判为**不够精确**（未定义判据与消息）→ 补齐为「结果所需容量（`n * len(s)` 字节）超出可分配上限 → `OverflowError`（`容量溢出：所需容量超出可分配上限`）；**任何 `n`/`s` 均不得 panic**」。**未改实现**（由 runtime-dev 修）。
+  - **③ `syntax.md` §9.2 样例 B（BUG-A-01）**：期望输出由 `the/quick/fox` **订正为 `the/fox/quick`**（`fox`=0x66 < `quick`=0x71，`sortBy` 稳定 + `keys` 字节序 ⇒ `fox` 先）+ 新增「tie 处理（v1.1 补钉）」注。**解释器输出本就是对的**；不改实现、不改测试。
+  - **④ obs-B-02（float 显示）**：裁定 **「最短往返」优先**，「整值 `.0`」**限定点形式**；`1e-4 ≤ |x| < 1e16` 定点（整值补 `.0`），`|x| ≥ 1e16` 或 `0 < |x| < 1e-4` 指数（不补 `.0`）；阈值与 Python `repr` / Rust `{:?}` 一致。§3.7 `float` 行改写 + 新增「float 显示细则」注。**实现零变更**。
+  - **④ obs-B-01（零帧运行期错误）**：裁定 **`Traceback` 头当且仅当帧栈非空**；零帧情形无头、无 `span` 时**仅输出末行**（如 `IOError: 无法读取：nope.lfz`），`--json` 的 `traceback` 为 `[]`。§8.2 新增「零帧情形」子条；IC §8.1「运行期 10 类带 Traceback 头」加零帧例外。**实现零变更**（规范追上事实）。
+  - **纪律**：先追加 **4 条 ADR**（DECISIONS.md L754/777/787/800），后改 `docs/spec/`；未新增错误类（仍 12 类 + 基类）、未引入 `E-xxx`；未写/未改任何代码、测试、guide、skill、REQUIREMENTS；未 commit/tag/push。
+- 产出: `.opencode/team/DECISIONS.md`（750→**812** 行，追加 4 条 ADR）；`docs/spec/interface-contract.md`（311→**312**，+4 处）、`docs/spec/semantics.md`（415→**422**，+4 处）、`docs/spec/syntax.md`（920→**922**，§9.2 一段）；三文件 UTF-8 无 BOM。
+- 证据（`git diff --stat` 本轮 4 文件）: `docs/spec/interface-contract.md | 9 +-`、`docs/spec/semantics.md | 11 +-`、`docs/spec/syntax.md | 4 +-`、`.opencode/team/DECISIONS.md | 62 ++`；逐处 `原文 → 新文` 见本轮结构化汇报与 §关键片段；`git status --porcelain` 确认 **`src/**`、`tests/**`、`app/**`、`docs/guide/**`、`.opencode/skills/**`、`REQUIREMENTS.md` 零改动**。
+- 决策: 4 条 ADR（标题行见上）；均「是否需用户追认 = 否（用户已批准全修），请知悉」。
+- 下一步: team-lead 转 **runtime-dev**（`b_range`/`b_repeat` 容量预检 + `error.rs` 加 `OverflowMsg::Capacity`）+ **test-engineer**（可选补负例）+ **docs-writer / ai-dx-engineer**（`docs/guide/errors.md` L23/L29/L102 与 README L128 同步）+ **verifier**（复验 exit 2 而非 101；文件不存在路径断言"无 Traceback 头"）；影响面分析见本轮汇报（供 team-lead 决策是否触及 REQUIREMENTS R-401 文档字节数 / coverage-matrix）。
+- 阻塞: 无
+
+## [2026-09-27] LFZ 特性缺口审计 + v1.1 候选新增特性提案（审计与提案，不改 `docs/spec/`）
+- 来源: team-lead 下达「LFZ 语言特性缺口审计 + 候选新增特性提案」任务（完整启动）。判据（用户给定，须同时满足）：① 便于 agent 书写（为"编程 Agent"服务）；② 性能（不得引入隐藏 O(n²)）。触发 = `lfz-programming` skill 盲测 **2/8 通过**（8 个零上下文 agent 只读 skill 写复杂程序）
+- 完成:
+  - **读完 4 类输入**：`BRAINSTORM.md`（Tier1–3 候选池）、`DECISIONS.md`（D-007 范围/11 项延后、D-011、D-016 冻结纪律）、`docs/spec/{syntax,semantics,interface-contract}.md`（910/415/311 行）、盲测现场（`hashmap_chain`/`json_mini`/`expr_eval` 三失败程序 + `knapsack_dp.report.md` 逐条缺口清单 + `maze_bfs.report.md` + 测试者探针 `t2_sindex`/`t7_short`）；并**只读**核对 `SKILL.md`（554 行）。
+  - **解释器探针（一手证据，只读运行 `lfz.exe`，探针文件在临时目录、不入库）**：`s[0]`→`TypeError 运算符 '[]' 不支持 string 与 array / struct`（exit 2）；`range(1,4)`→`TypeError 函数 range 期待 1 个参数`；循环内 `let` 每轮新绑定（0/2/4, exit0）；`<` 左对齐可用（`[ab   ]`）；`:>w` 动态宽度→`ValueError 格式说明符非法`；`&&` 短路成立；`ord`→`NameError`；链式下标赋值/`else if`/零参 `print()` 均可用。
+  - **交付审计报告**（§0–§8）：现状盘点（类型/字面量/绑定/运算符/语句/作用域/内置 54/错误模型/5 特色/未提供项）；**12 张候选卡片**（C1–C12，每张 5 段：现状 / agent 易用性·引盲测 / 性能·标注隐藏 O(n²) / 成本风险·A1–A7·445 单测·85 黑盒 / 建议 IN-OUT+P0-P2）；**18 项明确 OUT**（O1–O18，含理由）；**6 个焦点问题裁定**（a 字符串下标 / b range 签名 / c 循环 let / d 格式 `<`+动态宽度 / e `len(string)` / f Unicode折叠·math·hint）；**v1.1 建议纳入 7 项特性表** + **P0 文档修订 7 条（D1–D7）**；**兼容性核对**（A1–A7/§4.5/M6/§2.3 全兼容） + **3 条既有隐藏 O(n²) 发现**。
+  - **核心结论**：盲测 2/8 的根因**主要在文档（skill）而非语言**——7 条暴露项中 5 条纯属 skill 缺口，故 **P0 全落文档侧、语言侧最高只到 P1**。语言侧建议：OUT `s[i]`（UTF-8 `Rc<String>` 下标必 O(n) → 循环 O(n²)；保留 `split("",s)` O(n) 惯用法）；IN `range(lo,hi)` / 字符串方法族(`indexOf`/`endsWith`/`padEnd`/`padStart`/`substring`) / 文件 IO / `ord`·`chr` / `sin`·`cos`·`log`·`exp` / `contains`，并补钉「字符串取下标→TypeError」。明确 OUT：`try`/`catch`、标签 `break`、`match`、生成器、`..` 区间、`in` 运算符、Unicode 折叠、hint、动态宽度、模块/类/类型注解等。
+  - **纪律**：**未改 `docs/spec/`、`src/**`、`docs/guide/**`、`.opencode/skills/**`、`tests/**`；未 commit/tag/push；未写 ADR**（按任务书，ADR 与 spec 改动待**用户拍板后**再做）。
+- 产出: `.opencode/team/FEATURE-AUDIT.md`（新建，UTF-8 无 BOM，bytes=39238 / 260 行）
+- 证据: `git status --short` 仅 `?? .opencode/team/FEATURE-AUDIT.md`（新增）；`examples/life.lfz`、`examples/test.lfz` 为既有未跟踪文件（非本轮产生）；7 个探针程序实测输出见 FEATURE-AUDIT §1.2
+- 决策: 本任务为**审计与提案**，无 ADR（待用户拍板）
+- 下一步: 结构化汇报 team-lead → 用户拍板 v1.1 范围；确认后由 language-architect **先 ADR、后改 `docs/spec/`**（§4.2 下标补钉 / §10.7 内置表 / §4.5.7 math 加宽 / §8.1 文件 IO 口径）；D1–D7 文档修订可**解耦先行**交 ai-dx-engineer / docs-writer
+- 阻塞: 无
+
 ## [2026-09-24 05:10] 规范侧收尾：spec-20260924-01（§9.4 样例自相矛盾）+ bug-20260924-07 / A9（语句首 `{`）裁定
 - 来源: team-lead 下达「两项规范侧收尾（不改 `src/**`）：修 §9.4 样例自相矛盾；就 A9 / bug-07 给出可直接落地的裁定；先 ADR 后改 spec」（轻量启动）
 - 完成:

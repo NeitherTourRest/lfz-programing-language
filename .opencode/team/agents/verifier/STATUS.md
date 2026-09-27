@@ -1,28 +1,41 @@
 # verifier — 工作状态
 > 最后更新: 2026-09-27 by verifier
+
 ## 当前状态
-**P9 复验（rev.2）已完成 → 结论 `CONCERNS（无阻塞）`。** 被验提交 = **git HEAD `6aabdf5`**（`fix: bind self for methods retrieved via ["k"]`；工作树 clean）。2 项待闭项：`bug-20260927-01` **已闭合**、`obs-02` **连带闭合**；`obs-01`（README）**未完全闭合**（残留 2 处数值）。
-## 进行中
-- （无）—— rev.2 复验结论已出；等 team-lead 决策与下一指派。
-## 已交付（本次）
-- `docs/reports/P9-verification.md` 追加「复验（rev.2）」§9.0–§9.5（基线 / bug-01 复验 / obs-01 复验 / 关键基线复核 / 额外检查 / 升级结论行）。
-## 本轮关键实测证据（对 HEAD `6aabdf5`）
-- ✅ `cargo clean; cargo build` → **0 warning**（exit 0，3.68s）；`cargo test` → **432 passed / 0 failed / 0 ignored**（lib **362** + main 42 + cli 16 + test_runner 12）。
-- ✅ `cargo run -q -- test` → **82 PASS / 0 FAIL / 0 ERROR，exit 0**（`汇总：共 82 个用例，通过 82，失败 0，错误 0`）。
-- ✅ `cargo run -q -- run app/sortviz.lfz` → **exit 0**（79 行 / 4170 bytes），阶段 1+2 共 10 处 `[校验通过]`。
-- ✅ **bug-01 独立复现（自建夹具，exit 0）**：`p.get()=42`、`p["get"]()=42`（等价）；`p.bump()=1`、`p["bump"]()=2`、`p.n=2`（方括号取到的方法写回**同一 `self`**）。
-- ✅ Git：**68 commits**、4 标签、`origin/main` = 本地 HEAD = `6aabdf5`；`docs/slides` 3 文件已跟踪（obs-02 闭合）。
-## 本轮发现（观察）
-- 🟡 **obs-01 残留**：`README.md` L30/L86 仍写 `431 passed（lib 361）`，实测 **`432 passed（lib 362）`**（修复提交 `6aabdf5` 新增 1 条 lib 单测）。主体已刷新（8 交付物索引真实路径 / 4 标签 / 82 用例 / 341 行 / P10 阶段表均正确）。**owner = release-manager**（低，仅文档）。
-- ⚪ **建议项（owner: test-engineer）**：`tests/lfz/test_structs.lfz` L30 只断言 `type(p["norm2"])=="function"`、**未调用** `s["k"]()` → 黑盒未覆盖该调用形态；修复后应补 `assert(p["norm2"]() == 25, …)`，并更新已过时的 L28–L29 注释。
-- ⚪ **bug-20260927-02**（`test --json` stdout 非单行，低）：仍打开（非本轮待闭项）；`tests/REPORT.md` §3.1 已自认。
-## 阻塞 / 需要支持
-- 无阻塞。**结论 CONCERNS**：仅需 release-manager 将 `README.md` L30/L86 的 `431（lib 361）` 改为 `432（lib 362）` → 我复核后即可升级 **`PASS（可打 v1.0-final）`**。
+**T11-09 修复批次全量复验（7 类修复）已完成 → 结论：通过（7/7 + 回归全绿 + 0 新缺陷）。**
+- 产出：`docs/reports/T11-reverification.md`（18313 B）；一手原始证据：`docs/reports/T11-reverification-evidence/`（12 文件，83 KB）。
+- 被验产物：**`target\release\lfz.exe`**（**710144 B**，mtime `2026-09-27 22:26:59`，SHA256 `619AFD2E…`），由 `cargo build --release` 从当前工作树源码构建（二跑 0.03s 无重编译 = 与源码同源）。**未用 `dist\lfz.exe`（704000 B，修复前）**。
+- 统计：**39 复验项 → PASS 39 / FAIL 0 / 新缺陷单 0**；观察项 2（非阻塞）。
+
+## 逐项结论（证据见报告 §②）
+1. `repeat(2^62,"ab")` → **exit 2** + `OverflowError: 容量溢出：所需容量超出可分配上限`（原 101）。✅
+2. `range(2^62)` → **exit 2** + 同上。✅
+3. 解析嵌套 `PARSE_DEPTH_LIMIT=1000`：`(`×1000→**0**；`(`×1001（平衡/前缀）、`[`×1001（前缀/平衡）、`{"a":`×1001、`fn(){`×1001 → **exit 2** + `SyntaxError: 嵌套深度超限（超过 1000 层）`（`--json` col=1001）；**无 `-1073741571`**。✅ (8/8)
+4. `AST_DEPTH_LIMIT=10000`：`1+1+…` 9999→**0**、10000/10001→**2**、**100000→2**；`a[0][0]…` 10001/100000→**2**（`--json` col=1）。✅ (7/7)
+5. `;;`×`--json`：stdout **恰 1 行** `{"ok":true}`(12B)，`;;`→stderr；**非 json 回归** `;;` 仍在 stdout(8B)；交织顺序 `A/z/B`→stderr。✅ (3/3)
+6. 越界写 span：`a[5]=9` 插入符 **col 1**（基座）、`--json` col=1；读 `print(a[5])` col=7（同基座）；口径一致。✅ (4/4)
+7. `syntax.md` §9.2 样例 B 逐字实跑 → exit 0，输出 `the/fox/quick`，与订正后期望块 **逐字节一致**。✅
+8. 回归：`cargo test` **482/0/0**（lib 379 + main 48 + cli 28 + test_runner 12 + unit 15）；`lfz test` **90/90 exit 0**；`cargo build --all-targets`（clean 后重编）**0 warning**。✅
+
+## 顺带裁定
+- **`bug-20260927-02` → 不成立（不可复现）→ 关闭**：`lfz test --json` 与 `lfz --json test` 的 stdout 均**单个 JSON**（1 行 9098 B 可解析），程序输出落 stderr。P9“25 行”记录过时，C 域实测正确。
+
+## 观察项（非阻塞，待 team-lead 收口）
+- **OBS-T11-R1（低）**：`lfz test` 实际 **90** 用例（任务书期望 89 为陈旧；test-engineer STATUS 明载 87→90 = +2 负例 +1 正例文件）。`TEAM_BOARD/PROJECT_STATE/README` 仍记 85/87 → 由 **T11-10** 刷新。
+- **OBS-T11-R2（低，性能）**：`str()` 遍历 1,000,000 层嵌套数组耗时 ~167 s（300000 层 ~11 s），exit 0 不崩溃；疑似显示/环检测路径超线性。仅建议，非本次范围。
+
+## 进行中 / 阻塞
+- （无）。本波无阻塞。
+
 ## 下一步计划
-- 收到「README 测试数已更新」消息后：复核 L30/L86 = 432/362，出 **PASS** 升级结论并更新报告 §9.5。
-- 打 `v1.0-final` 前复核 HEAD 与工作树 clean（本轮已 clean）。
+- 若团队启动 **T11-05 v1.1 语言补强**，verifier 可在实现后做定向复验。
+- 等 **T11-10** 重建 `dist/lfz.exe` 后，可复跑本报告 §②（对 `dist` 产物做一次等价性抽查）。
+- `Temp/t11v/`（**非本会话创建**）仍在；本会话仅自清了 `Temp/T11/`。
+
 ## 关键经验（写给未来的自己）
-- **P9 阶段并发提交高发**：本轮开工时修复是**未提交**的 `M src/evaluator.rs`，我 build/test 期间被提交为 `6aabdf5`。**必须两次核 HEAD/status，并核对「我 build 的内容」与「最终 HEAD 内容」是否一致**（工作树==HEAD 即可判定结论适用）。
-- **JSON/中文输出用 `cmd /c … > file` 取原始字节**：`Select-String` 过滤中文「汇总」行会因 GBK 控制台编码抓不到；改存文件后按码页解码。
-- **黑盒用例「未断言」≠「已覆盖」**：`test_structs.lfz` 刻意不调用 `s["k"]()`，修复后仍是**黑盒缺口**——规范等价性必须补端到端断言，不能只靠 `type(...)` 探测。
-- **文档数值会随代码提交顺序过期**：README 刷新（`4727726`）早于 bug-01 修复（`6aabdf5`），导致测试数 431→432 自然失效。发版前须以**最终 HEAD 实测值**重核文档数字。
+- **产物同源是复验前提**：先声明 `target/release/lfz.exe` 的字节数/mtime/SHA256 + “二跑 0 编译”证明，再下结论；绝不复用 `dist\lfz.exe`（修复前）。
+- **`lfz test` 需在 repo 根运行**：在 `Temp/` 下运行会因找不到 `tests/` 而报 `未发现测试目录 'tests'`（exit 2）。
+- **`--json` 位置不限**：`test --json` 与 `--json test` 等价（help 明示）；裁定 bug-02 时必须两种都跑，避免位置差异误判。
+- **深左链用大 N 验证收口**：`1+1+…`/`a[0][0]…` 必须测到 100000，才能确认从 `-1073741571` 变为受控 exit 2；边界（9999/10000）单测。
+- **PowerShell 5.1 控制台打印中文乱码**：用 `Start-Process -RedirectStandardOutput` 落盘 + `ReadAllText(UTF8)` 读，绕开控制台码页；**不要**用自定义函数包装含 `-` 的参数。
+- **超大重复行会撑爆证据文件**：落盘前用正则折叠 `(.)\1{79,}`，1.7 MB → 13 KB。

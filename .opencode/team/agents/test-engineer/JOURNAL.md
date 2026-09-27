@@ -1,5 +1,52 @@
 # test-engineer — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 23:20] P5.8 解析期上限回归补测（§3.8 `PARSE_DEPTH_LIMIT` / §3.9 `AST_DEPTH_LIMIT`）
+- 来源: team-lead 任务书 **P5.8**（完整启动；为刚落地的两个解析期上限补「限内放行正例 + 超限负例」黑盒回归，并更新矩阵/报告计数）
+- 完成:
+  - **新增负例 +2**（大体积夹具，按 T-R2 放非自动发现目录）：
+    - `tests/fixtures/parse_nesting_overflow.lfz` = `#42` + `(`×1001 `1` `)`×1001 → `SyntaxError: 嵌套深度超限（超过 1000 层）`；
+    - `tests/fixtures/ast_depth_overflow.lfz` = `#42` + `1` `+1`×9999（10000 项）→ `SyntaxError: 表达式嵌套过深（超过 10000 层）`。
+  - **`tests/cases.json` 61→63**：两条声明 `expect.error = "SyntaxError"`（只断错误类，不逐字断消息；严格遵循 runner 契约 §3，未发明契约外字段）。
+  - **新增正例 `tests/lfz/test_parse_limits.lfz`（2 `assert`）**：`(`×1000（嵌套深度恰 1000）合法、`1+1+…` 9999 项（AST 深度恰 10000）合法（「上限过小误杀合法程序」的护栏）。
+  - **断言口径（关键）**：runner 只断言**错误类**；「退出码 = 2 / = 0、消息关键片段」**以直跑 `lfz run <file>` 取证**（runner 为进程内执行，无退出码断言通道）。
+  - **`tests/coverage-matrix.md` 同步**：§0.1（合计 87→90、正向 26→27 文件 / 597→599、负例 60→62）、§0.3、§1.1（+2 行 §3.8/§3.9）、§1.2（+1 行）、§3（`SyntaxError` 11→13、合计 62）、**新增 §5.6 P5.8（编号 61/62）**、§6.5 正向（27/599）、§8（90/90 + 直跑 exit 2）；header 加「解析期上限回归（P5.8）」。
+  - **`tests/REPORT.md` 同步**：§1、§2.2 T-R2/T-R4、§3.1、§4 计数表（+P5.8 行、合计 90）、错误类分布（`SyntaxError` 13、合计 62）、§5.1、§5.3、§8、§9（P5.8 四行）。
+  - **未做（按指令）**：未新增 100000 项夹具（任务仅要求 2 条负例；100000 项仅作带外直跑证据，结果 exit 2）；未改 `src/**`、`docs/spec/**`、`app/**`、`docs/guide/**`、`.opencode/skills/**`；未删除/改写任何既有用例。
+- 产出:
+  - `tests/fixtures/parse_nesting_overflow.lfz`（新）、`tests/fixtures/ast_depth_overflow.lfz`（新）、`tests/lfz/test_parse_limits.lfz`（新）
+  - `tests/cases.json`（+2 → 63 条：62 `expect.error` + 1 豁免）、`tests/coverage-matrix.md`（改）、`tests/REPORT.md`（改）
+  - 证据:
+    - `cargo run -q -- test` → **90 PASS / 0 FAIL / 0 ERROR，exit 0**（含 `PASS parse_nesting_1001_is_nesting_too_deep` / `PASS ast_depth_10000_terms_is_expr_too_deep` / `PASS tests/lfz/test_parse_limits.lfz`）
+    - `cargo run -q -- test --json` → 单行 `{"ok":true,"total":90,"passed":90,"failed":0,"errored":0,...}`
+    - `cargo run -- run tests/fixtures/parse_nesting_overflow.lfz` → `SyntaxError: 嵌套深度超限（超过 1000 层）`，`$LASTEXITCODE = 2`
+    - `cargo run -- run tests/fixtures/ast_depth_overflow.lfz` → `SyntaxError: 表达式嵌套过深（超过 10000 层）`，`$LASTEXITCODE = 2`
+    - `cargo run -- run tests/lfz/test_parse_limits.lfz` → `$LASTEXITCODE = 0`，stderr 空
+    - `cargo build` → **0 warning / 0 error**；`cargo test` → **482 passed / 0 failed / 0 ignored**（lib 379 + main 48 + cli 28 + test_runner 12 + unit 15）
+- 决策: 无新 ADR（纯回归补测，无跨角色决策）。工具链限制（`cases.json` 无退出码断言通道）继续记入 STATUS「阻塞/需要支持」与 REPORT §8。
+- 下一步: P5.5（可移植性 / 入口一致性）；建议 team-lead 定夺是否为「100000 项旧崩溃点」补大体积夹具。
+- 阻塞: 无（`src/**` 未改，无新缺陷单）。
+  - **经验固化为铁律**：① 进程上限类修复必须补「断言错误类」夹具（进程内 runner 一旦 panic 会带崩整轮）；② 上限边界必须「正例 + 负例」成对；③ 20 KB 级 stderr 勿用管道抓取（会死锁），改用 `cmd /c ... > out 2> err` 文件重定向；④ PowerShell `@('p'+$v)` 会拆成两元素插换行，须先算 `$line` 再入数组。
+## [2026-09-27 22:30] P5.7 容量溢出回归补测（bug-20260927-03/04 修后补负例，防回归）
+- 来源: team-lead 任务书 **P5.7**（完整启动；为刚修好的 `repeat` / `range` 溢出行为补黑盒回归用例 + 更新矩阵/报告计数）
+- 完成:
+  - **新增负例 +2**（最小复现作夹具内容）：`tests/fixtures/repeat_capacity_overflow.lfz` = `#42`+`repeat(4611686018427387904, "ab")`；`tests/fixtures/range_capacity_overflow.lfz` = `#42`+`range(4611686018427387904)`。均无 BOM、末行 `\n`，与 `overflow_add.lfz` 同风格。
+  - **`tests/cases.json` 58→60**：两条声明 `expect.error = "OverflowError"`（严格遵循 runner 契约 §3，未发明契约外字段）。
+  - **断言口径（关键）**：runner 只断言**错误类**；「退出码 = 2」**以直跑 `lfz run <fixture>` 取证**（runner 为进程内执行，无退出码断言通道）。直跑两夹具均得 `OverflowError: 容量溢出：所需容量超出可分配上限`，`$LASTEXITCODE = 2`（原为 Rust panic / exit 101）。
+  - **`tests/coverage-matrix.md` 同步**：§0.1（合计 85→87、负例 58→60）、§2.1 `range` 行 / §2.4 `repeat` 行（新增容量溢出负例）、§1.1 错误行（7→9，`OverflowError` 2→4）、§3 错误类表（`OverflowError` 5→7、合计 58→60）、**新增 §5.5 P5.7 容量溢出回归（编号 59/60）**、§7 缺陷表（bug-03/04 已修复）、§8 运行证据（87/87 + 直跑 exit 2）；header 状态加「容量溢出回归（P5.7）」。
+  - **`tests/REPORT.md` 同步**：§4 计数（85→87、负例 58→60、`OverflowError` 5→7、错误类分布合计 60）、§2.2 T-R2/T-R4（58→60）、§5.3 错误类表（7）、§7 缺陷表（bug-03/04）、§8 复现（87/451）、§9 回归表（P5.7 三行）；正文计数全部 85→87。
+  - **未做（按指令）**：`;;` × `--json` 用例未新增（tooling-dev 处理中）；未改 `src/**`、`docs/spec/**`、`app/**`、`docs/guide/**`、`.opencode/skills/**`；未删除/改写任何既有用例（仅新增 + 更新计数/行）。
+- 产出:
+  - `tests/fixtures/repeat_capacity_overflow.lfz`（新）、`tests/fixtures/range_capacity_overflow.lfz`（新）
+  - `tests/cases.json`（+2 → 61 条，60 `expect.error` + 1 豁免）、`tests/coverage-matrix.md`（改）、`tests/REPORT.md`（改）
+  - 证据（命令与结果）:
+    - `cargo run -q -- test` → **87 PASS / 0 FAIL / 0 ERROR，exit 0**（含 `PASS builtin_repeat_capacity_overflow` / `PASS builtin_range_capacity_overflow`）
+    - `cargo run -- test --json` → 单行 `{"ok":true,"total":87,"passed":87,"failed":0,"errored":0,...}`
+    - `cargo run -- run tests/fixtures/repeat_capacity_overflow.lfz` → `OverflowError: 容量溢出：所需容量超出可分配上限`，`$LASTEXITCODE = 2`
+    - `cargo run -- run tests/fixtures/range_capacity_overflow.lfz` → 同上，`$LASTEXITCODE = 2`
+    - `cargo build` → **0 warning / 0 error**；`cargo test` → **451 passed / 0 failed / 0 ignored**（lib 368 + main 47 + cli 24 + test_runner 12）
+- 决策: 无新 ADR（纯回归补测，无跨角色决策）。工具链限制（`cases.json` 无退出码断言通道）记入 STATUS「阻塞/需要支持」与 REPORT §8。
+- 下一步: 等 tooling-dev 修完 `;;` × `--json` 后另派补例；继续 P5.5（可移植性 / 入口一致性）。
+- 阻塞: 无。
 ## [2026-09-27 19:45] P5.6 等价路径双路补测（关闭接缝盲区；verifier P9 rev.2 §9.4 建议）
 - 来源: team-lead 任务书 **P5.6**（关闭「等价路径接缝盲区」；轻量启动）
 - 完成:

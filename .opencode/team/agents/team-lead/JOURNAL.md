@@ -1,5 +1,37 @@
 # team-lead — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 22:40] T11-② 修复批次收口：4 类崩溃 + JSON 缺陷 + span 全修，6 条 ADR
+- 来源: 用户批准「全修 + 复验 + 再迭代」（基于 T11-① 条款级审计 157 条款 / 5 FAIL）
+- 完成: 4 波派发（架构师 ×3、runtime-dev、tooling-dev、test-engineer、core-dev ×2）
+  - 6 条 ADR：`range`/`repeat` 统一 `OverflowError` · §9.2 样例订正 · `float` 显示「最短往返优先」 · 零帧错误无 Traceback · **`PARSE_DEPTH_LIMIT=1000`** · **`AST_DEPTH_LIMIT=10000`（口径正交）**
+  - runtime-dev：容量溢出 → `OverflowError`；格式说明符上限；写路径 span 对齐
+  - tooling-dev：`;;`×`--json` dump 随 print 转 stderr；`--help` 文案
+  - core-dev：解析嵌套上限 + `on_eval_stack` 256 MiB 同栈；AST 深度上限
+  - test-engineer：黑盒 +2（溢出负例）
+- 产出/证据（team-lead 亲测，非听汇报）: `repeat`/`range` 溢出 → exit 2 + `OverflowError`（原 panic 101）；`(`×1000/1001 → 0/2；`1+1+…` 9999→0 / 10000→2 / **100000→2**（原 -1073741571）；`--json`（含 `;;`）stdout **恰 1 行**；`a[5]=9` 插入符 **col 1**；`cargo test` **445→482/0/0**；`lfz test` **85→87**
+- 决策: 新增 2 条用户可见消息模板（`容量溢出` / `表达式嵌套过深`）+ 2 个常量（1000 / 10000）；**错误类仍 12**（无 13）；两上限**口径正交、缺一不可**（架构师量化：≥14× / ≈9× 安全系数，实测帧 18.3/2.93/0.27 KiB）
+- 事件: ① core-dev 踩 PowerShell `Set-Content` 无 BOM 毁 UTF-8 中文源码 → 自行 `git checkout` 恢复并改用 `edit`/`write`（已转团队纪律）；② 用户要求临时件迁出 C 盘 → 立 ADR + `.gitignore Temp/`，并首清 C 盘 5.31 MB→1.0 MB、保全盲测证据 28 件进 `docs/reports/blind-test/`
+- 下一步: T11-08 黑盒负例 → **T11-09 verifier 全量复验** → **T11-10 release-manager 重建 dist + 刷新 README（445→482）+ 提交批次**
+- 阻塞: `bug-20260927-02`（P9 记录 vs C 域实测矛盾）待复验裁定
+## [2026-09-27] T11 启动：特性审计 + skill 盲测 + 三路规范符合性审计（P0–P10 已全交付 v1.2.0）
+- 来源: 用户指令「完善语言特性，我们现在还有很多特性没有实现，你都检查一下。注意，我们的特性是要服务于agent，所以特性的设计需要满足'便于agent书写'以及性能考虑」→ 我主张「先审计再定」→ 用户复核路线为「**先确定现有计划完全实现无误，然后开始迭代**」
+- 完成（本轮）:
+  1. **特性缺口审计**（language-architect，`bg_71bb41a2`）交付 `.opencode/team/FEATURE-AUDIT.md`（39238 B / 407 行）：现状盘点 + 12 张候选卡 C1–C12 + **明确 OUT 18 项** + 6 焦点裁定 + v1.1 **IN 7 项** + **P0 文档 7 条**
+  2. **skill 盲测**：8 题零上下文 agent（隔离工作区，只给 skill + `lfz.exe`）→ **通过 2/8**（maze_bfs/knapsack_dp）；无偷看证据；报告 9 条 skill 缺口
+  3. **三路规范符合性审计**并行派发（verifier）：A 词法文法 `bg_b5cf84dc` / B 语义错误模型 `bg_2e381353` / C 内置 loader runner CLI `bg_593a9150`
+  4. **看板/状态对齐**：`TEAM_BOARD.md` 与 `PROJECT_STATE.md` 此前滞后至 09-23（P3 阶段），已按真实进度（v1.2.0，8 项交付物齐备）重写
+- 产出: `FEATURE-AUDIT.md`；`TEAM_BOARD.md`（新增 T11 进行中/待办 + 质量基线表）；`PROJECT_STATE.md`（表 3/4 全 ✅ + T11 阶段）；本 STATUS
+- 关键裁定（审计）:
+  - **盲测 2/8 的根因主要在文档(skill)，不在语言**：7 条暴露项中 5 条是纯 skill 缺口（`range` 无签名、`let` 循环语义、`<` 对齐、`len(string)`、隐性语法未展示），仅 2 条涉语言 → **P0 全在文档侧，语言侧最高 P1**
+  - **不加 `s[i]`**：UTF-8 不可变下 `s[i]`≡`chars().nth(i)` 是 O(i)，循环遍历即 **O(n²)**；正解是文档化 `split("", s)`（O(n)）
+  - **架构级性能发现 §7.1**：string 不可变 → **循环内 `s = s + c` 拼接是 O(n²)**（盲测 json_mini/expr_eval 即如此）→ doc 引导 `push`+`join`；runtime 可选「`Rc` 强计数为 1 时就地追加」（不改语义/A1）
+  - v1.1 **IN 7 项**（全为内置新增/签名扩展 + 1 条 spec 补钉，A1–A7 与 §4.5 全兼容）；**OUT 18 项**（含 `try/catch`、标签 break、`match`、生成器、`..`、`in`、Unicode 折叠、`hint`（永久）、动态宽度、模块、类、类型注解、字典类型、可选链…）
+- 事件/发现: **盲测隔离出现 1 处破口** —— 某盲测 agent 把 `examples/test.lfz`（103 B 探针）写进了**项目仓库**（而非隔离工作区），这解释了 `graph_dijkstra` 为何"无产出"；我**未擅自删除**，已记入状态待用户决定
+- 决策: 依 **D-010**（重大决策先问用户）—— 审计结论与 IN/OUT 清单**先交用户拍板**，不擅自改冻结 spec；T11 第二步（P0 文档 + v1.1 七项）待审计缺陷单回来后一并请示
+- 下一步: 收 3 份符合性审计 → 归并「spec 说了但实现没做/做错」缺陷单 → 交用户拍板 → 进入迭代（文档 ‖ 语言）→ 同题盲测重跑
+- 阻塞: 无（等 3 个审计返回）
+- 附带: `examples/life.lfz`（128 行 Game of Life，exit 0）为用户点单所写，**尚未提交**
+
 ## [2026-09-24 09:05] P3 收官：解释器端到端可用，里程碑 v0.2.0
 - 来源: 用户「开工 + 全程版本管理」指令下的连续推进（P3 拆 20 子阶段）
 - 完成: 派 core-dev/runtime-dev/tooling-dev/language-architect/verifier/release-manager 完成 P3 全部子阶段（P3.0–P3.10）；P3.11 独立验收三轮

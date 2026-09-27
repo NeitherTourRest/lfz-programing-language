@@ -1,0 +1,137 @@
+#42
+// ============================================================
+// life.lfz — 康威生命游戏（ASCII 演示）
+// 运行: lfz examples/life.lfz
+// ------------------------------------------------------------------
+// 本程序用到的 LFZ 特性（=本语言"特色"的集中展示）:
+//   * struct 风格的数据组织（用二维 array 表示网格）
+//   * 二维数组的【原地】方括号赋值  g[y][x] = 1        （A1 引用语义）
+//   * while / for-in / break / continue / 一元与复合赋值 +=
+//   * 函数定义 + 递归式调用（fn at / neighbors / step）
+//   * 内置 data-last 家族：push / range / sum / join / len
+//   * 富字符串插值  "${expr}"（含多段拼接）
+//   * assert 自校验（滑翔机 4 代平移 (1,1)）
+//   * ;; 打印当前可见变量（最后一行，演示该特色）
+// ============================================================
+
+let W = 16
+let H = 10
+let GENS = 6
+
+// ---------- 网格工具 ----------
+
+fn zeros(n) {
+    var r = []
+    var i = 0
+    while i < n {
+        r = push(0, r)
+        i += 1
+    }
+    r
+}
+
+fn grid_new(w, h) {
+    var g = []
+    var y = 0
+    while y < h {
+        g = push(zeros(w), g)
+        y += 1
+    }
+    g
+}
+
+// 越界一律当作死细胞（返回 0），省掉边界判断的重复代码
+fn at(g, x, y) {
+    if x < 0 { 0 }
+    else if x >= W { 0 }
+    else if y < 0 { 0 }
+    else if y >= H { 0 }
+    else { g[y][x] }
+}
+
+// 8 邻域存活数（摩尔邻域）
+fn neighbors(g, x, y) {
+    var n = 0
+    for dy in range(3) {
+        for dx in range(3) {
+            if dx == 1 && dy == 1 { continue }
+            n += at(g, x + dx - 1, y + dy - 1)
+        }
+    }
+    n
+}
+
+// 演进一代：活细胞若邻居 2/3 存活，死细胞若恰好 3 个邻居则复活
+fn step(g) {
+    var ng = grid_new(W, H)
+    var y = 0
+    while y < H {
+        var x = 0
+        while x < W {
+            let n = neighbors(g, x, y)
+            let alive = g[y][x] == 1
+            if alive && (n == 2 || n == 3) { ng[y][x] = 1 }
+            else if !alive && n == 3 { ng[y][x] = 1 }
+            x += 1
+        }
+        y += 1
+    }
+    ng
+}
+
+fn render(g) {
+    var lines = []
+    for row in g {
+        var s = ""
+        for c in row {
+            if c == 1 { s = s + "##" } else { s = s + ". " }
+        }
+        lines = push(s, lines)
+    }
+    join("\n", lines)
+}
+
+fn population(g) {
+    var t = 0
+    for row in g { t += sum(row) }
+    t
+}
+
+// 滑翔机（glider）：一个会斜着平移的周期图案
+fn seed_glider(g) {
+    g[1][2] = 1
+    g[2][3] = 1
+    g[3][1] = 1
+    g[3][2] = 1
+    g[3][3] = 1
+    g
+}
+
+// ---------- 主流程 ----------
+
+print("=== LFZ 康威生命游戏 ===")
+print("网格 ${W} x ${H}，演示 ${GENS} 代")
+
+var g = seed_glider(grid_new(W, H))
+var gen = 0
+while gen <= GENS {
+    print("")
+    print("--- 第 ${gen} 代  存活 ${population(g)} / ${W * H} ---")
+    print(render(g))
+    if gen < GENS { g = step(g) }
+    gen += 1
+}
+
+// ---------- 自校验：滑翔机 4 代后必须平移 (1,1) ----------
+var a = seed_glider(grid_new(W, H))
+var b = a
+var k = 0
+while k < 4 {
+    b = step(b)
+    k += 1
+}
+assert(b[2][3] == 1 && b[3][4] == 1 && b[4][2] == 1 && b[4][3] == 1 && b[4][4] == 1, "glider_shift_1_1_after_4_gens")
+print("")
+print("[OK] 自校验通过：滑翔机 4 代后平移 (1, 1)")
+
+;;
