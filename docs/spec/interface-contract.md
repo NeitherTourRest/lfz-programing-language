@@ -7,7 +7,7 @@
 
 本文件是 **core-dev / runtime-dev 必须按此实现** 的接口契约：错误类清单（§8.1）、Rust 实现契约（§10：loader 双入口 / `ext(path)` / 唯一 `Span` / `VmFrame` / `TraceFrame` / `LfzError` 变体 / per-scope `ScopeDebug` / §10.7 内置函数表 data-last）、下游角色硬性要求（§11）、旧错误码映射（§13）。**形式**见 [syntax.md](./syntax.md)；**意义**见 [semantics.md](./semantics.md)。
 
-**本文件内容映射**：§8.1（错误类清单）、§10（§10.1–§10.8）、§11（§11.1–§11.5）、§13（附录）。
+**本文件内容映射**：§8.1（错误类清单）、§10（§10.1–§10.9）、§11（§11.1–§11.5）、§13（附录）。
 **不在本文件**：§2–§7 / §9 / §12 / §14 / §15（→ syntax.md）；§3.6 / §3.7 / §4.2 / §4.5（→ semantics.md）；§8.2 / §8.3（→ semantics.md §8，用户可见输出契约）。
 
 ---
@@ -26,7 +26,7 @@
 | `IndexError` | `LfzError::Index { idx, len, span }` | 运行 | `下标 {i} 越界（长度 {n}）` |
 | `FieldError` | `LfzError::Field { name, span }` | 运行 | `结构体没有字段 '{name}'` |
 | `ZeroDivisionError` | `LfzError::DivZero { modulo, span }` | 运行 | `除以零` / `对零取模` |
-| `OverflowError` | `LfzError::Overflow { span, msg: OverflowMsg }` | 运行 | `整数溢出：结果超出 i64 范围` |
+| `OverflowError` | `LfzError::Overflow { span, msg: OverflowMsg }` | 运行 | `整数溢出：结果超出 i64 范围` / `容量溢出：所需容量超出可分配上限`（容器/字符串构造，v1.1 补钉） |
 | `ValueError` | `LfzError::Value { msg: ValueMsg, span }` | 运行 | `无法把 {src} 转换为 {dst}（'{text}'）` / `格式说明符非法：'{spec}'` / **`空数组没有极值（{func}）`** / **`区间非法：{lo} >= {hi}`** |
 | `IOError` | `LfzError::Io { msg: String, span: Option<Span> }` | 运行 | `输入结束（EOF）` / `无法读取：{path}` |
 | `AssertionError` | `LfzError::Assert { msg: String, span }` | 运行 | `断言失败：{msg}` / `{msg}` |
@@ -34,7 +34,7 @@
 
 - **共 12 个具体错误类 + 1 基类 `LfzError`**；基类**不直接抛出**。
 - **`--json` 的 `error` 取值集合（12 个）**：`CosmosAnswerError` / `SyntaxError` / `NameError` / `TypeError` / `IndexError` / `FieldError` / `ZeroDivisionError` / `OverflowError` / `ValueError` / `IOError` / `AssertionError` / **`RecursionError`**。
-- **运行期错误 = 10 类**（除 `CosmosAnswerError`、`SyntaxError` 两个加载/解析期类之外的其余 10 类），在输出中**带 `Traceback` 头**；加载/解析期两类**不带**。见 [semantics.md](./semantics.md) §8.2。
+- **运行期错误 = 10 类**（除 `CosmosAnswerError`、`SyntaxError` 两个加载/解析期类之外的其余 10 类），在输出中**带 `Traceback` 头**（**零帧情形除外**：帧栈为空时不带，如文件不存在的 `IOError`，见 [semantics.md](./semantics.md) §8.2「零帧情形」，v1.1 补钉）；加载/解析期两类**不带**。见 [semantics.md](./semantics.md) §8.2。
 - **`check` 失败不产生任何 `LfzError`**（非致命；stderr 警告 + 返回 `false`），**不**进入 `error` 集合，**不**改变退出码（A4）。
 - **退出码**（D-008）：`0` 成功；`1` 测试失败；所有错误类（含 `RecursionError`）→ `2`；`--json` 错误仍 `2`。
 - **冻结前补钉口径**：`int(NaN)` → `ValueError`；`int(±Inf)` / 有限浮点截断后超 i64 → `OverflowError`（详见 §10.7 `int` 行与 [semantics.md](./semantics.md) §4.5.7）。
@@ -135,7 +135,7 @@ enum LfzError {
 | 内置 | 签名 | 返回 | 说明 |
 |---|---|---|---|
 | `len` | `len(x) -> int` | `int` | array 元素数；struct **数据字段**数（不含方法，A5）；string 的 Unicode 标量数 |
-| `range` | `range(n) -> array` | `array[int]` | `[0, 1, …, n-1]`；`n < 0` → 空数组 |
+| `range` | `range(n) -> array` | `array[int]` | `[0, 1, …, n-1]`；`n < 0` → 空数组；若构造结果所需容量超出运行时可分配上限 → `OverflowError`（消息 `容量溢出：所需容量超出可分配上限`，v1.1 补钉）；**任何 `n` 均不得使进程 panic** |
 | `push` | `push(v, xs) -> array` | `array` | 追加 `v` 的**新**数组（不改 `xs`） |
 | `pop` | `pop(xs) -> array` | `array` | 去掉末元素的**新**数组；空 → `IndexError` |
 | `removeAt` | `removeAt(i, xs) -> array` | `array` | 去掉下标 `i`（支持负索引）的**新**数组；越界 → `IndexError` |
@@ -175,7 +175,7 @@ enum LfzError {
 | `trim` | `trim(s) -> string` | `string` | 去首尾空白 |
 | `upper` / `lower` | `upper(s) -> string` / `lower(s) -> string` | `string` | ASCII 大小写（Unicode 折叠见 v1.1） |
 | `replace` | `replace(old, new, s) -> string` | `string` | 全部替换 |
-| `repeat` | `repeat(n, s) -> string` | `string` | `n <= 0` → 空串；溢出 → `OverflowError` |
+| `repeat` | `repeat(n, s) -> string` | `string` | `n <= 0` → 空串；结果所需容量（`n * len(s)` 字节）超出运行时可分配上限 → `OverflowError`（消息 `容量溢出：所需容量超出可分配上限`，v1.1 补钉）；**任何 `n` / `s` 均不得使进程 panic** |
 | `startsWith` | `startsWith(prefix, s) -> bool` | `bool` | |
 
 **数学 / 随机 / 转换 / IO / 断言**
@@ -232,9 +232,29 @@ enum LfzError {
   - 例：`-9223372036854775808` **合法**；`9223372036854775808`（无负号）→ `SyntaxError`。
 - **`s[k]` 与 `.k` 的键统一为 string**；`has` / `keys` 只认数据字段（A5）。
 - **int→float 加宽（B13）**：见 [semantics.md](./semantics.md) §4.5.7（加宽可能不精确；混合比较按数学精确值）。
+- **`OverflowMsg` 新增变体（实现侧，v1.1 补钉）**：**`Capacity`**（**无字段**，消息 `容量溢出：所需容量超出可分配上限`）——**容器 / 字符串构造所需容量超出可分配上限**（`range` 超大 `n` / `repeat` 结果过长，见 §10.7）；归 `LfzError::Overflow` → **`OverflowError`**（**不新增错误类**；`OverflowMsg` 由 1 条增至 **2** 条，供 core-dev 在 `src/error.rs` 落地）。
 - **`ValueMsg` 变体（实现侧，v1 补钉）**：`Convert { src, dst, text }`、`BadFormatSpec { spec }`、**`EmptyExtremum { func: String }`**（消息 `空数组没有极值（{func}）`）、**`BadRange { lo: i64, hi: i64 }`**（消息 `区间非法：{lo} >= {hi}`）。后两者为本轮补钉**新增**，供 core-dev 在 `src/error.rs` 落地；均归类 `ValueError`（**不新增错误类**）。
 - **`SyntaxMsg` 新增变体（实现侧，v1 补钉）**：**`UnterminatedBlockComment`**（**无字段**，消息 `块注释在此处未闭合（缺少 '*/'）`）——**未闭合块注释 `/*` 至 EOF**（[syntax.md](./syntax.md) §2.4、[semantics.md](./semantics.md) §8.1）；归 `LfzError::Syntax` → `SyntaxError`，`span` 指向 `/*` 中的 `/`（**不新增错误类**）。
+- **`SyntaxMsg` 新增变体（实现侧，v1.1 补钉）**：**`NestingTooDeep`**（**无字段**，消息逐字符 `嵌套深度超限（超过 1000 层）`）——**解析嵌套深度超过 `PARSE_DEPTH_LIMIT = 1000`**（[syntax.md](./syntax.md) §3.8、[semantics.md](./semantics.md) §8.1）；归 `LfzError::Syntax` → **`SyntaxError`**（**不新增错误类**；`SyntaxMsg` 由 17 条增至 **18** 条），`span` = **第 1001 层嵌套的开启记号首字符**。
+- **`SyntaxMsg` 新增变体（实现侧，v1.1 补钉）**：**`ExprTooDeep`**（**无字段**，消息逐字符 `表达式嵌套过深（超过 10000 层）`）——**AST 节点深度超过 `AST_DEPTH_LIMIT = 10000`**（[syntax.md](./syntax.md) §3.9、[semantics.md](./semantics.md) §8.1）；归 `LfzError::Syntax` → **`SyntaxError`**（**不新增错误类**；`SyntaxMsg` 由 **18** 条增至 **19** 条），`span` = **首次使 AST 深度超过上限的节点首字符**。
 - **`TypeMsg` 新增变体（实现侧，v1 补钉；P3.11）**：**`ImmutableRebind { name: String }`**（消息 `不能重新赋值 let 变量 '{name}'；let 只锁重绑定，不锁内容`）——**对显式 `let` 绑定的重绑定**（[semantics.md](./semantics.md) §4.5.2 / §8.1）；归 `LfzError::Type` → **`TypeError`**（**不新增错误类**；`TypeMsg` 由 6 条增至 **7** 条），`span` = 赋值目标变量名首字符。
+
+### 10.9 解析与 AST 消费的栈安全（v1.1 补钉，规范性）
+
+> 目标：兑现「**任何合法输入都不得使解释器因栈耗尽而崩溃 / abort**」（实测反例：`(`×N 深嵌套 → `thread 'main' has overflowed its stack`，exit `-1073741571`）。
+
+- **要求 R-S1（解析嵌套）**：parser 必须以 **`PARSE_DEPTH_LIMIT = 1000`** 限制解析嵌套深度，超限抛 `SyntaxError`（新变体 `SyntaxMsg::NestingTooDeep`；定义见 [syntax.md](./syntax.md) §3.8，消息见 [semantics.md](./semantics.md) §8.1）。
+- **要求 R-S2（栈容量）**：解析须在**栈容量 ≥ 64 MiB** 的线程上运行；**推荐**把整条 `load → lex → parse → eval`（含 `Program` 的**析构**）流水线放到既有的 **256 MiB** 大栈线程（`EVAL_STACK_SIZE`，`src/evaluator.rs`）上——同一线程更省事，且使深 AST 的析构也在大栈上完成。
+- **要求 R-S3（AST 深度）**：parser 必须在**解析期**（构建中自底向上累加，或紧接解析后以**显式栈迭代遍历**）检查 **AST 节点深度**，超过 **`AST_DEPTH_LIMIT = 10000`** 即抛 `SyntaxError`（新变体 `SyntaxMsg::ExprTooDeep`，消息 `表达式嵌套过深（超过 10000 层）`；定义见 [syntax.md](./syntax.md) §3.9，消息见 [semantics.md](./semantics.md) §8.1），**求值之前**拒绝。**该检查本身不得以 AST 深度递归**。R-S3 收口 R-S1 **不覆盖**的**左结合长链**（迭代解析、深左偏 AST），使求值 / 析构递归深度均有界。**AST 迭代析构非必需**（上限已使析构深度 ≤ 10000）；若日后放宽该上限，再以迭代析构加固。
+- **量化依据（实测 2026-09-27，debug 构建；256 MiB 大栈线程）**：
+  - 二进制主线程栈 `SizeOfStackReserve = **1 MiB**`（PE 实测；release 同为 1 MiB）。
+  - **每层解析嵌套最坏 ≈ 18.3 KiB**（struct 字面量 `{"a":`）：分组 `(` ≈ 16.5 KiB、插值 `"${` ≈ 17.7 KiB、数组 `[` ≈ 17.1 KiB、lambda `fn(){` ≈ 16.8 KiB（均 debug）；release 最坏 ≈ 5.1 KiB。
+  - 故 1 MiB 主线程在 **约 56 层**即溢出（实测 `(` 第 62 层 abort、`{"a":` 第 56 层 abort）。
+  - `1000 × 18.3 KiB ≈ 17.9 MiB` → 在 **64 MiB** 上有 **≥ 3.6×** 余量、在 **256 MiB** 上有 **≥ 14×** 余量（release 余量更大）。
+  - **每层 AST 求值递归 ≈ 2.93 KiB**（实测：纯 `1+1+…` 链在 **91650 项** 正常、**91700 项** abort ⇒ `256 MiB ÷ 91675 ≈ 2.93 KiB`）——远小于解析帧，故 R-S3 的 **10000** 上限 ⇒ `10000 × 2.93 KiB ≈ 28.6 MiB`，在 256 MiB 上 **≈ 9.2×** 余量（release 更小 ⇒ 余量更大）。
+  - **每层 AST 析构（`Drop`）≈ 0.27 KiB**（实测：深链置于未执行分支，`800000` 项析构正常、`1600000` 项 abort ⇒ `256 MiB ÷ ≈10⁶ ≈ 0.27 KiB`）。R-S3 使析构深度 ≤ 10000 ⇒ `≈ 2.7 MiB`，**≈ 95×** 余量 ∴ **AST 迭代析构非必需**。
+  - **函数调用帧 ≈ 14.2 KiB**（由组合实测反推：`9999` 层函数递归 + `42000` 项深表达式仍正常、`45000` 项 abort ⇒ `256 MiB − 42000 × 2.93 KiB ≈ 138.7 MiB ÷ 10⁴ ≈ 14.2 KiB`）。**组合最坏**（`RECURSION_LIMIT` 与 `AST_DEPTH_LIMIT` 同时取满）= `10000 × 14.2 KiB + 10000 × 2.93 KiB ≈ 167 MiB ≤ 256 MiB`（**≈ 1.5×** 余量），**不溢出**。
+- **第 4 类残余（左结合长链 / 深左偏 AST）——已裁定并收口（v1.1）**：左结合链（`1+1+…`、`a[0][0]…`、`f(a)(b)…`、`a.b.c…`、`x |> f |> g…`）由**迭代循环**解析，**不受 R-S1 约束**，但会产出**深左偏 AST**；其实测（256 MiB 同栈、debug）**T = 91700 项即求值递归栈溢出**（`print` 前即 abort，非仅析构；T = 91650 仍正常）。收口方式 = **R-S3**：解析期以 `AST_DEPTH_LIMIT = 10000` 拒绝 AST 深度超限（`SyntaxError: 表达式嵌套过深（超过 10000 层）`，[syntax.md](./syntax.md) §3.9），从而使**求值 / 析构递归深度均 ≤ 10000**（上量化），**不再**依赖「同栈大栈」兜底。**两度量的口径不得合并**：R-S1 计**解析嵌套**（递归下降同时活跃层，保护 parser 栈），R-S3 计 **AST 节点深度**（保护求值 / 析构栈）；二者**正交不可互推**（`(((1)))` 前者大后者小；`1+1+…` 前者小后者大），故**分别设限**、各自取值。
 
 ---
 

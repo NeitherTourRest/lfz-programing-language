@@ -748,3 +748,260 @@
 - **边界**：仅改 `.opencode/skills/lfz-programming/**` 与 `docs/guide/ai/**`（`ai/` 为 ai-dx 专属子域）；**未改** `docs/spec/**`、`src/**`、仓库根 `README.md`、`docs/guide/**`（`ai/` 之外）、`tests/**`；未 commit / tag / push。
 - **影响**：**app-dev** 可直接按 SKILL §0.5 工作流开发 P8 应用（降低卡壳）；**docs-writer** 共享已验证示例、避开重复劳动（人向 vs AI 向分工）；**verifier** 可按 `VERIFICATION.md` §1 对照表与 §7 实跑证据独立复核；**release-manager** 交付物 5 索引须含 `README.md`（本文件为 skill 包入口说明）。
 - **证据**：4 示例 `cargo run --quiet -- run` 全 **exit 0**（`04_wordcount` 输出 `total=13, distinct=8` / `the: 4` / `fox: 2` / `jumps: 2`）；严格 `E-[0-9]`（区分大小写）检索 SKILL/README/VERIFICATION **0 命中**；`SKILL.md` 章节结构含 §0.5、§4.5、L4。
+
+---
+
+### [2026-09-27 21:10] [language-architect] bug-20260927-04 裁定：`range` 超大 n 与 `repeat` 溢出统一为 `OverflowError`（容量溢出）
+
+- **来源**：T11 规范符合性审计 C 域缺陷单 `bug-20260927-04`（`range` 超大 n → Rust panic，**规范静默**）+ `bug-20260927-03`（`repeat` 溢出 → Rust panic，spec 已要求 `OverflowError` 但陈词含糊）。用户 2026-09-27 批准「全修」，本轮**仅改 `docs/spec/**` + 本文件**（不碰 `src/**`）。
+- **背景（实测基线，只读复现）**：
+  - `range(4611686018427387904)` → 进程 panic（`capacity overflow`），退出码 101（C 域 §②C-26）。
+  - `repeat(4611686018427387904, "ab")` → 进程 panic，退出码 101（C 域 §②C-25）。
+  - 实现根因（C 域已定位，**非本轮修复**）：`src/builtins.rs:497` `(0..n).map(...).collect()` 与 `:925-928` `s.len().checked_mul(n as usize)` 仅挡 `usize` 溢出，未挡 `isize::MAX` 容量上限 → 库层 panic。
+- **决定**：
+  1. **统一为 `OverflowError`（类不变，12 类计数不变）**：任何**容器 / 字符串构造所需容量超出运行时可分配上限**的情形（`range` 的元素数、`repeat` 的 `n * len(s)` 字节数）→ **`OverflowError`**，**禁止 panic / 中止**。
+  2. **新增第二条消息模板**（原 `OverflowError` 仅一条，无法精确表达"容量"而非"i64 数值"）：
+     - 消息（逐字符）：**`容量溢出：所需容量超出可分配上限`**。
+     - 实现侧：`OverflowMsg` 增加**单变体 `Capacity`（无字段）**（本 ADR + `interface-contract.md` §10.8 记录），归 `LfzError::Overflow` → 仍 `OverflowError`。
+  3. `repeat` 行陈词「溢出 → `OverflowError`」判为**不够精确**（未定义"溢出"的判据与消息）→ 补齐为「结果所需容量（`n * len(s)` 字节）超出可分配上限 → `OverflowError`（`容量溢出：所需容量超出可分配上限`）；任何 `n`/`s` 均不得 panic」。
+- **理由**：① 规范层不绑定实现语言，但**任何合法输入都不得使进程崩溃**是解释器底线；② 与同批 `repeat` 溢出的既有口径**统一**（用户建议），避免同类两种错误类；③ 该失败本质是"容量"，与原消息「整数溢出：结果超出 i64 范围」语义不符（`range(2^62)` 的 `n` 并未超出 i64），故用独立、精确、可断言的模板；④ 黑盒测试只断言错误类，新增消息模板**不改变类**，回归面最小。
+- **规范落地**：`interface-contract.md` §10.7 `range` / `repeat` 行 + §8.1 `OverflowError` 行 + §10.8（新增 `OverflowMsg::Capacity`）；`semantics.md` §8.1 `OverflowError` 行。
+- **影响面**：
+  - **runtime-dev**（唯一实现方）：`b_range` 改为**容量换算后预检**（元素数 × `size_of::<Value>()` 超 `isize::MAX` → `overflow(span, OverflowMsg::Capacity)`）；`b_repeat` 的 `checked_mul` 失败与 `String::repeat` 容量检查失败统一 → `Capacity`；`error.rs` 新增 `OverflowMsg::Capacity` + `message()` 分支。
+  - **test-engineer**：可为 `range` / `repeat` 超大入参补**负例**（断言类 = `OverflowError`，不逐字断消息），并更新 `tests/coverage-matrix.md` 对应行（**仅建议，非必做**）。
+  - **verifier**：修复后按 C 域原命令复现（`e_range_big.lfz` / `e_repeat_min.lfz` 应 exit 2 + `OverflowError`，非 101）。
+  - **docs-writer / ai-dx-engineer**：`docs/guide/errors.md` L23 / `README.md` L128 的 `OverflowError` 消息行需追加容量模板（**本轮未改其文件**）。
+  - **既有 85 黑盒 / 445 单测**：**零影响**（无任何用例断言 `range`/`repeat` 溢出消息或该类负例，见本轮汇报"影响面分析"）。
+- **是否需用户追认**：否（用户已批准本轮"全修"）；**请知悉**：新增 1 条用户可见消息模板。
+
+### [2026-09-27 21:10] [language-architect] BUG-A-01 裁定：`syntax.md` §9.2 样例 B 期望输出订正（tie = `the/fox/quick`）
+
+- **来源**：A 域缺陷单 `BUG-A-01`（spec 内部不自洽；解释器输出**正确**）。
+- **背景**：§9.2 程序主体期望输出写 `the / quick / fox`，与 §10.7「`keys` 字节序升序 + `sortBy` 稳定」冲突。实测（A 域 §2.4 A-74）：`fox`(0x66) < `quick`(0x71) → `sortBy((w)=>-w.count)` 稳定升序 → `the(3), fox(2), quick(2)`。§9.2 自身的 `;;` dump（`keys = a<dog<fox<quick<the`）也印证此序。
+- **决定**：**只订正 §9.2 期望输出**为 `the / fox / quick`，并补一句显式 tie 处理说明（稳定排序 + 输入序 = `values`/`keys` 序 = 字节序升序 ⇒ `fox` 先于 `quick`）。**不改实现、不改测试**（解释器行为本就正确）。
+- **理由**：① 唯一自洽解是让样例服从 §10.7 的规范性排序规则；② §10.7 对 `sortBy`「稳定」与 `keys`「字节序」的规定是**冻结**条款，样例是瑕疵；③ 该样例被黑盒/文档共同引用，必须可运行且自洽。
+- **规范落地**：`syntax.md` §9.2（期望输出块 3 行次序订正 + 新增「tie 处理（v1.1 补钉）」注）。
+- **影响面**：**docs-writer / ai-dx-engineer / app-dev** 若引用 §9.2 输出须用订正版（**本轮未改其文件**；核对：`docs/guide/**` 与 skill **未**复制 §9.2 的 Top3 输出，skill 用的是另一段 `the quick brown fox…` 文本，无冲突）；**test-engineer**：`tests/**` **无** §9.2 逐字夹具（A 域用临时夹具），**零影响**；**core/runtime**：无代码变更。
+- **是否需用户追认**：否（用户已批准；本质为文档勘误）。
+
+### [2026-09-27 21:10] [language-architect] obs-B-02 裁定：`float` 显示「最短往返」优先，「整值 `.0`」限定点形式（阈值 1e16 / 1e-4）
+
+- **来源**：B 域观察 `obs-B-02`（`semantics.md` L42「整值浮点显示 `.0`」与实测 `1e16` 无 `.0` 冲突）。
+- **背景（实测，B 域 B-16）**：`1.0→1.0`、`1000000000000000.0`（十进制带 `.0`）、`1e16`/`1e20`/`1e21`（指数、无 `.0`）、`0.0001`（十进制）、`1e-5`（指数）、`1.2345678901234568e17`。实现为 Rust `{:?}`（`src/value.rs:373-382`），即**最短往返 + Python `repr` 式记法阈值**。
+- **决定**：**「最短往返」为最高准则**；「整值 `.0`」**仅适用于定点（十进制）形式**，不再是普遍规则。划界：
+  - `1e-4 ≤ |x| < 1e16`（含 `0.0`）→ 定点；整值补 `.0`（`1.0`、`1000000000000000.0`、`0.0001`）。
+  - `|x| ≥ 1e16` 或 `0 < |x| < 1e-4` → 指数形式，**不补** `.0`（`1e16`、`1e20`、`1.2345678901234568e17`、`1e-5`）——此时指数形式即最短往返形式。
+  - `0.0→0.0`、`-0.0→-0.0`（保号）、`NaN→nan`、`±Inf→inf`/`-inf`。
+- **理由**：① 两条旧规则**并非真冲突**，只需明确 `.0` 的适用范围（定点）；② 阈值与 Python `repr` / Rust `{:?}` **一致**，实现无需改动（该行为经 B-16 实测 PASS）；③ 使规范二值可判定、可回归。
+- **规范落地**：`semantics.md` §3.7 `float` 行改写 + 新增「float 显示细则（v1.1 补钉，规范性）」注。
+- **影响面**：**runtime-dev**：**零代码变更**（实现已符合）；**test-engineer**：可选补 1 条格式化黑盒（`1e16`/`1e-5`/`1.0`），**非必做**；**docs-writer / ai-dx-engineer**：`float` 显示说明以 §3.7 为准（**本轮未改其文件**）。既有 445 单测中 `display_scalar_forms` 仅测 `1.0/-0.5/2.5/nan/inf/-inf`，**零影响**。
+- **是否需用户追认**：否（用户已批准；行为未变，仅厘清规范）。
+
+### [2026-09-27 21:10] [language-architect] obs-B-01 裁定：零帧运行期错误不输出 `Traceback` 头
+
+- **来源**：B 域观察 `obs-B-01`（文件不存在时 `IOError: 无法读取：<path>` 无 `Traceback` 头，§8.2 未覆盖零帧情形）。
+- **背景（实测，B 域 B-23）**：`lfz run nope.lfz` → 仅一行 `IOError: 无法读取：<path>`（无 `Traceback` 头、无 `File` 帧），`--json` 的 `traceback:[]`；根因是该错在**执行前**发生、帧栈为空。
+- **决定**：**运行期错误的 `Traceback` 头当且仅当帧栈非空**。零帧情形（帧栈为空）渲染规则：
+  - **不输出** `Traceback (most recent call last):` 头；
+  - **有 `span`** → 输出 `File` 帧 + 末行 `<类名>: <消息>`；
+  - **无 `span`**（如 `IOError` 文件不存在/不可读）→ **仅**输出末行 `<类名>: <消息>`（无 `File` 帧、无插入符）；
+  - `--json` 的 `traceback` 为 `[]`。
+- **理由**：① 与实现（及 `tests/cli.rs:185/422` 的断言）一致，**规范追上事实**；② 帧栈为空的 `Traceback` 头会误导（无帧可显）；③ 保持「运行期 = 10 类」分类不变，仅细化**渲染**分支，二值可判定。
+- **规范落地**：`semantics.md` §8.2（运行期错误条目新增「零帧情形」子条）+ `interface-contract.md` §8.1（"运行期错误 = 10 类 … 带 Traceback 头" 加零帧例外）。
+- **影响面**：**tooling-dev**：**零代码变更**（CLI 已如此渲染）；**runtime-dev**：**零变更**；**docs-writer / ai-dx-engineer**：`docs/guide/errors.md` L29/L102「运行期 10 类都带 `Traceback` 头」措辞需加零帧例外（**本轮未改其文件**）；**verifier**：复验文件不存在路径时应断言"无 `Traceback` 头"。既有测试**零影响**。
+- **是否需用户追认**：否（用户已批准；行为未变，仅补规范）。
+
+---
+
+### [2026-09-27 21:19] [runtime-dev] T11 runtime panic 硬化：`repeat`/`range` 容量溢出（`OverflowMsg::Capacity`）+ 格式说明符上限 + 索引写入 span 对齐
+
+- **来源**：team-lead 任务书「修复 runtime 侧缺陷 + 全量 panic 硬化排查（用户批准全修）」；依据 C 域缺陷单 `bug-20260927-03` / `bug-20260927-04`、B 域 `obs-B-03`，以及 language-architect ADR `[2026-09-27 21:10]`（range/repeat 统一 `OverflowError`）。
+- **落地决定（实现侧，`src/**`）**：
+  1. `src/error.rs` 新增 `OverflowMsg::Capacity`（无字段，消息逐字符 `容量溢出：所需容量超出可分配上限`）——按 architect ADR 明示由 runtime-dev 落地；`OverflowError` 类不变（仍 12 类）。
+  2. `src/builtins.rs`：`b_repeat` 在 `checked_mul` 后补 `total > isize::MAX` 检查 → `Capacity`；`b_range` 加容量预检 `n × size_of::<Value>()` 超 `isize::MAX` → `Capacity`。
+  3. `src/evaluator.rs`：`repeat_str`（`string * int`）同口径 → `Capacity`；**格式说明符上限** `MAX_FMT_WIDTH = 1_000_000` / `MAX_FMT_PRECISION = 65_535`，超出 → 受控 `ValueError`（`格式说明符非法：…`，syntax §2.8）——修复抽样新发现的 2 类可达 panic（超大 width → 分配 abort；precision ≥ 65536 → `core::fmt` panic）。
+  4. `src/evaluator.rs exec_assign`：写路径错误 span 统一取 `target.span`（Lvalue 基座起始），替代 `seg.span`（`[`/`.` 位置）——`a[5]=9` 插入符 col 2 → col 1，与读取（基座首字符）一致（§8.2）。
+- **理由**：① 任何合法输入不得使进程 panic（exit 101 / abort）是解释器底线；② range/repeat 行为严格遵循 architect ADR，不自行发明；③ `error.rs` 改动由 ADR 逐字授权（非越界）；④ 格式说明符上限为「防御性拒绝」非语义变更，正常宽度/精度（≤ 上限）行为不变。
+- **影响面**：
+  - **verifier**：按 C 域原命令复现 `e_repeat_min.lfz` / `e_range_big.lfz` 应为 exit 2 + `OverflowError`（非 101）；`obs-B-03` 应核 `--json` 的 `col`。
+  - **test-engineer**：可选为 `range`/`repeat` 超大入参补黑盒负例（只断类），并补格式说明符超限负例。
+  - **docs-writer / ai-dx-engineer**：`OverflowError` 消息行与格式说明符限制可与 `docs/spec/` 对齐（本轮未改其文件）。
+  - **core-dev**：`error.rs` 新增枚举变体（`OverflowMsg` 由 1 → 2）；`parser.rs` 深嵌套栈溢出为独立未决项（见下）。
+- **未决 / 上报（未自行决定）**：① `src/parser.rs` 递归下降对 `((((…))))` / `[[[[…]]]]` ~2e5 层 → main 线程栈溢出（exit -1073741571），属 core-dev 域，建议加解析深度上限 + `SyntaxError`；② `range` 容量预检边界为 `isize::MAX` 字节（ADR 所定），物理不可分配的超大但合规请求仍可能 OOM-abort（彻底可控需 `Vec::try_reserve`）；③ `value.rs Display` 无深度上限（实测 2e5 未溢出，仅理论残余）。
+- **回归面**：`cargo build` / `--all-targets` **0 warning**；`cargo test` **451 passed / 0 failed / 0 ignored**（基线 445，+6）；`lfz test` **85/85 exit 0**。改动仅 `src/builtins.rs` / `src/evaluator.rs` / `src/error.rs`（290+/16-）；未改 `cli.rs`/`value.rs`/`tests/**`/`docs/spec/**`/`app/**`/`docs/guide/**`；未 commit / tag / push。
+- **是否需用户追认**：否（用户已批准"全修"；新增 1 条用户可见消息模板已由 architect ADR 说明）。
+
+---
+
+### [2026-09-27 21:32] [tooling-dev] CLI 修复：`;;`×`--json` 同通道（bug-B-20260927-01）+ `--help` 文案对齐 §2.2.0
+
+- **来源**：team-lead 任务书「修 CLI 侧缺陷（用户批准全修）」；依据 B 域缺陷单 `bug-B-20260927-01`（B/C 双域独立复现）、A 域观察 `obs-A-02`、`semantics.md` §3.6 #7 / §8.3 / §8.4、`syntax.md` §2.2.0、`interface-contract.md` §10.6。
+- **落地决定（实现侧，`src/**`）**：
+  1. `src/builtins.rs` 新增 `pub fn write_dump(text, span) -> R<()>`：`;;`（dump）写通道**复用** `print` 的既有进程级开关 `STDOUT_TO_STDERR`（`--json` 下由 CLI 调 `set_stdout_to_stderr(true)`）——默认 stdout，`--json` 下改写 stderr。
+  2. `src/evaluator.rs` `Interp::exec_stmt_inner` 的 `StmtKind::Dump` 分支：把原先**直写 `std::io::stdout()`** 改为调用 `builtins::write_dump`，与 `print` **同通道**（§3.6 #7）。
+  3. `src/cli.rs`：`HELP` 文案对齐 §2.2.0（`.lfz` 文件要求 `#42`；非 `.lfz` 文件豁免），删除一刀切「`<file>` 须以 `.lfz` 结尾」，明示「裸调用 `lfz <file>` 等价 `lfz run <file>`，唯一差别是裸调用要求 `.lfz` 结尾」。
+- **理由**：① spec 明文「`;;` 通道 = stdout，与 `print` 同通道」（§3.6 #7），而 `--json` 契约要求「stdout 恒为单个 JSON」（§8.3/§8.4）——二者联立即 `;;` 必须随 `print` 一起转 stderr；② 复用既有 `P4.2-fix` 开关，无新机制、零新依赖；③ help 文案修订仅为文本，无行为变更。
+- **证据（逐字节）**：
+  - 修复前 `lfz --json run dumpjson.lfz`：exit 0；stdout **20 B** = `z ： 5` + `{"ok":true}\n`（2 行）；stderr 0 B。
+  - 修复后：exit 0；stdout **12 B** = `{"ok":true}\n`（单行合法 JSON）；stderr **8 B** = `z ： 5\n`。
+  - `--json` 下 `print`/`;;` 同通道且按执行序：stderr = `A\nz ： 5\nB\n`，stdout 仍 12 B 单 JSON。
+  - 非 `--json`：`;;` 仍写 stdout（8 B），stderr 空。
+  - `cargo build` **0 warning**；`cargo test` **456 passed / 0 failed / 0 ignored**；`lfz test` **87/87 exit 0**。
+- **影响面**：
+  - **verifier**：复验 `lfz --json run <含 ;; 的文件>` stdout 恰 1 行 JSON、`;;` 行落 stderr；`--help` 不再含「须以 .lfz 结尾」。
+  - **test-engineer**：已由 tooling-dev 补 `tests/cli.rs` 4 条 e2e（成功 / 失败 / 同通道顺序 / 非 json 回归）；黑盒如需可加对应正向用例（不必须）。
+  - **docs-writer / ai-dx-engineer**：`--json` 说明可统一为「程序输出（含 `;;` dump）随 `print` 一起转 stderr」（本轮未改其文件）。
+  - **runtime-dev / core-dev**：零影响（未改 lexer/parser/value/error）。
+- **未决 / 观察（本轮只汇报、不动手）**：`obs-C-01`（`--help` 仅在首个参数生效）、`obs-C-02`（`lfz --json --version` 输出非 JSON）—— 均**无 spec 依据**（`--json` 契约仅针对 `run`/`test`），不属违反，记录备查。
+- **回归面**：改动仅 `src/builtins.rs`（+`write_dump`）/ `src/evaluator.rs`（Dump 分支 + 移除已无用的 `use std::io::Write` 与 `io as io_error` 导入）/ `src/cli.rs`（HELP + 文档 + 1 单测）/ `tests/cli.rs`（+4 e2e）；未改 `docs/spec/**`、`tests/lfz/**`、`tests/cases.json`、`app/**`、`docs/guide/**`；未 commit / tag / push。
+- **是否需用户追认**：否（用户已批准"全修"；修复严格对齐冻结 spec，未改规范）。
+
+---
+
+### [2026-09-27 21:40] [language-architect] 解析嵌套深度上限裁定：`PARSE_DEPTH_LIMIT = 1000`（`SyntaxError`，不新增错误类）+ 解析栈契约
+
+- **来源**：team-lead 任务书「裁定『解析深度上限』并写进规范」（用户已批准"全修"）；该崩溃为 runtime-dev 在 panic 硬化排查中**新发现的第 3 类**（`docs/spec/` 规范空白）。
+- **背景（一手实测，本机 debug + release，2026-09-27）**：
+  - 解析在**主线程**运行（`src/cli.rs:354` `parser::parse`，`main` 线程），主线程栈 **`SizeOfStackReserve = 1 MiB`**（PE 头实测；debug / release 同）。
+  - 深嵌套源码 → `thread 'main' has overflowed its stack` → 进程 **abort**，退出码 **`-1073741571`**。**实测最小触发远低于此前记录的 2e5 层**：
+    | 构造 | debug 首个崩溃层数 | release 首个崩溃层数 |
+    |---|---|---|
+    | struct 字面量 `{"a":`（最坏） | **56** | 200 |
+    | 字符串插值 `"${` | 58 | — |
+    | 数组 `[` | 60 | — |
+    | lambda `fn(){` | 61 | — |
+    | 分组 `(` | **62** | **228** |
+    | `if(true){` | 178 | — |
+    | 一元 `-` | 521 | — |
+  - **每层解析嵌套最坏 ≈ 18.3 KiB**（debug；release ≈ 5.1 KiB）——每层穿约 11 个优先级函数帧。
+  - 现有 `semantics.md` §4.5.5 只规定**运行期**递归上限 10000（在 256 MiB 大栈线程 `EVAL_STACK_SIZE` 上），**解析期无任何上限** → 规范空白。
+- **决定**：
+  1. **上限值 = `PARSE_DEPTH_LIMIT = 1000`（独立常量，≠ 运行期 10000）**；度量 = **解析嵌套深度**（递归下降同时活跃的嵌套构造层数；**左结合链不计层**）。
+  2. **错误类 = 复用 `SyntaxError`**（加载 / 解析期），新增细分消息 **`嵌套深度超限（超过 1000 层）`**；实现侧 `SyntaxMsg::NestingTooDeep`（无字段，`SyntaxMsg` 17 → 18）。**不新增第 13 类**（仍 12 类 + 1 基类）。
+  3. **无 `Traceback` 头**（`SyntaxError` 属既有「2 类不带」之一）。
+  4. `span` = 第 1001 层嵌套的**开启记号首字符**（`(` / `[` / `{` / `if` / `while` / `for` / `fn` / `${`）。
+  5. **栈契约**：解析须在 **栈 ≥ 64 MiB** 的线程上运行；**推荐**整条 `load → lex → parse → eval(→ drop)` 放到既有 **256 MiB** `EVAL_STACK_SIZE` 线程。
+- **理由**：
+  1. **不能简单复用运行期 10000**：解析帧（debug 最坏 ~18.3 KiB/层）约为求值帧的 10–40 倍；支持 10000 层（4× 余量）需 ≈ **732 MiB** 栈 → 近 1 GiB 线程，浪费且脆弱（语法稍增重即失守）。
+  2. **1000 层足够宽松**：真实源码嵌套远不会到 1000；**CPython 自身把括号嵌套上限设在 200**，1000 已远超任何合法用途。
+  3. **复用 `SyntaxError` 而非 `RecursionError`**：解析期本就有 `SyntaxError` 承载细分子消息（17 条）的机制；若让 `RecursionError` 出现在解析期，会破坏「运行期 10 类都带 `Traceback` 头」的分类（同一类有时带、有时不带）。错误类总数维持 **12**。
+  4. **栈契约使上限可达且安全**：见下方量化。
+- **量化论证（"为何该值下不会栈溢出"）**：判据 `最坏每层帧 × 上限 ≤ 栈容量 / 安全系数`。实测 debug 最坏每层 ≤ 18.3 KiB，取保守 **20 KiB**：`1000 × 20 KiB = 19.5 MiB`。规定解析栈 **≥ 64 MiB** ⇒ **安全系数 ≥ 3.2**；复用 **256 MiB** ⇒ **≥ 13**。故在 **debug（帧最大）** 与 **release（每层 ~5.1 KiB）** 下均不溢出；且实测崩溃阈值（56–62 层 @ 1 MiB）反推每层 ~16–18 KiB，与本上限所依赖的帧大小一致、自洽。
+- **规范落地**：
+  - `syntax.md`：新增 **§3.8 解析嵌套深度上限（v1.1 补钉，规范性）**（定义 + `PARSE_DEPTH_LIMIT = 1000` + 正反例 + 栈契约）+ 内容映射 §3（§3.1–§3.5 → §3.1–§3.5、**§3.8**）。
+  - `semantics.md` §8.1：`SyntaxError` 触发条件追加「解析嵌套过深」+ 细分消息表新增行 `嵌套深度超限（超过 1000 层）` + 规范注。
+  - `interface-contract.md`：§10.8 新增 `SyntaxMsg::NestingTooDeep`；新增 **§10.9 解析与 AST 消费的栈安全**（R-S1 / R-S2 + 量化依据）；内容映射 §10（§10.1–§10.8 → §10.1–**§10.9**）。
+  - spec v1 冻结不变；本轮为 **v1.1 补钉**（先 ADR、后改文档）。
+- **影响面（只分析，未动其文件）**：
+  - **core-dev（唯一实现方）**：`parser.rs` 加深度计数器（进入任一递归下降子解析 +1，超 1000 → `syntax(NestingTooDeep, 开启记号 span)`）；`error.rs` 加 `SyntaxMsg::NestingTooDeep` + `message()` 分支；把 `load → lex → parse`（含 `Program` 析构）移入 ≥ 64 MiB（建议复用 256 MiB）线程。
+  - **test-engineer**：建议补黑盒负例（`(`×1001 → 断 `SyntaxError`，不逐字断消息）+ 正向 `(`×1000；`tests/coverage-matrix.md` 可能需加行）。
+  - **verifier**：按本 ADR 夹具复现：`(`×1001 / `{"a":`×1001 → exit **2** + `SyntaxError`（**非** `-1073741571`）；`(`×1000 → exit **0**（不受 `#42` 之外影响）。
+  - **现有 451 单测 / 87 黑盒**：**零影响**（检索 `src/**`、`tests/**` 无任何 > 1000 层嵌套夹具；深度阈值夹具均为临时构造）。
+  - **docs-writer / ai-dx-engineer**：`docs/guide/errors.md` L35（`SyntaxError` 细分表）、`docs/guide/ai/README.md` L56、`docs/guide/README.md` L121-127、skill `VERIFICATION.md` 等处可补 `嵌套深度超限` 一条（**本轮未改其文件**）。
+  - **REQUIREMENTS.md**：R-112（12 类）不受影响；R-401 记录 spec **字节数**（62,389 / 33,931 / 30,592）本轮后再次陈旧 → **建议 requirements-analyst 刷新**。
+- **关联发现（另立，未在本 ADR 裁定）**：**左结合链**（`1+1+…`、`a[0][0]…`）由迭代循环解析、**不**受 `PARSE_DEPTH_LIMIT` 约束，但产出**深左偏 AST**，其**递归 `Drop`** 在 1 MiB 主线程上约 **5000 项**即栈溢出（实测：N=4000 正常打印后 exit 0；N=5000 **打印完成后**崩溃）。仅解析上限不能消除此路径；建议**单列裁定**（AST 迭代析构 / 总 AST 深度上限 / 流水线同栈大栈）。
+- **是否需用户追认**：否（用户已批准"全修"；本轮为解析期崩溃的规范补钉，**不新增错误类**，新增 1 条用户可见消息模板 + 1 个解析上限常量）。**请知悉**：(a) 解析上限 **1000** 独立于运行期 **10000**；(b) 实测**真实最小触发约 56–62 层**（远低于此前记录的 2e5）；(c) **左结合链崩溃**为关联独立问题，建议随后单列裁定。
+### [2026-09-27 21:38] [team-lead] 临时工作区迁至项目内 `Temp/`（不再使用 C 盘 %TEMP%）
+
+- **来源**：用户指令「以后临时文件放D盘的项目下，用专门的Temp目录存放」。
+- **决定**：全体 agent 的**临时夹具 / 输出 / 中间产物**一律写入 **`<repo>/Temp/`**（项目内、D 盘）；**禁止**再向 C 盘 `%TEMP%` / `%TEMP%\opencode\` 写任何文件。`Temp/` 已加入 `.gitignore`（不入库、不污染历史）。
+- **理由**：① 更符合宪法「严禁在项目目录外创建/修改/删除任何文件」；② 集中一处便于**及时盘点与清理**（用户同日要求）；③ 不污染 C 盘与 git 历史。
+- **影响面**：
+  - **所有 agent 的任务书**须写明「临时文件放 `<repo>/Temp/`」；
+  - **team-lead** 每波任务收工后盘点 `Temp/`；一手证据**先复制进 `docs/reports/**` 再清**（不得删唯一副本）；
+  - `scripts/**` 中若硬编码 `%TEMP%` 的脚本需同步（由 release-manager/工具链负责人按需处理）。
+- **是否需用户追认**：否（用户直接指令）。
+
+### [2026-09-27 22:10] [core-dev] 落地「解析嵌套深度上限 + 流水线栈契约」；报告左结合长链残余（N=100000 仍崩）
+
+- **来源**：team-lead 任务书「实现架构师刚裁定的**解析嵌套深度上限**（收口第 3 类崩溃），并测量第 4 类（左结合长链递归 Drop）」；依据 `DECISIONS.md` [2026-09-27 21:40] [language-architect] ADR + `syntax.md` §3.8 + `semantics.md` §8.1 + `interface-contract.md` §10.8/§10.9（R-S1/R-S2）。
+- **落地决定（实现侧，`src/**`，**严格按 ADR，不自行发明规则**）**：
+  1. **`src/parser.rs`**：新增 `pub const PARSE_DEPTH_LIMIT: u32 = 1000;` + `Parser.depth` + `enter_nesting(opener)`/`leave_nesting()`；guard 落在 ADR §3.8 规则 1 列举的**嵌套构造入口**（分组 `(` / 调用实参 `(` / 下标 `[` / 数组 `[` / struct 字面量 `{` / 块 `{`（含 struct 体）/ 条件·可迭代表达式 `if`·`while`·`for` / 一元前缀 `-`·`!` / 插值 `${`）；**左结合链不计层**（迭代循环，不入 guard）。超限 → `syntax(SyntaxMsg::NestingTooDeep, opener)`，`span` = 该构造**自身开启记号**首字符。
+  2. **`src/error.rs`**：`SyntaxMsg::NestingTooDeep`（无字段，`SyntaxMsg` 17→**18**）+ `message()` 逐字符 `嵌套深度超限（超过 1000 层）`；**不改** `class_name()`（仍 `SyntaxError`；**12 类不变**；无 `E-xxx`）。
+  3. **`src/evaluator.rs`**：新增 **`pub fn on_eval_stack<T,F>(f)`**（在既有 256 MiB `EVAL_STACK_SIZE` 线程上运行闭包；经 `Transfer` 在 `join` 边界移交结果，故 `T` 可含 `Rc`；spawn 失败退化当前栈）+ **`pub fn eval_module_traced_on_thread(&Program)`**（当前线程求值体）；`eval_module_traced` 重构为 `on_eval_stack(|| eval_module_on_thread(program))`（行为等价，保 fallback）。
+  4. **`src/cli.rs`**：`eval_case = evaluator::on_eval_stack(|| eval_case_on_stack(path))`，体内改用 `eval_module_traced_on_thread` → `load → lex → parse → eval`（含 `Program` **析构**）整条流水线**同一大栈**（R-S2）。**未动 `src/main.rs`**；未改 lexer/ast/loader/builtins。
+  5. **单测**：`src/parser.rs` +9、`src/error.rs` +1、新增 `tests/unit/{main.rs,nesting_depth.rs}`（+8；Cargo 自动识别为 `unit` 目标，未改 `Cargo.toml`）。
+- **理由**：① 解析期本就有 `SyntaxError` 细分子消息机制，加 1 条变体即收口崩溃且**不新增错误类**；② ADR 量化论证（每层最坏 ~18.3 KiB × 1000 ≈ 18 MiB）要求解析栈 ≥64 MiB，复用求值同栈最省事且使深 AST 析构也在大栈；③ guard 仅落嵌套构造入口（非优先级层），保证 `(`×1000 恰为 1000、左结合链恒定低位。
+- **证据（逐字节 / 实跑）**：
+  - `(`×1000 → **exit 0**；`(`×1001 / `[`×1001 / `{"a":`×1001 / `fn(){`×1001 → **exit 2** + 末行 `SyntaxError: 嵌套深度超限（超过 1000 层）`（**非** `-1073741571`）；`--json` = `{"ok":false,"error":"SyntaxError","line":2,"col":1001}`（匿名 struct 为 **col 5001**）。
+  - `cargo build --all-targets` **0 warning / 0 error**；`cargo test` **474 passed / 0 failed / 0 ignored**（lib 378 + main 48 + cli 28 + test_runner 12 + unit 8）；`cargo run -q -- test` **87/87，exit 0**。
+  - 字节数：`parser.rs 222111`、`error.rs 42911`、`evaluator.rs 143643`、`cli.rs 41198`、`tests/unit/main.rs 445`、`tests/unit/nesting_depth.rs 3790`；`git diff --numstat`：`parser.rs +211/-16`、`error.rs +75/-4`、`evaluator.rs +253/-26`、`cli.rs +48/-9`（后三者另含 21:19–21:32 修复批次既有未提交改动）。
+- **残余报告（第 4 类，**未自行设计新规则**）**：左结合长链（`1+1+…`、`a[0][0]…`）产出深左偏 AST；**即使流水线已在 256 MiB 同栈，N=100000 仍栈溢出**（exit `-1073741571`；`let x=…; print(x)` 无输出即崩 → **崩在 eval 递归**，非仅 `Drop`）；N=5000/20000/30000/50000/70000/80000/90000 正常（`1+1+…` exit 0 / `a[0][0]…` exit 2 `TypeError`）。ADR 已标其为「关联残余、未裁定」→ **数据上报 team-lead**，请架构师**单列裁定**（候选：AST 迭代析构 / 表达式深度上限 / 令表达式递归也计入运行期上限）。
+- **影响面**：
+  - **verifier**：按本 ADR 夹具复现 `(`×1000 → exit 0；`(`×1001 / `{"a":`×1001 → exit **2** + `SyntaxError`（**非** `-1073741571`）；`--json` 的 `line/col`。
+  - **test-engineer**：可选补黑盒负例（`(`×1001 → `SyntaxError`，只断类）与正向 `(`×1000；`coverage-matrix.md` 视需加行。
+  - **runtime-dev**：`evaluator.rs` 新增 2 个 `pub fn`（`on_eval_stack` / `eval_module_traced_on_thread`），`eval_module_traced` 语义不变；请知悉勿删。
+  - **tooling-dev**：`cli.rs` `eval_case` 现走大栈线程（行为/退出码不变）；`src/main.rs` 未改。
+  - **language-architect**：左结合长链残余待单列裁定；`syntax.md` §3.8 已含正反例，与本实现一致。
+  - **docs-writer / ai-dx-engineer**：`SyntaxError` 细分表可补 `嵌套深度超限（超过 1000 层）`（本轮未改其文件）。
+- **是否需用户追认**：否（用户已批准"全修"；严格实现 architect 已裁定的 v1.1 补钉，未改规范）。**请知悉**：左结合长链 N=100000 的残余崩溃为**独立未决项**，需架构师另裁。
+
+### [2026-09-27 22:15] [language-architect] 第 4 类残余裁定：`AST_DEPTH_LIMIT = 10000`（AST 深度上限，`SyntaxError`，不新增错误类）+ 与解析嵌套「口径分离」（R-S3）
+
+- **来源**：team-lead 任务书「裁定第 4 类残余崩溃（深左偏 AST / 表达式递归深度）」——即本架构师 `[2026-09-27 21:40]` ADR「**关联发现（另立，未裁定）**」所标注、core-dev `[2026-09-27 22:10]` 以数据上报的残余项。用户已批准"全修"，故本轮补裁定。
+- **背景（一手实测，本机 debug 构建、256 MiB 大栈线程，2026-09-27）**：
+  - §3.8 的 `PARSE_DEPTH_LIMIT = 1000` 只约束**递归下降同时活跃层数**；**左结合链**（`1+1+…`、`a[0][0]…`、`f(a)(b)…`、`a.b.c…`、`x |> f |> g…`）由**迭代循环**解析、**不**计层，却产出**深左偏 AST**（`1+1+…` T 项 ⇒ AST 深度 = T）。
+  - 求值器（`src/evaluator.rs` `eval_expr` / `eval_expr_inner`）**递归**遍历左脊 ⇒ T 大即耗尽求值栈。实测：`1+1+…` **T = 91650 正常（exit 0）、T = 91700 崩溃**（exit `-1073741571`，**`print` 未执行 ⇒ 崩在求值递归**，非仅 `Drop`）；`a[0][0]…` 同区。
+  - 实测帧大小（256 MiB 栈、debug）：**解析嵌套 ≈ 18.3 KiB/层**（沿用 21:40 ADR）、**AST 求值递归 ≈ 2.93 KiB/层**（`256 MiB ÷ 91675`）、**AST 析构（Drop）≈ 0.27 KiB/层**（深链置于未执行分支：800000 项析构正常、1600000 项 abort）、**函数调用帧 ≈ 14.2 KiB/帧**（组合反推）。
+- **候选方案逐一论证（要求 1）**：
+  - **(a) 让表达式求值递归计入运行期上限（复用 `RecursionError` + 10000）**：**否决**。① 语义错位：把**非递归**的平凡表达式（`1+1+…`）判为"递归深度超限"，`RecursionError` 名不副实；② **不覆盖析构**：parser 迭代解析仍可产生任意深 AST，求值在 10000 层抛错后 `Drop` 仍递归全深 ⇒ 必须另配 (c)，**非充分**；③ 实现侵入大：`eval_expr` 每个递归点都要 `depth++/--`（求值热路径）；④ 行为从"静态可判定"退化为"运行期才知"。
+  - **(b) 新增 AST 深度上限（解析期，`SyntaxError`）**：**采纳（主方案）**。① 静态、确定、**求值前**即拒绝；② **一处机制同时保护求值递归与析构递归**（AST ≤ 10000 ⇒ 二者 ≤ 10000 层）；③ 复用解析期既有的 `SyntaxError` 细分子消息机制，**不新增错误类**；④ **纯 parser 侧改动，零求值器改动**。
+  - **(c) AST 迭代析构（实现层，覆盖 `Drop`）**：**不采纳为规范要求（列为可选加固）**。(b) 已使析构深度 ≤ 10000（≈2.7 MiB，≈95× 余量），迭代析构是**冗余**工作（YAGNI）；仅当日后**放宽** `AST_DEPTH_LIMIT` 时才需以它加固（已在 `interface-contract.md` §10.9 R-S3 写明该条件）。
+  - **(d) 组合方案**：**部分采纳**——(b) 为规范要求、(c) 为可选加固、(a) 否决。即实际落地 = **(b)（+(c) 可选）**，**非** (a)+(b)+(c)。
+- **决定**：
+  1. **新增 `AST_DEPTH_LIMIT = 10000`**（**独立**常量；数值与运行期 `RECURSION_LIMIT` 相同，但**度量不同**：AST 节点深度 vs 函数调用帧深度）。
+  2. **度量 = AST 节点深度**：`depth(n) = 1 + 其直接语法子节点深度的最大值`（无子节点者 = 1）；**程序的 AST 深度 = 顶层语句深度最大值**（空程序 = 0）。**括号分组透明**（`(((1)))` 深度 = 1）；**左结合链的 AST 深度 = 链长**。
+  3. **错误类 = 复用 `SyntaxError`**（解析期），新增细分消息 **`表达式嵌套过深（超过 10000 层）`**；实现侧 `SyntaxMsg::ExprTooDeep`（无字段，`SyntaxMsg` 18 → **19**）。**不新增第 13 类**（仍 12 类 + 1 基类），**不改 `--json` 的 12 个 `error` 取值**。
+  4. **无 `Traceback` 头**（`SyntaxError` 属既有「2 类不带」之一）。
+  5. **`span`** = 首次使 AST 深度超过上限的**节点首字符**。
+  6. **口径分离（回应任务书的"矛盾"）**：`PARSE_DEPTH_LIMIT` **不**改为"AST 深度"；两者**正交、分别设限**（`(((1)))`：解析嵌套大、AST 深度小；`1+1+…`：反是）。解析嵌套 **1000**（护 parser 栈）+ AST 深度 **10000**（护求值 / 析构栈）。
+- **理由**：
+  1. **口径必须分离、不可合并**：两度量保护**不同资源**、帧大小差 **~6 倍**（18.3 KiB vs 2.93 KiB），故上限各异（1000 vs 10000）；`(((1)))` 证明 §3.8 **不能**由 AST 上限替代，`1+1+…` 证明 AST 上限 **不能**由 §3.8 替代 —— **二者缺一不可**。
+  2. **复用 `SyntaxError` 而非 `RecursionError`**：解析期本就有 `SyntaxError` 细分子消息机制；若让 `RecursionError` 出现在解析期，会破坏「**运行期 10 类都带 `Traceback` 头**」的分类（同一类有时带、有时不带）。**该分类不受本轮影响**：本错误在**解析期**、**无头**，与 `CosmosAnswerError` / `SyntaxError` 同类。
+  3. **10000 的取值**：与运行期递归上限**同号**便于记忆与论证；对纯深链 **≈9×** 余量，对组合最坏 **≈1.5×**，对析构 **≈95×**；且 10000 层对任何手写 / 生成程序都远超实际需要。
+- **量化论证（要求 4；判据 `上限 × 每层帧 ≤ 栈容量 / 安全系数`，256 MiB 栈、debug）**：
+  | 路径 | 每层帧 | 上限 | 占用 | 安全系数 |
+  |---|---|---|---|---|
+  | 解析嵌套（R-S1，**未变**） | ≈18.3 KiB | 1000 | ≈17.9 MiB | **≥14×** |
+  | AST 求值递归（R-S3） | ≈2.93 KiB | 10000 | ≈28.6 MiB | **≈9×** |
+  | AST 析构（`Drop`） | ≈0.27 KiB | 10000 | ≈2.7 MiB | **≈95×** |
+  | 组合最坏（函数递归 + 深表达式） | 14.2 / 2.93 KiB | 10000 + 10000 | ≈167 MiB | **≈1.5×** |
+  - release 帧更小 ⇒ 余量更大。**结论**：`AST_DEPTH_LIMIT = 10000` 下，**纯深链（本次真实缺陷路径）余量 ≈9×**、组合最坏亦**不溢出**。
+- **规范落点（要求 5，逐处；本轮只改 `docs/spec/**` + 本文件）**：
+  - `syntax.md`：新增 **§3.9 表达式 / 语句结构深度上限（AST 深度，v1.1 补钉，规范性）**（度量定义 + `AST_DEPTH_LIMIT = 10000` + 与 §3.8 分工 + 检查要求 + 正反例）；内容映射 §3（`§3.1–§3.5、§3.8` → `§3.1–§3.5、§3.8、§3.9`）。（git：`+42/-2`，含 21:40 批次）
+  - `semantics.md`：§4.5.5 新增"表达式 / 语句结构深度**不进入**运行期计数、由解析期 `AST_DEPTH_LIMIT` 约束"一条；§8.1 `SyntaxError` 触发条件追加「AST / 结构嵌套过深」+ 细分消息表新增行 + 规范注。（git：`+17/-3`）
+  - `interface-contract.md`：§10.8 新增 `SyntaxMsg::ExprTooDeep`（18→19）；§10.9 新增 **要求 R-S3（AST 深度）** + 扩充量化依据（求值 / 析构 / 调用帧）+ 把原「关联残余（未裁定）」段替换为「**已裁定并收口**」+ 明确两度量口径不得合并。（git：`+25/-5`）
+  - spec v1 冻结不变；本轮为 **v1.1 补钉**（先 ADR、后改文档）。**spec 字节数（本轮后）**：`syntax.md 70043 B` / `semantics.md 37929 B` / `interface-contract.md 37050 B`。
+- **影响面（要求 6，只分析，未动其文件）**：
+  - **core-dev（唯一实现方，随后）**：`src/parser.rs` 增 `pub const AST_DEPTH_LIMIT: u32 = 10000` + 解析期深度检查（**自底向上累加**或**显式栈迭代遍历**，**不得以 AST 深度递归**）+ 超限抛 `syntax(SyntaxMsg::ExprTooDeep, 节点 span)`；`src/error.rs` 加 `SyntaxMsg::ExprTooDeep` + `message()` 分支（18→19，`class_name()` 仍 `SyntaxError`）。**零求值器改动**（`evaluator.rs` 不动）。
+  - **unit（当前 474，含 `tests/unit/nesting_depth.rs` 8 项）**：该文件 `left_assoc_chains_are_not_counted` 用 **5001** 项 `+` 链与 **1001** 项 `[0]` 链断言"可解析"——**均 < 10000，零影响**；其余无 >10000 深结构。**建议 core-dev 补**：常量断言、`1+1+…`（10000 项，表达式语句 → 深度 10001）→ `SyntaxError` + 逐字符消息、恰 9999 项 → 合法。
+  - **黑盒（当前 87，`tests/cases.json` + `tests/fixtures/`）**：无 >10000 深结构夹具（`deep_recursion.lfz` 为**函数**递归 → `RecursionError`，不在本条范围）⇒ **零失败**。建议 test-engineer（可选）补 1 负例（`1+1+…`×10001 → `{"error":"SyntaxError"}`，只断类）。
+  - **`tests/coverage-matrix.md`**：现无「解析嵌套」行；建议一并加「结构深度（§3.8 / §3.9）」行。
+  - **`docs/guide/**`**：`errors.md`（`SyntaxError` 细分表）、`README.md`（错误清单）、`ai/README.md`（R-404 硬性清单）可补 `表达式嵌套过深（超过 10000 层）`（**本轮未改其文件**）。
+  - **`.opencode/skills/lfz-programming/**`**：现无 `嵌套深度` 相关条目；建议补入错误表（**本轮未改**）。
+  - **`REQUIREMENTS.md`**：**R-112（12 类）不受影响**（不新增错误类）；**R-401 的 spec 字节数**（原记 62,389 / 33,931 / 30,592）本轮后再次陈旧 → 建议 requirements-analyst 按上列实测刷新。
+- **是否需用户追认**：否（用户已批准"全修"；本轮为解析期崩溃的规范补钉，**不新增错误类**，新增 **1 条**用户可见消息模板 + **1 个**解析上限常量）。**请知悉**：(a) 新上限 **10000** 与运行期递归上限同值但**度量不同**；(b) 原「关联残余」**已收口**，**无需** AST 迭代析构；(c) 同时**订正** 21:40 ADR 中"函数递归每帧 ≈26 KiB / 10000 层需 256 MiB"的**粗估**——实测函数帧 ≈**14.2 KiB**，组合最坏 ≈**167 MiB**。
+
+### [2026-09-27 22:40] [core-dev] 落地第 4 类残余裁定：`AST_DEPTH_LIMIT = 10000`（AST 深度上限，`SyntaxError`）+ 与解析嵌套口径分离（R-S3）
+
+- **来源**：team-lead 任务书「实现架构师刚裁定的 **`AST_DEPTH_LIMIT`（AST 深度上限）**——收口第 4 类残余崩溃（深左偏 AST）」；依据 `DECISIONS.md` [2026-09-27 22:15] [language-architect] ADR + `syntax.md` §3.9 + `semantics.md` §4.5.5 / §8.1 + `interface-contract.md` §10.8 / §10.9 R-S3。
+- **落地决定（实现侧，`src/**`，严格按 ADR，不自行发明规则）**：
+  1. **`src/parser.rs`**：新增 `pub const AST_DEPTH_LIMIT: u32 = 10000;` + 自由函数 `check_ast_depth(&Program)`（**显式栈迭代后序遍历**，帧 `{node, next_child, max_child}` 存**堆**，**绝不以 AST 深度递归**——R-S3 明文禁止）+ 借用节点枚举 `DepthNode`（`span()` + `child(i)->Option`，逐产生式列直接语法子节点）+ `parse()` 末尾调用。度量严格按 §3.9 规则 1：叶 = 1、`depth(n)=1+max(子)`、程序深度 = 顶层语句最大值（空 = 0）、**括号分组透明**、**左结合链深度 = 链长**；首個 `depth > 10000` 的节点（后序首次越限，链式构造取**链起点**）→ `syntax(SyntaxMsg::ExprTooDeep, node.span())`。
+  2. **`src/error.rs`**：`SyntaxMsg::ExprTooDeep`（无字段，`SyntaxMsg` 18→**19**）+ `message()` 逐字符 `表达式嵌套过深（超过 10000 层）`；**不改** `class_name()`（仍 `SyntaxError`；**12 类不变**）；`--json` 的 12 个 `error` 取值不变；无 `Traceback` 头。
+  3. **零求值器改动**：`src/evaluator.rs` **本轮未动**；未改 `src/ast.rs`/`src/cli.rs`/`src/builtins.rs`/`docs/spec/**`/`tests/lfz/**`/`tests/cases.json`。
+  4. **单测**：新增 `tests/unit/ast_depth.rs`（7 项）+ `tests/unit/main.rs` 注册 `mod ast_depth;`。
+- **理由**：① 口径**必须分离**——`PARSE_DEPTH_LIMIT=1000`（护 parser 栈，计递归下降同时活跃层）与 `AST_DEPTH_LIMIT=10000`（护求值 / 析构栈，计 AST 节点深度）**正交不可互推**（`(((1)))` 前者大后者小；`1+1+…` 反之），二者缺一不可；② 复用解析期既有 `SyntaxError` 细分子消息机制，**不新增错误类**（仍 12 类 + 基类）；③ 检查在**解析期、求值之前**，静态确定，且**一处机制同时护求值递归与析构递归**（AST ≤ 10000 ⇒ 二者 ≤ 10000），故 **AST 迭代析构非必需**。
+- **证据（逐字节 / 实跑，fresh `cargo clean -p lfz` 后重编译）**：
+  - `1+1+…` **N=9999 → exit 0**；**N=10000 → exit 2** + 末行 `SyntaxError: 表达式嵌套过深（超过 10000 层）`；**N=10001 → exit 2**（同）；**旧崩溃点 N=100000 → exit 2（不再 `-1073741571`）**；索引链 `a[0][0]…` 9998 → 过解析（后 `NameError`）、9999 → exit 2 + 同 AST 消息。
+  - `--json`（`add_10000`）：stdout 恰 **192 B 单行合法 JSON**，`"error":"SyntaxError"`、`"line":2,"col":1`（**12 取值不变**）。
+  - **回归复核**：`(`×1000 → exit 0；`(`×1001 → exit 2 + `嵌套深度超限（超过 1000 层）`（R-S1 保持，与 R-S3 口径分离）。
+  - `cargo build --all-targets` **0 warning / 0 error**；`cargo test` **482 passed / 0 failed / 0 ignored**（lib 379 + main 48 + cli 28 + test_runner 12 + unit 15；基线 474，+8）；`cargo run -q -- test` **87/87，exit 0**。
+  - 字节数：`parser.rs 232060`（+9949）、`error.rs 44725`（+1814）、`tests/unit/ast_depth.rs 4116`（新）、`tests/unit/main.rs 460`（+15）；`git diff --numstat`：`parser.rs +440/-17`（我本轮 ≈ +229 行，余为 22:10 上一任务既有改动）、`error.rs +117/-4`（我本轮 ≈ +42 行，余为 21:19 修复批次既有改动）。
+- **影响面（只分析，未动其文件）**：
+  - **verifier**：按 §3.9 / R-S3 夹具复现 N=9999 → exit 0、N=10000/10001 → exit **2** + `SyntaxError`（**非** `-1073741571`）；`(`×1000/1001 回归；`--json` 的 `error/line/col`。
+  - **runtime-dev**：`evaluator.rs` **本轮零改动**（`on_eval_stack` / `eval_module_traced_on_thread` 保持）；第 4 类残余经解析期收口后，求值 / 析构递归深度 ≤ 10000，**不再**依赖同栈大栈兜底。
+  - **test-engineer**：可选补黑盒负例（`1+1+…`×10001 → `{"error":"SyntaxError"}`，只断类）；`tests/coverage-matrix.md` 视需加「结构深度（§3.8 / §3.9）」行。
+  - **docs-writer / ai-dx-engineer**：`errors.md`（`SyntaxError` 细分表）、`README.md`、`ai/README.md`、skill 可补 `表达式嵌套过深（超过 10000 层）`（**本轮未改其文件**）。
+  - **REQUIREMENTS.md**：R-112（12 类）不受影响；R-401 的 spec 字节数本轮后再次陈旧 → 建议 requirements-analyst 刷新。
+- **是否需用户追认**：否（用户已批准"全修"；严格实现 architect 已裁定的 v1.1 补钉，**不新增错误类**，新增 **1 条**用户可见消息模板 + **1 个**独立常量）。**请知悉**：(a) `AST_DEPTH_LIMIT = 10000` 与运行期 `RECURSION_LIMIT` **同值但度量不同**；(b) 与 `PARSE_DEPTH_LIMIT = 1000` **口径分离、不可合并**；(c) 第 4 类残余（深左偏 AST）**已收口**，**无需** AST 迭代析构。
+
