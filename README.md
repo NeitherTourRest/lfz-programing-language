@@ -14,7 +14,7 @@ LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、�
 | P2 | 语言设计（`docs/spec/` v1 三件套冻结，D-016） | ✅ 已完成 · 里程碑 **`v0.2.0`** |
 | P3 | 解释器核心（loader / lexer / ast / parser / evaluator / builtins(54) / CLI） | ✅ 已完成 |
 | P4 | 工具链（CLI、一键测试 runner、打包脚本） | ✅ 已完成 |
-| P5 | 黑盒测试集（25 正向 + 56 负例，覆盖矩阵） | ✅ 已完成 · 里程碑 **`v0.3-tested`** |
+| P5 | 黑盒测试集（26 正向 + 58 负例 + 1 豁免，共 85 用例；覆盖矩阵） | ✅ 已完成 · 里程碑 **`v0.3-tested`** |
 | P6 | 性能基准（LFZ vs Python，预热 + 多轮 + 中位数） | ✅ 已完成 |
 | P7 | 文档（人类手册 5 篇 + AI 指南 / skill） | ✅ 已完成 |
 | P8 | 应用（`app/sortviz.lfz` 341 行，5 算法） | ✅ 已完成 · 里程碑 **`v0.4-app`** |
@@ -27,8 +27,8 @@ LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、�
 | 项 | 命令 | 实测结果 |
 | -- | -- | -- |
 | 构建 | `cargo build` | **0 warning / 0 error**（零第三方依赖，仅 std） |
-| 单元测试 | `cargo test` | **431 passed / 0 failed / 0 ignored**（lib 361 + main 42 + cli 16 + test_runner 12） |
-| 黑盒测试 | `cargo run -- test` | **82 个用例，通过 82，失败 0，错误 0**（exit 0，一个命令跑全部） |
+| 单元测试 | `cargo test` | **432 passed / 0 failed / 0 ignored**（lib 362 + main 42 + cli 16 + test_runner 12） |
+| 黑盒测试 | `cargo run -- test` | **85 个用例，通过 85，失败 0，错误 0**（exit 0，一个命令跑全部） |
 | 端到端 | `cargo run -- run examples/hello.lfz` | `Hello, LFZ!`（exit 0） |
 | 应用 | `cargo run -- run app/sortviz.lfz` | exit 0；**5 算法**全部 `[校验通过]`；**341 行** |
 
@@ -63,8 +63,9 @@ LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、�
 | `v0.2.0` | P2/P3 | 语言设计冻结 + 解释器核心实现 |
 | `v0.3-tested` | P5 | 黑盒测试集完成（54 内置覆盖 + 覆盖矩阵） |
 | `v0.4-app` | P8 | 排序算法可视化应用（341 行，5 算法）+ 开发记录 |
+| `v1.0-final` | P9/P10 | 最终交付（LFZ v1）：规范冻结 + 解释器（432 单测全绿）+ 黑盒集（85 用例全绿）+ 性能报告 + 人/AI 指南 + 341 行排序可视化应用 + Git 历史 + 答辩 PPT |
 
-> `v1.0-final` 将在 verifier 对 P9 遗留项复验 PASS 后由 team-lead 下令打标。
+> **最终发布**：本提交打标 `v1.0-final`（verifier 对 P9 遗留项复验 rev.2 PASS，`bug-20260927-01` 已闭合）。
 
 ## 团队说明
 本项目由 14 名 AI 开发团队运作。团队宪法见 `AGENTS.md`；团队共享记忆（组织架构、看板、需求、决策、状态）见 `.opencode/team/`。任务入口：`task-info.md`（原始要求）、`.opencode/team/REQUIREMENTS.md`（需求矩阵）、`.opencode/team/PROJECT_STATE.md`（全局状态）。
@@ -83,10 +84,10 @@ cargo build
 cargo run -- run examples/hello.lfz
 # 输出: Hello, LFZ!
 
-# 运行单元测试（431 passed）
+# 运行单元测试（432 passed）
 cargo test
 
-# 运行黑盒测试集（一个命令跑全部，82 用例）
+# 运行黑盒测试集（一个命令跑全部，85 用例）
 cargo run -- test
 
 # 运行示例应用（排序算法可视化）

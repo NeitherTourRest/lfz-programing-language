@@ -1,5 +1,23 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 14:10] ✅ 最终发布收口：测试/P9 两个原子提交 + README/版本对齐 + `v1.0-final` 附注标签 + 推送
+- 来源: team-lead 任务书（轻量启动；最终发布收口——提交等价路径用例与 P9 rev.2 报告；对齐 README 数字与 `Cargo.toml` 版本；打 `v1.0-final` 附注标签；push。**三个原子提交**。禁区：禁 force-push、**只打 `v1.0-final` 一个标签**、不改 `docs/spec/**`·`src/**`（`Cargo.toml` 的 `version` 字段是唯一授权代码侧改动）、不提交 `target/`·密钥·临时文件）
+- 完成:
+  - **入清单门禁（通过，未触发停止）**：`git status --short` 实测与任务书背景**逐字一致**（10 ` M` + 3 `??` = 13 项：`DECISIONS.md`、test-engineer/verifier 各 `{STATUS,JOURNAL}`、`P9-verification.md`、`tests/{REPORT.md,cases.json,coverage-matrix.md,lfz/test_structs.lfz}`；`?? tests/fixtures/field_{bracket,dot}_missing.lfz`、`?? tests/lfz/test_equivalence_paths.lfz`），**无清单外、无缺失**。
+  - **基线复跑（与任务书权威数字全部一致，无停止）**：`cargo build` → 0 warning；`cargo test` → **362+42+16+12 = 432 passed / 0 failed / 0 ignored**；`cargo run --quiet -- test` → **85 用例 / 85 通过 / 0 失败 / 0 错误，exit 0**；`app/sortviz.lfz` **LF=341 行**（PS5.1 `Get-Content .Count`=327、`Measure-Object -Line`=302 均误读，弃用；以 LF 字节计 341 为准）；tags = `v0.1.0`/`v0.2.0`/`v0.3-tested`/`v0.4-app`；`Cargo.toml` 原 `version="0.1.0"`。
+  - **提交 1（=`7787da7`）**：`git add tests .opencode/team/agents/test-engineer/STATUS.md .opencode/team/agents/test-engineer/JOURNAL.md`（显式；9 文件 = 6 M + 3 A）→ `test(p5): cover equivalence paths (s.k === s["k"])` + 任务书 body 逐字。**注意**：`-m` 直传被 PS5.1 原生参数按 `"` 拆词（`pathspec 'blind'`），改用 `git commit -F <UTF-8 文件>` 解决。
+  - **提交 2（=`34de77f`）**：`git add docs/reports/P9-verification.md .opencode/team/agents/verifier/{STATUS,JOURNAL}.md .opencode/team/DECISIONS.md`（4 文件）→ `docs(p9): re-verification rev.2 (bug-20260927-01 closed)`。
+  - **README 对齐（我是唯一写者）**：L30 `431/361`→`432/362`；L31 黑盒 `82`→`85`；L86 `431`→`432`；L89 `82 用例`→`85 用例`；**P5 行** `25 正向 + 56 负例`→`26 正向 + 58 负例 + 1 豁免，共 85 用例`（实测：26 正例 `.lfz` + 58 负例 fixture + 1 豁免 `plain_ok.txt`）；「版本里程碑」新增 `v1.0-final` 行，并把「将在…后打标」改为「本提交打标…rev.2 PASS」。`app/sortviz.lfz` 341 行原已正确。
+  - **Cargo.toml**：`version = "0.1.0"` → `"1.0.0"`（唯一授权代码侧改动）；`cargo build` 自动更新 `Cargo.lock`（`name="lfz"` → `version="1.0.0"`）。
+  - **版本变更后复跑（全绿，版本不得影响结果）**：`cargo clean -p lfz; cargo build` → 0 warning；`cargo test` → **432 passed**（362+42+16+12）；`cargo run --quiet -- test` → **85/85 exit 0**。
+  - **提交 3**：`git add README.md Cargo.toml Cargo.lock .opencode/team/agents/release-manager/{STATUS,JOURNAL}.md` → `docs(release): align README counts and bump version to 1.0.0`。
+  - **打标签**：`git tag -a v1.0-final -m "v1.0-final — ..."`（任务书指定附注信息逐字）→ `git push` → `git push origin v1.0-final`。
+- 产出:
+  - 三个新提交（短哈希见汇报）+ 标签 `v1.0-final`；`git status --short` 空；`git log --oneline -4`；`git tag -n`（5 个，含 `v1.0-final`）；`git ls-remote --tags origin` 含 `refs/tags/v1.0-final`；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: 见上复跑数字与 README 修改行（L30/L31/L86/L89 + 版本里程碑）。
+- 决策: 无新增 release-manager ADR（本任务为发布收口与簿记；`DECISIONS.md` 本轮条目由 verifier 追加，我仅代为入库）。
+- 下一步: 交付完成；如需，配合 team-lead 做最终 standup / 答辩。
+- 阻塞: 无（owner 偏差仍为历史遗留待确认，不影响本轮）。
 ## [2026-09-27 13:05] ✅ 提交并推送 `bug-20260927-01` 修复（`s["k"]()` 绑定 `self`）
 - 来源: team-lead 任务书（轻量启动；提交 `bug-20260927-01` 修复并 push。要求：`git add src/evaluator.rs .opencode/team/agents/runtime-dev/{STATUS,JOURNAL}.md`（显式路径），信息 `fix: bind self for methods retrieved via ["k"] (spec s.k === s["k"])` + 指定 body；`git push`；本角色收工文档并入同一提交。禁区：禁 force-push、**不打 tag**（`v1.0-final` 待 verifier 复验 PASS 后由 team-lead 下令）、不改 `docs/spec/**`·README、不提交 `target/`·密钥·临时文件）
 - 完成:
