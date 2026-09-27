@@ -1,29 +1,31 @@
 # verifier — 工作状态
-> 最后更新: 2026-09-24 by verifier
+> 最后更新: 2026-09-27 by verifier
 ## 当前状态
-**P3.11 终验（rev.3）已完成 → 结论 `PASS（可打 v0.2.0）`。** 被验状态 = **git HEAD `c6638cc`**（`fix(p3): enforce let immutability (ImmutableRebind)`），工作树 **clean**。10 项待验缺陷**全部闭环**，`cargo build` 0 warning、`cargo test` **377 passed / 0 failed / 0 ignored**、**无新增回归**。报告: `docs/reports/P3-verification.md` §8「终验（rev.3）」。
+**P9 交付物级独立验收已完成 → 结论 `CONCERNS（有条件交付）`。** 被验状态 = **git HEAD `c224adb`**（`feat(p8): LFZ sorting-visualizer app`）。8 项交付物**实体齐备**、5 个评分项硬性条件**全部经实跑证据覆盖**；无阻塞项，但 2 项非阻塞事项需闭合。
 ## 进行中
-- （无）—— P3.11 终验已出结论，待 team-lead 决策发 `v0.2.0`。
+- （无）—— P9 报告已出结论；等 team-lead 决策与任务指派。
 ## 已交付（本次）
-- `docs/reports/P3-verification.md`（**追加 §8 终验（rev.3）**：逐项复现 10 项 + 两命令 + 夹具复跑 + 回归 + 更新回归表 + 终验结论行）
-- `docs/reports/fixtures-p3-rev3/spec_9_4_current.lfz`（**当前** §9.4 样例逐字，实测 exit 0 且输出与「预期输出」逐行一致）
-- `docs/reports/fixtures-p3-rev3/rev3-evidence.txt`（本轮合并原始证据，14120 字节）
-## 终验结论要点（对 HEAD `c6638cc`，clean）
-- ✅ **10/10 全部闭环**：原 3×🔴（多行块/插值 `format_spec`/`if` 表达式）、原 4×🟡（span/管道消息/**bug-06 `let` 重绑定**/bug-07 A9）、1×🟢（bug-08 `.self`，规范侧闭合）、1 规范侧（spec-01 §9.4 `;`）。
-- ✅ **bug-06 首次落地并复验通过**：`let a = 1 / a = 2` → **exit 2** + `TypeError: 不能重新赋值 let 变量 'a'；let 只锁重绑定，不锁内容`；`var` 重绑定仍 **exit 0/`2`**；`cargo test` **ignored = 0**（上轮 1）。
-- ✅ **bug-07 A9 落地**：`let s = { "k": 1 }`→`{k: 1}`；`{ let x=1 }` / `{ ;; }` → `SyntaxError`（与 §3.3 正/反例逐条一致）。
-- ✅ **bug-09 折叠落地**：深递归 stderr **123 行**、帧 40、含 `... 省略 9961 帧 ...`、末行 `RecursionError…`、exit 2（rev.1 = 30005 行）。
-- ✅ **spec-01 已修正**：§9.4 现以换行分隔、字段 `me`；逐字复跑 exit 0，输出与预期逐行一致。
-- ✅ **基线**：`cargo build` 0 warning；`cargo test` 库 **361/0 ignored** + bin **9** + cli **7** = 377 passed。
-- ℹ️ **过程记录（非缺陷）**：验证期间 release-manager 并发提交（HEAD 由 `833901d` → `c6638cc`）；发版请以 clean 的 `c6638cc` 为准。`fixtures-p3/spec_9_4_refs.lfz`（修订前 §9.4 的历史夹具）失败属夹具遗留且已说明（现行样例由 `spec_9_4_current.lfz` 验证通过）。
+- `docs/reports/P9-verification.md`（30057 bytes，含 §1 总表 / §2 逐项 / §3 关键命令原文 / §4 评分矩阵 / §5 缺陷单 / §6 回归 / §7 结论 / §8 方法学）
+## 本轮关键实测证据（对 HEAD `c224adb`）
+- ✅ `cargo clean; cargo build` → **0 warning**（3.84s）；`cargo test` → **431 passed / 0 failed / 0 ignored**（361+42+16+12）。
+- ✅ `cargo run -q -- test` → **82 PASS / 0 FAIL / 0 ERROR，exit 0**；`hello`→`Hello, LFZ!`；5 特色/容器夹具全 exit 0。
+- ✅ `cargo run -q -- run app/sortviz.lfz` → **exit 0**、5 算法全部 `[校验通过]`；`app/sortviz.lfz` **341 行**（LF 计数）、首行 `#42`。
+- ✅ 缺 `#42` 负例 → exit 2 + `CosmosAnswerError: 你忘记了宇宙的答案`（**UTF-8 字节 hex 逐字符匹配**）；`--json`（1/0）→ stdout **单行 JSON**、exit 2；文件不存在/空文件/语法错误均报错不崩溃。
+- ✅ `docs/spec/` 三件套字节 62389/33931/30592（与 R-401 声明一致）；AI 指南 3 示例实测逐行复现；基准 harness 复跑 **All outputs matched: True**。
+- ✅ Git：**65 commits**、4 标签、`origin/main`=`c224adb`=本地 HEAD。
+## 本轮发现（缺陷/观察）
+- 🔴 **bug-20260927-01（中，复现确认）**：`p["norm2"]()` 取到方法值后调用**未绑定 self** → `NameError`；`p.norm2()` 正常。与 `semantics.md` §4.5(L51) 明文 `s.k ≡ s["k"]`（…并调用，`self` 绑定）冲突。**owner= runtime-dev（core-dev 会签）**。
+- 🟡 **bug-20260927-02（低）**：`cargo run -- test --json` stdout **25 行**（`;;` dump 未重定向），JSON 在**最后一行**可解析；`tests/REPORT.md` §3.1 已自认为已知工具链间隙。**owner= tooling-dev**。
+- 🟡 **obs-01**：根 `README.md` 陈旧（377 tests / 「P4 下一步」），发版前须更新。owner= release-manager。
+- 🟡 **obs-02**：`docs/slides/LFZ-defense.pptx`（14 页，**核验期间并发产出**）**未纳入 Git**（`??`）。owner= release-manager / ppt-presenter。
+- ⚪ obs-03 Cargo.toml 版本仍 0.1.0；obs-04 覆盖矩阵自报 547 assert vs 脚本计数 545；obs-05 语言命名合规需人工确认。
 ## 阻塞 / 需要支持
-- 无。**10 项全闭环、无阻塞项**；`v0.2.0` 可打（打 clean HEAD `c6638cc`）。
+- 无阻塞。**结论 CONCERNS**：修 bug-01 + 提交 PPT + 刷 README 后可升级为 **PASS（可打 v1.0-final）**，届时由我复验。
 ## 下一步计划
-- P4/P5 起对工具链（`lfz test` 一键 runner、`--json`、打包）与黑盒测试集（覆盖矩阵 vs spec 特性清单）做阶段性抽查验收。
-- 若后续任何 `src/**` 再改动，按「复现原用例 + 反证新根因」复验并更新报告回归表。
+- 收到「bug-20260927-01 已修复」「PPT 已提交」消息后：**只复现原用例**（§5 最小步骤）判定「已修复/仍失败」，并在报告 §6 更新回归表。
+- 打 `v1.0-final` 前，按 P9 报告 §0 的「发版基线」复核 HEAD 与工作树 clean。
 ## 关键经验（写给未来的自己）
-- **验证期间仓库可能被并发写入**：本轮开工 HEAD=`833901d`（工作树含未提交的 bug-06 接线），验证中途 release-manager 提交为 `c6638cc`。**必须两次核 HEAD/status**，并在报告写明「最终基线」与「发版请打哪个提交」——否则「工作树已修、提交未含」会被漏判。
-- **"已修复"复验要能区分合规面**：bug-06 证据 = **退出码 2 + 逐字符消息 + ignored 计数 0**；bug-09 证据 = **行数（123）+ 省略行 + 末行**；数字是最硬的证据。
-- **规范/夹具/实现三分归因**：`spec_9_4_refs.lfz` 失败是**历史夹具**（复制了修订前 §9.4），不是实现缺陷；正解是另建「当前 spec 逐字」夹具（`spec_9_4_current.lfz`）反证实现正确。
-- **高风险修复面必须查回归**：bug-07 改 parser、bug-06 改捕获变量类型，均可能波及 `if/while/for`/闭包/`;;`；本轮 `fixtures-p3 01–08` + `spec_9_4_current` 全绿方可判无回归。
-- Windows 控制台按本地代码页重编码中文：**判断中文消息一律 UTF-8 字节解码**（`[Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes())`），勿信控制台直显。
+- **交付物目录可能在核验期间并发变化**：本轮开工时 `docs/slides/` 不存在，核验中途出现 14 页 PPT（未提交）。**必须两次核 HEAD/status，并在报告写明核验结束时刻的状态**——否则会把「刚产出、未入库」误判为「未达」或「已交付」。
+- **跑会写文件的工具会污染工作树**：`benchmarks/run_all.py` 会覆写 `benchmarks/results/raw.json`；本轮我复跑后出现 `M`，**已 `git checkout -- ` 还原**。验证前先预判工具的写副作用。
+- **中文/行数一律以字节为准**：Windows 控制台按本地代码页重编码中文；`Get-Content | Measure-Object -Line` 会把 341 行报成 302/327。**中文消息用 UTF-8 字节解码、行数用 LF 字节计数**。
+- **规范已写≠实现已达**：bug-01 的判据来自 `semantics.md` L51 明文，故「黑盒用例未断言」不等于「无缺陷」——要回 spec 找规范性依据。

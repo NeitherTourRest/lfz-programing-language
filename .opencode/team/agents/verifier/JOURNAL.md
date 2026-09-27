@@ -1,5 +1,18 @@
 # verifier — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27] P9 交付物级独立验收（模拟助教）—— 8 项交付物逐项核验（CONCERNS）
+- 来源: 任务书 P9（team-lead 调度）；被验状态 = **git HEAD `c224adb`**（`feat(p8): LFZ sorting-visualizer app`）。
+- **并发写入记录**: 开工时 `docs/slides/` **不存在**；核验中途出现 `docs/slides/LFZ-defense.pptx`（84 152 bytes，14 页，**未提交 `??`**）；同时 `ppt-presenter` 的 STATUS/JOURNAL 被并发修改。HEAD 全程未漂移 = `c224adb`。另：我复跑基准覆写了 `benchmarks/results/raw.json`，**已 `git checkout` 还原**，工作树恢复 clean。
+- 完成（**只验证不修复**，全部走真实 CLI）:
+  - **8 项交付物**: ①`docs/spec/` 三件套字节 62389/33931/30592=声明值、含 EBNF，**达标**；②`src/` clean 重建 **0 warning**、`cargo test` **431 passed/0 failed/0 ignored**，**达标**；③`tests/` `cargo run --quiet -- test` → **82/82 exit 0**、覆盖矩阵每特性≥3，**达标**；④`benchmarks/`+`performance.md` 四要素齐、预热+多轮+中位数、复跑 **All outputs matched: True**，**达标**；⑤`docs/guide/`(5 篇)+skill(含 `#42`×21、12 类名、无 `E-xxx`)、3 示例逐行复现，**达标**；⑥`app/sortviz.lfz` **341 行**/首行 `#42`/5 算法/`cargo run -- run` **exit 0**、DEV_RECORD 6 轮迭代，**达标**；⑦Git **65 commits**/4 标签/`origin/main`=`c224adb`，**达标**；⑧`docs/slides/LFZ-defense.pptx` **14 页可解析但未入库**，**部分**。
+  - **关键命令原文**: hello→`Hello, LFZ!`；缺 `#42`→exit 2+`CosmosAnswerError: 你忘记了宇宙的答案`（UTF-8 字节 hex 逐字符匹配）；`--json`(1/0)→stdout **单行 JSON**+exit 2；文件不存在/空文件/语法错误均报错不崩溃。
+  - **评分矩阵（20/20/10/20/30）**: 5 项硬性条件**均被实跑证据覆盖**；评分项 1 有 1 处「规范已写、实现未达」中等缺陷。
+- 产出: `docs/reports/P9-verification.md`（§1 总表/§2 逐项/§3 命令原文/§4 评分矩阵/§5 缺陷单/§6 回归/§7 结论/§8 方法学）。
+- 决策: **【验收结论】CONCERNS（有条件交付）**——8 项实体齐备、无阻塞；`CONCERNS` 源自：①**bug-20260927-01**（中，`p["method"]()` 未绑定 self，violates `semantics.md` L51 `s.k ≡ s["k"]`）；②PPT 未入库；③`test --json` 非单行（低，已自认）；④README 陈旧。**不建议直接打 v1.0-final**。
+- **新发现（缺陷，本角色不修）**: **bug-20260927-01**（中，owner= runtime-dev）；**bug-20260927-02** `test --json` stdout 25 行、JSON 在末行（低，owner= tooling-dev）。
+- 下一步: 等 team-lead 转交缺陷/bug 与 PPT 入库；修复后我复现原用例并把 §6 回归表置为「已修复」。
+- 阻塞: 无。
+
 ## [2026-09-24] P3.11 终验（rev.3）—— 10 项缺陷最终状态独立核验（PASS）
 - 来源: 任务书 P3.11 终验（rev.3）（team-lead 调度）；被验状态 = **git HEAD `c6638cc`**（`fix(p3): enforce let immutability`），工作树 **clean**。
 - **并发写入记录**: 开工时 HEAD=`833901d` 且工作树含**未提交**的 bug-06 接线（`src/evaluator.rs`/`src/value.rs`）；验证中途 release-manager 提交为 `c6638cc`，随后 clean。两次 build/test（提交前后同内容）结果一致。最终结论对 `c6638cc` 负责；报告已注明「发版请打 clean HEAD `c6638cc`」。
