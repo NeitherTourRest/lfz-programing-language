@@ -1,5 +1,17 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 13:04] ✅ P4.4 收口：两个原子提交（代码与脚本 / README）+ 推送
+- 来源: team-lead 任务书（轻量启动；提交 P4.4「裸文件调用 + release 优化 + 打包/安装脚本」；刷新 README；push。**两个原子提交**。禁区：禁 force-push、**不打 tag**（`v1.1.0` 由 team-lead 决定）、不提交 `dist/`·`target/`·密钥·临时文件、不改 `src/**`（清单外）·`docs/spec/**`·`docs/guide/**`）
+- 完成:
+  - **入清单门禁（通过）**：`git status --short` = 6 ` M`（`DECISIONS.md`、tooling-dev `{STATUS,JOURNAL}`、`Cargo.toml`、`src/cli.rs`、`tests/cli.rs`）+ 2 `??`（`scripts/build-release.ps1`、`scripts/install-lfz.ps1`）。清单内 `src/main.rs`·`Cargo.lock` **无改动** → `git add` 空操作（已如实报告）；`DECISIONS.md` 属清单外，保持未入库。
+  - **提交 1（=`fb0636f`）**：`git add src/cli.rs src/main.rs Cargo.toml Cargo.lock tests/cli.rs scripts/build-release.ps1 scripts/install-lfz.ps1 .opencode/team/agents/tooling-dev/STATUS.md .opencode/team/agents/tooling-dev/JOURNAL.md`（显式；7 文件 = 5 M + 2 A）→ `feat(p4): bare-file invocation, release profile, packaging and installer scripts` + 任务书 body（`%LOCALAPPDATA%\Programs\lfz` 按 Windows 路径语义渲染为单反斜杠）。
+  - **README 刷新（我是唯一写者）**：`cargo test` `432`→`445`（`lib 362 + main 47 + cli 24 + test_runner 12`）；`v1.0-final` 行 `432 单测全绿`→`445`；快速开始 `432 passed`→`445`，并新增裸文件调用 `lfz <file>`、`dist\lfz.exe` 入 PATH 后 `lfz Hello.lfz`、`scripts\build-release.ps1`/`scripts\install-lfz.ps1` 说明。其余行未动；`85 用例` 原已正确。
+  - **提交 2**：`git add README.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md` → `docs(release): document 'lfz <file>' and refresh test counts (445)`。
+  - `git push`（非 force）。
+- 产出: 两个新提交（短哈希见汇报）；`git status --short` 空；`git log --oneline -3`；`git ls-remote origin refs/heads/main` = 本地 HEAD；`README.md` diff（3 处数字 + 1 处用法块）。
+- 决策: 无新增 release-manager ADR（本任务为发布簿记）。
+- 下一步: 待 team-lead 决定是否打 `v1.1.0`。
+- 阻塞: 无。
 ## [2026-09-27 14:10] ✅ 最终发布收口：测试/P9 两个原子提交 + README/版本对齐 + `v1.0-final` 附注标签 + 推送
 - 来源: team-lead 任务书（轻量启动；最终发布收口——提交等价路径用例与 P9 rev.2 报告；对齐 README 数字与 `Cargo.toml` 版本；打 `v1.0-final` 附注标签；push。**三个原子提交**。禁区：禁 force-push、**只打 `v1.0-final` 一个标签**、不改 `docs/spec/**`·`src/**`（`Cargo.toml` 的 `version` 字段是唯一授权代码侧改动）、不提交 `target/`·密钥·临时文件）
 - 完成:

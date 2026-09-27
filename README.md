@@ -27,7 +27,7 @@ LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、�
 | 项 | 命令 | 实测结果 |
 | -- | -- | -- |
 | 构建 | `cargo build` | **0 warning / 0 error**（零第三方依赖，仅 std） |
-| 单元测试 | `cargo test` | **432 passed / 0 failed / 0 ignored**（lib 362 + main 42 + cli 16 + test_runner 12） |
+| 单元测试 | `cargo test` | **445 passed / 0 failed / 0 ignored**（lib 362 + main 47 + cli 24 + test_runner 12） |
 | 黑盒测试 | `cargo run -- test` | **85 个用例，通过 85，失败 0，错误 0**（exit 0，一个命令跑全部） |
 | 端到端 | `cargo run -- run examples/hello.lfz` | `Hello, LFZ!`（exit 0） |
 | 应用 | `cargo run -- run app/sortviz.lfz` | exit 0；**5 算法**全部 `[校验通过]`；**341 行** |
@@ -63,7 +63,7 @@ LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、�
 | `v0.2.0` | P2/P3 | 语言设计冻结 + 解释器核心实现 |
 | `v0.3-tested` | P5 | 黑盒测试集完成（54 内置覆盖 + 覆盖矩阵） |
 | `v0.4-app` | P8 | 排序算法可视化应用（341 行，5 算法）+ 开发记录 |
-| `v1.0-final` | P9/P10 | 最终交付（LFZ v1）：规范冻结 + 解释器（432 单测全绿）+ 黑盒集（85 用例全绿）+ 性能报告 + 人/AI 指南 + 341 行排序可视化应用 + Git 历史 + 答辩 PPT |
+| `v1.0-final` | P9/P10 | 最终交付（LFZ v1）：规范冻结 + 解释器（445 单测全绿）+ 黑盒集（85 用例全绿）+ 性能报告 + 人/AI 指南 + 341 行排序可视化应用 + Git 历史 + 答辩 PPT |
 
 > **最终发布**：本提交打标 `v1.0-final`（verifier 对 P9 遗留项复验 rev.2 PASS，`bug-20260927-01` 已闭合）。
 
@@ -84,7 +84,21 @@ cargo build
 cargo run -- run examples/hello.lfz
 # 输出: Hello, LFZ!
 
-# 运行单元测试（432 passed）
+# 裸文件调用：lfz <file> 等价于 lfz run <file>（run 子命令保留）
+cargo run -- examples/hello.lfz
+# 输出: Hello, LFZ!
+
+# 把 dist\lfz.exe 加进 PATH 后，可直接按文件名调用
+lfz Hello.lfz
+# 输出: Hello, LFZ!
+
+# 构建发布版（scripts\build-release.ps1 → dist\lfz.exe ~688 KB，自包含，含冒烟测试）
+powershell -File scripts\build-release.ps1
+
+# 安装到用户 PATH（scripts\install-lfz.ps1 默认 dry-run，带 PATH 备份与 -Uninstall）
+powershell -File scripts\install-lfz.ps1
+
+# 运行单元测试（445 passed）
 cargo test
 
 # 运行黑盒测试集（一个命令跑全部，85 用例）

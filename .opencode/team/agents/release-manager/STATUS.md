@@ -1,27 +1,24 @@
 # release-manager — 工作状态
 > 最后更新: 2026-09-27 by release-manager
 ## 当前状态
-**✅ 完成 —— 最终发布收口：三个原子提交 + `v1.0-final` 附注标签 + 推送。**
-- HEAD（收口前）= `6aabdf5`（`fix: bind self for methods retrieved via ["k"]`）；本轮三个提交：提交 1 = `7787da7`（`test(p5)`）、提交 2 = `34de77f`（`docs(p9)`）、提交 3 = 见汇报（`docs(release)`）。
-- **入清单门禁（通过，未触发停止）**：`git status --short` 实测与任务书背景**逐字一致**（10 ` M` + 3 `??` = 13 项），无清单外条目、无缺失条目。
-- **基线复跑（与任务书权威数字全部一致，无停止）**：`cargo build` 0 warning；`cargo test` **432**（362+42+16+12）；黑盒 **85/85** exit 0；`app/sortviz.lfz` **LF=341 行**。
-- 版本：`Cargo.toml` 由 `0.1.0` → **`1.0.0`**（唯一授权代码侧改动）；`Cargo.lock` 随之更新为 `1.0.0`。
+**✅ 完成 —— P4.4 收口：两个原子提交 + README 刷新 + 推送。**
+- 提交 1（代码与脚本）= `fb0636f`（`feat(p4): bare-file invocation, release profile, packaging and installer scripts`，7 文件 = 5 M + 2 A）；提交 2（README）= 见汇报（`docs(release): document 'lfz <file>' and refresh test counts (445)`）。
+- 入清单门禁（通过）：`git status --short` 实测 = 6 ` M` + 2 `??`；清单内 `src/main.rs`·`Cargo.lock` **无改动**（`git add` 为空操作，已如实报告）；`DECISIONS.md` 属清单外，**保持未入库**。
+- README（我是唯一写者）：`cargo test` `432`→`445`（`lib 362 + main 47 + cli 24 + test_runner 12`）；`v1.0-final` 行 `432 单测全绿`→`445`；快速开始 `432 passed`→`445` 并新增裸文件调用 `lfz <file>` 与 `scripts\build-release.ps1`/`scripts\install-lfz.ps1` 说明；`85 用例` 原已正确。**其余行未动**。
+- 未打 tag（`v1.1.0` 由 team-lead 决定）；`dist/` 未入库（`.gitignore` 忽略，`git check-ignore dist/lfz.exe` 命中）。
 ## 校验基线（本轮取证）
-- `cargo build` → `Finished`，**0 warning / 0 error**（版本变更后 `cargo clean -p lfz` 重建复跑仍 0 warning）。
-- `cargo test` → **432 passed / 0 failed / 0 ignored**（lib **362** + main 42 + cli 16 + test_runner 12）。
-- `cargo run --quiet -- test` → **85 个用例 / 通过 85 / 失败 0 / 错误 0**，exit 0。
-- `app/sortviz.lfz` = **341 行**（LF=341, CR=0；PS5.1 下 `Get-Content .Count`/`Measure-Object -Line` 对 UTF-8 误读为 327/302，已弃用）。
-- 标签：`v0.1.0` / `v0.2.0` / `v0.3-tested` / `v0.4-app` / **`v1.0-final`**（本轮新增，附注标签）。
+- 提交前 `git status --short`：` M .opencode/team/DECISIONS.md`、` M .opencode/team/agents/tooling-dev/JOURNAL.md`、` M .opencode/team/agents/tooling-dev/STATUS.md`、` M Cargo.toml`、` M src/cli.rs`、` M tests/cli.rs`、`?? scripts/build-release.ps1`、`?? scripts/install-lfz.ps1`（= 8 项，与任务书背景一致）。
+- `git diff --stat`：6 文件 / +386 −39；`README.md` diff 仅 3 处数字 + 1 处用法块（无越界改动）。
+- 后台权威数字（任务书已核验，本轮照录未复跑）：`cargo build` 0 warning；`cargo build --release` 0 warning；`cargo test` **445**（362+47+24+12）；`cargo run --quiet -- test` **85/85** exit 0；`dist\lfz.exe` = **704000 B**；`dist\lfz.exe --version` = `lfz 1.0.0`。
 ## 进行中
 - （无）
 ## 阻塞 / 需要支持
 - **无阻塞**。
-- （遗留）**owner 偏差**：可认证账号 login = `NeitherTourRest`（display name = `MakeChase`）。待 team-lead/用户确认；不影响交付。
+- （遗留）owner 偏差：login = `NeitherTourRest` / display name = `MakeChase`，待 team-lead/用户确认；不影响交付。
 ## 下一步计划
-- 交付完成（`v1.0-final` 已打并推送）。如需，配合 team-lead 做最终 standup / 答辩。
+- `git push` 后完成验收取证（`git status --short` 空、`ls-remote` 对齐、短哈希）。如需，配合 team-lead 决定是否打 `v1.1.0`。
 ## 关键经验（写给未来的自己）
-- **PS5.1 原生参数会把提交信息里的双引号拆词**：`git commit -m '...(s["k"])...'` → `pathspec 'blind' did not match`。含 `"` 的提交信息一律走 `git commit -F <UTF-8 文件>`（本次提交 1 即如此）。
-- **行数一律用 LF 计数，勿信 `Get-Content .Count`**：PS5.1 默认编码对 UTF-8 会少行（`app/sortviz.lfz` 实测 LF=341，被 `Get-Content` 误读为 327、`Measure-Object -Line` 为 302）；以 `[System.IO.File]::ReadAllBytes` 数 `\n`（或 Python 迭代）为准。
-- **版本 bump 后必须复跑**：改 `Cargo.toml` 的 `version` 会使 `Cargo.lock` 自动更新（须一并入库），且必须重跑 `cargo build` + `cargo test` + `cargo run --quiet -- test` 确认全绿（本次三绿）。
-- 禁区确认：本轮**只打 `v1.0-final` 一个标签**、无 force-push、未改 `docs/spec/**`·`src/**`（仅 `Cargo.toml` 的 `version`）、未提交 `target/`·密钥·临时文件。
-- README 对齐中超出任务书枚举的**事实性修正**（P5 行 `25/56` → `26 正向 + 58 负例 + 1 豁免`；「版本里程碑」补 `v1.0-final` 行）已如实汇报；**未触碰 P9 叙述行**（非数字，留待 team-lead 裁定）。
+- **提交清单里可能有“无改动文件”**：`git add <unchanged tracked file>` 是空操作（本轮 `src/main.rs`·`Cargo.lock`），不应据此报错；以 `git status --short` 为准**如实报告差异**。
+- **PS5.1 提交信息防拆词**：信息含 `"` 时用 `git commit -F <UTF-8 文件>`；本轮为纯 ASCII，用单引号 + 两段 `-m`（subject/body）安全；单引号本身以 `''` 转义（提交 2 的 `'lfz <file>'`）。
+- **`dist/` 被 `.gitignore` 忽略**：`git check-ignore dist/lfz.exe` 命中；P4.4 打包产物不入库。
+- 禁区确认：本轮无 force-push、未打 tag、未提交 `dist/`·`target/`·密钥·临时文件；未改清单外 `src/**`·`docs/spec/**`·`docs/guide/**`。
