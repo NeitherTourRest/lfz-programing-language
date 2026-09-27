@@ -1,5 +1,19 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 11:09] 现状测试报告入库并推送（单个原子提交）
+- 来源: team-lead 任务书（轻量启动；team-lead 现场重跑全部验收后的报告 `docs/reports/status-check.md`（4398 B / 50 行）——build 0 warning、`cargo test` 377 全绿、端到端 hello、4 类错误模型、25 夹具全量（16 正例 + 9 负例）判定、Span 位置专项；结论 **P3 无回归、可继续开发**。要求：单提交 + push；验收取证 status / log -3 / ls-remote 一致 / 新提交短哈希；收工文档并入同一提交。预期工作区仅 `?? docs/reports/status-check.md`（**可能并行出现 `M src/cli.rs`/`M src/main.rs`（P4 开工）→ 如出现不暂存、不中止**；其它意外条目 → 停止汇报）。禁区：禁 force-push、**不打 tag**、**不暂存 `src/**`**、不改清单外文件）
+- 完成:
+  - **入清单门禁（通过，未触发停止）**：`git status --short` 复核**恰为任务书预期 1 项**（`?? docs/reports/status-check.md`），**预期的 `M src/cli.rs`/`M src/main.rs` 未出现**，**无清单外条目**；基线 HEAD = 远程 `refs/heads/main` = `f625150`。
+  - 内容取证（**未改内容，仅代为入库**）：`(Get-Item docs/reports/status-check.md).Length` = **4398 B**、`(Get-Content).Count` = **50 行**；`Select-String '^#{1,3} '` 列出 6 个标题（现状测试报告（team-lead 首测）/ 1. 构建与单测 / 2. 四类错误模型（真实 CLI）/ 3. 夹具全量压测（3 组 / 25 个 `.lfz`）（3.1 正例：16 个全部 exit 0、3.2 负例：9 个全部 exit 2 且错误正确）/ 4. 位置信息专项（`Span` 正确性）/ 5. 结论），与任务书背景描述吻合。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入同一提交（工作区保持干净）。
+  - **单个原子提交**：`git add docs/reports/status-check.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（**显式 3 文件**，未 `git add -A`，未暂存 `src/**`）→ `git commit` 标题 + 任务书 body 逐字。
+  - `git push`（非 force；`$LASTEXITCODE=0` 判据）。
+- 产出:
+  - 一个新提交（短哈希见汇报）；`git status --short` 空（或如实列出并行改动）；`git ls-remote origin refs/heads/main` = 本地 HEAD；`git tag -n` 仍仅 `v0.1.0`/`v0.2.0`（**本轮未打新 tag**）。
+  - 证据: `git log --oneline -3`（顶部为本轮提交，位于 `f625150` 之上）；`git ls-remote origin refs/heads/main`。
+- 决策: 无新 ADR（本轮为报告入库，非跨角色新决策）。owner 偏差仍为遗留待确认项。
+- 下一步: P10 交付清单核对报告 `docs/reports/delivery-checklist.md`；后续里程碑 P5 `v0.3-tested` / P8 `v0.4-app` / P9-P10 `v1.0-final` 按需打附注标签。
+- 阻塞: 无（owner 偏差为历史遗留待确认，不影响本轮推送）。
 ## [2026-09-27 10:58] opencode→DSH 迁移手册入库并推送（单个原子提交）
 - 来源: team-lead 任务书（轻量启动；team-lead 新写 `MIGRATION-TO-DSH.md`，29675 B / 309 行，内容含：项目/仓库位置、P0–P10 进度快照（含 P3 模块明细与 377 测试基线、ADR 与标签）、需求与 8 项交付物×评分矩阵、**14 人团队全量定义与协作协议**、文件地图、**opencode→DSH 逐项映射表（14 项，附官方依据）**、可勾选迁移步骤（含 `cordis.yml` 与插件代码骨架）、迁移后 7 条自检、已知坑与 14 条实战教训、待确认项、打印版检查清单。要求：单提交 + push；验收取证 status / log -3 / ls-remote 一致 / 新提交短哈希；收工文档并入同一提交。禁区：禁 force-push、**不打 tag**（非里程碑）、不改 `src/**`·`docs/spec/**`、不提交 `target/`·密钥·临时文件）
 - 完成:
