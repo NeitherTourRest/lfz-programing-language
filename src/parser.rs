@@ -62,12 +62,42 @@
 //!    `i64::MIN` / `IntegerOutOfRange` 特判，见上「本批实现」。）
 //! 5. `self` 与形参重名不作语法级限制（§7 无规则）；`self` 归属方法体的语义校验
 //!    在求值期。
+//!
+//! # 解析嵌套深度上限（v1.1 补钉）
+//!
+//! 依 `syntax.md` §3.8 / `interface-contract.md` §10.9 R-S1：递归下降中**同时活跃的嵌套
+//! 构造层数**（分组 / 调用实参 / 下标 / 数组 / struct 字面量 / 块 / 条件 / 可迭代表达式 /
+//! 一元前缀操作数 / 字符串插值）不得超过 [`PARSE_DEPTH_LIMIT`]（= 1000）；
+//! **同一层级的左结合链**（`a + b + c`、`f(a)(b)(c)`、`a[0][0]`）不计层。
+//! 达到 1001 层 → `SyntaxError`（`SyntaxMsg::NestingTooDeep`，**不新增错误类**），
+//! `span` = 第 1001 层开启记号首字符。栈契约（≥64 MiB）见 `interface-contract.md` §10.9 R-S2。
 
 use crate::ast::*;
 use crate::env::ScopeId;
 use crate::error::{syntax, LzError, R, SyntaxMsg};
 use crate::lexer::{Token, TokenKind};
 use crate::span::Span;
+
+/// 解析嵌套深度上限（`syntax.md` §3.8；`interface-contract.md` §10.9 R-S1）。
+///
+/// 深度达到 `PARSE_DEPTH_LIMIT + 1`（= 1001）时立即以 `SyntaxError`
+/// （`SyntaxMsg::NestingTooDeep`）终止，`span` = 第 1001 层嵌套的**开启记号**首字符。
+/// 该上限**独立于**运行期 `RECURSION_LIMIT`（= 10000）——解析帧远重于求值帧。
+pub const PARSE_DEPTH_LIMIT: u32 = 1000;
+
+/// AST 节点深度上限（`syntax.md` §3.9；`interface-contract.md` §10.9 **R-S3**）。
+///
+/// 度量 = **AST 节点深度**：`depth(n) = 1 + max(直接语法子节点 depth)`（叶节点 = 1）；
+/// **程序 AST 深度 = 顶层语句深度最大值**（空程序 = 0）。**括号分组透明**（`(((1)))`
+/// 深度 = 1）；**左结合链的 AST 深度 = 链长**（`1+1+…` T 项 ⇒ 深度 T）。
+/// 任一节点深度达到 `AST_DEPTH_LIMIT + 1`（= 10001）即抛 `SyntaxError`
+/// （`SyntaxMsg::ExprTooDeep`），**求值之前**拒绝。
+///
+/// 数值与运行期 `RECURSION_LIMIT`（= 10000）相同，但**度量不同**
+/// （AST 节点深度 vs 函数调用帧深度），二者**口径不得合并**（§3.9 规则 6）：
+/// 本上限收口 §3.8（`PARSE_DEPTH_LIMIT`，护 parser 栈）**不覆盖**的**左结合长链**产出的
+/// **深左偏 AST**（护求值 / 析构栈）。
+pub const AST_DEPTH_LIMIT: u32 = 10000;
 
 /// 换行模式（`syntax.md` §3.2）：决定 `NEWLINE` 是否有效。
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -128,6 +158,13 @@ pub struct Parser<'a> {
     group_depth: u32,
     /// 管道上下文栈（§4.3）：`|>` RHS 压 `Rhs`，函数体压 `Barrier`；`_` 合法性据此判定。
     pipe_stack: Vec<PipeCtx>,
+    /// 解析嵌套深度（§3.8）：递归下降中**同时活跃的嵌套构造层数**峰值。
+    ///
+    /// 进入任一嵌套构造的子结构（分组 / 调用实参 / 下标 / 数组 / struct 字面量 /
+    /// 块 / 条件 / 可迭代表达式 / 一元前缀操作数 / 字符串插值）时 `+1`，离开时 `−1`。
+    /// **同一层级的左结合链**（`a + b + c`、`f(a)(b)(c)`、`a[0][0]`）由迭代循环展开，
+    /// **不计层**。达到 `PARSE_DEPTH_LIMIT + 1` 即报 `SyntaxMsg::NestingTooDeep`。
+    depth: u32,
 }
 
 /// 解析记号流为一个程序（`Program` = 顶层语句序列；即任务书所称 module）。
@@ -135,7 +172,221 @@ pub struct Parser<'a> {
 /// 记号流须以 `Eof` 结尾（`lexer::lex` 保证）。
 #[must_use]
 pub fn parse(tokens: &[Token]) -> R<Program> {
-    Parser::new(tokens).parse_program()
+    let program = Parser::new(tokens).parse_program()?;
+    check_ast_depth(&program)?;
+    Ok(program)
+}
+
+// ---------------------------------------------------------------------------
+// AST 深度检查（§3.9 / §10.9 R-S3）
+// ---------------------------------------------------------------------------
+
+/// 检查 `Program` 的 AST 深度是否超过 [`AST_DEPTH_LIMIT`]（`syntax.md` §3.9 /
+/// `interface-contract.md` §10.9 **R-S3**）。
+///
+/// **不得以 AST 深度递归**（该检查自身即会栈溢出）：此处用**显式栈迭代后序遍历**
+/// 自底向上累加各节点深度（帧存于**堆**上，深度不受调用栈限制）。首个满足
+/// `depth > AST_DEPTH_LIMIT` 的节点即报 `SyntaxMsg::ExprTooDeep`，
+/// `span` = 该节点**首字符**（链式构造的首个越限节点通常取其**链起点**）。
+///
+/// 复杂度 `O(节点数)`；栈 = `O(AST 深度)`（堆分配，非调用栈）。
+fn check_ast_depth(program: &Program) -> R<()> {
+    /// 迭代后序遍历的一帧：节点 + 下一个待访问子节点下标 + 已完成子节点的最大深度。
+    struct Frame<'a> {
+        node: DepthNode<'a>,
+        next_child: usize,
+        max_child: u32,
+    }
+
+    for stmt in &program.stmts {
+        let mut stack: Vec<Frame<'_>> = vec![Frame {
+            node: DepthNode::Stmt(stmt),
+            next_child: 0,
+            max_child: 0,
+        }];
+        loop {
+            // 是否还有未访问的子节点。
+            let next = match stack.last() {
+                Some(f) => f.node.child(f.next_child),
+                None => break,
+            };
+            if let Some(child) = next {
+                let f = stack.last_mut().expect("栈非空");
+                f.next_child += 1;
+                stack.push(Frame {
+                    node: child,
+                    next_child: 0,
+                    max_child: 0,
+                });
+                continue;
+            }
+            // 子节点全部完成 → 结算本节点深度 = 1 + 子节点深度最大值。
+            let frame = match stack.pop() {
+                Some(f) => f,
+                None => break,
+            };
+            let depth = 1 + frame.max_child;
+            if depth > AST_DEPTH_LIMIT {
+                return Err(syntax(SyntaxMsg::ExprTooDeep, frame.node.span()));
+            }
+            if let Some(parent) = stack.last_mut() {
+                parent.max_child = parent.max_child.max(depth);
+            }
+        }
+    }
+    Ok(())
+}
+
+/// §3.9 深度检查所用的**借用节点**：覆盖所有可能构成 AST 深度的语法节点。
+///
+/// 分组括号不产生节点（`parse_group` 直接返回内部表达式），故天然**透明**。
+#[derive(Clone, Copy)]
+enum DepthNode<'a> {
+    Stmt(&'a Stmt),
+    Expr(&'a Expr),
+    Block(&'a Block),
+    FnDecl(&'a FnDecl),
+    StructDecl(&'a StructDecl),
+    Member(&'a StructMember),
+    Field(&'a FieldInit),
+    Lvalue(&'a Lvalue),
+    Body(&'a Body),
+}
+
+/// 第 `i` 个直接语法子节点；`i` 越界 → `None`。`nth1` = 恰 1 个、`nth2` = 恰 2 个。
+fn nth1<'a>(i: usize, a: DepthNode<'a>) -> Option<DepthNode<'a>> {
+    if i == 0 {
+        Some(a)
+    } else {
+        None
+    }
+}
+
+/// 见 [`nth1`]。
+fn nth2<'a>(i: usize, a: DepthNode<'a>, b: DepthNode<'a>) -> Option<DepthNode<'a>> {
+    match i {
+        0 => Some(a),
+        1 => Some(b),
+        _ => None,
+    }
+}
+
+impl<'a> DepthNode<'a> {
+    /// 该节点的起始 `Span`（首个使深度超限的节点即以此定位）。
+    fn span(self) -> Span {
+        match self {
+            DepthNode::Stmt(s) => s.span,
+            DepthNode::Expr(e) => e.span,
+            DepthNode::Block(b) => b.span,
+            DepthNode::FnDecl(f) => f.span,
+            DepthNode::StructDecl(s) => s.span,
+            DepthNode::Member(m) => match m {
+                StructMember::Method(f) => f.span,
+                StructMember::Field(fi) => fi.span,
+            },
+            DepthNode::Field(fi) => fi.span,
+            DepthNode::Lvalue(l) => l.span,
+            DepthNode::Body(b) => match b {
+                Body::Block(bl) => bl.span,
+                Body::Expr(e) => e.span,
+            },
+        }
+    }
+
+    /// 第 `i` 个**直接语法子节点**（按 §3.9 规则 1 各产生式列举）；越界 → `None`。
+    fn child(self, i: usize) -> Option<DepthNode<'a>> {
+        match self {
+            DepthNode::Stmt(s) => match &s.node {
+                StmtKind::Decl { init, .. } => nth1(i, DepthNode::Expr(init)),
+                StmtKind::Assign { target, value, .. } => {
+                    nth2(i, DepthNode::Lvalue(target), DepthNode::Expr(value))
+                }
+                StmtKind::FnDecl(f) => nth1(i, DepthNode::FnDecl(f)),
+                StmtKind::StructDecl(sd) => nth1(i, DepthNode::StructDecl(sd)),
+                StmtKind::If(e) => nth1(i, DepthNode::Expr(e)),
+                StmtKind::While { cond, body } => {
+                    nth2(i, DepthNode::Expr(cond), DepthNode::Block(body))
+                }
+                StmtKind::For { iter, body, .. } => {
+                    nth2(i, DepthNode::Expr(iter), DepthNode::Block(body))
+                }
+                StmtKind::Return(Some(e)) => nth1(i, DepthNode::Expr(e)),
+                StmtKind::Return(None)
+                | StmtKind::Break
+                | StmtKind::Continue
+                | StmtKind::Dump { .. } => None,
+                StmtKind::Expr(e) => nth1(i, DepthNode::Expr(e)),
+            },
+            DepthNode::Expr(e) => match &e.node {
+                ExprKind::Int(_)
+                | ExprKind::Float(_)
+                | ExprKind::Str(_)
+                | ExprKind::Bool(_)
+                | ExprKind::Nil
+                | ExprKind::Ident(_)
+                | ExprKind::SelfRef => None,
+                ExprKind::Array(xs) => xs.get(i).map(DepthNode::Expr),
+                ExprKind::StructLit(sl) => sl.fields.get(i).map(DepthNode::Field),
+                ExprKind::Field { object, .. } => nth1(i, DepthNode::Expr(object)),
+                ExprKind::Index { object, index } => {
+                    nth2(i, DepthNode::Expr(object), DepthNode::Expr(index))
+                }
+                ExprKind::Call { callee, args } => {
+                    if i == 0 {
+                        Some(DepthNode::Expr(callee))
+                    } else {
+                        args.get(i - 1).map(DepthNode::Expr)
+                    }
+                }
+                ExprKind::Unary { operand, .. } => nth1(i, DepthNode::Expr(operand)),
+                ExprKind::Binary { left, right, .. } => {
+                    nth2(i, DepthNode::Expr(left), DepthNode::Expr(right))
+                }
+                ExprKind::Logical { left, right, .. } => {
+                    nth2(i, DepthNode::Expr(left), DepthNode::Expr(right))
+                }
+                ExprKind::If(ifx) => match i {
+                    0 => Some(DepthNode::Expr(&*ifx.cond)),
+                    1 => Some(DepthNode::Block(&ifx.then_block)),
+                    2 => match &ifx.else_branch {
+                        Some(ElseBranch::If(e)) => Some(DepthNode::Expr(e)),
+                        Some(ElseBranch::Block(b)) => Some(DepthNode::Block(b)),
+                        None => None,
+                    },
+                    _ => None,
+                },
+                ExprKind::Lambda(l) => nth1(i, DepthNode::Body(&l.body)),
+                ExprKind::Interp(interp) => interp
+                    .parts
+                    .iter()
+                    .filter_map(|p| match p {
+                        StrPart::Expr { expr, .. } => Some(DepthNode::Expr(expr)),
+                        StrPart::Text(_) => None,
+                    })
+                    .nth(i),
+            },
+            DepthNode::Block(b) => b.stmts.get(i).map(DepthNode::Stmt),
+            DepthNode::FnDecl(f) => nth1(i, DepthNode::Body(&f.body)),
+            DepthNode::StructDecl(sd) => sd.members.get(i).map(DepthNode::Member),
+            DepthNode::Member(m) => match m {
+                StructMember::Method(f) => nth1(i, DepthNode::FnDecl(f)),
+                StructMember::Field(fi) => nth1(i, DepthNode::Field(fi)),
+            },
+            DepthNode::Field(fi) => nth1(i, DepthNode::Expr(&fi.value)),
+            DepthNode::Lvalue(l) => l
+                .path
+                .iter()
+                .filter_map(|seg| match &seg.kind {
+                    LvalueSegKind::Index(e) => Some(DepthNode::Expr(e)),
+                    LvalueSegKind::Field(_) => None,
+                })
+                .nth(i),
+            DepthNode::Body(b) => match b {
+                Body::Block(bl) => nth1(i, DepthNode::Block(bl)),
+                Body::Expr(e) => nth1(i, DepthNode::Expr(e)),
+            },
+        }
+    }
 }
 
 impl<'a> Parser<'a> {
@@ -153,7 +404,28 @@ impl<'a> Parser<'a> {
             cond_restrict: false,
             group_depth: 0,
             pipe_stack: Vec::new(),
+            depth: 0,
         }
+    }
+
+    // ------------------------------------------------------------------
+    // 解析嵌套深度（§3.8 / §10.9 R-S1）
+    // ------------------------------------------------------------------
+
+    /// 进入一层嵌套构造：深度 `+1`；超过 `PARSE_DEPTH_LIMIT` → `SyntaxError`
+    /// （`NestingTooDeep`），`span` = 该层**开启记号**首字符（§3.8 规则 2）。
+    fn enter_nesting(&mut self, opener: Span) -> R<()> {
+        self.depth += 1;
+        if self.depth > PARSE_DEPTH_LIMIT {
+            Err(syntax(SyntaxMsg::NestingTooDeep, opener))
+        } else {
+            Ok(())
+        }
+    }
+
+    /// 离开一层嵌套构造：深度 `−1`（饱和，错误路径亦平衡）。
+    fn leave_nesting(&mut self) {
+        self.depth = self.depth.saturating_sub(1);
     }
 
     // ------------------------------------------------------------------
@@ -554,9 +826,13 @@ impl<'a> Parser<'a> {
             _ => return Err(self.unexpected("结构体名")),
         };
         self.skip_newlines();
+        let brace = self.peek_span(); // `{`（struct 体，§3.8 计层）
         self.expect(&TokenKind::LBrace)?;
         self.nl_stack.push(NlMode::Ign);
-        let members = self.parse_member_list()?;
+        self.enter_nesting(brace)?;
+        let members = self.parse_member_list();
+        self.leave_nesting();
+        let members = members?;
         self.skip_ign_newlines();
         self.expect(&TokenKind::RBrace)?;
         self.nl_stack.pop();
@@ -612,7 +888,11 @@ impl<'a> Parser<'a> {
         let span = self.peek_span(); // `{`
         self.expect(&TokenKind::LBrace)?;
         self.nl_stack.push(NlMode::Sig);
-        let stmts = self.parse_stmt_seq()?;
+        // §3.8：进入块子结构 +1（开启记号 = `{`）。
+        self.enter_nesting(span)?;
+        let stmts = self.parse_stmt_seq();
+        self.leave_nesting();
+        let stmts = stmts?;
         self.expect(&TokenKind::RBrace)?;
         self.nl_stack.pop();
         Ok(Block { span, stmts })
@@ -634,7 +914,7 @@ impl<'a> Parser<'a> {
     /// 先试探、无 `else` 则回退（§3.5；A4 悬挂 else 绑定最近的 if）。
     fn parse_if_expr(&mut self, span: Span) -> R<Expr> {
         self.bump(); // if
-        let cond = self.parse_cond()?;
+        let cond = self.parse_cond(span)?;
         self.skip_newlines();
         let then_block = self.parse_block()?;
         let else_branch = self.try_parse_else()?;
@@ -673,7 +953,7 @@ impl<'a> Parser<'a> {
     /// `while <expr> <block>`（§7 `while_stmt`）：条件走 NO_BRACE_LITERAL，体内 `loop_depth` +1。
     fn parse_while(&mut self, span: Span) -> R<Stmt> {
         self.bump(); // while
-        let cond = self.parse_cond()?;
+        let cond = self.parse_cond(span)?;
         self.skip_newlines();
         self.loop_depth += 1;
         let body = self.parse_block()?;
@@ -692,7 +972,7 @@ impl<'a> Parser<'a> {
             _ => return Err(self.unexpected("迭代变量名")),
         };
         self.expect(&TokenKind::KwIn)?;
-        let iter = self.parse_cond()?;
+        let iter = self.parse_cond(span)?;
         self.skip_newlines();
         self.loop_depth += 1;
         let body = self.parse_block()?;
@@ -733,10 +1013,20 @@ impl<'a> Parser<'a> {
 
     /// 控制流头的表达式（if / while 条件、for 可迭代位）：
     /// 置 NO_BRACE_LITERAL（§3.4）后解析，结束恢复原状。
-    fn parse_cond(&mut self) -> R<Expr> {
+    ///
+    /// §3.8：条件 / 可迭代表达式属嵌套构造，进入即 +1；`opener` = 关键字
+    /// （`if` / `while` / `for`）的起始 `Span`（第 1001 层即在此报错）。
+    fn parse_cond(&mut self, opener: Span) -> R<Expr> {
         let saved = self.cond_restrict;
         self.cond_restrict = true;
-        let result = self.parse_expr();
+        let result = match self.enter_nesting(opener) {
+            Ok(()) => {
+                let e = self.parse_expr();
+                self.leave_nesting();
+                e
+            }
+            Err(e) => Err(e),
+        };
         self.cond_restrict = saved;
         result
     }
@@ -926,7 +1216,11 @@ impl<'a> Parser<'a> {
                         return Ok(Spanned::new(ExprKind::Int(i64::MIN), span));
                     }
                 }
-                let operand = self.parse_unary()?;
+                // §3.8：进入一元前缀操作数子结构 +1（开启记号 = `-`）。
+                self.enter_nesting(span)?;
+                let operand = self.parse_unary();
+                self.leave_nesting();
+                let operand = operand?;
                 Ok(Spanned::new(
                     ExprKind::Unary { op: UnaryOp::Neg, operand: Box::new(operand) },
                     span,
@@ -934,7 +1228,11 @@ impl<'a> Parser<'a> {
             }
             TokenKind::Bang => {
                 self.bump();
-                let operand = self.parse_unary()?;
+                // §3.8：进入一元前缀操作数子结构 +1（开启记号 = `!`）。
+                self.enter_nesting(span)?;
+                let operand = self.parse_unary();
+                self.leave_nesting();
+                let operand = operand?;
                 Ok(Spanned::new(
                     ExprKind::Unary { op: UnaryOp::Not, operand: Box::new(operand) },
                     span,
@@ -1007,11 +1305,16 @@ impl<'a> Parser<'a> {
             match self.peek().clone() {
                 // 调用 `callee ( args )`。
                 TokenKind::LParen => {
+                    let open_span = self.peek_span(); // `(`（§3.8 开启记号）
                     self.bump();
                     self.nl_stack.push(NlMode::Ign);
                     self.group_depth += 1; // §3.4：实参表内临时解除 NO_BRACE_LITERAL
                     self.pipe_call_args_enter(); // §4.3：`_` 在调用实参位才合法
-                    let args = self.parse_args(TokenKind::RParen)?;
+                    // §3.8：进入调用实参表子结构 +1。
+                    self.enter_nesting(open_span)?;
+                    let args = self.parse_args(TokenKind::RParen);
+                    self.leave_nesting();
+                    let args = args?;
                     self.pipe_call_args_leave();
                     self.expect(&TokenKind::RParen)?;
                     self.group_depth -= 1;
@@ -1020,10 +1323,15 @@ impl<'a> Parser<'a> {
                 }
                 // 索引 `object [ expr ]`。
                 TokenKind::LBracket => {
+                    let open_span = self.peek_span(); // `[`（§3.8 开启记号）
                     self.bump();
                     self.nl_stack.push(NlMode::Ign);
                     self.group_depth += 1; // §3.4：下标内临时解除 NO_BRACE_LITERAL
-                    let inner = self.parse_expr()?;
+                    // §3.8：进入下标表达式子结构 +1。
+                    self.enter_nesting(open_span)?;
+                    let inner = self.parse_expr();
+                    self.leave_nesting();
+                    let inner = inner?;
                     self.skip_ign_newlines();
                     self.expect(&TokenKind::RBracket)?;
                     self.group_depth -= 1;
@@ -1154,12 +1462,17 @@ impl<'a> Parser<'a> {
                     self.bump();
                 }
                 TokenKind::InterpBegin => {
+                    let open_span = self.peek_span(); // `${`（§3.8 开启记号）
                     self.bump();
                     saw_interp = true;
                     if !cur_text.is_empty() {
                         parts.push(StrPart::Text(std::mem::take(&mut cur_text)));
                     }
-                    let expr = self.parse_expr()?;
+                    // §3.8：进入字符串插值表达式子结构 +1。
+                    self.enter_nesting(open_span)?;
+                    let expr = self.parse_expr();
+                    self.leave_nesting();
+                    let expr = expr?;
                     // lexer 在 `${expr:spec}` 处先发 `Colon` 再发 `FormatSpec(text)`
                     // （见 lexer.rs 及其单测）；此处必须消费 `Colon`（P3 验收 bug-02 修复）。
                     let format_spec = if *self.peek() == TokenKind::Colon {
@@ -1199,7 +1512,11 @@ impl<'a> Parser<'a> {
         self.bump(); // LParen
         self.nl_stack.push(NlMode::Ign);
         self.group_depth += 1; // §3.4：括号内临时解除 NO_BRACE_LITERAL
-        let inner = self.parse_expr()?;
+        // §3.8：进入分组子结构 +1（开启记号 = `(`）。
+        self.enter_nesting(span)?;
+        let inner = self.parse_expr();
+        self.leave_nesting();
+        let inner = inner?;
         self.skip_ign_newlines();
         self.expect(&TokenKind::RParen)?;
         self.group_depth -= 1;
@@ -1239,7 +1556,11 @@ impl<'a> Parser<'a> {
         self.bump(); // LBracket
         self.nl_stack.push(NlMode::Ign);
         self.group_depth += 1; // §3.4：方括号内临时解除 NO_BRACE_LITERAL
-        let elems = self.parse_args(TokenKind::RBracket)?;
+        // §3.8：进入数组字面量子结构 +1（开启记号 = `[`）。
+        self.enter_nesting(span)?;
+        let elems = self.parse_args(TokenKind::RBracket);
+        self.leave_nesting();
+        let elems = elems?;
         self.expect(&TokenKind::RBracket)?;
         self.group_depth -= 1;
         self.nl_stack.pop();
@@ -1253,7 +1574,11 @@ impl<'a> Parser<'a> {
     fn parse_struct_lit(&mut self, type_name: Option<String>, span: Span) -> R<Expr> {
         self.expect(&TokenKind::LBrace)?;
         self.nl_stack.push(NlMode::Ign);
-        let fields = self.parse_field_list()?;
+        // §3.8：进入 struct 字面量字段值子结构 +1（开启记号 = `{`）。
+        self.enter_nesting(span)?;
+        let fields = self.parse_field_list();
+        self.leave_nesting();
+        let fields = fields?;
         self.expect(&TokenKind::RBrace)?;
         self.nl_stack.pop();
         Ok(Spanned::new(ExprKind::StructLit(StructLit { type_name, fields }), span))
@@ -1615,7 +1940,12 @@ mod tests {
         match err.as_ref() {
             LzError::Syntax { msg, span } => {
                 assert_eq!(msg, &want, "子消息不符");
-                assert_eq!(*span, Span::new(line, col), "位置不符");
+                assert_eq!(
+                    *span,
+                    Span::new(line, col),
+                    "位置不符：得到 {span:?}，期望 {:?}",
+                    Span::new(line, col)
+                );
             }
             other => panic!("应为 SyntaxError，得到 {}", other.class_name()),
         }
@@ -5282,5 +5612,98 @@ mod tests {
             other => panic!("应为 Int(i64::MIN) 表达式语句，得到 {other:?}"),
         }
         assert!(matches!(p.stmts[2].node, StmtKind::Dump { .. }));
+    }
+
+    // ------------------------------------------------------------------
+    // §3.8 解析嵌套深度上限（v1.1 补钉）
+    //
+    // 深嵌套（`(`×1000 等）在主测试线程栈（默认约 2–8 MiB）上会溢出，故一律经
+    // [`crate::evaluator::on_eval_stack`] 在 256 MiB 大栈线程上解析（§10.9 R-S2）；
+    // 返回值只取标量 / 错误，避免深 AST 逃逸到小栈线程析构。
+    //
+    // 注：以下测试经 [`parse_src`]（`line_base = 1`）解析，故程序体第 1 行报为**第 2 行**
+    // ——这与真实 `.lfz` 文件一致（第 1 行是 `#42`，程序体从第 2 行起）。
+    // ------------------------------------------------------------------
+
+    /// 大栈上解析成功时的顶层语句数（`Program` 在大栈线程内析构）。
+    fn parse_ok_len_big(body: &str) -> usize {
+        crate::evaluator::on_eval_stack(|| {
+            let p = parse_src(body).expect("应可解析");
+            p.stmts.len()
+        })
+    }
+
+    /// 大栈上解析失败时的错误。
+    fn parse_err_big(body: &str) -> Box<LzError> {
+        crate::evaluator::on_eval_stack(|| parse_src(body).expect_err("应报解析错误"))
+    }
+
+    #[test]
+    fn nesting_depth_limit_constant_is_1000() {
+        assert_eq!(PARSE_DEPTH_LIMIT, 1000);
+    }
+
+    #[test]
+    fn paren_1000_is_legal() {
+        // 正例（syntax.md §3.8）：`(`×1000 `1` `)`×1000 → 深度恰 1000 → 合法。
+        let src = format!("{}1{}", "(".repeat(1000), ")".repeat(1000));
+        assert_eq!(parse_ok_len_big(&src), 1);
+    }
+
+    #[test]
+    fn paren_1001_is_nesting_too_deep_at_1001st_open() {
+        // 反例：`(`×1001 → 第 1001 层开启记号（第 1001 个 `(`，col 1001）处报错。
+        let src = format!("{}1{}", "(".repeat(1001), ")".repeat(1001));
+        let err = parse_err_big(&src);
+        assert_syntax(&err, SyntaxMsg::NestingTooDeep, 2, 1001);
+        assert_eq!(err.class_name(), "SyntaxError");
+        assert_eq!(err.message(), "嵌套深度超限（超过 1000 层）");
+        assert_eq!(err.to_string(), "SyntaxError: 嵌套深度超限（超过 1000 层）");
+    }
+
+    #[test]
+    fn bracket_1001_is_nesting_too_deep() {
+        let src = format!("{}1{}", "[".repeat(1001), "]".repeat(1001));
+        let err = parse_err_big(&src);
+        assert_syntax(&err, SyntaxMsg::NestingTooDeep, 2, 1001);
+    }
+
+    #[test]
+    fn struct_lit_1001_is_nesting_too_deep() {
+        // `{"a":`×1001 `1` `}`×1001（最坏每层帧大小的构造）；第 1001 个 `{` 在第 5001 列
+        // （每段 `{"a":` 宽 5）。
+        let src = format!("{}1{}", "{\"a\":".repeat(1001), "}".repeat(1001));
+        let err = parse_err_big(&src);
+        assert_syntax(&err, SyntaxMsg::NestingTooDeep, 2, 5001);
+    }
+
+    #[test]
+    fn fn_block_1001_is_nesting_too_deep() {
+        let src = format!("{}1{}", "fn(){".repeat(1001), "}".repeat(1001));
+        let err = parse_err_big(&src);
+        // 第 1001 层开启记号 = 第 1001 个 `fn(){` 的 `{`（每段宽 5 → 第 5005 列）。
+        assert_syntax(&err, SyntaxMsg::NestingTooDeep, 2, 5005);
+    }
+
+    #[test]
+    fn unary_prefix_1001_is_nesting_too_deep() {
+        let src = format!("{}1", "-".repeat(1001));
+        let err = parse_err_big(&src);
+        assert_syntax(&err, SyntaxMsg::NestingTooDeep, 2, 1001);
+    }
+
+    #[test]
+    fn left_assoc_add_chain_is_not_counted() {
+        // §3.8 规则 1「不计层」：`1+1+…` 由迭代循环解析，不增加嵌套深度；
+        // 即便 5000 项（远超 1000）也应正常解析。
+        let src = format!("1{}", "+1".repeat(5000));
+        assert_eq!(parse_ok_len_big(&src), 1);
+    }
+
+    #[test]
+    fn index_chain_is_not_counted() {
+        // `a[0][0]…`：各下标为兄弟关系（非嵌套），1001 个下标仍合法。
+        let src = format!("a{}", "[0]".repeat(1001));
+        assert_eq!(parse_ok_len_big(&src), 1);
     }
 }

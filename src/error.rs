@@ -24,7 +24,7 @@ pub type R<T> = Result<T, Box<LzError>>;
 // 子消息枚举
 // ===========================================================================
 
-/// `SyntaxError` 细分消息 —— `semantics.md` §8.1「`SyntaxError` 细分消息」表，**17 条**。
+/// `SyntaxError` 细分消息 —— `semantics.md` §8.1「`SyntaxError` 细分消息」表，**19 条**。
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum SyntaxMsg {
     /// `非法字符 '{c}'`
@@ -61,6 +61,17 @@ pub enum SyntaxMsg {
     InterpolationNewline,
     /// `整数字面量超出 i64 范围`
     IntegerOutOfRange,
+    /// `嵌套深度超限（超过 1000 层）`（**无字段**）—— 解析嵌套深度超过
+    /// `PARSE_DEPTH_LIMIT = 1000`（`syntax.md` §3.8 / `semantics.md` §8.1，
+    /// `interface-contract.md` §10.8 / §10.9，v1.1 补钉）；**不新增错误类**，
+    /// 仍归 `SyntaxError`。
+    NestingTooDeep,
+    /// `表达式嵌套过深（超过 10000 层）`（**无字段**）—— **AST 节点深度**超过
+    /// `AST_DEPTH_LIMIT = 10000`（`syntax.md` §3.9 / `semantics.md` §4.5.5 / §8.1，
+    /// `interface-contract.md` §10.8 / §10.9 R-S3，v1.1 补钉）；收口左结合长链
+    /// （`1+1+…`、`a[0][0]…`）产出的深左偏 AST。**不新增错误类**，仍归
+    /// `SyntaxError`（与 `NestingTooDeep` 口径分离、互不换算）。
+    ExprTooDeep,
 }
 
 impl SyntaxMsg {
@@ -103,6 +114,8 @@ impl SyntaxMsg {
                 "插值表达式不能跨行；请把表达式写在一行内".to_string()
             }
             SyntaxMsg::IntegerOutOfRange => "整数字面量超出 i64 范围".to_string(),
+            SyntaxMsg::NestingTooDeep => "嵌套深度超限（超过 1000 层）".to_string(),
+            SyntaxMsg::ExprTooDeep => "表达式嵌套过深（超过 10000 层）".to_string(),
         }
     }
 }
@@ -153,12 +166,20 @@ impl TypeMsg {
     }
 }
 
-/// `OverflowError` 子消息 —— `semantics.md` §8.1 该行仅给出**一条**消息模板，故为**单变体**枚举
-/// （保留枚举形态以对齐契约 §10.4 `Overflow { span, msg: OverflowMsg }` 与未来扩展）。
+/// `OverflowError` 子消息 —— `semantics.md` §8.1 给出**两条**消息模板（v1.1 补钉起）。
+///
+/// 保留枚举形态以对齐契约 §10.4 `Overflow { span, msg: OverflowMsg }`。
+///
+/// v1.1 补钉（`interface-contract.md` §10.8 / `DECISIONS.md` [2026-09-27 21:10] 裁定
+/// `bug-20260927-04`）：新增 [`OverflowMsg::Capacity`]——容器 / 字符串构造**所需容量**超出
+/// 运行时可分配上限（`range` 超大 `n` / `repeat` 结果过长），与「`i64` 数值溢出」区分。
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum OverflowMsg {
     /// `整数溢出：结果超出 i64 范围`（涵盖 `int` 运算溢出与 `int(float)` 的 `±Inf` / 截断超界）。
     IntegerOutOfRange,
+    /// `容量溢出：所需容量超出可分配上限`（**无字段**；容器 / 字符串构造所需容量超出可分配上限，
+    /// v1.1 补钉——`range` 超大 `n` / `repeat` 结果过长；**任何输入均不得使进程 panic**）。
+    Capacity,
 }
 
 impl OverflowMsg {
@@ -167,6 +188,7 @@ impl OverflowMsg {
     pub fn message(&self) -> String {
         match self {
             OverflowMsg::IntegerOutOfRange => "整数溢出：结果超出 i64 范围".to_string(),
+            OverflowMsg::Capacity => "容量溢出：所需容量超出可分配上限".to_string(),
         }
     }
 }
@@ -668,7 +690,7 @@ mod tests {
     }
 
     #[test]
-    fn syntax_msg_covers_all_seventeen_rows() {
+    fn syntax_msg_covers_all_nineteen_rows() {
         assert_eq!(
             SyntaxMsg::IllegalChar { c: '$' }.message(),
             "非法字符 '$'"
@@ -747,6 +769,76 @@ mod tests {
         assert_eq!(
             SyntaxMsg::IntegerOutOfRange.message(),
             "整数字面量超出 i64 范围"
+        );
+        assert_eq!(
+            SyntaxMsg::NestingTooDeep.message(),
+            "嵌套深度超限（超过 1000 层）"
+        );
+        assert_eq!(
+            SyntaxMsg::ExprTooDeep.message(),
+            "表达式嵌套过深（超过 10000 层）"
+        );
+    }
+
+    /// v1.1 补钉（`syntax.md` §3.8 / `interface-contract.md` §10.8）：`NestingTooDeep`
+    /// 消息逐字符锁定，且**仍归 `SyntaxError` 类**（`class_name()` 映射不改，类总数仍 12）。
+    #[test]
+    fn nesting_too_deep_message_is_the_spec_text() {
+        assert_chars_eq(
+            &SyntaxMsg::NestingTooDeep.message(),
+            "嵌套深度超限（超过 1000 层）",
+        );
+        assert_eq!(
+            syntax(SyntaxMsg::NestingTooDeep, Span::START).class_name(),
+            "SyntaxError"
+        );
+        assert_eq!(
+            LzError::Syntax {
+                msg: SyntaxMsg::NestingTooDeep,
+                span: Span::new(1, 1001),
+            }
+            .to_string(),
+            "SyntaxError: 嵌套深度超限（超过 1000 层）"
+        );
+        // 该变体无字段：构造即用，无参数。
+        assert_eq!(
+            LzError::Syntax {
+                msg: SyntaxMsg::NestingTooDeep,
+                span: Span::START,
+            }
+            .message(),
+            "嵌套深度超限（超过 1000 层）"
+        );
+    }
+
+    /// v1.1 补钉（`syntax.md` §3.9 / `interface-contract.md` §10.8）：`ExprTooDeep`
+    /// 消息逐字符锁定，且**仍归 `SyntaxError` 类**（`class_name()` 映射不改，类总数仍 12）。
+    #[test]
+    fn expr_too_deep_message_is_the_spec_text() {
+        assert_chars_eq(
+            &SyntaxMsg::ExprTooDeep.message(),
+            "表达式嵌套过深（超过 10000 层）",
+        );
+        assert_eq!(
+            syntax(SyntaxMsg::ExprTooDeep, Span::START).class_name(),
+            "SyntaxError"
+        );
+        assert_eq!(
+            LzError::Syntax {
+                msg: SyntaxMsg::ExprTooDeep,
+                span: Span::new(1, 1),
+            }
+            .to_string(),
+            "SyntaxError: 表达式嵌套过深（超过 10000 层）"
+        );
+        // 该变体无字段：构造即用，无参数。
+        assert_eq!(
+            LzError::Syntax {
+                msg: SyntaxMsg::ExprTooDeep,
+                span: Span::START,
+            }
+            .message(),
+            "表达式嵌套过深（超过 10000 层）"
         );
     }
 
@@ -837,6 +929,27 @@ mod tests {
         assert_eq!(
             OverflowMsg::IntegerOutOfRange.message(),
             "整数溢出：结果超出 i64 范围"
+        );
+    }
+
+    /// v1.1 补钉：`OverflowMsg::Capacity` 的第二条消息模板，逐字符固定，且仍归 `OverflowError`。
+    #[test]
+    fn overflow_msg_capacity_is_the_second_template() {
+        assert_chars_eq(
+            &OverflowMsg::Capacity.message(),
+            "容量溢出：所需容量超出可分配上限",
+        );
+        assert_eq!(
+            overflow(Span::START, OverflowMsg::Capacity).class_name(),
+            "OverflowError"
+        );
+        assert_eq!(
+            LzError::Overflow {
+                span: Span::START,
+                msg: OverflowMsg::Capacity,
+            }
+            .to_string(),
+            "OverflowError: 容量溢出：所需容量超出可分配上限"
         );
     }
 

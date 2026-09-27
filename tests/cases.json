@@ -13,6 +13,8 @@
     { "path": "fixtures/syntax_illegal_char.lfz",        "name": "syntax_illegal_character",          "expect": { "error": "SyntaxError" } },
     { "path": "fixtures/syntax_unclosed_paren.lfz",      "name": "syntax_unclosed_paren",             "expect": { "error": "SyntaxError" } },
     { "path": "fixtures/int_literal_overflow.lfz",       "name": "int_literal_exceeds_i64",           "expect": { "error": "SyntaxError" } },
+    { "path": "fixtures/parse_nesting_overflow.lfz",     "name": "parse_nesting_1001_is_nesting_too_deep", "expect": { "error": "SyntaxError" } },
+    { "path": "fixtures/ast_depth_overflow.lfz",         "name": "ast_depth_10000_terms_is_expr_too_deep", "expect": { "error": "SyntaxError" } },
 
     { "path": "fixtures/let_rebind.lfz",                 "name": "let_rebind_is_type_error",          "expect": { "error": "TypeError" } },
     { "path": "fixtures/let_compound_rebind.lfz",        "name": "let_compound_rebind_is_type_error", "expect": { "error": "TypeError" } },
@@ -25,6 +27,8 @@
 
     { "path": "fixtures/overflow_add.lfz",               "name": "int_overflow_add",                  "expect": { "error": "OverflowError" } },
     { "path": "fixtures/abs_i64_min.lfz",                "name": "abs_i64_min_overflow",              "expect": { "error": "OverflowError" } },
+    { "path": "fixtures/repeat_capacity_overflow.lfz",   "name": "builtin_repeat_capacity_overflow",  "expect": { "error": "OverflowError" } },
+    { "path": "fixtures/range_capacity_overflow.lfz",    "name": "builtin_range_capacity_overflow",   "expect": { "error": "OverflowError" } },
 
     { "path": "fixtures/if_condition_not_bool.lfz",      "name": "if_condition_not_bool",             "expect": { "error": "TypeError" } },
     { "path": "fixtures/for_over_string.lfz",            "name": "for_over_string_not_iterable",      "expect": { "error": "TypeError" } },

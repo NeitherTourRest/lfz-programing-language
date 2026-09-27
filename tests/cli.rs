@@ -498,6 +498,100 @@ fn bare_two_files_is_usage_error_exit_2() {
     );
 }
 
+// ---------------------------------------------------------------------------
+// bug-B-20260927-01：`;;`（dump）必须与 `print` 同通道
+// 规范：semantics.md §3.6 #7（`;;` 通道 = stdout，与 `print` 同通道）
+//       + §8.3/§8.4（`--json` 下 stdout 恒为单个 JSON）
+// ---------------------------------------------------------------------------
+
+/// 成功路径：程序 `let z = 5` + `;;` + `run --json` → stdout **恰为** `{"ok":true}\n`，
+/// `z ： 5`（dump 行）出现在 **stderr**、不在 stdout。
+#[test]
+fn json_run_dump_success_redirects_to_stderr() {
+    let f = TempLfz::new("#42\nlet z = 5\n;;\n");
+    let r = run_lfz(&["run", "--json", &f.path()]);
+
+    assert_eq!(r.code, 0, "stderr={}", r.stderr);
+    // stdout 恰为一个合法 JSON 对象（逐字符），证明 `;;` 未污染 stdout。
+    assert_eq!(r.stdout, "{\"ok\":true}\n", "stdout={:?}", r.stdout);
+    assert!(
+        !r.stdout.contains("z ： 5"),
+        "`;;` 不得写 stdout：stdout={:?}",
+        r.stdout
+    );
+    // `;;` 与 `print` 同通道 → 在 `--json` 下落 stderr。
+    assert!(
+        r.stderr.contains("z ： 5"),
+        "`;;` 应随 `print` 一起重定向到 stderr：stderr={:?}",
+        r.stderr
+    );
+}
+
+/// 通道一致性（§3.6 #7）：`print` 与 `;;` 在 `--json` 下**同通道**（均 stderr），
+/// 且保持程序执行顺序（A → `z ： 5` → B）；stdout 仍恰为单个 JSON。
+#[test]
+fn json_run_dump_and_print_share_channel_in_order() {
+    let f = TempLfz::new("#42\nprint(\"A\")\nlet z = 5\n;;\nprint(\"B\")\n");
+    let r = run_lfz(&["run", "--json", &f.path()]);
+
+    assert_eq!(r.code, 0, "stderr={}", r.stderr);
+    assert_eq!(r.stdout, "{\"ok\":true}\n", "stdout={:?}", r.stdout);
+    // 三者均在 stderr，且按执行序交织（证明同通道）。
+    let (a, d, b) = (
+        r.stderr.find('A').expect("stderr 应含 print A"),
+        r.stderr.find("z ： 5").expect("stderr 应含 dump 行"),
+        r.stderr.find('B').expect("stderr 应含 print B"),
+    );
+    assert!(a < d && d < b, "print/dump 应按执行序交织于 stderr：{:?}", r.stderr);
+    assert!(
+        !r.stdout.contains('A') && !r.stdout.contains('B') && !r.stdout.contains("z ： 5"),
+        "stdout 不得含任何程序输出：stdout={:?}",
+        r.stdout
+    );
+}
+
+/// 失败路径：程序先 `;;` 再运行期报错 + `run --json` → stdout 仍是**唯一一行合法 JSON**
+/// （§8.3 示例 4 形状），`z ： 5` 只在 stderr。
+#[test]
+fn json_run_dump_before_error_redirects_to_stderr() {
+    let f = TempLfz::new("#42\nlet z = 5\n;;\n1 / 0\n");
+    let r = run_lfz(&["run", "--json", &f.path()]);
+
+    assert_eq!(r.code, 2, "stderr={}", r.stderr);
+    assert_eq!(r.stdout.lines().count(), 1, "stdout={:?}", r.stdout);
+    let s = r.stdout.trim_end();
+    assert!(
+        s.starts_with("{\"ok\":false") && s.ends_with('}'),
+        "stdout 应为单个 JSON 对象：{:?}",
+        r.stdout
+    );
+    assert!(
+        !r.stdout.contains("z ： 5"),
+        "`;;` 不得写 stdout：stdout={:?}",
+        r.stdout
+    );
+    assert!(
+        r.stderr.contains("z ： 5"),
+        "`;;` 应重定向到 stderr：stderr={:?}",
+        r.stderr
+    );
+}
+
+/// 回归保护：**非** `--json` 模式下 `;;` 仍写 **stdout**（§3.6 #7 默认通道），不属于重定向目标。
+#[test]
+fn dump_without_json_still_writes_stdout() {
+    let f = TempLfz::new("#42\nlet z = 5\n;;\n");
+    let r = run_lfz(&["run", &f.path()]);
+
+    assert_eq!(r.code, 0, "stderr={}", r.stderr);
+    assert!(r.stdout.contains("z ： 5"), "stdout={:?}", r.stdout);
+    assert!(
+        !r.stderr.contains("z ： 5"),
+        "非 json 模式 `;;` 不应改写 stderr：stderr={:?}",
+        r.stderr
+    );
+}
+
 /// `run` 后跟非 `.lfz` 文件仍按旧行为读取（不校验扩展名；非 `.lfz` 无 `#42` 要求）→ 正常执行。
 /// 证明裸文件入口的扩展名收紧**没有**波及 `run` 子命令（向后兼容）。
 #[test]

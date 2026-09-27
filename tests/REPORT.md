@@ -1,8 +1,8 @@
 # LFZ 黑盒测试集 — 测试报告（P5）
 
-> 交付物：评分项 2（20 分）｜ 负责人: test-engineer ｜ 状态: **定稿（P5.4）+ 等价路径补测（P5.6）** ｜ 最后更新: 2026-09-27
+> 交付物：评分项 2（20 分）｜ 负责人: test-engineer ｜ 状态: **定稿（P5.4）+ 等价路径补测（P5.6）+ 容量溢出回归（P5.7）+ 解析期上限回归（P5.8）** ｜ 最后更新: 2026-09-27
 > 测试对象: LFZ 解释器（`cargo run -- test` runner + `lfz` 解释器） ｜ 基线: P3 解释器核心 `v0.2.0`
-> 事实源: `docs/spec/{syntax,semantics,interface-contract}.md`（冻结 v1） ｜ runner 契约: `docs/tooling/runner-contract.md`（v1.2）
+> 事实源: `docs/spec/{syntax,semantics,interface-contract}.md`（冻结 v1 + §3.8/§3.9 解析期上限 v1.1 补钉） ｜ runner 契约: `docs/tooling/runner-contract.md`（v1.2）
 > 配套文件: 覆盖矩阵 `tests/coverage-matrix.md`；用例 `tests/lfz/**/*.lfz` + `tests/fixtures/**` + 清单 `tests/cases.json`
 
 ---
@@ -11,7 +11,7 @@
 
 本测试集是 LFZ 语言的**黑盒测试集**：只依赖 `docs/spec/` 声明的**公开语法与语义**判定解释器行为是否正确，**不读解释器实现代码**、**不修改解释器源码**。目标是证明 LFZ 解释器实现了 spec 声明的**全部语言特性**，且行为符合 spec。
 
-**定稿结论**：`cargo run --quiet -- test` → **85 用例全绿（85 PASS / 0 FAIL / 0 ERROR，退出码 0）**；覆盖 `docs/spec/` 声明的语言特性全集、`interface-contract.md` §10.7 全表 **54** 个内置（53 黑盒 + 1 由 Rust 单测）、§8.1 **12** 个错误类（11 黑盒 + 1 由 Rust 单测）。**P5.6** 依 verifier《P9-verification.md》rev.2 §9.4 建议，为规范声明「两种写法等价」的路径补**双路**用例（专节见覆盖矩阵 §1.3）。
+**定稿结论**：`cargo run --quiet -- test` → **90 用例全绿（90 PASS / 0 FAIL / 0 ERROR，退出码 0）**；覆盖 `docs/spec/` 声明的语言特性全集、`interface-contract.md` §10.7 全表 **54** 个内置（53 黑盒 + 1 由 Rust 单测）、§8.1 **12** 个错误类（11 黑盒 + 1 由 Rust 单测）。**P5.6** 依 verifier《P9-verification.md》rev.2 §9.4 建议，为规范声明「两种写法等价」的路径补**双路**用例（专节见覆盖矩阵 §1.3）。**P5.7** 为 `bug-20260927-03`（`repeat` 容量溢出）与 `bug-20260927-04`（`range` 超大 `n`）修后补 2 条负例（断言类 `OverflowError`；直跑 exit 2，不再 panic），防回归（见 §7）。**P5.8** 为新增的解析期上限 `syntax.md` §3.8（`PARSE_DEPTH_LIMIT = 1000`）与 §3.9（`AST_DEPTH_LIMIT = 10000`）补**限内放行正例 + 超限负例**双向回归：`(`×1001 / `1+1+…`×10000 → `SyntaxError`（直跑 exit 2，不再 panic / abort），`(`×1000 / 9999 项 → exit 0（见 §5.1 / §9）。
 
 ---
 
@@ -29,9 +29,9 @@
 | 条目 | 内容 | 本测试集的遵循方式 |
 |---|---|---|
 | **T-R1** | 用例执行链与 `lfz run` 一致；缺/非法 `#42` → `CosmosAnswerError`（判 ERROR，退出码 2） | 所有 `.lfz` 首行恒为 `#42` |
-| **T-R2** | 负例经 `cases.json` 的 `expect.error` 声明（取值必须是 §8.1 的 12 类名之一）；夹具放非自动发现处 | 58 负例放 `tests/fixtures/`，在 `tests/cases.json` 声明 |
+| **T-R2** | 负例经 `cases.json` 的 `expect.error` 声明（取值必须是 §8.1 的 12 类名之一）；夹具放非自动发现处 | 62 负例放 `tests/fixtures/`，在 `tests/cases.json` 声明 |
 | **T-R3** | 仅 `AssertionError`（`assert` 失败 / `fail`）判 FAIL；`check` 失败非致命（PASS）；`expect` 不符判 FAIL | 错误类断言以「类名一致」为准；`check` 用例断言非致命 |
-| **T-R4** | 默认发现根 `tests/`；递归 `*.lfz`（大小写不敏感）；排除 `fixtures/`；结果稳定排序 | 26 个正向 `.lfz` 放自动发现域，58 负例放 `fixtures/` |
+| **T-R4** | 默认发现根 `tests/`；递归 `*.lfz`（大小写不敏感）；排除 `fixtures/`；结果稳定排序 | 27 个正向 `.lfz` 放自动发现域，62 负例放 `fixtures/` |
 
 ### 2.3 断言与判定口径
 
@@ -56,7 +56,7 @@ cargo run --quiet -- test
 
 - 默认发现根 = cwd 下 `tests/`；递归收集 `tests/**/*.lfz`（**排除 `tests/fixtures/`**）；读取 `tests/cases.json` 声明负例。
 - 每用例一行 `PASS/FAIL/ERROR <name>`；末尾汇总行逐字符稳定：`汇总：共 <N> 个用例，通过 <P>，失败 <F>，错误 <E>`。
-  - 机器可读：`cargo run --quiet -- test --json` → **末行**为汇总 JSON（`ok/total/passed/failed/errored/cases`；本测试集实测 `{"ok":true,"total":85,"passed":85,"failed":0,"errored":0,...}`）。
+  - 机器可读：`cargo run --quiet -- test --json` → **末行**为汇总 JSON（`ok/total/passed/failed/errored/cases`；本测试集实测 `{"ok":true,"total":90,"passed":90,"failed":0,"errored":0,...}`）。
   - **注意（已知工具链偏差，待 team-lead / tooling-dev 裁定）**：契约 §9.3 的输出重定向仅覆盖内建 `print` / `input` 提示，**未覆盖 `;;` dump 指令**——`;;` 文本仍写 stdout，含 `;;` 的用例（`test_dump.lfz`）会使 `--json` 的 stdout 出现**多行**（JSON 恒在**最后一行**）。此为 **runner/CLI 契约与实现间隙**（非黑盒测试集缺陷，`src/**` 未改）；机器消费建议取 stdout 最后一行。主要交付命令为**非 `--json`** 的 `cargo run --quiet -- test`，不受此影响。
 
 ### 3.2 退出码语义（`0` / `1` / `2`）
@@ -74,20 +74,21 @@ cargo run --quiet -- test
 
 ---
 
-## 4. 用例总数与构成（**85**）
+## 4. 用例总数与构成（**90**）
 
 | 构成 | 数量 | 说明 |
 |---|---|---|
-| 正向自动发现 `.lfz` | **26 文件 / 597 `assert`** | `tests/lfz/**/*.lfz`，首行恒 `#42` |
+| 正向自动发现 `.lfz` | **27 文件 / 599 `assert`** | `tests/lfz/**/*.lfz`，首行恒 `#42` |
 | ├ 基础语言特性（P5.1） | 7 文件 / 114 | 字面量 / let-var / 算术 / 优先级 / 除法取模 / i64 边界 / `#42` |
 | ├ 控制流·函数·闭包·结构体·管道·插值·`;;`·A1·A6（P5.2） | 10 文件 / 179 | 见覆盖矩阵 §1 |
 | ├ 内置函数全表（P5.3） | 8 文件 / 263 | 见覆盖矩阵 §2 |
-| └ 等价路径双路补测（P5.6） | 1 文件 / 41 | `test_equivalence_paths.lfz`；见覆盖矩阵 §1.3 |
-| 负例清单 `expect.error` | **58** fixture | `tests/fixtures/**` + `tests/cases.json` |
+| ├ 等价路径双路补测（P5.6） | 1 文件 / 41 | `test_equivalence_paths.lfz`；见覆盖矩阵 §1.3 |
+| └ 解析期上限边界补测（P5.8） | 1 文件 / 2 | `test_parse_limits.lfz`；见覆盖矩阵 §1.1 / §5.6 |
+| 负例清单 `expect.error` | **62** fixture | `tests/fixtures/**` + `tests/cases.json`（P5.1–P5.4 的 58 + **P5.7 的 2** + **P5.8 的 2**） |
 | 正向豁免（非 `.lfz`） | **1**（`fixtures/plain_ok.txt`） | 非 `.lfz` 不要求 `#42`，判正常 PASS |
-| **合计** | **85** | `cargo run --quiet -- test` → **85 PASS / 0 FAIL / 0 ERROR**，exit 0 |
+| **合计** | **90** | `cargo run --quiet -- test` → **90 PASS / 0 FAIL / 0 ERROR**，exit 0 |
 
-**错误类分布**（`expect.error` 逐类计数，合计 58）：`CosmosAnswerError` 5、`SyntaxError` 11、`NameError` 1、`TypeError` 11、`IndexError` 6、`FieldError` 4、`ZeroDivisionError` 3、`OverflowError` 5、`ValueError` 10、`AssertionError` 1、`RecursionError` 1、`IOError` 0（见 §5.3 / §6）。
+**错误类分布**（`expect.error` 逐类计数，合计 62）：`CosmosAnswerError` 5、`SyntaxError` 13、`NameError` 1、`TypeError` 11、`IndexError` 6、`FieldError` 4、`ZeroDivisionError` 3、`OverflowError` 7、`ValueError` 10、`AssertionError` 1、`RecursionError` 1、`IOError` 0（见 §5.3 / §6）。
 
 ---
 
@@ -113,6 +114,7 @@ cargo run --quiet -- test
 | 环安全（A6）：自引用容器 `==` 等价 | ✅ 通过（`<cycle>` 文本见 §6） | 同上 |
 | **等价路径**：`s.k≡s["k"]`（读/写/调用）、复合赋值脱糖、管道 data-last 脱糖、块注释≡空格、`a--b`、短路 | ✅ 通过（两写法均有用例且结果一致） | 覆盖矩阵 §1.3（P5.6） |
 | 错误模型（§8.1） | ⚠️ 部分（11/12 黑盒 + `IOError` 由 Rust 单测） | §5.3 / §6 |
+| **解析期上限**：§3.8 嵌套深度 `1000` / §3.9 AST 深度 `10000`（限内放行 + 超限 `SyntaxError`） | ✅ 通过（双向；负例直跑 exit 2，不 panic） | 覆盖矩阵 §1.1 / §5.6（P5.8） |
 | 可移植性 / 入口一致性 | ⏭ 待实现（P5.5） | 覆盖矩阵 §9 |
 
 ### 5.2 内置函数覆盖（§10.7 全表 **54** 个）
@@ -127,13 +129,13 @@ cargo run --quiet -- test
 | 错误类 | 数量 | 状态 |
 |---|---|---|
 | `CosmosAnswerError` | 5 | ✅ 黑盒通过 |
-| `SyntaxError` | 11 | ✅ 黑盒通过 |
+| `SyntaxError` | 13 | ✅ 黑盒通过（含 P5.8 解析期上限 `parse_nesting_overflow` / `ast_depth_overflow`） |
 | `NameError` | 1 | ✅ 黑盒通过 |
 | `TypeError` | 11 | ✅ 黑盒通过 |
 | `IndexError` | 6 | ✅ 黑盒通过 |
 | `FieldError` | 4 | ✅ 黑盒通过（`del`×2 + 缺失键读 `.k`/`["k"]`×2） |
 | `ZeroDivisionError` | 3 | ✅ 黑盒通过 |
-| `OverflowError` | 5 | ✅ 黑盒通过 |
+| `OverflowError` | 7 | ✅ 黑盒通过（`overflow_add` / `abs_i64_min` / `int_inf` / `sum_overflow` / `ceil_inf` + **P5.7 新增 `repeat` / `range` 容量溢出**） |
 | `ValueError` | 10 | ✅ 黑盒通过 |
 | `IOError` | 0 | ⏭ 黑盒跳过（环境相关）→ **Rust 单测覆盖**（见 §6） |
 | `AssertionError` | 1 | ✅ 黑盒通过 |
@@ -166,6 +168,8 @@ runner 契约 §6 / §9.3：非 `--json` 模式下程序 `print` / `;;` 写 stdo
 | 缺陷单 | 现象 | 严重度 | 影响用例 | 状态 |
 |---|---|---|---|---|
 | **bug-20260927-01** | 经方括号取得的方法值再调用时不绑定 `self`：`p["norm2"]()` → `NameError`（`.字段()` 调用点正常） | 中 | `test_structs.lfz` 中「方括号调用方法」未断言 | ✅ **已修复**（commit `6aabdf5`）→ **P5.6 补端到端用例并回归**：`struct_method_call_bracket` / `method_bracket_mutates_same_instance` + `equiv_method_two_call_forms_equal` / `equiv_self_mutation_*` |
+| **bug-20260927-03** | `repeat(n, s)` 超大 `n` → **Rust panic（进程崩溃 / exit 101）**；spec 要求 `OverflowError` | 高 | 无（原 85 黑盒未覆盖该入参） | ✅ **已修复**（runtime-dev，`OverflowMsg::Capacity`）→ **P5.7 补负例并回归**：`builtin_repeat_capacity_overflow` PASS；直跑 exit 2 |
+| **bug-20260927-04** | `range(n)` 超大 `n` → **Rust panic（进程崩溃 / exit 101）**（规范原静默，ADR [2026-09-27 21:10] 裁定统一为 `OverflowError`） | 中 | 无（原 85 黑盒未覆盖该入参） | ✅ **已修复**（runtime-dev）→ **P5.7 补负例并回归**：`builtin_range_capacity_overflow` PASS；直跑 exit 2 |
 
 > 缺陷修复前，对应用例在矩阵中标注为「未断言 / 阻塞」，**不删除、不放宽**任何已有断言。本批为修复**后**补测，属新增断言，未改动既有断言。
 
@@ -182,7 +186,7 @@ $env:Path += ";$env:USERPROFILE\.cargo\bin"
 # 1) 构建（应 0 warning / 0 error）
 cargo build
 
-# 2) 一键运行全部黑盒用例（应 85 PASS / 0 FAIL / 0 ERROR，退出码 0）
+# 2) 一键运行全部黑盒用例（应 90 PASS / 0 FAIL / 0 ERROR，退出码 0）
 cargo run --quiet -- test
 #   查看退出码：
 #   echo $LASTEXITCODE     # → 0
@@ -190,14 +194,14 @@ cargo run --quiet -- test
 # 3) 机器可读输出（选做；stdout 为唯一一行 JSON）
 cargo run --quiet -- test --json
 
-# 4) 解释器单元/集成测试回归（应 432 passed / 0 failed）
+# 4) 解释器单元/集成测试回归（该计数随 `src/**` 变更而变；本测试集以黑盒命令 90/90 为准）
 cargo test
 ```
 
 **预期输出（末尾汇总行，逐字符稳定）**：
 
 ```
-汇总：共 85 个用例，通过 85，失败 0，错误 0
+汇总：共 90 个用例，通过 90，失败 0，错误 0
 ```
 
 ---
@@ -215,5 +219,12 @@ cargo test
 | 2026-09-27 | **P5.6（等价路径补测）** | `cargo clean -p lfz; cargo build` | **0 warning / 0 error** |
 | 2026-09-27 | **P5.6（等价路径补测）** | `cargo run --quiet -- test` | **85 PASS / 0 FAIL / 0 ERROR，exit 0**（+3 用例） |
 | 2026-09-27 | **P5.6（等价路径补测）** | `cargo test` | **432 passed / 0 failed / 0 ignored**（lib 362+42+16+12；`src/**` 未改） |
+| 2026-09-27 | **P5.7（容量溢出回归）** | `cargo run -q -- test` | **87 PASS / 0 FAIL / 0 ERROR，exit 0**（+2 负例：`repeat`/`range` 容量溢出 → `OverflowError`） |
+| 2026-09-27 | **P5.7（容量溢出回归）** | `cargo run -- run tests/fixtures/{repeat,range}_capacity_overflow.lfz` | 均 `OverflowError: 容量溢出：所需容量超出可分配上限`，`$LASTEXITCODE = 2`（不再 panic / 101） |
+| 2026-09-27 | **P5.7（容量溢出回归）** | `cargo test` | **451 passed / 0 failed / 0 ignored**（lib 368 + main 47 + cli 24 + test_runner 12；runtime-dev 修复批后即时实测。注：tooling-dev 的 `;;`×`--json` 修复批并发进行中，其后 `tests/cli.rs` 计数会变——本测试集只以 `cargo run -q -- test` 的 87/87 为准） |
+| 2026-09-27 | **P5.8（解析期上限回归）** | `cargo build` | **0 warning / 0 error** |
+| 2026-09-27 | **P5.8（解析期上限回归）** | `cargo run -q -- test` | **90 PASS / 0 FAIL / 0 ERROR，exit 0**（85→…→90：本批 +2 负例 +1 正例文件） |
+| 2026-09-27 | **P5.8（解析期上限回归）** | `cargo run -- run tests/fixtures/{parse_nesting_overflow,ast_depth_overflow}.lfz` | 均 `SyntaxError`（`嵌套深度超限（超过 1000 层）` / `表达式嵌套过深（超过 10000 层）`），`$LASTEXITCODE = 2`（不 panic / abort）；正例 `test_parse_limits.lfz` → exit 0、stderr 空 |
+| 2026-09-27 | **P5.8（解析期上限回归）** | `cargo test` | **482 passed / 0 failed / 0 ignored**（lib 379 + main 48 + cli 28 + test_runner 12 + unit 15；`src/**` 含 §3.8/§3.9 变更后的实测，非本批引入） |
 
 > 解释器每次变更后，本测试集须复跑全量并把结果追加到本表；回归结果同时作为 verifier 独立验收（P9）的输入。

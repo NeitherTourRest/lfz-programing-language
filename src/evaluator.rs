@@ -64,7 +64,7 @@ use crate::ast::{
 use crate::builtins;
 use crate::env::{Env, ScopeChain};
 use crate::error::{
-    div_zero, field as field_error, index as index_error, io as io_error, name as name_error,
+    div_zero, field as field_error, index as index_error, name as name_error,
     overflow, recursion, type_error, value as value_error, LzError, OverflowMsg, R, TraceFrame,
     TypeMsg, ValueMsg,
 };
@@ -72,7 +72,6 @@ use crate::span::Span;
 use crate::value::{CapturedVar, Closure, StructObj, UserFn, Value};
 use std::cell::RefCell;
 use std::cmp::Ordering;
-use std::io::Write;
 use std::rc::Rc;
 
 // ===========================================================================
@@ -200,20 +199,61 @@ pub fn eval_module(program: &Program) -> R<Value> {
 ///
 /// `result` 为最后一条语句的值（顶层 `return` 防御性接受；无语句 → `nil`）。
 pub fn eval_module_traced(program: &Program) -> TracedRun {
+    on_eval_stack(|| eval_module_on_thread(program))
+}
+
+/// 在**专用大栈线程**（[`EVAL_STACK_SIZE`] = 256 MiB ≥ 64 MiB）上运行 `f` 并返回其结果
+/// （`interface-contract.md` §10.9 R-S2）。
+///
+/// `T` 可含 `Rc`（非 `Send`）：结果经 [`Transfer`] 在 `join` 边界移交，故 `T` **无** `Send`
+/// 约束（闭包 `F` 须 `Send`，以便在子线程上运行）。线程创建失败（OS 资源不足）时**退化**为
+/// 当前栈执行（逻辑深度上限仍生效）。
+///
+/// **用途**：CLI 把 `load → lex → parse → eval`（含 `Program` 的**析构**）整条流水线放到**同一**
+/// 大栈，使 `PARSE_DEPTH_LIMIT` 层可达、深左偏 AST 的递归析构不溢出。
+pub fn on_eval_stack<T, F>(f: F) -> T
+where
+    F: FnOnce() -> T + Send,
+{
+    use std::sync::{Arc, Mutex};
+    // 闭包放入共享槽：线程创建失败时可在当前栈上取回并执行（保底退化）。
+    let slot = Arc::new(Mutex::new(Some(f)));
     std::thread::scope(|scope| {
-        let handle = match std::thread::Builder::new()
+        let worker = Arc::clone(&slot);
+        let spawned = std::thread::Builder::new()
             .stack_size(EVAL_STACK_SIZE)
-            .spawn_scoped(scope, || Transfer(eval_module_on_thread(program)))
-        {
-            Ok(h) => h,
-            // 线程创建失败（OS 资源不足）时退化为当前栈求值（仍受逻辑深度上限保护）。
-            Err(_) => return eval_module_on_thread(program),
-        };
-        match handle.join() {
-            Ok(transfer) => transfer.0,
-            Err(payload) => std::panic::resume_unwind(payload),
+            .spawn_scoped(scope, move || {
+                let f = worker
+                    .lock()
+                    .expect("栈执行槽锁未中毒")
+                    .take()
+                    .expect("栈执行闭包只被调用一次");
+                Transfer(f())
+            });
+        match spawned {
+            Ok(handle) => match handle.join() {
+                Ok(transfer) => transfer.0,
+                Err(payload) => std::panic::resume_unwind(payload),
+            },
+            // 线程创建失败（OS 资源不足）：在当前栈上执行（逻辑深度上限仍生效）。
+            Err(_) => {
+                let f = slot
+                    .lock()
+                    .expect("栈执行槽锁未中毒")
+                    .take()
+                    .expect("栈执行闭包只被调用一次");
+                f()
+            }
         }
     })
+}
+
+/// 在**当前线程**上求值（不新开线程）。
+///
+/// 供已位于大栈线程的调用方（如 CLI 经 [`on_eval_stack`]）复用，使 `parse` 与 `eval`
+/// 处于**同一**大栈（§10.9 R-S2「整条流水线同栈」），避免嵌套线程。
+pub fn eval_module_traced_on_thread(program: &Program) -> TracedRun {
+    eval_module_on_thread(program)
 }
 
 /// [`eval_module_traced`] 的实际求值体（在求值线程上运行）。
@@ -609,14 +649,13 @@ impl Interp {
             StmtKind::Break => Ok(Flow::Break),
             StmtKind::Continue => Ok(Flow::Continue),
             // `;;`：输出当前**可见名字链**（§3.6：内→外、同层 slot 升序、遮蔽去重）。
-            // 渲染逻辑为纯函数 [`render_dump`]，本处只负责收集 + 打印到 stdout。
+            // 渲染逻辑为纯函数 [`render_dump`]；写通道由 [`builtins::write_dump`] 决定，
+            // **与 `print` 同通道**（`--json` 下二者一起转 stderr，§3.6 #7）。
             StmtKind::Dump { .. } => {
                 let entries = self.visible_entries(scope);
                 let text = render_dump(&entries);
                 if !text.is_empty() {
-                    let mut out = std::io::stdout();
-                    out.write_all(text.as_bytes())
-                        .map_err(|e| io_error(format!("无法写入：{e}"), Some(stmt.span)))?;
+                    builtins::write_dump(&text, stmt.span)?;
                 }
                 Ok(Flow::Value(Value::Nil))
             }
@@ -800,9 +839,14 @@ impl Interp {
                 .ok_or_else(|| name_error("self".to_string(), target.span))?,
         };
         let last = target.path.len() - 1;
+        // §8.2：插入符指向「引发错误的最小 AST 节点的首字符」。对下标 / 字段访问，**读取**
+        // 路径（`ExprKind::Index` / `Field` 节点）的 span 取**基座起始**（parser
+        // `parse_postfix` 不变量），故**写入**路径也须用基座 span（`target.span` = 基座 token
+        // 起始），而非下标节的 `[` / `.` 位置（obs-B-03：同一访问读写两形态 column 须一致）。
+        let err_span = target.span;
         // 中间段：逐段解析到「最终容器」。
         for seg in &target.path[..last] {
-            current = match self.read_segment(&current, seg, scope)? {
+            current = match self.read_segment(&current, seg, err_span, scope)? {
                 Step::Done(v) => v,
                 Step::Flow(f) => return Ok(f),
             };
@@ -820,13 +864,13 @@ impl Interp {
         let current_val = if op == AssignOp::Assign {
             None
         } else {
-            Some(self.read_final(&current, &key, seg.span)?)
+            Some(self.read_final(&current, &key, err_span)?)
         };
         let newv = match self.eval_rhs(op, current_val, value, scope, target.span)? {
             Step::Done(v) => v,
             Step::Flow(f) => return Ok(f),
         };
-        self.write_final(&current, &key, newv, seg.span)?;
+        self.write_final(&current, &key, newv, err_span)?;
         Ok(Flow::Value(Value::Nil))
     }
 
@@ -862,11 +906,20 @@ impl Interp {
     }
 
     /// 解析 lvalue 的**中间段**（字段 / 下标读取），用于走到最终容器。
-    fn read_segment(&mut self, cur: &Value, seg: &LvalueSeg, scope: &Scope) -> R<Step<Value>> {
+    ///
+    /// `err_span` 为**基座 span**（`target.span`）：字段 / 下标错误位置须指向基座首字符，
+    /// 与读取路径一致（obs-B-03 / §8.2）。
+    fn read_segment(
+        &mut self,
+        cur: &Value,
+        seg: &LvalueSeg,
+        err_span: Span,
+        scope: &Scope,
+    ) -> R<Step<Value>> {
         match &seg.kind {
-            LvalueSegKind::Field(k) => Ok(Step::Done(self.get_field(cur, k, seg.span)?)),
+            LvalueSegKind::Field(k) => Ok(Step::Done(self.get_field(cur, k, err_span)?)),
             LvalueSegKind::Index(e) => match self.eval_expr(e, scope)? {
-                Flow::Value(iv) => Ok(Step::Done(self.index_read(cur, &iv, seg.span)?)),
+                Flow::Value(iv) => Ok(Step::Done(self.index_read(cur, &iv, err_span)?)),
                 f => Ok(Step::Flow(f)),
             },
         }
@@ -1561,13 +1614,21 @@ fn is_nan(v: &Value) -> bool {
 }
 
 /// `string * int` 重复（`n <= 0` → 空串）。
+///
+/// 与内置 `repeat(n, s)` 同一口径（§10.7 / ADR bug-20260927-04）：`len * n` 超过
+/// `isize::MAX`（`String` 最大可分配字节数）时，`str::repeat` 会以 `capacity overflow`
+/// **panic**，故提前拦截为受控 `OverflowError`（`容量溢出：所需容量超出可分配上限`）。
 fn repeat_str(s: &str, n: i64, span: Span) -> R<Value> {
     if n <= 0 {
         return Ok(Value::string(""));
     }
-    s.len()
+    let total = s
+        .len()
         .checked_mul(n as usize)
-        .ok_or_else(|| overflow(span, OverflowMsg::IntegerOutOfRange))?;
+        .ok_or_else(|| overflow(span, OverflowMsg::Capacity))?;
+    if total > isize::MAX as usize {
+        return Err(overflow(span, OverflowMsg::Capacity));
+    }
     Ok(Value::string(s.repeat(n as usize)))
 }
 
@@ -1609,6 +1670,21 @@ fn bad_operands(op: &str, lt: &str, rt: &str, span: Span) -> Box<LzError> {
 // ===========================================================================
 // 格式说明符（§2.8：`[ [fill] align ][sign][width][.precision][type]`）
 // ===========================================================================
+
+/// 格式说明符 `width` 允许的最大值（防御性上限）。
+///
+/// `width` 仅用于填充（`"0".repeat` / `format!` 拼接），本身不受 `core::fmt` 精度限制；但
+/// 超大 `width`（如 `"{:99999999999d}"`）会请求不可行的分配，`String::repeat` / 分配器随之
+/// **abort**（`memory allocation of N bytes failed`，非受控错误）。此处设一个远大于正常排版
+/// 需要的上限；超出即按 `syntax.md` §2.8「非法说明符 → `ValueError`」拒绝。
+const MAX_FMT_WIDTH: usize = 1_000_000;
+
+/// 格式说明符 `precision` 的**硬上限**（`core::fmt` 实现限制）。
+///
+/// 动态精度 `format!("{:.*}", p, x)` 在 `p >= 65536` 时直接以
+/// `Formatting argument out of range` **panic**（实测 `p = 65535` 正常、`65536` 崩溃）。
+/// 故 `precision > 65535` 一律按非法说明符拒绝（`syntax.md` §2.8）。
+const MAX_FMT_PRECISION: usize = 65_535;
 
 /// 单个富字符串段的格式说明符（Python 风格子集）。
 struct FmtSpec {
@@ -1663,7 +1739,11 @@ impl FmtSpec {
         }
         if i > ws {
             let w: String = cs[ws..i].iter().collect();
-            fs.width = Some(w.parse::<usize>().map_err(|_| bad())?);
+            let width = w.parse::<usize>().map_err(|_| bad())?;
+            if width > MAX_FMT_WIDTH {
+                return Err(bad()); // 超大 width → 受控 ValueError（非分配 abort）
+            }
+            fs.width = Some(width);
         }
         // [.precision]
         if i < cs.len() && cs[i] == '.' {
@@ -1676,7 +1756,11 @@ impl FmtSpec {
                 return Err(bad());
             }
             let p: String = cs[ps..i].iter().collect();
-            fs.precision = Some(p.parse::<usize>().map_err(|_| bad())?);
+            let precision = p.parse::<usize>().map_err(|_| bad())?;
+            if precision > MAX_FMT_PRECISION {
+                return Err(bad()); // 超大 precision → 受控 ValueError（非 core::fmt panic）
+            }
+            fs.precision = Some(precision);
         }
         // [type]
         if i < cs.len() {
@@ -2721,6 +2805,149 @@ mod tests {
         let err = eval_module(&prog(vec![Spanned::new(StmtKind::Expr(bad), at)])).unwrap_err();
         assert_eq!(err.class_name(), "TypeError");
         assert_eq!(err.span(), Some(at));
+    }
+
+    /// bug-20260927-03 同源路径：`string * int` 重复溢出 → 受控
+    /// `OverflowError`（`容量溢出：所需容量超出可分配上限`），而非 panic。
+    #[test]
+    fn string_mul_overflow_is_controlled_overflow_error() {
+        let n_bad = 4_611_686_018_427_387_904i64; // 2 * n_bad = 2^63 > isize::MAX
+        let err = eval_module(&prog(vec![expr_stmt(bin(
+            BinaryOp::Mul,
+            sstr("ab"),
+            e(ExprKind::Int(n_bad)),
+        ))]))
+        .unwrap_err();
+        assert_eq!(err.class_name(), "OverflowError");
+        assert_eq!(err.message(), "容量溢出：所需容量超出可分配上限");
+        // 正常 / 非正重复数不受影响。
+        assert_eq!(
+            run_str(vec![expr_stmt(bin(BinaryOp::Mul, sstr("ab"), int(3)))]),
+            "ababab"
+        );
+        assert_eq!(
+            run_str(vec![expr_stmt(bin(BinaryOp::Mul, sstr("ab"), int(0)))]),
+            ""
+        );
+    }
+
+    /// obs-B-03 回归：索引越界写入的插入符位置须与读取一致，指向「最小 AST 节点」的
+    /// 首字符 = 基座（`a`），而非下标节 `[`（§8.2）。
+    #[test]
+    fn index_write_oob_span_points_to_base_like_read() {
+        // 写入：Lvalue.span = (5,3)（基座 `a`）；下标节 span = (5,7)（`[`）。
+        let at_base = Span::new(5, 3);
+        let at_bracket = Span::new(5, 7);
+        let write = vec![
+            ldecl("a", arr(vec![int(1), int(2), int(3)])),
+            st(StmtKind::Assign {
+                target: Lvalue {
+                    span: at_base,
+                    base: LvalueBase::Name("a".to_string()),
+                    path: vec![LvalueSeg {
+                        span: at_bracket,
+                        kind: LvalueSegKind::Index(Spanned::new(ExprKind::Int(5), at_bracket)),
+                    }],
+                },
+                op: AssignOp::Assign,
+                value: int(9),
+            }),
+        ];
+        let err = eval_module(&prog(write)).unwrap_err();
+        assert_eq!(err.class_name(), "IndexError");
+        assert_eq!(err.span(), Some(at_base), "写入越界插入符应指向基座首字符（非 `[`）");
+
+        // 读取：Index 表达式节点 span = 基座起始（parser `parse_postfix` 不变量）。
+        let read_base = Span::new(6, 3);
+        let read = vec![
+            ldecl("a", arr(vec![int(1), int(2), int(3)])),
+            expr_stmt(Spanned::new(
+                ExprKind::Index {
+                    object: Box::new(Spanned::new(ExprKind::Ident("a".to_string()), read_base)),
+                    index: Box::new(int(5)),
+                },
+                read_base,
+            )),
+        ];
+        let err = eval_module(&prog(read)).unwrap_err();
+        assert_eq!(err.class_name(), "IndexError");
+        assert_eq!(err.span(), Some(read_base), "读取越界插入符指向基座首字符");
+
+        // 中间段字段缺失（read_segment 路径）：错误 span 亦取基座（非 `.`）。
+        let at_s = Span::new(8, 2);
+        let mid = vec![
+            ldecl(
+                "s",
+                e(ExprKind::StructLit(StructLit {
+                    type_name: None,
+                    fields: vec![],
+                })),
+            ),
+            st(StmtKind::Assign {
+                target: Lvalue {
+                    span: at_s,
+                    base: LvalueBase::Name("s".to_string()),
+                    path: vec![
+                        LvalueSeg {
+                            span: Span::new(8, 4),
+                            kind: LvalueSegKind::Field("b".to_string()),
+                        },
+                        LvalueSeg {
+                            span: Span::new(8, 6),
+                            kind: LvalueSegKind::Field("c".to_string()),
+                        },
+                    ],
+                },
+                op: AssignOp::Assign,
+                value: int(1),
+            }),
+        ];
+        let err = eval_module(&prog(mid)).unwrap_err();
+        assert_eq!(err.class_name(), "FieldError");
+        assert_eq!(err.span(), Some(at_s), "中间段字段缺失插入符亦应指向基座");
+    }
+
+    /// 硬化回归：超大 `width` / `precision` 不得触发分配 abort / `core::fmt` panic，
+    /// 须报受控 `ValueError`（`syntax.md` §2.8「非法说明符 → `ValueError`」）。
+    #[test]
+    fn format_spec_extent_is_bounded_without_panic() {
+        // width 超上限（此前会请求 ~100GB 分配并 abort）。
+        assert_eq!(
+            err_class(vec![expr_stmt(interp(vec![iseg(int(1), Some("99999999999d"))]))]),
+            "ValueError"
+        );
+        // precision 超 `core::fmt` 硬上限 65535（此前 `format!` panic）。
+        assert_eq!(
+            err_class(vec![expr_stmt(interp(vec![iseg(flt(1.5), Some(".999999999f"))]))]),
+            "ValueError"
+        );
+        assert_eq!(
+            err_class(vec![expr_stmt(interp(vec![iseg(flt(1.5), Some(".65536f"))]))]),
+            "ValueError"
+        );
+        // 无类型说明符亦受 width 上界约束。
+        assert_eq!(
+            err_class(vec![expr_stmt(interp(vec![iseg(int(1), Some("99999999999"))]))]),
+            "ValueError"
+        );
+        // 正常宽度 / 边界内 precision 仍工作。
+        assert_eq!(
+            run_str(vec![expr_stmt(interp(vec![iseg(int(42), Some("05d"))]))]),
+            "00042"
+        );
+        assert_eq!(
+            run_str(vec![expr_stmt(interp(vec![iseg(flt(1.5), Some(".65535f"))]))])
+                .chars()
+                .count(),
+            65537
+        );
+        // 上限内的较大 width 可用（1000 宽）。
+        assert_eq!(
+            run_str(vec![expr_stmt(interp(vec![iseg(int(1), Some("1000d"))]))])
+                .chars()
+                .count(),
+            1000
+        );
     }
 
     // =======================================================================

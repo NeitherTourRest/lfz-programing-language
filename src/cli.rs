@@ -28,13 +28,14 @@
 //! # 流约定
 //!
 //! - 程序自身输出（`print` / `eprint` / `;;`）默认由解释器 `builtins` 直接写 **stdout / stderr**，
-//!   本模块**不**接管、不缓冲；`--json` 下 `print` / `input` 提示被重定向到 stderr（见下）。
+//!   本模块**不**接管、不缓冲；`--json` 下 `print` / `;;`（dump）/ `input` 提示被重定向到 stderr（见下）。
+//!   `;;` 与 `print` **恒同通道**（`semantics.md` §3.6 #7；`builtins::write_dump` 复用同一开关）。
 //! - CLI 的**错误诊断**写 **stderr**；`--help` / `--version` 写 **stdout**。
 //!   （spec 未规定错误流；采用 Python 约定 → stderr。）
 //! - **`--json` 模式**：stdout **只**接收**唯一一行 JSON**（结果对象）；人类可读的报告 / 诊断
 //!   一律转 **stderr**（硬性设计约束）。**P4.2-fix（已解决）**：CLI 在运行前把解释器内建
-//!   `print` / `input` 提示重定向到 **stderr**（`lfz::builtins::set_stdout_to_stderr`），故 stdout
-//!   恒为单个 JSON，程序输出不再与之交错（见 `docs/tooling/runner-contract.md` §9.3）。
+//!   `print` / `;;`（dump）/ `input` 提示重定向到 **stderr**（`lfz::builtins::set_stdout_to_stderr`），
+//!   故 stdout 恒为单个 JSON，程序输出不再与之交错（见 `docs/tooling/runner-contract.md` §9.3）。
 //!
 //! # 退出码（D-008）
 //!
@@ -70,16 +71,22 @@ const HELP: &str = "\
 LFZ 解释器
 
 用法:
-  lfz <file>           运行 LFZ 脚本（等价于 lfz run <file>）
-  lfz run <file>       运行 LFZ 脚本（.lfz 文件要求首行为 #42）
+  lfz <file>           运行 LFZ 脚本（裸调用；等价 lfz run <file>）
+  lfz run <file>       运行 LFZ 脚本
   lfz test [路径...]   运行黑盒测试（默认发现 tests/**/*.lfz，排除 tests/fixtures）
   lfz --help, -h       显示本帮助
   lfz --version, -V    显示版本
 
-<file> 须以 .lfz 结尾；否则报错并退出码 2。
+文件与前导（#42）:
+  裸调用 lfz <file> 等价 lfz run <file>，唯一差别是入口校验：
+    lfz <file>       要求 <file> 以 .lfz 结尾（大小写不敏感）；否则报错并退出码 2。
+    lfz run <file>   接受任意路径（不校验扩展名）。
+  是否要求 #42 前导按扩展名判定（§2.2.0）:
+    .lfz 文件        首行必须为 #42，否则 CosmosAnswerError（退出码 2）；
+    非 .lfz 文件     豁免 #42 前导（如 .txt / 无扩展名），按普通源加载执行。
 
 选项:
-  --json               以机器可读 JSON 输出（stdout 只写 JSON；人类可读诊断转 stderr）
+  --json               以机器可读 JSON 输出（stdout 只写 JSON；程序输出与人类可读诊断转 stderr）
                        位置不限，以下写法等价：
                          lfz --json <file>       lfz <file> --json
                          lfz run --json <file>   lfz run <file> --json
@@ -320,7 +327,16 @@ pub(crate) fn traceback_json(
 ///
 /// 与 [`run_file`] 的差别：`run_file` 只关心成败与渲染，本函数把**中间上下文**带出，
 /// 供 runner 逐用例判定（类名 ↔ 期望、位置信息）。
+///
+/// §10.9 R-S2：整条流水线（`load → lex → parse → eval`，含 `Program` 的**析构**）在
+/// **≥64 MiB 大栈线程**（复用求值用的 256 MiB [`evaluator::on_eval_stack`]）上运行，
+/// 保证 `PARSE_DEPTH_LIMIT`（1000）层可达、深左偏 AST 的递归析构不溢出。
 pub(crate) fn eval_case(path: &str) -> CaseEval {
+    evaluator::on_eval_stack(|| eval_case_on_stack(path))
+}
+
+/// [`eval_case`] 的流水线体（在 [`evaluator::on_eval_stack`] 的大栈线程上运行）。
+fn eval_case_on_stack(path: &str) -> CaseEval {
     // 加载期：失败（IOError / NotUtf8 / CosmosAnswerError）时无源码视图。
     let loaded = match loader::load_file(path) {
         Ok(l) => l,
@@ -354,8 +370,9 @@ pub(crate) fn eval_case(path: &str) -> CaseEval {
             }
         }
     };
-    // 运行期：用 `eval_module_traced` 取帧栈（§10.3 / D-008 影响段）。
-    let traced = evaluator::eval_module_traced(&program);
+    // 运行期：用 `eval_module_traced` 取帧栈（§10.3 / D-008 影响段）；
+    // 已在流水线大栈线程上，故用**当前线程**求值体（§10.9 R-S2 同栈），不再嵌套开线程。
+    let traced = evaluator::eval_module_traced_on_thread(&program);
     if traced.result.is_ok() {
         return CaseEval::Passed;
     }
@@ -673,6 +690,28 @@ mod tests {
         assert_eq!(execute(&args(&["--version"]), &mut out, &mut err), EXIT_OK);
         assert_eq!(String::from_utf8(out).expect("UTF-8"), format!("{VERSION}\n"));
         assert!(err.is_empty());
+    }
+
+    /// obs-A-02：`--help` 文案须与 `syntax.md` §2.2.0 扩展名豁免一致，并明示
+    /// 「裸调用 `lfz <file>` 等价 `lfz run <file>`」；不得再保留把豁免说死的一刀切表述。
+    #[test]
+    fn help_text_matches_extension_exemption() {
+        let mut out = Vec::new();
+        let mut err = Vec::new();
+        assert_eq!(execute(&args(&["--help"]), &mut out, &mut err), EXIT_OK);
+        let text = String::from_utf8(out).expect("UTF-8");
+        // 明示裸调用与 `run` 的等价关系（任务要求）。
+        assert!(text.contains("等价 lfz run <file>"), "应说明裸调用等价：{text}");
+        // 明示 §2.2.0 扩展名豁免（非 `.lfz` 文件不要求 `#42`）。
+        assert!(text.contains("非 .lfz 文件"), "应说明非 .lfz 豁免：{text}");
+        assert!(text.contains("豁免 #42 前导"), "应说明前导豁免：{text}");
+        // 裸调用的入口校验（须 `.lfz`）仍须如实记录。
+        assert!(text.contains("要求 <file> 以 .lfz 结尾"), "应记录裸调用入口校验：{text}");
+        // 旧的一刀切误导文案（对 `run` 亦不成立）必须移除。
+        assert!(
+            !text.contains("<file> 须以 .lfz 结尾"),
+            "不得保留旧误导文案：{text}"
+        );
     }
 
     #[test]

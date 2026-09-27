@@ -488,11 +488,22 @@ fn b_len(args: &[Value], span: Span) -> R<Value> {
     }
 }
 
-/// `range(n) -> array[int]`：`[0, 1, …, n-1]`；`n < 0` → 空数组。
+/// `range(n) -> array[int]`：`[0, 1, …, n-1]`；`n < 0` → 空数组；
+/// 构造结果所需容量超出可分配上限 → `OverflowError`（`容量溢出：所需容量超出可分配上限`）；
+/// **任何 `n` 均不得使进程 panic**（v1.1 补钉，ADR bug-20260927-04）。
 fn b_range(args: &[Value], span: Span) -> R<Value> {
     let n = need_int("range", args, 0, span)?;
     if n <= 0 {
         return Ok(Value::array(Vec::new()));
+    }
+    // 容量预检：`n` 个 `Value` 所需的字节数（`n * size_of::<Value>()`）超出 `isize::MAX`
+    // 时，`Vec::collect` 会以 `capacity overflow` **panic**（bug-20260927-04）。
+    // 提前换算为受控 `OverflowError`（Capacity）。
+    let bytes = (n as usize)
+        .checked_mul(std::mem::size_of::<Value>())
+        .ok_or_else(|| overflow(span, OverflowMsg::Capacity))?;
+    if bytes > isize::MAX as usize {
+        return Err(overflow(span, OverflowMsg::Capacity));
     }
     let items: Vec<Value> = (0..n).map(Value::Int).collect();
     Ok(Value::array(items))
@@ -915,16 +926,26 @@ fn b_replace(args: &[Value], span: Span) -> R<Value> {
     Ok(Value::string(s.replace(old, new)))
 }
 
-/// `repeat(n, s) -> string`：`n <= 0` → 空串；长度溢出 → `OverflowError`。
+/// `repeat(n, s) -> string`：`n <= 0` → 空串；结果所需容量（`n * len(s)` 字节）超出可分配
+/// 上限 → `OverflowError`（`容量溢出：所需容量超出可分配上限`，v1.1 补钉）；
+/// **任何 `n` / `s` 均不得使进程 panic**（§10.7 / ADR bug-20260927-04）。
 fn b_repeat(args: &[Value], span: Span) -> R<Value> {
     let n = need_int("repeat", args, 0, span)?;
     let s = need_str("repeat", args, 1, span)?;
     if n <= 0 {
         return Ok(Value::string(""));
     }
-    s.len()
+    let total = s
+        .len()
         .checked_mul(n as usize)
-        .ok_or_else(|| overflow(span, OverflowMsg::IntegerOutOfRange))?;
+        .ok_or_else(|| overflow(span, OverflowMsg::Capacity))?;
+    // 修复 bug-20260927-03：`String` / `Vec` 的最大可分配字节数受 `isize::MAX` 约束。
+    // 当 `len * n` 落在 `(isize::MAX, usize::MAX]` 区间时，`usize` 乘法**不**溢出
+    // （故 `checked_mul` 通过），但 `str::repeat` 内部会以 `capacity overflow`
+    // **panic**（进程崩溃、退出码 101）。v1.1 补钉统一报容量溢出的 `OverflowError`。
+    if total > isize::MAX as usize {
+        return Err(overflow(span, OverflowMsg::Capacity));
+    }
     Ok(Value::string(s.repeat(n as usize)))
 }
 
@@ -1152,6 +1173,22 @@ fn stdout_to_stderr() -> bool {
 fn write_line<T: Write>(mut target: T, text: &str, span: Span) -> R<Value> {
     writeln!(target, "{text}").map_err(|e| io_error(format!("无法写入：{e}"), Some(span)))?;
     Ok(Value::Nil)
+}
+
+/// `;;`（dump）输出通道（`docs/spec/semantics.md` §3.6 第 7 条）：**与 `print` 同通道** ——
+/// 默认 stdout；CLI 在 `--json` 下置 [`set_stdout_to_stderr`]`(true)` 后，与 `print` 一起改写
+/// **stderr**，使 stdout 恒为**单个 JSON**（`bug-B-20260927-01` 修复点）。
+///
+/// `text` 由 [`crate::evaluator::render_dump`] 生成（行尾已含 `\n`，此处原样写出、不附加换行）。
+/// 写入失败 → `IOError`（带调用点 `span`）。
+pub fn write_dump(text: &str, span: Span) -> R<()> {
+    let res = if stdout_to_stderr() {
+        std::io::stderr().write_all(text.as_bytes())
+    } else {
+        std::io::stdout().write_all(text.as_bytes())
+    };
+    res.map_err(|e| io_error(format!("无法写入：{e}"), Some(span)))?;
+    Ok(())
 }
 
 /// `print(...) -> nil`：各参数显示形式、**空格连接** + 末尾 `\n`。
@@ -1634,6 +1671,41 @@ mod tests {
         assert_eq!(cls("replace", &[i(1), s("a"), s("b")]), "TypeError");
         assert_eq!(cls("repeat", &[s("a"), s("b")]), "TypeError");
         assert_eq!(cls("startsWith", &[i(1), s("b")]), "TypeError");
+    }
+
+    /// bug-20260927-03 回归：`repeat(n, s)` 的 `len * n` 落在 `(isize::MAX, usize::MAX]`
+    /// 时**不得**触发 `str::repeat` 的 `capacity overflow` panic（进程崩溃）；
+    /// 须报受控 `OverflowError`（`容量溢出：所需容量超出可分配上限`，v1.1 补钉）。
+    #[test]
+    fn repeat_overflow_is_controlled_overflow_error() {
+        // 复现输入（`2 * 2^62 = 2^63 > isize::MAX`，但 `usize` 乘法不溢出）。
+        let n_bad = 4_611_686_018_427_387_904i64;
+        assert_eq!(cls("repeat", &[i(n_bad), s("ab")]), "OverflowError");
+        assert_eq!(
+            msg("repeat", &[i(n_bad), s("ab")]),
+            "容量溢出：所需容量超出可分配上限"
+        );
+        // `usize` 乘法本身溢出 → 仍为受控 OverflowError。
+        assert_eq!(cls("repeat", &[i(i64::MAX), s("abc")]), "OverflowError");
+        assert_eq!(msg("repeat", &[i(i64::MAX), s("abc")]), "容量溢出：所需容量超出可分配上限");
+        // 空串 / 非正 n / 正常路径不受影响。
+        assert_eq!(ok("repeat", &[i(n_bad), s("")]).to_string(), "");
+        assert_eq!(ok("repeat", &[i(3), s("ab")]).to_string(), "ababab");
+        assert_eq!(ok("repeat", &[i(0), s("ab")]).to_string(), "");
+        assert_eq!(ok("repeat", &[i(-2), s("ab")]).to_string(), "");
+    }
+
+    /// bug-20260927-04 回归（ADR [2026-09-27 21:10]）：`range` 超大 `n` 不得 panic，
+    /// 须报容量溢出的受控 `OverflowError`；正常 / 非正路径不变。
+    #[test]
+    fn range_huge_n_is_controlled_capacity_overflow_error() {
+        let n_bad = 4_611_686_018_427_387_904i64; // 2^62（×16B = 2^66 > isize::MAX）
+        assert_eq!(cls("range", &[i(n_bad)]), "OverflowError");
+        assert_eq!(msg("range", &[i(n_bad)]), "容量溢出：所需容量超出可分配上限");
+        assert_eq!(cls("range", &[i(i64::MAX)]), "OverflowError");
+        assert_eq!(ok("range", &[i(4)]).to_string(), "[0, 1, 2, 3]");
+        assert_eq!(ok("range", &[i(0)]).to_string(), "[]");
+        assert_eq!(ok("range", &[i(-3)]).to_string(), "[]");
     }
 
     // ---- 数学 -------------------------------------------------------------

@@ -1,7 +1,7 @@
 # LFZ 黑盒测试 — 覆盖矩阵（定稿）
 
-> 唯一写者: test-engineer ｜ 状态: **定稿（P5.4）+ 等价路径补测（P5.6）** ｜ 最后更新: 2026-09-27
-> 事实源: `docs/spec/{syntax,semantics,interface-contract}.md`（冻结 v1） ｜ runner 契约: `docs/tooling/runner-contract.md`（v1.2）
+> 唯一写者: test-engineer ｜ 状态: **定稿（P5.4）+ 等价路径补测（P5.6）+ 容量溢出回归（P5.7）+ 解析期上限回归（P5.8）** ｜ 最后更新: 2026-09-27
+> 事实源: `docs/spec/{syntax,semantics,interface-contract}.md`（冻结 v1 + §3.8/§3.9 解析期上限 v1.1 补钉） ｜ runner 契约: `docs/tooling/runner-contract.md`（v1.2）
 > 断言方式: LFZ 内建 `assert(cond, msg)` / `check(cond, msg)`；负例经 `tests/cases.json` 的 `expect.error` 声明（§8.1 的 12 类名之一）
 > 运行命令: `cargo run --quiet -- test`（默认发现 `tests/**/*.lfz`，排除 `fixtures/`）
 
@@ -9,18 +9,19 @@
 
 ## 0. 定稿总览
 
-### 0.1 用例构成（合计 **85**）
+### 0.1 用例构成（合计 **90**）
 
 | 构成 | 数量 | 说明 |
 |---|---|---|
-| 正向自动发现 `.lfz` | **26 文件 / 597 `assert`** | `tests/lfz/**/*.lfz`；首行恒 `#42`；见 §1.1 / §6 |
+| 正向自动发现 `.lfz` | **27 文件 / 599 `assert`** | `tests/lfz/**/*.lfz`；首行恒 `#42`；见 §1.1 / §6 |
 | ├ P5.1 基础语言特性 | 7 文件 / 114 | `test_literals` `test_let_var` `test_arithmetic` `test_precedence` `test_division_modulo` `test_int_min` `test_preamble` |
 | ├ P5.2 控制流/函数/闭包/结构体/管道/插值/`;;`/A1/A6 | 10 文件 / 179 | `test_if_else` `test_loops` `test_functions` `test_closures` `test_structs` `test_pipe` `test_interpolation` `test_dump` `test_reference_semantics` `test_cycle_safety` |
 | ├ P5.3 内置函数全表 | 8 文件 / 263 | `test_builtins_{array,higher_order,struct,string,math,convert,random,io}` |
-| └ P5.6 等价路径双路补测 | 1 文件 / 41 | `test_equivalence_paths`（关闭接缝盲区；小节见 §1.3） |
-| 负例清单 `expect.error` | **58** fixture | `tests/fixtures/**`；逐个见 §5 |
+| ├ P5.6 等价路径双路补测 | 1 文件 / 41 | `test_equivalence_paths`（关闭接缝盲区；小节见 §1.3） |
+| └ P5.8 解析期上限边界补测 | 1 文件 / 2 | `test_parse_limits`（`§3.8` 恰 1000 层 / `§3.9` 恰 9999 项「限内放行」；负例见 §5.6） |
+| 负例清单 `expect.error` | **62** fixture | `tests/fixtures/**`；逐个见 §5 |
 | 正向豁免（非 `.lfz`） | **1**（`fixtures/plain_ok.txt`） | 清单无 `expect`，判正常 PASS（非 `.lfz` 不要求前导） |
-| **合计** | **85** | `cargo run --quiet -- test` → **85 PASS / 0 FAIL / 0 ERROR**，exit 0 |
+| **合计** | **90** | `cargo run --quiet -- test` → **90 PASS / 0 FAIL / 0 ERROR**，exit 0 |
 
 ### 0.2 判定口径 / 退出码（runner 契约 §4/§5，D-008）
 
@@ -38,6 +39,8 @@
 - **语言特性**：词法 / 表达式 / 语句 / 函数 / 闭包 / 结构体 / 管道 / 富插值 / `;;` / 引用语义（A1）/ 环安全（A6）等 `docs/spec/` 声明的语言特性**均有用例**（见 §1.1 / §1.2）。
 - **等价路径**：凡 spec 声明「两种写法等价」处均**双路覆盖**（`s.k ≡ s["k"]` 读 / 写 / 调用、复合赋值脱糖、管道 data-last 脱糖、块注释 ≡ 空格、`a--b`）——专节见 **§1.3**（P5.6，关闭 verifier P9 rev.2 §9.4 指出的接缝盲区）。
 - **内置函数**：`interface-contract.md` §10.7 全表 **54** 个 → **53 个**由 LFZ 黑盒覆盖，**1 个（`input`）跳过**并由 Rust 单测覆盖（见 §2 / §4）。
+- **容量溢出回归**：`repeat` / `range` 超大入参的容量溢出（`bug-20260927-03` / `bug-20260927-04`）由负例 `builtin_repeat_capacity_overflow` / `builtin_range_capacity_overflow` 锁定（断言错误类 `OverflowError`；直跑 `lfz run <fixture>` 退出码 `2`，**不 panic / 不崩溃**）——见 §5.5 / §8。
+- **解析期上限回归**：`syntax.md` §3.8 `PARSE_DEPTH_LIMIT = 1000` 与 §3.9 `AST_DEPTH_LIMIT = 10000` 由「限内放行正例 + 超限负例」双向锁定——`(`×1000 / `1+1+…`×9999 合法（`test_parse_limits`），`(`×1001 / `1+1+…`×10000 → `SyntaxError`（`parse_nesting_overflow` / `ast_depth_overflow`，直跑 exit 2，**不 panic / 不 abort**）——见 §1.1 / §5.6 / §8。
 - **错误模型**：§8.1 **12 个具体错误类** → **11 个**由黑盒负例覆盖，**1 个（`IOError`）** 由 Rust 单测覆盖（见 §3 / §4）；基类 `LfzError` 不直接抛出（spec §8.1），无触发用例。
 - **不可断言项**：`;;` 输出文本、错误消息文本、行号/列号、`input`、程序 stdout 捕获等 —— 逐条在 §4 给出「为什么测不到 + 由谁覆盖」。
 
@@ -47,11 +50,11 @@
 
 ### 1.1 特性 × 用例组（P5.1 + P5.2 合并）
 
-> 计数口径：**正常** = happy path；**边界** = 空 / 极值 / 单元素 / 嵌套 / 快照 / 极端形态；**错误** = 期望抛错的负例（经 `tests/cases.json` 的 `expect.error` 声明，判 PASS）。同一负例服务多个特性行时存在跨行重复计数——**去重后负例总数以 §5 为准（58）**。
+> 计数口径：**正常** = happy path；**边界** = 空 / 极值 / 单元素 / 嵌套 / 快照 / 极端形态；**错误** = 期望抛错的负例（经 `tests/cases.json` 的 `expect.error` 声明，判 PASS）。同一负例服务多个特性行时存在跨行重复计数——**去重后负例总数以 §5 为准（62）**。
 
 | 域 | 特性 | 用例组文件 | 正常 | 边界 | 错误 | 状态 | 证据 |
 |---|---|---|---|---|---|---|---|
-| 词法 | `int` 字面量（十进制 / 前缀 / 下划线 / 显示） | `tests/lfz/test_literals.lfz` | 6 | 4 | 0 | 通过 | `cargo run --quiet -- test` → 85/85 PASS，exit 0 |
+| 词法 | `int` 字面量（十进制 / 前缀 / 下划线 / 显示） | `tests/lfz/test_literals.lfz` | 6 | 4 | 0 | 通过 | `cargo run --quiet -- test` → 90/90 PASS，exit 0 |
 | 词法 | `float` 字面量（小数点 / 指数 / 整值显示 `.0`） | `tests/lfz/test_literals.lfz` | 5 | 3 | 0 | 通过 | 同上 |
 | 词法 | `string` 字面量与转义 `\n \t \r \\ \" \e \$` | `tests/lfz/test_literals.lfz` | 3 | 11 | 0 | 通过 | 同上 |
 | 词法 | `bool` | `tests/lfz/test_literals.lfz` | 5 | 0 | 0 | 通过 | 同上 |
@@ -92,7 +95,9 @@
 | 引用 | A1 引用语义：`a[i]=v` / `s.k=v` 原地可见；`push/pop/removeAt/insert/swap/slice/sort/map/filter/del` 返回新值不改原容器；负索引 | `tests/lfz/test_reference_semantics.lfz` | 20 | 9 | 0 | 通过 | 同上 |
 | 引用 | A6 环安全：自引用 struct / array 的 `==` 等价（身份优先 + 重访即相等 + 不死循环） | `tests/lfz/test_cycle_safety.lfz` | 5 | 4 | 0 | 通过（**`<cycle>` 文本未断言**，见 §4） | 同上；`==` 可断言 |
 | 错误 | 语法错误模型（单 `;` / `#` 越位 / `_` 绑定 / 循环外 `break` / 非法字符 / 未闭合括号） | `tests/fixtures/*` | 0 | 0 | 6 | 通过 | 同上；6 个 fixture 均 → `SyntaxError` |
-| 错误 | 名字 / 类型 / 除零 / 溢出错误模型 | `tests/fixtures/*` | 0 | 0 | 7 | 通过 | 同上；`NameError`×1、`TypeError`×2、`ZeroDivisionError`×3、`OverflowError`×2 |
+| 错误 | 名字 / 类型 / 除零 / 溢出错误模型 | `tests/fixtures/*` | 0 | 0 | 9 | 通过 | 同上；`NameError`×1、`TypeError`×2、`ZeroDivisionError`×3、`OverflowError`×4（含 `repeat`/`range` 容量溢出，bug-20260927-03/04 回归） |
+| 解析 | §3.8 解析嵌套深度上限：`(`/`[`/`{`/`if`/`while`/`for`/`fn`/`${` 递归嵌套恰 **1000** 层合法、**1001** 层超限 | `tests/lfz/test_parse_limits.lfz` + `tests/fixtures/parse_nesting_overflow.lfz` | 0 | 1 | 1 | 通过 | 同上；正例 `parse_nesting_1000_is_legal`；负例 `parse_nesting_1001_is_nesting_too_deep` → `SyntaxError`（直跑 exit 2） |
+| 解析 | §3.9 AST 深度上限：`1+1+…` 链恰 **9999** 项（AST 深度 `10000`）合法、**10000** 项（深度 `10001`）超限 | `tests/lfz/test_parse_limits.lfz` + `tests/fixtures/ast_depth_overflow.lfz` | 0 | 1 | 1 | 通过 | 同上；正例 `ast_depth_9999_terms_is_legal`；负例 `ast_depth_10000_terms_is_expr_too_deep` → `SyntaxError`（直跑 exit 2） |
 
 ### 1.2 特性域状态总览（`docs/spec/` 全集对照）
 
@@ -118,6 +123,7 @@
 | 错误模型全量（12 类 + traceback 折叠 + `--json` 字段逐字符） | semantics §8；interface-contract §8.1 | **部分**（**11/12 类**黑盒负例；`IOError` 由 Rust 单测；traceback 折叠 / `--json` 逐字符由 Rust 单测 + CLI e2e 覆盖，非黑盒范畴 —— 见 §3/§4） | P5.4 ✅ |
 | 可移植性（BOM、CRLF/LF/CR、非 UTF-8 → `SyntaxError`） | syntax §2.1、§6-B4/B7/B8 | 待实现 | P5.5 |
 | 入口一致性（REPL / stdin / `-e` 豁免前导；伪路径） | syntax §6-B9 | 待实现 | P5.5 |
+| 解析期上限（§3.8 解析嵌套深度 1000 / §3.9 AST 深度 10000） | syntax §3.8/§3.9；interface-contract §10.9 R-S1/R-S3 | **通过**（限内放行正例 + 超限 `SyntaxError` 负例双向；负例直跑 exit 2，**不 panic / 不 abort**） | P5.8 ✅ |
 
 ### 1.3 「等价路径」双路覆盖小节（P5.6，关闭接缝盲区）
 
@@ -160,7 +166,7 @@
 | # | 内置 | 正常+边界断言 | 错误负例（fixture → 期望类） | 状态 | 说明 |
 |---|---|---|---|---|---|
 | 1 | `len` | 5 | — | 通过 | array 元素数 / struct 数据字段数 / string Unicode 标量数 |
-| 2 | `range` | 4 | — | 通过 | `n<0` → 空数组 |
+| 2 | `range` | 4 | `range_capacity_overflow` → `OverflowError` | 通过 | `n<0` → 空数组；超大 `n`（容量超可分配上限）→ `OverflowError`（bug-20260927-04 回归，**不 panic**） |
 | 3 | `push` | 3 | — | 通过 | **A1** `push_does_not_mutate` |
 | 4 | `pop` | 4 | `pop_empty` → `IndexError` | 通过 | `pop([])` → `Index{idx:-1,len:0}`；**A1** |
 | 5 | `removeAt` | 4 | `removeAt_out_of_range` / `removeAt_negative_out_of_range` → `IndexError` | 通过 | 支持负索引；**A1** |
@@ -206,7 +212,7 @@
 | 30 | `upper` | 3 | — | 通过 | ASCII 大小写 |
 | 31 | `lower` | 2 | — | 通过 | 同上 |
 | 32 | `replace` | 4 | — | 通过 | 全部替换；返回新串（§4.5.11） |
-| 33 | `repeat` | 4 | — | 通过 | `n<=0` → 空串 |
+| 33 | `repeat` | 4 | `repeat_capacity_overflow` → `OverflowError` | 通过 | `n<=0` → 空串；`n * len(s)` 字节超可分配上限 → `OverflowError`（bug-20260927-03 回归，**不 panic**） |
 | 34 | `startsWith` | 5 | — | 通过 | 空前缀恒 `true` |
 
 ### 2.5 数学（7 个，`tests/lfz/test_builtins_math.lfz`）
@@ -258,24 +264,24 @@
 
 > 权威来源：错误类触发条件与消息由 `semantics.md` §8.1 规范性给出；本表为**黑盒触发证据**对照。
 > 断言口径：错误用例**只断言错误类**（§8.1 的 12 类名之一），**不逐字断言中文消息 / 行号 / 列号**（理由见 §4）。
-> 计数：`tests/cases.json` 中 `expect.error` 逐类出现次数，合计 **58**。
+> 计数：`tests/cases.json` 中 `expect.error` 逐类出现次数，合计 **62**。
 
 | # | 错误类（`--json` / `class_name()`） | 阶段 | 触发用例（fixture → manifest 名） | 数量 | 状态 |
 |---|---|---|---|---|---|
 | 1 | `CosmosAnswerError` | 加载 | `missing_preamble`(preamble_missing_first_line) / `preamble_trailing_space` / `preamble_trailing_tab` / `preamble_no_newline`(preamble_no_newline_eof) / `empty`(preamble_empty_file) | 5 | **通过** |
-| 2 | `SyntaxError` | 加载/解析 | `single_semi` / `hash_mid_program` / `placeholder_binding` / `break_outside_loop` / `syntax_illegal_char` / `syntax_unclosed_paren` / `int_literal_overflow` / `pipe_multiple_placeholders` / `pipe_underscore_in_lambda` / `continue_outside_loop` / `return_outside_fn` | 11 | **通过** |
+| 2 | `SyntaxError` | 加载/解析 | `single_semi` / `hash_mid_program` / `placeholder_binding` / `break_outside_loop` / `syntax_illegal_char` / `syntax_unclosed_paren` / `int_literal_overflow` / `pipe_multiple_placeholders` / `pipe_underscore_in_lambda` / `continue_outside_loop` / `return_outside_fn` / `parse_nesting_overflow`(parse_nesting_1001_is_nesting_too_deep) / `ast_depth_overflow`(ast_depth_10000_terms_is_expr_too_deep) | 13 | **通过** |
 | 3 | `NameError` | 运行 | `name_error`(undefined_name) | 1 | **通过** |
 | 4 | `TypeError` | 运行 | `let_rebind` / `let_compound_rebind` / `type_error_add` / `if_condition_not_bool` / `for_over_string` / `pipe_rhs_not_function` / `interp_format_type_mismatch` / `filter_predicate_not_bool` / `join_non_string_element` / `sort_mixed_types` / `div_non_int` | 11 | **通过** |
 | 5 | `IndexError` | 运行 | `pop_empty` / `removeAt_out_of_range` / `removeAt_negative_out_of_range` / `insert_negative_index` / `insert_index_too_large` / `swap_out_of_range` | 6 | **通过** |
 | 6 | `FieldError` | 运行 | `del_method_field` / `del_missing_data_field` / `field_dot_missing`(field_dot_read_missing_field_error) / `field_bracket_missing`(field_bracket_read_missing_field_error) | 4 | **通过** |
 | 7 | `ZeroDivisionError` | 运行 | `zero_division` / `mod_zero` / `div_zero` | 3 | **通过** |
-| 8 | `OverflowError` | 运行 | `overflow_add` / `abs_i64_min` / `int_inf` / `sum_overflow` / `ceil_inf` | 5 | **通过** |
+| 8 | `OverflowError` | 运行 | `overflow_add` / `abs_i64_min` / `int_inf` / `sum_overflow` / `ceil_inf` / `repeat_capacity_overflow` / `range_capacity_overflow` | 7 | **通过** |
 | 9 | `ValueError` | 运行 | `interp_bad_format` / `min_empty` / `max_empty` / `minBy_empty` / `maxBy_empty` / `int_nan` / `int_bad_string` / `float_bad_string` / `randInt_bad_range` / `floor_nan` | 10 | **通过** |
 | 10 | `IOError` | 运行 | —（黑盒**跳过**） | 0 | **跳过（环境相关）**：runner 不提供 stdin；`input()` 可能 EOF 或**阻塞**，不可复现。**由 Rust 单测覆盖**：`src/builtins.rs::tests::input_reads_line_crlf_and_eof`（EOF→`IOError`）+ `src/error.rs::tests::class_name_all_twelve_match_spec_exactly`。见 §4 |
 | 11 | `AssertionError` | 运行 | `fail_raises`(builtin_fail_assertion_error) | 1 | **通过**（`fail(msg)`；`assert(false)` 同类） |
 | 12 | `RecursionError` | 运行 | `deep_recursion`(deep_recursion_exceeds_limit) | 1 | **通过** |
 | — | `LfzError`（基类） | — | —（基类**不直接抛出**，spec §8.1） | — | **不适用** |
-| | | | | **合计 58** | **11/12 类黑盒覆盖 + 1 类（`IOError`）由 Rust 单测** |
+| | | | | **合计 62** | **11/12 类黑盒覆盖 + 1 类（`IOError`）由 Rust 单测** |
 
 > `check(false)` **不产生**任何 `LfzError`（非致命，A4）→ 不属于本表，其行为在 §1.1 / §2.8 以「返回值 + 不中断」断言。
 
@@ -300,7 +306,7 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 
 ---
 
-## 5. 负例清单（`tests/cases.json`，共 **58** 条 `expect.error` + 1 条正向豁免）
+## 5. 负例清单（`tests/cases.json`，共 **62** 条 `expect.error` + 1 条正向豁免）
 
 ### 5.1 P5.1（21 条）
 
@@ -380,6 +386,20 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 | 57 | `fixtures/field_dot_missing.lfz` | `field_dot_read_missing_field_error` | `FieldError` | 缺失键读取（`.字段` 路径） |
 | 58 | `fixtures/field_bracket_missing.lfz` | `field_bracket_read_missing_field_error` | `FieldError` | 缺失键读取（`["键"]` 路径，与 .字段 等价报错） |
 
+### 5.5 P5.7 容量溢出回归（2 条；bug-20260927-03 / bug-20260927-04）
+
+| # | fixture 路径 | manifest 名 | 期望错误类 | 覆盖特性 |
+|---|---|---|---|---|
+| 59 | `fixtures/repeat_capacity_overflow.lfz` | `builtin_repeat_capacity_overflow` | `OverflowError` | `repeat(4611686018427387904, "ab")`：`n * len(s)` 字节超可分配上限 → `OverflowError`（原 Rust panic / exit 101 → 现 exit 2，不崩溃） |
+| 60 | `fixtures/range_capacity_overflow.lfz` | `builtin_range_capacity_overflow` | `OverflowError` | `range(4611686018427387904)`：元素数超可分配上限 → `OverflowError`（原 Rust panic / exit 101 → 现 exit 2，不崩溃） |
+
+### 5.6 P5.8 解析期上限回归（2 条；`syntax.md` §3.8 / §3.9）
+
+| # | fixture 路径 | manifest 名 | 期望错误类 | 覆盖特性 |
+|---|---|---|---|---|
+| 61 | `fixtures/parse_nesting_overflow.lfz` | `parse_nesting_1001_is_nesting_too_deep` | `SyntaxError` | §3.8：`(`×1001（解析嵌套深度 1001 > `PARSE_DEPTH_LIMIT` 1000）→ `SyntaxError: 嵌套深度超限（超过 1000 层）`（直跑 exit 2，**不 abort**） |
+| 62 | `fixtures/ast_depth_overflow.lfz` | `ast_depth_10000_terms_is_expr_too_deep` | `SyntaxError` | §3.9：`1+1+…` 10000 项（AST 深度 10001 > `AST_DEPTH_LIMIT` 10000）→ `SyntaxError: 表达式嵌套过深（超过 10000 层）`（旧崩溃点 100000 项现亦 exit 2，**不再进程 abort**） |
+
 > 另有 `fixtures/plain_ok.txt` → `non_lfz_file_no_preamble_required`（**无** `expect`，正向豁免，判正常 PASS）。
 
 ---
@@ -432,7 +452,13 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 |---|---|---|
 | `tests/lfz/test_equivalence_paths.lfz` | 41 | `s.k≡s["k"]`（读/写/调用/改 self）、复合赋值脱糖、管道 data-last 脱糖、块注释≡空格、`a--b`、逻辑分组+短路、`/` vs `div` 非等价并置 |
 
-> 正向合计：**26 文件 / 597 条 `assert`**（114 + 179 + 263 + 41）。
+### 6.5 P5.8 正向（1 文件 / 2 条 `assert`，解析期上限「限内放行」边界）
+
+| 文件 | 断言数 | 覆盖特性 |
+|---|---|---|
+| `tests/lfz/test_parse_limits.lfz` | 2 | §3.8 `(`×1000（嵌套深度恰 1000）合法；§3.9 `1+1+…` 9999 项（AST 深度恰 10000）合法 |
+
+> 正向合计：**27 文件 / 599 条 `assert`**（114 + 179 + 263 + 41 + 2）。
 
 ---
 
@@ -441,32 +467,45 @@ runner 契约（`runner-contract.md` §6 / §9.3）规定：非 `--json` 模式�
 | 缺陷单 | 现象 | spec 依据 | 影响用例 | 状态 |
 |---|---|---|---|---|
 | **bug-20260927-01** | 经方括号取得的方法值**再调用时不绑定 `self`**：`p["norm2"]()` → `NameError: 未定义的名字 'self'`（`.字段()` 调用点则绑定正常） | semantics.md §3.7「`s.k ≡ s["k"]` 仍能取到该函数值并**调用（`self` 绑定）**」；§4.5.8「方法…访问时绑定 `self`」；ADR D-015 A5（DECISIONS.md） | `test_structs.lfz` 中「方括号调用方法」未断言（仅断言 `type(p["norm2"]) == "function"` 可取到函数值）；已提交 team-lead | ✅ **已修复**（commit `6aabdf5`，由 runtime-dev）→ **本批补端到端用例**：`struct_method_call_bracket` / `method_bracket_mutates_same_instance`（`test_structs.lfz`）+ `equiv_method_two_call_forms_equal` / `equiv_self_mutation_*`（`test_equivalence_paths.lfz`）；verifier P9 rev.2 §9.1 复验已闭合 |
+| **bug-20260927-03** | `repeat(n, s)` 超大 `n`（`n * len(s)` 字节超可分配上限）→ **Rust panic（进程崩溃 / exit 101）** | interface-contract §10.7 `repeat`（溢出 → `OverflowError`）+ §10.8（`OverflowMsg::Capacity`，消息 `容量溢出：所需容量超出可分配上限`）；ADR [2026-09-27 21:10] | 无（原 85 黑盒未覆盖该入参）→ 本批新增 | ✅ **已修复**（runtime-dev，`OverflowMsg::Capacity`）→ **P5.7 补负例**：`builtin_repeat_capacity_overflow` PASS（直跑 exit 2，非 101） |
+| **bug-20260927-04** | `range(n)` 超大 `n` → **Rust panic（进程崩溃 / exit 101）** | interface-contract §10.7 `range`（容量 → `OverflowError`）+ §10.8；ADR [2026-09-27 21:10]（规范原静默，已裁定统一为 `OverflowError`） | 无（原 85 黑盒未覆盖该入参）→ 本批新增 | ✅ **已修复**（runtime-dev）→ **P5.7 补负例**：`builtin_range_capacity_overflow` PASS（直跑 exit 2，非 101） |
 
 ---
 
-## 8. 运行证据（P5.4 定稿 + P5.6 等价路径补测）
+## 8. 运行证据（P5.4 定稿 + P5.6 等价路径补测 + P5.7 容量溢出回归 + P5.8 解析期上限回归）
 
 ```
 $ cargo run --quiet -- test
 PASS  abs_i64_min_overflow
+PASS  ast_depth_10000_terms_is_expr_too_deep
 PASS  syntax_break_outside_loop
 ...
-PASS  field_bracket_read_missing_field_error
-PASS  field_dot_read_missing_field_error
+PASS  parse_nesting_1001_is_nesting_too_deep
+PASS  builtin_range_capacity_overflow
 ...
-PASS  tests/lfz/test_structs.lfz
+PASS  builtin_repeat_capacity_overflow
+...
 PASS  tests/lfz/test_equivalence_paths.lfz
+PASS  tests/lfz/test_parse_limits.lfz
+PASS  tests/lfz/test_structs.lfz
 
-汇总：共 85 个用例，通过 85，失败 0，错误 0
+汇总：共 90 个用例，通过 90，失败 0，错误 0
 $ echo $LASTEXITCODE
 0
 ```
 
-- **用例总数：85** = 正向自动发现 **26**（P5.1 的 7 + P5.2 的 10 + P5.3 的 8 + P5.6 的 1）+ 清单（负例 **58** + 非 `.lfz` 正向豁免 1）。
-- 正向断言总数：**597**（114 + 179 + 263 + 41）。
-- 退出码 **0**（全绿）。
-- 构建：`cargo clean -p lfz` 后 `cargo build` → **0 warning / 0 error**。
-- 回归：`cargo test` → **432 passed / 0 failed / 0 ignored**（lib **362** + 42 + 16 + 12；`src/**` 未改，未被本批破坏）。
+- **用例总数：90** = 正向自动发现 **27**（P5.1 的 7 + P5.2 的 10 + P5.3 的 8 + P5.6 的 1 + **P5.8 的 1**）+ 清单（负例 **62** + 非 `.lfz` 正向豁免 1）。
+- 正向断言总数：**599**（114 + 179 + 263 + 41 + **2**）。
+- 退出码 **0**（全绿）；`test --json` 末行 → `{"ok":true,"total":90,"passed":90,"failed":0,"errored":0,...}`。
+- 构建：`cargo build` → **0 warning / 0 error**。
+- 回归：`cargo test` → **482 passed / 0 failed / 0 ignored**（lib 379 + main 48 + cli 28 + test_runner 12 + unit 15；含 §3.8/§3.9 单测，`src/**` 变更后的实测）。
+- **新增两条容量溢出负例直跑证据**（runner 只断言错误类，退出码以直跑 `lfz run <fixture>` 取证）：
+  - `repeat(4611686018427387904, "ab")` → `OverflowError: 容量溢出：所需容量超出可分配上限`，`$LASTEXITCODE = 2`；
+  - `range(4611686018427387904)` → `OverflowError: 容量溢出：所需容量超出可分配上限`，`$LASTEXITCODE = 2`。
+- **新增两条解析期上限负例 + 一条正例直跑证据**（P5.8；runner 只断言错误类，退出码/消息以直跑取证）：
+  - `(`×1001（`fixtures/parse_nesting_overflow.lfz`）→ `SyntaxError: 嵌套深度超限（超过 1000 层）`，`$LASTEXITCODE = 2`；
+  - `1+1+…` 10000 项（`fixtures/ast_depth_overflow.lfz`）→ `SyntaxError: 表达式嵌套过深（超过 10000 层）`，`$LASTEXITCODE = 2`（旧崩溃点 100000 项现亦 exit 2，不再进程 abort）；
+  - `tests/lfz/test_parse_limits.lfz`（`(`×1000 / `1+1+…` 9999 项）→ `$LASTEXITCODE = 0`、stderr 空。
 
 ---
 
