@@ -191,3 +191,191 @@ fn no_args_is_usage_error_exit_2() {
     assert_eq!(r.code, 2, "stderr={}", r.stderr);
     assert!(r.stderr.contains("缺少子命令"), "stderr={:?}", r.stderr);
 }
+
+// ---------------------------------------------------------------------------
+// `--json`（P4.2）：stdout 只写一行 JSON；退出码仍 D-008（错误 → 2）
+// 权威字段：`docs/spec/semantics.md` §8.3 示例 4 / §8.4。
+// ---------------------------------------------------------------------------
+
+/// JSON 顶层标量区（`traceback` 之前），避免与 traceback 内嵌字段混淆。
+fn head(json: &str) -> &str {
+    json.find("\"traceback\"").map_or(json, |i| &json[..i])
+}
+
+/// 成功：`{"ok":true}`（单行）、stderr 空、退出码 0。
+#[test]
+fn json_run_success_is_ok_true_exit_0() {
+    let f = TempLfz::new("#42\nlet x = 1\n");
+    let r = run_lfz(&["run", "--json", &f.path()]);
+
+    assert_eq!(r.code, 0, "stderr={}", r.stderr);
+    assert_eq!(r.stdout, "{\"ok\":true}\n", "stdout={:?}", r.stdout);
+    assert!(r.stderr.is_empty(), "成功不应有 stderr：{:?}", r.stderr);
+}
+
+/// 缺 `#42`：`CosmosAnswerError`，`ok:false`，`line:1`/`col:1`，单帧 `<module>`，退出码 2。
+#[test]
+fn json_run_missing_preamble_shape() {
+    let f = TempLfz::new("print(\"hi\")\n");
+    let r = run_lfz(&["run", "--json", &f.path()]);
+
+    assert_eq!(r.code, 2, "stderr={}", r.stderr);
+    assert_eq!(r.stdout.lines().count(), 1, "stdout={:?}", r.stdout);
+    let h = head(&r.stdout);
+    assert!(h.starts_with("{\"ok\":false"), "stdout={:?}", r.stdout);
+    assert!(h.contains(r#""error":"CosmosAnswerError""#), "{:?}", r.stdout);
+    assert!(
+        h.contains(r#""message":"你忘记了宇宙的答案""#),
+        "{:?}",
+        r.stdout
+    );
+    assert!(h.contains(r#""line":1"#), "{:?}", r.stdout);
+    assert!(h.contains(r#""col":1"#), "{:?}", r.stdout);
+    assert!(
+        r.stdout
+            .contains(r#""traceback":[{"file":"#)
+            && r.stdout.contains(r#""line":1,"func":"<module>"}]"#),
+        "traceback 应为单帧 <module>：{:?}",
+        r.stdout
+    );
+    // JSON 模式不写人类可读块到 stdout。
+    assert!(!r.stdout.contains("Traceback"), "{:?}", r.stdout);
+    assert!(r.stderr.is_empty(), "JSON 模式失败也不写 stderr：{:?}", r.stderr);
+}
+
+/// 语法错：`SyntaxError`，位置 `line:2`/`col:11`，退出码 2。
+#[test]
+fn json_run_syntax_error_shape() {
+    let f = TempLfz::new("#42\nlet x = 1 $ 2\n");
+    let r = run_lfz(&["run", "--json", &f.path()]);
+
+    assert_eq!(r.code, 2, "stderr={}", r.stderr);
+    let h = head(&r.stdout);
+    assert!(h.contains(r#""error":"SyntaxError""#), "{:?}", r.stdout);
+    assert!(h.contains(r#""message":"非法字符 '$'""#), "{:?}", r.stdout);
+    assert!(h.contains(r#""line":2"#), "{:?}", r.stdout);
+    assert!(h.contains(r#""col":11"#), "{:?}", r.stdout);
+    assert!(r.stderr.is_empty(), "{:?}", r.stderr);
+}
+
+/// 运行期错：`ZeroDivisionError`，`line:3`/`col:5`，traceback 自外→内（§8.3 示例 2）。
+#[test]
+fn json_run_runtime_error_matches_example2_traceback() {
+    let f = TempLfz::new("#42\nfn half(n) {\n    n / 0\n}\nlet r = half(10)\nprint(r)\n");
+    let r = run_lfz(&["run", "--json", &f.path()]);
+
+    assert_eq!(r.code, 2, "stderr={}", r.stderr);
+    let h = head(&r.stdout);
+    assert!(h.contains(r#""error":"ZeroDivisionError""#), "{:?}", r.stdout);
+    assert!(h.contains(r#""message":"除以零""#), "{:?}", r.stdout);
+    assert!(h.contains(r#""line":3"#), "{:?}", r.stdout);
+    assert!(h.contains(r#""col":5"#), "{:?}", r.stdout);
+    // 帧表：外层 `<module>`@5 → 内层 `half`@3。
+    assert!(r.stdout.contains(r#""line":5,"func":"<module>""#), "{:?}", r.stdout);
+    assert!(r.stdout.contains(r#""line":3,"func":"half""#), "{:?}", r.stdout);
+    // `print(r)` 未执行 → stdout 无程序输出污染。
+    assert_eq!(r.stdout.lines().count(), 1, "stdout={:?}", r.stdout);
+}
+
+/// 断言失败：`AssertionError`，`line:2`/`col:1`，退出码 2（`run` 不区分 1）。
+#[test]
+fn json_run_assert_failure_shape() {
+    let f = TempLfz::new("#42\nassert(false, \"boom\")\n");
+    let r = run_lfz(&["run", "--json", &f.path()]);
+
+    assert_eq!(r.code, 2, "stderr={}", r.stderr);
+    let h = head(&r.stdout);
+    assert!(h.contains(r#""error":"AssertionError""#), "{:?}", r.stdout);
+    assert!(h.contains(r#""message":"断言失败：boom""#), "{:?}", r.stdout);
+    assert!(h.contains(r#""line":2"#), "{:?}", r.stdout);
+    assert!(h.contains(r#""col":1"#), "{:?}", r.stdout);
+    assert!(r.stderr.is_empty(), "{:?}", r.stderr);
+}
+
+/// 缺文件 → `IOError`（无 span）：`line`/`col` 为 `null`、`traceback` 为 `[]`，退出码 2。
+#[test]
+fn json_run_missing_file_io_error_shape() {
+    let missing = std::env::temp_dir()
+        .join("lfz_cli_json_definitely_missing_54321.lfz")
+        .to_str()
+        .expect("路径应为 UTF-8")
+        .to_string();
+    let _ = std::fs::remove_file(&missing);
+
+    let r = run_lfz(&["run", "--json", &missing]);
+    assert_eq!(r.code, 2, "stderr={}", r.stderr);
+    let h = head(&r.stdout);
+    assert!(h.contains(r#""error":"IOError""#), "{:?}", r.stdout);
+    assert!(h.contains(r#""line":null"#), "{:?}", r.stdout);
+    assert!(h.contains(r#""col":null"#), "{:?}", r.stdout);
+    assert!(r.stdout.contains(r#""traceback":[]"#), "{:?}", r.stdout);
+}
+
+/// `--json` 出现在 file 之后同样被识别。
+#[test]
+fn json_flag_accepted_after_file() {
+    let f = TempLfz::new("#42\nlet x = 1\n");
+    let r = run_lfz(&["run", &f.path(), "--json"]);
+    assert_eq!(r.code, 0, "stderr={}", r.stderr);
+    assert_eq!(r.stdout, "{\"ok\":true}\n", "stdout={:?}", r.stdout);
+}
+
+// ---------------------------------------------------------------------------
+// P4.2-fix：`print` 在 `--json` 下重定向到 stderr，stdout 恒为唯一合法 JSON
+// ---------------------------------------------------------------------------
+
+/// 程序输出标记（避免与临时路径等偶然子串混淆）。
+const PRINT_MARK: &str = "__LFZ_PRINT_MARKER__";
+
+/// 成功路径：程序 `print("x")` + `run --json` → stdout **恰为** `{"ok":true}`
+/// （合法 JSON，可被任意解析器解析），`x` 出现在 **stderr**、不在 stdout。
+#[test]
+fn json_run_print_success_redirects_to_stderr() {
+    let f = TempLfz::new(&format!("#42\nprint(\"{PRINT_MARK}\")\n"));
+    let r = run_lfz(&["run", "--json", &f.path()]);
+
+    assert_eq!(r.code, 0, "stderr={}", r.stderr);
+    // stdout 恰为一个合法 JSON 对象（逐字符），证明未混入程序输出。
+    assert_eq!(r.stdout, "{\"ok\":true}\n", "stdout={:?}", r.stdout);
+    assert!(
+        !r.stdout.contains(PRINT_MARK),
+        "print 不得写 stdout：stdout={:?}",
+        r.stdout
+    );
+    assert!(
+        r.stderr.contains(PRINT_MARK),
+        "print 应重定向到 stderr：stderr={:?}",
+        r.stderr
+    );
+}
+
+/// 失败路径：程序先 `print("x")` 再运行期报错 + `run --json` → stdout 仍是**唯一一行合法 JSON**
+/// （§8.3 示例 4 形状），`x` 只在 stderr。
+#[test]
+fn json_run_print_before_error_redirects_to_stderr() {
+    let f = TempLfz::new(&format!("#42\nprint(\"{PRINT_MARK}\")\n1 / 0\n"));
+    let r = run_lfz(&["run", "--json", &f.path()]);
+
+    assert_eq!(r.code, 2, "stderr={}", r.stderr);
+    assert_eq!(r.stdout.lines().count(), 1, "stdout={:?}", r.stdout);
+    // 单行且为 `{...}` 对象（合法 JSON），且为错误形状。
+    let s = r.stdout.trim_end();
+    assert!(
+        s.starts_with("{\"ok\":false") && s.ends_with('}'),
+        "stdout 应为单个 JSON 对象：{:?}",
+        r.stdout
+    );
+    let h = head(&r.stdout);
+    assert!(h.contains(r#""error":"ZeroDivisionError""#), "{:?}", r.stdout);
+    assert!(h.contains(r#""message":"除以零""#), "{:?}", r.stdout);
+    assert!(
+        !r.stdout.contains(PRINT_MARK),
+        "print 不得写 stdout：stdout={:?}",
+        r.stdout
+    );
+    assert!(
+        r.stderr.contains(PRINT_MARK),
+        "print 应重定向到 stderr：stderr={:?}",
+        r.stderr
+    );
+}

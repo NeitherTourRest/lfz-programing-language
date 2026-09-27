@@ -1,5 +1,40 @@
 # tooling-dev — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 17:05] P4.2-fix：`--json` 下 `print` 重定向 stderr（stdout 恒为单个 JSON）
+- 来源: team-lead 任务书「P4.2-fix — 让 `--json` 模式下的 `stdout` 真正只含 JSON」；**唯一一次跨模块授权**（限 `src/builtins.rs` 输出目标切换）。
+- 完成:
+  - `src/builtins.rs`（**仅**输出目标切换，未触碰其它逻辑）：新增进程级 `static STDOUT_TO_STDERR: AtomicBool`（默认 `false`）+ `pub fn set_stdout_to_stderr(on: bool)` + 私有 `stdout_to_stderr()` + 写行内核 `write_line<T: Write>`；`b_print` / `b_input` 按开关择流（默认 stdout，开关开时 stderr）；**`b_eprint` 保持不变**（恒 stderr）。
+  - `src/cli.rs::run_file`：开头 `lfz::builtins::set_stdout_to_stderr(json);`（覆盖 `run --json` 成功/失败两路径）。
+  - `src/test_runner.rs::run`：开头 `lfz::builtins::set_stdout_to_stderr(json);`（覆盖 `test --json`）。
+  - `tests/cli.rs`：+2 e2e —— `json_run_print_success_redirects_to_stderr`（程序 `print` + `run --json`：stdout **逐字符 = `{"ok":true}`**，print 在 stderr）、`json_run_print_before_error_redirects_to_stderr`（先 print 再 `1/0`：stdout 单行错误 JSON，print 在 stderr）。
+  - `tests/test_runner.rs`：+1 e2e —— `json_print_case_stdout_is_single_json`（含 `print` 用例 + `test --json`：stdout **逐字符 = 预期汇总 JSON**，print 在 stderr）。
+  - `docs/tooling/runner-contract.md`：§6 与 §9.3 的「已知限制」改为「**已解决**（`--json` 下程序输出重定向到 stderr，stdout 恒为单个 JSON）」；§9.4 增落点；状态 → v1.2。
+- 产出（证据）:
+  - `cargo build --all-targets` → **0 warning**；`cargo test` → **431 passed / 0 failed**（lib 361 + bin 42 + `tests/cli.rs` 16 + `tests/test_runner.rs` 12；原 428 零破坏，新增 3）。
+  - `lfz run --json examples/hello.lfz` → stdout 恰 `{"ok":true}`（`ConvertFrom-Json` 解析通过），**`Hello, LFZ!` 在 stderr**，exit **0**。
+  - `lfz run --json <先 print 后 1/0>` → stdout 单行 §8.3 示例 4 形状 JSON（`ZeroDivisionError`/`除以零`/line3/col1），marker 在 stderr，exit **2**；原始字节含 UTF-8 `E9 99 A4…`（= 除以零）。
+  - `lfz test --json`（临时目录含会 print 的用例）→ stdout 恰唯一汇总 JSON（`ConvertFrom-Json` 解析通过），marker 在 stderr，exit **0**。
+- 决策: 写入 ADR `[2026-09-27 17:05] [tooling-dev] P4.2-fix …`（跨模块影响 test-engineer/verifier → 契约 §9.3 由「已知限制」升为「已解决」）。
+- 下一步: 通知 test-engineer（若其用例依赖「print 会污染」的旧假设需知悉）；P4 剩余 REPL / 打包。
+- 阻塞: 无。
+## [2026-09-27 11:23] P4.2 `--json` 机器可读输出（`lfz run --json` / `lfz test --json`）
+- 来源: team-lead 任务书「P4.2 — `--json` 机器可读输出」；权威字段 = `docs/spec/semantics.md` §8.3 示例 4 / §8.4 + `interface-contract.md` §8.1 / §10.6 + D-008。
+- 完成:
+  - `src/json.rs`：新增 `Json::Int` + `pub fn encode(&Json) -> String`（紧凑单行；转义 `"`/`\`/控制字符；**非 ASCII 原样**，与示例 4 一致）；+4 单测（含示例 4 逐字符）。
+  - `src/cli.rs`：`execute` 全局摘除 `--json` → `run_file(path, json, out, err)`；新增 `success_json` / `error_json` / `push_error_fields` / `traceback_json`（字段与顺序对齐 §8.3 示例 4）；`--help` 增 `--json`；+6 单测。
+  - `src/test_runner.rs`：`run(args, json, out, err)`；`json` 模式只写一行汇总 JSON（`ok/total/passed/failed/errored/cases`），逐用例 `case_json` 复用 `cli::push_error_fields`；环境错误仍 stderr、stdout 空；+5 单测。
+  - `tests/cli.rs`：+7 e2e（成功 / 缺 `#42` / 语法错 / 运行期错示例 2 traceback / 断言失败 / `IOError` null / `--json` 位置）。
+  - `tests/test_runner.rs`：+4 e2e（混合 / 全过 / ERROR / 环境错误 stdout 空）。
+  - `docs/tooling/runner-contract.md`：新增 §9（`--json` 字段契约 + 流约束 + 已知限制 + 落点）；状态 → v1.1。`src/main.rs` 注释同步。
+- 产出（证据）:
+  - `cargo build --all-targets` → **NO WARNINGS**（exit 0）。
+  - `cargo test` → lib 361 + bin 42 + `tests/cli.rs` 14 + `tests/test_runner.rs` 11 = **428 passed / 0 failed**（原 402 零破坏，新增 26）。
+  - `run --json <运行期错程序>` → 单行 `{"ok":false,"error":"ZeroDivisionError","message":"除以零",...,"line":3,"col":5,"traceback":[{"...","line":5,"func":"<module>"},{"...","line":3,"func":"half"}]}`，**退出码 2**，stderr 0B（与 §8.3 示例 2 对齐）。
+  - `run --json <缺 #42>` → `{"ok":false,"error":"CosmosAnswerError","message":"你忘记了宇宙的答案","file":"...","line":1,"col":1,"traceback":[{"...","line":1,"func":"<module>"}]}`，退出码 2（与示例 4 逐字段一致）。
+  - `test --json <临时目录>` → 单行 `{"ok":false,"total":3,"passed":1,"failed":1,"errored":1,"cases":[... PASS/FAIL(AssertionError)/ERROR(ZeroDivisionError) ...]}`，退出码 2；全过目录 → `{"ok":true,"total":1,"passed":1,"failed":0,"errored":0,...}`，退出码 0。全部夹具建于 `%TEMP%`，`tests/` 未留文件。
+- 决策（已提 ADR 2026-09-27 11:23）: ① `--json` 全局开关；② 成功 = `{"ok":true}`；③ 加载/解析期 traceback = 合成单帧 `<module>`，`IO` 无 span → `line/col:null`、`traceback:[]`；④ `test --json` 汇总 schema（与 `run` 同源错误字段）；⑤ stdout 只 JSON、诊断转 stderr。均为规范未逐字钉死处的「与示例 4 同源」最小推广。
+- 下一步: REPL（可选）+ `scripts/package.ps1` + `scripts/lfz.ps1`/`lfz.bat` 启动器；运行章节与 docs-writer 协作；与 test-engineer 联调。
+- 阻塞: 无。**已知限制**：内建 `print`/`check` 直写进程 stdout/stderr，CLI 无法接管（不改 builtins），`--json` 下被运行程序的 `print` 会与 JSON 交错；已写入 runner-contract §9.3。
 ## [2026-09-27 11:16] P4.1 `lfz test` 一键测试 runner（评分项 2 基础设施）
 - 来源: team-lead 任务书「P4.1 — `lfz test` 一键测试 runner」；契约 = `docs/spec/interface-contract.md` §11.2（T-R1…T-R4）+ §8.1（退出码 D-008）。
 - 完成:

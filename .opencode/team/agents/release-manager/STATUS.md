@@ -1,31 +1,28 @@
 # release-manager — 工作状态
-> 最后更新: 2026-09-27 11:18 by release-manager
+> 最后更新: 2026-09-27 by release-manager
 ## 当前状态
-**P4.1（`lfz test` 一键测试 runner）入库并推送：9 项显式清单 + 本角色收工文档，同一提交**。
-- 本轮 **1 个提交**：`feat(p4): lfz test runner (one command runs all black-box cases)`。
-- 入库内容 = tooling-dev 交付（**仅代为入库、未改内容**）：新增 `src/json.rs`(340 行) + `src/test_runner.rs`(500 行) + `tests/test_runner.rs`(188 行) + `docs/tooling/runner-contract.md`(88 行)；修改 `src/cli.rs`(+143/- 块) + `src/main.rs`(+11) + `.opencode/team/DECISIONS.md`(tooling-dev ADR) + `agents/tooling-dev/{STATUS,JOURNAL}.md`；外加本角色 `{STATUS,JOURNAL}.md`。
-- 背景（team-lead 已核验）：`cargo build` 0 warning；`cargo test` 402 全绿（361 库 + 27 bin + 7 + 7）；`lfz test <dir>` 判定正例 PASS / AssertionError→FAIL / 其它错误类→ERROR；汇总 `共 5 个用例，通过 3，失败 1，错误 1` exit 2（ERROR 支配 FAIL）。
-- **未 force-push、未打任何新 tag**（`v0.1.0`/`v0.2.0` 保留）；`git add` 全为**显式 9 文件清单**，未 `git add -A`。
-## 校验基线（本轮证据）
-- 入清单门禁：`git status --short` 恰为任务书预期 **9 项**——`M .opencode/team/DECISIONS.md`、`M .opencode/team/agents/tooling-dev/JOURNAL.md`、`M .opencode/team/agents/tooling-dev/STATUS.md`、`M src/cli.rs`、`M src/main.rs`、`?? docs/tooling/`、`?? src/json.rs`、`?? src/test_runner.rs`、`?? tests/test_runner.rs`；**无清单外条目**（门禁未触发）。
-- `git diff --stat`（已跟踪部分）= 5 files changed, 177 insertions(+), 42 deletions(-)：DECISIONS.md(+12) / tooling-dev JOURNAL(+18) / tooling-dev STATUS(+35/块) / src/cli.rs(+143) / src/main.rs(+11)。
-- 新文件体量：`src/json.rs` 11391 B / 340 行、`src/test_runner.rs` 19576 B / 500 行、`tests/test_runner.rs` 6892 B / 188 行、`docs/tooling/runner-contract.md` 8007 B / 88 行；`docs/tooling/` 仅此 1 文件。
-- 基线：提交前 HEAD = 远程 `refs/heads/main` = `688b1bd`；`git tag -n` 仍仅 `v0.1.0`/`v0.2.0`（本轮不打新 tag）。
-- 复议 `cargo run --quiet -- test`（无路径，默认 `tests/**/*.lfz` 排除 `tests/fixtures`）→ 输出 `lfz test: 未发现任何测试用例`，退出码 **2**（当前 `tests/` 尚无 `.lfz` 黑盒用例，属预期默认行为；黑盒集为 P5 test-engineer 交付）。
-- 终态：`git status --short` 空；本地 HEAD = `git ls-remote origin refs/heads/main`。
+**✅ 完成 —— P4.2（`--json`）两个原子提交已执行并推送（team-lead 已裁决「清单已修正」）。**
+- 上轮门禁停下的 3 个清单外文件（`src/json.rs`、`tests/cli.rs`、`tests/test_runner.rs`）经 team-lead 确认**同属 P4.2、清单遗漏、已修正**；本轮按**修正后完整清单**执行，未再触发停止。
+- **入清单门禁（通过）**：`git status --short -uall` 实测 **13 文件**（全部 ` M`，无未跟踪），与修正后清单逐字一致：提交 1 = `src/builtins.rs`（1 文件）；提交 2 = `src/json.rs`、`src/cli.rs`、`src/main.rs`、`src/test_runner.rs`、`tests/cli.rs`、`tests/test_runner.rs`、`docs/tooling/runner-contract.md`、`.opencode/team/DECISIONS.md`、`.opencode/team/agents/tooling-dev/{STATUS,JOURNAL}.md`、`.opencode/team/agents/release-manager/{STATUS,JOURNAL}.md`（12 文件）。**无清单外条目、无缺失条目**。
+- 基线 HEAD = 远程 `refs/heads/main` = `e695159`（`feat(p4): lfz test runner (one command runs all black-box cases)`）。
+- **两个原子提交 + push 已完成**（短哈希见收工汇报；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD）。
+- 先完成收工协议（覆盖本 `STATUS.md`、追加 `JOURNAL.md`）再提交，使收工文档并入提交 2，工作区提交后保持干净。
+## 校验基线（本轮取证）
+- `git diff --stat`（提交前）= **13 files changed, 1049 insertions(+), 83 deletions(-)**：DECISIONS.md +26 / tooling-dev JOURNAL +35 / tooling-dev STATUS 块 / runner-contract.md +71-块 / **src/builtins.rs +44-块** / src/cli.rs +240-块 / **src/json.rs +144** / src/main.rs +7 / src/test_runner.rs +151-块 / **tests/cli.rs +188** / **tests/test_runner.rs +109** / release-manager STATUS 块 / release-manager JOURNAL +12。
+- `git diff -- src/builtins.rs` 复核：仅新增 `STDOUT_TO_STDERR`(AtomicBool) + `set_stdout_to_stderr()` + `stdout_to_stderr()` + `write_line()`，`b_print`/`b_input` 按开关选 stdout/stderr，**默认 false（行为不变）**，其余 builtin 逻辑未动 —— 与提交 1 描述逐字吻合。
+- `git tag -n` 仍仅 `v0.1.0` / `v0.2.0`（**本轮未打任何 tag**）。
 ## 进行中
 - （无）
 ## 阻塞 / 需要支持
-- **owner 偏差（历史遗留，待确认）**：可认证账号 login = `NeitherTourRest`（display name = `MakeChase`）。待 team-lead/用户确认；不影响交付。
+- **无阻塞**（上轮清单遗漏已由 team-lead 修正并执行完毕）。
+- （遗留）**owner 偏差**：可认证账号 login = `NeitherTourRest`（display name = `MakeChase`）。待 team-lead/用户确认；不影响本任务。
 ## 下一步计划
-- 用户验收通过后：P10 交付清单核对报告 `docs/reports/delivery-checklist.md`（对照 `task-info.md` 8 项，至少 3 轮）。
-- 后续阶段里程碑（P5 `v0.3-tested` / P8 `v0.4-app` / P9/P10 `v1.0-final`）按需打附注标签（须 team-lead 授权）。
+- P10 交付清单核对报告 `docs/reports/delivery-checklist.md`（对照 `task-info.md` 8 项，至少 3 轮）。
+- 后续里程碑标签：P5 `v0.3-tested` / P8 `v0.4-app` / P9-P10 `v1.0-final`（待 team-lead 判定通过条件后打附注标签）。
+- 与 tooling-dev 衔接打包；核对报告与打包产物一致性核对。
 ## 关键经验（写给未来的自己）
-- **代码功能提交 = 显式文件清单 + 清单外即停**：本轮预测 9 项与实测 `git status --short` 逐字吻合，零歧义；`git add <显式文件>` 永远优于 `git add -A`。
-- **并行改动识别**：任务书已把 tooling-dev 的新增/修改文件全部列入清单，我只需照单暂存；凡**未预告**条目才触发停止门禁。
-- **退出码复议要带「默认行为」上下文**：`cargo run -- test`（无路径）当前 `tests/` 仅 `cli.rs`/`test_runner.rs`（Rust 测试），无 `.lfz` → runner 报「未发现任何测试用例」exit 2，属**预期**；真正的黑盒集在 P5 才落地。
-- **收工文档并入同一提交**：先改 `STATUS.md`/`JOURNAL.md` 再 `git add`，工作区天然干净、无需二次提交。
-- **Journal 只追加、最新条目在最上方**：新条目插在 `# 标题` 说明行之后、上一条 `## [时间]` 之前。
-- **代理纪律**：`git push` 走仓库自身 `http.proxy`/`https.proxy=http://127.0.0.1:7890`；PowerShell 下进度写 stderr 显示红色 `NativeCommandError`，判据是 `$LASTEXITCODE=0`。
-- **CRLF 预警无害**：`git status/diff` 打印 `LF will be replaced by CRLF` 属 Windows 行尾提示，不影响提交内容。
-- **禁区确认**：本轮未 force-push、未打新 tag、未 `git add -A`、未暂存清单外文件、未提交 `target/`·密钥·临时文件；未改动 `docs/spec/**`。
+- **清单门禁逐字比对 + 依赖完整性检查**：上轮 11 vs 预期 8 项，3 项偏差命中「停止并汇报」红线；本轮修正为 13 文件（1+12）后放行。**门禁在 `git add` 之前**，先 `git status --short -uall` + `git diff --stat` 如实报告，再动暂存区。
+- **收工文档排序要点**：当收工文档须并入同一提交、且验收要求「push 后 `git status --short` 空」时，**必须先写 STATUS/JOURNAL 再 commit**，否则 push 后再改会造成工作区 dirty 与验收项矛盾。
+- **`-uall` 可确认无未跟踪遗漏**：本轮 `git status --short -uall` = 13 项全部 ` M`，无 `??`，说明并行改动均为已跟踪修改。
+- CRLF 预警（`LF will be replaced by CRLF`）为 Windows 行尾提示，无害；提交信息用 UTF-8。
+- 禁区确认：本轮未 force-push、未打 tag、未改 `docs/spec/**`、未提交 `target/`·密钥·临时文件；未改任何他角色交付内容（仅代为入库）。

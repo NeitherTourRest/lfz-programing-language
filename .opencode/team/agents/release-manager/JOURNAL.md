@@ -1,5 +1,33 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 11:29] ✅ P4.2 `--json` 两个原子提交并推送（清单已修正后执行）
+- 来源: team-lead 任务书（轻量启动；**裁决「清单已修正」**——上轮门禁停下的 3 个清单外文件 `src/json.rs`、`tests/cli.rs`、`tests/test_runner.rs` 确认同属 P4.2。要求按修正后完整清单做**两个原子提交**并 push：提交 1 = `git add src/builtins.rs`；提交 2 = `git add src/json.rs src/cli.rs src/main.rs src/test_runner.rs tests/cli.rs tests/test_runner.rs docs/tooling/runner-contract.md .opencode/team/DECISIONS.md .opencode/team/agents/tooling-dev/{STATUS,JOURNAL}.md .opencode/team/agents/release-manager/{STATUS,JOURNAL}.md`；收工文档并入提交 2。验收取证 status 空 / `log --oneline -4` / `ls-remote` 一致 / 短哈希 / `--json` 复议 `o.txt`=`{"ok":true}`、`e.txt`=`Hello, LFZ!`。禁区：禁 force-push、**不打 tag**、不改 `docs/spec/**`、不提交 `target/`·密钥·临时文件）
+- 完成:
+  - **入清单门禁（通过，未触发停止）**：`git status --short -uall` 复核**恰为修正后清单 13 文件**（全部 ` M`，**无 `??` 未跟踪、无清单外/缺失条目**）：提交 1 `src/builtins.rs`；提交 2 `src/json.rs`、`src/cli.rs`、`src/main.rs`、`src/test_runner.rs`、`tests/cli.rs`、`tests/test_runner.rs`、`docs/tooling/runner-contract.md`、`.opencode/team/DECISIONS.md`、`.opencode/team/agents/tooling-dev/{STATUS,JOURNAL}.md`、`.opencode/team/agents/release-manager/{STATUS,JOURNAL}.md`。
+  - 基线复核：提交前 HEAD = 远程 `refs/heads/main` = `e695159`；`git diff --stat`（提交前）= **13 files changed, 1049 insertions(+), 83 deletions(-)**；`git tag -n` 仍仅 `v0.1.0`/`v0.2.0`。
+  - 内容抽查（提交 1）：`git diff -- src/builtins.rs` 仅新增 `STDOUT_TO_STDERR`(AtomicBool)+`set_stdout_to_stderr()`+`stdout_to_stderr()`+`write_line()`，`b_print`/`b_input` 按开关选 stdout/stderr，**默认 false 行为不变**，其余 builtin 逻辑未动——与提交 1 描述逐字吻合。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、追加本 `JOURNAL.md`），使收工改动并入提交 2（工作区提交后保持干净）。
+  - **提交 1**：`git add src/builtins.rs`（显式 1 文件）→ `fix(builtins): make program stdout target swappable (for --json)` + 任务书 body 逐字。
+  - **提交 2**：`git add src/json.rs src/cli.rs src/main.rs src/test_runner.rs tests/cli.rs tests/test_runner.rs docs/tooling/runner-contract.md .opencode/team/DECISIONS.md .opencode/team/agents/tooling-dev/STATUS.md .opencode/team/agents/tooling-dev/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（**显式 12 文件**，未 `git add -A`）→ `feat(p4): --json machine-readable output for run and test` + 任务书 body 逐字。
+  - `git push`（非 force；`$LASTEXITCODE=0` 判据）。
+- 产出:
+  - 两个新提交（短哈希见汇报）；`git status --short` 空；`git ls-remote origin refs/heads/main` = 本地 HEAD；`git tag -n` 仍仅 `v0.1.0`/`v0.2.0`（**本轮未打新 tag**）。
+  - 证据: `git status --short`；`git log --oneline -4`；`git ls-remote origin refs/heads/main`；`cmd /c "target\debug\lfz.exe run --json examples\hello.lfz 1>o.txt 2>e.txt"` → `o.txt` = `{"ok":true}`、`e.txt` = `Hello, LFZ!`。
+- 决策: 无新 ADR（`DECISIONS.md` 本轮条目由 tooling-dev 追加，我仅代为入库，无跨角色新决策）。owner 偏差仍为遗留待确认项。
+- 下一步: P10 交付清单核对报告 `docs/reports/delivery-checklist.md`；后续里程碑 P5 `v0.3-tested` / P8 `v0.4-app` / P9-P10 `v1.0-final` 按需打附注标签。
+- 阻塞: 无。
+## [2026-09-27 11:55] ⛔ P4.2 `--json` 两个原子提交 —— 停止门禁触发，未执行
+- 来源: team-lead 任务书（轻量启动；把 P4.2 `--json` 与其修复做**两个原子提交**并 push。提交 1 = `git add src/builtins.rs`（builtins 最小改动，stdout target 可切换）；提交 2 = `git add src/cli.rs src/main.rs src/test_runner.rs docs/tooling/runner-contract.md .opencode/team/DECISIONS.md agents/tooling-dev/{STATUS,JOURNAL}.md`；收工文档并入提交 2；验收取证 status 空 / `log --oneline -4` / `ls-remote` 一致 / 短哈希 / `--json` 复议。**明文门禁：若出现清单外条目 → 停止并汇报。** 禁区：禁 force-push、不打 tag、不改 `docs/spec/**`、不提交 `target/`·密钥·临时文件）
+- 完成:
+  - **入清单门禁（触发 → 停止）**：`git status --short -uall` 实测 **11 项**，任务书预期 **8 项**；**3 项清单外** → `src/json.rs`(M,+144)、`tests/cli.rs`(M,+188)、`tests/test_runner.rs`(M,+109)。
+  - 判定清单不可直接执行：`src/json.rs` 新增 `Json::Int` 变体 + `encode()`/`encode_into()`，是清单内 `src/cli.rs`/`src/main.rs` 的**编译依赖**；排除它将产出编译不过的「原子提交」。清单外 ②③ 即提交 2 body 所述「print+--json cases」测试盲区证据。
+  - **未执行任何 `git add`/`commit`/`push`**；全程只读；未改产品代码/任何交付物。
+  - 仅更新本角色 `STATUS.md`（记录阻塞）与本 `JOURNAL.md`（本条），不改他人物品。
+- 产出:
+  - 无新提交（基线 HEAD = 远程 = `e695159`，未变）。证据: `git status --short`（11 项，逐项列出见汇报）、`git diff --stat`（11 files, +1004/-58）、`git log --oneline -4`（`e695159`/`688b1bd`/`f625150`/`27d3d48`）、`git tag -n`（仅 `v0.1.0`/`v0.2.0`）。
+- 决策: 无新 ADR。**升级 team-lead**：请裁决 (1) 补全清单并指定 3 文件各归哪个提交，或 (2) 接受「仅 8 文件 + 编译不过 + 工作区 dirty」并说明 3 文件处置，或 (3) 重述范围。
+- 下一步: 待 team-lead 澄清 → 重跑门禁 → 两提交 → push → 取证。
+- 阻塞: **有** —— 任务书文件清单遗漏 3 个 P4.2 相关文件；未经裁决不得擅自并入（原子提交纪律 + 不静默改范围）。
 ## [2026-09-27 11:18] P4.1 `lfz test` runner 入库并推送（单个原子提交）
 - 来源: team-lead 任务书（轻量启动；提交 **P4.1 `lfz test` 一键测试 runner** 并推送。背景已核验：`cargo build` 0 warning；`cargo test` 402 全绿（361 库 + 27 bin + 7 + 7）；`lfz test <dir>` 实测正例 PASS / `assert` 失败→FAIL / 其它错误类→ERROR / `fixtures/` 经 `cases.json` 的 `expect` 判定→PASS；汇总 `共 5 个用例，通过 3，失败 1，错误 1`，退出码 2（ERROR 支配 FAIL）。新增/修改 9 项：`src/json.rs`(新,std-only JSON)、`src/test_runner.rs`(新,runner)、`tests/test_runner.rs`(新,集成测试)、`docs/tooling/runner-contract.md`(新,派生契约 T-R4/清单 schema/判定表/退出码/输出格式,以 spec §11.2 为准)、`src/cli.rs`、`src/main.rs`、`.opencode/team/DECISIONS.md`(tooling-dev ADR)、`agents/tooling-dev/{STATUS,JOURNAL}.md`。**清单外条目 → 停止汇报**。要求：显式 9 文件 `git add` + 指定 commit 信息 + push；验收取证 status / log -3 / ls-remote 一致 / 新提交短哈希；**复议** `cargo run --quiet -- test` 输出与退出码；收工文档并入同一提交。禁区：禁 force-push、**不打 tag**（P4 子阶段完成后由 team-lead 决定）、不改 `docs/spec/**`、不提交 `target/`·密钥·临时文件）
 - 完成:

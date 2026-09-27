@@ -19,6 +19,13 @@
 //!
 //! 整体退出码：存在 `ERROR` → `2`；否则存在 `FAIL` → `1`；否则 `0`（`ERROR` 优先于 `FAIL`）。
 //!
+//! # `--json`（P4.2）
+//!
+//! stdout 只写**唯一一行 JSON**：`{ok,total,passed,failed,errored,cases:[…]}`；每个用例
+//! `{name,path,verdict[,error,message,file,line,col,traceback]}`（错误字段复用 [`cli::push_error_fields`]，
+//! 与 `run --json` / §8.4 同源）。字段与示例见 `docs/tooling/runner-contract.md` §9。
+//! 环境错误仍写 stderr、stdout 为空、退出码 `2`。
+//!
 //! 本模块属 **bin crate**（`main.rs` 内 `mod test_runner;`），不进库 crate。
 
 use crate::cli::{self, CaseEval};
@@ -71,8 +78,15 @@ enum Verdict {
 
 /// runner 入口：发现 → 逐用例执行 → 打印报告 → 返回退出码。
 ///
-/// `out` = 测试报告（每用例一行 + 失败明细 + 汇总结论）；`err` = runner 自身错误（参数 / 环境）。
-pub fn run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32 {
+/// `out` = 测试报告（人类可读文本，或 `json` 模式下**唯一一行 JSON**）；
+/// `err` = runner 自身错误（参数 / 环境）。
+///
+/// `json == true` 时：stdout **只**写一个汇总 JSON 对象（`ok` / `total` / `passed` / `failed` /
+/// `errored` / `cases`），逐用例判定与错误字段内嵌于 `cases`；**不**输出人类可读报告。
+/// 环境错误（参数 / 缺目录 / 清单非法 / 无用例）仍写 **stderr** 且 stdout 为空、退出码 `2`。
+pub fn run(args: &[String], json: bool, out: &mut dyn Write, err: &mut dyn Write) -> i32 {
+    // P4.2-fix：`--json` 下程序输出（`print` / `input` 提示）转 stderr，stdout 恒为单个 JSON。
+    lfz::builtins::set_stdout_to_stderr(json);
     let cases = match discover(args, err) {
         Ok(c) => c,
         Err(()) => return cli::EXIT_ERROR,
@@ -85,30 +99,56 @@ pub fn run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32 {
     let mut passed = 0usize;
     let mut failed = 0usize;
     let mut errored = 0usize;
+    let mut docs: Vec<Json> = Vec::with_capacity(cases.len());
     for case in &cases {
         let eval = cli::eval_case(&case.path);
         match judge(&eval, case.expect.as_deref()) {
             Verdict::Pass => {
                 passed += 1;
-                let _ = writeln!(out, "{:<5} {}", "PASS", case.display);
+                if json {
+                    docs.push(case_json(case, "PASS", None));
+                } else {
+                    let _ = writeln!(out, "{:<5} {}", "PASS", case.display);
+                }
             }
             Verdict::Fail => {
                 failed += 1;
-                report(out, "FAIL", case, &eval);
+                if json {
+                    docs.push(case_json(case, "FAIL", Some(&eval)));
+                } else {
+                    report(out, "FAIL", case, &eval);
+                }
             }
             Verdict::Error => {
                 errored += 1;
-                report(out, "ERROR", case, &eval);
+                if json {
+                    docs.push(case_json(case, "ERROR", Some(&eval)));
+                } else {
+                    report(out, "ERROR", case, &eval);
+                }
             }
         }
     }
 
     let total = cases.len();
-    let _ = writeln!(out);
-    let _ = writeln!(
-        out,
-        "汇总：共 {total} 个用例，通过 {passed}，失败 {failed}，错误 {errored}"
-    );
+    if json {
+        let ok = errored == 0 && failed == 0;
+        let doc = Json::Obj(vec![
+            ("ok".to_string(), Json::Bool(ok)),
+            ("total".to_string(), Json::Int(total as i64)),
+            ("passed".to_string(), Json::Int(passed as i64)),
+            ("failed".to_string(), Json::Int(failed as i64)),
+            ("errored".to_string(), Json::Int(errored as i64)),
+            ("cases".to_string(), Json::Arr(docs)),
+        ]);
+        let _ = writeln!(out, "{}", json::encode(&doc));
+    } else {
+        let _ = writeln!(out);
+        let _ = writeln!(
+            out,
+            "汇总：共 {total} 个用例，通过 {passed}，失败 {failed}，错误 {errored}"
+        );
+    }
 
     if errored > 0 {
         cli::EXIT_ERROR
@@ -117,6 +157,20 @@ pub fn run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32 {
     } else {
         cli::EXIT_OK
     }
+}
+
+/// 构造一个用例的 `--json` 对象：`name` / `path` / `verdict`，非 `PASS` 时追加 §8.4 错误字段
+/// （`error` / `message` / `file` / `line` / `col` / `traceback`，复用 `cli::push_error_fields`）。
+fn case_json(case: &Case, verdict: &str, eval: Option<&CaseEval>) -> Json {
+    let mut fields = vec![
+        ("name".to_string(), Json::Str(case.display.clone())),
+        ("path".to_string(), Json::Str(case.path.clone())),
+        ("verdict".to_string(), Json::Str(verdict.to_string())),
+    ];
+    if let Some(eval) = eval {
+        cli::push_error_fields(&mut fields, &case.path, eval);
+    }
+    Json::Obj(fields)
 }
 
 /// 判定单用例（契约见模块头表）。
@@ -373,12 +427,21 @@ mod tests {
         }
     }
 
-    /// 以内存缓冲运行 runner，返回 `(退出码, stdout, stderr)`。
+    /// 以内存缓冲运行 runner（人类可读模式），返回 `(退出码, stdout, stderr)`。
     fn run(args: &[&str]) -> (i32, String, String) {
+        run_with(args, false)
+    }
+
+    /// 以内存缓冲运行 runner（`--json` 模式），返回 `(退出码, stdout, stderr)`。
+    fn run_json(args: &[&str]) -> (i32, String, String) {
+        run_with(args, true)
+    }
+
+    fn run_with(args: &[&str], json: bool) -> (i32, String, String) {
         let argv: Vec<String> = args.iter().map(|s| (*s).to_string()).collect();
         let mut out = Vec::new();
         let mut err = Vec::new();
-        let code = super::run(&argv, &mut out, &mut err);
+        let code = super::run(&argv, json, &mut out, &mut err);
         (
             code,
             String::from_utf8(out).expect("stdout UTF-8"),
@@ -539,5 +602,69 @@ mod tests {
         let (code, _out, err) = run(&[&missing]);
         assert_eq!(code, cli::EXIT_ERROR);
         assert!(err.contains("路径不存在"), "err={err}");
+    }
+
+    // ---- `--json`：逐用例判定 + 汇总（stdout 只一行 JSON） ----------------
+
+    #[test]
+    fn json_all_pass_is_ok_true_exit_0() {
+        let d = TempDir::new();
+        d.file("a.lfz", "#42\nassert(true, \"ok\")\n");
+        let (code, out, err) = run_json(&[&d.str()]);
+        assert_eq!(code, cli::EXIT_OK, "err={err}");
+        assert_eq!(out.lines().count(), 1, "stdout 应只有一行 JSON：{out}");
+        assert!(out.contains(r#""ok":true"#), "out={out}");
+        assert!(out.contains(r#""total":1"#), "out={out}");
+        assert!(out.contains(r#""passed":1"#), "out={out}");
+        assert!(out.contains(r#""verdict":"PASS""#), "out={out}");
+        assert!(!out.contains("汇总"), "JSON 模式不得有人类可读报告：{out}");
+        assert!(err.is_empty(), "err={err}");
+    }
+
+    #[test]
+    fn json_assert_failure_has_error_fields_exit_1() {
+        let d = TempDir::new();
+        d.file("bad.lfz", "#42\nassert(false, \"1+1==2\")\n");
+        let (code, out, _err) = run_json(&[&d.str()]);
+        assert_eq!(code, cli::EXIT_TEST_FAIL, "out={out}");
+        assert!(out.contains(r#""ok":false"#), "out={out}");
+        assert!(out.contains(r#""failed":1"#), "out={out}");
+        assert!(out.contains(r#""verdict":"FAIL""#), "out={out}");
+        assert!(out.contains(r#""error":"AssertionError""#), "out={out}");
+        assert!(out.contains(r#""message":"断言失败：1+1==2""#), "out={out}");
+        // §8.2 位置：`assert` 语句首 = line 2 / col 1。
+        assert!(out.contains(r#""line":2"#), "out={out}");
+        assert!(out.contains(r#""col":1"#), "out={out}");
+    }
+
+    #[test]
+    fn json_other_error_class_is_error_exit_2() {
+        let d = TempDir::new();
+        d.file("boom.lfz", "#42\n1 / 0\n");
+        let (code, out, _err) = run_json(&[&d.str()]);
+        assert_eq!(code, cli::EXIT_ERROR, "out={out}");
+        assert!(out.contains(r#""errored":1"#), "out={out}");
+        assert!(out.contains(r#""verdict":"ERROR""#), "out={out}");
+        assert!(out.contains(r#""error":"ZeroDivisionError""#), "out={out}");
+        assert!(out.contains(r#""message":"除以零""#), "out={out}");
+    }
+
+    #[test]
+    fn json_missing_preamble_is_error_exit_2() {
+        let d = TempDir::new();
+        d.file("no_pre.lfz", "print(\"x\")\n"); // 无 #42 → 加载期失败，print 不会执行
+        let (code, out, _err) = run_json(&[&d.str()]);
+        assert_eq!(code, cli::EXIT_ERROR, "out={out}");
+        assert!(out.contains(r#""error":"CosmosAnswerError""#), "out={out}");
+        assert!(out.contains(r#""line":1"#), "out={out}");
+    }
+
+    #[test]
+    fn json_env_error_keeps_stdout_empty() {
+        let d = TempDir::new();
+        let (code, out, err) = run_json(&[&d.str()]); // 空目录 → 无用例
+        assert_eq!(code, cli::EXIT_ERROR);
+        assert!(out.is_empty(), "环境错误时 stdout 应为空：out={out}");
+        assert!(err.contains("未发现任何测试用例"), "err={err}");
     }
 }

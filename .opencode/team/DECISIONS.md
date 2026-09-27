@@ -659,3 +659,29 @@
 - **理由**：契约先行（D-008）要求 runner 契约先于黑盒测试；test-engineer 需按固定「发现规则 + 判定 + 退出码 + 清单 schema」并行编写 P5 用例，避免接口误解。
 - **影响**：**test-engineer** 按 `docs/tooling/runner-contract.md` §7 编写用例（`.lfz` 首行须 `#42`；负例放 `tests/fixtures/` 并在 `tests/cases.json` 用 `expect.error` 声明）；**verifier** 以 `lfz test` 判定与退出码作为验收工具；**release-manager** 打包冒烟可用 `lfz test`。
 - **证据**：`cargo build --all-targets`（clean 全量）**0 warning**；`cargo test` **402 passed / 0 failed**（lib 361 + bin 27 + `tests/cli.rs` 7 + `tests/test_runner.rs` 7，原 377 零破坏）；`cargo run -- test` 三档退出码实测 `0`/`1`/`2`。
+
+### [2026-09-27 11:23] [tooling-dev] `--json` 机器可读输出契约（P4.2，跨角色：影响 test-engineer/perf-engineer/verifier）
+
+- **背景**：P4.2 实现 `lfz run --json` / `lfz test --json`。硬契约 = `semantics.md` §8.3 示例 4 / §8.4（`--json` 字段）+ `interface-contract.md` §10.6（CLI 只做格式化 + 退出码映射，`--json` 输出示例 4 的字段）+ D-008（错误退出码 `2`）。其中 `test --json` 汇总 schema 与若干边界（成功形态 / 无源码位置 / 加载期 traceback）规范未逐字钉死。
+- **决议（不改 `docs/spec/`；派生文档 `docs/tooling/runner-contract.md` §9 已写入并生效）**：
+  1. **`--json` 是全局开关**：可出现在 `run` / `test` 子命令的任意位置，先行摘除后再解析子命令。
+  2. **`run --json`**：成功 → `{"ok":true}`；失败 → 字段与顺序**逐字符对齐** §8.3 示例 4（`ok` / `error` / `message` / `file` / `line` / `col` / `traceback`）。`error` 恒为 `LzError::class_name()`（**12 类名之一，禁止 `E-xxx`**）。
+  3. **加载/解析期 traceback**：无 `TracedRun` → **合成单帧 `<module>`**（行 = 错误 `span` 行，与示例 4 的 `CosmosAnswer` 单帧一致）；无 span（`IOError`）→ `traceback:[]` 且 `line`/`col` 为 `null`（保持字段存在、类型显式）。
+  4. **`test --json`**：stdout 唯一一行 `{"ok","total","passed","failed","errored","cases":[…]}`（`ok = failed==0 && errored==0`）；逐用例 `{name,path,verdict[,error,message,file,line,col,traceback]}`，错误字段与 `run --json` **同源复用**；退出码同 runner 契约 §5。
+  5. **流硬约束**：`--json` 下 **stdout 只写 JSON**；人类可读报告 / 诊断一律转 **stderr**（runner 环境错误时 stdout 为空、退出码 `2`）。
+  6. **已知限制**：内建 `print` / `check` 直写进程 stdout/stderr，CLI 无法接管（不改 builtins）；被运行程序的 `print` 会与 JSON 交错，故 `--json` 消费者应让用例以 `assert` 断言。
+- **理由**：契约要求 `--json` 用类名 + 中文消息 + 位置 + traceback；机器消费者需 stdout 纯净可解析；示例 4 是唯一权威样例，其余以「与示例 4 同源」做最小推广，不发明字段。
+- **影响**：**test-engineer / perf-engineer / verifier / release-manager** 可用 `--json` 做机器判定（退出码不变）；**docs-writer** 运行章节可引用；**app-dev** 可在应用内调用 `--json` 解析。
+- **证据**：`cargo build --all-targets` **0 warning**；`cargo test` **428 passed / 0 failed**（lib 361 + bin 42 + `tests/cli.rs` 14 + `tests/test_runner.rs` 11；原 402 零破坏，新增 26）；实测 `run --json <含错程序>` → §8.3 示例 2 形状 JSON、exit 2；`test --json <临时目录>` → 汇总 JSON、exit 2（混合）/ `0`（全过）。
+
+### [2026-09-27 17:05] [tooling-dev] P4.2-fix：`--json` 下程序输出重定向 stderr，stdout 恒为单个 JSON（影响 test-engineer/verifier，跨模块例外已授权）
+
+- **背景**：P4.2 的硬约束「`--json` 下 stdout 只含 JSON」被实测未满足：`print` 直写进程 stdout，与 JSON 混排（`src/builtins.rs`）。tooling-dev 的 `--json` 测试只覆盖「程序不 print」的盲区。
+- **决策（经 team-lead 书面授权，**唯一一次**跨模块例外，仅限 `src/builtins.rs` 的输出目标切换）**：
+  1. **可切换输出目标**：`src/builtins.rs` 新增进程级 `static STDOUT_TO_STDERR: AtomicBool`（**默认 `false`**）+ `pub fn set_stdout_to_stderr(on: bool)`；`b_print` / `b_input` 提示按开关择流（默认 stdout，开关开 → stderr）；**`b_eprint` 不变**（恒 stderr）；**不改**任何其它内置的行为 / 签名 / 返回类型 / 错误消息。
+  2. **置位点**：`src/cli.rs::run_file` 与 `src/test_runner.rs::run` 在运行前以各自 `json` 形参置位；故 `--json` 成功与失败两路径、`run` 与 `test` 两命令皆重定向。非 `--json` 目标仍为 stdout（428 既有用例零破坏）。
+  3. **契约升级**：`docs/tooling/runner-contract.md` §6/§9.3 的「已知限制（print 会与 JSON 交错）」→「**已解决**：`--json` 下程序输出重定向到 stderr，stdout 恒为单个 JSON」；状态 → v1.2。
+  4. **补测试盲区**：`tests/cli.rs` +2（run 成功/失败路径含 print）、`tests/test_runner.rs` +1（test 含 print 用例）；断言 stdout 逐字符等于合法 JSON、print 内容在 stderr。
+- **理由**：满足「`--json` 下 stdout 只能是 JSON」硬约束；把「程序输出」与「工具 JSON」分离到不同流，是最小且不改变语言语义的实现。
+- **影响**：**test-engineer** —— 用例正文现可在 `--json` 下安全 `print`（内容进 stderr），旧「print 会污染 stdout」假设作废；**verifier** —— `lfz run/test --json` 的 stdout 可直接喂 JSON 解析器；**perf-engineer** —— 计时/多轮下程序输出不会污染机器可读结果；**docs-writer** —— 运行章节可说明 stdout/stderr 分流。
+- **证据**：`cargo build --all-targets` **0 warning**；`cargo test` **431 passed / 0 failed**（lib 361 + bin 42 + `tests/cli.rs` 16 + `tests/test_runner.rs` 12；原 428 零破坏，新增 3）。实测：`run --json examples/hello.lfz` → stdout 恰 `{"ok":true}`（`ConvertFrom-Json` 通过）、`Hello, LFZ!` 在 stderr、exit 0；`run --json <print+1/0>` → stdout 单行错误 JSON、marker 在 stderr、exit 2；`test --json <含 print 用例目录>` → stdout 恰唯一汇总 JSON、marker 在 stderr、exit 0。

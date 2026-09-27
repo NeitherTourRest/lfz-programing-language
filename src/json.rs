@@ -1,10 +1,13 @@
-//! 极简 JSON 解析器（仅 std；供 `lfz test` 读取 `cases.json` 用例清单）。
+//! 极简 JSON 解析器 + 紧凑序列化器（仅 std）。
 //!
-//! 覆盖标准 JSON 词法：对象 / 数组 / 字符串（含 `\uXXXX` 与常用转义）/ 数字 /
-//! `true` / `false` / `null`。只实现"够用且正确"的子集：不追求性能，不做 JSON5 扩展，
-//! 不加第三方依赖（D-011）。
+//! - **解析**（[`parse`]）：供 `lfz test` 读取 `cases.json` 用例清单。覆盖标准 JSON 词法：
+//!   对象 / 数组 / 字符串（含 `\uXXXX` 与常用转义）/ 数字 / `true` / `false` / `null`。
+//! - **编码**（[`encode`]）：供 `lfz run --json` / `lfz test --json` 输出机器可读结果
+//!   （`semantics.md` §8.3 示例 4 / §8.4）。紧凑单行、非 ASCII 原样（UTF-8）。
 //!
-//! 契约：`docs/tooling/runner-contract.md`（`cases.json` 清单 schema）。
+//! 只实现"够用且正确"的子集：不追求性能，不做 JSON5 扩展，不加第三方依赖（D-011）。
+//!
+//! 契约：`docs/tooling/runner-contract.md`（`cases.json` 清单 schema + `--json` 输出 schema）。
 //! 本模块属 **bin crate** 私有工具（`main.rs` 内 `mod json;`），**不进** 库 crate。
 
 use std::fmt;
@@ -16,8 +19,10 @@ pub enum Json {
     Null,
     /// `true` / `false`。
     Bool(bool),
-    /// 数字（本工具仅用作占位，实际不消费数值字段）。
+    /// 浮点数字（解析器产出；输出构造不产生）。
     Num(f64),
+    /// 整数字面量（**仅供输出构造**，如 `--json` 的 `line` / `col` / 计数；解析器恒产出 [`Json::Num`]）。
+    Int(i64),
     /// 字符串。
     Str(String),
     /// 数组。
@@ -53,6 +58,75 @@ impl Json {
             _ => None,
         }
     }
+}
+
+/// 序列化为**紧凑单行 JSON**（无多余空白；非 ASCII 原样输出，保持 UTF-8）。
+///
+/// 供 `--json`（`semantics.md` §8.3 示例 4 / §8.4）输出机器可读结果；对象字段按 `Vec` 顺序，
+/// 保证字段序可复现（与示例 4 逐字符对齐）。
+#[must_use]
+pub fn encode(v: &Json) -> String {
+    let mut out = String::new();
+    encode_into(v, &mut out);
+    out
+}
+
+/// 递归写出一个 [`Json`] 值到 `out`（紧凑格式：`:` / `,` 前后无空格）。
+fn encode_into(v: &Json, out: &mut String) {
+    match v {
+        Json::Null => out.push_str("null"),
+        Json::Bool(true) => out.push_str("true"),
+        Json::Bool(false) => out.push_str("false"),
+        Json::Int(n) => out.push_str(&n.to_string()),
+        Json::Num(n) => out.push_str(&n.to_string()),
+        Json::Str(s) => encode_str(s, out),
+        Json::Arr(items) => {
+            out.push('[');
+            for (i, item) in items.iter().enumerate() {
+                if i > 0 {
+                    out.push(',');
+                }
+                encode_into(item, out);
+            }
+            out.push(']');
+        }
+        Json::Obj(fields) => {
+            out.push('{');
+            for (i, (key, val)) in fields.iter().enumerate() {
+                if i > 0 {
+                    out.push(',');
+                }
+                encode_str(key, out);
+                out.push(':');
+                encode_into(val, out);
+            }
+            out.push('}');
+        }
+    }
+}
+
+/// 写出一个 JSON 字符串字面量（含 `"` 包裹）。
+///
+/// - 转义 `"` / `\` 与所有 `U+0000..=U+001F` 控制字符（用 `\b \f \n \r \t` 或 `\u00xx`）；
+/// - **非 ASCII（含中文）原样输出**，不转 `\uXXXX`——与 §8.3 示例 4 的 `"message":"你忘记了…"` 一致。
+fn encode_str(s: &str, out: &mut String) {
+    out.push('"');
+    for c in s.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\u{0008}' => out.push_str("\\b"),
+            '\u{000C}' => out.push_str("\\f"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            c if (c as u32) < 0x20 => {
+                out.push_str(&format!("\\u{:04x}", c as u32));
+            }
+            c => out.push(c),
+        }
+    }
+    out.push('"');
 }
 
 /// 解析错误：`msg` + 字符偏移 `pos`（0-based，便于定位）。
@@ -359,5 +433,63 @@ mod tests {
         assert!(parse("{").is_err());
         assert!(parse("[1,]").is_err());
         assert!(parse("\"unterminated").is_err());
+    }
+
+    // ---- `encode`：`--json` 输出（§8.3 示例 4 逐字符） --------------------
+
+    /// 逐字符复刻 `semantics.md` §8.3 示例 4（`CosmosAnswerError`）。
+    #[test]
+    fn encodes_example4_byte_for_byte() {
+        let v = Json::Obj(vec![
+            ("ok".to_string(), Json::Bool(false)),
+            ("error".to_string(), Json::Str("CosmosAnswerError".to_string())),
+            (
+                "message".to_string(),
+                Json::Str("你忘记了宇宙的答案".to_string()),
+            ),
+            ("file".to_string(), Json::Str("forgot.lfz".to_string())),
+            ("line".to_string(), Json::Int(1)),
+            ("col".to_string(), Json::Int(1)),
+            (
+                "traceback".to_string(),
+                Json::Arr(vec![Json::Obj(vec![
+                    ("file".to_string(), Json::Str("forgot.lfz".to_string())),
+                    ("line".to_string(), Json::Int(1)),
+                    ("func".to_string(), Json::Str("<module>".to_string())),
+                ])]),
+            ),
+        ]);
+        assert_eq!(
+            encode(&v),
+            concat!(
+                r#"{"ok":false,"error":"CosmosAnswerError","message":"你忘记了宇宙的答案","#,
+                r#""file":"forgot.lfz","line":1,"col":1,"#,
+                r#""traceback":[{"file":"forgot.lfz","line":1,"func":"<module>"}]}"#
+            )
+        );
+    }
+
+    /// 转义：`"` / `\` / `\n` / `\t` / 控制字符 `\u0001`。
+    #[test]
+    fn encodes_escapes_and_control_chars() {
+        let v = Json::Str("a\"b\\c\nd\te\u{0001}".to_string());
+        assert_eq!(encode(&v), "\"a\\\"b\\\\c\\nd\\te\\u0001\"");
+    }
+
+    /// 标量与空容器。
+    #[test]
+    fn encodes_scalars_and_empty_containers() {
+        assert_eq!(encode(&Json::Null), "null");
+        assert_eq!(encode(&Json::Bool(true)), "true");
+        assert_eq!(encode(&Json::Bool(false)), "false");
+        assert_eq!(encode(&Json::Int(-7)), "-7");
+        assert_eq!(encode(&Json::Arr(Vec::new())), "[]");
+        assert_eq!(encode(&Json::Obj(Vec::new())), "{}");
+    }
+
+    /// 非 ASCII 原样输出，不转 `\uXXXX`。
+    #[test]
+    fn encode_keeps_non_ascii_raw() {
+        assert_eq!(encode(&Json::Str("中文 ✓".to_string())), "\"中文 ✓\"");
     }
 }

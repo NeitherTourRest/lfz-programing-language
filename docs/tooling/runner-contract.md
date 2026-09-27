@@ -1,8 +1,8 @@
 # `lfz test` runner 契约（派生物 · 供 test-engineer 使用）
 
-> 唯一写者: tooling-dev ｜ 状态: **v1（P4.1 生效）**
+> 唯一写者: tooling-dev ｜ 状态: **v1.2（P4.2-fix：`--json` 下程序输出重定向到 stderr；含 v1.1 的 `--json` 与 P4.1 契约）**
 > **权威来源**: [`docs/spec/interface-contract.md`](../spec/interface-contract.md) §11.2（**T-R1 … T-R4**，硬性契约）、
-> §8.1（错误类 + 退出码 D-008）；[`docs/spec/semantics.md`](../spec/semantics.md) §8.2/§8.3（输出格式）、§4.5.10（`assert`/`check`/`fail`）。
+> §8.1（错误类 + 退出码 D-008）、§10.6（`--json` 字段）；[`docs/spec/semantics.md`](../spec/semantics.md) §8.2/§8.3/§8.4（输出格式与 `--json` 字段）、§4.5.10（`assert`/`check`/`fail`）。
 > 本文件是上述规范的**实现侧派生说明**：把「发现规则 / 清单 schema / 判定与退出码裁定 / 输出格式」写死，供 test-engineer 按契约编写黑盒测试集（P5）。
 > **若本文件与 `docs/spec/` 有任何出入，以 `docs/spec/` 为准并立即报告 tooling-dev。** 本文件不改动 `docs/spec/`。
 
@@ -13,6 +13,8 @@
 ```
 lfz test              # 默认发现：cwd 下 tests/**/*.lfz（排除 tests/fixtures/**）
 lfz test <路径...>    # 目录 → 递归发现该目录下 *.lfz；文件 → 直接作为用例运行
+lfz test --json       # 同上，但 stdout 只输出一行 JSON（机器可读；见 §9）
+lfz test --json <路径...>
 ```
 
 - 无参数时**发现根** = 当前工作目录下的 `tests/`；若该目录不存在 → 退出码 `2` + stderr `lfz test: 未发现测试目录 'tests'`。
@@ -104,7 +106,7 @@ lfz test <路径...>    # 目录 → 递归发现该目录下 *.lfz；文件 →
   汇总：共 <总数> 个用例，通过 <P>，失败 <F>，错误 <E>
   ```
 
-- **已知限制**：解释器内建（`print` / `check` 警告等）直接写进程 stdout/stderr，runner 无法接管；若用例正文有 `print`，其输出会与报告交错（`check` 警告在 stderr）。测试正文建议以 `assert` 表达断言。
+- **流纪律（P4.2-fix：已解决）**：非 `--json` 模式下，解释器内建 `print` 写 stdout、`check` 警告写 stderr。**`--json` 模式下 CLI 将 `print` / `input` 提示重定向到 stderr**（`lfz::builtins::set_stdout_to_stderr`），故 stdout 恒为**唯一一个 JSON**，程序输出不再与 JSON 交错。测试正文仍建议以 `assert` 表达断言。
 
 ---
 
@@ -125,3 +127,66 @@ lfz test <路径...>    # 目录 → 递归发现该目录下 *.lfz；文件 →
 | T-R2 | `src/test_runner.rs::apply_manifest` + `collect_lfz` 的 `fixtures` 排除；单测 `tr2_manifest_negative_fixture_passes` / `tr2_manifest_expect_mismatch_is_fail` / `tr4_fixtures_dir_excluded_from_discovery`；e2e `manifest_negative_fixture_passes` |
 | T-R3 | `src/test_runner.rs::judge`（仅 `AssertionError` → `FAIL`）+ `report` 复用 `cli::render_error`（§8.2 位置）；单测 `tr3_assert_failure_is_fail_exit_1_with_position` / `tr3_other_error_class_is_error_exit_2`；e2e `check_failure_is_non_fatal_pass` |
 | T-R4 | `src/test_runner.rs::discover` / `collect_lfz`（§2 全文）；单测 `tr4_fixtures_dir_excluded_from_discovery`；e2e `default_discovery_reports_mixed_pass_and_fail` / `nested_and_fixtures_exclusion` |
+
+---
+
+## 9. `--json` 机器可读输出（P4.2）
+
+> 权威字段来源：`semantics.md` **§8.3 示例 4** / **§8.4**（`run --json`）；`test --json` 的汇总形态为本契约扩展（spec 未定义，**与 `run --json` 同源复用错误字段**）。
+> **硬性约束**：`--json` 模式下 **stdout 只写一行 JSON**；人类可读的报告 / 诊断一律转 **stderr**。
+> `--json` 为全局开关，可出现在 `run` / `test` 子命令的任意位置。
+
+### 9.1 `lfz run --json <file>`
+
+- 成功 → `{"ok":true}`（退出码 `0`）。
+- 失败 → 字段与顺序**逐字符对齐** §8.3 示例 4：
+
+  ```json
+  {"ok":false,"error":"<12 类名之一>","message":"<中文消息>","file":"<path>","line":N,"col":M,"traceback":[{"file":"<path>","line":N,"func":"<module>|<fn 名>|<fn>"}]}
+  ```
+
+  | 字段 | 类型 | 说明 |
+  |---|---|---|
+  | `ok` | bool | 恒 `false`（失败）；成功时恒 `true` |
+  | `error` | string | `LzError::class_name()`，**12 类名之一**；**禁止** `E-xxx` |
+  | `message` | string | `LzError::message()`（中文） |
+  | `file` | string | 传入的 `<file>` **原样**（`\` 不归一化；JSON 内 `\` 转义为 `\\`） |
+  | `line` / `col` | int \| null | `LzError::span()`（1-based）；`IOError` 无 span → `null` |
+  | `traceback` | array | 运行期：完整帧表（自外→内，**不折叠**，§8.4）；加载/解析期：**合成单帧 `<module>`**；无 span → `[]` |
+
+- 退出码仍 **D-008**（错误 → `2`）。
+
+### 9.2 `lfz test --json [路径...]`
+
+- stdout 为**唯一一行 JSON**：
+
+  ```json
+  {"ok":<bool>,"total":N,"passed":P,"failed":F,"errored":E,"cases":[ … ]}
+  ```
+
+  其中 `ok = (failed == 0 && errored == 0)`。
+- 每用例对象：`{"name":…,"path":…,"verdict":"PASS"|"FAIL"|"ERROR"[,…错误字段]}`；
+  非 `PASS` 追加 §8.4 错误字段（`error` / `message` / `file` / `line` / `col` / `traceback`），
+  与 `run --json` **同源**（复用 `cli::push_error_fields`）。
+- `path` / `name` 按 `/` 规范化（复用发现规则，跨平台可复现）。
+- 退出码同 §5（`0` / `1` / `2`）。
+- **环境错误**（参数 / 缺目录 / 清单非法 / 无用例）：stdout **为空**，诊断写 **stderr**，退出码 `2`。
+
+### 9.3 程序输出的重定向（P4.2-fix：**已解决**）
+
+`--json` 模式下，CLI 在运行前调用 `lfz::builtins::set_stdout_to_stderr(true)`，把解释器内建 `print` 与 `input` 的**提示输出**重定向到 **stderr**；`eprint`（本就 stderr）与 `check` 警告亦在 stderr，二者不受开关影响。因此 **stdout 恒为唯一一行 JSON**——`run --json` 与 `test --json` 皆然——被运行程序 / 用例正文的 `print` 输出一律出现在 stderr，不再与 JSON 交错。默认（非 `--json`）目标仍为 stdout，原行为不变。
+
+> 实现：`src/builtins.rs` 进程级 `static STDOUT_TO_STDERR: AtomicBool` + `pub fn set_stdout_to_stderr(on: bool)`；`b_print` / `b_input` 按开关择流，`b_eprint` 不变。置位点：`cli::run_file` 与 `test_runner::run`（均以 `json` 形参）。
+
+### 9.4 契约条目 → 实现落点
+
+| 条目 | 落点 |
+|---|---|
+| `--json` 标志解析 | `src/cli.rs::execute`（任意位置摘除） |
+| `run --json` 字段 | `src/cli.rs::{success_json, error_json, push_error_fields, traceback_json}` |
+| `test --json` 汇总 | `src/test_runner.rs::run`（`json` 分支）+ `case_json` |
+| JSON 编码 | `src/json.rs::encode`（紧凑单行、非 ASCII 原样） |
+| 单测 | `json::tests::*`（示例 4 逐字符）、`cli::tests::{error_json_*, success_json_*, execute_run_json_*}`、`test_runner::tests::json_*` |
+| e2e | `tests/cli.rs::json_*`（成功 + 缺 `#42` + 语法错 + 运行期错 + 断言失败 + IOError）、`tests/test_runner.rs::json_*` |
+| 输出重定向（P4.2-fix） | `src/builtins.rs::{set_stdout_to_stderr, b_print, b_input}`；置位点 `src/cli.rs::run_file` / `src/test_runner.rs::run` |
+| 输出重定向 e2e | `tests/cli.rs::json_run_print_success_redirects_to_stderr` / `tests/cli.rs::json_run_print_before_error_redirects_to_stderr` / `tests/test_runner.rs::json_print_case_stdout_is_single_json` |
