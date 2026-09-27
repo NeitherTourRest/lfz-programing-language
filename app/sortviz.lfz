@@ -1,0 +1,341 @@
+#42
+// ============================================================
+// sortviz.lfz — LFZ 排序算法可视化（终端字符画应用）
+// 作者：app-dev ｜ 依据 .opencode/skills/lfz-programming/SKILL.md 开发
+// 语言特性：管道 |>、结构体、富插值、check/assert、;; 变量 dump
+// 运行：cargo run --quiet -- run app/sortviz.lfz
+// 说明：LFZ CLI v1 不支持命令行参数/环境变量/文件读取，
+//       故规模、种子、帧宽由下方 §0 CONFIG 常量配置（改这里即可重配置）。
+// ============================================================
+
+// ---------------- §0 CONFIG（改这里即可重配置） ----------------
+let APP_NAME = "LFZ 排序算法可视化"
+let N_SMALL = 8        // 逐帧可视化规模（小）
+let N_BIG = 600        // 统计对比规模（大）
+let SEED = 42          // 随机种子（seed(n) 保证可复现）
+let CELLW = 6          // 每个条形单元的字符宽度
+let SHOW_FRAMES = true // 是否输出逐帧条形图
+
+;;                     // ← 变量 dump：此刻全局仅上方 6 个配置常量
+
+// ---------------- §1 统计结构体（结构体 + 方法，self 原地累加） ----------------
+struct Stats {
+    cmp: 0,
+    swaps: 0,
+    steps: 0,
+    fn noteCmp() { self.cmp += 1 },
+    fn noteSwap() { self.swaps += 1 },
+    fn noteStep() { self.steps += 1 },
+    fn line() => "比较=${self.cmp:>6}  交换=${self.swaps:>6}  步数=${self.steps:>6}",
+}
+
+// ---------------- §2 数据生成（seed + randInt，可复现） ----------------
+fn genData(n) {
+    var out = []
+    var i = 0
+    while i < n {
+        out = push(randInt(0, 100), out)
+        i += 1
+    }
+    out
+}
+
+// ---------------- §3 可视化（repeat/插值 打印条形图） ----------------
+fn padRight(s, n) {
+    if len(s) >= n { return s }
+    s + repeat(n - len(s), " ")
+}
+
+fn cellOf(v, mx, w) {
+    let filled = if mx > 0 { div(v * w, mx) } else { 0 }
+    repeat(filled, "#") + repeat(w - filled, " ")
+}
+
+fn barLine(label, xs, mx, w) {
+    let body = xs |> map((v) => cellOf(v, mx, w)) |> join("|")
+    "${padRight(label, 14)}|${body}|"
+}
+
+fn hline(text) {
+    print("")
+    print("== ${text} ==")
+}
+
+// 数据摘要（用管道 |> 串起 min/max/sum）
+fn summarize(xs) {
+    let mn = xs |> min()
+    let mx = xs |> max()
+    let total = xs |> sum()
+    "min=${mn}  max=${mx}  sum=${total}  n=${len(xs)}"
+}
+
+// ---------------- §4 排序算法（管道 data-last / 传引用原地改 / 结构体统计） ----------------
+
+// 4.1 冒泡排序：相邻比较，逐趟把最大值冒到末尾
+fn bubbleSort(xs, st, snap) {
+    let n = len(xs)
+    snap("t=0", xs)
+    var i = 0
+    var done = false
+    while i < n - 1 && !done {
+        done = true
+        var j = 0
+        while j < n - 1 - i {
+            st.noteCmp()
+            if xs[j] > xs[j + 1] {
+                let tmp = xs[j]
+                xs[j] = xs[j + 1]
+                xs[j + 1] = tmp
+                st.noteSwap()
+                done = false
+            }
+            st.noteStep()
+            j += 1
+        }
+        i += 1
+        snap("pass ${i}", xs)
+    }
+    xs
+}
+
+// 4.2 选择排序：每轮选出未排序区最小值，交换到前端
+fn selectionSort(xs, st, snap) {
+    let n = len(xs)
+    snap("t=0", xs)
+    var i = 0
+    while i < n - 1 {
+        var minIdx = i
+        var j = i + 1
+        while j < n {
+            st.noteCmp()
+            if xs[j] < xs[minIdx] { minIdx = j }
+            st.noteStep()
+            j += 1
+        }
+        if minIdx != i {
+            let tmp = xs[i]
+            xs[i] = xs[minIdx]
+            xs[minIdx] = tmp
+            st.noteSwap()
+        }
+        i += 1
+        snap("i=${i}", xs)
+    }
+    xs
+}
+
+// 4.3 插入排序：把当前元素插入已排序前缀的正确位置
+fn insertionSort(xs, st, snap) {
+    let n = len(xs)
+    snap("t=0", xs)
+    var i = 1
+    while i < n {
+        let key = xs[i]
+        var j = i - 1
+        while j >= 0 {
+            st.noteCmp()
+            if xs[j] > key {
+                xs[j + 1] = xs[j]
+                st.noteSwap()
+                st.noteStep()
+                j -= 1
+            } else {
+                st.noteStep()
+                break
+            }
+        }
+        xs[j + 1] = key
+        i += 1
+        snap("i=${i}", xs)
+    }
+    xs
+}
+
+// 4.4 归并排序：分治；归并返回新数组（函数式更新，不改原容器）
+fn mergeParts(a, b, st) {
+    var out = []
+    var i = 0
+    var j = 0
+    let la = len(a)
+    let lb = len(b)
+    while i < la && j < lb {
+        st.noteCmp()
+        if a[i] <= b[j] {
+            out = push(a[i], out)
+            i += 1
+        } else {
+            out = push(b[j], out)
+            j += 1
+        }
+        st.noteStep()
+    }
+    while i < la {
+        out = push(a[i], out)
+        i += 1
+        st.noteStep()
+    }
+    while j < lb {
+        out = push(b[j], out)
+        j += 1
+        st.noteStep()
+    }
+    out
+}
+
+fn msort(xs, st) {
+    if len(xs) <= 1 { return xs }
+    let mid = div(len(xs), 2)
+    let left = msort(slice(0, mid, xs), st)
+    let right = msort(slice(mid, len(xs), xs), st)
+    mergeParts(left, right, st)
+}
+
+fn mergeSort(xs, st, snap) {
+    snap("t=0", xs)
+    let sorted = msort(xs, st)
+    snap("done", sorted)
+    sorted
+}
+
+// 4.5 快速排序：Lomuto 分区，原地交换
+fn partition(xs, lo, hi, st) {
+    let pivot = xs[hi]
+    var i = lo
+    var j = lo
+    while j < hi {
+        st.noteCmp()
+        if xs[j] < pivot {
+            if i != j {
+                let tmp = xs[i]
+                xs[i] = xs[j]
+                xs[j] = tmp
+                st.noteSwap()
+            }
+            i += 1
+        }
+        st.noteStep()
+        j += 1
+    }
+    if i != hi {
+        let tmp = xs[i]
+        xs[i] = xs[hi]
+        xs[hi] = tmp
+        st.noteSwap()
+    }
+    i
+}
+
+fn qsort(xs, lo, hi, st, snap) {
+    if lo >= hi { return nil }
+    let p = partition(xs, lo, hi, st)
+    snap("pivot@${p}", xs)
+    qsort(xs, lo, p - 1, st, snap)
+    qsort(xs, p + 1, hi, st, snap)
+}
+
+fn quickSort(xs, st, snap) {
+    snap("t=0", xs)
+    qsort(xs, 0, len(xs) - 1, st, snap)
+    snap("done", xs)
+    xs
+}
+
+// ---------------- §5 正确性校验 ----------------
+fn isSorted(xs) {
+    var i = 0
+    var ok = true
+    while i < len(xs) - 1 {
+        if xs[i] > xs[i + 1] { ok = false }
+        i += 1
+    }
+    ok
+}
+
+// 跑一个算法：统计 + 断言（assert 致命，失败即退出码 2）
+fn runSort(name, sorter, data, show) {
+    let work = data |> slice(0, len(data))
+    let st = Stats {}
+    let mx = data |> max()
+    let snap = (label, arr) => {
+        if show { print(barLine("${name} ${label}", arr, mx, CELLW)) }
+    }
+    let sorted = sorter(work, st, snap)
+    let expected = data |> sort()
+    let good = isSorted(sorted) && sorted == expected
+    assert(good, "算法 ${name} 排序结果不正确（未有序或与 sort() 不一致）")
+    print("  ${padRight(name, 10)} ${st.line()}  [校验通过]")
+    sorted
+}
+
+// 属性自测：随机数组 × 5 算法，check 非致命（失败不中断，仅 stderr 提示）
+fn selfTest(trials) {
+    let nosnap = (label, arr) => nil
+    var fails = 0
+    var t = 0
+    while t < trials {
+        let n = randInt(1, 30)
+        let xs = genData(n)
+        let expected = sort(xs)
+        let r1 = bubbleSort(slice(0, len(xs), xs), Stats {}, nosnap)
+        let r2 = selectionSort(slice(0, len(xs), xs), Stats {}, nosnap)
+        let r3 = insertionSort(slice(0, len(xs), xs), Stats {}, nosnap)
+        let r4 = mergeSort(slice(0, len(xs), xs), Stats {}, nosnap)
+        let r5 = quickSort(slice(0, len(xs), xs), Stats {}, nosnap)
+        if !(r1 == expected) { fails += 1 }
+        if !(r2 == expected) { fails += 1 }
+        if !(r3 == expected) { fails += 1 }
+        if !(r4 == expected) { fails += 1 }
+        if !(r5 == expected) { fails += 1 }
+        t += 1
+    }
+    let total = trials * 5
+    check(fails == 0, "属性自测：${total} 次排序中有 ${fails} 次失败")
+    print("  自测 ${total} 次排序，失败 ${fails} 次（check 非致命）")
+    fails
+}
+
+// ---------------- §6 驱动 ----------------
+hline("${APP_NAME} — sortviz")
+print("配置：N_SMALL=${N_SMALL}  N_BIG=${N_BIG}  SEED=${SEED}  CELLW=${CELLW}  SHOW_FRAMES=${SHOW_FRAMES}")
+print("")
+
+seed(SEED)
+let small = genData(N_SMALL)
+hline("阶段 1：小规模逐帧可视化（N=${N_SMALL}）")
+print("原始数据: ${small}")
+print("数据摘要: ${summarize(small)}")
+print("初始条形图:")
+print(barLine("origin", small, small |> max(), CELLW))
+print("")
+print("-- 冒泡排序（逐趟）--")
+runSort("bubble", bubbleSort, small, SHOW_FRAMES)
+print("")
+print("-- 选择排序（逐轮）--")
+runSort("selection", selectionSort, small, SHOW_FRAMES)
+print("")
+print("-- 插入排序（逐张）--")
+runSort("insertion", insertionSort, small, SHOW_FRAMES)
+print("")
+print("-- 归并排序（分治）--")
+runSort("merge", mergeSort, small, SHOW_FRAMES)
+print("")
+print("-- 快速排序（逐次分区）--")
+runSort("quick", quickSort, small, SHOW_FRAMES)
+
+seed(SEED)
+let big = genData(N_BIG)
+hline("阶段 2：大规模仅统计对比（N=${N_BIG}，不输出逐帧）")
+print("数据摘要: ${summarize(big)}")
+print("  算法         比较次数    交换次数      步数   校验")
+runSort("bubble", bubbleSort, big, false)
+runSort("selection", selectionSort, big, false)
+runSort("insertion", insertionSort, big, false)
+runSort("merge", mergeSort, big, false)
+runSort("quick", quickSort, big, false)
+
+hline("阶段 3：属性自测（随机数组 × 5 算法，check 非致命）")
+seed(SEED)
+selfTest(30)
+
+hline("完成：5 种算法全部通过正确性校验")
+// END sortviz.lfz

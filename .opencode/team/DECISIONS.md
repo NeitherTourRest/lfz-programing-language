@@ -708,3 +708,11 @@
 - **理由**：如实呈现解释执行开销与瓶颈是评分项 3 的明确导向；只报告不改 `src/**`（无越权）。
 - **影响**：**runtime-dev** 接收 §6 优化建议；**team-lead** 决定是否排期；**verifier** 可用本套件复跑核验数据真实性；**test-engineer** 可用 6 基准作为回归素材。
 - **证据**：`cargo build --release`（全量重编 `Compiling lfz` → `Finished` 3.08 s，**0 warning / 0 error**）；`python benchmarks/run_all.py --warmup 2 --runs 5` → **18/18 输出一致**；原始逐轮数据 `benchmarks/results/raw.json`。
+
+### [2026-09-27 15:30] [app-dev] P8 应用架构定案：单文件 LFZ 应用 + 源码常量配置（影响 verifier / ppt-presenter / ai-dx-engineer）
+
+- **决策**：交付物 6（评分项 5，30 分）「排序算法可视化」落地为**单文件** `app/sortviz.lfz`（341 行 / 有效行 290）+ `app/README.md` + `app/DEV_RECORD.md`；含 5 算法（冒泡/选择/插入/归并/快速）、`repeat` 字符画逐帧、`struct Stats` 统计、`assert`/`check` 校验；5 特色（管道/结构体/富插值/check+assert/`;;`）全用。应用参数（规模/种子/帧宽/逐帧开关）用**源码顶部常量**配置，不用任何外部输入。
+- **理由（语言能力约束，均已实测）**：LFZ v1 **无模块/import**（`import` 为保留字，用即 `SyntaxError`，退出码 2）→ 无法跨文件复用 → 只能单文件；**无 CLI 参数 / 环境变量 / 文件 IO**（CLI 仅 `run <file>` / `test`）→ 参数只能写源码常量；**`input()` 在无 stdin 环境抛 `IOError`**（退出码 2）→ 默认路径零 `input`，保证 `cargo run` 无 stdin 直接跑通。
+- **边界**：仅新增 `app/`；**未改** `src/**`、`docs/spec/**`、`tests/**`、`.opencode/skills/**`、README；无第三方依赖；未 commit / tag / push。
+- **影响**：**verifier** 验收评分项 5 以「可运行、≥200 行、开发记录完整」为准，运行命令与行数证据见 `app/DEV_RECORD.md` §0/§6；**ppt-presenter** 演示路径见 §7（3 分钟版，含终端编码提示）；**ai-dx-engineer** 收到 1 条指南补充建议（在 SKILL §0/§3 注明「LFZ v1 无模块、CLI 无参数入口；稍大应用应写为单文件 + 源码常量」），见 §8。
+- **证据**：`cargo run --quiet -- run app/sortviz.lfz` → 退出码 **0**（5 算法全部 `[校验通过]`，属性自测 150/150 失败 0）；`cargo run --quiet -- run --json app/sortviz.lfz` → stdout `{"ok":true}`；`cargo build` → **0 warning**；`cargo run --quiet -- test` → **82/82 PASS**；`git status --porcelain` → 仅 `?? app/`；`(Get-Content app\sortviz.lfz -Encoding UTF8).Count` → **341**，首行字节 `23 34 32 0A`。

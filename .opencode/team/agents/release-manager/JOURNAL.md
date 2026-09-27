@@ -1,5 +1,21 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 12:19] ✅ P8（LFZ 排序算法可视化应用）单原子提交 + P8 里程碑附注标签 `v0.4-app` 已打并推送
+- 来源: team-lead 任务书（轻量启动；把 P8 应用 `app/` 做**单个原子提交**并 push，并**打 P8 里程碑附注标签 `v0.4-app`**、推送含 tag；`git add app .opencode/team/DECISIONS.md .opencode/team/agents/app-dev/{STATUS,JOURNAL}.md` + 本角色收工文档并入本提交。已核验：`cargo build` 0 warning、`cargo test` 431 全绿、`cargo run --quiet -- test` 82/82 exit 0。禁区：禁 force-push、**只打 `v0.4-app` 一个标签**、不改 `src/**`·`docs/spec/**`·README、不提交 `target/`·密钥·临时文件）
+- 完成:
+  - **入清单门禁（通过，未触发停止）**：`git status --short` 复核实测与任务书预期逐字一致——` M` = `.opencode/team/DECISIONS.md`、`.opencode/team/agents/app-dev/{STATUS,JOURNAL}.md`；`??` = `app/`。**无清单外条目、无缺失条目**。
+  - 基线复核：上轮 HEAD = `30e8b6c feat(p7): LFZ AI development guide and lfz-programming skill`；分支 `main`；`git check-ignore -v target` = `.gitignore:25:/target/`；`git check-ignore app` 退出码 1（未被忽略）；`git tag -n` 原含 `v0.1.0`/`v0.2.0`/`v0.3-tested`。
+  - **行数偏差（如实上报，本轮唯一偏离）**：任务书背景写 `sortviz=327 / DEV_RECORD=218 / README=117`，实测全不符；双口径实测（Read 工具 total + `[System.IO.File]::ReadAllText` 换行计数）**`sortviz.lfz=341 / DEV_RECORD.md=299 / README.md=141`**，且三处自述均为 341 → 提交标题采用实测 **341**，其余逐字照录。
+  - 内容取证（**只入库、不改内容**）：`git diff .opencode/team/DECISIONS.md` = app-dev 1 条「P8 应用架构定案」ADR（单文件 + 源码常量配置）；`app/` = `sortviz.lfz`（首行 `#42`）+ `README.md` + `DEV_RECORD.md`。
+  - 先完成收工协议（覆盖更新本角色 `STATUS.md`、置顶追加本 `JOURNAL.md`），使收工改动并入本提交（提交后工作区干净）。
+  - **提交（P8）**：`git add app .opencode/team/DECISIONS.md .opencode/team/agents/app-dev/STATUS.md .opencode/team/agents/app-dev/JOURNAL.md .opencode/team/agents/release-manager/STATUS.md .opencode/team/agents/release-manager/JOURNAL.md`（**显式路径**，未 `git add -A`）→ `git commit -F <UTF-8 信息文件>`。
+  - **打标签**：`git tag -a v0.4-app -m "v0.4-app — P8 LFZ application complete: app/sortviz.lfz (341 lines, 5 algorithms, ASCII visualiser, seeded, self-tested)."`（附注；**标签信息内行数同样采用实测 341**，与提交标题一致）→ `git push` → `git push origin v0.4-app`。
+- 产出:
+  - 一个新提交（短哈希见汇报）；`git status --short` 空；`git log --oneline -3`；`git tag -n` 含 `v0.1.0`/`v0.2.0`/`v0.3-tested`/`v0.4-app`；`git ls-remote --tags origin` 含 `refs/tags/v0.4-app`；`git ls-remote origin refs/heads/main` = 本地 HEAD。
+  - 证据: `cargo run --quiet -- run app/sortviz.lfz` → 退出码 **0**、输出 **78 行**，含「自测 150 次排序，失败 0 次（check 非致命）」「== 完成：5 种算法全部通过正确性校验 ==」。
+- 决策: 无新增 release-manager ADR；行数偏差属事实修正（沿用「实测 > 任务书背景」，已上报）。
+- 下一步: P10 交付清单核对；P9–P10 收口打 `v1.0-final`。
+- 阻塞: 无。
 ## [2026-09-27 20:10] ✅ P6/P7a/P7b 按产出归属切分为三个原子提交并推送（未打 tag）
 - 来源: team-lead 任务书（轻量启动；把 P6（性能）/ P7a（人类文档）/ P7b（AI 指南+skill）按产出归属做**三个原子提交**并 push，收工文档并入提交 3；已核验：`cargo build` 0 warning、`cargo test` 431 全绿、`cargo run --quiet -- test` → 82/82 exit 0。禁区：禁 force-push、**不打 tag**（P8 收口再打 `v0.4-app`）、不改 `src/**`·`docs/spec/**`、不提交 `target/`·密钥·临时文件）
 - 完成:
