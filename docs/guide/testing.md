@@ -3,7 +3,7 @@
 > LFZ 内建测试运行器（`lfz test`）。本页讲清：**怎么跑、怎么写、负例怎么放、结果怎么读**。
 > 权威契约：[`docs/spec/interface-contract.md`](../spec/interface-contract.md) §11.2（**T-R1 … T-R4**）；实现侧派生：[`docs/tooling/runner-contract.md`](../tooling/runner-contract.md)。
 > 配套：[`README.md`](README.md) ｜ [`tutorial.md`](tutorial.md) ｜ [`reference.md`](reference.md) ｜ [`errors.md`](errors.md)
-> 最后更新: 2026-09-27 by docs-writer
+> 最后更新: 2026-09-27（T11-③ D4 退出码语境；用例数刷新为 90） by docs-writer
 
 ---
 
@@ -19,7 +19,7 @@ $ cargo run --quiet -- test
 - 每个用例一行 `PASS/FAIL/ERROR <name>`；末尾汇总行逐字符稳定：
 
 ```text
-汇总：共 82 个用例，通过 82，失败 0，错误 0
+汇总：共 90 个用例，通过 90，失败 0，错误 0
 ```
 
 其它用法：
@@ -114,6 +114,11 @@ check(1 == 2, "软检查不致命")          // 失败只写 stderr，用例仍 
 
 > 同一轮既有 `FAIL` 又有 `ERROR` 时取 **`2`（ERROR 优先）**（`runner-contract §5` 裁定）。
 
+> **退出码 `1` 是 `lfz test` 专属的"用例失败"**，别和 `lfz run` 混淆（常见困惑）：
+> - `lfz run x.lfz` 下，`assert` 失败 / `fail()` → 抛 `AssertionError`（一个**错误类**）→ 退出码 **`2`**。
+> - `lfz test` 下，同一个 `assert` 失败的**用例**记为 `FAIL` → 退出码 **`1`**。
+> 也就是说：`assert` 本身永远是错误；只有**测试运行器**把 `AssertionError` 归类为"用例失败"并给 `1`。详见 [`errors.md` §3.4](errors.md)。
+
 ---
 
 ## 6. 完整最小示例（实测）
@@ -199,14 +204,14 @@ PASS  mini/pass_basic.lfz
 | `tests/coverage-matrix.md` | **覆盖矩阵**：逐特性 × 正常/边界/错误 |
 | `tests/REPORT.md` | **测试报告**：方法、结论、覆盖统计、已知缺陷、复现命令 |
 
-当前基线（见 [`tests/REPORT.md`](../tests/REPORT.md)）：`cargo run --quiet -- test` → **82 PASS / 0 FAIL / 0 ERROR**，退出码 `0`。
+当前基线（见 [`tests/REPORT.md`](../tests/REPORT.md)）：`cargo run --quiet -- test` → **90 PASS / 0 FAIL / 0 ERROR**，退出码 `0`。
 
 ### 7.1 运行全量并查看结果
 
 ```console
 $ cargo run --quiet -- test
 ...
-汇总：共 82 个用例，通过 82，失败 0，错误 0
+汇总：共 90 个用例，通过 90，失败 0，错误 0
 $ echo $LASTEXITCODE
 0
 ```

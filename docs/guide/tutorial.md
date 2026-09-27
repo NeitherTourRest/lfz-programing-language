@@ -1,9 +1,9 @@
 # LFZ 教程：从零写一个「成绩分析器」
 
-> **学完你能做什么**：从零掌握 LFZ 的核心语法（`#42`、变量、控制流、函数与递归、闭包、结构体、管道 `|>`、富字符串插值、`;;`、`assert`/`check`），并独立写出一个能运行的小程序。
+> **学完你能做什么**：从零掌握 LFZ 的核心语法（`#42`、变量、控制流、函数与递归、闭包、结构体、管道 `|>`、富字符串插值、`;;`、`assert`/`check`、字符串处理），并独立写出一个能运行的小程序。
 > 每一步都有**完整可运行代码**和**实测输出**。照着敲，一次就能成功。
 > 权威定义见 [`docs/spec/`](../spec/)；本教程只讲怎么用。配套：[`README.md`](README.md) · [`reference.md`](reference.md) · [`errors.md`](errors.md) · [`testing.md`](testing.md)
-> 最后更新: 2026-09-27 by docs-writer
+> 最后更新: 2026-09-27（T11-③ D1–D7：字符串处理 / 对齐 / 循环绑定 / 退出码） by docs-writer
 
 **说明**：所有示例的第一行都是 `#42`（LFZ 文件前导）。本文中的每段代码都已用 `cargo run --quiet -- run <文件>` 实际运行过，输出为**真实结果**。
 
@@ -112,6 +112,30 @@ $ cargo run --quiet -- run s3.lfz
 **常见错误**：
 - 条件写成 `if n { ... }`（`n` 是 `int`）→ `TypeError: 条件必须是 bool，得到 int`。
 - 用 `;` 分隔语句 → `SyntaxError: 单独的 ';' 非法；打印变量请用 ';;'`（`docs/spec/syntax.md` §5-A11）。
+
+**补充（容易误解的两点）**：
+- **`else if` 链可用**：`if a { ... } else if b { ... } else { ... }` 是合法写法，可一路串多个分支。
+- **循环体里的 `let` / `var` 每轮都是新绑定**：循环每执行一轮就新建一个变量单元，可以在循环内部放心用 `let`；闭包捕获的是**当轮**那个单元（`docs/spec/semantics.md` §4.5.0、§4.5.3）。实测：
+
+```lfz
+#42
+var i = 0
+var fns = []
+while i < 3 {
+    let x = i * 2
+    fns = push(() => x, fns)
+    i += 1
+}
+for f in fns { print("捕获当轮 cell -> ${f()}") }
+```
+
+```console
+$ cargo run --quiet -- run s3b.lfz
+捕获当轮 cell -> 0
+捕获当轮 cell -> 2
+捕获当轮 cell -> 4
+```
+得到 `0 2 4`——证明每轮的 `x` 互不干扰（若共享同一个单元，三个都会打印 `4`）。
 
 ---
 
@@ -280,6 +304,30 @@ pi=3.14
 
 **常见错误**：非法说明符 → `ValueError: 格式说明符非法：'...'`；说明符与值类型不符 → `TypeError: 格式说明符 '...' 不适用于 ...`（`docs/spec/semantics.md` §8.1）。
 
+**对齐与 fill**：`<`（左）、`>`（右）、`^`（居中）都可用，且可在 `align` 前加一个 **fill 字符**。实测（`s = "ab"`）：
+
+```lfz
+#42
+let s = "ab"
+print("[${s:<5}]")     // 左对齐
+print("[${s:>5}]")     // 右对齐
+print("[${s:^5}]")     // 居中
+print("[${s:*^7}]")    // fill '*' + 居中
+print("[${s:*<7}]")    // fill '*' + 左对齐
+print("[${42:05d}]")   // 补零
+```
+```console
+$ cargo run --quiet -- run s8b.lfz
+[ab   ]
+[   ab]
+[ ab  ]
+[**ab***]
+[ab*****]
+[00042]
+```
+
+> ⚠️ **宽度必须是字面数字**，不支持动态宽度：`"${s:>w}"`（`w` 是变量）→ `ValueError: 格式说明符非法：'>w'`。要按变量宽度对齐，用字符串拼接 + `repeat` 手工补齐（见 Step 13）。
+
 ---
 
 ## Step 9 — `;;`：一键打印当前可见变量
@@ -377,7 +425,7 @@ LFZ 内建测试运行器。把断言写进 `tests/**/*.lfz`（首行仍是 `#42
 ```console
 $ cargo run --quiet -- test
 ...
-汇总：共 82 个用例，通过 82，失败 0，错误 0
+汇总：共 90 个用例，通过 90，失败 0，错误 0
 ```
 
 - `assert` 失败 → 该用例 `FAIL`（退出码 `1`）。
@@ -461,6 +509,51 @@ roster ： [{name: "Alice", score: 93}, {name: "Bob", score: 67}, {name: "Cara",
 ```
 
 **这段程序用到了**：`struct` + 方法 + `self`（Step 6）、`if` 表达式（Step 3）、函数与 `assert`（Step 4/10）、`array` 与 `for`（Step 3）、管道 `|> sortBy` / `|> maxBy`（Step 7）、lambda `(s) => -s.score`（Step 7）、富字符串插值与 `:.2f`（Step 8）、`;;`（Step 9）、`total / len(sts)`（`/` 返回 `float`，Step 2）。
+
+---
+
+## Step 13 — 处理字符串：不可下标、`split` 与 O(n) 构建
+
+**概念**：LFZ 的 `string` 是**不可变**的 UTF-8 字符串，**不能下标**——`s[0]` 会报 `TypeError`。按字符访问要先把字符串用 `split("", s)` 拆成字符数组（一次 **O(n)**，之后下标 **O(1)**）。另外，**字符串不可变**意味着循环里 `s = s + c` 每轮复制整个前缀，是 **O(n²)**；正确做法是先 `push` 到数组，最后 `join`（**O(n)**）。
+
+**代码**（文件 `s13.lfz`）：
+
+```lfz
+#42
+let s = "abc"
+let cs = split("", s)              // ["a", "b", "c"]，一次 O(n)
+print("len(s) = ${len(s)}")        // Unicode 标量数
+print("cs[0] = ${cs[0]}")          // 之后下标 O(1)
+
+// 逐字符转大写再拼回：push + join，O(n)
+var parts = []
+for c in cs {
+    parts = push(upper(c), parts)
+}
+print("out = ${join("", parts)}")
+```
+
+**运行**：
+
+```console
+$ cargo run --quiet -- run s13.lfz
+len(s) = 3
+cs[0] = a
+out = ABC
+```
+
+**常见错误**：
+- 对字符串取下标 → `TypeError: 运算符 '[]' 不支持 string 与 array / struct`（`s[0]` 非法）。改用 `split("", s)`。
+- 循环里用 `s = s + c` 拼字符串 → 结果对，但**大输入会慢到 O(n²)**。改用数组 `push` + `join("", parts)`。
+- `len(s)` 是 **O(n)**；别在循环里反复对同一长串求 `len`（先 `split` 后对数组 `len` 是 O(1)）。
+
+**按变量宽度补齐**（动态宽度不被格式说明符支持时的替代）：
+
+```lfz
+#42
+fn padRight(w, s) => if w > len(s) { s + repeat(w - len(s), " ") } else { s }
+print("[" + padRight(5, "ab") + "]")   // [ab   ]
+```
 
 ---
 

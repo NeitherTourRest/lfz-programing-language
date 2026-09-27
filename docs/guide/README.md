@@ -3,7 +3,7 @@
 > 面向**人类开发者**的 LFZ 手册。目标：让你在 **5 分钟**内装好 LFZ、跑通第一个程序、看懂常见报错。
 > 权威语法/语义以 `docs/spec/` 为准；本手册只做讲解与示例，不定义新语法。
 > 配套：教程 [`tutorial.md`](tutorial.md) ｜ 参考 [`reference.md`](reference.md) ｜ 错误模型 [`errors.md`](errors.md) ｜ 测试 [`testing.md`](testing.md)
-> 最后更新: 2026-09-27 by docs-writer
+> 最后更新: 2026-09-27（T11-③ D1–D7 修订） by docs-writer
 
 ---
 
@@ -126,8 +126,16 @@ $ cargo run --quiet -- run greeting.lfz
 | 下标越界 | `IndexError: 下标 10 越界（长度 3）` | 检查下标范围 `[0, len-1]` |
 | 函数外写 `return` | `SyntaxError: 'return' 只能出现在函数体内` | 把 `return` 放进 `fn` 体 |
 | 整数溢出 | `OverflowError: 整数溢出：结果超出 i64 范围` | 用 `float` 或控制数值范围 |
+| **字符串取下标** | `TypeError: 运算符 '[]' 不支持 string 与 array / struct` | 字符串**不能** `s[0]`；用 `split("", s)` 拆成字符数组 |
+| 容器构造过大 | `OverflowError: 容量溢出：所需容量超出可分配上限` | 别构造超大数组/字符串；超大循环改用 `while` |
+| 嵌套太深 | `SyntaxError: 嵌套深度超限（超过 1000 层）` | 拆小表达式、减少嵌套 |
+| 格式宽度写了变量 | `ValueError: 格式说明符非法：'>w'` | 宽度只支持字面数字；按变量宽度用 `repeat` 手工补齐 |
 
 关于除法：`/` **永远**返回 `float`（`7 / 2 == 3.5`）；需要整数向下取整用内置 `div(a, b)`（`div(7, 2) == 3`）；`%` 是 Python 式取模（`-7 % 3 == 2`）（`docs/spec/semantics.md` §4.2）。
+
+> **两个最常问的点**：
+> 1. **字符串不能下标**：`s[0]` 非法。按字符处理先 `split("", s)`（一次 O(n)），之后用数组下标（O(1)）。逐字符**别**用 `s = s + c`（循环里是 O(n²)），改用 `push` 到数组再 `join`。详见 [`reference.md` §3.5](reference.md)、教程 Step 13。
+> 2. **`assert` 的退出码看语境**：`lfz run` 下 `assert` 失败 → 错误类 → 退出 **2**；`lfz test` 下用例失败 → 退出 **1**。详见 [`errors.md` §3.4](errors.md)。
 
 ---
 
