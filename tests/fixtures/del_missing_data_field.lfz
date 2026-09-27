@@ -1,0 +1,5 @@
+#42
+// 负例：del(k, s) 的 k 不是任何数据字段 → FieldError
+// spec: interface-contract.md §10.7 del 行（缺失 → FieldError）
+let s = { "a": 1 }
+let t = del("missing", s)

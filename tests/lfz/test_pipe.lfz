@@ -1,0 +1,48 @@
+#42
+// ============================================================
+// test_pipe.lfz — 管道 `|>`：data-last 注入 / `_` 占位符 / 链式 / 组合
+// 覆盖: 裸函数 RHS、调用 data-last、`_` 第一/末位、嵌套调用内 `_`、
+//       链式管道、与 map/filter/reduce/sum/take/slice 组合、lambda RHS、优先级
+// spec: syntax.md §4.1/§4.3/§4.4（A17/A18/A24/M4）
+// 负例（RHS 非函数 → TypeError）见 fixtures/pipe_rhs_not_function.lfz
+// 负例（≥2 个 `_` → SyntaxError）见 fixtures/pipe_multiple_placeholders.lfz
+// 负例（λ 体内 `_` → SyntaxError）见 fixtures/pipe_underscore_in_lambda.lfz
+// ============================================================
+
+fn double(x) => x * 2
+fn sub(a, b) => a - b
+fn inc(x) => x + 1
+
+// ---- data-last：无 `_` 时注入末参 ----
+assert((5 |> double) == 10, "pipe_bare_function_rhs")
+assert((5 |> double()) == 10, "pipe_call_data_last_no_args")
+
+let xs = [1, 2, 3, 4]
+assert((xs |> take(2)) == [1, 2], "pipe_builtin_take_data_last")
+assert((xs |> slice(1, 3)) == [2, 3], "pipe_builtin_slice_data_last")
+assert((xs |> len) == 4, "pipe_len")
+
+// ---- `_` 占位符：第一位 / 末位 ----
+assert((10 |> sub(_, 3)) == 7, "pipe_placeholder_first_arg")
+assert((10 |> sub(3, _)) == 0 - 7, "pipe_placeholder_last_arg")
+
+// ---- `_` 出现在嵌套调用内（不穿 λ）合法 ----
+assert((5 |> double(inc(_))) == 12, "pipe_placeholder_in_nested_call")
+
+// ---- 链式管道 ----
+let chain = [1, 2, 3, 4] |> map((x) => x * x) |> filter((x) => x > 4) |> reduce((a, b) => a + b, 0)
+assert(chain == 25, "pipe_chain_map_filter_reduce")
+
+assert((5 |> inc |> double) == 12, "pipe_chained_left_assoc")
+assert(([1, 2, 3] |> sum()) == 6, "pipe_sum_data_last")
+assert(([1, 2, 3] |> reduce((a, b) => a + b, 0)) == 6, "pipe_reduce_data_last")
+
+// ---- lambda 作 RHS ----
+let addTen = (x) => x + 10
+assert((5 |> addTen) == 15, "pipe_lambda_rhs")
+
+// ---- 优先级：`|>` 比 `+` 紧 ----
+assert((1 + 2 |> double) == 6, "pipe_tighter_than_plus")
+
+// ---- 链式管道内 `_` 与 data-last 混用 ----
+assert(([1, 2, 3, 4] |> filter((x) => x % 2 == 0) |> map((x) => x * 10)) == [20, 40], "pipe_filter_then_map")

@@ -1,0 +1,118 @@
+#42
+// ============================================================
+// test_loops.lfz — 循环：while / for…in / break / continue
+// 覆盖: while、while+break、for 数组、for range、continue、break、
+//       嵌套循环 break 只跳内层、struct 迭代按键 UTF-8 字节序、
+//       for 迭代快照（长度变化不影响次数）、元素内部改动仍可见
+// spec: syntax.md §3.4/§7; semantics.md §4.5.4
+// 负例（for 迭代 string → TypeError）见 fixtures/for_over_string.lfz
+// 负例（continue 在循环外 → SyntaxError）见 fixtures/continue_outside_loop.lfz
+// ============================================================
+
+// ---- while ----
+var i = 0
+var total = 0
+while i < 5 {
+    total += i
+    i += 1
+}
+assert(total == 10, "while_accumulates")
+assert(i == 5, "while_counter_terminates")
+
+// while + break
+var j = 0
+while true {
+    j += 1
+    if j >= 3 { break }
+}
+assert(j == 3, "while_break")
+
+// for over array
+var sum = 0
+for e in [1, 2, 3, 4] {
+    sum += e
+}
+assert(sum == 10, "for_array_sum")
+
+// for over range(n) → [0, n)
+var rs = 0
+for k in range(4) {
+    rs += k
+}
+assert(rs == 6, "for_range_sum")
+assert(range(0) == [], "range_zero_is_empty")
+assert(range(-3) == [], "range_negative_is_empty")
+
+// continue 跳过偶数
+var odds = 0
+for e in [1, 2, 3, 4, 5, 6] {
+    if e % 2 == 0 { continue }
+    odds += e
+}
+assert(odds == 9, "for_continue_skips_even")
+
+// break 提前退出
+var firstBig = 0
+for e in [1, 2, 9, 4] {
+    if e > 5 {
+        firstBig = e
+        break
+    }
+}
+assert(firstBig == 9, "for_break_stops")
+
+// 嵌套循环：break 只跳内层
+var cells = 0
+for a in range(3) {
+    for b in range(3) {
+        if b == 1 { break }
+        cells += 1
+    }
+}
+assert(cells == 3, "nested_break_inner_only")
+
+// ---- struct 迭代：键按 UTF-8 字节序升序 ----
+let s = { "b": 1, "a": 2, "c": 3 }
+var order = []
+for key in s {
+    order = push(key, order)
+}
+assert(order == ["a", "b", "c"], "for_struct_key_byte_order")
+
+// ASCII 大小写字节序：'Z'(0x5A) < 'a'(0x61)
+let mixed = { "a": 1, "Z": 2 }
+var mixedOrder = []
+for key in mixed {
+    mixedOrder = push(key, mixedOrder)
+}
+assert(mixedOrder == ["Z", "a"], "for_struct_key_byte_order_ascii")
+
+// struct 迭代只含数据字段（方法不参与）
+struct S {
+    a: 1,
+    fn m() => self.a,
+}
+let inst = S { a: 1 }
+var keysSeen = []
+for key in inst {
+    keysSeen = push(key, keysSeen)
+}
+assert(keysSeen == ["a"], "for_struct_iterates_data_fields_only")
+
+// ---- for 迭代快照 ----
+// 迭代中增删元素不改变本次迭代次数
+var grow = [1, 2, 3]
+var seen = 0
+for e in grow {
+    seen += 1
+    grow = push(e, grow)
+}
+assert(seen == 3, "for_snapshot_length_stable")
+
+// 元素为可变容器时，内部改动仍可见（共享引用）
+var rows = [[1], [2]]
+for row in rows {
+    row[0] = 9
+}
+assert(rows[0][0] == 9, "for_snapshot_shares_element_ref_0")
+assert(rows[1][0] == 9, "for_snapshot_shares_element_ref_1")

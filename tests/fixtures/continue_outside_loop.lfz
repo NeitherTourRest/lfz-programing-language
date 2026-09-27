@@ -1,0 +1,4 @@
+#42
+// 负例：continue 出现在循环体之外 → SyntaxError
+// spec: syntax.md §7（continue_stmt 仅循环体内）；semantics.md §8.1（'{kw}' 只能出现在循环体内）
+continue

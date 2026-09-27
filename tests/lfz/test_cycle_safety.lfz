@@ -1,0 +1,41 @@
+#42
+// ============================================================
+// test_cycle_safety.lfz — A6 环安全
+// 覆盖: 自引用 struct / array 的 `==`（身份优先、重访视为相等、不死循环）、
+//       非环深结构相等 / 不等
+// spec: semantics.md §4.5.9（A6）
+// 说明: `==` 结果可断言；`<cycle>` 渲染文本未做逐字断言（见 coverage-matrix 备注），
+//       仅保证对自引用容器渲染不报错。
+// ============================================================
+
+// ---- 自引用 struct ----
+let a = { "n": 1 }
+a.me = a
+assert(a == a, "cycle_identity_equality")
+
+let b = { "n": 1 }
+b.me = b
+assert(a == b, "cycle_structural_equality")
+
+// 环 + 数据不同 → 不等
+let c = { "n": 2 }
+c.me = c
+assert(!(a == c), "cycle_structural_inequality")
+
+// 自引用容器渲染不报错（不逐字断言 `<cycle>` 文本）
+assert(type(str(a)) == "string", "cycle_display_runs_without_error")
+
+// ---- 自引用 array ----
+var xs = [0]
+xs[0] = xs
+assert(xs == xs, "array_cycle_identity")
+var ys = [0]
+ys[0] = ys
+assert(xs == ys, "array_cycle_structural_equality")
+
+// ---- 非环深结构相等 / 不等 ----
+let d = { "x": [1, 2] }
+let e = { "x": [1, 2] }
+assert(d == e, "deep_structural_equality")
+assert(!(d == { "x": [1, 3] }), "deep_structural_inequality")
+assert([1, [2, 3]] == [1, [2, 3]], "nested_array_deep_equality")

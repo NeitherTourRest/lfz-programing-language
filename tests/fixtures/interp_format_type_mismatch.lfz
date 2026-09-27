@@ -1,0 +1,5 @@
+#42
+// 负例：格式说明符与值类型不符 → 运行期 TypeError
+// spec: syntax.md §2.8 补充规则 3（说明符与值类型不符 → TypeError）；semantics.md §8.1
+let f = 3.14
+let s = "${f:d}"

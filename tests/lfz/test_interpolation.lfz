@@ -1,0 +1,35 @@
+#42
+// ============================================================
+// test_interpolation.lfz — 富字符串插值：多段 / 嵌套 / format_spec / 转义
+// 覆盖: 多段插值、插值内表达式、嵌套字符串、format_spec（:>3 :<4 :05d :.2f :x :X）、
+//       \$ 转义（字面 $ 与字面 ${…}）
+// spec: syntax.md §2.8（含 M1/M5/M6/补充规则 1–3）; semantics.md §3.7
+// 负例（非法说明符 → ValueError）见 fixtures/interp_bad_format.lfz
+// 负例（说明符与值类型不符 → TypeError）见 fixtures/interp_format_type_mismatch.lfz
+// ============================================================
+
+// ---- 多段插值 ----
+let name = "LFZ"
+let ver = 3
+assert("Hi ${name} v${ver}!" == "Hi LFZ v3!", "interp_multi_segment")
+assert("${1 + 2}" == "3", "interp_expression")
+assert("a${1}b${2}c" == "a1b2c", "interp_three_segments")
+
+// ---- 嵌套字符串 ----
+assert("a${"b"}c" == "abc", "interp_nested_string")
+assert("[${"x" + "y"}]" == "[xy]", "interp_nested_string_concat")
+
+// ---- format_spec ----
+assert("${7:>3}" == "  7", "format_right_align_int")
+assert("${"ab":>3}" == " ab", "format_right_align_string")
+assert("${"ab":<4}" == "ab  ", "format_left_align_string")
+assert("${42:05d}" == "00042", "format_zero_pad_int")
+assert("${3.14159:.2f}" == "3.14", "format_precision_float")
+assert("${255:x}" == "ff", "format_hex_lower")
+assert("${255:X}" == "FF", "format_hex_upper")
+assert("${5:x}" == "5", "format_hex_small")
+
+// ---- \$ 转义 ----
+assert("\$" == "$", "escaped_dollar_literal")
+assert("\${name}" == "$" + "{name}", "escaped_dollar_brace_is_literal")
+assert("cost: \$5" == "cost: $5", "escaped_dollar_in_text")

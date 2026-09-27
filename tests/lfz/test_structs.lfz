@@ -1,0 +1,93 @@
+#42
+// ============================================================
+// test_structs.lfz — 结构体：字面量 / 字段访问 / 方法 vs 数据面（A5）/ del
+// 覆盖: struct 声明与模板默认值、实例化、`.k` 与 `["k"]` 等价、方法字段（含 self）、
+//       keys/values/entries/has/len/显示 均不含方法字段、动态字段、匿名 struct、
+//       平拷贝（可变默认值不共享）、del 仅作用数据面（正向）
+// spec: syntax.md §3.3/§7; semantics.md §4.5.8/§4.5.9
+// 负例（del 方法字段 → FieldError）见 fixtures/del_method_field.lfz
+// 负例（del 缺失数据字段 → FieldError）见 fixtures/del_missing_data_field.lfz
+// ============================================================
+
+struct Point {
+    x: 0,
+    y: 0,
+    fn norm2() => self.x * self.x + self.y * self.y,
+    fn describe() => "(${self.x}, ${self.y})",
+}
+
+let p = Point { x: 3, y: 4 }
+assert(p.x == 3, "struct_dot_field")
+assert(p["y"] == 4, "struct_bracket_field")
+assert(p.x == p["x"], "struct_dot_bracket_equivalent")
+
+// ---- 方法字段 ----
+assert(p.norm2() == 25, "struct_method_call_dot")
+// `p["norm2"]` 能取到方法函数值（spec semantics §3.7：s.k ≡ s["k"] 可取到该函数值）。
+// 注意：经方括号取得的方法值再调用时未绑定 self → 见缺陷单 bug-20260927-01
+// （spec 要求 s.k ≡ s["k"] 且调用时 self 绑定；实现仅在 `.字段()` 调用点绑定）。
+// 缺陷修复前此处只断言「可取到 function 值」，不调用（避免把缺陷行为固化为期望）。
+assert(type(p["norm2"]) == "function", "struct_method_value_via_bracket")
+assert(p.describe() == "(3, 4)", "struct_method_uses_self")
+
+// ---- A5 数据面：函数值字段不参与 ----
+assert(keys(p) == ["x", "y"], "keys_excludes_methods")
+assert(values(p) == [3, 4], "values_excludes_methods")
+assert(entries(p) == [["x", 3], ["y", 4]], "entries_excludes_methods")
+assert(len(p) == 2, "len_excludes_methods")
+assert(has("x", p), "has_data_field_true")
+assert(!has("norm2", p), "has_method_field_false")
+assert(str(p) == "{x: 3, y: 4}", "display_excludes_methods")
+
+// ---- 模板默认值 ----
+struct Named {
+    name: "?",
+    age: 0,
+}
+let n = Named { name: "Bob" }
+assert(n.age == 0, "template_default_applied")
+assert(n.name == "Bob", "template_override_default")
+
+// ---- 平拷贝：可变默认值每实例一份，不共享（B7） ----
+struct Bag {
+    items: [],
+}
+let b1 = Bag {}
+let b2 = Bag {}
+b1.items = push(1, b1.items)
+assert(len(b1.items) == 1, "mutable_default_instance_1")
+assert(len(b2.items) == 0, "mutable_default_not_shared")
+
+// ---- 动态字段（实例新增，模板不变） ----
+let q = Point { x: 1, y: 2 }
+q.z = 9
+assert(q.z == 9, "dynamic_field_add")
+assert(len(q) == 3, "dynamic_field_in_data_face")
+let q2 = Point { x: 1, y: 2 }
+assert(!has("z", q2), "dynamic_field_not_on_other_instance")
+
+// ---- 方法修改 self ----
+struct Counter {
+    n: 0,
+    fn bump() {
+        self.n += 1
+    },
+    fn value() => self.n,
+}
+let cc = Counter { n: 0 }
+cc.bump()
+cc.bump()
+assert(cc.value() == 2, "method_mutates_self")
+
+// ---- 匿名 struct（字典面孔） ----
+let d = { "k": 1, "name": "x" }
+assert(d["k"] == 1, "anon_struct_field")
+assert(keys(d) == ["k", "name"], "anon_struct_keys_byte_order")
+assert(len(d) == 2, "anon_struct_len")
+
+// ---- del 仅作用数据面（正向） ----
+let ds = { "a": 1, "b": 2 }
+let ds2 = del("a", ds)
+assert(keys(ds2) == ["b"], "del_removes_data_field")
+assert(keys(ds) == ["a", "b"], "del_returns_new_struct")
+assert(!has("a", ds2), "del_updates_data_face")

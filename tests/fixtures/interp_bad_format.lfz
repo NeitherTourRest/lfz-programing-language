@@ -1,0 +1,5 @@
+#42
+// 负例：非法格式说明符 → 运行期 ValueError
+// spec: syntax.md §2.8 补充规则 3（非法说明符 → ValueError）；semantics.md §8.1
+let x = 1
+let s = "${x:q}"

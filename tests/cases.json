@@ -26,6 +26,19 @@
     { "path": "fixtures/overflow_add.lfz",               "name": "int_overflow_add",                  "expect": { "error": "OverflowError" } },
     { "path": "fixtures/abs_i64_min.lfz",                "name": "abs_i64_min_overflow",              "expect": { "error": "OverflowError" } },
 
+    { "path": "fixtures/if_condition_not_bool.lfz",      "name": "if_condition_not_bool",             "expect": { "error": "TypeError" } },
+    { "path": "fixtures/for_over_string.lfz",            "name": "for_over_string_not_iterable",      "expect": { "error": "TypeError" } },
+    { "path": "fixtures/del_method_field.lfz",           "name": "del_method_field_is_field_error",   "expect": { "error": "FieldError" } },
+    { "path": "fixtures/del_missing_data_field.lfz",     "name": "del_missing_data_field",            "expect": { "error": "FieldError" } },
+    { "path": "fixtures/pipe_rhs_not_function.lfz",      "name": "pipe_rhs_not_function",             "expect": { "error": "TypeError" } },
+    { "path": "fixtures/interp_format_type_mismatch.lfz","name": "interp_format_type_mismatch",       "expect": { "error": "TypeError" } },
+    { "path": "fixtures/interp_bad_format.lfz",          "name": "interp_bad_format_specifier",       "expect": { "error": "ValueError" } },
+    { "path": "fixtures/pipe_multiple_placeholders.lfz", "name": "pipe_multiple_placeholders",        "expect": { "error": "SyntaxError" } },
+    { "path": "fixtures/pipe_underscore_in_lambda.lfz",  "name": "pipe_underscore_in_lambda",         "expect": { "error": "SyntaxError" } },
+    { "path": "fixtures/continue_outside_loop.lfz",      "name": "syntax_continue_outside_loop",      "expect": { "error": "SyntaxError" } },
+    { "path": "fixtures/return_outside_fn.lfz",          "name": "syntax_return_outside_function",    "expect": { "error": "SyntaxError" } },
+    { "path": "fixtures/deep_recursion.lfz",             "name": "deep_recursion_exceeds_limit",      "expect": { "error": "RecursionError" } },
+
     { "path": "fixtures/plain_ok.txt",                   "name": "non_lfz_file_no_preamble_required" }
   ]
 }

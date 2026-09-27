@@ -1,0 +1,47 @@
+#42
+// ============================================================
+// test_dump.lfz — `;;` 变量 dump 语句
+// 覆盖: 顶层 `;;`、函数作用域 `;;`（该次调用局部链）、块作用域 `;;`、遮蔽去重
+// spec: semantics.md §3.6; syntax.md §5-A10/A13
+// 说明: `;;` 的输出通道 = stdout；runner 不捕获/断言程序 stdout，
+//       故本文件无法逐字断言 dump 文本，只保证"执行到 `;;` 不报错"（PASS）。
+//       （见 tests/coverage-matrix.md 的诚实标注。）
+// ============================================================
+
+let alpha = 1
+var beta = 2
+fn gamma() => alpha + beta
+struct Delta { v: 0, }
+
+;;
+
+assert(alpha == 1, "dump_top_level_runs")
+assert(beta == 2, "dump_after_vars")
+assert(gamma() == 3, "dump_after_fn")
+assert(type(Delta) == "struct", "dump_struct_template_visible")
+
+// 函数内 `;;`（打印该次调用的局部可见链）
+fn localDump() {
+    let local = 99
+    ;;
+    local
+}
+assert(localDump() == 99, "dump_in_function_scope_runs")
+
+// 块内 `;;`
+var hit = 0
+if true {
+    let inBlock = 1
+    ;;
+    hit = inBlock
+}
+assert(hit == 1, "dump_in_block_scope_runs")
+
+// 遮蔽去重不报错
+let shadow = 1
+if true {
+    let shadow = 2
+    ;;
+    hit += shadow
+}
+assert(hit == 3, "dump_shadowed_scope_runs")

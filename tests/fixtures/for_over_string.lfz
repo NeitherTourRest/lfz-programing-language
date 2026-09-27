@@ -1,0 +1,6 @@
+#42
+// 负例：对 string 做 for 迭代 → 运行期 TypeError（可迭代仅 array / struct）
+// spec: semantics.md §4.5.4（可迭代类型：仅 array 与 struct）
+for ch in "abc" {
+    let x = ch
+}

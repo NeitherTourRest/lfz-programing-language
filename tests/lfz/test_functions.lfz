@@ -1,0 +1,89 @@
+#42
+// ============================================================
+// test_functions.lfz — 函数：定义 / 调用 / 递归 / 参数与返回 / 函数字面量
+// 覆盖: fn 声明与调用、显式/隐式/提前 return、无参、递归（阶乘、斐波那契）、
+//       函数字面量（fn(…){} 与 (…) => …）、函数作值（type/显示）、高阶函数
+// spec: syntax.md §3.3/§7; semantics.md §4.5.5
+// 负例（深递归 → RecursionError）见 fixtures/deep_recursion.lfz
+// ============================================================
+
+// ---- 定义与调用 ----
+fn add(a, b) { a + b }
+assert(add(2, 3) == 5, "fn_call")
+assert(add(-1, 1) == 0, "fn_call_negative")
+
+// ---- 显式 / 隐式 / 提前 return ----
+fn explicit(x) {
+    return x * 2
+}
+assert(explicit(4) == 8, "fn_explicit_return")
+
+fn implicitVal(x) {
+    x * 3
+}
+assert(implicitVal(4) == 12, "fn_implicit_return_last_expr")
+
+fn early(x) {
+    if x < 0 { return 0 - x }
+    x
+}
+assert(early(-5) == 5, "fn_early_return")
+assert(early(5) == 5, "fn_fallthrough_return")
+
+fn noReturn() {
+    let z = 1
+}
+assert(noReturn() == nil, "fn_without_value_returns_nil")
+
+// ---- 递归：阶乘 ----
+fn fact(n) {
+    if n <= 1 { return 1 }
+    n * fact(n - 1)
+}
+assert(fact(0) == 1, "factorial_base")
+assert(fact(1) == 1, "factorial_one")
+assert(fact(5) == 120, "factorial_5")
+assert(fact(10) == 3628800, "factorial_10")
+
+// ---- 递归：斐波那契 ----
+fn fib(n) {
+    if n < 2 { return n }
+    fib(n - 1) + fib(n - 2)
+}
+assert(fib(0) == 0, "fib_0")
+assert(fib(1) == 1, "fib_1")
+assert(fib(10) == 55, "fib_10")
+
+// ---- 无参函数 / 箭头体 ----
+fn answer() => 42
+assert(answer() == 42, "fn_no_params_arrow_body")
+
+// ---- 函数字面量 ----
+let sq = fn (x) { x * x }
+assert(sq(4) == 16, "fn_literal_block_body")
+
+let inc = (x) => x + 1
+assert(inc(41) == 42, "lambda_literal_arrow")
+
+let zero = () => 0
+assert(zero() == 0, "lambda_no_params")
+
+// ---- 函数是值 ----
+assert(type(add) == "function", "named_function_type")
+assert(type(sq) == "function", "function_literal_type")
+assert(str(add) == "<fn add>", "named_function_display")
+assert(str(sq) == "<fn>", "anonymous_function_display")
+
+// ---- 高阶：函数作实参 / 返回值 ----
+fn apply(f, v) => f(v)
+assert(apply(sq, 5) == 25, "function_as_argument")
+
+fn compose(f, g) => (x) => f(g(x))
+let addOne = (x) => x + 1
+let dbl = (x) => x * 2
+let addOneAfterDouble = compose(addOne, dbl)
+assert(addOneAfterDouble(5) == 11, "function_as_return_value")
+
+// 函数同一性（== 仅按同一性）
+assert(add == add, "function_identity_equal")
+assert(!(add == sq), "distinct_functions_not_equal")

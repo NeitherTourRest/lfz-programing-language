@@ -1,0 +1,4 @@
+#42
+// 负例：`_` 出现在 lambda 体内（穿过 λ 体）→ 解析期 SyntaxError
+// spec: syntax.md §4.3 规则 6（M4）；§5-A24
+let r = [1, 2, 3] |> map((x) => x + _)

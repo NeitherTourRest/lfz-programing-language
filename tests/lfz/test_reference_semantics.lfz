@@ -1,0 +1,91 @@
+#42
+// ============================================================
+// test_reference_semantics.lfz — A1 引用语义
+// 覆盖: 容器别名（索引/字段写入原地可见）、传参按引用、
+//       push/pop/removeAt/insert/swap/slice/sort/map/filter/del 返回新值不改原容器、
+//       let 只锁重绑定不锁内容、负索引
+// spec: semantics.md §4.5.2/§4.5.11; interface-contract.md §10.7
+// ============================================================
+
+// ---- 别名：索引 / 字段写入原地可见 ----
+let a = [1, 2, 3]
+let b = a
+b[0] = 99
+assert(a[0] == 99, "array_alias_index_write_visible")
+assert(a == [99, 2, 3], "array_alias_whole_value_seen")
+
+let s = { "k": 1 }
+let t = s
+t.k = 42
+assert(s.k == 42, "struct_alias_dot_write_visible")
+t["k"] = 43
+assert(s.k == 43, "struct_alias_bracket_write_visible")
+
+// ---- 传参按引用 ----
+fn setFirst(xs) {
+    xs[0] = 7
+}
+let arr = [0, 0]
+setFirst(arr)
+assert(arr == [7, 0], "array_pass_by_reference")
+
+fn setField(st) {
+    st.f = 5
+}
+let rec = { "f": 0 }
+setField(rec)
+assert(rec.f == 5, "struct_pass_by_reference")
+
+// ---- 内置返回新值、不改原容器 ----
+let orig = [1, 2, 3]
+
+let pushed = push(4, orig)
+assert(pushed == [1, 2, 3, 4], "push_returns_new")
+assert(orig == [1, 2, 3], "push_does_not_mutate")
+
+let popped = pop(orig)
+assert(popped == [1, 2], "pop_returns_new")
+assert(orig == [1, 2, 3], "pop_does_not_mutate")
+
+let removed = removeAt(1, orig)
+assert(removed == [1, 3], "removeAt_returns_new")
+assert(orig == [1, 2, 3], "removeAt_does_not_mutate")
+
+let inserted = insert(1, 9, orig)
+assert(inserted == [1, 9, 2, 3], "insert_returns_new")
+assert(orig == [1, 2, 3], "insert_does_not_mutate")
+
+let swapped = swap(0, 2, orig)
+assert(swapped == [3, 2, 1], "swap_returns_new")
+assert(orig == [1, 2, 3], "swap_does_not_mutate")
+
+let sliced = slice(0, 2, orig)
+assert(sliced == [1, 2], "slice_returns_new")
+assert(orig == [1, 2, 3], "slice_does_not_mutate")
+
+let src = [3, 1, 2]
+let sortedNew = sort(src)
+assert(sortedNew == [1, 2, 3], "sort_returns_new")
+assert(src == [3, 1, 2], "sort_does_not_mutate")
+
+let mapped = map((x) => x * 10, orig)
+assert(mapped == [10, 20, 30], "map_returns_new")
+assert(orig == [1, 2, 3], "map_does_not_mutate")
+
+let filtered = filter((x) => x > 1, orig)
+assert(filtered == [2, 3], "filter_returns_new")
+assert(orig == [1, 2, 3], "filter_does_not_mutate")
+
+let dsrc = { "a": 1, "b": 2 }
+let dNew = del("a", dsrc)
+assert(keys(dNew) == ["b"], "del_returns_new")
+assert(keys(dsrc) == ["a", "b"], "del_does_not_mutate")
+
+// ---- let 只锁重绑定，不锁内容 ----
+let locked = [0]
+locked[0] = 5
+assert(locked[0] == 5, "let_allows_content_mutation")
+
+// ---- 负索引（removeAt / swap 支持） ----
+assert(removeAt(-1, [1, 2, 3]) == [1, 2], "removeAt_negative_index")
+assert(swap(-1, 0, [1, 2, 3]) == [3, 2, 1], "swap_negative_index")

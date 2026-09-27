@@ -1,0 +1,82 @@
+#42
+// ============================================================
+// test_closures.lfz — 闭包（A2）：按 cell 引用捕获
+// 覆盖: counter 语义（共享 cell 递增）、多实例各自 cell、
+//       多个闭包共享同一 cell、循环每轮迭代独立 cell、嵌套闭包、捕获形参
+// spec: semantics.md §4.5.3
+// ============================================================
+
+// ---- counter：闭包与定义作用域共享同一个 n ----
+fn makeCounter() {
+    var n = 0
+    fn inc() {
+        n += 1
+        n
+    }
+    inc
+}
+let c1 = makeCounter()
+assert(c1() == 1, "closure_counter_first")
+assert(c1() == 2, "closure_counter_shared_cell")
+assert(c1() == 3, "closure_counter_third")
+
+// ---- 两个实例各持独立 cell ----
+let c2 = makeCounter()
+assert(c2() == 1, "closure_separate_instance_starts_fresh")
+assert(c1() == 4, "closure_original_instance_unaffected")
+assert(c2() == 2, "closure_separate_instance_second")
+
+// ---- 多个闭包共享同一 cell ----
+fn makePair() {
+    var n = 0
+    fn inc() {
+        n += 1
+    }
+    fn get() => n
+    [inc, get]
+}
+let p = makePair()
+p[0]()
+assert(p[1]() == 1, "closure_shared_cell_read_after_write")
+p[0]()
+p[0]()
+assert(p[1]() == 3, "closure_shared_cell_accumulates")
+
+// ---- 循环每轮迭代各自独立的 cell（块级 let） ----
+fn makeAdders() {
+    var fs = []
+    for i in range(3) {
+        let j = i
+        fs = push((x) => x + j, fs)
+    }
+    fs
+}
+let adders = makeAdders()
+assert(adders[0](10) == 10, "closure_per_iteration_cell_0")
+assert(adders[1](10) == 11, "closure_per_iteration_cell_1")
+assert(adders[2](10) == 12, "closure_per_iteration_cell_2")
+
+// ---- 嵌套闭包捕获多层变量 ----
+fn outer(a) {
+    fn middle(b) {
+        fn inner(c) => a + b + c
+        inner
+    }
+    middle
+}
+let g = outer(1)
+let h = g(10)
+assert(h(100) == 111, "nested_closure_captures_all_layers")
+
+// ---- 捕获形参并在多次调用间保持 ----
+fn makeAcc(start) {
+    var acc = start
+    fn addTo(v) {
+        acc += v
+        acc
+    }
+    addTo
+}
+let acc = makeAcc(100)
+assert(acc(10) == 110, "closure_param_captured")
+assert(acc(10) == 120, "closure_accumulator_persists")

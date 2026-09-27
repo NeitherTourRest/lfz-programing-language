@@ -1,0 +1,5 @@
+#42
+// 负例：管道右侧调用出现 ≥2 个 `_` → 解析期 SyntaxError
+// spec: syntax.md §4.3 规则 1；§5-A24；semantics.md §8.1（管道右侧调用最多只能有一个 '_'）
+fn sub(a, b) => a - b
+let r = 5 |> sub(_, _)

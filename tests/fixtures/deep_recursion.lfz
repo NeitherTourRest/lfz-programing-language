@@ -1,0 +1,7 @@
+#42
+// 负例：无限递归超过求值帧深度上限（10000）→ RecursionError
+// spec: semantics.md §4.5.5（B4/A7）；§8.1 RecursionError
+fn loop(n) {
+    loop(n + 1)
+}
+loop(0)

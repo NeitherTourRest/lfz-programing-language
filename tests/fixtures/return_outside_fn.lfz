@@ -1,0 +1,4 @@
+#42
+// 负例：return 出现在函数体之外 → SyntaxError
+// spec: syntax.md §7（return_stmt 仅函数体内）；semantics.md §8.1（'return' 只能出现在函数体内）
+return 1

@@ -1,0 +1,70 @@
+#42
+// ============================================================
+// test_if_else.lfz — 控制流：if / else（语句形态与表达式形态）
+// 覆盖: if 语句、if/else、else-if 链、if 表达式作绑定值、作实参、嵌套
+// spec: syntax.md §3.3/§3.4/§3.5/§7; semantics.md §4.5.1
+// 负例（非 bool 条件 → TypeError）见 fixtures/if_condition_not_bool.lfz
+// ============================================================
+
+// ---- 语句形态 ----
+var x = 0
+if true {
+    x = 1
+}
+assert(x == 1, "if_stmt_true")
+
+var y = 0
+if false {
+    y = 1
+} else {
+    y = 2
+}
+assert(y == 2, "if_else_stmt_false")
+
+// else-if 链
+fn classify(n) {
+    if n < 0 {
+        "neg"
+    } else if n == 0 {
+        "zero"
+    } else {
+        "pos"
+    }
+}
+assert(classify(-5) == "neg", "else_if_chain_neg")
+assert(classify(0) == "zero", "else_if_chain_zero")
+assert(classify(7) == "pos", "else_if_chain_pos")
+
+// while 条件为 if 表达式之邻（真值分支只求一次）
+var hits = 0
+if true { hits += 1 } else { hits += 100 }
+assert(hits == 1, "if_only_selected_branch_evaluated")
+
+// ---- 表达式形态 ----
+let a = 5
+let r = if a > 3 { "big" } else { "small" }
+assert(r == "big", "if_expr_true_branch")
+
+let r2 = if a > 100 { "big" } else { "small" }
+assert(r2 == "small", "if_expr_false_branch")
+
+// 作实参
+fn tag(v) => "v=" + v
+assert(tag(if a > 3 { "T" } else { "F" }) == "v=T", "if_expr_as_argument")
+
+// 嵌套 if 表达式
+let nested = if a > 0 {
+    if a > 3 {
+        "gt3"
+    } else {
+        "le3"
+    }
+} else {
+    "nonpos"
+}
+assert(nested == "gt3", "nested_if_expr")
+
+// if 表达式结果赋给 var
+var acc = 0
+acc = if true { 10 } else { 20 }
+assert(acc == 10, "if_expr_assign_to_var")

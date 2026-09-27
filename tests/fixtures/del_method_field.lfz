@@ -1,0 +1,9 @@
+#42
+// 负例：del(k, s) 的 k 为方法字段（函数值字段）→ 视为缺失 → FieldError
+// spec: semantics.md §4.5.9（A5 扩展补钉）；interface-contract.md §10.7 del 行
+struct Box {
+    v: 1,
+    fn get() => self.v,
+}
+let b = Box { v: 1 }
+del("get", b)

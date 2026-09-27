@@ -1,0 +1,4 @@
+#42
+// 负例：管道右侧求值后不是函数 → 运行期 TypeError
+// spec: syntax.md §4.3 规则 3；semantics.md §8.1 TypeError（管道右侧必须是函数）
+let r = 5 |> 3
