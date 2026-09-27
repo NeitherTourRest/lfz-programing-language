@@ -1,5 +1,19 @@
 # release-manager — 工作日志
 > 只追加，最新条目在最上方。
+## [2026-09-27 23:30] ✅ 提交 `lfz-programming` skill 包升级（两个原子提交）+ 打 `v1.2.0` 附注标签 + 推送（含 tag）
+- 来源: team-lead 任务书（轻量启动；提交 skill 包升级；`git add <显式文件>`；**两个原子提交**；打附注标签 `v1.2.0`（信息逐字）；`git push` → `git push origin v1.2.0`；收工文档并入提交 2。门禁：`git status --short` 若不符背景 → 停止并汇报。禁区：禁 force-push、**只打 `v1.2.0` 一个标签**、**不做全局安装**、不改 `src/**`·`docs/spec/**`·仓库根 `README.md`、不提交 `dist/`·`target/`·密钥·临时文件）
+- 完成:
+  - **入清单门禁（通过，未触发停止）**：`git status --short` 实测 = 6 ` M` + 2 `??`，与任务书背景**逐字一致**（` M .opencode/skills/lfz-programming/{SKILL,VERIFICATION,prompt-template}.md`、` M .opencode/team/DECISIONS.md`、` M .opencode/team/agents/ai-dx-engineer/{STATUS,JOURNAL}.md`、`?? .opencode/skills/lfz-programming/README.md`、`?? docs/guide/ai/examples/04_wordcount.lfz`）；无清单外、无缺失。基线：分支 `main`；提交前 HEAD = `9cc97c8`；原 tags = 6。
+  - **内容取证（只入库、不改内容）**：`git diff --stat` = SKILL +117 / VERIFICATION +124 / prompt-template ±7 / DECISIONS +11 / ai-dx JOURNAL +18 / ai-dx STATUS ±31；新增 `README.md` 5596 B、`04_wordcount.lfz` 759 B；`DECISIONS.md` 含 ai-dx-engineer「P7c：`lfz-programming` skill 包交付形态与三种安装方式」ADR。
+  - **提交 1**：`git add .opencode/skills/lfz-programming docs/guide/ai/examples/04_wordcount.lfz .opencode/team/agents/ai-dx-engineer/STATUS.md .opencode/team/agents/ai-dx-engineer/JOURNAL.md`（显式；7 文件 = 5 M + 2 A）→ `git commit -F <UTF-8 文件>`（信息含 `→`/`§`，防 PS5.1 拆词）→ `feat(skill): lfz-programming agent skill package (workflow, error→fix map, install README, 4th validated program)`。
+  - **先完成收工协议**（覆盖 `STATUS.md`、置顶追加本 `JOURNAL.md`），使收工改动并入提交 2。
+  - **提交 2**：`git add .opencode/team/DECISIONS.md .opencode/team/agents/release-manager/{STATUS,JOURNAL}.md`（显式 3 文件）→ `git commit -F <UTF-8 文件>` → `docs(adr): record lfz-programming skill package upgrade`。
+  - **打标签**：`git tag -a v1.2.0 -m "v1.2.0 — lfz-programming skill package: 5-step agent workflow, error->fix map, install README (project/global/harness), requirement traceability, 4 empirically validated programs."`（附注）→ `git push` → `git push origin v1.2.0`。
+- 产出:
+  - 两个新提交（短哈希见汇报）+ 标签 `v1.2.0`；`git status --short` 空；`git log --oneline -4`；`git tag -n`（**7 个**，含 `v1.2.0`）；`git ls-remote --tags origin` 含 `refs/tags/v1.2.0`；`git ls-remote origin refs/heads/main` = 本地 HEAD；复议 `lfz docs\guide\ai\examples\04_wordcount.lfz` → `total=13, distinct=8` + top3，**exit 0**。
+- 决策: 无新增 release-manager ADR（本任务为发布簿记；`DECISIONS.md` 本轮条目由 ai-dx-engineer 追加，我仅代为入库）。
+- 下一步: 交付完成；如需再打 tag / 做全局安装，先取得授权（用户已明确"只留在项目内"）。
+- 阻塞: 无。
 ## [2026-09-27 18:05] ✅ 补入 P4.4 ADR（清单遗漏已裁决）+ 打 `v1.1.0` 里程碑附注标签 + 推送（含 tag）
 - 来源: team-lead 任务书（轻量启动；**裁决「清单遗漏」**——上轮门禁停下的 `DECISIONS.md`（tooling-dev P4.4 ADR）不在清单内，本轮授权补入。要求：`git add .opencode/team/DECISIONS.md`；信息 `docs(adr): record P4.4 packaging decision`；**打附注标签 `v1.1.0`**（信息逐字）；`git push`；`git push origin v1.1.0`；收工文档并入本提交。门禁：`git status --short` 若非仅 ` M .opencode/team/DECISIONS.md` → 停止并汇报。禁区：禁 force-push、**只打 `v1.1.0` 一个标签**、不提交 `dist/`·`target/`·密钥·临时文件、不改 `src/**`·`docs/spec/**`）
 - 完成:

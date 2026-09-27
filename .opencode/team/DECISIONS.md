@@ -737,3 +737,14 @@
 - **边界**：仅改 `src/cli.rs`、`Cargo.toml`、`tests/cli.rs`，新增 `scripts/build-release.ps1` / `scripts/install-lfz.ps1`；**未改** `src/main.rs`、`docs/spec/**`、`app/**`、`tests/lfz/**`、`tests/fixtures/**`、`docs/guide/**`、`README.md`、`.gitignore`；无第三方依赖；未 commit / tag / push；**未真正修改用户 PATH**（install 仅 dry-run 验证）。
 - **影响**：**release-manager**（README 快速开始与交付物索引应加 `lfz <file>` 与 `scripts/`，建议文本随汇报提供）；**docs-writer**（`docs/guide/README.md` 运行章节加裸文件用法）；**verifier**（可直接用 `dist\lfz.exe Hello.lfz` 验收；退出码 0/1/2 不变）；**test-engineer**（`lfz test` 契约不变，黑盒集 85/85 不受影响）。
 - **证据**：`cargo build --all-targets` 与 `cargo build --release` 均 **0 warning**；`cargo test` → **445 passed / 0 failed**（原 432 零破坏，新增 13）；`cargo run --quiet -- test` → **85/85 PASS，exit 0**；`dist\lfz.exe` = **704000 B**，`dist\lfz.exe Hello.lfz` → `Hello, LFZ!` exit 0；`dist\lfz.exe --json Hello.lfz` → stdout 恰 12 B `{"ok":true}`（`Hello, LFZ!` 在 stderr）exit 0；`install-lfz.ps1`（无 `-Apply`）dry-run 后用户 PATH SHA256 与前一致（len=549）、安装目录未创建。
+
+### [2026-09-27 23:10] [ai-dx-engineer] P7c：`lfz-programming` skill 包交付形态与三种安装方式（影响 app-dev / docs-writer / verifier / release-manager）
+
+- **决策**：
+  1. `lfz-programming` skill 包以**纯文件（Markdown）**形态交付，主文件 `SKILL.md`（frontmatter `name`/`description`），配套 `README.md`（安装与使用）、`prompt-template.md`（提示模板）、`VERIFICATION.md`（实测证据）。
+  2. 支持**三种安装**：① 本项目 `.opencode/skills/`（opencode 自动扫描，**需重启 opencode 生效**）；② 全局复制到 `%USERPROFILE%\.config\opencode\skills\lfz-programming\`（跨项目可用）；③ 其他 harness（如 DSH 的 `dsh-skill-filesystem`）**指向该目录**挂载。
+  3. 新增 `SKILL.md` §0.5「Agent 标准工作流（5 步）」并把「**实跑且退出码必须为 0**」设为交付硬门槛；新增 §4.5「错误类 → 原因 → 修法」对照；全篇置顶硬纪律「**不要凭记忆写 LFZ**，本文件没写的语法一律视为不存在」。
+- **背景**：作业要求第 4 条「设计开发指南（例如 Skills 等文档）供编程 Agent 使用，使 Agent 能顺利编写代码」+ `interface-contract.md` §11.1 五条硬性要求。P7b 已交付 SKILL 正文；P7c 补齐"最后一公里"（安装/使用/工作流/错误自诊断）并用**第 4 个新程序**再证可用。
+- **边界**：仅改 `.opencode/skills/lfz-programming/**` 与 `docs/guide/ai/**`（`ai/` 为 ai-dx 专属子域）；**未改** `docs/spec/**`、`src/**`、仓库根 `README.md`、`docs/guide/**`（`ai/` 之外）、`tests/**`；未 commit / tag / push。
+- **影响**：**app-dev** 可直接按 SKILL §0.5 工作流开发 P8 应用（降低卡壳）；**docs-writer** 共享已验证示例、避开重复劳动（人向 vs AI 向分工）；**verifier** 可按 `VERIFICATION.md` §1 对照表与 §7 实跑证据独立复核；**release-manager** 交付物 5 索引须含 `README.md`（本文件为 skill 包入口说明）。
+- **证据**：4 示例 `cargo run --quiet -- run` 全 **exit 0**（`04_wordcount` 输出 `total=13, distinct=8` / `the: 4` / `fox: 2` / `jumps: 2`）；严格 `E-[0-9]`（区分大小写）检索 SKILL/README/VERIFICATION **0 命中**；`SKILL.md` 章节结构含 §0.5、§4.5、L4。
