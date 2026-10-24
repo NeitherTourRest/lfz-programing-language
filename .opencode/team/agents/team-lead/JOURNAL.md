@@ -115,3 +115,8 @@
 - 隔离按指令约束与完整已记录工具审计，不声称OS隔离。模型初始unknown与DateTime元数据修正说明保留，未改变冻结输入/源代码/预算结果。
 - 归档：docs/reports/agent-benchmark-v2/v2-20261024-r01/；117项raw ZIP保原始字节，311文件总清单；全验收runner187文件保存，后续不删唯一证据。
 - Git：release-manager审查两组提交及v1.3.0附注，主会话执行；Cargo/bin保持1.0.1以保pin。旧2/8不可直接比，不编造提升。
+
+## [2026-10-24 18:57] v1.3.0实际发布回执
+- 归档提交fa1eb12，发布提交53e6d88aeb2467f04e0118ee408459eaf86f3a5c。
+- git push --atomic origin main refs/tags/v1.3.0成功；远程main和tag剥离均指向发布提交，附注对象39d17f3a7721fbcd3ca8b0dc5bc6bd33193263db。
+- 收工回执另行追加，不移动既有v1.3.0；原三处事故记录仍28/1/1行未提交。
