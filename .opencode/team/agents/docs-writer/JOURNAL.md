@@ -30,3 +30,11 @@
 - 完成: 角色定义与活文档建立
 - 产出: `.opencode/agents/docs-writer.md`
 - 下一步: 等待 team-lead 调度
+
+## [2026-10-24 13:39] T11-14 已实现内置与文件IO指南同步
+- 来源: team-lead任务书；仅五个人类指南与证据、本人状态。
+- 完成: 69内置、range双参、Unicode/IEEE/IO完整签名与边界；复杂度纠错；runner自动准备cwd/Temp约定。
+- 产出: docs/guide五文件；docs/reports/T11-v11-guide-evidence.md（13476 B）。target/release/lfz.exe run逐块33例全部预期退出，26成功/7教学错误；额外7错误探针全通过；新增组合stdout逐字相同。
+- 决策: 无新跨角色决策，沿用spec与既定ADR。
+- 下一步: team-lead统一验收和发布；最终Rust全量验证由团队报告确认。
+- 阻塞: 无；临时件仅Temp/docs-v11，无git操作。

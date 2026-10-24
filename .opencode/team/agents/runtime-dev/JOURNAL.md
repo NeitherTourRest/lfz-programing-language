@@ -194,3 +194,10 @@
 - 完成: 角色定义与活文档建立
 - 产出: `.opencode/agents/runtime-dev.md`
 - 下一步: 等待 team-lead 调度
+
+## [2026-10-24 13:28] T11-12 v1.1 内置实现交付
+- 来源：team-lead；后续追加用户明确追认文件IO。
+- 完成：builtins.rs新增15内置、range1/2参；注册69；8组v11单测先落盘后实现。
+- 证据：旧exe red.lfz → TypeError期待1参；red-io.lfz → readFile NameError。cargo历史路径不存在，恢复后调用被中断，尚无新源码编译/测试通过证据。定向/全量测试由team-lead接手。
+- 边界：仅builtins.rs及自身STATUS/JOURNAL，未改spec/黑盒/guide，未commit。
+- 下一步：统一编译/复验；architect裁决ord/substring/pad复杂度。

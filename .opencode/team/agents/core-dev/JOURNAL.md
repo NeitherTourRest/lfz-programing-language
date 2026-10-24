@@ -172,3 +172,17 @@
 - 完成: 角色定义与活文档建立
 - 产出: `.opencode/agents/core-dev.md`
 - 下一步: 等待 team-lead 调度
+
+## [2026-10-24] T11-12 ValueMsg 接口任务移交
+- 来源: team-lead。
+- 完成: 已读取启动资料、接口契约与 error.rs；停止源码编辑。
+- 产出: STATUS.md / JOURNAL.md；无可确认源码产出或测试成功证据。
+- 阻塞: apply_patch 两次挂起并中断；任务由 team-lead 回收交 runtime-dev。
+- 下一步: 整合方复核文件状态并统一测试。
+
+## [2026-10-24] T11-12 ValueMsg 已完成
+- 来源: team-lead 恢复任务，明确要求先落地解除编译阻塞。
+- 完成: error.rs 三变体及消息；新增逐字符及 ValueError 分类测试。
+- 证据: cargo test --lib error::tests::v11_value_messages_match_contract -- --exact，1 passed / 0 failed。
+- 流程偏差: apply_patch 红灯补丁挂起未落地，故无红灯证据；未虚称 TDD 完成。
+- 下一步: team-lead 统一集成验证。

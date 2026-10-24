@@ -1,4 +1,6 @@
 # 团队任务看板
+> 2026-10-24 最终执行快照：T11-12/13/14/16 完成；494 Rust / 130 黑盒 / 74 独立功能 witness PASS；V01 已独立关闭。T11-15 同题盲测原材料不齐，2/8 基线保持，未打 v1.3.0。release-manager 负责本批提交与项目内 dist 收口。
+
 > 最后更新: 2026-09-27 by team-lead
 
 本文件为活文档，唯一写者 team-lead。其他角色只读，通过结构化汇报请求 team-lead 更新。
@@ -6,12 +8,12 @@
 ## 🔵 进行中
 | ID | 任务 | 负责 | 依赖 | 状态 | 产出/证据 |
 | -- | -- | -- | -- | -- | -- |
-| T11-11 | 提交并推送 T11-③ 第 1 波产物（skill + guide + spec + ADR + 证据） | release-manager | 第 1 波 ✅ | 进行中 | git 提交 + push |
-| T11-12 | **实现 v1.1 七项**（15 个新内置 + `range` 2 参）—— **#4 文件 IO 待用户追认** | core-dev + runtime-dev | ADR ✅ | ⏸ **待追认后派** | `src/**` + 单测 |
-| T11-13 | 黑盒用例（v1.1 七项正/负例） | test-engineer | T11-12 | 待派 | `tests/**` |
-| T11-14 | 文档同步**已实现**的 v1.1 特性 | ai-dx-engineer ‖ docs-writer | T11-12 | 待派 | skill + guide |
-| T11-15 | verifier 复验 + **同题 8 盲测重跑**（基线 **2/8**） | verifier | T11-13/14 | 待派 | 报告 + 前后对比 |
-| T11-16 | 刷新 `REQUIREMENTS.md`（R-401 spec 字节数 + v1.1 新需求条目） | requirements-analyst | — | 待派 | `REQUIREMENTS.md` |
+| T11-11 | 提交并推送 T11-③ 第 1 波产物 | release-manager | 第 1 波 ✅ | ✅ 已完成（历史核验） | HEAD 91b65c3 |
+| T11-12 | 实现 v1.1 七项（文件 IO 已获用户追认） | core-dev + runtime-dev | ADR ✅ | ✅ 15 新内置 + range 双参 | src/builtins.rs、src/error.rs；69 内置 |
+| T11-13 | v1.1 七项正负黑盒 | test-engineer | T11-12 | ✅ 130/130 | 4 正例组 63 assert + 36 负例；tests/evidence/ |
+| T11-14 | 同步已实现 v1.1 的 AI skill 与人类指南 | ai-dx-engineer ‖ docs-writer | T11-12 | ✅ 实跑验证 | docs/reports/T11-v11-{skill,guide}-evidence.md |
+| T11-15 | 独立复验 + 同题 8 盲测 | verifier | T11-13/14 | 部分完成：功能 74/74；V01 独立关闭；盲测原题不齐 | docs/reports/T11-v11-reverification.md；2/8 基线不变 |
+| T11-16 | 刷新需求矩阵 | requirements-analyst | — | ✅ 已同步；R202/R405 最终证据收口 | R-113/116–122/401/405 |
 
 ### T11-③ v1.1 迭代（第 1 波 ✅ 完成，2026-09-27）
 | 交付 | 负责 | 结果 |

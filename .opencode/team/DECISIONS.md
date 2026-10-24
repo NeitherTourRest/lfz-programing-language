@@ -1131,3 +1131,26 @@
 - **致 downstream**：① **language-architect**：请复核 §7.1 的 `push+join` 建议（skill 已按实测订正）；② **runtime-dev**：若要真兑现 O(n)，只能「`Rc` 强计数为 1 时就地追加」（不改语义/A1）或提供原地 append 内置；③ **verifier**：T11-06 同题盲测重跑可用本表核对 O(n) 写法。
 - **影响面**：仅 skill 文档（4 文件）；**零语言/实现改动**；对 A1–A7 与 §4.5 确定性无影响。
 
+### [2026-10-24 13:26] [team-lead] T11-12 恢复推进与文件 IO 用户追认
+
+- 用户要求继续推进项目，并明确回复“本轮加入文件 IO”；readFile/writeFile/appendFile 按既有规范落地。
+- team-lead 按单一写者分派 runtime-dev、core-dev、test-engineer；不重开 OUT 特性。
+- 历史工具链缺失，Rust 1.90.0 minimal 恢复在项目 Temp/toolchain；不改用户 PATH，测试 TEMP/TMP 定向项目 Temp/。
+- T11-11 仓库核验已完成：HEAD 91b65c3；旧看板条目滞后，本轮订正。
+
+### [2026-10-24 13:32] [language-architect] 订正 v1.1 字符串内置复杂度与文件 IO 累积建议
+
+- 来源：team-lead 本轮复杂度复核；仅订正文档，不改语言行为、签名、错误消息或实现。
+- `ord`：成功输入仅一个标量，O(1)；非法字符串须在错误消息中完整报告标量数 n，故错误路径 O(n)。窥前两个标量只能判错，不能得出消息所需 n。非字符串类型错误仍 O(1)；`chr` 仍 O(1)。
+- `substring`：UTF-8 标量下标需扫描前缀，非空结果时间 O(min(to, len(s)))，其中 to 是负数夹至 0 后的端点；超过串尾自然停止。from 同样夹取；参数夹取后空区间可直接返回空串，不要求先统计全串长度；不能按输出子串长度标注。
+- `padStart` / `padEnd`：须统计 s / fill 标量数，时间上界 O(n+m+输出宽度)，n、m 分别为二者标量数。无补齐时也可能有计数成本；不得只标 O(width)。
+- 文件 IO 累积建议沿用 [2026-09-27 23:40] ADR：循环 push 遵 A1 克隆前缀，也是 O(n²)。改为预分配后下标写入，或 map 一次构造数组后 join；在片段数与总输出大小意义下为线性构建，不再推荐循环 push+join 为 O(n)。
+- 落点：docs/spec/interface-contract.md §10.7 的 ord 表行、文件 IO 复杂度段与规范性复杂度条款。A1–A7、12 类错误与现有签名全部不变。请文档/AI 指南作者同步复杂度口径。
+
+### [2026-10-24 13:39] [team-lead] V01 一键测试准备临时工作目录
+
+- 独立复验发现新 IO 正例依赖未跟踪的 Temp/ 已存在；干净 CWD 原行为为 129 PASS / 1 ERROR / exit 2，解释器按不创建父目录规范执行正确。
+- 由 tooling-dev 在 runner 发现有效非空测试集之后、运行首个用例之前创建 cwd/Temp；不改 cwd，不扩大 IO 内置能力，不新增语言特性或清单 schema。
+- 无法创建时属 runner 环境错误：stderr 诊断、stdout 空、exit 2，不执行脚本；无效参数/空测试集不创建 Temp。
+- 三条回归锁定干净目录成功、Temp 普通文件冲突受控失败、无效/空集不创建目录；tooling 实跑全量 494 单测及干净/现有目录 130 黑盒通过，独立 verifier 再裁定关闭。
+- docs/tooling/runner-contract.md 已更新，docs-writer 已同步 testing 指南。临时文件仍限项目 Temp/。

@@ -202,3 +202,11 @@
 - 完成: 角色定义与活文档建立
 - 产出: `.opencode/agents/language-architect.md`
 - 下一步: 等待 team-lead 调度
+
+## [2026-10-24 13:35] v1.1 接口契约复杂度订正
+- 来源: team-lead 小任务；按启动协议读取全局状态、看板、自己状态与角色定义。
+- 完成: 先追加 ADR，再订正 ord 成功/错误路径、substring 前缀扫描、pad* 计数成本、文件 IO 的线性构建建议。无语言行为或签名变更。
+- 产出: docs/spec/interface-contract.md；.opencode/team/DECISIONS.md；自身 STATUS.md。五项精确文本断言全部 PASS。
+- 决策: [2026-10-24 13:32] ADR；沿用 [2026-09-27 23:40] push+join 实测订正。
+- 下一步: 指南作者同步；需求作者刷新字节数。
+- 阻塞: 无；无临时件、无 git 操作。

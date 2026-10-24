@@ -84,3 +84,12 @@
 - 完成: 角色定义与活文档建立
 - 产出: `.opencode/agents/team-lead.md`
 - 下一步: 等待 team-lead 调度
+
+## [2026-10-24 13:42] T11 v1.1 实现、独立复验与文档同步
+- 来源：用户要求继续推进项目；单独明确追认本轮加入文件 IO。
+- 完成：按单写者调度 runtime/core/test/architect/AI指南/人类指南/需求/工具链/独立验证/发布；69内置，494 Rust、130黑盒、74独立witness通过。
+- 缺陷闭环：V01 fresh CWD缺Temp，runner准备目录后独立原场景130/130；失败原证据保留。
+- 产出：src/builtins.rs、error.rs、test_runner.rs；tests/；docs/spec与guide；skill；需求矩阵；T11-v11系列报告。具体字节数/命令见各角色STATUS与报告。
+- 经验：apply_patch挂起导致早期延误，改用IO.File UTF8；缺失Rust工具链恢复到项目Temp/toolchain，未改用户PATH；不故意崩溃压测、不操作项目外。
+- 发布：release-manager按原子提交收口；开场3文件旧事故记录只保留不混入提交；不打v1.3.0、不改项目外安装。
+- 后续：历史8题原任务书不齐，本轮未重跑，不改变2/8基线；不是整项目完全验收声明。

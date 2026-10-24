@@ -114,3 +114,11 @@
 - 完成: 角色定义与活文档建立
 - 产出: `.opencode/agents/tooling-dev.md`
 - 下一步: 等待 team-lead 调度
+
+## [2026-10-24 13:39] T11-V01：fresh cwd 的 runner 工作目录准备
+- 来源：team-lead 调度修复 verifier 的 bug-20261024-V01。
+- 完成：先增加真实 IO 用例回归复现失败，再最小新增 runner cwd/Temp 准备；文件冲突受控返回环境错误；契约更新 v1.3。
+- 产出：src/test_runner.rs、tests/test_runner.rs（新增3测试）、docs/tooling/runner-contract.md。定向 15/15；cargo test 494/494 exit0；现工作区与独立缺Temp cwd 完整黑盒均130/130 exit0。完整日志及独立cwd路径见 STATUS.md。
+- 决策：不改 cwd；仅有效非空集在执行前准备 Temp；IO 语言语义不变。请 team-lead 统一转告 test-engineer 并追加跨角色 ADR。
+- 下一步：verifier 重跑原 witness，team-lead 更新看板与计数。
+- 阻塞：无；cargo 有环境 hard-link fallback warning，无源码告警结论。

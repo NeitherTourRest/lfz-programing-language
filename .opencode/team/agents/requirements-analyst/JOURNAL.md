@@ -18,3 +18,20 @@
 - 完成: 角色定义与活文档建立
 - 产出: `.opencode/agents/requirements-analyst.md`
 - 下一步: 等待 team-lead 调度
+
+## [2026-10-24 13:39] T11-16 v1.1需求增量对齐
+- 来源: team-lead任务书；用户已追认文件IO。
+- 完成: 更新R-113/R-401/R-202；新增R-116~R-122及R-405复杂度映射；保留历史盲测2/8。
+- 产出: REQUIREMENTS.md v3；Get-Item确认spec字节数70043/41143/45830；rg核对新增需求与string索引清单名。
+- 证据: 引用T11-v11-reverification.md的491/130/74 PASS（V01修复前）；修复后15/15 runner由team-lead转达，全量及干净CWD待验。
+- 决策: 无新增范围/语义决策。
+- 下一步: 最终复验后回填R-202；R-405由verifier核对。
+- 阻塞: 8题原任务书不齐，未重跑。
+
+## [2026-10-24 13:42] T11-16最终证据收口
+- 来源: team-lead轻量启动任务。
+- 完成: 回填V01关闭、R-202通过；tooling全量494/494与verifier原491区分来源；原clean-cwd130/130、Temp文件冲突exit2/stdout空/sentinel保留。R-405按IC §10.7/reference §3.5及§5/SKILL §4.6及§6.1文本核对PASS，未运行耗时测试。
+- 产出: REQUIREMENTS.md当前快照/R202/R405；本STATUS。证据clean-cwd-fixed.json/temp-file-conflict.json；Get-Item spec字节数仍70043/41143/45830。
+- 决策: 无。
+- 下一步: 交release-manager汇总提交；盲测未重跑，2/8不变。
+- 阻塞: 无本批阻塞。

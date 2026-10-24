@@ -145,3 +145,19 @@
 - 完成: 角色定义与活文档建立
 - 产出: `.opencode/agents/verifier.md`
 - 下一步: 等待 team-lead 调度
+
+## [2026-10-24 14:10] T11-15 v1.1 实现独立复验
+- 来源：team-lead任务书，15新增内置/range双参/ValueMsg三条；文件IO已用户追认。
+- 完成：独立74进程witness全部PASS；cargo test491/491；现工作区黑盒130/130；文本IO错误通道PASS。
+- 产出：docs/reports/T11-v11-reverification.md及T11-v11-reverification-evidence/，含逐进程原始JSON、命令/CWD/源码、单测原文和构建哈希。
+- 缺陷：bug-20261024-V01，新独立CWD无Temp子目录，复制tests后运行130中129PASS/1IOError，exit2；立即报team-lead，保持开放。未修复。
+- 盲测：仅历史材料核查，5程序2报告，未找齐8题原任务书；未重跑，不称提升2/8。
+- 下一步：team-lead派tooling-dev修复环境准备后，唤醒本角色重跑V01原witness。
+- 阻塞：V01待owner修复；8题待完整任务书。
+## [2026-10-24 13:41] V01修复后小范围独立复验
+- 来源：team-lead轻量任务书，仅原clean-cwd与Temp普通文件冲突场景，未重跑74功能witness。
+- 完成：原clean-cwd执行前无Temp，自动准备后130/130 exit0；新CWD的Temp普通文件冲突exit2/stdout空/stderr明确，sentinel不变。两项PASS。
+- 产出：原报告追加复验节并更新结论；evidence/clean-cwd-fixed.json、temp-file-conflict.json含完整输出命令哈希。初验失败证据不变。
+- 决策：bug-20261024-V01已修复，关闭。
+- 下一步：release-manager发布收口；8题盲测仍需原任务书，未重跑。
+- 阻塞：本批无。

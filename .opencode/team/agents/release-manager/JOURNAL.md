@@ -753,3 +753,16 @@
 - 决策: 无新 ADR（常规提交/推送，非跨角色新决策）。
 - 下一步: 待 team-lead 授权 T11-12（v1.1 实现）→ 实现+复验+盲测重跑完成后，再打 `v1.3.0`。
 - 阻塞: 无。
+
+## [2026-10-24 13:43] T11-12/13/14/16 本地发布与提交准备
+- 来源：team-lead任务书及最终产品门禁PASS通知。
+- 完成：项目内Rust 1.90.0重建release，刷新dist；hello和发布版130黑盒exit0；README/交付清单更新69/494/130及字节数/哈希；既有历史计数原样保留。
+- 产出：dist/lfz.exe=766464 B、1.0.1；SHA256 149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB；docs/reports/T11-v11-release-evidence/。
+- 决策：Cargo 1.0.1与8个tag保持；盲测材料不全，历史2/8不变；dist忽略目录不强制入库。
+- 下一步：待lead共享记录完成后7组原子提交+push，哈希与远程证据另追加。
+- 阻塞：初始3个共享文件通过Temp staged快照精确排除旧事故记录，本轮新增入库，工作树原文保留。
+## [2026-10-24 13:58] Git 权限转主会话执行
+- 首组提交 b03e13f 已成功；第二组3文件runner/测试/契约已由lead主会话stage。
+- 子agent的任意PS批处理审批等待219.7秒、随后单git add审批等待281.8秒，均被lead中断以排查；工具只报aborted by user，无自动拒绝理由。首组git commit前缀审批成功。
+- lead决定后续add/commit/hash-object/update-index/push统一由主会话执行；release-manager只做分组审阅和收工取证，不并行写index。
+- 已生成Temp/release-stage-{0,1,2}.txt，分别为DECISIONS/PROJECT_STATE/lead STATUS本轮安全快照，每个旧改动selector唯一命中；原工作树保持不动。

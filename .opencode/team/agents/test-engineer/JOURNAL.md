@@ -119,3 +119,11 @@
 - 完成: 角色定义与活文档建立
 - 产出: `.opencode/agents/test-engineer.md`
 - 下一步: 等待 team-lead 调度
+
+## [2026-10-24] T11-13 v1.1 黑盒增量
+- 来源: team-lead 派发；后续用户追认文件 IO。
+- 完成: 4 正例组 / 63 assert +36 负例；cases.json 追加；REPORT/coverage-matrix §10 同步。
+- 证据: target/release/lfz.exe test --json 连续两轮 130/130 PASS、exit0；tests/evidence/T11-13-blackbox.json、T11-13-blackbox-repeat.json。
+- 限制: append 首次创建、非法 UTF8、OS 权限尚未覆盖；runner仅断言错误类。
+- 下一步: verifier 独立验收。
+- 阻塞: 无；apply_patch 挂起后改 IO.File 完成。
