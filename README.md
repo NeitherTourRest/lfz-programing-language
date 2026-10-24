@@ -33,7 +33,7 @@ LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、�
 | 应用 | `cargo run -- run app/sortviz.lfz` | exit 0；**5 算法**全部 `[校验通过]`；**341 行** |
 | 发布产物 | `dist\lfz.exe` | **766464 B**（`lfz 1.0.1`，自包含，由当前源码同源重建） |
 
-> 本轮已实现 15 个新内置（总计 69）与 `range(lo, hi)`，含获用户追认的 `readFile` / `writeFile` / `appendFile`。独立定向验证 74/74，runner 干净工作目录 130/130；详见 [T11-v11-reverification.md](docs/reports/T11-v11-reverification.md)。同题 8 盲测因原任务材料不全未重跑，历史 2/8 基线保留；本轮不打 `v1.3.0`，Cargo 版本仍为 1.0.1。
+> 本轮已实现 15 个新内置（总计 69）与 `range(lo, hi)`，含获用户追认的 `readFile` / `writeFile` / `appendFile`。独立定向验证 74/74，runner 干净工作目录 130/130；详见 [T11-v11-reverification.md](docs/reports/T11-v11-reverification.md)。用户已授权改用新八题建立 v2 基线，正式首轮结果见下方报告；历史 2/8 保留且不作跨题集提升比较。Cargo 版本仍为 1.0.1，`v1.3.0` 交付里程碑包含上述已验收实现、测试与 v2 正式首轮证据；Git 附注标签为发布凭据，解释器版本保持 1.0.1。
 >
 > 本地发布产物 SHA256：`149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`。`dist/` 为忽略的构建目录；可用 `scripts/build-release.ps1` 重建。构建与发布版黑盒原始证据见 [T11-v11-release-evidence/](docs/reports/T11-v11-release-evidence/)。
 ## 交付物索引（8 项）
@@ -62,8 +62,10 @@ LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、�
 | T11 修复批次全量复验（37 条款含子项 + 2 补充，**PASS 39 / FAIL 0**） | [`docs/reports/T11-reverification.md`](docs/reports/T11-reverification.md) |
 | T11 特性缺口审计（IN 7 项 / OUT 18 项 / P0 文档 7 条） | [`.opencode/team/FEATURE-AUDIT.md`](.opencode/team/FEATURE-AUDIT.md) |
 | T11 前置 skill 盲测（8 题零上下文 agent，通过 2/8） | [`docs/reports/blind-test/`](docs/reports/blind-test/) |
-| LFZ Agent 编程基准 v2（新八题集；不与旧 2/8 直接比较，正式测评未开始） | [`docs/validation/agent-benchmark-v2/TASKS.md`](docs/validation/agent-benchmark-v2/TASKS.md) |
+| LFZ Agent 编程基准 v2（冻结新八题任务与验收工具） | [`docs/validation/agent-benchmark-v2/TASKS.md`](docs/validation/agent-benchmark-v2/TASKS.md) |
+| v2 正式首轮独立验收（8/8 整题，131/131 功能用例；源码及协议审查 PASS） | [`v2-20261024-r01/REVIEW.md`](docs/reports/agent-benchmark-v2/v2-20261024-r01/REVIEW.md) |
 
+> 正式首轮 `v2-20261024-r01` 使用 8 个独立无历史 Agent 会话，模型记录为 `gpt-6.1-sol / medium`；[认证结果](docs/reports/agent-benchmark-v2/v2-20261024-r01/certified-results.json)为 **8/8 整题、131/131 功能用例**，8 份源码约束及协议均经独立审查。学生共 9 次 LFZ 自调，各题首次自调均 exit 0（8/8）；这是学生自选测试的过程辅指标，不代表首跑就通过冻结验收。隔离限于分题无历史派发、提示词约束和已记录工具动作审计，未实施 OS 隔离。本轮建立新基线，不与历史 2/8 直接比较或计算提升比例；[原始字节归档](docs/reports/agent-benchmark-v2/v2-20261024-r01/raw-inputs-submissions.zip)保留输入与提交证据。
 > P3 复核夹具与命令原文见 [`docs/reports/fixtures-p3-rev3/`](docs/reports/fixtures-p3-rev3/)。
 > P9 报告同时记录 2 项非阻塞遗留（`bug-20260927-01`：`s["k"]()` 未绑定 `self`；`obs-01`：README 陈旧），本 README 刷新即闭合 `obs-01`。
 > T11 复验裁定 `bug-20260927-02`（`lfz test --json` stdout 非单行）**不成立 → 关闭**（当前源码同源构建下 stdout 恒为单个 JSON）；复验证据见 [`docs/reports/T11-reverification.md`](docs/reports/T11-reverification.md)。
@@ -79,8 +81,9 @@ LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、�
 | `v1.1.0` | P4.4 | 打包：裸文件调用 `lfz <file>`、release profile（lto/strip）、自包含 `dist/lfz.exe` + 构建/安装脚本 |
 | `v1.2.0` | P7 | `lfz-programming` skill 包：5 步 Agent 工作流、错误→修复映射、安装 README、需求追溯、4 个实测程序 |
 | `v1.2.1` | T11 | 修复批次收口：6 条 ADR（`repeat`/`range` 容量溢出统一 `OverflowError`、`PARSE_DEPTH_LIMIT=1000`、`AST_DEPTH_LIMIT=10000`、§9.2 样例订正、`float` 显示口径、零帧错误渲染）+ `;;`×`--json` 通道修复 + 越界写 span 修复；**482 单测 / 90 黑盒全绿** |
+| `v1.3.0` | T11 / Agent benchmark v2 | 15 新内置与 range 双参、文件 IO、494 Rust 测试 / 130 黑盒；v2 正式首轮 8/8 整题、131/131 功能用例与源码/协议独立审查证据；解释器仍为 1.0.1，发布以 Git 附注标签为凭据 |
 
-> **最新 release**：`v1.2.1`（T11 修复批次收口；verifier 复验 **PASS 39 / FAIL 0**，见 [`docs/reports/T11-reverification.md`](docs/reports/T11-reverification.md)）。历史上 `v1.0-final` 为 P10 首次终交付标签。
+> **`v1.3.0` 交付里程碑**：69 内置、494 Rust 测试与 130 黑盒，以及 v2 正式首轮 8/8 整题、131/131 功能用例的独立认证与原始证据归档；以 Git 附注标签为发布凭据。解释器版本仍为 1.0.1。历史上 `v1.0-final` 为 P10 首次终交付标签，`v1.2.1` 为 T11 修复批次里程碑。
 
 ## 团队说明
 本项目由 14 名 AI 开发团队运作。团队宪法见 `AGENTS.md`；团队共享记忆（组织架构、看板、需求、决策、状态）见 `.opencode/team/`。任务入口：`task-info.md`（原始要求）、`.opencode/team/REQUIREMENTS.md`（需求矩阵）、`.opencode/team/PROJECT_STATE.md`（全局状态）。

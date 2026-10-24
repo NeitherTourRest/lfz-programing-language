@@ -2,19 +2,21 @@
 > 最后更新: 2026-10-24 by team-lead
 
 ## 当前状态
-T11-17 新八题任务与验收包完成（用户明确要求不用找旧题、重新写）。新基线 LFZ-AGENT-BENCH-v2；旧2/8仅作历史，不做同题提升比较。正式八Agent测评未开始，新成绩为空。
+T11-18 正式v2首轮测评完成，T11实现/文档/需求/验证与新基线闭环。独立认证8/8整题、131/131功能用例；新基线不与历史2/8计算提升。v1.3.0附注交付里程碑门禁已通过，最终提交/tag可从Git核对；解释器仍1.0.1以保持冻结hash。
 
-## 本轮产出与证据
-- docs/validation/agent-benchmark-v2/TASKS.md：8题明确接口、输入边界、唯一结果/算法约束。
-- STUDENT_PROMPT.md：20分钟/5次调用、首次源码快照、过程记录、学生可见材料与提示词隔离边界。
-- cases.json 131个固定case；run.py功能验收、负例/缺题/超时识别及真实文件IO双轮校验；README/QA/人工审查schema/冻结manifest完整。
-- root实跑 --self-test exit0 ok:true；verifier独立180项用例/边界检查和9项控制检查通过。REVIEW.md保留B07参考逻辑Unicode初验失败→修后通过证据。
-- manifest SHA256 f2046eadca7c9f55376cbac000ccd53b25958298d10e2fc176ed0a14867c2a3e。冻结含任务、提示、用例、运行器、4份skill、解释器；不循环包含自身。
-- 自动功能通过始终REVIEW_REQUIRED/NOT_CERTIFIED，正式整题通过另需独立源码约束和过程协议审查，分母恒8。
-- 没改解释器/原tests/应用；未重跑无关Rust全量测试。用户原有三处事故记录保留未提交。
+## 产出与证据
+- docs/reports/agent-benchmark-v2/v2-20261024-r01/SUMMARY.md、REVIEW.md、functional-results.json、manual-review.json、certified-results.json。
+- 8独立fork_turns=none会话，仅本题/skill/exe；实际gpt-6.1-sol/medium从会话turn_context确认。原model unknown字段保留演变记录。
+- 8题源码约束PASS；33次工具调用与33返回逐一审计，未见越界读取/联网/外部求解/委派。9次学生LFZ自调，日志次数和预算一致，8题首个记录均exit0（学生自选测试辅指标）。
+- 协议按指令隔离+记录工具轨迹的声明范围PASS，不声称OS隔离或未记录系统行为的证明。私有推理/系统提示未导出。
+- 131用例含147独立验收进程全PASS；源代码与过程审查独立绑定SHA256，不给学生验收反馈后重写本轮答案。
+- raw-inputs-submissions.zip 665764B，SHA90a6a3e3d894e7a813b06463506d5cc540e0a4570d7b005a3fd27ccc6a776d84，117项原始字节全回读一致；artifact-manifest覆盖311其他文件。
+- 原始学生源码、首次快照、日志、提示、run元信息、tool-traces、187份runner证据、冻结9项输入均已留存。报告目录.gitattributes禁换行归一。
+- 未改解释器/原tests/应用或冻结skill，未重编译；既有69内置/494 Rust/130黑盒与冻结解释器hash不变。
 
-## 下一步
-T11-18：使用冻结v2题集正式运行8个无历史学生Agent，封存源码/日志后独立验收，建立新基线；不拿执行器自测替代学生成绩。Git由release-manager审核分组，主会话执行以免子agent审批悬挂。
+## 交付 / 后续
+release-manager已审发布文档和两提交分组；主会话代执行Git、v1.3.0附注tag和推送，避免子agent审批悬挂。原有三处事故记录保留未提交。
+后续若优化skill或语言，基于冻结v2另开新轮测评，不能修改本轮已交卷答案或降低验收标准再重算。
 
 ## 关键经验（写给未来的自己）
 - **临时件一律放项目内 `Temp/`（用户 2026-09-27 指令，已立 ADR）**：**禁止**再往 C 盘 `%TEMP%` 写；`Temp/` 已 gitignore。纪律：① **每份任务书必须写明"临时文件放 `<repo>/Temp/`"**；② 每波任务收工后我**盘一次 `Temp/`**；③ **先保全证据再删** —— 一手证据（如盲测报告）**复制进仓库** `docs/reports/**` 再清临时件，**不得删唯一副本**；④ **正在跑的任务目录不许动**（按 mtime 判别）。历史：首次清理 C 盘 `%TEMP%\opencode\` 740 文件 / 5.31 MB → 44 文件 / 1.41 MB。

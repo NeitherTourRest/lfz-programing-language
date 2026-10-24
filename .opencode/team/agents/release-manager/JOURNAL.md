@@ -790,3 +790,11 @@
 - 分组：test(benchmark): add reviewed agent benchmark v2（完整包及review-evidence）；docs(team): link benchmark v2 and record readiness（根README+本轮团队状态）。
 - 保护：第二组须用staged快照排除原初3处事故记录，不改工作树原文；不新增tag，不动Cargo/dist。
 - 变更：仅本人STATUS/JOURNAL；未git/网络/改冻结包。下一步主会话统一提交与推送。
+## [2026-10-24 18:49] v2正式首轮PASS与v1.3.0里程碑准备
+- 来源：team-lead轻量启动及最终门禁PASS通知。
+- 完成：根README/交付清单链接正式REVIEW与certified，8/8整题/131功能、新基线不比旧2/8、9自调各题首次exit0仅辅指标、gpt-6.1-sol/medium、指令隔离与审计边界均明确。
+- 证据：certified与链接核验PASS；ZIP hash/bytes吻合raw-archive；dist hash仍149B184E...，Cargo1.0.1不变。
+- 新增：正式报告目录.gitattributes `* -text`；git check-attr对LFZ/JSON/ZIP均unset。其他报告与冻结输入未改，已通知root可生成最终总清单。
+- 计划：两组提交（正式完整归档；发布文档+团队状态），保护原初3处事故记录；v1.3.0按最终门禁在主会话创建附注标签，仍非解释器版本升级。
+- 下一步：主会话提交/tag/push并核对远程；本角色不做Git写入或网络、不重建解释器。
+- 最后文案收口：README/交付清单改为描述v1.3.0已验收产物与附注tag发布凭据，保留解释器1.0.1区别；未声称Git已执行，未改冻结输入。

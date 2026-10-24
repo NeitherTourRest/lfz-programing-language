@@ -174,3 +174,12 @@
 - 来源：team-lead最后收口。
 - 完成：复制180项/9控件/独立CLI/原始失败JSON及必要脚本到review-evidence（19文件），另实跑B07冻结反例PASS，REVIEW相对链接更新；未覆盖失败、未清Temp、未改冻结九文件。
 - 产出：docs/validation/agent-benchmark-v2/review-evidence/；无阻塞。
+
+## [2026-10-24 18:46] v2-20261024-r01正式八题独立验收
+- 来源：team-lead轻量任务书，8题fork_turns=none交卷封存后独立验收；不修复/不给学生反馈。
+- 完成：冻结runner131/131，147进程exit0、0timeout；8源码算法约束PASS；sealed/metadata/输入hash、快照/测试/时间预算和调用日志齐备。
+- 协议：初无完整工具轨迹时暂UNKNOWN；收到8精确session的全部已记录工具输入/输出后逐项审查，33调用33结果、9LFZ进程与日志一致，均本题范围，无禁用动作；按事前指令隔离范围8协议PASS，不声称OS隔离。turn_context确认gpt-6.1-sol/medium。
+- 产出：docs/reports/agent-benchmark-v2/v2-20261024-r01/functional-results.json、manual-review.json、certified-results.json、REVIEW.md；runner-evidence187文件、review-evidence审计脚本/JSON。
+- 验证：manual-review Draft202012 schema/8唯一ID/hash联结通过；最终8/8整题PASS，新v2基线，不与历史2/8比较。
+- 下一步：team-lead发布归档，保留原字节，不改本轮答案。
+- 阻塞：无。
