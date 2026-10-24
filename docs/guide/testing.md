@@ -3,7 +3,7 @@
 > LFZ 内建测试运行器（`lfz test`）。本页讲清：**怎么跑、怎么写、负例怎么放、结果怎么读**。
 > 权威契约：[`docs/spec/interface-contract.md`](../spec/interface-contract.md) §11.2（**T-R1 … T-R4**）；实现侧派生：[`docs/tooling/runner-contract.md`](../tooling/runner-contract.md)。
 > 配套：[`README.md`](README.md) ｜ [`tutorial.md`](tutorial.md) ｜ [`reference.md`](reference.md) ｜ [`errors.md`](errors.md)
-> 最后更新: 2026-09-27（T11-③ D4 退出码语境；用例数刷新为 90） by docs-writer
+> 最后更新: 2026-10-24（T11-14：69 内置与文件 IO 已实现） by docs-writer
 
 ---
 
@@ -19,7 +19,7 @@ $ cargo run --quiet -- test
 - 每个用例一行 `PASS/FAIL/ERROR <name>`；末尾汇总行逐字符稳定：
 
 ```text
-汇总：共 90 个用例，通过 90，失败 0，错误 0
+汇总：共 130 个用例，通过 130，失败 0，错误 0
 ```
 
 其它用法：
@@ -204,14 +204,16 @@ PASS  mini/pass_basic.lfz
 | `tests/coverage-matrix.md` | **覆盖矩阵**：逐特性 × 正常/边界/错误 |
 | `tests/REPORT.md` | **测试报告**：方法、结论、覆盖统计、已知缺陷、复现命令 |
 
-当前基线（见 [`tests/REPORT.md`](../tests/REPORT.md)）：`cargo run --quiet -- test` → **90 PASS / 0 FAIL / 0 ERROR**，退出码 `0`。
+2026-10-24 本轮测试项为 494 项 Rust 测试（含 V01 修复新增 3 项）与 130 项黑盒；最终全量结果见团队复验报告。下列数量指黑盒测试。`lfz test` 在有效且非空的测试集执行前自动准备进程 cwd 下的 Temp/，保留一命令测试约定；准备失败按环境错误退出 2，stdout 为空。直接 `lfz run` 不代建 IO 父目录，单独运行文件 IO 示例时自行准备父目录。读写采用 UTF-8；还应测非法 UTF-8、非 string 参数、缺失父目录，以及 cwd 不同于脚本目录的情形。
+
+当前基线（见 [`tests/REPORT.md`](../tests/REPORT.md)）：`cargo run --quiet -- test` → **130 PASS / 0 FAIL / 0 ERROR**，退出码 `0`。
 
 ### 7.1 运行全量并查看结果
 
 ```console
 $ cargo run --quiet -- test
 ...
-汇总：共 90 个用例，通过 90，失败 0，错误 0
+汇总：共 130 个用例，通过 130，失败 0，错误 0
 $ echo $LASTEXITCODE
 0
 ```

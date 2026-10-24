@@ -3,7 +3,7 @@
 > LFZ 采用 **Python 风格**的错误模型：**类名 + 中文消息 + 位置（行/列）+ 源码行 + 插入符**，运行期错误附 `Traceback`。
 > 权威定义：[`docs/spec/semantics.md`](../spec/semantics.md) §8（用户可见行为）；[`docs/spec/interface-contract.md`](../spec/interface-contract.md) §8.1（实现映射）。
 > 配套：[`README.md`](README.md) ｜ [`tutorial.md`](tutorial.md) ｜ [`reference.md`](reference.md) ｜ [`testing.md`](testing.md)
-> 最后更新: 2026-09-27（T11-③ D1–D7：零帧 Traceback 例外、容量溢出、嵌套超限） by docs-writer
+> 最后更新: 2026-10-24（T11-14：69 内置与文件 IO 已实现） by docs-writer
 
 ---
 
@@ -21,8 +21,8 @@
 | `FieldError` | struct 不存在该字段；`del(k, s)` 的键不是数据字段 | `结构体没有字段 '{name}'` | 运行 |
 | `ZeroDivisionError` | `/`、`%`、`div(a,b)` 除数为零（含 float） | `除以零` / `对零取模` | 运行 |
 | `OverflowError` | `int` 运算超出 i64；`int(float)` 遇 `±Inf`/超界；**容器/字符串构造所需容量超出可分配上限** | `整数溢出：结果超出 i64 范围` / `容量溢出：所需容量超出可分配上限` | 运行 |
-| `ValueError` | 显式转换失败；格式说明符非法；空数组取极值；`randInt` 区间非法 | 见 §2 | 运行 |
-| `IOError` | `input()` 遇 EOF；不可读文件 | `输入结束（EOF）` / `无法读取：{path}` | 运行 |
+| `ValueError` | 显式转换失败；格式说明符非法；空数组取极值；randInt 区间非法；ord 非单标量、chr 非法码点、pad* 空填充串 | 见 §2 | 运行 |
+| `IOError` | input() EOF；文件读写失败或内容非 UTF-8 | `输入结束（EOF）` / `无法读取：{path}` / `无法读取：{path}（不是合法的 UTF-8 编码）` / `无法写入：{path}` / `无法追加：{path}` | 运行 |
 | `AssertionError` | **仅** `assert` 失败 或 `fail()`（`check` 失败**不**抛此错） | `断言失败：{msg}` / `{msg}` | 运行 |
 | `RecursionError` | 求值帧深度超限（默认 10000 层） | `递归深度超限（超过 10000 层）` | 运行 |
 
@@ -84,6 +84,11 @@
 | 格式说明符非法 | `格式说明符非法：'{spec}'` |
 | 空数组取极值 | `空数组没有极值（{func}）` |
 | `randInt` 区间非法 | `区间非法：{lo} >= {hi}` |
+| ord 字符串不恰含一个标量 | `ord 的参数必须是单个字符（Unicode 标量数 {n}）` |
+| chr 越界或代理区码点 | `chr 的参数不是合法的 Unicode 码点：{n}` |
+| padEnd / padStart 填充串为空（即使无需补齐） | `填充串不能为空` |
+
+文件 IO 的参数类型错误是 TypeError（path / contents 须 string）；系统读写失败是 IOError。readFile 非法 UTF-8 是 IOError，源代码加载非法 UTF-8 是 SyntaxError。文件 IO 在求值期执行，帧非空时带 Traceback。log(0) 是 -Inf，log(-1) / sin(float("inf")) 是 NaN，均不抛异常（SE §4.5.6）。
 
 > v1 明确**不输出** `hint` / `提示：` 行（保证输出逐字符稳定，`SE §8.1` 末尾）。
 

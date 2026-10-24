@@ -8,7 +8,7 @@ description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也�
 > 读者：**未接触过 LFZ 的编程 Agent**。目标：只凭本文件写出**正确、可运行**的 LFZ 程序。
 > 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（冻结 v1）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
 > 使用纪律：**只允许使用本文件列出的语法**。不要用 Python / C / JS 的规则去猜 LFZ——LFZ 在若干处刻意不同（见 §4）。
-> **版本对齐**：本指南只描述**当前解释器（`dist\lfz.exe`，v1.0.1）已实现**的行为。`docs/spec/` 中标注「v1.1 补钉」但**尚未落地**的特性（新增内置、扩展签名等）**不在本指南范围**；只使用本指南 §6 列出的名字，不要用别处的内置名。
+> **版本对齐（2026-10-24）**：当前源码重建的 `target/release/lfz.exe` 已实现 **69 个内置**（54+15）及 `range` 双参重载。版本号仍为 v1.0.1，v1.1 指本轮特性批次。新增实跑证据见 `docs/reports/T11-v11-skill-evidence.md`。旧 dist 不能作为本轮能力依据。
 
 > 🚫 **硬纪律：不要凭记忆写 LFZ。** 本文件**没写的语法一律视为不存在**；拿不准就先查 §10 列出的 spec，或改用本文件已列出的等价写法。宁可用保守写法，也不要"猜一个大概像 Python 的写法"。
 
@@ -242,7 +242,7 @@ let q = 10 |> push(_, [1, 2])      // _ 占位：注入到该位 → push(10, [1
     - `let ys = push(9, xs)` —— **不**改 `xs`；`sort(xs)` 不改 `xs`。
     - 唯一原地改的是**赋值语法** `a[i] = v` / `s.k = v`。
 
-11. **54 个内置按 data-last 约定**（见 §6）；容器/字符串被操作对象恒为末参。
+11. **69 个内置按 data-last 约定**（见 §6）；容器/字符串被操作对象恒为末参。
 
 12. **`round` 是银行家舍入（四舍六入五成双）**：`round(2.5) == 2`、`round(3.5) == 4`。
 
@@ -392,14 +392,14 @@ print("continue")
 
 ---
 
-## 6. 内置函数 54 个（data-last）
+## 6. 内置函数 69 个（data-last）
 
 > **约定**：凡对容器 / 字符串操作者，**被操作对象恒为最后一个参数**；`xs |> f(...)` 把 `xs` 注入末参。**凡容器更新一律返回新值、不改原容器**（A1），除非用赋值语法 `a[i]=` / `s.k=`。参数类型/个数不符 → `TypeError`。
 
-**核心 / 数组（21）**：`len` `range` `push` `pop` `removeAt` `insert` `swap` `slice` `min` `max` `sum` `minBy` `maxBy` `sort` `sortBy` `map` `filter` `reduce` `take` `drop` `each`
+**核心 / 数组（22）**：`len` `range` `push` `pop` `removeAt` `insert` `swap` `slice` `min` `max` `sum` `minBy` `maxBy` `sort` `sortBy` `map` `filter` `reduce` `take` `drop` `each` `contains`
 
 - **`len(x) -> int`**：`array` 元素数 / `struct` **数据字段**数（不含方法）/ **`string` 的 Unicode 标量数**（**合法**：`len("abc") == 3`、`len("日本語") == 3`、`len("😀") == 1`、`len("") == 0`）。⚠️ `len(string)` 是 **O(n)**（需扫描标量，非字节数）；长串循环里别反复调用，先 `split("", s)` 后对数组求 `len`（O(1)）。
-- **`range(n) -> array[int]`**：`[0, 1, …, n-1]`（**半开区间**，物化为普通数组，O(n) 时间 + O(n) 内存）；`n < 0` → `[]`（`range(0)` 亦为 `[]`）。**只接受 1 个参数**：`range(1, 4)` → `TypeError: 函数 range 期待 1 个参数，得到 2`（**不要写** `range(lo, hi)`）。
+- **`range(n) -> array[int]`**：`[0, 1, …, n-1]`（**半开区间**，物化为普通数组，O(n) 时间 + O(n) 内存）；`n < 0` → `[]`（`range(0)` 亦为 `[]`）。另支持 **`range(lo, hi) -> array[int]`**：物化半开区间 `[lo,hi)`，`hi <= lo` → `[]`；非空时 O(hi−lo) 时间/内存。只接受 1 或 2 参，均须 int；0 参消息 `函数 range 期待 1 个参数，得到 0`，3 参消息 `函数 range 期待 2 个参数，得到 3`。容量超限 → `OverflowError: 容量溢出：所需容量超出可分配上限`。
 - `push(v, xs)`、`pop(xs)`、`removeAt(i, xs)`、`insert(i, v, xs)`、`swap(i, j, xs)`、`slice(from, to, xs)`（**均返回新数组**，见 §4-24 / §4.6）
 - `map(f, xs)`、`filter(pred, xs)`（`pred` 必须返回 `bool`）、`reduce(f, init, xs)`（`f(acc, x)`）、`take(n, xs)`、`drop(n, xs)`、`each(f, xs)`
 - `min(xs)`/`max(xs)`（全序；空 → `ValueError`）、`minBy(keyFn, xs)`/`maxBy(keyFn, xs)`、`sum(xs)`（全 `int` → `int`，含 `float` → `float`，空 → `0`）、`sort(xs)`/`sortBy(keyFn, xs)`（稳定升序）
@@ -409,11 +409,11 @@ print("continue")
 - `keys(s)`/`values(s)`/`entries(s)` 按键的 **UTF-8 字节序升序**；只含**数据字段**（方法字段不含）。
 - `has(k, s) -> bool`；`del(k, s) -> struct`（新 struct；键不是数据字段 → `FieldError`）。
 
-**字符串（8）**：`split` `join` `trim` `upper` `lower` `replace` `repeat` `startsWith`
+**字符串（13）**：`split` `join` `trim` `upper` `lower` `replace` `repeat` `startsWith` `endsWith` `indexOf` `padEnd` `padStart` `substring`
 
 - `split(sep, s)`（**`sep` 为空串 → 按字符拆成单字符数组**：`split("", "abc") == ["a", "b", "c"]`，一次 **O(n)**；这是字符串「取字符」的正解，见 §4-22）、`join(sep, xs)`（元素须为 string）、`replace(old, new, s)`、`repeat(n, s)`、`startsWith(prefix, s)`。
 
-**数值 / 转换 / IO / 断言（20）**：`abs` `floor` `ceil` `round` `sqrt` `pow` `div` `rand` `randInt` `seed` `str` `int` `float` `type` `print` `eprint` `input` `assert` `check` `fail`
+**数值 / 转换 / IO / 断言（29）**：`abs` `floor` `ceil` `round` `sqrt` `pow` `div` `rand` `randInt` `seed` `str` `int` `float` `type` `print` `eprint` `input` `assert` `check` `fail` `sin` `cos` `log` `exp` `ord` `chr` `readFile` `writeFile` `appendFile`
 
 - `div(a, b) -> int`（向下取整；两参须 `int`）。
 - `round(f) -> int`（银行家舍入）；`floor`/`ceil`/`round` 的 `NaN` → `ValueError`，`±Inf`/超界 → `OverflowError`。
@@ -424,7 +424,33 @@ print("continue")
 - `randInt(lo, hi) -> int`（`[lo, hi)`；`lo >= hi` → `ValueError`）；`rand() -> float`（`[0,1)`）；`seed(n)` 固定随机序列。
 - `print(...)`（空格连接 + 换行，stdout）、`eprint(...)`（stderr）、`input(prompt?)`（EOF → `IOError`）。
 
-> `sqrt` / `pow` 之外的数学内置（`sin` / `log` / `exp` 等）**v1 不提供**。
+### 6.1 本轮新增 15 个内置：完整签名与边界
+
+被操作的容器/字符串放末参；例如 `"日本語" |> substring(1, 3)`，`"内容" |> writeFile("Temp/out.txt")`。字符串操作返回新串。字符指 **Unicode 标量**，不是 UTF-8 字节或字素簇；组合字符/含 ZWJ 的 emoji 可含多个标量。`s[i]` 仍不合法，读取字符用 `split("", s)[i]`。
+
+| 签名 | 已实现行为与复杂度 |
+| -- | -- |
+| `contains(v, xs) -> bool` | 仅 array；深结构、环安全 `==` 比较。O(n) 次比较（深比较可大于 O(1)）；N 次循环反复搜索长数组为 O(N·M)。struct 键用 `has(k,s)`。 |
+| `endsWith(suffix, s) -> bool` | 空后缀 true；O(m)，m 为后缀长度。 |
+| `indexOf(sub, s) -> int` | 首次匹配的标量下标；未找到 -1；空 sub 返回 0。保守最坏 O(n·m)，不宣称 O(n)。 |
+| `padEnd(width, fill, s) -> string` | 右补至标量宽度；len(s)>=width 返回原串；fill 重复、按标量截断。O(n+m+输出宽度)，包括主串/fill 计数。 |
+| `padStart(width, fill, s) -> string` | 左补，其余同 padEnd。 |
+| `substring(from, to, s) -> string` | 标量半开区间，两端夹取到 `[0,len(s)]`，from>=to 返回空串；负数不从尾计。非空结果 O(min(to,len(s)))（to 先夹至非负），UTF-8 需扫描前缀；空区间可直接返回。 |
+| `ord(c) -> int` | c 须恰好一个标量的 string；成功 O(1)，非法字符串完整统计 n，错误路径 O(n)。非 string → TypeError；标量数≠1 → `ValueError: ord 的参数必须是单个字符（Unicode 标量数 {n}）`。 |
+| `chr(n) -> string` | n 须 int，0..1114111 且排除代理区 55296..57343；O(1)。非 int → TypeError；非法码点 → `ValueError: chr 的参数不是合法的 Unicode 码点：{n}`。 |
+| `sin(f) -> float` | int 加宽；正弦；±Inf/NaN → NaN，O(1)。 |
+| `cos(f) -> float` | int 加宽；余弦；±Inf/NaN → NaN，O(1)。 |
+| `log(f) -> float` | int 加宽；自然对数；log(0) → -Inf，负数 → NaN，O(1)。 |
+| `exp(f) -> float` | int 加宽；e 的 f 次方；溢出 → +Inf，O(1)。 |
+| `readFile(path) -> string` | path 须 string；UTF-8 全量读取，O(文件大小) 时间/内存。 |
+| `writeFile(path, contents) -> nil` | 两参须 string；UTF-8 覆盖写，不存在则创建；O(文件大小)。 |
+| `appendFile(path, contents) -> nil` | 两参须 string；UTF-8 追加，不存在则创建；O(追加大小)。 |
+
+`padEnd`/`padStart` 的 fill 为空（即使无需补齐）→ `ValueError: 填充串不能为空`；width/from/to 非 int、字符串形参非 string → TypeError。math 采用 IEEE，NaN/Inf 本身不抛 ValueError/OverflowError；转换/取整规则仍见 §6。int 加宽超过 2^53 可能丢精度。
+
+文件路径原样交给 OS；相对路径基于**进程 CWD**（不是脚本目录），不展开 `~`、不规范化、不自动建父目录。当前项目只在项目内读写，临时件放 `Temp/`；内置本身不实施沙箱。错误均为 `IOError`：读失败 `无法读取：{path}`；非法 UTF-8 `无法读取：{path}（不是合法的 UTF-8 编码）`；写失败 `无法写入：{path}`；追加失败 `无法追加：{path}`。`writeFile(p,42)` 不隐式转换，应先 `str(42)`。外部 IO 依赖环境。大量片段遵循 §4.6，避免循环拼接或 push 的 O(n²)。
+
+完整可运行增量示例及 stdout/退出码见 `docs/reports/T11-v11-skill-evidence.md`，使用当前源码重建的 `target/release/lfz.exe`。
 
 ---
 

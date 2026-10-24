@@ -2,7 +2,7 @@
 
 > 每一条都标注了 **spec 章节号**（`SY` = [`docs/spec/syntax.md`](../spec/syntax.md)，`SE` = [`docs/spec/semantics.md`](../spec/semantics.md)，`IC` = [`docs/spec/interface-contract.md`](../spec/interface-contract.md)）。本参考是**导读**，权威定义以 spec 为准。
 > 配套：上手 [`README.md`](README.md) ｜ 教程 [`tutorial.md`](tutorial.md) ｜ 错误 [`errors.md`](errors.md) ｜ 测试 [`testing.md`](testing.md)
-> 最后更新: 2026-09-27 by docs-writer
+> 最后更新: 2026-10-24（T11-14：69 内置与文件 IO 已实现） by docs-writer
 
 ---
 
@@ -115,7 +115,7 @@ align = "<" | ">" | "^"      type = "d" | "x" | "X" | "o" | "b" | "f" | "e" | "s
 | `${s:*<7}` | fill `*` + 左对齐 | `[ab*****]` |
 | `${42:05d}` | 补零（`0` 作 fill） | `[00042]` |
 
-> ⚠️ **宽度必须是字面数字，不支持动态宽度**：`"${s:>w}"`（`w` 是变量）→ `ValueError: 格式说明符非法：'>w'`。需要"按变量宽度对齐"时，用字符串拼接 + `repeat` 手工补齐（见 §3.5）。
+> ⚠️ **宽度必须是字面数字，不支持动态宽度**：`"${s:>w}"`（`w` 是变量）→ `ValueError: 格式说明符非法：'>w'`。需要"按变量宽度对齐"时，用`padEnd` / `padStart` 补齐（见 §3.5）。
 
 ### 3.4 引用语义与作用域（易错，务必记住）
 
@@ -154,32 +154,31 @@ for c in cs { print(c) }       // 顺序遍历，总 O(n)
 
 `len` 对 string 求的是 **Unicode 标量个数**（不是字节数）：`len("abc")==3`、`len("你好")==2`、`len("a你b")==3`。注意 `len(s)` 本身是 **O(n)**；别在循环里反复对同一长串求 `len`——先 `split("", s)` 得到数组后，对数组 `len` 是 **O(1)**。
 
-**③ 逐字符构建字符串 → 先 `push` 到数组，最后 `join`（O(n)）**
+**③ 逐字符构建字符串 → `map` 一次构造数组，再 `join`**
 
-字符串不可变，**循环里 `s = s + c` 每次都会复制整个前缀 ⇒ O(n²)**。正确写法是累积到一个数组、最后一次性 `join`：
+循环内 `s = s + c` 每轮复制前缀，是 O(n²)。循环 `parts = push(c, parts)` 也会复制数组前缀，同样是 O(n²)。用 map 一次构造数组，或预分配数组后下标写入，再一次 join：
 
 ```lfz
 #42
-let s = "abc"
-var parts = []
-for c in split("", s) {
-    parts = push(upper(c), parts)   // 收集，push 返回新数组
+let cs = split("", "abc")
+let parts = map((c) => upper(c), cs)
+print(join("", parts))             // ABC
+let out = map((c) => "", cs)
+for i in range(len(cs)) {
+    out[i] = upper(cs[i])
 }
-let out = join("", parts)           // "ABC"，一次 O(n)
-print(out)
+print(join("", out))               // ABC
 ```
 
-| 写法 | 复杂度 | 建议 |
-|---|---|---|
-| `s = s + c`（循环内字符串拼接） | **O(n²)**（每轮复制前缀） | ❌ 避免 |
-| `parts = push(c, parts)` … `join("", parts)` | **O(n)** | ✅ 首选 |
+若每个片段处理成本为 O(1)，以上构建为 O(片段数 + 总输出大小)。push 返回新数组，不适合长循环累积。
 
-**按变量宽度补齐**（动态宽度不被格式说明符支持时的替代）：先算差额再用 `repeat` 补：
+**按变量宽度补齐**：已实现 padEnd / padStart，宽度按 Unicode 标量计数。
 
 ```lfz
 #42
-fn padRight(w, s) => if w > len(s) { s + repeat(w - len(s), " ") } else { s }
-print("[" + padRight(5, "ab") + "]")   // [ab   ]
+let width = 5
+print("[" + padEnd(width, " ", "ab") + "]")  // [ab   ]
+print("[" + padStart(width, " ", "ab") + "]") // [   ab]
 ```
 
 ### 3.6 容易"以为不支持、其实支持"的语法（正面示例）
@@ -221,16 +220,16 @@ print()                           // 空行
 
 ---
 
-## 5. 内置函数速查（54 个，全部 **data-last**）
+## 5. 内置函数速查（69 个，全部 **data-last**）
 
 > 出处：IC §10.7。约定：**被操作数据恒为最后一个参数**；`xs |> f(...)` 把 `xs` 注入末参。**除赋值语法外一律"返回新值、不改原容器"**（A1，SE §4.5.2）。参数类型/数量不符 → `TypeError`。
 
-### 5.1 核心 / 数组（21）
+### 5.1 核心 / 数组（22）
 
 | 内置 | 签名 | 返回 | 说明 |
 |---|---|---|---|
 | `len` | `len(x) -> int` | `int` | array 元素数 / struct **数据字段**数 / **string 的 Unicode 标量数**（`len("abc")==3`、`len("你好")==2`）；对 string 是 **O(n)** |
-| `range` | `range(n) -> array` | `array[int]` | `[0, 1, …, n-1]`；`n<0` → 空。**当前只接受 1 个参数**；`range(1, 4)` → `TypeError: 函数 range 期待 1 个参数，得到 2`（双参形式属 v1.1 计划，尚未实现） |
+| `range` | `range(n) -> array[int]` / `range(lo, hi) -> array[int]` | `array[int]` | `[0,n)` / `[lo,hi)`；n<=0 / hi<=lo → 空；须 int，只有 1/2 参，无 step。物化数组，时间/内存 O(结果长度)，超容量 → OverflowError |
 | `push` | `push(v, xs) -> array` | `array` | 追加（新数组） |
 | `pop` | `pop(xs) -> array` | `array` | 去掉末元素；空 → `IndexError` |
 | `removeAt` | `removeAt(i, xs) -> array` | `array` | 去下标 `i`（支持负索引）；越界 → `IndexError` |
@@ -247,6 +246,7 @@ print()                           // 空行
 | `reduce` | `reduce(f, init, xs) -> value` | 任意 | `f(acc, x)` 左折叠 |
 | `take` `drop` | `take(n, xs)` / `drop(n, xs)` | `array` | 前 `n` 个 / 去前 `n` 个 |
 | `each` | `each(f, xs) -> nil` | `nil` | 仅副作用遍历 |
+| `contains` | `contains(v, xs) -> bool` | `bool` | 仅 array；用深相等、环安全的 == 查找。O(n) 线性扫描；容器元素比较另计成本。避免循环内反复扫描长数组；struct 键用 has |
 
 ### 5.2 struct / 字典（5）
 
@@ -260,7 +260,7 @@ print()                           // 空行
 
 > **数据面**：方法（函数值字段）**不参与** `keys`/`values`/`entries`/`has`/`len`/`del`/`==`/display（A5，SE §3.7、§4.5.9）。
 
-### 5.3 字符串（8）
+### 5.3 字符串（13）
 
 | 内置 | 签名 | 说明 |
 |---|---|---|
@@ -271,10 +271,15 @@ print()                           // 空行
 | `replace` | `replace(old, new, s) -> string` | 全部替换 |
 | `repeat` | `repeat(n, s) -> string` | `n<=0` → 空串 |
 | `startsWith` | `startsWith(prefix, s) -> bool` | 前缀判断 |
+| `endsWith` | `endsWith(suffix, s) -> bool` | 空 suffix → true；O(m)，m 为后缀长度 |
+| `indexOf` | `indexOf(sub, s) -> int` | 首次匹配的 Unicode 标量下标；无匹配 → -1；空 sub → 0。最坏 O(n·m) |
+| `substring` | `substring(from, to, s) -> string` | 标量半开区间；两端夹取至 [0,len(s)]，负数夹至 0；from>=to → 空串。非空结果 O(min(to,len(s)))，须扫描 UTF-8 前缀；空区间可直接返回 |
+| `padEnd` | `padEnd(width, fill, s) -> string` | 右侧重复 fill，按标量截断至 width；width<=len(s) 返回原串；fill 空 → ValueError |
+| `padStart` | `padStart(width, fill, s) -> string` | 左侧补齐，其余同 padEnd |
 
-> v1 字符串内置**只有这 8 个**；`indexOf` / `endsWith` / `padEnd` / `padStart` / `substring` 等属 **v1.1 计划**，当前**尚未实现**（调用会得到 `NameError: 未定义的名字 '...'`）。需要补空格对齐时用 `repeat` 手工补齐（见 §3.5）。
+> 新增字符串内置全 data-last；width/from/to 须 int，其余参数须 string。pad* 复杂度 O(n+m+输出宽度)，包含 s、fill 的标量计数。Unicode 标量不是字节或用户感知字形（组合字符、表情序列可能含多个标量）。
 
-### 5.4 数学 / 随机 / 转换 / IO / 断言（20）
+### 5.4 数学 / 随机 / 转换 / IO / 断言（29）
 
 | 内置 | 签名 | 说明 |
 |---|---|---|
@@ -296,10 +301,19 @@ print()                           // 空行
 | `assert` | `assert(cond, msg?) -> nil` | 失败 → `AssertionError`（致命） |
 | `check` | `check(cond, msg?) -> bool` | 失败 → stderr 警告 + 返回 `false`，**不中断** |
 | `fail` | `fail(msg?) -> never` | 抛 `AssertionError`（致命） |
+| `sin` / `cos` | `sin(f) -> float` / `cos(f) -> float` | 弧度；O(1)；±Inf/NaN → NaN |
+| `log` | `log(f) -> float` | 自然对数；O(1)；负数 → NaN，0 → -Inf（不抛除零错误） |
+| `exp` | `exp(f) -> float` | e 的 f 次幂；O(1)；溢出 → +Inf |
+| `ord` | `ord(c) -> int` | c 须恰一个 Unicode 标量的 string；成功 O(1)；非法串 ValueError 需报告完整标量数，O(n)；非 string → TypeError，O(1) |
+| `chr` | `chr(n) -> string` | n 须 int，合法范围 0..0x10FFFF，排除代理区 0xD800..0xDFFF；非法 → ValueError；O(1) |
+| `readFile` | `readFile(path) -> string` | 整文件 UTF-8 读取；非法 UTF-8 / 读取失败 → IOError |
+| `writeFile` | `writeFile(path, contents) -> nil` | UTF-8 覆盖写，创建/截断文件；失败 → IOError |
+| `appendFile` | `appendFile(path, contents) -> nil` | UTF-8 追加；不存在则创建；失败 → IOError |
 
-> `sqrt` / `pow` 之外的数学内置（`sin`/`log`/`exp` 等）**v1 不提供**（IC §10.7 说明）。
+> 文件 IO 的 path / contents 须 string，不隐式转换；写数字先 str(42)。相对路径基于解释器进程当前工作目录，与脚本所在目录无关。路径原样交给 OS，不展开 ~，不自动创建父目录，不做规范化或沙箱；二进制/目录 API 不提供。读返回 string，写/追加返回 nil；时间及内存按文件大小计；结果依赖文件系统与 cwd。多片段拼接用 map 或预分配数组后 join，循环 push 也会复制前缀。
+> sin/cos/log/exp 接受 int 并加宽为 float；大于 2^53 的整数加宽可能失精度。NaN/Inf 遵 IEEE-754；`/ 0` 和 `% 0` 仍抛 ZeroDivisionError。
 > `seed` 未调用时用时间种子——这是 LFZ 唯一的非确定来源（IC §10.7）。
-> 数值内置加宽口径：`floor`/`ceil`/`round`/`sqrt`/`pow` 接受 `int` 并加宽为 `float`；`abs` 同型不加宽（IC §10.7「数值内置形参加宽」）。
+> 数值内置加宽口径：`floor`/`ceil`/`round`/`sqrt`/`pow`/`sin`/`cos`/`log`/`exp` 接受 `int` 并加宽为 `float`；`abs` 同型不加宽（IC §10.7「数值内置形参加宽」）。
 
 ---
 
@@ -316,9 +330,9 @@ print()                           // 空行
 - [ ] 跨行只靠括号；字符串/插值内**不能**换行。
 - [ ] 字符串**不能下标** `s[0]`；按字符访问用 `split("", s)`（§3.5）。
 - [ ] 循环体里的 `let`/`var` **每轮都是新绑定**，可放心在循环内声明。
-- [ ] 逐字符**别**用 `s = s + c`（O(n²)）；改用 `push` 到数组再 `join`（§3.5）。
+- [ ] 逐字符**别**用 `s = s + c`（O(n²)）；改用 map 或预分配后下标写入，再 join（§3.5）；循环 push 同样是 O(n²)。
 - [ ] 格式对齐用 `<`/`>`/`^`（可带 fill）；**动态宽度不支持**，用 `repeat` 手工补。
-- [ ] `range` 当前只接受 1 个参数（`range(n)`）。
+- [ ] `range` 接受 1 或 2 个 int 参数；无 step 参数。
 - [ ] 对齐/退出码等细节：退出码 `0` 成功 / `1` **测试用例失败** / `2` **任何错误**；`assert` 在 `run` 下走错误类 → 退出 **2**（见 [`errors.md` §3.4](errors.md)、[`testing.md` §5](testing.md)）。
 
 ---
@@ -333,6 +347,6 @@ print()                           // 空行
 | 优先级、管道脱糖 | `syntax.md` §4 |
 | 27 条歧义消解（A1–A27） | `syntax.md` §5 |
 | `;;` 语义、值显示、求值语义、错误模型 | `semantics.md` §3.6、§3.7、§4.5、§8 |
-| 54 个内置函数表 | `interface-contract.md` §10.7 |
+| 69 个内置函数表 | `interface-contract.md` §10.7 |
 | 错误类实现映射、loader、`Span`、帧 | `interface-contract.md` §8.1、§10 |
 | 下游硬性要求（含 docs / runner 契约） | `interface-contract.md` §11 |

@@ -3,7 +3,7 @@
 > **学完你能做什么**：从零掌握 LFZ 的核心语法（`#42`、变量、控制流、函数与递归、闭包、结构体、管道 `|>`、富字符串插值、`;;`、`assert`/`check`、字符串处理），并独立写出一个能运行的小程序。
 > 每一步都有**完整可运行代码**和**实测输出**。照着敲，一次就能成功。
 > 权威定义见 [`docs/spec/`](../spec/)；本教程只讲怎么用。配套：[`README.md`](README.md) · [`reference.md`](reference.md) · [`errors.md`](errors.md) · [`testing.md`](testing.md)
-> 最后更新: 2026-09-27（T11-③ D1–D7：字符串处理 / 对齐 / 循环绑定 / 退出码） by docs-writer
+> 最后更新: 2026-10-24（T11-14：69 内置与文件 IO 已实现） by docs-writer
 
 **说明**：所有示例的第一行都是 `#42`（LFZ 文件前导）。本文中的每段代码都已用 `cargo run --quiet -- run <文件>` 实际运行过，输出为**真实结果**。
 
@@ -425,7 +425,7 @@ LFZ 内建测试运行器。把断言写进 `tests/**/*.lfz`（首行仍是 `#42
 ```console
 $ cargo run --quiet -- test
 ...
-汇总：共 90 个用例，通过 90，失败 0，错误 0
+汇总：共 130 个用例，通过 130，失败 0，错误 0
 ```
 
 - `assert` 失败 → 该用例 `FAIL`（退出码 `1`）。
@@ -514,7 +514,7 @@ roster ： [{name: "Alice", score: 93}, {name: "Bob", score: 67}, {name: "Cara",
 
 ## Step 13 — 处理字符串：不可下标、`split` 与 O(n) 构建
 
-**概念**：LFZ 的 `string` 是**不可变**的 UTF-8 字符串，**不能下标**——`s[0]` 会报 `TypeError`。按字符访问要先把字符串用 `split("", s)` 拆成字符数组（一次 **O(n)**，之后下标 **O(1)**）。另外，**字符串不可变**意味着循环里 `s = s + c` 每轮复制整个前缀，是 **O(n²)**；正确做法是先 `push` 到数组，最后 `join`（**O(n)**）。
+**概念**：LFZ 的 `string` 是**不可变**的 UTF-8 字符串，**不能下标**——`s[0]` 会报 `TypeError`。按字符访问要先把字符串用 `split("", s)` 拆成字符数组（一次 **O(n)**，之后下标 **O(1)**）。另外，**字符串不可变**意味着循环里 `s = s + c` 每轮复制整个前缀，是 **O(n²)**；正确做法是用 map 一次构造数组，最后 join（O(片段数 + 总输出大小)）；循环 push 也会克隆前缀，仍是 O(n²)。
 
 **代码**（文件 `s13.lfz`）：
 
@@ -525,11 +525,8 @@ let cs = split("", s)              // ["a", "b", "c"]，一次 O(n)
 print("len(s) = ${len(s)}")        // Unicode 标量数
 print("cs[0] = ${cs[0]}")          // 之后下标 O(1)
 
-// 逐字符转大写再拼回：push + join，O(n)
-var parts = []
-for c in cs {
-    parts = push(upper(c), parts)
-}
+// 逐字符转大写再拼回：map 一次构造数组，再 join
+let parts = map((c) => upper(c), cs)
 print("out = ${join("", parts)}")
 ```
 
@@ -544,16 +541,58 @@ out = ABC
 
 **常见错误**：
 - 对字符串取下标 → `TypeError: 运算符 '[]' 不支持 string 与 array / struct`（`s[0]` 非法）。改用 `split("", s)`。
-- 循环里用 `s = s + c` 拼字符串 → 结果对，但**大输入会慢到 O(n²)**。改用数组 `push` + `join("", parts)`。
+- 循环里用 `s = s + c` 拼字符串 → 结果对，但**大输入会慢到 O(n²)**。改用 map 或预分配后下标写入，再 join；循环 push 也是 O(n²)。
 - `len(s)` 是 **O(n)**；别在循环里反复对同一长串求 `len`（先 `split` 后对数组 `len` 是 O(1)）。
 
 **按变量宽度补齐**（动态宽度不被格式说明符支持时的替代）：
 
 ```lfz
 #42
-fn padRight(w, s) => if w > len(s) { s + repeat(w - len(s), " ") } else { s }
-print("[" + padRight(5, "ab") + "]")   // [ab   ]
+let w = 5
+print("[" + padEnd(w, " ", "ab") + "]")   // [ab   ]
 ```
+
+
+**已实现的内置组合示例**（IC §10.7）：字符串下标与补齐宽度按 Unicode 标量计数，不按字节或显示列计数。`contains` 仅查 array（O(n)，深元素比较成本另计），struct 键用 has。先在仓库根执行 `New-Item -ItemType Directory -Force Temp/docs-v11`，再把下例存为 `Temp/docs-v11/features.lfz`，从仓库根运行 `target/release/lfz.exe run Temp/docs-v11/features.lfz`：
+
+```lfz
+#42
+print(range(-2, 2))
+let s = "a你🙂b"
+print(indexOf("🙂", s), endsWith("b", s))
+print(substring(1, 3, s))
+print(padEnd(5, "🙂x", "你"))
+print(padStart(5, "🙂x", "你"))
+print(ord("🙂"), chr(128578))
+print(sin(0), cos(0), log(1), exp(0))
+print(log(0), log(-1), exp(1000), sin(float("inf")))
+print(contains({k: [1]}, [{k: [1]}]))
+let p = "Temp/docs-v11/note.txt"
+print(writeFile(p, "你好"))
+print(appendFile(p, "🙂"))
+print(readFile(p))
+```
+
+输出：
+
+```text
+[-2, -1, 0, 1]
+2 true
+你🙂
+你🙂x🙂x
+🙂x🙂x你
+128578 🙂
+0.0 1.0 0.0 1.0
+-inf nan inf nan
+true
+nil
+nil
+你好🙂
+```
+
+文件 IO 以 UTF-8 整文件读写。path / contents 必须 string；写数字先 str。相对路径相对于进程 cwd，与脚本路径无关；路径不展开 ~，不自动创建父目录。readFile 失败或文件不是合法 UTF-8 → IOError；writeFile / appendFile 失败也为 IOError。覆盖写会截断文件，追加写不存在时创建文件，二者成功均返回 nil。
+
+`ord` 只接受一个 Unicode 标量；`chr` 排除代理区 0xD800..0xDFFF 及越界值；`pad*` 的 fill 不能空。详细签名、复杂度和错误消息见参考 §5 与错误手册 §2。
 
 ---
 

@@ -215,9 +215,9 @@ print(sum_even([1, 2, 3, 4, 5]))
 
 ---
 
-## 5. 内置函数 54 个数目核对
+## 5. 内置函数数目核对（当前69，原始基线54）
 
-按 `interface-contract.md` §10.7 分组计数并逐名列出（SKILL §6）：核心/数组 21 + struct 5 + 字符串 8 + 数值/转换/IO/断言 20 = **54**。数目与 spec 一致。
+按 `interface-contract.md` §10.7 分组计数并逐名列出（SKILL §6）：核心/数组 21 + struct 5 + 字符串 8 + 数值/转换/IO/断言 20 = **54**。这是原始54项基线。2026-10-24 新增数组1 + 字符串5 + 数值/转换6 + 文件IO3 = 15；当前分组22 + 5 + 13 + 29 = **69**，range 重载不另计名字。
 
 ---
 
@@ -331,6 +331,8 @@ json-exit=0
 
 > 目的：把 skill 盲测 **2/8** 暴露的 7 条缺口（`FEATURE-AUDIT.md` §6.2 D1–D7）逐条落地——**每条先用 `lfz` 实跑验证，再写入 `SKILL.md`**。
 > 环境：`dist\lfz.exe`（v1.0.1，由当前源码重建）；控制台 `chcp 65001` 以正确显示中文；探针在 `Temp\lfz-dx\`（**临时件，收工已清**，源码见 §8.4）。
+
+> 历史说明：以下 §8 是 2026-09-27 实测；D2 双参 range 失败为旧行为。当前 range(lo,hi) 已实现，最新证据见 §9；D1/D3–D7 仍适用。
 
 ### 8.1 逐条实测证据
 
@@ -466,3 +468,7 @@ print(len("hello"))      // 5                   else if n >= 80 { "B" }
 > `d4` 的 `test` 侧探针：`Temp\lfz-dx\testcases\fail_case.lfz` = `#42` + `let x = 1` + `assert(x == 2, "…")`；`lfz test` 该目录 → `失败 1`、exit `1`。
 > 说明：上述探针均为**临时件**，已按团队约定从 `Temp/` 清理；本文保留命令与输出作为可复现证据。
 
+
+## 9. 2026-10-24 已实现特性同步
+
+已同步 SKILL §6/§6.1（69内置、range双参）、README、prompt-template；依最新 interface-contract §10.7。新 exe 命令、完整源码、stdout/错误消息与退出码见 `docs/reports/T11-v11-skill-evidence.md`。本轮为示例/回归实跑，未宣称新 Agent 盲测通过率。原 D1–D7 历史证据保留，D2 单参限制由双参重载替代。
