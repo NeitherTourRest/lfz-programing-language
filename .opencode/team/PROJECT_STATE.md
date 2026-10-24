@@ -10,7 +10,7 @@ T11-12/13/14/16 本批实现、黑盒与文档需求同步已完成；T11-15 的
 - 应用：sortviz 150 次排序自测，0 失败，exit 0；证据 docs/reports/T11-v11-app-output.txt。
 - 文档：spec 复杂度订正；五指南、AI skill 四文件均实跑；需求矩阵 R-113/116–122/401/405 同步。
 - 发布：release-manager 重建项目内 dist、刷新 README/交付清单并按原子提交收口，Cargo 版本仍 1.0.1；提交哈希见该角色收工记录。不更新项目外安装，不新增标签。
-- Git：本地实现与验收提交已完成；git push 被自动审批拒绝（尚未确认目的地归属和具体数据发送授权），远程未更新，等待用户明确许可。
+- Git：用户明确允许向指定 GitHub 仓库推送后，本批 8 个提交已推送到 origin/main（29b7265）；git ls-remote 与本地提交号一致。此前审批阻塞已解除，未新增标签。
 - 独立报告：docs/reports/T11-v11-reverification.md；保留失败、修复后原始证据。
 - 环境：Rust 1.90.0 minimal 仅在项目 Temp/toolchain，不改用户 PATH；测试 TEMP/TMP 定向项目内。
 

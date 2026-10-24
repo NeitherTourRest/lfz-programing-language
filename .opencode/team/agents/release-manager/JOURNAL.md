@@ -771,3 +771,9 @@
 - 证据：git log -7与git status只读核验；剩余diff恰为DECISIONS旧事故ADR+28行、PROJECT_STATE旧bullet+1、lead STATUS旧bullet+1；Cargo文件无diff，8tag不变，dist哈希吻合。
 - 阻塞：lead执行git push被自动审批拒绝，理由是源码/文档/团队记录外传到尚未验证归属的GitHub origin且缺用户明确数据与目的地授权；origin/main仍91b65c3。不重试、不换目的地、不绕过。
 - 下一步：lead已向用户说明拒绝并请求明确授权；最后收工记录由lead本地提交，用户授权后方可推送并核对远程HEAD。
+## [2026-10-24 14:22] 用户明确授权后推送成功
+- 来源：team-lead轻量唤醒；仅读取本角色STATUS。
+- 完成：用户已明确允许推送到指定GitHub仓库，主会话按既有发布计划执行git push origin main成功，回执91b65c3..29b7265 main -> main，本轮8提交含最终收工记录。
+- 状态：旧自动审批拒绝历史已因用户明确授权解除，远程推送完成；未新建或移动tag，Cargo仍1.0.1，同题8盲测未重跑，历史2/8不变。
+- 变更：仅本人STATUS/JOURNAL，使用IO.File UTF8；未执行git、网络或审批操作。
+- 下一步：主会话统一保存并推送本次收工记录。
