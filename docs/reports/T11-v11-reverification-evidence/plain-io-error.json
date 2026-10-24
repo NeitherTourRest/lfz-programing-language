@@ -1,0 +1,6 @@
+{
+  "exit": 2,
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-v11\\io_invalid.lfz\", line 2, in <module>\n    readFile(\"Temp/verifier-v11/invalid.txt\")\n    ^\nIOError: 无法读取：Temp/verifier-v11/invalid.txt（不是合法的 UTF-8 编码）\n",
+  "command": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\debug\\lfz.exe run \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-v11\\io_invalid.lfz\""
+}

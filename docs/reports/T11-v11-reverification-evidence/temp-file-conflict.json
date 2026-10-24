@@ -1,0 +1,12 @@
+{
+  "id": "temp-file-conflict",
+  "pass": true,
+  "exit": 2,
+  "command": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\debug\\lfz.exe test --json \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verify-clean-cwd-8c090dd3dcc14028b7b89cb2e2615840\\tests\"",
+  "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verify-temp-conflict-0e6b54f4edfa456e900c18f025a6e26b",
+  "TempExistedBefore": true,
+  "stdout": "",
+  "stderr": "lfz test: 无法准备测试工作目录 'Temp'：当文件已存在时，无法创建该文件。 (os error 183)\n",
+  "exeSha256": "B2AAACA9B4AD2A054A25201045D91EDE45DE693DFB673E7E78AC56F76A28882B",
+  "exeLength": 1387520
+}

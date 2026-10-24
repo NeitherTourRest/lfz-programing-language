@@ -1,10 +1,17 @@
-# LFZ 需求矩阵（唯一需求事实源 · v1 对齐版）
+# LFZ 需求矩阵（唯一需求事实源 · v1.1 增量对齐版）
 
-> 最后更新: 2026-09-27 by requirements-analyst
-> 版本: **v2（对齐 spec v1 冻结 D-016 + P3/P4 已实现事实）**
+> 最后更新: 2026-10-24 by requirements-analyst
+> 版本: **v3（保留 v2 历史基线，增补已实现 v1.1 与 T11-15 独立证据）**
 > 本文件是**唯一需求事实源**，唯一写者 requirements-analyst，他人只读。
 > 来源: `task-info.md`（课程作业原始要求）+ 用户指令 + 已定案 ADR（见 `DECISIONS.md`）。
 
+## 当前增量快照（2026-10-24，T11-16）
+
+- 用户已单独追认本轮文件 IO：`readFile` / `writeFile` / `appendFile`。规范与实现现为 **69 个内置**（原 54 + 新增 15），另扩展 `range` 双参，并固化 string 索引拒绝的既有行为；没有新增文法或错误类，仍为 12 类。
+- 证据来源为 verifier 的 `docs/reports/T11-v11-reverification.md` 与同名 `-evidence/`：**494 Rust 测试 / 130 工作区黑盒 / 74 独立 witness PASS**（494 全量由 tooling-dev 执行，日志 `Temp/tooling-v01-cargo-test.txt`；verifier 修复前独立单测为 491，未冒记其重跑）。需求分析师只维护需求与证据映射，不将文档检查视作另一次测试执行。
+- **本批实现及测试环境可交付，V01 已关闭**：初验干净 CWD 为 129 PASS / 1 ERROR，原失败证据保留；tooling 修复后全量 **494/494 PASS**，verifier 13:41 使用原目录/原 tests 副本确认无 Temp 后重跑，**130/130 PASS、exit 0**；Temp 为普通文件的冲突场景 **exit 2、stdout 空、sentinel 内容保留**。证据 `docs/reports/T11-v11-reverification-evidence/clean-cwd-fixed.json`、`temp-file-conflict.json`。R-202 通过；该结论不包含下述未重跑的盲测。
+- **8 同题盲测未重跑**：原始 8 题任务书/验收记录不齐；历史 **2/8** 原值保留，74 witness 不能替代盲测结果。R-403 的新一轮改善不作通过声明。
+- 本节及新增/修订条目为当前增量口径。下方 v2 的历史计数、P1 阶段覆盖汇总及验收命令示例保留作来源记录，不能据此推断本轮完成状态；本次未重新验收性能、应用或答辩交付。
 ## 0. 使用说明（team-lead / verifier 先读）
 
 - **文档定位**：P9 验收时 verifier 以本文件 §1/§6 为对表依据；每条需求都能落到「**一条可原样执行的命令 + 期望结果**」。
@@ -16,7 +23,7 @@
 
 ---
 
-## 1. 需求矩阵（v1 现行）
+## 1. 需求矩阵（v1 基线 + v1.1 增量）
 
 > 列：R-ID | 需求 | 来源（task-info + ADR）| 验证方式（可命令复现）| 状态 | 交付物 | 评分项。
 > **R-1xx** 语言与解释器 · **R-2xx** 自动测试 · **R-3xx** 性能 · **R-4xx** 文档 · **R-5xx** 应用 · **R-6xx** 环境与提交物。
@@ -27,7 +34,7 @@
 |------|------|------|------------------------|------|--------|--------|
 | R-101 | 支持 `int` / `float` / `string` / `bool` / `nil` 基本数据类型及其字面量与运算（`/` 恒返回 float；`div` 向下取整；`%` Python 取模） | task-info §1 + D-007/D-011/D-015 A3 | `cargo run -q -- run examples/hello.lfz` → stdout `Hello, LFZ!`、exit 0；`cargo test`（361 库单测含类型/运算用例）全绿 | 通过 | 交付物 1、2；`src/value.rs`,`src/evaluator.rs` | 1 |
 | R-102 | 支持数组与 struct 类型（含**合一 struct**：struct 兼作字典/实例模板） | task-info §1 + D-007/D-011 | `cargo run -q -- run docs/reports/fixtures-p3/04_containers.lfz` → exit 0；`cargo test`（value/struct 用例） | 通过 | 交付物 1、2；`src/value.rs` | 1 |
-| R-103 | 支持基本输入输出（`print` / `eprint` / `input`；`;;` 变量 dump 到 stdout） | task-info §1 + D-012 | `cargo run -q -- run examples/hello.lfz` → 输出 `Hello, LFZ!`；`cargo test`（`cli`/`test_runner` 集成含 print 流断言） | 通过 | 交付物 1、2；`src/builtins.rs` | 1 |
+| R-103 | 支持基本输入输出（`print` / `eprint` / `input`；`;;` 变量 dump 通道随 `print`（普通模式 stdout，`--json` 模式 stderr）） | task-info §1 + D-012 | `cargo run -q -- run examples/hello.lfz` → 输出 `Hello, LFZ!`；`cargo test`（`cli`/`test_runner` 集成含 print 流断言） | 通过 | 交付物 1、2；`src/builtins.rs` | 1 |
 | R-104 | 支持分支循环控制（`if`/`else` 及 `if` 表达式、`while`、`for-in`） | task-info §1 | `cargo run -q -- run docs/reports/fixtures-p3/02_control.lfz` → exit 0；`cargo test`（parser/evaluator 控制流用例） | 通过 | 交付物 1、2；`src/parser.rs`,`src/evaluator.rs` | 1 |
 | R-105 | 支持函数定义与调用（`fn` 声明 / 函数字面量 / 闭包（按 cell 引用捕获，A2）/ 递归） | task-info §1 + D-015 A2 | `cargo run -q -- run docs/reports/fixtures-p3/03_functions.lfz` → exit 0；`cargo run -q -- run docs/reports/fixtures-p3-rev3/spec_9_4_current.lfz` → 5 行 `1 2 3 / 99 99 / [3, 1, 2]  [1, 2, 3] / {me: <cycle>} / true`、exit 0 | 通过 | 交付物 1、2；`src/evaluator.rs`,`src/env.rs` | 1 |
 | R-106 | **特色①** 管道 `\|>` + `_` 占位（解析期脱糖为 `Call`；`\|>` 优先级比 `+ - * / %` 松、比比较紧） | task-info §1 注意 + D-007/D-011/D-012 | `cargo run -q -- run docs/reports/fixtures-p3/05_pipe.lfz` → 9 行输出（`4 3 15 15 5` + `[0,2,4,6,8] [1,2,3] [2,4] ABC`）、exit 0 | 通过 | 交付物 1、2；`src/parser.rs` | 1（+4 语法说明） |
@@ -36,17 +43,24 @@
 | R-109 | **特色④** 结构化错误 + `assert`/`check`/`fail`（`check` **非致命**：警告→stderr、返回 false、不中断；仅 `assert`/`fail` 致命 `AssertionError`） | task-info §1 注意 + D-007/D-011/D-015 A4 | `cargo run -q -- run docs/reports/fixtures-p3/08_builtins.lfz` → exit 0；`cargo test`（`check` 非致命用例） | 通过 | 交付物 1、2；`src/builtins.rs`,`src/evaluator.rs` | 1（+4） |
 | R-110 | **特色⑤** 确定性语义「无魔法」（求值顺序左→右 B1；`for` 迭代快照 B2；键 UTF-8 字节序 B3；越界/缺字段/溢出/类型不符一律结构化报错；NaN/±Inf 规则 B5） | task-info §1 注意 + D-007/D-015 B1–B3/B5 | `cargo test`（evaluator 求值顺序/键序/快照用例）全绿；`cargo run -q -- run docs/reports/fixtures-p3-rev3/spec_9_4_current.lfz` | 通过 | 交付物 1、2；`src/evaluator.rs` | 1（+4） |
 | R-111 | `.lfz` **文件**首行**恰好** `#42`（三字符 + 行终止符）；**仅按扩展名**（ASCII 大小写不敏感 `.lfz`/`.LFZ`）触发，REPL/stdin/`-e` 豁免；违规 → `CosmosAnswerError: 你忘记了宇宙的答案`（无源码行/插入符） | D-013/D-014/D-016 B2 | `Set-Content -Encoding utf8 _t.lfz 'print(1)'; cargo run -q -- run _t.lfz` → stderr 末行 `CosmosAnswerError: 你忘记了宇宙的答案`、exit 2；`cargo test`（loader/`#42` 用例） | 通过 | 交付物 2；`src/loader.rs`,`src/cli.rs` | 1 |
-| R-112 | **Python 风格错误模型**：基类 `LfzError` + **12 个具体错误类**（`CosmosAnswerError`/`SyntaxError`/`NameError`/`TypeError`/`IndexError`/`FieldError`/`ZeroDivisionError`/`OverflowError`/`ValueError`/`IOError`/`AssertionError`/`RecursionError`）；输出 `类名: 中文消息` + `line N, col M` + 源行 + 插入符；运行期错误带 `Traceback`（首 10+尾 30 折叠）；**禁止 `E-xxx`**；退出码 **0/1/2**（成功 / `lfz test` 失败 / 其他错误·环境） | D-008/D-013/D-014/D-015 A7/D-021 | `cargo run -q -- run --json <含 1/0 的程序>` → stdout 单行 JSON，`error` 为 12 类名之一且不含 `E-xxx`、exit 2；`cargo test`（error/cli 格式化用例） | 通过 | 交付物 2；`src/error.rs`,`src/cli.rs` | 1 |
-| R-113 | `§10.7` 内置函数表 **54 个**，data-last 约定（回调在前、容器末参；容器更新返回新值 A1） | D-015 B9 | `cargo test`（`BUILTIN_NAMES` 54 项一致性 + HOF 用例）全绿 | 通过 | 交付物 2；`src/builtins.rs` | 1 |
+| R-112 | **Python 风格错误模型**：基类 `LfzError` + **12 个具体错误类**（`CosmosAnswerError`/`SyntaxError`/`NameError`/`TypeError`/`IndexError`/`FieldError`/`ZeroDivisionError`/`OverflowError`/`ValueError`/`IOError`/`AssertionError`/`RecursionError`）；输出 `类名: 中文消息` + `line N, col M` + 源行 + 插入符；运行期帧栈非空才带 `Traceback`（首 10+尾 30 折叠；零帧省略头）；**禁止 `E-xxx`**；退出码 **0/1/2**（成功 / `lfz test` 失败 / 其他错误·环境） | D-008/D-013/D-014/D-015 A7/D-021 | `cargo run -q -- run --json <含 1/0 的程序>` → stdout 单行 JSON，`error` 为 12 类名之一且不含 `E-xxx`、exit 2；`cargo test`（error/cli 格式化用例） | 通过 | 交付物 2；`src/error.rs`,`src/cli.rs` | 1 |
+| R-113 | `§10.7` 内置函数表 **69 个**（54 + 15），data-last；容器更新返回新值 A1 | D-015 B9 + v1.1 ADR | `cargo test` 中内置名称表一致性测试全绿；`& ./docs/reports/T11-v11-reverification-evidence/run.ps1` → 74/74 PASS（含新增内置参数错误） | 通过 | 交付物 2；`src/builtins.rs`（runtime-dev）；T11-v11-reverification.md | 1 |
 | R-114 | 语法体现**自身特色**（5 特色组合），**不与任何现存语言完全相同** | task-info §1 注意 + D-007 | `docs/spec/` 记录 5 特色；`cargo run -q -- run docs/reports/fixtures-p3/05_pipe.lfz`（`\|>`+`_` 组合）与 `spec_9_4_current.lfz`（环安全 `<cycle>`）可运行 | 通过 | 交付物 1；`docs/spec/` | 1（+4） |
 | R-115 | 实现语言 = **Rust**，**仅 std、零第三方依赖** | D-011 | `Get-Content Cargo.toml` 的 `[dependencies]` 段为空；`cargo build` 0 warning | 通过 | 交付物 2；`Cargo.toml` | 1 |
 
+| R-116 | `range(n)` 兼容；`range(lo, hi)` 返回普通 int 数组、半开区间，hi≤lo 为空；仅 1/2 参，容量溢出为 OverflowError | v1.1 ADR；interface-contract §10.7 | `target/debug/lfz.exe run tests/lfz/test_v11_range.lfz` → exit 0；独立 witness 脚本 → range/range_capacity 及 0/3 参、类型错误 PASS | 通过 | 交付物 2、3；src/builtins.rs（runtime-dev）、tests/lfz/test_v11_range.lfz（test-engineer） | 1、2 |
+| R-117 | 新增字符串五内置 `endsWith` / `indexOf` / `padEnd` / `padStart` / `substring`；data-last、Unicode 标量、夹取半开区间、新值；空 fill 恒 ValueError | v1.1 ADR；interface-contract §10.7 | `target/debug/lfz.exe run tests/lfz/test_v11_string.lfz` → exit 0；独立 witness unicode/pad/fill_empty/fill_start → PASS（含精确中文错误） | 通过 | 交付物 2、3；src/builtins.rs（runtime-dev）、tests/lfz/test_v11_string.lfz（test-engineer） | 1、2 |
+| R-118 | 新增 `ord` / `chr`：恰好单 Unicode 标量与合法码点互转；代理区、非法范围、非单标量 ValueError；无隐式类型转换 | v1.1 ADR；interface-contract §10.7/§10.8 | `target/debug/lfz.exe run tests/lfz/test_v11_unicode_math.lfz` → exit 0；独立 witness codepoints/ord_count 与非法码点 → PASS | 通过 | 交付物 2、3；src/builtins.rs（runtime-dev）、src/error.rs（core-dev）、tests/lfz/test_v11_unicode_math.lfz（test-engineer） | 1、2 |
+| R-119 | 新增 `sin` / `cos` / `log` / `exp`：int 加宽 float，IEEE 口径；log(0)=-Inf、log(负数)=NaN、exp 溢出=+Inf | v1.1 ADR；interface-contract §10.7；semantics §4.5.6 | `target/debug/lfz.exe run tests/lfz/test_v11_unicode_math.lfz` → exit 0；独立 witness ieee 与各类型错误 → PASS | 通过 | 交付物 2、3；src/builtins.rs（runtime-dev）、tests/lfz/test_v11_unicode_math.lfz（test-engineer） | 1、2 |
+| R-120 | 新增 `contains(v, xs)`：仅 array，按深结构/环安全相等查找；struct 键沿用 has | v1.1 ADR；interface-contract §10.7；semantics §4.5.9 | `target/debug/lfz.exe run tests/lfz/test_v11_string.lfz` → exit 0；独立 witness contains（嵌套、环、int/float 相等）及非 array 类型错误 → PASS | 通过 | 交付物 2、3；src/builtins.rs（runtime-dev）、tests/lfz/test_v11_string.lfz（test-engineer） | 1、2 |
+| R-121 | 新增 `readFile` / `writeFile` / `appendFile`：UTF-8 整文件读/覆盖/追加，写追加返回 nil；路径按进程 CWD 原样解析、不展开 ~、不自动创建父目录；失败为既有 IOError，非法 UTF-8 有精确消息 | 用户 2026-10-24 单独追认 + interface-contract §10.7；semantics §8 | `& ./docs/reports/T11-v11-reverification-evidence/run.ps1` → io/cwd/io_invalid/io_missing/io_parent/io_append_parent/io_no_tilde 与类型/参数错误全 PASS；源码/命令/输出见 evidence/witness.json | 通过 | 交付物 2、3；src/builtins.rs（runtime-dev）、tests/lfz/test_v11_io.lfz（test-engineer）；一键测试环境缺陷 V01 另见 R-202 | 1、2 |
+| R-122 | 固化既有 string 索引限制：读/写均 TypeError「运算符 '[]' 不支持 string 与 array / struct」；逐标量遍历用 split("", s) 后遍历数组 | v1.1 ADR；semantics §3.7/§4.5.11 | `target/debug/lfz.exe test --json` → v11_string_index_read、v11_string_index_write 两个清单负例 PASS；`target/debug/lfz.exe run tests/lfz/test_v11_string.lfz` → exit 0 | 通过 | 交付物 1、2、3；docs/spec/semantics.md（language-architect）、src/evaluator.rs（runtime-dev，既有行为）、tests/fixtures/v11_string_index_*.lfz（test-engineer） | 1、2、4 |
 ### 1.2 自动测试（评分项 2 = 20 分）
 
 | R-ID | 需求 | 来源 | 验证方式（可命令复现） | 状态 | 交付物 | 评分项 |
 |------|------|------|------------------------|------|--------|--------|
 | R-201 | 完整**黑盒测试集**，脚本用 LFZ 编写，覆盖**所有功能**，每特性 ≥3 用例（正常/边界/错误） | task-info §2 + D-021 | `cargo run -q -- test` → 汇总「全部 PASS」、exit 0；`tests/coverage-matrix.md` 覆盖全部特性且每特性 ≥3 用例 | 待办 | 交付物 3；`tests/**/*.lfz`,`tests/coverage-matrix.md` | 2 |
-| R-202 | **一个命令**执行所有测试（默认发现 `tests/**/*.lfz`，排除 `tests/fixtures/**`；稳定排序；0 用例 → exit 2 不静默成功） | task-info §2 + D-021 + runner-contract §2/§5 | `cargo run -q -- test` 为唯一入口；runner 机制已实现（`cargo test` 中 `test_runner` 12 例全绿）；**待 R-201 用例落地后**该命令应 exit 0 | 进行中 | 交付物 3；`src/test_runner.rs` | 2 |
+| R-202 | **一个命令**执行所有测试（默认发现、排除 fixtures、稳定排序；0 用例 exit 2）；干净 CWD 无遗留 Temp 也能一键执行 | task-info §2 + D-021 + runner-contract §2/§5；V01 可复现交付要求 | `target/debug/lfz.exe test --json` → 130/130 PASS / exit 0；verifier 在原无 Temp 的干净 CWD 对原 tests 副本同命令复验 130/130 PASS；Temp 同名普通文件冲突 exit 2、stdout 空且内容保留；证据 clean-cwd-fixed.json / temp-file-conflict.json（T11-v11-reverification-evidence/）；runner 15/15、全量 494/494 PASS 由 tooling-dev 另行执行 | 通过 | 交付物 3；src/test_runner.rs（tooling-dev）；docs/reports/T11-v11-reverification.md（verifier，13:41 关闭 V01） | 2 |
 | R-203 | 测试失败可定位：用例名 + 期望 vs 实际 + `§8.2` 位置（`File "<path>", line N[, in func]` + 源码行 + 插入符 + `类名: 消息`） | task-info §2 + runner-contract §6 | 注入失败用例 → 报告含 `FAIL <name> (<path>:<line>:<col>)` + 缩进错误块；`cargo test`（`tr3_*` 用例） | 通过 | 交付物 3；`src/test_runner.rs`,`src/cli.rs` | 2 |
 | R-204 | 负例须经 `tests/cases.json` 的 `expect.error` 声明并使用**非自动发现**夹具（`tests/fixtures/`）；清单类名取 12 类之一 | D-021 + runner-contract §3/§4 | `cargo run -q -- test` 对清单声明的负例判 PASS；类名非法 → exit 2 | 待办 | 交付物 3；`tests/cases.json`,`tests/fixtures/` | 2 |
 
@@ -62,11 +76,16 @@
 
 | R-ID | 需求 | 来源 | 验证方式（可命令复现） | 状态 | 交付物 | 评分项 |
 |------|------|------|------------------------|------|--------|--------|
-| R-401 | LFZ **语法规则文档**（完整、含 EBNF 与样例；词法/文法/语义/错误/接口契约） | task-info §4/提交 1 + D-016 | `docs/spec/{syntax,semantics,interface-contract}.md` 均存在且非空（62,389 / 33,931 / 30,592 字节）；文首含「唯一事实源（冻结于 2026-09-23）」 | 通过 | 交付物 1、5；`docs/spec/` | 4 |
+| R-401 | LFZ **语法规则文档**（含 EBNF、样例、词法/文法/语义/错误/接口契约；v1 冻结后按 ADR 补钉） | task-info §4/提交 1 + D-016 + v1.1 ADR | `Get-Item docs/spec/syntax.md,docs/spec/semantics.md,docs/spec/interface-contract.md` 均非空；2026-10-24 实际字节数按顺序 **70,043 / 41,143 / 45,830**（记录快照，后续合法补钉可增长）；规范内容对应 R-113、R-116~R-122 | 通过 | 交付物 1、5；`docs/spec/`（language-architect） | 4 |
 | R-402 | **人类向**开发指南/手册（教程 + 语法 + 运行/错误说明） | task-info §4 | `docs/guide/` 存在且含入门、语法、运行与错误章节 | 待办 | 交付物 5；`docs/guide/` | 4 |
 | R-403 | **给 AI 的**开发指南/skill，并经**全新 agent 实测**验证可顺利用 LFZ 写代码 | task-info §4 | `.opencode/skills/lfz-programming/`（或等价文档）存在 + 一份实测记录（命令与结果） | 待办 | 交付物 5；`.opencode/skills/lfz-programming/` | 4 |
 | R-404 | AI 指南**硬性内容**：写死「`.lfz` 首行 `#42`」+ 12 个错误类清单 + 禁止旧 `E-xxx` + 示例一律带头 | D-013/D-014 §下游硬性要求 | 指南文本含 `#42` 与 12 类名；示例代码块首行均为 `#42` | 待办 | 交付物 5；`.opencode/skills/lfz-programming/` | 4 |
 
+### 1.4.1 v1.1 复杂度标注（R-405）
+
+| R-ID | 需求 | 来源 | 验证方式（可命令复现） | 状态 | 交付物 | 评分项 |
+|------|------|------|------------------------|------|--------|--------|
+| R-405 | 文档复杂度与最新 spec 一致：indexOf 保守最坏 O(n·m)；pad* O(n+m+输出宽度) 含计数；substring 非空 O(min(to,len(s))) 含扫描前缀，空区间可直接返回；ord 成功 O(1)、完整计数错误 O(n)；contains 线性扫描；文件 IO O(文件大小)；循环拼接与循环 push 均可能 O(n²)，批量构造用预分配下标写或 map 后 join（O(片段数+总输出大小)） | interface-contract §10.7 最新 complexity 补钉；semantics §3.7/§4.5.11；ADR 2026-09-27 23:40 | `rg -n 'indexOf\|padEnd\|substring\|ord\|push\|join' docs/spec/interface-contract.md docs/guide .opencode/skills/lfz-programming`，按本条逐项核对指南与 spec 公式一致；任一指南仍宣称循环 push 为 O(n)、ord 所有路径 O(1) 或遗漏扫描成本则失败；2026-10-24 文本核对 PASS：reference.md §3.5/§5、SKILL.md §4.6/§6.1 与 IC §10.7 的上述公式一致；contains 深比较成本另计；历史 VERIFICATION.md 中旧 push 建议已明确否定。未运行性能测试 | 通过 | 交付物 1、5；docs/spec/（language-architect）、docs/guide/（docs-writer）、.opencode/skills/lfz-programming/（ai-dx-engineer） | 4 |
 ### 1.5 应用（评分项 5 = 30 分）
 
 | R-ID | 需求 | 来源 | 验证方式（可命令复现） | 状态 | 交付物 | 评分项 |
@@ -98,10 +117,10 @@
 
 | 评分项 | 分值 | 对应 R-ID | 硬性通过条件 |
 |--------|------|-----------|--------------|
-| 1. LFZ 解释器实现 | **20** | R-101 ~ R-115（+ R-605、R-601） | `cargo run -q -- run examples/hello.lfz` → `Hello, LFZ!`；`cargo test` 全绿；5 特色可运行；`#42`+Python 错误模型生效 |
+| 1. LFZ 解释器实现 | **20** | R-101 ~ R-122（+ R-605、R-601） | `cargo run -q -- run examples/hello.lfz` → `Hello, LFZ!`；`cargo test` 全绿；5 特色可运行；`#42`+Python 错误模型生效 |
 | 2. LFZ 解释器自动测试脚本 | **20** | R-201 ~ R-204（+ R-606） | **一个命令**跑全部；覆盖全部功能；每特性 ≥3 用例（正常/边界/错误）；失败可定位 |
 | 3. LFZ 解释器性能测试 | **10** | R-301 ~ R-303（+ R-607） | 报告交付；LFZ vs Python **公平对比**（预热/多轮/中位数 + 报告可复现） |
-| 4. 语法说明 + 人/AI 开发指南 | **20** | R-401 ~ R-404（+ R-604、R-608） | 语法文档冻结 + 人类手册 + AI 指南/skill 齐备且 AI 指南经实测 |
+| 4. 语法说明 + 人/AI 开发指南 | **20** | R-401 ~ R-405（+ R-604、R-608） | 语法文档冻结 + 人类手册 + AI 指南/skill 齐备且 AI 指南经实测 |
 | 5. 利用编程 Agent 开发程序 | **30** | R-501 ~ R-503（+ R-609） | 应用可运行、≥200 行、功能完整、含开发记录 |
 | （支撑）环境与提交完整性 | 无独立分值 | R-601 ~ R-603、R-610 ~ R-612 | Git 历史完整 + 8 项提交物齐备 + 答辩载体 |
 
@@ -146,7 +165,7 @@
 | R-110 | 交付物 1、2 `src/evaluator.rs` | 1（+4） | ✅ 已满足 | `cargo test` |
 | R-111 | 交付物 2 `src/loader.rs`,`src/cli.rs` | 1 | ✅ 已满足 | 构造无 `#42` 的 `.lfz` → `cargo run -q -- run <f>`（exit 2 + `CosmosAnswerError`） |
 | R-112 | 交付物 2 `src/error.rs`,`src/cli.rs` | 1 | ✅ 已满足 | `cargo run -q -- run --json <含 1/0 的程序>` |
-| R-113 | 交付物 2 `src/builtins.rs` | 1 | ✅ 已满足 | `cargo test` |
+| R-113 | 交付物 2 `src/builtins.rs` | 1 | ✅ 已满足 | 69 内置一致性；见 §1.1 与 T11-v11-reverification.md（修复前证据） |
 | R-114 | 交付物 1 `docs/spec/` | 1（+4） | ✅ 已满足 | 见 §6 命令 2/4 |
 | R-115 | 交付物 2 `Cargo.toml` | 1 | ✅ 已满足 | `Get-Content Cargo.toml`（空 `[dependencies]`）+ `cargo build` |
 | R-201 | 交付物 3 `tests/**/*.lfz` | 2 | ⬜ 未做 | `cargo run -q -- test`（P5 后应 exit 0） |

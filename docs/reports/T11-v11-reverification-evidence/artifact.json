@@ -1,0 +1,8 @@
+{
+  "exe": "target/debug/lfz.exe",
+  "length": 1383424,
+  "mtime": "2026-10-24T13:31:48.8301951+08:00",
+  "sha256": "34616B9D44ABE45902EB67A9AC286F2741D819C025BE557B48ED6FAE7354A24E",
+  "unitTests": 491,
+  "blackboxTests": 130
+}

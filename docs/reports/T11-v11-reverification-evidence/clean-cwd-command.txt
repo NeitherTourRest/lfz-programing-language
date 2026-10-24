@@ -1,0 +1,4 @@
+D:\XUE\2026fall\Program Design\lfz-programing language design\target\debug\lfz.exe test --json "D:\XUE\2026fall\Program Design\lfz-programing language design\Temp\verify-clean-cwd-8c090dd3dcc14028b7b89cb2e2615840\tests"
+CWD=D:\XUE\2026fall\Program Design\lfz-programing language design\Temp\verify-clean-cwd-8c090dd3dcc14028b7b89cb2e2615840
+exit=2
+TempExists=False
