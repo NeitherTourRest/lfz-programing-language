@@ -1,0 +1,392 @@
+{
+  "kind": "RUNNER_SELF_TEST_ONLY",
+  "ok": true,
+  "references": [
+    {
+      "task": "B01",
+      "cases": 16,
+      "reference_matches": true
+    },
+    {
+      "task": "B02",
+      "cases": 18,
+      "reference_matches": true
+    },
+    {
+      "task": "B03",
+      "cases": 15,
+      "reference_matches": true
+    },
+    {
+      "task": "B04",
+      "cases": 16,
+      "reference_matches": true
+    },
+    {
+      "task": "B05",
+      "cases": 16,
+      "reference_matches": true
+    },
+    {
+      "task": "B06",
+      "cases": 17,
+      "reference_matches": true
+    },
+    {
+      "task": "B07",
+      "cases": 17,
+      "reference_matches": true
+    },
+    {
+      "task": "B08",
+      "cases": 16,
+      "reference_matches": true
+    }
+  ],
+  "controls": {
+    "positive": {
+      "id": "ST-expression",
+      "source_sha256": "6a1b1f2caddcc1e60b08579b4eda65f6bccd5afb986157dd725dd48ddf5e3b44",
+      "case_sha256": "b688ace127fa7fd838f053c232254a376ce863207419917d49165635c9cb811c",
+      "status": "PASS",
+      "attempts": [
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.021279,
+          "program_sha256": "6908c50639e4bff9e4f8dc3e9b6e8178eb30f355daa2dbc315f443a68a25307a",
+          "program_path": "Temp/benchmark-v2-selftest-kdsiin18/positive/combined-0.lfz",
+          "command": [
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+            "run",
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\positive\\combined-0.lfz"
+          ],
+          "passed": true
+        }
+      ]
+    },
+    "wrong": {
+      "id": "ST-expression",
+      "source_sha256": "51c0c1813c6a773ba27dfb01f4e4b5260eb0d1ae6e873f55eb6dae4414ff5dde",
+      "case_sha256": "b688ace127fa7fd838f053c232254a376ce863207419917d49165635c9cb811c",
+      "status": "FAIL",
+      "attempts": [
+        {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\wrong\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 9,\"ST-expression\")\n    ^\nAssertionError: 断言失败：ST-expression\n",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "b2a42b4e7278665980da48c07ecfc5fd595e31bb074b0c46e25bf9d4a02aa9eb",
+          "timed_out": false,
+          "elapsed_seconds": 0.016459,
+          "program_sha256": "f10d08425c31eafa6b9fdd620c6ce425dd5d035dacb0c25e9ab74a45af689b3d",
+          "program_path": "Temp/benchmark-v2-selftest-kdsiin18/wrong/combined-0.lfz",
+          "command": [
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+            "run",
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\wrong\\combined-0.lfz"
+          ],
+          "passed": false
+        }
+      ]
+    },
+    "missing_function": {
+      "id": "ST-expression",
+      "source_sha256": "b916f739a67d58e3b3ab2565778bb50255cfb14e392984ac0fc76a4db6bef00f",
+      "case_sha256": "b688ace127fa7fd838f053c232254a376ce863207419917d49165635c9cb811c",
+      "status": "FAIL",
+      "attempts": [
+        {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\missing_function\\combined-0.lfz\", line 5, in <module>\n    let __bench_result = solve(__bench_arg_0)\n                         ^\nNameError: 未定义的名字 'solve'\n",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "c47f48621a96ca8c120e6df03f74ef1497b06d717b79bd962af85f7399041d50",
+          "timed_out": false,
+          "elapsed_seconds": 0.01769,
+          "program_sha256": "520d378a61bfc7ad5d24c04b25054658315f962f451a44cf2b28a4338c1bc732",
+          "program_path": "Temp/benchmark-v2-selftest-kdsiin18/missing_function/combined-0.lfz",
+          "command": [
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+            "run",
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\missing_function\\combined-0.lfz"
+          ],
+          "passed": false
+        }
+      ]
+    },
+    "nonzero": {
+      "id": "ST-expression",
+      "source_sha256": "8899e66ef3a1953f5069eb06962cb4d080bb286558b833f55ff07e456f3661c5",
+      "case_sha256": "b688ace127fa7fd838f053c232254a376ce863207419917d49165635c9cb811c",
+      "status": "FAIL",
+      "attempts": [
+        {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\nonzero\\combined-0.lfz\", line 2, in <module>\n    fail(\"deliberate self-test\")\n    ^\nAssertionError: deliberate self-test\n",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "528e84c006e5cc1855b8d828bb5b48103454db7a1d0e1a4b97116112725bfb65",
+          "timed_out": false,
+          "elapsed_seconds": 0.017017,
+          "program_sha256": "27f2d94d28d8fe472a7a916e6ea66f0587f567ea2b83e12a79ebfe6faa06d521",
+          "program_path": "Temp/benchmark-v2-selftest-kdsiin18/nonzero/combined-0.lfz",
+          "command": [
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+            "run",
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\nonzero\\combined-0.lfz"
+          ],
+          "passed": false
+        }
+      ]
+    },
+    "invalid_preamble": {
+      "id": "ST-expression",
+      "source_sha256": "f17389dd52b8f4583e75faa1b636be1372ad4570727063ab6ff051a7f116d303",
+      "case_sha256": "b688ace127fa7fd838f053c232254a376ce863207419917d49165635c9cb811c",
+      "status": "INVALID_SOURCE",
+      "detail": "First line must be exact #42",
+      "attempts": []
+    }
+  },
+  "missing_tasks_counted": 8,
+  "literal_roundtrip": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": "",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": false,
+    "elapsed_seconds": 0.017543
+  },
+  "timeout_detected": {
+    "exit": null,
+    "stdout": "",
+    "stderr": "",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": true,
+    "elapsed_seconds": 0.216907
+  },
+  "io_controls": {
+    "io_positive": {
+      "id": "ST-io",
+      "source_sha256": "c8cb45a531a8e0cd91d9f77acc4d80bf84f8371a43d89aca84211ab366fb339b",
+      "case_sha256": "a729c7f6a974d7c6044de10b0920d21d192e99be8e511a848982f370144645b0",
+      "status": "PASS",
+      "attempts": [
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.022294,
+          "program_sha256": "29f6d6ed72f57b8d1f32a08e5c8160d2e49f8788332de8722b154420f615eb1a",
+          "program_path": "Temp/benchmark-v2-selftest-kdsiin18/io_positive/combined-0.lfz",
+          "command": [
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+            "run",
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\io_positive\\combined-0.lfz"
+          ],
+          "output_matches": true,
+          "input_unchanged": true,
+          "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "passed": true
+        },
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.016839,
+          "program_sha256": "29f6d6ed72f57b8d1f32a08e5c8160d2e49f8788332de8722b154420f615eb1a",
+          "program_path": "Temp/benchmark-v2-selftest-kdsiin18/io_positive/combined-1.lfz",
+          "command": [
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+            "run",
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\io_positive\\combined-1.lfz"
+          ],
+          "output_matches": true,
+          "input_unchanged": true,
+          "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "passed": true
+        }
+      ]
+    },
+    "io_wrong": {
+      "id": "ST-io",
+      "source_sha256": "d3d6bd9c2ac27b4471497a160039b6e79befc5127f1736904bf008282c15235a",
+      "case_sha256": "a729c7f6a974d7c6044de10b0920d21d192e99be8e511a848982f370144645b0",
+      "status": "FAIL",
+      "attempts": [
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.017438,
+          "program_sha256": "3cd868255af2bc16f706b242ab14e994932f9f447a881853d600d8f572886bd6",
+          "program_path": "Temp/benchmark-v2-selftest-kdsiin18/io_wrong/combined-0.lfz",
+          "command": [
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+            "run",
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\io_wrong\\combined-0.lfz"
+          ],
+          "output_matches": false,
+          "input_unchanged": true,
+          "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "output_sha256": "8810ad581e59f2bc3928b261707a71308f7e139eb04820366dc4d5c18d980225",
+          "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "passed": false
+        },
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.017327,
+          "program_sha256": "3cd868255af2bc16f706b242ab14e994932f9f447a881853d600d8f572886bd6",
+          "program_path": "Temp/benchmark-v2-selftest-kdsiin18/io_wrong/combined-1.lfz",
+          "command": [
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+            "run",
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\io_wrong\\combined-1.lfz"
+          ],
+          "output_matches": false,
+          "input_unchanged": true,
+          "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "output_sha256": "8810ad581e59f2bc3928b261707a71308f7e139eb04820366dc4d5c18d980225",
+          "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "passed": false
+        }
+      ]
+    },
+    "io_input_mutation": {
+      "id": "ST-io",
+      "source_sha256": "eacf3520b3bdbb12834c8d9d27a4ef1f1d9c6f0d4b2339123bda0d22a5704e9b",
+      "case_sha256": "a729c7f6a974d7c6044de10b0920d21d192e99be8e511a848982f370144645b0",
+      "status": "FAIL",
+      "attempts": [
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.017271,
+          "program_sha256": "d70331c4689eb80988e82c27d106d03358aebafa8496848fb880eed4e42b7947",
+          "program_path": "Temp/benchmark-v2-selftest-kdsiin18/io_input_mutation/combined-0.lfz",
+          "command": [
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+            "run",
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\io_input_mutation\\combined-0.lfz"
+          ],
+          "output_matches": true,
+          "input_unchanged": false,
+          "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "input_sha256": "d67e2e944994496c8d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed",
+          "passed": false
+        },
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.018525,
+          "program_sha256": "d70331c4689eb80988e82c27d106d03358aebafa8496848fb880eed4e42b7947",
+          "program_path": "Temp/benchmark-v2-selftest-kdsiin18/io_input_mutation/combined-1.lfz",
+          "command": [
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+            "run",
+            "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\io_input_mutation\\combined-1.lfz"
+          ],
+          "output_matches": true,
+          "input_unchanged": false,
+          "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "input_sha256": "d67e2e944994496c8d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed",
+          "passed": false
+        }
+      ]
+    }
+  },
+  "grid_mutation_detected": {
+    "id": "ST-grid-mutation",
+    "source_sha256": "a1f2c7ceb6bb4cc006732914ad185f0a94939bf668fb2fc40a4fa4217544b65f",
+    "case_sha256": "c066f27b746d9ddbc9dc16c1ace25a2d7721a4013fb0eff7f8ea554b06d60a57",
+    "status": "FAIL",
+    "attempts": [
+      {
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\grid-mutation\\combined-0.lfz\", line 12, in <module>\n    assert(__bench_arg_0 == [\".\"],\"input unchanged 0\")\n    ^\nAssertionError: 断言失败：input unchanged 0\n",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "26bdf9f95238a735d3342b6abf3f4f8ba2c8fa269b0cd040075baa764fe65abb",
+        "timed_out": false,
+        "elapsed_seconds": 0.017168,
+        "program_sha256": "491bb60526872de27e8ca2dcf53ac72362ec0797ac51f3b5bbad4b9744447f32",
+        "program_path": "Temp/benchmark-v2-selftest-kdsiin18/grid-mutation/combined-0.lfz",
+        "command": [
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+          "run",
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\grid-mutation\\combined-0.lfz"
+        ],
+        "passed": false
+      }
+    ]
+  },
+  "state_leak_detected": {
+    "id": "ST-expression",
+    "source_sha256": "35c3f0d582a79868803e899f11d985990aa0ec9015e2df9c598c748a67e8bc7a",
+    "case_sha256": "b688ace127fa7fd838f053c232254a376ce863207419917d49165635c9cb811c",
+    "status": "FAIL",
+    "attempts": [
+      {
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\state-leak\\combined-0.lfz\", line 12, in <module>\n    assert(__bench_repeat == 9,\"repeat independent solve\")\n    ^\nAssertionError: 断言失败：repeat independent solve\n",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "dfa2673068e2e162139dae893b528dc7c4c82a2776ceebd1f8f8742b8cb36c20",
+        "timed_out": false,
+        "elapsed_seconds": 0.016906,
+        "program_sha256": "c59fc7bcc14b04e7a590c4364ce97e512755344bae6d692ba826a3b96419b3c4",
+        "program_path": "Temp/benchmark-v2-selftest-kdsiin18/state-leak/combined-0.lfz",
+        "command": [
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+          "run",
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-kdsiin18\\state-leak\\combined-0.lfz"
+        ],
+        "passed": false
+      }
+    ]
+  },
+  "work_directory": "Temp/benchmark-v2-selftest-kdsiin18",
+  "note": "Constant stubs are harness controls, never student scores.",
+  "manifest_sha256": "040070201e83d95a6e457b3adfe32e544013b20613dc0237999188d6ec2c410c"
+}

@@ -1,0 +1,54 @@
+{
+  "id": "independent-io",
+  "source_sha256": "af521b6c0055a306af56d8d599248cc0c28f01d72e865b5952413b00f413d718",
+  "case_sha256": "6f445742f5c512b71c397d2cdc3c3587ab9d3a30a3d87d74605455c114e2ad65",
+  "status": "FAIL",
+  "attempts": [
+    {
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-wrong-return\\combined-0.lfz\", line 10, in <module>\n    assert(__bench_result == {\"count\":2,\"total\":5},\"independent-io\")\n    ^\nAssertionError: 断言失败：independent-io\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "c0c051572d3750299a62e8208ceb6432f0323c5fe943b49904dd6f30f0711796",
+      "timed_out": false,
+      "elapsed_seconds": 0.023104,
+      "program_sha256": "fcaec46cf101bdcd074d3537f60d52fbbe636ec0ea7903889c463aa0140ca9b7",
+      "program_path": "Temp/verifier-benchmark-v2/io-wrong-return/combined-0.lfz",
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-wrong-return\\combined-0.lfz"
+      ],
+      "output_matches": true,
+      "input_unchanged": true,
+      "expected_output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+      "output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+      "expected_input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+      "input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+      "passed": false
+    },
+    {
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-wrong-return\\combined-1.lfz\", line 10, in <module>\n    assert(__bench_result == {\"count\":2,\"total\":5},\"independent-io\")\n    ^\nAssertionError: 断言失败：independent-io\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "c089f7078fa6f61fbf05d7d8a04fc84f4231b77921379e17ecb390a3d0561ce2",
+      "timed_out": false,
+      "elapsed_seconds": 0.02549,
+      "program_sha256": "fcaec46cf101bdcd074d3537f60d52fbbe636ec0ea7903889c463aa0140ca9b7",
+      "program_path": "Temp/verifier-benchmark-v2/io-wrong-return/combined-1.lfz",
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-wrong-return\\combined-1.lfz"
+      ],
+      "output_matches": true,
+      "input_unchanged": true,
+      "expected_output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+      "output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+      "expected_input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+      "input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+      "passed": false
+    }
+  ]
+}

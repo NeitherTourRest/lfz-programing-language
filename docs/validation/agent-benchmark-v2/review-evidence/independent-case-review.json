@@ -1,0 +1,908 @@
+{
+  "kind": "INDEPENDENT_CASE_REVIEW_NOT_AGENT_SCORE",
+  "checks": [
+    {
+      "name": "B07-01 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-01 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-02 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-02 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-03 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-03 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-04 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-04 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-05 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-05 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-06 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-06 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-07 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-07 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-08 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-08 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-09 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-09 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-10 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-10 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-11 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-11 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-12 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-12 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-13 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-13 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-14 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-14 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-15 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-15 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-16 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-16 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-17 independent ASCII oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07-17 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-01 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-01 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-01 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-02 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-02 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-02 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-03 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-03 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-03 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-04 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-04 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-04 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-05 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-05 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-05 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-06 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-06 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-06 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-07 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-07 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-07 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-08 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-08 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-08 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-09 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-09 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-09 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-10 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-10 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-10 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-11 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-11 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-11 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-12 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-12 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-12 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-13 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-13 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-13 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-14 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-14 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-14 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-15 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-15 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-16 witness weight/value",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-16 exhaustive optimum and tie",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B05-16 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-01 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-01 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-02 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-02 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-03 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-03 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-04 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-04 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-05 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-05 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-06 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-06 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-07 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-07 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-08 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-08 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-09 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-09 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-10 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-10 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-11 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-11 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-12 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-12 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-13 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-13 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-14 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-14 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-15 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-15 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-16 independent output oracle",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B08-16 LF/noBOM bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-01 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-02 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-03 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-04 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-05 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-06 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-07 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-08 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-09 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-10 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-11 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-12 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-13 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-14 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-15 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-16 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-17 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B02-18 CSV grammar expected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-01 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-02 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-03 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-04 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-05 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-06 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-07 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-08 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-09 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-10 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-11 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-12 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-13 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-14 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B03-15 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-01 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-02 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-03 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-04 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-05 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-06 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-07 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-08 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-09 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-10 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-11 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-12 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-13 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-14 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-15 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B04-16 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-01 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-02 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-03 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-04 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-05 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-06 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-07 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-08 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-09 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-10 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-11 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-12 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-13 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-14 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-15 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-16 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B06-17 bounds",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "B07 initial regression fixed",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "total": 180,
+  "passed": 180,
+  "failed": []
+}

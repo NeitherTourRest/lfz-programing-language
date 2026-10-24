@@ -1,0 +1,319 @@
+{
+  "kind": "INDEPENDENT_RUNNER_REVIEW_NOT_AGENT_SCORE",
+  "manifest_sha256": "f2046eadca7c9f55376cbac000ccd53b25958298d10e2fc176ed0a14867c2a3e",
+  "runner_sha256": "5a698248db184d091bd0a41e46b861f241e7f8f2a1051cef640640671eb9e862",
+  "cases_sha256": "919cfe6905ef4f4bc003d0321fe4398aab631be0ac8a0873f03c2761af6f22cd",
+  "checks": [
+    {
+      "name": "CLI missing submissions refused",
+      "pass": true,
+      "details": {
+        "command": [
+          "D:\\app\\ANACONDA\\python.exe",
+          "-B",
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\validation\\agent-benchmark-v2\\run.py",
+          "--lfz",
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+          "--solutions",
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\empty",
+          "--output",
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\missing-results.json"
+        ],
+        "exit": 1,
+        "stdout": "{\"functional_pass_tasks\": 0, \"denominator\": 8, \"source_review\": \"REVIEW_REQUIRED\", \"protocol_review\": \"REVIEW_REQUIRED\", \"certified_pass_tasks\": null}\r\n",
+        "stderr": "Failed to find real location of D:\\app\\ANACONDA\\python.exe\n"
+      }
+    },
+    {
+      "name": "CLI wrong solution refused without certification",
+      "pass": true,
+      "details": {
+        "command": [
+          "D:\\app\\ANACONDA\\python.exe",
+          "-B",
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\validation\\agent-benchmark-v2\\run.py",
+          "--lfz",
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+          "--solutions",
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions",
+          "--output",
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-results.json"
+        ],
+        "exit": 1,
+        "stdout": "{\"functional_pass_tasks\": 0, \"denominator\": 8, \"source_review\": \"REVIEW_REQUIRED\", \"protocol_review\": \"REVIEW_REQUIRED\", \"certified_pass_tasks\": null}\r\n",
+        "stderr": "Failed to find real location of D:\\app\\ANACONDA\\python.exe\n"
+      }
+    },
+    {
+      "name": "default ten-second process timeout",
+      "pass": true,
+      "details": {
+        "exit": null,
+        "stdout": "",
+        "stderr": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "timed_out": true,
+        "elapsed_seconds": 10.013815
+      }
+    },
+    {
+      "name": "B08 good",
+      "pass": true,
+      "details": {
+        "id": "independent-io",
+        "source_sha256": "1e8b3c6a3b8e83dd609ff0b9b2b0f6981d5695118ee7364ecffe9e3f8fc54d7e",
+        "case_sha256": "6f445742f5c512b71c397d2cdc3c3587ab9d3a30a3d87d74605455c114e2ad65",
+        "status": "PASS",
+        "attempts": [
+          {
+            "exit": 0,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "timed_out": false,
+            "elapsed_seconds": 0.018283,
+            "program_sha256": "bbb802ddd09e15974e699ee24c986395b72ccca7494d27f6e17a18776d84a2d3",
+            "program_path": "Temp/verifier-benchmark-v2/io-good/combined-0.lfz",
+            "command": [
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+              "run",
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-good\\combined-0.lfz"
+            ],
+            "output_matches": true,
+            "input_unchanged": true,
+            "expected_output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+            "output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+            "expected_input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "passed": true
+          },
+          {
+            "exit": 0,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "timed_out": false,
+            "elapsed_seconds": 0.038515,
+            "program_sha256": "bbb802ddd09e15974e699ee24c986395b72ccca7494d27f6e17a18776d84a2d3",
+            "program_path": "Temp/verifier-benchmark-v2/io-good/combined-1.lfz",
+            "command": [
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+              "run",
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-good\\combined-1.lfz"
+            ],
+            "output_matches": true,
+            "input_unchanged": true,
+            "expected_output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+            "output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+            "expected_input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "passed": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "B08 append",
+      "pass": true,
+      "details": {
+        "id": "independent-io",
+        "source_sha256": "0d8c9721ef2949355eceebb76c534f00140b3e410685e339a884fcb64701152e",
+        "case_sha256": "6f445742f5c512b71c397d2cdc3c3587ab9d3a30a3d87d74605455c114e2ad65",
+        "status": "FAIL",
+        "attempts": [
+          {
+            "exit": 0,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "timed_out": false,
+            "elapsed_seconds": 0.017658,
+            "program_sha256": "d6d64fa258207cd72b0e294c10254dd2439b3e605025f01ab4dc93dabd2d83e5",
+            "program_path": "Temp/verifier-benchmark-v2/io-append/combined-0.lfz",
+            "command": [
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+              "run",
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-append\\combined-0.lfz"
+            ],
+            "output_matches": false,
+            "input_unchanged": true,
+            "expected_output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+            "output_sha256": "5c3210cb3d3bff4e2be9494a4f5001e1169009505eb2b6edf69c4bbddab2476e",
+            "expected_input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "passed": false
+          },
+          {
+            "exit": 0,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "timed_out": false,
+            "elapsed_seconds": 0.018293,
+            "program_sha256": "d6d64fa258207cd72b0e294c10254dd2439b3e605025f01ab4dc93dabd2d83e5",
+            "program_path": "Temp/verifier-benchmark-v2/io-append/combined-1.lfz",
+            "command": [
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+              "run",
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-append\\combined-1.lfz"
+            ],
+            "output_matches": false,
+            "input_unchanged": true,
+            "expected_output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+            "output_sha256": "5c3210cb3d3bff4e2be9494a4f5001e1169009505eb2b6edf69c4bbddab2476e",
+            "expected_input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "passed": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "B08 wrong-return",
+      "pass": true,
+      "details": {
+        "id": "independent-io",
+        "source_sha256": "af521b6c0055a306af56d8d599248cc0c28f01d72e865b5952413b00f413d718",
+        "case_sha256": "6f445742f5c512b71c397d2cdc3c3587ab9d3a30a3d87d74605455c114e2ad65",
+        "status": "FAIL",
+        "attempts": [
+          {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-wrong-return\\combined-0.lfz\", line 10, in <module>\n    assert(__bench_result == {\"count\":2,\"total\":5},\"independent-io\")\n    ^\nAssertionError: 断言失败：independent-io\n",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "c0c051572d3750299a62e8208ceb6432f0323c5fe943b49904dd6f30f0711796",
+            "timed_out": false,
+            "elapsed_seconds": 0.023104,
+            "program_sha256": "fcaec46cf101bdcd074d3537f60d52fbbe636ec0ea7903889c463aa0140ca9b7",
+            "program_path": "Temp/verifier-benchmark-v2/io-wrong-return/combined-0.lfz",
+            "command": [
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+              "run",
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-wrong-return\\combined-0.lfz"
+            ],
+            "output_matches": true,
+            "input_unchanged": true,
+            "expected_output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+            "output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+            "expected_input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "passed": false
+          },
+          {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-wrong-return\\combined-1.lfz\", line 10, in <module>\n    assert(__bench_result == {\"count\":2,\"total\":5},\"independent-io\")\n    ^\nAssertionError: 断言失败：independent-io\n",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "c089f7078fa6f61fbf05d7d8a04fc84f4231b77921379e17ecb390a3d0561ce2",
+            "timed_out": false,
+            "elapsed_seconds": 0.02549,
+            "program_sha256": "fcaec46cf101bdcd074d3537f60d52fbbe636ec0ea7903889c463aa0140ca9b7",
+            "program_path": "Temp/verifier-benchmark-v2/io-wrong-return/combined-1.lfz",
+            "command": [
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+              "run",
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-wrong-return\\combined-1.lfz"
+            ],
+            "output_matches": true,
+            "input_unchanged": true,
+            "expected_output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+            "output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+            "expected_input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "passed": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "B08 crlf",
+      "pass": true,
+      "details": {
+        "id": "independent-io",
+        "source_sha256": "641aae315e1f7f2ef3086896d653c20eff034fab6b958964eef4e209557fb17c",
+        "case_sha256": "6f445742f5c512b71c397d2cdc3c3587ab9d3a30a3d87d74605455c114e2ad65",
+        "status": "FAIL",
+        "attempts": [
+          {
+            "exit": 0,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "timed_out": false,
+            "elapsed_seconds": 0.025114,
+            "program_sha256": "cd0883ebe86a2031957c6efedb5c640deccd8ad578e1226dd2c9edb74716f44d",
+            "program_path": "Temp/verifier-benchmark-v2/io-crlf/combined-0.lfz",
+            "command": [
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+              "run",
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-crlf\\combined-0.lfz"
+            ],
+            "output_matches": false,
+            "input_unchanged": true,
+            "expected_output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+            "output_sha256": "0eccf3f5f62d230f101484162a29d2cef5228f5099857a129c7ce8da171204f7",
+            "expected_input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "passed": false
+          },
+          {
+            "exit": 0,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "timed_out": false,
+            "elapsed_seconds": 0.026782,
+            "program_sha256": "cd0883ebe86a2031957c6efedb5c640deccd8ad578e1226dd2c9edb74716f44d",
+            "program_path": "Temp/verifier-benchmark-v2/io-crlf/combined-1.lfz",
+            "command": [
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+              "run",
+              "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-crlf\\combined-1.lfz"
+            ],
+            "output_matches": false,
+            "input_unchanged": true,
+            "expected_output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+            "output_sha256": "0eccf3f5f62d230f101484162a29d2cef5228f5099857a129c7ce8da171204f7",
+            "expected_input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+            "passed": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "manifest path mismatch rejected",
+      "pass": true,
+      "details": "Frozen manifest mismatch; review and explicitly re-freeze before measuring"
+    },
+    {
+      "name": "existing report not overwritten",
+      "pass": true,
+      "details": {
+        "command": [
+          "D:\\app\\ANACONDA\\python.exe",
+          "-B",
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\validation\\agent-benchmark-v2\\run.py",
+          "--lfz",
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+          "--self-test",
+          "--output",
+          "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\cli-self-test.json"
+        ],
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Failed to find real location of D:\\app\\ANACONDA\\python.exe\nusage: run.py [-h] [--solutions SOLUTIONS] --lfz LFZ [--output OUTPUT]\r\n              [--freeze] [--self-test]\r\nrun.py: error: output exists: choose a new report path to preserve results\r\n"
+      }
+    }
+  ],
+  "total": 9,
+  "passed": 9
+}

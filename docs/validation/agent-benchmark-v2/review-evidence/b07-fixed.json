@@ -1,0 +1,56 @@
+{
+  "kind": "INDEPENDENT_B07_REGRESSION",
+  "command": "import frozen run.py; reference(B07, original counterexample)",
+  "runner_sha256": "5a698248db184d091bd0a41e46b861f241e7f8f2a1051cef640640671eb9e862",
+  "args": [
+    "aKB",
+    [
+      "a",
+      "b",
+      "akb"
+    ]
+  ],
+  "expected": [
+    [
+      "a",
+      1,
+      [
+        0
+      ]
+    ],
+    [
+      "b",
+      1,
+      [
+        1
+      ]
+    ],
+    [
+      "akb",
+      0,
+      []
+    ]
+  ],
+  "actual": [
+    [
+      "a",
+      1,
+      [
+        0
+      ]
+    ],
+    [
+      "b",
+      1,
+      [
+        1
+      ]
+    ],
+    [
+      "akb",
+      0,
+      []
+    ]
+  ],
+  "pass": true
+}

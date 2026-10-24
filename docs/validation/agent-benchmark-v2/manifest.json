@@ -1,0 +1,15 @@
+{
+  "schema": "LFZ-AGENT-BENCH-v2.1",
+  "files": {
+    "docs/validation/agent-benchmark-v2/TASKS.md": "8d7201425f9c6addab689036bfd2071765ed781f248221e38509c994544c5c42",
+    "docs/validation/agent-benchmark-v2/STUDENT_PROMPT.md": "e6edf5debad31fb0efe7e9091bde20f8fb5a17e0dec3adf678fef2556630497f",
+    "docs/validation/agent-benchmark-v2/cases.json": "919cfe6905ef4f4bc003d0321fe4398aab631be0ac8a0873f03c2761af6f22cd",
+    "docs/validation/agent-benchmark-v2/run.py": "5a698248db184d091bd0a41e46b861f241e7f8f2a1051cef640640671eb9e862",
+    ".opencode/skills/lfz-programming/SKILL.md": "6045cd7bf4a30b7b62d29e39ee35c2b2573d77e15267471e28893c709d8b3b00",
+    ".opencode/skills/lfz-programming/README.md": "affe04c3751f91897eda6e13741028e20cc91e60cb945fdeb5bb18689e34fc09",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "d27a7d2d5b732f57547352fbff006e0451f4aa1f1aef7352349cdf52dc7b56f7",
+    ".opencode/skills/lfz-programming/prompt-template.md": "871abde52ff79cd887f8ca8689d2ad3dbec065bc88a796a46879ce8b92a0a47a",
+    "target/release/lfz.exe": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab"
+  },
+  "note": "Excludes manifest itself. Re-freeze explicitly before a new measurement only."
+}

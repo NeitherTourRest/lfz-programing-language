@@ -1,0 +1,54 @@
+{
+  "id": "independent-io",
+  "source_sha256": "641aae315e1f7f2ef3086896d653c20eff034fab6b958964eef4e209557fb17c",
+  "case_sha256": "6f445742f5c512b71c397d2cdc3c3587ab9d3a30a3d87d74605455c114e2ad65",
+  "status": "FAIL",
+  "attempts": [
+    {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timed_out": false,
+      "elapsed_seconds": 0.025114,
+      "program_sha256": "cd0883ebe86a2031957c6efedb5c640deccd8ad578e1226dd2c9edb74716f44d",
+      "program_path": "Temp/verifier-benchmark-v2/io-crlf/combined-0.lfz",
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-crlf\\combined-0.lfz"
+      ],
+      "output_matches": false,
+      "input_unchanged": true,
+      "expected_output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+      "output_sha256": "0eccf3f5f62d230f101484162a29d2cef5228f5099857a129c7ce8da171204f7",
+      "expected_input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+      "input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+      "passed": false
+    },
+    {
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timed_out": false,
+      "elapsed_seconds": 0.026782,
+      "program_sha256": "cd0883ebe86a2031957c6efedb5c640deccd8ad578e1226dd2c9edb74716f44d",
+      "program_path": "Temp/verifier-benchmark-v2/io-crlf/combined-1.lfz",
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\io-crlf\\combined-1.lfz"
+      ],
+      "output_matches": false,
+      "input_unchanged": true,
+      "expected_output_sha256": "f357173443c72b2f7162a1a17be8e569534edf50f9f54239500eba02f706becf",
+      "output_sha256": "0eccf3f5f62d230f101484162a29d2cef5228f5099857a129c7ce8da171204f7",
+      "expected_input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+      "input_sha256": "07f81bb975dccfa626e1dbca758721b15c2b023f167f6d0545421ef2cfafdaaa",
+      "passed": false
+    }
+  ]
+}

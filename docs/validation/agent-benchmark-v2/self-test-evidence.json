@@ -1,0 +1,292 @@
+{
+  "kind": "RUNNER_SELF_TEST_ONLY",
+  "ok": true,
+  "references": [
+    {
+      "task": "B01",
+      "cases": 16,
+      "reference_matches": true
+    },
+    {
+      "task": "B02",
+      "cases": 18,
+      "reference_matches": true
+    },
+    {
+      "task": "B03",
+      "cases": 14,
+      "reference_matches": true
+    },
+    {
+      "task": "B04",
+      "cases": 16,
+      "reference_matches": true
+    },
+    {
+      "task": "B05",
+      "cases": 16,
+      "reference_matches": true
+    },
+    {
+      "task": "B06",
+      "cases": 16,
+      "reference_matches": true
+    },
+    {
+      "task": "B07",
+      "cases": 17,
+      "reference_matches": true
+    },
+    {
+      "task": "B08",
+      "cases": 16,
+      "reference_matches": true
+    }
+  ],
+  "controls": {
+    "positive": {
+      "id": "ST-expression",
+      "source_sha256": "6a1b1f2caddcc1e60b08579b4eda65f6bccd5afb986157dd725dd48ddf5e3b44",
+      "case_sha256": "b688ace127fa7fd838f053c232254a376ce863207419917d49165635c9cb811c",
+      "status": "PASS",
+      "attempts": [
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.135721,
+          "program_sha256": "9e3ee22ae43077dd65da416e9bb4fe81bab767713956783d2fb0615d5b022595",
+          "program_path": "Temp/benchmark-v2-selftest-394top_b/positive/combined-0.lfz",
+          "passed": true
+        }
+      ]
+    },
+    "wrong": {
+      "id": "ST-expression",
+      "source_sha256": "51c0c1813c6a773ba27dfb01f4e4b5260eb0d1ae6e873f55eb6dae4414ff5dde",
+      "case_sha256": "b688ace127fa7fd838f053c232254a376ce863207419917d49165635c9cb811c",
+      "status": "FAIL",
+      "attempts": [
+        {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-394top_b\\wrong\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 9,\"ST-expression\")\n    ^\nAssertionError: 断言失败：ST-expression\n",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "263199a60c6f7b9f308541731b0783ab2b44b8b9b8448fec76d4d27ffe7b6c8e",
+          "timed_out": false,
+          "elapsed_seconds": 0.021004,
+          "program_sha256": "d8e99267274e49b07df08dfe9db0eef4cca7b0b00d1ff6111bcf97526e39a88a",
+          "program_path": "Temp/benchmark-v2-selftest-394top_b/wrong/combined-0.lfz",
+          "passed": false
+        }
+      ]
+    },
+    "missing_function": {
+      "id": "ST-expression",
+      "source_sha256": "b916f739a67d58e3b3ab2565778bb50255cfb14e392984ac0fc76a4db6bef00f",
+      "case_sha256": "b688ace127fa7fd838f053c232254a376ce863207419917d49165635c9cb811c",
+      "status": "FAIL",
+      "attempts": [
+        {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-394top_b\\missing_function\\combined-0.lfz\", line 5, in <module>\n    let __bench_result = solve(__bench_arg_0)\n                         ^\nNameError: 未定义的名字 'solve'\n",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "658e45b0bbecdb88b2ca6b4175199e059ed09f37cb3446014da30497f80879aa",
+          "timed_out": false,
+          "elapsed_seconds": 0.017228,
+          "program_sha256": "cf60eae3ef31eedbf9d34bdfe5ed08bdfe5db0e317a53612ff67aeea2aff6739",
+          "program_path": "Temp/benchmark-v2-selftest-394top_b/missing_function/combined-0.lfz",
+          "passed": false
+        }
+      ]
+    },
+    "nonzero": {
+      "id": "ST-expression",
+      "source_sha256": "8899e66ef3a1953f5069eb06962cb4d080bb286558b833f55ff07e456f3661c5",
+      "case_sha256": "b688ace127fa7fd838f053c232254a376ce863207419917d49165635c9cb811c",
+      "status": "FAIL",
+      "attempts": [
+        {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-selftest-394top_b\\nonzero\\combined-0.lfz\", line 2, in <module>\n    fail(\"deliberate self-test\")\n    ^\nAssertionError: deliberate self-test\n",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "a1cadc8b36dfbfae1e461ac8779e6929a4c3ce53843c0356a21c875806ff12c7",
+          "timed_out": false,
+          "elapsed_seconds": 0.017797,
+          "program_sha256": "f2030e0a85d3a1fd70a734a08ff4d3e4ec40f9648dbfe06c85731d76e7fcbf20",
+          "program_path": "Temp/benchmark-v2-selftest-394top_b/nonzero/combined-0.lfz",
+          "passed": false
+        }
+      ]
+    },
+    "invalid_preamble": {
+      "id": "ST-expression",
+      "source_sha256": "f17389dd52b8f4583e75faa1b636be1372ad4570727063ab6ff051a7f116d303",
+      "case_sha256": "b688ace127fa7fd838f053c232254a376ce863207419917d49165635c9cb811c",
+      "status": "INVALID_SOURCE",
+      "detail": "First line must be exact #42",
+      "attempts": []
+    }
+  },
+  "missing_tasks_counted": 8,
+  "literal_roundtrip": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": "",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": false,
+    "elapsed_seconds": 0.018625
+  },
+  "timeout_detected": {
+    "exit": null,
+    "stdout": "",
+    "stderr": "",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": true,
+    "elapsed_seconds": 0.219108
+  },
+  "io_controls": {
+    "io_positive": {
+      "id": "ST-io",
+      "source_sha256": "c8cb45a531a8e0cd91d9f77acc4d80bf84f8371a43d89aca84211ab366fb339b",
+      "case_sha256": "a729c7f6a974d7c6044de10b0920d21d192e99be8e511a848982f370144645b0",
+      "status": "PASS",
+      "attempts": [
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.018143,
+          "program_sha256": "ba31c726d3f77c5b89c07dcad4a649ecd5fbd6bafba717d38734ddeed68bd205",
+          "program_path": "Temp/benchmark-v2-selftest-394top_b/io_positive/combined-0.lfz",
+          "output_matches": true,
+          "input_unchanged": true,
+          "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "passed": true
+        },
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.017527,
+          "program_sha256": "ba31c726d3f77c5b89c07dcad4a649ecd5fbd6bafba717d38734ddeed68bd205",
+          "program_path": "Temp/benchmark-v2-selftest-394top_b/io_positive/combined-1.lfz",
+          "output_matches": true,
+          "input_unchanged": true,
+          "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "passed": true
+        }
+      ]
+    },
+    "io_wrong": {
+      "id": "ST-io",
+      "source_sha256": "d3d6bd9c2ac27b4471497a160039b6e79befc5127f1736904bf008282c15235a",
+      "case_sha256": "a729c7f6a974d7c6044de10b0920d21d192e99be8e511a848982f370144645b0",
+      "status": "FAIL",
+      "attempts": [
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.017769,
+          "program_sha256": "e109b5eec5877b0b232bf1142ab88d7f28d407d2467d2fcf4e0db2dbbda76d29",
+          "program_path": "Temp/benchmark-v2-selftest-394top_b/io_wrong/combined-0.lfz",
+          "output_matches": false,
+          "input_unchanged": true,
+          "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "output_sha256": "8810ad581e59f2bc3928b261707a71308f7e139eb04820366dc4d5c18d980225",
+          "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "passed": false
+        },
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.017,
+          "program_sha256": "e109b5eec5877b0b232bf1142ab88d7f28d407d2467d2fcf4e0db2dbbda76d29",
+          "program_path": "Temp/benchmark-v2-selftest-394top_b/io_wrong/combined-1.lfz",
+          "output_matches": false,
+          "input_unchanged": true,
+          "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "output_sha256": "8810ad581e59f2bc3928b261707a71308f7e139eb04820366dc4d5c18d980225",
+          "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "passed": false
+        }
+      ]
+    },
+    "io_input_mutation": {
+      "id": "ST-io",
+      "source_sha256": "eacf3520b3bdbb12834c8d9d27a4ef1f1d9c6f0d4b2339123bda0d22a5704e9b",
+      "case_sha256": "a729c7f6a974d7c6044de10b0920d21d192e99be8e511a848982f370144645b0",
+      "status": "FAIL",
+      "attempts": [
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.017315,
+          "program_sha256": "a2e28757fd636291bdf3a094465148e4dae1236ef51e4ef8533e2413086919df",
+          "program_path": "Temp/benchmark-v2-selftest-394top_b/io_input_mutation/combined-0.lfz",
+          "output_matches": true,
+          "input_unchanged": false,
+          "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "input_sha256": "d67e2e944994496c8d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed",
+          "passed": false
+        },
+        {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false,
+          "elapsed_seconds": 0.020913,
+          "program_sha256": "a2e28757fd636291bdf3a094465148e4dae1236ef51e4ef8533e2413086919df",
+          "program_path": "Temp/benchmark-v2-selftest-394top_b/io_input_mutation/combined-1.lfz",
+          "output_matches": true,
+          "input_unchanged": false,
+          "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+          "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+          "input_sha256": "d67e2e944994496c8d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed",
+          "passed": false
+        }
+      ]
+    }
+  },
+  "work_directory": "Temp/benchmark-v2-selftest-394top_b",
+  "note": "Constant stubs are harness controls, never student scores.",
+  "manifest_sha256": "fdee84e7e88067dfecd6147ee7104a28cfcde48373131b4acb461e68a28e794a"
+}

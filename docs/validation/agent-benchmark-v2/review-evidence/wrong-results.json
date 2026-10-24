@@ -1,0 +1,1766 @@
+{
+  "schema": "LFZ-AGENT-BENCH-v2.1",
+  "kind": "FUNCTIONAL_EVALUATION_ONLY",
+  "denominator": 8,
+  "warning": "Not an eight-Agent blind-test result. Independent source and protocol review are required.",
+  "functional_pass_tasks": 0,
+  "certified_pass_tasks": null,
+  "tasks": [
+    {
+      "task": "B01",
+      "functional_status": "FAIL",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 0,
+      "total_cases": 16,
+      "cases": [
+        {
+          "id": "B01-01",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "dce92e1d9eee9a05bba2ac8fa06f12daa9ef94f5b02d6660279115d676f66604",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-01\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 9,\"B01-01\")\n    ^\nAssertionError: 断言失败：B01-01\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "a4058c22e9d2ebb11955db7d3026310e490e93e2da7246aca7974d5873c92fb1",
+              "timed_out": false,
+              "elapsed_seconds": 0.018933,
+              "program_sha256": "b6621410f9e2fabe131bcd964a411bd7b7b6c29cb3e1c113d1b411e4d9292c3b",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-01/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-01\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-02",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "1b1cba8c91843405171bf326ec8836bb034bf229f8292537a8b42e97d76a6dbf",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-02\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == -4,\"B01-02\")\n    ^\nAssertionError: 断言失败：B01-02\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "127e0c6d8c36759131f49bcf5db92bca9218fd01f1494330828f4a927fe748ba",
+              "timed_out": false,
+              "elapsed_seconds": 0.017486,
+              "program_sha256": "ce6dc4e606a43f8faaf9d59e3437e132cb14511a2eca17d6b83738e8556a2884",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-02/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-02\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-03",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "eb9a71bc330f6b42fada5937c5f8fce9355a3b2b5d7965941fab618753505c2d",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-03\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 12,\"B01-03\")\n    ^\nAssertionError: 断言失败：B01-03\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "618099ce63edcc332612ae72b2ee0b5c35c4dc505a76dc0a6bbda03d2fdc2964",
+              "timed_out": false,
+              "elapsed_seconds": 0.018379,
+              "program_sha256": "455c01717bc17fbb5d1b4c16fd2c08b59fe20a157dbed3d84a1ab3d90f698af1",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-03/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-03\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-04",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "82d0c236ea1657b77e98e1b10bf177d42049bb16b5df1415677db79a0a2b0c19",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-04\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 3,\"B01-04\")\n    ^\nAssertionError: 断言失败：B01-04\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "939d128f81207f431ada169c7355bc5a2a1386e0093376022e65da6c6ed206ae",
+              "timed_out": false,
+              "elapsed_seconds": 0.020956,
+              "program_sha256": "aa1e14203802530a3ca5051c701f4fd8c2e8d5db7904224b9443c6c4b1ef78a6",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-04/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-04\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-05",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "559d2057c30169845d63cdd980532e29d3bfec65ad9031acd5f787311fb2f54b",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-05\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 9,\"B01-05\")\n    ^\nAssertionError: 断言失败：B01-05\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "8f6b4c56d182c800fe189813a14f1a479dba23c32c7240a8dda5a0d11fc92705",
+              "timed_out": false,
+              "elapsed_seconds": 0.020215,
+              "program_sha256": "de2e870b53834dbd1ecf0e8f5266bbe1225b21aed5ff32b8516f5de0c0a0c801",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-05/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-05\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-06",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "3c9cef82c9b8b937dd8a52f183348de678c4a5c548b5245b3c1299df20349137",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-06\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 5,\"B01-06\")\n    ^\nAssertionError: 断言失败：B01-06\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "92da66295b3ebc074341de2b3121cb7f81ef58f0ab27eb4546d94067f730c7b9",
+              "timed_out": false,
+              "elapsed_seconds": 0.019166,
+              "program_sha256": "b0b973841aa8e0b3a919db001e4869915e224ecd4089f88e11fa596156236c3c",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-06/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-06\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-07",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "26030ec622fce1b46e51170d7a0e9314a6deb9ec922b29da7cbb9b4ccb057936",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-07\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 10,\"B01-07\")\n    ^\nAssertionError: 断言失败：B01-07\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "1c88fde1431324e45b94adefdbdeb5809c35ac10503b28831f4eb39195329223",
+              "timed_out": false,
+              "elapsed_seconds": 0.018236,
+              "program_sha256": "65a5e0be1a9cf0a302036b6607c7f2001ccce019ad3eae22ae60c5e49d112145",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-07/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-07\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-08",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "3a601b46cf424a82d304955801c409cd3e2434125af0093821fb341d78895e74",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-08\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == -4,\"B01-08\")\n    ^\nAssertionError: 断言失败：B01-08\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "f8d08586684ec79e50e76d53cfc4186eac6d8ae853666dd1d29fb32cba4ccb8f",
+              "timed_out": false,
+              "elapsed_seconds": 0.016967,
+              "program_sha256": "00c5e87ef70caf969b7a503a55050b59f1e84a124195ecba29052a2f40d316d3",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-08/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-08\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-09",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "1bf9688c8229d1796780d34022c6070138b3b0d3d04f21ef02f5ca21f8ad44d5",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-09\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 3,\"B01-09\")\n    ^\nAssertionError: 断言失败：B01-09\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "66485d7132062b35a1d44cc1dbf51afae5ebbbdbc975776f16c681f14fed4eb5",
+              "timed_out": false,
+              "elapsed_seconds": 0.018144,
+              "program_sha256": "7a8e64c06e86b4ebde54eef8a6eb912ce79089672866e7e2e396131bfcef7222",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-09/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-09\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-10",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "69a245966d1dd97c8809c3ee722b3d28b69d9809046b4736b8a33633ec84c202",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-10\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 24,\"B01-10\")\n    ^\nAssertionError: 断言失败：B01-10\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "97ff893cce88e9bd1cf8344b963cba3046710f1529361348604913056b987488",
+              "timed_out": false,
+              "elapsed_seconds": 0.021271,
+              "program_sha256": "fb38c580b5c207fba6d60b0533a9682821d06b0596620b0d490088d61e223ba6",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-10/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-10\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-11",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "465064e8181d895a9b85b8f7b01760cd08af4d8417b5a8c8903054593caddc22",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-11\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 0,\"B01-11\")\n    ^\nAssertionError: 断言失败：B01-11\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "edaa77b6d7a0e62f3f492d74b87b09aa4f4f48e1a191fe07163871a916d661e5",
+              "timed_out": false,
+              "elapsed_seconds": 0.016518,
+              "program_sha256": "05fffa28ab843a0300afa0e3eee22fb4cb8ba69c7f7b482cecb25444514c3deb",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-11/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-11\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-12",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "2308e5f44e3f137fb301128425f706d75626df88c8b4d37be113b44c819f0ee7",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-12\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 15,\"B01-12\")\n    ^\nAssertionError: 断言失败：B01-12\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "364054d41d05cf2f889d3610f3994944ac5ac8c54a4637f1f229c05a4c70e1bd",
+              "timed_out": false,
+              "elapsed_seconds": 0.01608,
+              "program_sha256": "d4469873bb259f79e6365921dd3f833011dd760e6b8ca31c8e9bee6fb0ca8207",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-12/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-12\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-13",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "1ff805c625a4a02fdf7285f52f94605dc1a124a7ae1a8f4a85b2abf1556da8f4",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-13\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 3,\"B01-13\")\n    ^\nAssertionError: 断言失败：B01-13\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "c242e037035b7319afde25a76dc638dc7e0cf6f130b3eea8cb4fdfaa77b2c93c",
+              "timed_out": false,
+              "elapsed_seconds": 0.019232,
+              "program_sha256": "d7991bdb896929a89c2f19a7dfee3c624d7a8e9f708d3ca5d2e48055b73711f7",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-13/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-13\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-14",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "d48e0f90e0764774c0e18faf874539c54f7d6595b025eb1946b0170ac23e7653",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-14\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 9007199254740995,\"B01-14\")\n    ^\nAssertionError: 断言失败：B01-14\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "044844689a1b1b77f95c775b3233971f5dc776005e370c555ecf3bcccac35e44",
+              "timed_out": false,
+              "elapsed_seconds": 0.018007,
+              "program_sha256": "5823220599f6b688d969dc2c6fc4e5740986aec2cc20e7cd0576c6e134958e1c",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-14/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-14\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-15",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "c26335caa9ba84b69517719f72e4992cb40e375e78f40a542a9956778352a3e6",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-15\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 9223372036854775806,\"B01-15\")\n    ^\nAssertionError: 断言失败：B01-15\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "7ad8f9cfe80f78cec167b7003430203f5e2eec82e84657d1cd842a2583f97f20",
+              "timed_out": false,
+              "elapsed_seconds": 0.019622,
+              "program_sha256": "4c34181af206cd23599295b3fbe6b170c6129476887d99aad18808d3aa70576f",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-15/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-15\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        },
+        {
+          "id": "B01-16",
+          "source_sha256": "a5bad1a88c2289c5f2f96b5aa06d01d1b355afb26a74100d4af7af2fdee4dbff",
+          "case_sha256": "99f15c20595c0eb0314ccc061d173257f2141fd7e931423d8ed5fddda98ef325",
+          "status": "FAIL",
+          "attempts": [
+            {
+              "exit": 2,
+              "stdout": "",
+              "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-16\\combined-0.lfz\", line 6, in <module>\n    assert(__bench_result == 3,\"B01-16\")\n    ^\nAssertionError: 断言失败：B01-16\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "769f250c71b756cc656023c9357317ef03e51cfafb88023c707d58ed12e8b9e9",
+              "timed_out": false,
+              "elapsed_seconds": 0.018852,
+              "program_sha256": "2160128f3b81810ce61abddf6f7893239e6b5c89b38bf8c52fe2e49481d7cf59",
+              "program_path": "Temp/benchmark-v2-run-gje0d3jh/B01/B01-16/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-gje0d3jh\\B01\\B01-16\\combined-0.lfz"
+              ],
+              "passed": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "B02",
+      "functional_status": "FAIL",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 0,
+      "total_cases": 18,
+      "cases": [
+        {
+          "id": "B02-01",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "04cecf612a5830a065155bd9720f1d8defcb83a879b0538f4e8dc0e3ef63cb8e",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-02",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "75fd202bab33cfca31f9bc3350d8b2304aef16cc2742cac2782243b048ff973c",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-03",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "2d9aab33920cfc656c2a58151bf9de87f224f9bb5f7b54ffb850088488ac09d3",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-04",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "13831c36eb7430e53302ed3441c73cd1d77a144a5e621840e469479466315464",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-05",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "5d4e16fe55624f5a6d68b192346c8dc20bd0f5acacd5481771ca951cb3247c35",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-06",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "572f6e7147c8e5662304a99f5124b496425172e6ed7356c5c544365015108fa2",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-07",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "94411671c48e0b89fa56f91717461574f47719d6c10da66a49bf025e49223c44",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-08",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "912ad7724018fa2c09326a1133040938422006b2df100fac755ba3c99822e6f8",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-09",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "163ce9174c917eec9b3d3a810a4704f792ab4591eae3eab69205f2d027233194",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-10",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "c6f219444f9d2b9e5f64e249c510c837fdefab37f67b4e34e614fffe54165b4e",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-11",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "909dd5d63598b2b0013a26e6a00634cb14ee867f8ced370cc9190b4ba2924477",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-12",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "27db0e482737d74408db5ab5b60fdc7946943bd27783cb9029c15dc9204fab8e",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-13",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "beab6b9fe219871d9a1b7389d75b154892f4f9e66db3a6ad534218e1defad5c9",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-14",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "44c83cb7baace514e1a799d547911eb5f0776675317cab48f7cfbeb0d0c6a10e",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-15",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "4c3d6ce57f6a7c26f5bbd70d595b445c21c2b94a352f14e645976b1bff2ab3db",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-16",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "b505965359e5b8265e4bc659e51dc5c28a86735b43c7b1476e7b3c9bf5512127",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-17",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "02deab782ffe30555c27c2b2f9a3c1072c7eac70515bf71d0093e3a66a4cc7a6",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        },
+        {
+          "id": "B02-18",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "ecad1333cca75294329dbfde18d5e4c5f5f4b1931961f0eaddeeb11f159295c8",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B02\\solution.lfz"
+        }
+      ]
+    },
+    {
+      "task": "B03",
+      "functional_status": "FAIL",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 0,
+      "total_cases": 15,
+      "cases": [
+        {
+          "id": "B03-01",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "f8443272d622ecef8127093945bb2140ab2707c6b9f402a15b912463f08d1ce4",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-02",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "d264823c406f9e6b34c45f28d607bfbfb0306c1bfaef304a25380de4c5a51381",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-03",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "a6f57e9f6e09d9dff37e0a113ec2f44c8f42d65694a186d2d99082e301200e9e",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-04",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "5b46cbdbff4865599ae365d15fbc34c0b568056e5c6ce33a06d4c23573556d64",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-05",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "80215a4dea00f4c484c8d126aea3796d5c42d8adff011f1ac0896e01bec3e06c",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-06",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "3978d9553c2a79d2519bc5960b655566181dde728682bff07e5e2fdc385f59aa",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-07",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "03691354671ddcb227cb2574e8ec36e286b869447d44818de1ba77bfba52d085",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-08",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "88ce24ba4ddbff5809d2ae9b497a8032fb5f892658b6386e94540caf4085aff3",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-09",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "484b0da8741b4e7db8060efaf68450b6795edbce51699bef001af09b225afa74",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-10",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "59b717260c51844045ae9568fd87a20a7790c42ec1624bd1db094daea7079a9d",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-11",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "db0a6e1db6d1298e08dfad44774b5240b7eabfaee17ed2d108250a745d8c929e",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-12",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "4aa5a3ad3b86e8d7174cee9d9ebaba5d6236ce8534957bb8360fe4dc85f7698c",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-13",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "1d0ee3eb0ad2a263530153578e7dbc6160364f3e74cb842e179d4d837df53699",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-14",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "53ae3adba47ec2ffb31e1c96c3e8a5dcf01421da82a90e27727bd405b9deb332",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        },
+        {
+          "id": "B03-15",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "98f292d5913868e52003ee11143d526ad76b5eaa48395ea9869cf33e77bcdcad",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B03\\solution.lfz"
+        }
+      ]
+    },
+    {
+      "task": "B04",
+      "functional_status": "FAIL",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 0,
+      "total_cases": 16,
+      "cases": [
+        {
+          "id": "B04-01",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "515912b4586a2ee9eb40738ed62e1cf8d8d1189a1a272d6a8b78b010fe009d9e",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-02",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "0462c3e819097323fc1dcbde7538009fa971126b6c2a9ee32616fbc3211d992e",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-03",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "258991caef0c67a961e0dca1ad8e1ac77235b413c4bd77eb9bc6343f11547d6e",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-04",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "2ca9660cb70fbd5e6fb00e2f4ad177a0b92cabb168bf5671ca5054d6174de2d5",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-05",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "e7829d3e8f90a5d2b31c8984d328c5153c5465af64075679db55b25dae5d2bc6",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-06",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "a25dec5697c6e926100c884693f635659e3f1d00417f7ad06bf921f8c846784b",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-07",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "b6e63ef278d9c2dab4dca50455c7c5ce29282fc847213befa90a0e8f7d50e01e",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-08",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "32aebd7bae515819865f29f3a79da591d75b263c25b8f2077b07a109c9cbea6d",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-09",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "532a4396aa4cd27c4dc549307f7d882efb5785a528a1e6418dfce74ec1a550ac",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-10",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "ab45f672e85687cda3b4f64625c27abefbf2e9293c787020151abd8058295ca8",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-11",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "3cbcf8c3904085f9058fa438b36639654820069cc0aa8bf1e569d70f7a36f4d8",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-12",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "3574771a1ba06ca78ccc66058c600ef524a8c2ce3fbeaa74b1aa90200a95029f",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-13",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "0dca476177a7a3f3c3e83bb37df282272073393ed0850cea331992979afb781c",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-14",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "82990b00396eb4036acab03143f4ae896a37b3622abf92c9700d89cf9d49a1d7",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-15",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "e63c075dfba5f55c2ff91502c3caaadcfbc961a005ffb3a8d3b669f8a9c24ca3",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        },
+        {
+          "id": "B04-16",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "99caa9bc39815eeb257c63b806c5db5d2be2715117a60cec4dc0265b24bb4b6d",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B04\\solution.lfz"
+        }
+      ]
+    },
+    {
+      "task": "B05",
+      "functional_status": "FAIL",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 0,
+      "total_cases": 16,
+      "cases": [
+        {
+          "id": "B05-01",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "6eb111c78c5939bc9422a68ea4942f42eb13c48cdf1c1a53f3e2ef3154628280",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-02",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "1a36a9fba774a37e6cc92d46a46253c10060daa145c0c8c739310562c7135f38",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-03",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "ac43c230301a558cd7d02791a2774052da6a7cb6583200eef39671c36d695802",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-04",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "2148881e9cfa1d10ab6dd478353a6b7d2079366a49fb35c933095c3e62078eef",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-05",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "2e5ec82760df4056b83ded8aef0bd754f9c4d8feb6ae5058778cfb7f6f67d2fd",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-06",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "bd3a569ad1d25bbf01bce828381a56531a4279e0339bea634e29e69882d9952e",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-07",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "3b0d82f98c525b6ce58378e970e3a589f6e62a0ed90cfd9b406ac33812870c74",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-08",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "bddf765d756db1abdc500e63301f2e5f387e6c0c7149b6abf1b60bb3a48d6fff",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-09",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "f24d2d989e53019fcc68ea4400bc58e196f50f999e474dd4cd095778707607dc",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-10",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "0723e979dad31837218f5e3ae2361735496b1d7732ade5aac23dc013522a3c91",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-11",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "bf78015c4a3d160bb666b23c3a43b012c15b020190aa1efbce84c33cfb690396",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-12",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "f0babd2b19ab6506c77cdb8cf16786879e1d1ed783ddeaa0ae1ddce4d07ecc41",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-13",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "bc47ab47b6580bbb14dcc7d4b30f579314577c716828f244055947359c191e2a",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-14",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "4bc8c4db9fd48a6212f9eb92e673424945a91c0100352389b968a0f6f22eecd3",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-15",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "948b3ad558d226f10173a4ad8d02c34a80da2be2e4cefccac4e0bc0abb6c6814",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        },
+        {
+          "id": "B05-16",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "0d283e30629999989c2d37e10118bb1d2e3721abfca5142d8a8c78813d2c7d0b",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B05\\solution.lfz"
+        }
+      ]
+    },
+    {
+      "task": "B06",
+      "functional_status": "FAIL",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 0,
+      "total_cases": 17,
+      "cases": [
+        {
+          "id": "B06-01",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "d9d48159a3631c8fb5cb8e9247f76c38141ebbdb7042ac8099c49b73f1d2f922",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-02",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "fafe128b6960d5f83d0fdd7911c16d77ca2cf4b10116b5a02707d9e481e319e0",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-03",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "b43185d03fb69bf1e4aec984e232d1f8ae22a029b293e52579e3f83b6992a3bd",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-04",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "c3fb9436e0ed24f7352f4e42e25035f36960e5d469e48aa41baae8e4cb585c47",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-05",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "b6f61a039aa88793ab741204ff9cbdf2442bdebaaba46b07b316d3210bcabf66",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-06",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "afa6b1708073eae505dc833d2ded99bd458f373f163a94bf99cabc3f0e1324d1",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-07",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "9054cd873c5f77014cd164c5cadfe1c78e39bbf46aa78f36a0196f455a2c1835",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-08",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "05d57115338f958a07c02fa44c37e34578c4047f65bb4895c434563e57b6e816",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-09",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "4f446982dc90553b7a1016908af4468e47f6fe4741e6fb328eba6a69ed4b33e6",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-10",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "e33a16c07f28f994ad17aa141c448bb8cb0522b72747c55d7d0dfdf63c2a4883",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-11",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "77fccd1bfb5e684a1d71f0758c0582efcf4510723328c28d9ad9143a01a66a68",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-12",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "716b0dda29b19bf31c3b065bf3ea115a05e4b49fb462e771b857b297fc238ce7",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-13",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "daa9129b49628e053d29b01c2d393f3fd4e9b9c28a084a519e83e1ec19d8d183",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-14",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "001b4aafddb19f87a4d18afe56b4d29cdf8b632bc6b0c4684fc861448a8d3a4d",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-15",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "6d3e851691423f7740c95db6a49e1b4e10deeb57a400e9b4bea8b0af266f193b",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-16",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "fef73195bc3bbad264b3c517dfa0817eec47cc868eb37525182f379337846113",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        },
+        {
+          "id": "B06-17",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "6e8c16e269588417906bb9e142b32394fdb986678435f4fe743e2b0bb461eb9a",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B06\\solution.lfz"
+        }
+      ]
+    },
+    {
+      "task": "B07",
+      "functional_status": "FAIL",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 0,
+      "total_cases": 17,
+      "cases": [
+        {
+          "id": "B07-01",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "02ec66e0588a455e415df58900e8c7533d4775ee975f430b2f8a5e4c9a513181",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-02",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "a36a146049bd98bf17eb2aabf0a079de87a078406143cc1008f95aaed1920932",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-03",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "47bd72bcc4d42dcb5d72791f259a4bcb7a62477850423f4194b9412abc609787",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-04",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "cf47e0adebb5457ffde45a1762bf492b5313b577a53e1d091f8bece8670c92a5",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-05",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "773644316c44f59b622f1462ebcf907d1ab5eab34ea2731ba751c98b88065095",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-06",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "bf3dadca9b23792158cf2b78bf0c60b4ef29934ba28038c10dcb84f59e46b690",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-07",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "0f6e4ce24b71a3e078f976ab3a4a5daed30d4e1a065cc8c0169fef32cc878426",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-08",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "8665fad57e16d76d1ba7e7d0476acee290d136fa6d37070079f9048ec3499480",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-09",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "e0db66f6ac3471930d36316c5d8c19111393920c566eb5231525ea4ebb4b41e8",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-10",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "ddac6fe0350bb5f4a526bad3006ab494579ee42059aaa13f9407192a3df70e1d",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-11",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "677335d3b176c0343a103b1e23e163a85df2376618ca53b0e958dde42c9400a8",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-12",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "2fa18689eb70d9a4c8f1c4349b3cf13a061e55e2343327e0343e2434294b4d8d",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-13",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "620a939cca2255a2c998a126946c2ad72404cacfc6c02dee328da5047ba72080",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-14",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "cc140fe9ba4c8699ec77bed42f0dcd20403a168cd5bb64f1965f302a17311d4f",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-15",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "4ad38de8e9d84a7552f36e7a9172bd8d710344a830f6d1a4ab0eb9a77aba90b2",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-16",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "c9fa779feffa20cd4e8b89394d173e752eff3bb92161724a8b1f6d599acabf0b",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        },
+        {
+          "id": "B07-17",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "f6bd5f3cb633031794bb7e9c94afc341495c690f1ef0d54ae5b2c0f6f97391f9",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B07\\solution.lfz"
+        }
+      ]
+    },
+    {
+      "task": "B08",
+      "functional_status": "FAIL",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 0,
+      "total_cases": 16,
+      "cases": [
+        {
+          "id": "B08-01",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "9f66f9c516957ac0722621b2227da43d9cb65f8a80a47b4628bad9ae0c5883ef",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-02",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "ef689058ecd460d73cb9ef6d86198d241f92437bd2383d46f1deb6a23a168972",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-03",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "f4dfa783ca6800629fa63a29aa2bf70d7f74aa0e806aaa3000b348cb6c50b504",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-04",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "0a7ecfa6d40d29cfe76e8e9ca8627c5eb03126774231b79cf8a279a7316e1b7f",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-05",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "8482461513de8aaafb860172b192cfac2a996a241c948d5039641d145e199528",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-06",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "2da8a108730546a2b91bde568b4956d4fb5f9656efaf510ba8df52a3fa7b4736",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-07",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "fd2efa7140f6edf6245608967fa5f4bf9d65971194217a306452969f033fc308",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-08",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "e2e8048e5823c352a6ac66076d6ca410aaa2d1ee2af5da36c2ad0b12eeb46856",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-09",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "b7733be976c2ed6ad22cffc9b05c91e5a4245681eae49bafc9e3344fa39e51e5",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-10",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "8327f56a05abecb334a997adf3d80451b400ea7ffbe7ad94459f4444e23a9ec9",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-11",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "5f37850cb2296c70f6b088a0b4974661c8c812bbfc9131fd0923c4d4e0df9c2c",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-12",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "a23243e502bf69b57ffb2df6645e2491142ecd9983cc2bc5583558046abad261",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-13",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "bd40f9d05618b24592afd1185aaf1714e14c827f27760065d4c9a2a2e3dd17ea",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-14",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "0f36623997e235fa9848b46a19c17afcb513c124b07c71329ea213abd45a8d36",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-15",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "bfecece68dfbb801b07fa37ea8136f719b7298692a1f97259791f3b23a69c645",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        },
+        {
+          "id": "B08-16",
+          "status": "MISSING",
+          "source_sha256": null,
+          "case_sha256": "7b6e73023f7fab9416efaebada711da5471302dd93b988fc9b1ca5ee14f335fb",
+          "exit": null,
+          "stdout": "",
+          "stderr": "",
+          "attempts": [],
+          "detail": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\verifier-benchmark-v2\\wrong-submissions\\B08\\solution.lfz"
+        }
+      ]
+    }
+  ],
+  "manifest_sha256": "f2046eadca7c9f55376cbac000ccd53b25958298d10e2fc176ed0a14867c2a3e",
+  "interpreter_sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+  "work_directory": "Temp/benchmark-v2-run-gje0d3jh"
+}

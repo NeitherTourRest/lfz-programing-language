@@ -1,0 +1,52 @@
+{
+  "command": "python Temp/verifier-benchmark-v2/review_b07.py",
+  "args": [
+    "aKB",
+    [
+      "a",
+      "b",
+      "akb"
+    ]
+  ],
+  "expected": [
+    [
+      "a",
+      1,
+      [
+        0
+      ]
+    ],
+    [
+      "b",
+      1,
+      [
+        1
+      ]
+    ],
+    [
+      "akb",
+      0,
+      []
+    ]
+  ],
+  "actual": [
+    [
+      "a",
+      0,
+      []
+    ],
+    [
+      "b",
+      0,
+      []
+    ],
+    [
+      "akb",
+      1,
+      [
+        0
+      ]
+    ]
+  ],
+  "pass": false
+}
