@@ -307,3 +307,58 @@ fn json_print_case_stdout_is_single_json() {
         r.stderr
     );
 }
+
+// bug-20261024-V01：有效非空测试集执行前准备 cwd/Temp，不改变 cwd。
+#[test]
+fn fresh_cwd_io_suite_prepares_temp() {
+    for args in [vec!["test"], vec!["test", "--json", "tests"]] {
+        let d = TempDir::new();
+        d.file(
+            "tests/test_v11_io.lfz",
+            include_str!("lfz/test_v11_io.lfz"),
+        );
+        assert!(!d.path().join("Temp").exists());
+        let r = run_in(d.path(), &args);
+        assert_eq!(r.code, 0, "stdout={} stderr={}", r.stdout, r.stderr);
+        assert!(r.stderr.is_empty(), "stderr={}", r.stderr);
+        assert_eq!(
+            std::fs::read(d.path().join("Temp/v11_io_roundtrip.txt")).unwrap(),
+            b"",
+            "IO 路径必须相对原 cwd，且现有 IO 用例应执行至最后"
+        );
+        assert!(!d.path().join("tests/Temp").exists());
+        if args.contains(&"--json") {
+            assert!(head(&r.stdout).contains(r#""passed":1"#), "{}", r.stdout);
+            assert_eq!(r.stdout.lines().count(), 1);
+        } else {
+            assert!(r.stdout.contains("PASS"), "{}", r.stdout);
+        }
+    }
+}
+
+#[test]
+fn temp_file_conflict_is_runner_environment_error() {
+    for args in [vec!["test"], vec!["test", "--json"]] {
+        let d = TempDir::new();
+        d.file("Temp", "preserve this file");
+        d.file("tests/must_not_run.lfz", "#42\nprint(\"MUST_NOT_RUN\")\n");
+        let r = run_in(d.path(), &args);
+        assert_eq!(r.code, 2, "stdout={} stderr={}", r.stdout, r.stderr);
+        assert!(r.stdout.is_empty(), "stdout={}", r.stdout);
+        assert!(r.stderr.contains("lfz test: 无法准备测试工作目录 'Temp'"), "{}", r.stderr);
+        assert!(!r.stderr.contains("MUST_NOT_RUN"), "{}", r.stderr);
+        assert_eq!(std::fs::read_to_string(d.path().join("Temp")).unwrap(), "preserve this file");
+    }
+}
+
+#[test]
+fn invalid_or_empty_suite_does_not_prepare_temp() {
+    for args in [vec!["test", "missing"], vec!["test", "--json"]] {
+        let d = TempDir::new();
+        std::fs::create_dir_all(d.path().join("tests")).unwrap();
+        let r = run_in(d.path(), &args);
+        assert_eq!(r.code, 2, "stdout={} stderr={}", r.stdout, r.stderr);
+        assert!(r.stdout.is_empty(), "{}", r.stdout);
+        assert!(!d.path().join("Temp").exists());
+    }
+}

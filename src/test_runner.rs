@@ -96,6 +96,13 @@ pub fn run(args: &[String], json: bool, out: &mut dyn Write, err: &mut dyn Write
         return cli::EXIT_ERROR;
     }
 
+    // runner 工作目录准备：发现有效非空用例集后、执行首个用例前创建 cwd/Temp。
+    // 不改变 cwd；IO 内置仍按原语义处理调用者给出的路径。
+    if let Err(e) = std::fs::create_dir_all("Temp") {
+        let _ = writeln!(err, "lfz test: 无法准备测试工作目录 'Temp'：{e}");
+        return cli::EXIT_ERROR;
+    }
+
     let mut passed = 0usize;
     let mut failed = 0usize;
     let mut errored = 0usize;

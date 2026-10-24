@@ -1,6 +1,6 @@
 # `lfz test` runner 契约（派生物 · 供 test-engineer 使用）
 
-> 唯一写者: tooling-dev ｜ 状态: **v1.2（P4.2-fix：`--json` 下程序输出重定向到 stderr；含 v1.1 的 `--json` 与 P4.1 契约）**
+> 唯一写者: tooling-dev ｜ 状态: **v1.3（T11-V01：测试工作目录准备；P4.2-fix：`--json` 下程序输出重定向到 stderr；含 v1.1 的 `--json` 与 P4.1 契约）**
 > **权威来源**: [`docs/spec/interface-contract.md`](../spec/interface-contract.md) §11.2（**T-R1 … T-R4**，硬性契约）、
 > §8.1（错误类 + 退出码 D-008）、§10.6（`--json` 字段）；[`docs/spec/semantics.md`](../spec/semantics.md) §8.2/§8.3/§8.4（输出格式与 `--json` 字段）、§4.5.10（`assert`/`check`/`fail`）。
 > 本文件是上述规范的**实现侧派生说明**：把「发现规则 / 清单 schema / 判定与退出码裁定 / 输出格式」写死，供 test-engineer 按契约编写黑盒测试集（P5）。
@@ -20,6 +20,18 @@ lfz test --json <路径...>
 - 无参数时**发现根** = 当前工作目录下的 `tests/`；若该目录不存在 → 退出码 `2` + stderr `lfz test: 未发现测试目录 'tests'`。
 - 显式路径不存在 → 退出码 `2` + stderr `lfz test: 路径不存在：<path>`。
 - 发现 0 个用例 → 退出码 `2` + stderr `lfz test: 未发现任何测试用例`（**不静默成功**）。
+
+---
+
+### 1.1 测试工作目录准备（T11-V01）
+
+发现与清单校验成功且测试集非空后，runner 在执行首个用例前显式准备 **当前工作目录（cwd）下的 `Temp/`**：缺失时创建，已有目录时复用。默认发现、显式目录与显式文件参数均采用这一流程，文本与 `--json` 模式一致。
+
+runner **不改变 cwd**，所以测试正文中的 `Temp/...` 相对进程启动时的 cwd 解析，与发现根或脚本所在目录无关。该准备仅提供测试集约定的工作目录；`readFile` / `writeFile` / `appendFile` 的语言语义不变，其他缺失父目录仍由内置函数报告 `IOError`。runner 不负责清理测试生成的文件。
+
+若 `Temp` 已是普通文件、权限不足或发生其他创建失败，runner 不执行任何用例，退出码 `2`，stdout 为空，stderr 写 `lfz test: 无法准备测试工作目录 'Temp'：<系统错误>`（包括 `--json` 模式）。发现失败、清单非法或空测试集在此步骤之前返回，不创建 `Temp`。
+
+回归证据：`tests/test_runner.rs::{fresh_cwd_io_suite_prepares_temp,temp_file_conflict_is_runner_environment_error,invalid_or_empty_suite_does_not_prepare_temp}`。第一条直接复用正式 `test_v11_io.lfz`，在无 `Temp` 的独立 cwd 验证默认一命令与显式目录 JSON 两种入口。
 
 ---
 
