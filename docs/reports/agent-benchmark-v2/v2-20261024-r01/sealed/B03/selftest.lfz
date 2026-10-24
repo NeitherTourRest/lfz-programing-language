@@ -1,0 +1,88 @@
+#42
+fn bucket_hash(key) {
+    var code_sum = 0
+    for c in split("", key) {
+        code_sum = (code_sum + ord(c)) % 8
+    }
+    code_sum
+}
+
+fn solve(operations) {
+    let buckets = [[], [], [], [], [], [], [], []]
+    let results = map((i) => nil, range(len(operations)))
+    var count = 0
+    var result_index = 0
+    for operation in operations {
+        let action = operation[0]
+        if action == "size" {
+            results[result_index] = count
+        } else {
+            let key = operation[1]
+            let bucket_index = bucket_hash(key)
+            var found = -1
+            var i = 0
+            while i < len(buckets[bucket_index]) {
+                if buckets[bucket_index][i][0] == key {
+                    found = i
+                    break
+                }
+                i += 1
+            }
+            if action == "set" {
+                if found == -1 {
+                    buckets[bucket_index] = push([key, operation[2]], buckets[bucket_index])
+                    count += 1
+                } else {
+                    buckets[bucket_index][found][1] = operation[2]
+                }
+                results[result_index] = nil
+            } else if action == "get" {
+                if found != -1 {
+                    results[result_index] = buckets[bucket_index][found][1]
+                }
+            } else if action == "has" {
+                results[result_index] = found != -1
+            } else if action == "delete" {
+                results[result_index] = found != -1
+                if found != -1 {
+                    buckets[bucket_index] = removeAt(found, buckets[bucket_index])
+                    count -= 1
+                }
+            }
+        }
+        result_index += 1
+    }
+    results
+}
+assert(solve([]) == [], "empty operations")
+assert(solve([["size"], ["get", "missing"], ["has", "missing"], ["delete", "missing"]]) == [0, nil, false, false], "missing keys")
+assert(solve([["set", "a", 1], ["set", "i", 2], ["size"], ["get", "a"], ["get", "i"], ["set", "a", -7], ["size"], ["get", "a"], ["delete", "a"], ["get", "i"], ["has", "a"], ["delete", "a"], ["set", "a", 0], ["size"], ["get", "a"]]) == [nil, nil, 2, 1, 2, nil, 2, -7, true, 2, false, false, nil, 2, 0], "collisions overwrite delete reinsert")
+assert(solve([["set", "", 10], ["set", "😀", 20], ["set", "日本語", 30], ["set", "é", 40], ["get", ""], ["get", "😀"], ["get", "日本語"], ["get", "é"], ["size"], ["delete", ""], ["get", "😀"]]) == [nil, nil, nil, nil, 10, 20, 30, 40, 4, true, 20], "empty Unicode keys")
+assert(bucket_hash("") == 0, "empty hash")
+assert(bucket_hash("😀") == 128512 % 8, "non BMP scalar hash")
+assert(bucket_hash("日本語") == (26085 + 26412 + 35486) % 8, "multi scalar hash")
+assert(solve([["size"], ["get", "a"], ["get", ""]]) == [0, nil, nil], "independent calls")
+var collision_ops = []
+var collision_expected = []
+for i in range(32) {
+    collision_ops = push(["set", chr(65 + 8 * i), i - 16], collision_ops)
+    collision_expected = push(nil, collision_expected)
+}
+for i in range(32) {
+    collision_ops = push(["get", chr(65 + 8 * i)], collision_ops)
+    collision_expected = push(i - 16, collision_expected)
+}
+collision_ops = push(["size"], collision_ops)
+collision_expected = push(32, collision_expected)
+for i in range(32) {
+    collision_ops = push(["delete", chr(65 + 8 * i)], collision_ops)
+    collision_expected = push(true, collision_expected)
+}
+collision_ops = push(["size"], collision_ops)
+collision_expected = push(0, collision_expected)
+assert(solve(collision_ops) == collision_expected, "32 distinct keys all in one bucket")
+let longest_key = repeat(128, "😀")
+assert(solve([["set", longest_key, 9], ["has", longest_key], ["get", longest_key], ["delete", longest_key], ["size"]]) == [nil, true, 9, true, 0], "maximum scalar length")
+let boundary_ops = map((i) => ["size"], range(128))
+assert(solve(boundary_ops) == map((i) => 0, range(128)), "128 operations")
+print("PASS: self-authored interface and boundary tests")

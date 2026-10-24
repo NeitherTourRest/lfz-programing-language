@@ -1,0 +1,71 @@
+#42
+fn solve(source) {
+    let chars = split("", source)
+    let n = len(chars)
+    if n == 0 {
+        return []
+    }
+    let buffer = map((i) => "", range(n))
+    let fields = map((i) => "", range(n + 1))
+    let rows = map((i) => nil, range(n + 1))
+    var used = 0
+    var fieldCount = 0
+    var rowCount = 0
+    var quoted = false
+    var endedLine = false
+    var i = 0
+    while i < n {
+        let c = chars[i]
+        endedLine = false
+        if quoted {
+            if c == "\"" {
+                if i + 1 < n && chars[i + 1] == "\"" {
+                    buffer[used] = "\""
+                    used += 1
+                    i += 1
+                } else {
+                    quoted = false
+                }
+            } else {
+                buffer[used] = c
+                used += 1
+            }
+        } else {
+            if c == "\"" {
+                quoted = true
+            } else if c == "," {
+                fields[fieldCount] = join("", slice(0, used, buffer))
+                fieldCount += 1
+                used = 0
+            } else if c == "\n" || c == "\r" {
+                fields[fieldCount] = join("", slice(0, used, buffer))
+                fieldCount += 1
+                rows[rowCount] = slice(0, fieldCount, fields)
+                rowCount += 1
+                fieldCount = 0
+                used = 0
+                endedLine = true
+                if c == "\r" && i + 1 < n && chars[i + 1] == "\n" {
+                    i += 1
+                }
+            } else {
+                buffer[used] = c
+                used += 1
+            }
+        }
+        i += 1
+    }
+    if !endedLine {
+        fields[fieldCount] = join("", slice(0, used, buffer))
+        fieldCount += 1
+        rows[rowCount] = slice(0, fieldCount, fields)
+        rowCount += 1
+    }
+    slice(0, rowCount, rows)
+}
+
+let __bench_arg_0 = "\"a,b\",c"
+let __bench_result = solve(__bench_arg_0)
+assert(__bench_result == [["a,b","c"]],"B02-09")
+let __bench_repeat = solve("\"a,b\",c")
+assert(__bench_repeat == [["a,b","c"]],"repeat independent solve")

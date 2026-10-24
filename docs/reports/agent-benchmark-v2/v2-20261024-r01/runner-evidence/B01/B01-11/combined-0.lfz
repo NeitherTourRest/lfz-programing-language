@@ -1,0 +1,89 @@
+#42
+// Recursive descent: expression -> term -> unary -> integer/parentheses.
+fn b01_skip(cs, start) {
+    var p = start
+    while p < len(cs) && cs[p] == " " {
+        p += 1
+    }
+    p
+}
+
+fn b01_unary(cs, start) {
+    var p = b01_skip(cs, start)
+    var negative = false
+    while p < len(cs) && (cs[p] == "+" || cs[p] == "-") {
+        if cs[p] == "-" {
+            negative = !negative
+        }
+        p = b01_skip(cs, p + 1)
+    }
+    if cs[p] == "(" {
+        let inner = b01_expr(cs, p + 1)
+        var value = inner[0]
+        if negative {
+            value = -value
+        }
+        return [value, b01_skip(cs, inner[1]) + 1]
+    }
+    var value = 0
+    while p < len(cs) {
+        let code = ord(cs[p])
+        if code < 48 || code > 57 {
+            break
+        }
+        let digit = code - 48
+        if negative {
+            value = value * 10 - digit
+        } else {
+            value = value * 10 + digit
+        }
+        p += 1
+    }
+    [value, p]
+}
+
+fn b01_term(cs, start) {
+    let first = b01_unary(cs, start)
+    var value = first[0]
+    var p = b01_skip(cs, first[1])
+    while p < len(cs) && (cs[p] == "*" || cs[p] == "/") {
+        let op = cs[p]
+        let rhs = b01_unary(cs, p + 1)
+        if op == "*" {
+            value = value * rhs[0]
+        } else {
+            value = div(value, rhs[0])
+        }
+        p = b01_skip(cs, rhs[1])
+    }
+    [value, p]
+}
+
+fn b01_expr(cs, start) {
+    let first = b01_term(cs, start)
+    var value = first[0]
+    var p = b01_skip(cs, first[1])
+    while p < len(cs) && (cs[p] == "+" || cs[p] == "-") {
+        let op = cs[p]
+        let rhs = b01_term(cs, p + 1)
+        if op == "+" {
+            value = value + rhs[0]
+        } else {
+            value = value - rhs[0]
+        }
+        p = b01_skip(cs, rhs[1])
+    }
+    [value, p]
+}
+
+fn solve(source) {
+    let chars = split("", source)
+    let result = b01_expr(chars, 0)
+    result[0]
+}
+
+let __bench_arg_0 = "0*999 + 0/7"
+let __bench_result = solve(__bench_arg_0)
+assert(__bench_result == 0,"B01-11")
+let __bench_repeat = solve("0*999 + 0/7")
+assert(__bench_repeat == 0,"repeat independent solve")

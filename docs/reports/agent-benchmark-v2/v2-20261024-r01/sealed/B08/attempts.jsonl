@@ -1,0 +1,2 @@
+{"start_utc":"2026-10-24T10:40:34.5542999Z","test_source":"selftest-01.lfz","source_snapshot":"attempt-01.lfz","stdout":"attempt-01.stdout.txt","stderr":"attempt-01.stderr.txt","exit_code":0,"end_utc":"2026-10-24T10:40:34.6334183Z","attempt":1,"command":".\\lfz.exe run selftest-01.lfz"}
+{"stdout":"attempt-02.stdout.txt","exit_code":0,"stderr":"attempt-02.stderr.txt","end_utc":"2026-10-24T10:40:49.8650250Z","source_snapshot":"attempt-02.lfz","command":".\\lfz.exe run selftest-02.lfz","attempt":2,"test_source":"selftest-02.lfz","start_utc":"2026-10-24T10:40:49.8323434Z"}

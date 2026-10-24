@@ -1,0 +1,24 @@
+#42
+fn solve(inputPath, outputPath) {
+    let lines = split("\n", readFile(inputPath))
+    let rows = map((i) => "", range(len(lines) + 1))
+    rows[0] = "index,value,running\n"
+    var count = 0
+    var total = 0
+    for line in lines {
+        let valueText = trim(line)
+        if valueText != "" {
+            let value = int(valueText)
+            count += 1
+            total += value
+            rows[count] = "${count},${value},${total}\n"
+        }
+    }
+    writeFile(outputPath, join("", rows))
+    { count: count, total: total }
+}
+
+let __bench_arg_0 = "Temp/benchmark-v2-run-psgbx3ri/B08/B08-02/输入 文件.txt"
+let __bench_arg_1 = "Temp/benchmark-v2-run-psgbx3ri/B08/B08-02/输出 文件.csv"
+let __bench_result = solve(__bench_arg_0,__bench_arg_1)
+assert(__bench_result == {"count":0,"total":0},"B08-02")

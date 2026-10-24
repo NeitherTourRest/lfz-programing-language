@@ -1,0 +1,12 @@
+{
+  "functional_report_sha256": "84a017c05d2451c79af699405588b06870eec47b56855adb1faac5e71a4cf2cb",
+  "copied_runner_files": 187,
+  "copied_files_identical": true,
+  "tasks": 8,
+  "cases": 131,
+  "passed_cases": 131,
+  "process_attempts": 147,
+  "timed_out": 0,
+  "max_process_seconds": 0.080458,
+  "source_snapshot_hashes_match": true
+}

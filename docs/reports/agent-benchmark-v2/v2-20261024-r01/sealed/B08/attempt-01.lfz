@@ -1,0 +1,19 @@
+#42
+fn solve(inputPath, outputPath) {
+    let lines = split("\n", readFile(inputPath))
+    let rows = map((i) => "", range(len(lines) + 1))
+    rows[0] = "index,value,running\n"
+    var count = 0
+    var total = 0
+    for line in lines {
+        let valueText = trim(line)
+        if valueText != "" {
+            let value = int(valueText)
+            count += 1
+            total += value
+            rows[count] = "${count},${value},${total}\n"
+        }
+    }
+    writeFile(outputPath, join("", rows))
+    { count: count, total: total }
+}

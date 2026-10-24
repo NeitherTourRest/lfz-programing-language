@@ -1,0 +1,7 @@
+{
+  "archive": "raw-inputs-submissions.zip",
+  "sha256": "90a6a3e3d894e7a813b06463506d5cc540e0a4570d7b005a3fd27ccc6a776d84",
+  "bytes": 665764,
+  "entries": 117,
+  "purpose": "Preserve original bytes of frozen inputs, submitted sources/attempts/logs and filtered tool traces independent of Git newline normalization. No private reasoning/system prompts included."
+}

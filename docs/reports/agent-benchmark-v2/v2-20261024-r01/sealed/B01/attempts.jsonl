@@ -1,0 +1,1 @@
+{"attempt":1,"start_utc":"2026-10-24T10:33:24.4405112Z","end_utc":"2026-10-24T10:33:24.5899528Z","command":".\\lfz.exe run test-01.lfz","exit_code":0,"snapshot":"attempt-01.lfz","stdout":"attempt-01.stdout.txt","stderr":"attempt-01.stderr.txt"}

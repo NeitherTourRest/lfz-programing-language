@@ -1,0 +1,1 @@
+PASS: independent process overwrites existing output with shorter header and populated content

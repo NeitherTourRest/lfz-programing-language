@@ -1,0 +1,1 @@
+{"attempt":1,"source":"attempt-01.lfz","test":"selftest.lfz","utc_start":"2026-10-24T10:36:58.9935470Z","utc_end":"2026-10-24T10:36:59.1155964Z","command":".\\lfz.exe run selftest.lfz","exit_code":0,"stdout":"attempt-01.stdout.txt","stderr":"attempt-01.stderr.txt"}

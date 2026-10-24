@@ -1,0 +1,153 @@
+{
+  "kind": "INDEPENDENT_MANUAL_REVIEW",
+  "run_id": "v2-20261024-r01",
+  "reviewer": "verifier",
+  "functional_report_sha256": "84a017c05d2451c79af699405588b06870eec47b56855adb1faac5e71a4cf2cb",
+  "manifest_sha256": "f2046eadca7c9f55376cbac000ccd53b25958298d10e2fc176ed0a14867c2a3e",
+  "tasks": [
+    {
+      "task": "B01",
+      "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+      "source_review": "PASS",
+      "protocol_review": "PASS",
+      "evidence": [
+        "sealed/B01/solution.lfz",
+        "sealed/B01/seal.json",
+        "sealed/B01/attempts.jsonl",
+        "sealed/B01/REPORT.md",
+        "dispatch-prompts/B01.txt",
+        "tool-traces/B01.json",
+        "review-evidence/source-review.md",
+        "review-evidence/material-check.json",
+        "review-evidence/tool-trace-review.json",
+        "REVIEW.md"
+      ]
+    },
+    {
+      "task": "B02",
+      "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+      "source_review": "PASS",
+      "protocol_review": "PASS",
+      "evidence": [
+        "sealed/B02/solution.lfz",
+        "sealed/B02/seal.json",
+        "sealed/B02/attempts.jsonl",
+        "sealed/B02/REPORT.md",
+        "dispatch-prompts/B02.txt",
+        "tool-traces/B02.json",
+        "review-evidence/source-review.md",
+        "review-evidence/material-check.json",
+        "review-evidence/tool-trace-review.json",
+        "REVIEW.md"
+      ]
+    },
+    {
+      "task": "B03",
+      "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+      "source_review": "PASS",
+      "protocol_review": "PASS",
+      "evidence": [
+        "sealed/B03/solution.lfz",
+        "sealed/B03/seal.json",
+        "sealed/B03/attempts.jsonl",
+        "sealed/B03/REPORT.md",
+        "dispatch-prompts/B03.txt",
+        "tool-traces/B03.json",
+        "review-evidence/source-review.md",
+        "review-evidence/material-check.json",
+        "review-evidence/tool-trace-review.json",
+        "REVIEW.md"
+      ]
+    },
+    {
+      "task": "B04",
+      "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+      "source_review": "PASS",
+      "protocol_review": "PASS",
+      "evidence": [
+        "sealed/B04/solution.lfz",
+        "sealed/B04/seal.json",
+        "sealed/B04/attempts.jsonl",
+        "sealed/B04/REPORT.md",
+        "dispatch-prompts/B04.txt",
+        "tool-traces/B04.json",
+        "review-evidence/source-review.md",
+        "review-evidence/material-check.json",
+        "review-evidence/tool-trace-review.json",
+        "REVIEW.md"
+      ]
+    },
+    {
+      "task": "B05",
+      "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+      "source_review": "PASS",
+      "protocol_review": "PASS",
+      "evidence": [
+        "sealed/B05/solution.lfz",
+        "sealed/B05/seal.json",
+        "sealed/B05/attempts.jsonl",
+        "sealed/B05/REPORT.md",
+        "dispatch-prompts/B05.txt",
+        "tool-traces/B05.json",
+        "review-evidence/source-review.md",
+        "review-evidence/material-check.json",
+        "review-evidence/tool-trace-review.json",
+        "REVIEW.md"
+      ]
+    },
+    {
+      "task": "B06",
+      "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+      "source_review": "PASS",
+      "protocol_review": "PASS",
+      "evidence": [
+        "sealed/B06/solution.lfz",
+        "sealed/B06/seal.json",
+        "sealed/B06/attempts.jsonl",
+        "sealed/B06/REPORT.md",
+        "dispatch-prompts/B06.txt",
+        "tool-traces/B06.json",
+        "review-evidence/source-review.md",
+        "review-evidence/material-check.json",
+        "review-evidence/tool-trace-review.json",
+        "REVIEW.md"
+      ]
+    },
+    {
+      "task": "B07",
+      "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+      "source_review": "PASS",
+      "protocol_review": "PASS",
+      "evidence": [
+        "sealed/B07/solution.lfz",
+        "sealed/B07/seal.json",
+        "sealed/B07/attempts.jsonl",
+        "sealed/B07/REPORT.md",
+        "dispatch-prompts/B07.txt",
+        "tool-traces/B07.json",
+        "review-evidence/source-review.md",
+        "review-evidence/material-check.json",
+        "review-evidence/tool-trace-review.json",
+        "REVIEW.md"
+      ]
+    },
+    {
+      "task": "B08",
+      "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+      "source_review": "PASS",
+      "protocol_review": "PASS",
+      "evidence": [
+        "sealed/B08/solution.lfz",
+        "sealed/B08/seal.json",
+        "sealed/B08/attempts.jsonl",
+        "sealed/B08/REPORT.md",
+        "dispatch-prompts/B08.txt",
+        "tool-traces/B08.json",
+        "review-evidence/source-review.md",
+        "review-evidence/material-check.json",
+        "review-evidence/tool-trace-review.json",
+        "REVIEW.md"
+      ]
+    }
+  ]
+}

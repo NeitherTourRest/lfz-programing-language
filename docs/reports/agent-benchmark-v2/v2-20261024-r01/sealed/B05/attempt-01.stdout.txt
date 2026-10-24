@@ -1,0 +1,1 @@
+PASS: 15 self-authored cases with interface and consistency assertions

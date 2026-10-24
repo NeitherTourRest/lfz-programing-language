@@ -1,0 +1,63 @@
+#42
+// ASCII 字母分词；索引在任何 query 查找之前完整构建。
+fn solve(text, queries) {
+    let chars = split("", text)
+    let capacity = len(chars)
+    let wordChars = map((i) => "", range(capacity))
+    let tokens = map((i) => "", range(capacity))
+    let index = {}
+    var width = 0
+    var tokenCount = 0
+    // 末尾空格负责提交最后一个单词，也适用于空文本。
+    for c in push(" ", chars) {
+        let code = ord(c)
+        if (code >= 65 && code <= 90) || (code >= 97 && code <= 122) {
+            wordChars[width] = lower(c)
+            width += 1
+        } else {
+            if width > 0 {
+                let word = join("", slice(0, width, wordChars))
+                tokens[tokenCount] = word
+                tokenCount += 1
+                if has(word, index) {
+                    index[word].count += 1
+                } else {
+                    index[word] = { count: 1, used: 0, positions: [] }
+                }
+                width = 0
+            }
+        }
+    }
+    // 依词频一次分配位置数组，避免逐次 push 复制已有位置。
+    for word in index {
+        index[word].positions = map((i) => 0, range(index[word].count))
+    }
+    var pos = 0
+    while pos < tokenCount {
+        let word = tokens[pos]
+        let entry = index[word]
+        entry.positions[entry.used] = pos
+        entry.used += 1
+        pos += 1
+    }
+    let result = map((i) => nil, range(len(queries)))
+    var q = 0
+    while q < len(queries) {
+        let normalized = lower(queries[q])
+        if has(normalized, index) {
+            let entry = index[normalized]
+            result[q] = [normalized, entry.count, entry.positions]
+        } else {
+            result[q] = [normalized, 0, []]
+        }
+        q += 1
+    }
+    result
+}
+
+let __bench_arg_0 = "Cat, dog CAT!"
+let __bench_arg_1 = ["CAT","bird"]
+let __bench_result = solve(__bench_arg_0,__bench_arg_1)
+assert(__bench_result == [["cat",2,[0,2]],["bird",0,[]]],"B07-03")
+let __bench_repeat = solve("Cat, dog CAT!",["CAT","bird"])
+assert(__bench_repeat == [["cat",2,[0,2]],["bird",0,[]]],"repeat independent solve")

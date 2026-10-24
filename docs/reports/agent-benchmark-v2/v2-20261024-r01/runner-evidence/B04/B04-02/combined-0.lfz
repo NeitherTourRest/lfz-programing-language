@@ -1,0 +1,67 @@
+#42
+fn solve(grid, start, goal) {
+    let rows = len(grid)
+    let cols = len(grid[0])
+    let cells = rows * cols
+    let board = map((row) => split("", row), grid)
+    let previous = map((i) => -2, range(cells))
+    let queue = map((i) => 0, range(cells))
+    let origin = start[0] * cols + start[1]
+    let target = goal[0] * cols + goal[1]
+    let dr = [-1, 0, 1, 0]
+    let dc = [0, 1, 0, -1]
+    var head = 0
+    var tail = 1
+    queue[0] = origin
+    previous[origin] = -1
+    while head < tail {
+        let current = queue[head]
+        head += 1
+        if current == target {
+            break
+        }
+        let row = div(current, cols)
+        let col = current % cols
+        for direction in range(4) {
+            let nr = row + dr[direction]
+            let nc = col + dc[direction]
+            if nr >= 0 && nr < rows && nc >= 0 && nc < cols {
+                let next = nr * cols + nc
+                if board[nr][nc] == "." && previous[next] == -2 {
+                    previous[next] = current
+                    queue[tail] = next
+                    tail += 1
+                }
+            }
+        }
+    }
+    if previous[target] == -2 {
+        return []
+    }
+    var count = 0
+    var cursor = target
+    while cursor != -1 {
+        count += 1
+        cursor = previous[cursor]
+    }
+    let path = map((i) => nil, range(count))
+    var index = count - 1
+    cursor = target
+    while cursor != -1 {
+        path[index] = [div(cursor, cols), cursor % cols]
+        index -= 1
+        cursor = previous[cursor]
+    }
+    path
+}
+
+let __bench_arg_0 = ["....."]
+let __bench_arg_1 = [0,0]
+let __bench_arg_2 = [0,4]
+let __bench_result = solve(__bench_arg_0,__bench_arg_1,__bench_arg_2)
+assert(__bench_result == [[0,0],[0,1],[0,2],[0,3],[0,4]],"B04-02")
+assert(__bench_arg_0 == ["....."],"input unchanged 0")
+assert(__bench_arg_1 == [0,0],"input unchanged 1")
+assert(__bench_arg_2 == [0,4],"input unchanged 2")
+let __bench_repeat = solve(["....."],[0,0],[0,4])
+assert(__bench_repeat == [[0,0],[0,1],[0,2],[0,3],[0,4]],"repeat independent solve")

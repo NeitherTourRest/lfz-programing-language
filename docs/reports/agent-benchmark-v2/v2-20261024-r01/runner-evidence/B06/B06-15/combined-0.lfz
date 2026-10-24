@@ -1,0 +1,40 @@
+#42
+fn solve(events) {
+    let balances = {}
+    var rejected = 0
+    for event in events {
+        if event[0] == "deposit" {
+            let id = event[1]
+            let amount = event[2]
+            if !has(id, balances) {
+                balances[id] = 0
+            }
+            balances[id] = balances[id] + amount
+        } else {
+            let source = event[1]
+            let target = event[2]
+            let amount = event[3]
+            if !has(source, balances) {
+                balances[source] = 0
+            }
+            if !has(target, balances) {
+                balances[target] = 0
+            }
+            if balances[source] < amount {
+                rejected += 1
+            } else {
+                if source != target {
+                    balances[source] = balances[source] - amount
+                    balances[target] = balances[target] + amount
+                }
+            }
+        }
+    }
+    ({ balances: balances, rejected: rejected })
+}
+
+let __bench_arg_0 = [["deposit","big",9007199254740992],["transfer","big","small",1]]
+let __bench_result = solve(__bench_arg_0)
+assert((type(__bench_result) == "struct" && len(__bench_result) == 2 && __bench_result.rejected == 0 && entries(__bench_result.balances) == [["big",9007199254740991],["small",1]]),"B06-15")
+let __bench_repeat = solve([["deposit","big",9007199254740992],["transfer","big","small",1]])
+assert((type(__bench_repeat) == "struct" && len(__bench_repeat) == 2 && __bench_repeat.rejected == 0 && entries(__bench_repeat.balances) == [["big",9007199254740991],["small",1]]),"repeat independent solve")

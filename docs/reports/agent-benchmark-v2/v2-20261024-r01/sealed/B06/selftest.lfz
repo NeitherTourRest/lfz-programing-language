@@ -1,0 +1,64 @@
+#42
+fn solve(events) {
+    let balances = {}
+    var rejected = 0
+    for event in events {
+        if event[0] == "deposit" {
+            let id = event[1]
+            let amount = event[2]
+            if !has(id, balances) {
+                balances[id] = 0
+            }
+            balances[id] = balances[id] + amount
+        } else {
+            let source = event[1]
+            let target = event[2]
+            let amount = event[3]
+            if !has(source, balances) {
+                balances[source] = 0
+            }
+            if !has(target, balances) {
+                balances[target] = 0
+            }
+            if balances[source] < amount {
+                rejected += 1
+            } else {
+                if source != target {
+                    balances[source] = balances[source] - amount
+                    balances[target] = balances[target] + amount
+                }
+            }
+        }
+    }
+    ({ balances: balances, rejected: rejected })
+}
+
+assert(solve([]) == {balances: {}, rejected: 0}, "empty")
+let a = solve([["transfer", "unknown", "other", 3]])
+assert(a == {balances: {unknown: 0, other: 0}, rejected: 1}, "unknown accounts")
+let b = solve([["deposit", "a", 7], ["transfer", "a", "b", 8]])
+assert(b == {balances: {a: 7, b: 0}, rejected: 1}, "no partial debit")
+let c = solve([["deposit", "a", 7], ["transfer", "a", "b", 7], ["transfer", "b", "c", 2]])
+assert(c == {balances: {a: 0, b: 5, c: 2}, rejected: 0}, "exact and chained transfers")
+let d = solve([["transfer", "same", "same", 1], ["deposit", "same", 4], ["transfer", "same", "same", 4], ["transfer", "same", "same", 5]])
+assert(d == {balances: {same: 4}, rejected: 2}, "self transfer")
+let u = solve([["deposit", "😀甲", 11], ["transfer", "😀甲", "", 6], ["transfer", "", "self", 2], ["deposit", "a.b", 3], ["transfer", "a.b", "😀甲", 1]])
+assert(u.balances["😀甲"] == 6, "Unicode")
+assert(u.balances[""] == 4, "empty id")
+assert(u.balances["self"] == 2, "keyword id")
+assert(u.balances["a.b"] == 2, "punctuation id")
+assert(sum(values(u.balances)) == 14, "conservation")
+assert(u.rejected == 0, "accepted events")
+assert(solve([]) == {balances: {}, rejected: 0}, "independent calls")
+let long_id = repeat(128, "😀")
+let long_result = solve([["deposit", long_id, 9], ["transfer", long_id, "return", 9]])
+assert(long_result.balances[long_id] == 0, "128 scalar id")
+assert(long_result.balances["return"] == 9, "keyword destination")
+let many = map((i) => ["deposit", str(i), 1], range(128))
+let many_result = solve(many)
+assert(len(many_result.balances) == 128, "128 events distinct accounts")
+assert(sum(values(many_result.balances)) == 128, "128 event total")
+assert(many_result.rejected == 0, "128 event rejections")
+let repeat_events = map((i) => ["deposit", "repeat", 2], range(128))
+assert(solve(repeat_events).balances["repeat"] == 256, "repeated deposits")
+print("PASS: self-authored ledger boundary and interface tests")

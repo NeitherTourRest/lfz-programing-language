@@ -1,0 +1,81 @@
+#42
+fn solve(grid, start, goal) {
+    let rows = len(grid)
+    let cols = len(grid[0])
+    let cells = rows * cols
+    let board = map((row) => split("", row), grid)
+    let previous = map((i) => -2, range(cells))
+    let queue = map((i) => 0, range(cells))
+    let origin = start[0] * cols + start[1]
+    let target = goal[0] * cols + goal[1]
+    let dr = [-1, 0, 1, 0]
+    let dc = [0, 1, 0, -1]
+    var head = 0
+    var tail = 1
+    queue[0] = origin
+    previous[origin] = -1
+    while head < tail {
+        let current = queue[head]
+        head += 1
+        if current == target {
+            break
+        }
+        let row = div(current, cols)
+        let col = current % cols
+        for direction in range(4) {
+            let nr = row + dr[direction]
+            let nc = col + dc[direction]
+            if nr >= 0 && nr < rows && nc >= 0 && nc < cols {
+                let next = nr * cols + nc
+                if board[nr][nc] == "." && previous[next] == -2 {
+                    previous[next] = current
+                    queue[tail] = next
+                    tail += 1
+                }
+            }
+        }
+    }
+    if previous[target] == -2 {
+        return []
+    }
+    var count = 0
+    var cursor = target
+    while cursor != -1 {
+        count += 1
+        cursor = previous[cursor]
+    }
+    let path = map((i) => nil, range(count))
+    var index = count - 1
+    cursor = target
+    while cursor != -1 {
+        path[index] = [div(cursor, cols), cursor % cols]
+        index -= 1
+        cursor = previous[cursor]
+    }
+    path
+}
+assert(solve(["."], [0,0], [0,0]) == [[0,0]], "single")
+assert(solve(["...", "...", "..."], [1,1], [0,2]) == [[1,1],[0,1],[0,2]], "up before right")
+assert(solve(["...", "...", "..."], [1,1], [2,0]) == [[1,1],[2,1],[2,0]], "down before left")
+assert(solve(["...", "...", "..."], [0,0], [2,2]) == [[0,0],[0,1],[0,2],[1,2],[2,2]], "right before down")
+assert(solve([".#.", "###", ".#."], [0,0], [2,2]) == [], "unreachable")
+assert(solve([".#.", ".#.", "..."], [0,0], [0,2]) == [[0,0],[1,0],[2,0],[2,1],[2,2],[1,2],[0,2]], "detour")
+assert(solve(["...."], [0,3], [0,0]) == [[0,3],[0,2],[0,1],[0,0]], "single row")
+assert(solve([".",".","."], [2,0], [0,0]) == [[2,0],[1,0],[0,0]], "single column")
+let board = ["...", ".#.", "..."]
+let start = [0,0]
+let goal = [2,2]
+let result = solve(board, start, goal)
+assert(board == ["...", ".#.", "..."], "grid immutable")
+assert(start == [0,0] && goal == [2,2], "coordinates immutable")
+let large = map((i) => repeat(20, "."), range(20))
+let longPath = solve(large, [0,0], [19,19])
+assert(len(longPath) == 39, "maximum grid length")
+for i in range(20) {
+    assert(longPath[i] == [0,i], "maximum grid tie order horizontal")
+}
+for i in range(1,20) {
+    assert(longPath[19+i] == [i,19], "maximum grid tie order vertical")
+}
+assert(solve(large,[10,10],[10,10]) == [[10,10]], "same coordinate in large grid")
+print("PASS: own BFS interface, boundary, ordering, detour, no-path, immutability, 20x20 tests")

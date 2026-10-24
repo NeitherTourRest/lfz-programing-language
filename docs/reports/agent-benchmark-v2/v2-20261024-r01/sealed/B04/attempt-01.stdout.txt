@@ -1,0 +1,1 @@
+PASS: own BFS interface, boundary, ordering, detour, no-path, immutability, 20x20 tests

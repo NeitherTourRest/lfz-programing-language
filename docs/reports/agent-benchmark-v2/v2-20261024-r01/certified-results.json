@@ -1,0 +1,17 @@
+{
+  "kind": "INDEPENDENT_CERTIFIED_RESULT",
+  "run_id": "v2-20261024-r01",
+  "functional_report_sha256": "84a017c05d2451c79af699405588b06870eec47b56855adb1faac5e71a4cf2cb",
+  "manual_review_sha256": "edb12042b4426e6519597b199568eb0290705629b7ea0a7fa52747984e1c74e9",
+  "manifest_sha256": "f2046eadca7c9f55376cbac000ccd53b25958298d10e2fc176ed0a14867c2a3e",
+  "denominator": 8,
+  "functional_pass_tasks": 8,
+  "certified_pass_tasks": 8,
+  "passed_cases": 131,
+  "total_cases": 131,
+  "isolation": "instruction-based shared filesystem, reviewed recorded student tool calls; no OS isolation claim",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "model_evidence": "tool-traces/B01..B08.json model_contexts",
+  "historical_comparison": "new v2 baseline; no percentage improvement calculated against old 2/8"
+}

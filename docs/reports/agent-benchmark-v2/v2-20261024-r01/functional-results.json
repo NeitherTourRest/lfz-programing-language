@@ -1,0 +1,3840 @@
+{
+  "schema": "LFZ-AGENT-BENCH-v2.1",
+  "kind": "FUNCTIONAL_EVALUATION_ONLY",
+  "denominator": 8,
+  "warning": "Not an eight-Agent blind-test result. Independent source and protocol review are required.",
+  "functional_pass_tasks": 8,
+  "certified_pass_tasks": null,
+  "tasks": [
+    {
+      "task": "B01",
+      "functional_status": "FUNCTIONAL_PASS",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 16,
+      "total_cases": 16,
+      "cases": [
+        {
+          "id": "B01-01",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "dce92e1d9eee9a05bba2ac8fa06f12daa9ef94f5b02d6660279115d676f66604",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.042443,
+              "program_sha256": "2b1bac9589e4cc174e469b477ddcffb65f854f9907e0072ea66b4eace8e16608",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-01/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-01\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-02",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "1b1cba8c91843405171bf326ec8836bb034bf229f8292537a8b42e97d76a6dbf",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017779,
+              "program_sha256": "ac15c05e77a31d27d267b446fd8565ed3706881d0942936900e09b04c14d9c8c",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-02/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-02\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-03",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "eb9a71bc330f6b42fada5937c5f8fce9355a3b2b5d7965941fab618753505c2d",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.023336,
+              "program_sha256": "6bbf89bb3dca0c900d013452ab54419a727a792429d934c96708e59793beffeb",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-03/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-03\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-04",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "82d0c236ea1657b77e98e1b10bf177d42049bb16b5df1415677db79a0a2b0c19",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019,
+              "program_sha256": "09811f0fecaa53032dda70015578f208482868eecc319a2312dd32ed7aa37c36",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-04/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-04\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-05",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "559d2057c30169845d63cdd980532e29d3bfec65ad9031acd5f787311fb2f54b",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017447,
+              "program_sha256": "04cb31d72fc92fe5335795efa0c4288c774f29bb1ec988be27593781e736d8b3",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-05/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-05\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-06",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "3c9cef82c9b8b937dd8a52f183348de678c4a5c548b5245b3c1299df20349137",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017877,
+              "program_sha256": "8df4b926f857a45629ae7c6dca73523cd9a2f4aee70a5bab47d0ba8fd073e32b",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-06/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-06\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-07",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "26030ec622fce1b46e51170d7a0e9314a6deb9ec922b29da7cbb9b4ccb057936",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.020421,
+              "program_sha256": "c8dbb5e47e20859ff65aac4e5473a9e61e591bb0217de5f0059b01789b2b0af4",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-07/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-07\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-08",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "3a601b46cf424a82d304955801c409cd3e2434125af0093821fb341d78895e74",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019067,
+              "program_sha256": "a4c9a71e7678e8df8142222fc54bad6206ef52326f876f0fcae000c633be5c49",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-08/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-08\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-09",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "1bf9688c8229d1796780d34022c6070138b3b0d3d04f21ef02f5ca21f8ad44d5",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018331,
+              "program_sha256": "0da0f1effee7aaed7b08fb720243875f23616bd1698fb2d84dc94bdb3c0e9c36",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-09/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-09\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-10",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "69a245966d1dd97c8809c3ee722b3d28b69d9809046b4736b8a33633ec84c202",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.023684,
+              "program_sha256": "e603cc9a95f060729bd457f53408494341b1cd3266740787914c171e689d9651",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-10/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-10\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-11",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "465064e8181d895a9b85b8f7b01760cd08af4d8417b5a8c8903054593caddc22",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017648,
+              "program_sha256": "c4edc0b3549aa1d9d0c90a63820fc362eb72b40d8c5d605fcbed54b948dcaf90",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-11/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-11\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-12",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "2308e5f44e3f137fb301128425f706d75626df88c8b4d37be113b44c819f0ee7",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.020741,
+              "program_sha256": "f534bb1f6649ac5e6dd39c1e8ebc41a42f9faf8f3147dade11c58693dc497ac2",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-12/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-12\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-13",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "1ff805c625a4a02fdf7285f52f94605dc1a124a7ae1a8f4a85b2abf1556da8f4",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016588,
+              "program_sha256": "97ec4f640de40c1797b8b2a53488da64613edcdea59c17398c1cf839d42920cc",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-13/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-13\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-14",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "d48e0f90e0764774c0e18faf874539c54f7d6595b025eb1946b0170ac23e7653",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017386,
+              "program_sha256": "2ade942ef81c2db18c4ee68baa2ef86ded774f5b0fbcf4c4031f3f9b94063471",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-14/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-14\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-15",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "c26335caa9ba84b69517719f72e4992cb40e375e78f40a542a9956778352a3e6",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017925,
+              "program_sha256": "a0ee9b6f28bb2bc26f4a8f733a10cfa26fc3c5f395a7fefaf60e3af5414a0aba",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-15/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-15\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B01-16",
+          "source_sha256": "0fe03bec14c46a5aaf82da0dfffbe7d68e2969f60fab68d75e97029f3cacfea8",
+          "case_sha256": "99f15c20595c0eb0314ccc061d173257f2141fd7e931423d8ed5fddda98ef325",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016858,
+              "program_sha256": "fe1b2fb295731826c4b0a37d6e97728dac1cef1c1ffbf761b39cd1a494dc6b8a",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B01/B01-16/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B01\\B01-16\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "B02",
+      "functional_status": "FUNCTIONAL_PASS",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 18,
+      "total_cases": 18,
+      "cases": [
+        {
+          "id": "B02-01",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "04cecf612a5830a065155bd9720f1d8defcb83a879b0538f4e8dc0e3ef63cb8e",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017801,
+              "program_sha256": "f505e784a9973c7e827d8e720c071ae1a8e0a2edcbc21d2f08d6aa506e5a5d7c",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-01/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-01\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-02",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "75fd202bab33cfca31f9bc3350d8b2304aef16cc2742cac2782243b048ff973c",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018083,
+              "program_sha256": "d0e9c8fc6c009f35df7a08dae5076c3a79800d43981844356c50489cfe08de4c",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-02/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-02\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-03",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "2d9aab33920cfc656c2a58151bf9de87f224f9bb5f7b54ffb850088488ac09d3",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.022406,
+              "program_sha256": "de0a85f7d11371298ce793d484dd2a17b3e10072df8c4ad91a1fa4fb4e8aad80",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-03/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-03\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-04",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "13831c36eb7430e53302ed3441c73cd1d77a144a5e621840e469479466315464",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017365,
+              "program_sha256": "6db2a4ae762a16c9b86fc4d6273f7f5279de7c192e7cf4e24e2d42f27c7b5a9d",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-04/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-04\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-05",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "5d4e16fe55624f5a6d68b192346c8dc20bd0f5acacd5481771ca951cb3247c35",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.022665,
+              "program_sha256": "c9ff4ccac9ee3cf59329e83aeb3dcf4f5bb50193a76de069de239416003d750c",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-05/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-05\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-06",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "572f6e7147c8e5662304a99f5124b496425172e6ed7356c5c544365015108fa2",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017275,
+              "program_sha256": "c31750813efe07c6d648bbf08ebe38a80d07d5cdc145d53a0e08dab57c5c1590",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-06/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-06\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-07",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "94411671c48e0b89fa56f91717461574f47719d6c10da66a49bf025e49223c44",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.01758,
+              "program_sha256": "225f89d6eb27ae323b5fc64dd0a550481d635fad77704513e127202515070ddd",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-07/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-07\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-08",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "912ad7724018fa2c09326a1133040938422006b2df100fac755ba3c99822e6f8",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017748,
+              "program_sha256": "03ce926b574564d99ec086ad2ce8796d172301529a6703f932e9a7e79b623c0b",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-08/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-08\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-09",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "163ce9174c917eec9b3d3a810a4704f792ab4591eae3eab69205f2d027233194",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021505,
+              "program_sha256": "8dfed125fa145d7ff8d624098001ce2daff2936d6f962f030743da929e849fa0",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-09/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-09\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-10",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "c6f219444f9d2b9e5f64e249c510c837fdefab37f67b4e34e614fffe54165b4e",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017375,
+              "program_sha256": "9b20b7afe2b48ca3a7edb73a4efb004ab68232b79b6dfd97ef1d8d339261a94a",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-10/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-10\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-11",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "909dd5d63598b2b0013a26e6a00634cb14ee867f8ced370cc9190b4ba2924477",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.01822,
+              "program_sha256": "70b8f2b0983c9222edd34bb0038be0747ba6bbcddec67d1d8e4d6bcd3d67d428",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-11/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-11\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-12",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "27db0e482737d74408db5ab5b60fdc7946943bd27783cb9029c15dc9204fab8e",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021825,
+              "program_sha256": "cc95b9126f24bf8c44ee1d395b9af6ac69f76cf416213dd8a70dc43e99688018",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-12/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-12\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-13",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "beab6b9fe219871d9a1b7389d75b154892f4f9e66db3a6ad534218e1defad5c9",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018968,
+              "program_sha256": "3c81a6ba23a5001145e593e7d87673d71ca1eb70bdf804b8e71a3b6dbdd6d843",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-13/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-13\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-14",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "44c83cb7baace514e1a799d547911eb5f0776675317cab48f7cfbeb0d0c6a10e",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016632,
+              "program_sha256": "84c57bd240dc5a4e8e358da8abcf32fd997bb995217744d3c4fd1f502749b27e",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-14/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-14\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-15",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "4c3d6ce57f6a7c26f5bbd70d595b445c21c2b94a352f14e645976b1bff2ab3db",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021288,
+              "program_sha256": "b8bb76e02b1793e335e697b7fa36ddba56c53010ddef938a3d89f30514325db1",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-15/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-15\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-16",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "b505965359e5b8265e4bc659e51dc5c28a86735b43c7b1476e7b3c9bf5512127",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.025219,
+              "program_sha256": "a03e52438439391d4fe4c9d88e6b01e769b2539261dbaba61ea1099262f50f53",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-16/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-16\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-17",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "02deab782ffe30555c27c2b2f9a3c1072c7eac70515bf71d0093e3a66a4cc7a6",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017071,
+              "program_sha256": "e101070242fdd8d188664505e261b99d78213ff697f7cea3820a4c8e57dbd9c2",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-17/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-17\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B02-18",
+          "source_sha256": "e7a8a3215163462dd38a9894d65c10da676074b9f70f17a044a15baf89bbc3f9",
+          "case_sha256": "ecad1333cca75294329dbfde18d5e4c5f5f4b1931961f0eaddeeb11f159295c8",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018654,
+              "program_sha256": "72a933008920d147b672b71cbf1bbb899dfe84c1fbb263f0ae6ad5c9768fd0e4",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B02/B02-18/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B02\\B02-18\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "B03",
+      "functional_status": "FUNCTIONAL_PASS",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 15,
+      "total_cases": 15,
+      "cases": [
+        {
+          "id": "B03-01",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "f8443272d622ecef8127093945bb2140ab2707c6b9f402a15b912463f08d1ce4",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016769,
+              "program_sha256": "dbd86f0e6479c537fd2b034e052c1ec9fc10afd10dbfcec10222f497136e111b",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-01/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-01\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-02",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "d264823c406f9e6b34c45f28d607bfbfb0306c1bfaef304a25380de4c5a51381",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016274,
+              "program_sha256": "48fdf714e8cd549da314809c2d53715829113dc0fa8cccb57913f63a1627b751",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-02/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-02\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-03",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "a6f57e9f6e09d9dff37e0a113ec2f44c8f42d65694a186d2d99082e301200e9e",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021168,
+              "program_sha256": "fddd0fe033abc63ae39b082f415110999473822a3dfc8024ae5f4a4db0121019",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-03/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-03\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-04",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "5b46cbdbff4865599ae365d15fbc34c0b568056e5c6ce33a06d4c23573556d64",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.022278,
+              "program_sha256": "7948d2daf560760d7aca6de2e56d10100a193215ae6412f822c3cf78743f50bc",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-04/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-04\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-05",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "80215a4dea00f4c484c8d126aea3796d5c42d8adff011f1ac0896e01bec3e06c",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017412,
+              "program_sha256": "d229d1a3c7980ad6d40ada28091a3cda8c18d476d9d0540c851b0ebf71f0c554",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-05/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-05\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-06",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "3978d9553c2a79d2519bc5960b655566181dde728682bff07e5e2fdc385f59aa",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017317,
+              "program_sha256": "5409ebec49607020b7f3cac7acb0a5c9b838f654fb86fc6dca853aa2256ade23",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-06/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-06\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-07",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "03691354671ddcb227cb2574e8ec36e286b869447d44818de1ba77bfba52d085",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017197,
+              "program_sha256": "69583f2107bd9cd609cb52f6645d373098569fe2c641eacf40a76a05e42f41e0",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-07/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-07\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-08",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "88ce24ba4ddbff5809d2ae9b497a8032fb5f892658b6386e94540caf4085aff3",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018047,
+              "program_sha256": "fedd4042bd875f81bfba060b8b7f5b8f2fa1c8156cf7bfd12e145a31dc3c1f0b",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-08/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-08\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-09",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "484b0da8741b4e7db8060efaf68450b6795edbce51699bef001af09b225afa74",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018123,
+              "program_sha256": "452fccb8af997ac06d45c402d533f1bd9ed47881942c7470eac6ecfe0a2b6a11",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-09/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-09\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-10",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "59b717260c51844045ae9568fd87a20a7790c42ec1624bd1db094daea7079a9d",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.020681,
+              "program_sha256": "ac226a2bf819519d14fbc020d5889f17f794f81aa12de5ef854b896e3e9d1cec",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-10/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-10\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-11",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "db0a6e1db6d1298e08dfad44774b5240b7eabfaee17ed2d108250a745d8c929e",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.023055,
+              "program_sha256": "279edbab0d88f69452ea481f063afbec01391fbada6503dc3014bcf6557d1502",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-11/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-11\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-12",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "4aa5a3ad3b86e8d7174cee9d9ebaba5d6236ce8534957bb8360fe4dc85f7698c",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019863,
+              "program_sha256": "0173ea774ade1f4ac12e6daa293ae35f4172802509188d5bfdc9f25b4c3921b4",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-12/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-12\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-13",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "1d0ee3eb0ad2a263530153578e7dbc6160364f3e74cb842e179d4d837df53699",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.024205,
+              "program_sha256": "262899b594f5cb9f6bf28ce01fb79e9ac36c333638988fa0295e4c12d50f9bc8",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-13/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-13\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-14",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "53ae3adba47ec2ffb31e1c96c3e8a5dcf01421da82a90e27727bd405b9deb332",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019627,
+              "program_sha256": "e57d7ef36dcb870d621e2b5786f571492264b72e7cbf13bd4898f6de4d2dd5e9",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-14/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-14\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B03-15",
+          "source_sha256": "f1bbe2f79654b1c429e342819b253d157cc2d6f776820252d15725598a2b4dfb",
+          "case_sha256": "98f292d5913868e52003ee11143d526ad76b5eaa48395ea9869cf33e77bcdcad",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.020398,
+              "program_sha256": "3d39609064ba55b1a1e70014375d55ffcda35abb10a0cacb4eb112677752b5a4",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B03/B03-15/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B03\\B03-15\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "B04",
+      "functional_status": "FUNCTIONAL_PASS",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 16,
+      "total_cases": 16,
+      "cases": [
+        {
+          "id": "B04-01",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "515912b4586a2ee9eb40738ed62e1cf8d8d1189a1a272d6a8b78b010fe009d9e",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021912,
+              "program_sha256": "5ef7d95e1c7868b851ce4ed12857d53d4aa3b285c4db06ae4c5f1e9e37178c94",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-01/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-01\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-02",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "0462c3e819097323fc1dcbde7538009fa971126b6c2a9ee32616fbc3211d992e",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.02532,
+              "program_sha256": "33be5b25fa19df2d0277569c52efdac6166f6123741eb78d4f3ebc212eedf60c",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-02/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-02\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-03",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "258991caef0c67a961e0dca1ad8e1ac77235b413c4bd77eb9bc6343f11547d6e",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.01884,
+              "program_sha256": "821d3943fad0b874cfaea3ce0c0a448403778f4b746c92b4673b3e04dab01335",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-03/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-03\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-04",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "2ca9660cb70fbd5e6fb00e2f4ad177a0b92cabb168bf5671ca5054d6174de2d5",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018803,
+              "program_sha256": "300de39b90dfcd30a3d1826254fdcf0e8991a7ed91bf5b59121326f061c01a55",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-04/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-04\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-05",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "e7829d3e8f90a5d2b31c8984d328c5153c5465af64075679db55b25dae5d2bc6",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018859,
+              "program_sha256": "36fcecbb02ce66edfcc7bff4b0549e9c810b9eca16aa5651da0a6809edc2b1c8",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-05/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-05\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-06",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "a25dec5697c6e926100c884693f635659e3f1d00417f7ad06bf921f8c846784b",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.020108,
+              "program_sha256": "e4cfbc741f8af64b199880965862b02c2231b8a77b20ad4dc6d123739fe82e47",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-06/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-06\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-07",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "b6e63ef278d9c2dab4dca50455c7c5ce29282fc847213befa90a0e8f7d50e01e",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.02188,
+              "program_sha256": "d7f946b0edbfcfcc62ce5ed82b94ebc9a973ec103fb08085f9be90f00e108e14",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-07/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-07\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-08",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "32aebd7bae515819865f29f3a79da591d75b263c25b8f2077b07a109c9cbea6d",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019781,
+              "program_sha256": "95ee23147c48103b1537b1270a83d2aca06b394a5349f5457ffeecd794fbd0b5",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-08/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-08\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-09",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "532a4396aa4cd27c4dc549307f7d882efb5785a528a1e6418dfce74ec1a550ac",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021714,
+              "program_sha256": "9165e27781c62b45b82e64482cac560bab5af46c06c227dbd50330187a634b69",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-09/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-09\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-10",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "ab45f672e85687cda3b4f64625c27abefbf2e9293c787020151abd8058295ca8",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.020656,
+              "program_sha256": "12579463fa00d805d10012cb97c93ad291d0430f0436ffc727c6b0ace5b03a01",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-10/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-10\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-11",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "3cbcf8c3904085f9058fa438b36639654820069cc0aa8bf1e569d70f7a36f4d8",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018814,
+              "program_sha256": "795a90b6d47c3bb91b61b5d343c471d4428ce489ba7e17b9ed06bbea33e03b76",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-11/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-11\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-12",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "3574771a1ba06ca78ccc66058c600ef524a8c2ce3fbeaa74b1aa90200a95029f",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019508,
+              "program_sha256": "39eda13876cccfba280153b21dfc6c1f2c59e11549736f0a42c53772b1c2e17a",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-12/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-12\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-13",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "0dca476177a7a3f3c3e83bb37df282272073393ed0850cea331992979afb781c",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021224,
+              "program_sha256": "0c04556101d814a0c34147deaad33a6dfba05b56a33ccbac08399c76110919b2",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-13/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-13\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-14",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "82990b00396eb4036acab03143f4ae896a37b3622abf92c9700d89cf9d49a1d7",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.026949,
+              "program_sha256": "68864d8fc2fc4190db732d57e818e1ce5415b5ac3725811eff8524712d1ddc64",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-14/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-14\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-15",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "e63c075dfba5f55c2ff91502c3caaadcfbc961a005ffb3a8d3b669f8a9c24ca3",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.027871,
+              "program_sha256": "f2ff51b628ff67cf7d11f6a35ad22503b30cb075143061d4d66a44b7ad14edde",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-15/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-15\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B04-16",
+          "source_sha256": "b65793a3d513b27cdeeca9f0b247c4c1a81b200ba356839aeab56e7b78ba5c27",
+          "case_sha256": "99caa9bc39815eeb257c63b806c5db5d2be2715117a60cec4dc0265b24bb4b6d",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019625,
+              "program_sha256": "83e6a26c101779153f835a7f7e179864722091686ef39d8ceee5f9a0c78539e7",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B04/B04-16/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B04\\B04-16\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "B05",
+      "functional_status": "FUNCTIONAL_PASS",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 16,
+      "total_cases": 16,
+      "cases": [
+        {
+          "id": "B05-01",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "6eb111c78c5939bc9422a68ea4942f42eb13c48cdf1c1a53f3e2ef3154628280",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021296,
+              "program_sha256": "60f51a77c05b3f5b7d390eaac74b66e2fd5d45feb7181d7dc508d47da3bac9a4",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-01/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-01\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-02",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "1a36a9fba774a37e6cc92d46a46253c10060daa145c0c8c739310562c7135f38",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019689,
+              "program_sha256": "0d5cf1b5be0a9435a8aeff51337e1fb0d2b2776772823ce2cba4ef81da574d7a",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-02/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-02\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-03",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "ac43c230301a558cd7d02791a2774052da6a7cb6583200eef39671c36d695802",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019106,
+              "program_sha256": "1e3ac0541d40affadd6d7cc8913a822ddcfef52fa2f459a2dfa0c5a841b82758",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-03/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-03\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-04",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "2148881e9cfa1d10ab6dd478353a6b7d2079366a49fb35c933095c3e62078eef",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.020939,
+              "program_sha256": "9f80451c0a004102304e179527e73469a5e7e36b499fbb853ccb4a5af2b012e5",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-04/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-04\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-05",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "2e5ec82760df4056b83ded8aef0bd754f9c4d8feb6ae5058778cfb7f6f67d2fd",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.025609,
+              "program_sha256": "911c625fca5ce56f6e266e42aaf977729b98076aed46ab3ef8873862905a17d4",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-05/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-05\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-06",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "bd3a569ad1d25bbf01bce828381a56531a4279e0339bea634e29e69882d9952e",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019939,
+              "program_sha256": "f6957723530effc964012e0c3a3d556da752594facc25a7ae897a39a077186b7",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-06/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-06\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-07",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "3b0d82f98c525b6ce58378e970e3a589f6e62a0ed90cfd9b406ac33812870c74",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.02336,
+              "program_sha256": "551be094131de0aa27812ddc8b2cdca30a6af9613548d7f61a8c5e0ab418e2a4",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-07/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-07\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-08",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "bddf765d756db1abdc500e63301f2e5f387e6c0c7149b6abf1b60bb3a48d6fff",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019454,
+              "program_sha256": "b9a2aba1bfb88e03dba65716bcb4334f87637ca2f6eca7e06433c8a14ec1c921",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-08/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-08\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-09",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "f24d2d989e53019fcc68ea4400bc58e196f50f999e474dd4cd095778707607dc",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.023056,
+              "program_sha256": "7b1248fd31249ad86b1e5721d1d1ad16a667905dd190b2fae80f7a42b2f80a10",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-09/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-09\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-10",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "0723e979dad31837218f5e3ae2361735496b1d7732ade5aac23dc013522a3c91",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.024198,
+              "program_sha256": "15bdb4647b811e7361bfde14c00593c630d4cae99f7b65302f90bd81aca59770",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-10/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-10\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-11",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "bf78015c4a3d160bb666b23c3a43b012c15b020190aa1efbce84c33cfb690396",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.01961,
+              "program_sha256": "25342db7a95cc12c144651fc9e8183cf523a2e2dc81197733a6fc67923d6990e",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-11/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-11\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-12",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "f0babd2b19ab6506c77cdb8cf16786879e1d1ed783ddeaa0ae1ddce4d07ecc41",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.023634,
+              "program_sha256": "821c844cb7831d0a50e843dc24c98247162d83a2a01a7c62a9b64c8b6d43cf0b",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-12/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-12\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-13",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "bc47ab47b6580bbb14dcc7d4b30f579314577c716828f244055947359c191e2a",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.020857,
+              "program_sha256": "bc816cf16f2266804da67d55e43041bf0e0277fc71b80be7bbc75f572a0781d3",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-13/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-13\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-14",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "4bc8c4db9fd48a6212f9eb92e673424945a91c0100352389b968a0f6f22eecd3",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.020312,
+              "program_sha256": "408d42aeed1b93d21a0f601a0db7dfb18008865c2a7b8a9989a0f8badddbfa2b",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-14/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-14\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-15",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "948b3ad558d226f10173a4ad8d02c34a80da2be2e4cefccac4e0bc0abb6c6814",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.022947,
+              "program_sha256": "994d2cc53cebc01502ad0fc2e63cf26a2c60c8716455a98e58244a8f460e1d61",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-15/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-15\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B05-16",
+          "source_sha256": "23b43f899b7b342e68956c23211490c68e831f473d8a8f6eec43a3e5679782a0",
+          "case_sha256": "0d283e30629999989c2d37e10118bb1d2e3721abfca5142d8a8c78813d2c7d0b",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017572,
+              "program_sha256": "bd4cc1d59d936e1d4e0bf34197ab6f1797155f13462152678505cafb4e11dd77",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B05/B05-16/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B05\\B05-16\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "B06",
+      "functional_status": "FUNCTIONAL_PASS",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 17,
+      "total_cases": 17,
+      "cases": [
+        {
+          "id": "B06-01",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "d9d48159a3631c8fb5cb8e9247f76c38141ebbdb7042ac8099c49b73f1d2f922",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016832,
+              "program_sha256": "ca84998d9f78640044a22d2d195a872ed89d32a5f6e3414c42860cebb6b30a56",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-01/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-01\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-02",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "fafe128b6960d5f83d0fdd7911c16d77ca2cf4b10116b5a02707d9e481e319e0",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016779,
+              "program_sha256": "893afad2fc204dde25b510ac329bcffc5400d8926a4db207ccb7dc13209411d7",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-02/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-02\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-03",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "b43185d03fb69bf1e4aec984e232d1f8ae22a029b293e52579e3f83b6992a3bd",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.020571,
+              "program_sha256": "90b71b5158a0ffcd33a546fc59a0c3fb8966a10d747c8393b9803e71e8c3e1cc",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-03/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-03\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-04",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "c3fb9436e0ed24f7352f4e42e25035f36960e5d469e48aa41baae8e4cb585c47",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.022154,
+              "program_sha256": "7bdef9c6c94c89dfec96fad409ea0fd5d426c1bcf76c4807bb2fb7babaa401bf",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-04/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-04\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-05",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "b6f61a039aa88793ab741204ff9cbdf2442bdebaaba46b07b316d3210bcabf66",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016943,
+              "program_sha256": "126bb977d01b3f8c0b95ebd0abfc511de6710fdfa6cac448244ac4024b4f9516",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-05/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-05\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-06",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "afa6b1708073eae505dc833d2ded99bd458f373f163a94bf99cabc3f0e1324d1",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016961,
+              "program_sha256": "9af2530adf01e41f6b069bed928a9689b19c862f75ae6c1f7b86c53214f65243",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-06/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-06\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-07",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "9054cd873c5f77014cd164c5cadfe1c78e39bbf46aa78f36a0196f455a2c1835",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016848,
+              "program_sha256": "53cc7009e412bdb0f194d9707950059796621ea0bb07660797755610a40d802f",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-07/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-07\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-08",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "05d57115338f958a07c02fa44c37e34578c4047f65bb4895c434563e57b6e816",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017196,
+              "program_sha256": "3d31ec9dd077a8fc6b4807bb6462a54f9cfe1c86162f3a40da9efdeb48dbfb11",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-08/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-08\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-09",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "4f446982dc90553b7a1016908af4468e47f6fe4741e6fb328eba6a69ed4b33e6",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018212,
+              "program_sha256": "3819cd48c39c616d4cb16e34372fc5a79ea2611958c9ad793a589967d8578640",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-09/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-09\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-10",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "e33a16c07f28f994ad17aa141c448bb8cb0522b72747c55d7d0dfdf63c2a4883",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016713,
+              "program_sha256": "102007fca323b1bcf9cc58cd22d71021bf9442f5ea60510605d2bcfd687785ac",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-10/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-10\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-11",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "77fccd1bfb5e684a1d71f0758c0582efcf4510723328c28d9ad9143a01a66a68",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016858,
+              "program_sha256": "1a0cd226b2180809d365351d2ceab672d79399b836a5cd7c5b6a22cfec568573",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-11/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-11\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-12",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "716b0dda29b19bf31c3b065bf3ea115a05e4b49fb462e771b857b297fc238ce7",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017359,
+              "program_sha256": "56b73ad70afad8bd742710e2bcb6bf2658b239b444f941ce46ba205935fb00c1",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-12/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-12\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-13",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "daa9129b49628e053d29b01c2d393f3fd4e9b9c28a084a519e83e1ec19d8d183",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017832,
+              "program_sha256": "da3228fc90b43a4d5984b16b26f1079095bea7a706316d2ef67559d463624291",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-13/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-13\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-14",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "001b4aafddb19f87a4d18afe56b4d29cdf8b632bc6b0c4684fc861448a8d3a4d",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.023277,
+              "program_sha256": "44c4fb9363c11f8daf2664b2a1ac76c7e4b18dc7a9e55ec2d30810042ec72882",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-14/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-14\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-15",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "6d3e851691423f7740c95db6a49e1b4e10deeb57a400e9b4bea8b0af266f193b",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018805,
+              "program_sha256": "11ad07ab48a74f90d83d3cf6e5acbf26f451819b3b50d1c870be428fd1b53597",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-15/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-15\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-16",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "fef73195bc3bbad264b3c517dfa0817eec47cc868eb37525182f379337846113",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017284,
+              "program_sha256": "79885dfd323704d415c05516e168ca8bc971b3ea8718fd16cd88aabe5582fff6",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-16/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-16\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B06-17",
+          "source_sha256": "03013689a5face0203861a5d5dc5beb113e89022697962d0fce88476f7e77b28",
+          "case_sha256": "6e8c16e269588417906bb9e142b32394fdb986678435f4fe743e2b0bb461eb9a",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017798,
+              "program_sha256": "999bcae8498e36dc8de20575a0adbe198d4ca468481ae757f6c3c4f33e55985e",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B06/B06-17/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B06\\B06-17\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "B07",
+      "functional_status": "FUNCTIONAL_PASS",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 17,
+      "total_cases": 17,
+      "cases": [
+        {
+          "id": "B07-01",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "02ec66e0588a455e415df58900e8c7533d4775ee975f430b2f8a5e4c9a513181",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.020275,
+              "program_sha256": "77a8aa10e104368a02268b67290ac7b2a1aeb39030af0a6df778ccd03ba0d1fe",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-01/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-01\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-02",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "a36a146049bd98bf17eb2aabf0a079de87a078406143cc1008f95aaed1920932",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017075,
+              "program_sha256": "40455e4f8132a391548815c57b7b11e4a59933908e0658819a9a3e8f084dc205",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-02/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-02\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-03",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "47bd72bcc4d42dcb5d72791f259a4bcb7a62477850423f4194b9412abc609787",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017229,
+              "program_sha256": "77d4eaa304e62e2566c897d61a91a812216c3cb12a1967bee06aac4f094a673e",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-03/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-03\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-04",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "cf47e0adebb5457ffde45a1762bf492b5313b577a53e1d091f8bece8670c92a5",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016208,
+              "program_sha256": "5455d1e51d43db6b4c963142b6b2506a727271641718de38cbda0c95c08d19fd",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-04/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-04\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-05",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "773644316c44f59b622f1462ebcf907d1ab5eab34ea2731ba751c98b88065095",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016687,
+              "program_sha256": "68b5f1f634e06d69f9b27153d779e80c9f00c73ee084ccdef73479a4ee6d0da2",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-05/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-05\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-06",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "bf3dadca9b23792158cf2b78bf0c60b4ef29934ba28038c10dcb84f59e46b690",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017549,
+              "program_sha256": "84b9bc7c37e7f812928c8d90afbd8726b4badd7ab39b1db44e1f97d164e50f2b",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-06/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-06\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-07",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "0f6e4ce24b71a3e078f976ab3a4a5daed30d4e1a065cc8c0169fef32cc878426",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021474,
+              "program_sha256": "452b11c676541b071b6e7133b79c48eada3cb455cb53fdaf97ffd54f28812895",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-07/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-07\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-08",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "8665fad57e16d76d1ba7e7d0476acee290d136fa6d37070079f9048ec3499480",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016593,
+              "program_sha256": "da1ddc856b25a170ba4b02fdf25f5afa6713ab09d011e18430785f5bc8b35e30",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-08/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-08\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-09",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "e0db66f6ac3471930d36316c5d8c19111393920c566eb5231525ea4ebb4b41e8",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017634,
+              "program_sha256": "07c6be84ce7b5dfdaa097b84b4404f2593745ec4176f8f29e92e88da90644f77",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-09/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-09\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-10",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "ddac6fe0350bb5f4a526bad3006ab494579ee42059aaa13f9407192a3df70e1d",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019279,
+              "program_sha256": "5ca005d492e5b719e9f34e26df333e5631993b1ba35c8713576f7241f59ad3e9",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-10/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-10\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-11",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "677335d3b176c0343a103b1e23e163a85df2376618ca53b0e958dde42c9400a8",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018282,
+              "program_sha256": "3506a1d015655994ed2a2163d9d7e5e9f36e6efc328b75ab8c3727eabb8432b0",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-11/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-11\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-12",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "2fa18689eb70d9a4c8f1c4349b3cf13a061e55e2343327e0343e2434294b4d8d",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017405,
+              "program_sha256": "19722ed8b7eb85b7fa60e1fe444fae9a85dbbbba24aae0935e6e4a3643c9af45",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-12/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-12\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-13",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "620a939cca2255a2c998a126946c2ad72404cacfc6c02dee328da5047ba72080",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.016623,
+              "program_sha256": "5f3033ec529c6ffa0a9fc05072d796df0ff0ac4b25f9fbf7944b9d9f8ab7706a",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-13/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-13\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-14",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "cc140fe9ba4c8699ec77bed42f0dcd20403a168cd5bb64f1965f302a17311d4f",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021107,
+              "program_sha256": "c7900f30457c0249b77c94b5d085914868f98de79ac6ad659638b2e496443c5c",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-14/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-14\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-15",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "4ad38de8e9d84a7552f36e7a9172bd8d710344a830f6d1a4ab0eb9a77aba90b2",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.080458,
+              "program_sha256": "d1228ea40c4be2985cfb67258f57882a482fc86f8206a20da3eb57c6d92f8209",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-15/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-15\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-16",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "c9fa779feffa20cd4e8b89394d173e752eff3bb92161724a8b1f6d599acabf0b",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.01852,
+              "program_sha256": "8e375ddb512d69bb33b7967cdb82ae10b730d550d47f523bb4521a8d5befeabf",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-16/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-16\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B07-17",
+          "source_sha256": "9b95de0bc9b3377d800a7c278288a5481c8b14769cebd1a058d06a84f5ff8225",
+          "case_sha256": "f6bd5f3cb633031794bb7e9c94afc341495c690f1ef0d54ae5b2c0f6f97391f9",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017385,
+              "program_sha256": "636999e81fe682be50b4a8d38b88b2a5be5aa622a168321f69ae9523479e63aa",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B07/B07-17/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B07\\B07-17\\combined-0.lfz"
+              ],
+              "passed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "B08",
+      "functional_status": "FUNCTIONAL_PASS",
+      "source_review": "REVIEW_REQUIRED",
+      "protocol_review": "REVIEW_REQUIRED",
+      "overall_task_status": "NOT_CERTIFIED",
+      "passed_cases": 16,
+      "total_cases": 16,
+      "cases": [
+        {
+          "id": "B08-01",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "9f66f9c516957ac0722621b2227da43d9cb65f8a80a47b4628bad9ae0c5883ef",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018886,
+              "program_sha256": "b4cb25fa3ac098a50ea456099ea0c77aac9b7bba8dc4fc4c651baeac9acad282",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-01/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-01\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "fb77661cb1e4c9e2d90e17b89f052f3ddccdf9ca2f2b2de67edc74f1c531f4af",
+              "output_sha256": "fb77661cb1e4c9e2d90e17b89f052f3ddccdf9ca2f2b2de67edc74f1c531f4af",
+              "expected_input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.023435,
+              "program_sha256": "b4cb25fa3ac098a50ea456099ea0c77aac9b7bba8dc4fc4c651baeac9acad282",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-01/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-01\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "fb77661cb1e4c9e2d90e17b89f052f3ddccdf9ca2f2b2de67edc74f1c531f4af",
+              "output_sha256": "fb77661cb1e4c9e2d90e17b89f052f3ddccdf9ca2f2b2de67edc74f1c531f4af",
+              "expected_input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-02",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "ef689058ecd460d73cb9ef6d86198d241f92437bd2383d46f1deb6a23a168972",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021089,
+              "program_sha256": "7d40f0d337ef1f47cef258b2b16b7afa2cc464b4fc95ff8d9ecf6422f09d0817",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-02/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-02\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "fb77661cb1e4c9e2d90e17b89f052f3ddccdf9ca2f2b2de67edc74f1c531f4af",
+              "output_sha256": "fb77661cb1e4c9e2d90e17b89f052f3ddccdf9ca2f2b2de67edc74f1c531f4af",
+              "expected_input_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+              "input_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021735,
+              "program_sha256": "7d40f0d337ef1f47cef258b2b16b7afa2cc464b4fc95ff8d9ecf6422f09d0817",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-02/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-02\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "fb77661cb1e4c9e2d90e17b89f052f3ddccdf9ca2f2b2de67edc74f1c531f4af",
+              "output_sha256": "fb77661cb1e4c9e2d90e17b89f052f3ddccdf9ca2f2b2de67edc74f1c531f4af",
+              "expected_input_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+              "input_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-03",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "f4dfa783ca6800629fa63a29aa2bf70d7f74aa0e806aaa3000b348cb6c50b504",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.020901,
+              "program_sha256": "2eb397052b4cadc482ef1904b796092bcdbf3711e0ee534119778d77fea08aae",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-03/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-03\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "fb77661cb1e4c9e2d90e17b89f052f3ddccdf9ca2f2b2de67edc74f1c531f4af",
+              "output_sha256": "fb77661cb1e4c9e2d90e17b89f052f3ddccdf9ca2f2b2de67edc74f1c531f4af",
+              "expected_input_sha256": "4058261dc726e331e50b29b90fa7c28089d9a094b3a47cfa4b58e3f52d155468",
+              "input_sha256": "4058261dc726e331e50b29b90fa7c28089d9a094b3a47cfa4b58e3f52d155468",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019133,
+              "program_sha256": "2eb397052b4cadc482ef1904b796092bcdbf3711e0ee534119778d77fea08aae",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-03/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-03\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "fb77661cb1e4c9e2d90e17b89f052f3ddccdf9ca2f2b2de67edc74f1c531f4af",
+              "output_sha256": "fb77661cb1e4c9e2d90e17b89f052f3ddccdf9ca2f2b2de67edc74f1c531f4af",
+              "expected_input_sha256": "4058261dc726e331e50b29b90fa7c28089d9a094b3a47cfa4b58e3f52d155468",
+              "input_sha256": "4058261dc726e331e50b29b90fa7c28089d9a094b3a47cfa4b58e3f52d155468",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-04",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "0a7ecfa6d40d29cfe76e8e9ca8627c5eb03126774231b79cf8a279a7316e1b7f",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.01763,
+              "program_sha256": "40d666ba8482067ad50f53bfb9fe7ee91051328042883e4f0f39136d955cfdc9",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-04/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-04\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+              "input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.025434,
+              "program_sha256": "40d666ba8482067ad50f53bfb9fe7ee91051328042883e4f0f39136d955cfdc9",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-04/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-04\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "expected_input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+              "input_sha256": "44afc78e43fa3ec801952ecfc03e3c16f98bd6560212f3f9f61f0e4649af506f",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-05",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "8482461513de8aaafb860172b192cfac2a996a241c948d5039641d145e199528",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019186,
+              "program_sha256": "1e84b3a458c709dfa61e9853edcdd1aac7916cc4948c344bfe33cbd1cfe967c2",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-05/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-05\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "960a3c0c3a3189cf23dd77dd82edf2c811988a59c7238ffa7c90f9e45486002a",
+              "output_sha256": "960a3c0c3a3189cf23dd77dd82edf2c811988a59c7238ffa7c90f9e45486002a",
+              "expected_input_sha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+              "input_sha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018118,
+              "program_sha256": "1e84b3a458c709dfa61e9853edcdd1aac7916cc4948c344bfe33cbd1cfe967c2",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-05/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-05\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "960a3c0c3a3189cf23dd77dd82edf2c811988a59c7238ffa7c90f9e45486002a",
+              "output_sha256": "960a3c0c3a3189cf23dd77dd82edf2c811988a59c7238ffa7c90f9e45486002a",
+              "expected_input_sha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+              "input_sha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-06",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "2da8a108730546a2b91bde568b4956d4fb5f9656efaf510ba8df52a3fa7b4736",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019737,
+              "program_sha256": "bbc0b9f7890bbe3c7ada6d2eb9401fede291bee6ab970ee3c8471d93c37f4a81",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-06/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-06\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "b9926e8129bdc1320a13f52e70186a8a9f6fa445d4b9dfecac6a23c6ec1c05b1",
+              "output_sha256": "b9926e8129bdc1320a13f52e70186a8a9f6fa445d4b9dfecac6a23c6ec1c05b1",
+              "expected_input_sha256": "9c687f894a68660fc47b97336f029be60db01dba48bc2e59ac5edc9980b98a63",
+              "input_sha256": "9c687f894a68660fc47b97336f029be60db01dba48bc2e59ac5edc9980b98a63",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021315,
+              "program_sha256": "bbc0b9f7890bbe3c7ada6d2eb9401fede291bee6ab970ee3c8471d93c37f4a81",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-06/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-06\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "b9926e8129bdc1320a13f52e70186a8a9f6fa445d4b9dfecac6a23c6ec1c05b1",
+              "output_sha256": "b9926e8129bdc1320a13f52e70186a8a9f6fa445d4b9dfecac6a23c6ec1c05b1",
+              "expected_input_sha256": "9c687f894a68660fc47b97336f029be60db01dba48bc2e59ac5edc9980b98a63",
+              "input_sha256": "9c687f894a68660fc47b97336f029be60db01dba48bc2e59ac5edc9980b98a63",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-07",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "fd2efa7140f6edf6245608967fa5f4bf9d65971194217a306452969f033fc308",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017855,
+              "program_sha256": "755d40a7c05476e477fda8c7464d605d7d009afbefffa28ed8b5ce20c1abf711",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-07/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-07\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "expected_input_sha256": "1792881b40d3c535585c7842e2b0cabd5f82bd9a04fd69b70aa1dd572ceb3dde",
+              "input_sha256": "1792881b40d3c535585c7842e2b0cabd5f82bd9a04fd69b70aa1dd572ceb3dde",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019851,
+              "program_sha256": "755d40a7c05476e477fda8c7464d605d7d009afbefffa28ed8b5ce20c1abf711",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-07/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-07\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "expected_input_sha256": "1792881b40d3c535585c7842e2b0cabd5f82bd9a04fd69b70aa1dd572ceb3dde",
+              "input_sha256": "1792881b40d3c535585c7842e2b0cabd5f82bd9a04fd69b70aa1dd572ceb3dde",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-08",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "e2e8048e5823c352a6ac66076d6ca410aaa2d1ee2af5da36c2ad0b12eeb46856",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.017219,
+              "program_sha256": "62d14fa87b2119a0a10d3256bdc84b3a4c76196058ba710b5b042b91b0970fbb",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-08/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-08\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "8854882f4c434f10eed7a83f2ff28d88c79957fdfbad14b3a4f6da66f5b98b90",
+              "output_sha256": "8854882f4c434f10eed7a83f2ff28d88c79957fdfbad14b3a4f6da66f5b98b90",
+              "expected_input_sha256": "927254cd27395c8632326178b42ab71dff6d4ca44f2defa2abab702a5ae65336",
+              "input_sha256": "927254cd27395c8632326178b42ab71dff6d4ca44f2defa2abab702a5ae65336",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.018971,
+              "program_sha256": "62d14fa87b2119a0a10d3256bdc84b3a4c76196058ba710b5b042b91b0970fbb",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-08/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-08\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "8854882f4c434f10eed7a83f2ff28d88c79957fdfbad14b3a4f6da66f5b98b90",
+              "output_sha256": "8854882f4c434f10eed7a83f2ff28d88c79957fdfbad14b3a4f6da66f5b98b90",
+              "expected_input_sha256": "927254cd27395c8632326178b42ab71dff6d4ca44f2defa2abab702a5ae65336",
+              "input_sha256": "927254cd27395c8632326178b42ab71dff6d4ca44f2defa2abab702a5ae65336",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-09",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "b7733be976c2ed6ad22cffc9b05c91e5a4245681eae49bafc9e3344fa39e51e5",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.026957,
+              "program_sha256": "1c71ffbf6a7dae1bfe1af5b356c217e30e2758cc5b8261c062da4ddfeda849cc",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-09/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-09\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "56f5f080e6cbe3611977145fea65a73c16f0369178a68396cc6b038bcce6c779",
+              "output_sha256": "56f5f080e6cbe3611977145fea65a73c16f0369178a68396cc6b038bcce6c779",
+              "expected_input_sha256": "ba6b574e70cff8e4b0f8a6f74158880c4c4bcdc6b2dd41e19843475717cf2aa5",
+              "input_sha256": "ba6b574e70cff8e4b0f8a6f74158880c4c4bcdc6b2dd41e19843475717cf2aa5",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.026261,
+              "program_sha256": "1c71ffbf6a7dae1bfe1af5b356c217e30e2758cc5b8261c062da4ddfeda849cc",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-09/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-09\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "56f5f080e6cbe3611977145fea65a73c16f0369178a68396cc6b038bcce6c779",
+              "output_sha256": "56f5f080e6cbe3611977145fea65a73c16f0369178a68396cc6b038bcce6c779",
+              "expected_input_sha256": "ba6b574e70cff8e4b0f8a6f74158880c4c4bcdc6b2dd41e19843475717cf2aa5",
+              "input_sha256": "ba6b574e70cff8e4b0f8a6f74158880c4c4bcdc6b2dd41e19843475717cf2aa5",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-10",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "8327f56a05abecb334a997adf3d80451b400ea7ffbe7ad94459f4444e23a9ec9",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.026155,
+              "program_sha256": "0d9a65d637ce5aca5ee5551584a61d4212f4b746d6b28fe7bf8c248c6da81d66",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-10/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-10\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "c154258f5cd5c8360b13b6c515502f0a64993793dff009a104077f2b06ed1263",
+              "output_sha256": "c154258f5cd5c8360b13b6c515502f0a64993793dff009a104077f2b06ed1263",
+              "expected_input_sha256": "a254fe2ca987346f0fc867fcf1417ea4658d6fafcd1bd7d28402ddde925876de",
+              "input_sha256": "a254fe2ca987346f0fc867fcf1417ea4658d6fafcd1bd7d28402ddde925876de",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.024891,
+              "program_sha256": "0d9a65d637ce5aca5ee5551584a61d4212f4b746d6b28fe7bf8c248c6da81d66",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-10/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-10\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "c154258f5cd5c8360b13b6c515502f0a64993793dff009a104077f2b06ed1263",
+              "output_sha256": "c154258f5cd5c8360b13b6c515502f0a64993793dff009a104077f2b06ed1263",
+              "expected_input_sha256": "a254fe2ca987346f0fc867fcf1417ea4658d6fafcd1bd7d28402ddde925876de",
+              "input_sha256": "a254fe2ca987346f0fc867fcf1417ea4658d6fafcd1bd7d28402ddde925876de",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-11",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "5f37850cb2296c70f6b088a0b4974661c8c812bbfc9131fd0923c4d4e0df9c2c",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.035999,
+              "program_sha256": "d984c214b459c9f7048f69702083079da5b14f4e4f128e92b3c3d176995d22e3",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-11/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-11\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "expected_input_sha256": "e3d10c952daaa2a8ef9822de3009ae78be9e74cf807e1b967d06da8a997f1a4c",
+              "input_sha256": "e3d10c952daaa2a8ef9822de3009ae78be9e74cf807e1b967d06da8a997f1a4c",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.021959,
+              "program_sha256": "d984c214b459c9f7048f69702083079da5b14f4e4f128e92b3c3d176995d22e3",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-11/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-11\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "expected_input_sha256": "e3d10c952daaa2a8ef9822de3009ae78be9e74cf807e1b967d06da8a997f1a4c",
+              "input_sha256": "e3d10c952daaa2a8ef9822de3009ae78be9e74cf807e1b967d06da8a997f1a4c",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-12",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "a23243e502bf69b57ffb2df6645e2491142ecd9983cc2bc5583558046abad261",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.027335,
+              "program_sha256": "a4947f1be2979a5407166f354e8ace4e4d21c5256d81aea9fdbd5e9ff4437f81",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-12/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-12\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "888b12b592071cd5214e8f6beea0e117e6013121cb93ec32fedf16fc875ef119",
+              "output_sha256": "888b12b592071cd5214e8f6beea0e117e6013121cb93ec32fedf16fc875ef119",
+              "expected_input_sha256": "0653dd81f4a4d2295439b65df6d94161d27e9b376221a8243134240e289d04c8",
+              "input_sha256": "0653dd81f4a4d2295439b65df6d94161d27e9b376221a8243134240e289d04c8",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.031169,
+              "program_sha256": "a4947f1be2979a5407166f354e8ace4e4d21c5256d81aea9fdbd5e9ff4437f81",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-12/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-12\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "888b12b592071cd5214e8f6beea0e117e6013121cb93ec32fedf16fc875ef119",
+              "output_sha256": "888b12b592071cd5214e8f6beea0e117e6013121cb93ec32fedf16fc875ef119",
+              "expected_input_sha256": "0653dd81f4a4d2295439b65df6d94161d27e9b376221a8243134240e289d04c8",
+              "input_sha256": "0653dd81f4a4d2295439b65df6d94161d27e9b376221a8243134240e289d04c8",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-13",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "bd40f9d05618b24592afd1185aaf1714e14c827f27760065d4c9a2a2e3dd17ea",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.023809,
+              "program_sha256": "ac3ce366ddc635c18cad97353b8f2d34412a00d27c07e9141682aba40bf8cf89",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-13/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-13\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "cec1d7d49652df6e6e4f327fb19174f9cc76b61a9d2565f09185b84a7739400f",
+              "output_sha256": "cec1d7d49652df6e6e4f327fb19174f9cc76b61a9d2565f09185b84a7739400f",
+              "expected_input_sha256": "15e51615a969b38f0b0f5733e3928412124f5669d49017b6b6d1b21fcdd8a648",
+              "input_sha256": "15e51615a969b38f0b0f5733e3928412124f5669d49017b6b6d1b21fcdd8a648",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.026606,
+              "program_sha256": "ac3ce366ddc635c18cad97353b8f2d34412a00d27c07e9141682aba40bf8cf89",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-13/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-13\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "cec1d7d49652df6e6e4f327fb19174f9cc76b61a9d2565f09185b84a7739400f",
+              "output_sha256": "cec1d7d49652df6e6e4f327fb19174f9cc76b61a9d2565f09185b84a7739400f",
+              "expected_input_sha256": "15e51615a969b38f0b0f5733e3928412124f5669d49017b6b6d1b21fcdd8a648",
+              "input_sha256": "15e51615a969b38f0b0f5733e3928412124f5669d49017b6b6d1b21fcdd8a648",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-14",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "0f36623997e235fa9848b46a19c17afcb513c124b07c71329ea213abd45a8d36",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019758,
+              "program_sha256": "7c219b482f10443a3e995760066f4e52666131c9b49fa9b68096de1ee617e759",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-14/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-14\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "211fa68da7bcfc0e364d4ca050718fcfce2aa875a6b8a2a503d7d85c0756d75d",
+              "output_sha256": "211fa68da7bcfc0e364d4ca050718fcfce2aa875a6b8a2a503d7d85c0756d75d",
+              "expected_input_sha256": "26d928ca7798882c482edb82cf892a2036308dff7482080e65ac947719112ef2",
+              "input_sha256": "26d928ca7798882c482edb82cf892a2036308dff7482080e65ac947719112ef2",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.040128,
+              "program_sha256": "7c219b482f10443a3e995760066f4e52666131c9b49fa9b68096de1ee617e759",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-14/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-14\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "211fa68da7bcfc0e364d4ca050718fcfce2aa875a6b8a2a503d7d85c0756d75d",
+              "output_sha256": "211fa68da7bcfc0e364d4ca050718fcfce2aa875a6b8a2a503d7d85c0756d75d",
+              "expected_input_sha256": "26d928ca7798882c482edb82cf892a2036308dff7482080e65ac947719112ef2",
+              "input_sha256": "26d928ca7798882c482edb82cf892a2036308dff7482080e65ac947719112ef2",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-15",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "bfecece68dfbb801b07fa37ea8136f719b7298692a1f97259791f3b23a69c645",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.033328,
+              "program_sha256": "52d57da1a39b490203b455524a223009c625bbf0ed8182cd8e04f12805659dc9",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-15/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-15\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "e7de896850909546edc781c6cd4a8a14ebbeeabb3b5bb4f5bad2abda3c38a2f7",
+              "output_sha256": "e7de896850909546edc781c6cd4a8a14ebbeeabb3b5bb4f5bad2abda3c38a2f7",
+              "expected_input_sha256": "9943a8a5db6e809a9fded458b9cc3370d405f778e8efecdfc7303b08014d834c",
+              "input_sha256": "9943a8a5db6e809a9fded458b9cc3370d405f778e8efecdfc7303b08014d834c",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.019212,
+              "program_sha256": "52d57da1a39b490203b455524a223009c625bbf0ed8182cd8e04f12805659dc9",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-15/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-15\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "e7de896850909546edc781c6cd4a8a14ebbeeabb3b5bb4f5bad2abda3c38a2f7",
+              "output_sha256": "e7de896850909546edc781c6cd4a8a14ebbeeabb3b5bb4f5bad2abda3c38a2f7",
+              "expected_input_sha256": "9943a8a5db6e809a9fded458b9cc3370d405f778e8efecdfc7303b08014d834c",
+              "input_sha256": "9943a8a5db6e809a9fded458b9cc3370d405f778e8efecdfc7303b08014d834c",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "B08-16",
+          "source_sha256": "d8f198cc247fbc5623c655585b5a4f86f46a05576113dfae4438a0ad10b8800b",
+          "case_sha256": "7b6e73023f7fab9416efaebada711da5471302dd93b988fc9b1ca5ee14f335fb",
+          "status": "PASS",
+          "attempts": [
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.025758,
+              "program_sha256": "9fca52e32fccc7c7a50228753b079fbd096a5f0f5ac9e16610256b93407123f1",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-16/combined-0.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-16\\combined-0.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "expected_input_sha256": "9f8feb9dd5daa6ef72fab751ce3d3bffdbe64892eb6834c599702ca245689ae9",
+              "input_sha256": "9f8feb9dd5daa6ef72fab751ce3d3bffdbe64892eb6834c599702ca245689ae9",
+              "passed": true
+            },
+            {
+              "exit": 0,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "timed_out": false,
+              "elapsed_seconds": 0.026415,
+              "program_sha256": "9fca52e32fccc7c7a50228753b079fbd096a5f0f5ac9e16610256b93407123f1",
+              "program_path": "Temp/benchmark-v2-run-psgbx3ri/B08/B08-16/combined-1.lfz",
+              "command": [
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+                "run",
+                "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\benchmark-v2-run-psgbx3ri\\B08\\B08-16\\combined-1.lfz"
+              ],
+              "output_matches": true,
+              "input_unchanged": true,
+              "expected_output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "output_sha256": "abe5b081a6554e1fc97a41b73857bde15669346eef2208f6b1b51fb41b5db15f",
+              "expected_input_sha256": "9f8feb9dd5daa6ef72fab751ce3d3bffdbe64892eb6834c599702ca245689ae9",
+              "input_sha256": "9f8feb9dd5daa6ef72fab751ce3d3bffdbe64892eb6834c599702ca245689ae9",
+              "passed": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "manifest_sha256": "f2046eadca7c9f55376cbac000ccd53b25958298d10e2fc176ed0a14867c2a3e",
+  "interpreter_sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+  "work_directory": "Temp/benchmark-v2-run-psgbx3ri"
+}
