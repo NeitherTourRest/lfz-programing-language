@@ -1,0 +1,2 @@
+#42
+writeFile("Temp/v11_io_roundtrip.txt",42)

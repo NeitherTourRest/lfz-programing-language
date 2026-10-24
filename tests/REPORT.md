@@ -228,3 +228,26 @@ cargo test
 | 2026-09-27 | **P5.8（解析期上限回归）** | `cargo test` | **482 passed / 0 failed / 0 ignored**（lib 379 + main 48 + cli 28 + test_runner 12 + unit 15；`src/**` 含 §3.8/§3.9 变更后的实测，非本批引入） |
 
 > 解释器每次变更后，本测试集须复跑全量并把结果追加到本表；回归结果同时作为 verifier 独立验收（P9）的输入。
+
+## 10. T11-13 v1.1 黑盒增量（2026-10-24，当前结果）
+
+**当前全量 130 PASS / 0 FAIL / 0 ERROR，exit 0；连续运行两次一致。** 前文 90/90 为 P5.8 历史记录。本批新增 4 正例组、63 assert、36 负例；全量现为 31 正例文件、662 assert、98 错误负例、1 非 .lfz 正例。既有测试内容未修改。
+
+新增文件：tests/lfz/test_v11_{range,string,unicode_math,io}.lfz；tests/fixtures/v11_*.lfz；cases.json 仅追加错误类声明。覆盖范围与边界见 coverage-matrix.md §10。
+
+复现：从项目根目录先保证 Temp/ 存在，然后运行：
+
+```powershell
+./target/release/lfz.exe test --json > Temp/v11-blackbox.json 2> Temp/v11-blackbox.stderr.txt
+$LASTEXITCODE
+./target/release/lfz.exe test --json > Temp/v11-blackbox-repeat.json 2> Temp/v11-blackbox-repeat.stderr.txt
+$LASTEXITCODE
+```
+
+两次 stdout 均为单个可解析 JSON，汇总均 {"ok":true,"total":130,"passed":130,"failed":0,"errored":0}；两次退出码均 0。原始 stdout 留存 tests/evidence/T11-13-blackbox.json 与 tests/evidence/T11-13-blackbox-repeat.json。stderr 是既有测试的正常输出。
+
+IO 正例固定先覆盖写 Temp/v11_io_roundtrip.txt，再追加并读取，最后覆盖空串；重复运行无状态依赖。错误路径使用 Temp/v11_missing_dir/no_file.txt（运行前该父目录须不存在）。本批没有断言 append 首次创建、非法 UTF8、OS 权限差异；runner 只断言错误类，不独立断言退出码/精确错误文本。没有主动运行会崩溃的压力测试。
+
+| 日期 | 批次 | 命令 | 结果 |
+|---|---|---|---|
+| 2026-10-24 | T11-13 | target/release/lfz.exe test --json（两次） | 130/130 PASS，exit0；4 新正例组 +36 负例 |

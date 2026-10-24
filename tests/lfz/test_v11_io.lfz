@@ -1,0 +1,8 @@
+#42
+let p = "Temp/v11_io_roundtrip.txt"
+assert(writeFile(p, "中文🙂\n") == nil, "io_write_nil")
+assert(readFile(p) == "中文🙂\n", "io_utf8_roundtrip")
+assert(appendFile(p, "尾") == nil, "io_append_nil")
+assert(readFile(p) == "中文🙂\n尾", "io_append_preserves_prefix")
+assert(writeFile(p, "") == nil, "io_overwrite_nil")
+assert(readFile(p) == "", "io_overwrite_truncates_empty")

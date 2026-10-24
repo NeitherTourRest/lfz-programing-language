@@ -1,0 +1,11 @@
+#42
+// v1.1 黑盒：interface-contract §10.7 / semantics §4.2。
+assert(range(2,5) == [2,3,4], "v11_range_1")
+assert(range(-2,2) == [-2,-1,0,1], "v11_range_2")
+assert(range(4,4) == [], "v11_range_3")
+assert(range(5,2) == [], "v11_range_4")
+assert(range(3) == [0,1,2], "v11_range_5")
+assert(range(9223372036854775806,9223372036854775807) == [9223372036854775806], "v11_range_6")
+assert(range(-9223372036854775808,-9223372036854775806) == [-9223372036854775808,-9223372036854775807], "v11_range_7")
+assert(range(9223372036854775807,-9223372036854775808) == [], "v11_range_8")
+assert((5 |> range(2)) == [2,3,4], "v11_range_9")

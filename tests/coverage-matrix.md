@@ -516,3 +516,18 @@ $ echo $LASTEXITCODE
 | 可移植性（BOM、CRLF/LF/CR、非 UTF-8 → `SyntaxError`） | syntax §2.1、§6-B4/B7/B8 | 待实现 | P5.5 |
 | 入口一致性（REPL / stdin / `-e` 豁免前导；伪路径） | syntax §6-B9 | 待实现 | P5.5 |
 | `;;` / `print` 输出文本、错误消息文本、span 的端到端断言 | semantics §3.6/§3.7/§8.2 | 待工具支持（见 §4） | 待 tooling-dev 扩权 |
+
+## 10. T11-13 v1.1 增量覆盖（2026-10-24，当前结果）
+
+本节为最新增量口径；前文 P5.8 的 90/90 是历史基线。当前全量 **130/130 PASS** = 自动发现正例 **31** + 错误负例 **98** + 非 .lfz 正例 **1**；正例共 **662 assert**。本批新增 **4** 个正例文件 / **63 assert** / **36** 个负例，既有用例保留。
+
+| 特性 | 用例组文件 | 正常用例数 | 边界用例数 | 错误用例数 | 状态 | 证据（运行命令与结果摘要） |
+|---|---|---:|---:|---:|---|---|
+| range(lo,hi)，兼容一参 | lfz/test_v11_range.lfz | 3 | 6 | 5 | 通过 | release test --json：130/130 |
+| 字符串五内置 | lfz/test_v11_string.lfz（前19条） | 8 | 11 | 9 | 通过 | Unicode 标量、半开区间、夹取、重复截断、空 fill |
+| contains/string 索引既有契约 | lfz/test_v11_string.lfz（后5条） | 3 | 2 | 3 | 通过 | 深数组相等；string 容器拒绝；索引读写拒绝 |
+| ord/chr | lfz/test_v11_unicode_math.lfz（前9条） | 5 | 4 | 9 | 通过 | 代理区两端拒绝；最大码点；组合字符双标量拒绝 |
+| sin/cos/log/exp | lfz/test_v11_unicode_math.lfz（后15条） | 7 | 8 | 4 | 通过 | int 加宽、float 类型、容差、NaN/Inf；log(0)无错误 |
+| 文件 IO | lfz/test_v11_io.lfz | 4 | 2 | 6 | 通过 | UTF8 中文/emoji、追加、覆盖截断空串、类型/缺父目录 |
+
+负例路径为 fixtures/v11_*.lfz，由 cases.json 声明错误类别。正常/边界计数是独立 assert 分类，不代表 runner 用例数。IO 输出限 Temp/v11_io_roundtrip.txt；每轮先覆盖，因此连续两次均通过。文件 IO 的 append 创建、非法 UTF8 内容、不可写权限场景本批尚无黑盒覆盖，不据此宣称 IO 全条款独立验收完成。
