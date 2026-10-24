@@ -766,3 +766,8 @@
 - 子agent的任意PS批处理审批等待219.7秒、随后单git add审批等待281.8秒，均被lead中断以排查；工具只报aborted by user，无自动拒绝理由。首组git commit前缀审批成功。
 - lead决定后续add/commit/hash-object/update-index/push统一由主会话执行；release-manager只做分组审阅和收工取证，不并行写index。
 - 已生成Temp/release-stage-{0,1,2}.txt，分别为DECISIONS/PROJECT_STATE/lead STATUS本轮安全快照，每个旧改动selector唯一命中；原工作树保持不动。
+## [2026-10-24 14:00] 本地7原子提交完成，远程推送被自动审批拒绝
+- 完成：b03e13f、dde97f4、53fc371、873c0ae、6b3e0ee、096be44、57f9034；第一组由release-manager提交，其余由lead主会话代执行同一分组计划。
+- 证据：git log -7与git status只读核验；剩余diff恰为DECISIONS旧事故ADR+28行、PROJECT_STATE旧bullet+1、lead STATUS旧bullet+1；Cargo文件无diff，8tag不变，dist哈希吻合。
+- 阻塞：lead执行git push被自动审批拒绝，理由是源码/文档/团队记录外传到尚未验证归属的GitHub origin且缺用户明确数据与目的地授权；origin/main仍91b65c3。不重试、不换目的地、不绕过。
+- 下一步：lead已向用户说明拒绝并请求明确授权；最后收工记录由lead本地提交，用户授权后方可推送并核对远程HEAD。
