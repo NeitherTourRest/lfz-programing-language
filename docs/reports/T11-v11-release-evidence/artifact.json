@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-24",
+  "sourceBaseline": "91b65c3 + T11-12/13/14/16 working tree",
+  "path": "dist/lfz.exe",
+  "bytes": 766464,
+  "sha256": "149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB",
+  "version": "lfz 1.0.1",
+  "smokeExit": 0,
+  "releaseBlackboxExit": 0,
+  "releaseBlackboxTotal": 130,
+  "releaseBlackboxPassed": 130,
+  "tagsChanged": false,
+  "blindRerun": false,
+  "historicalBlindBaseline": "2/8",
+  "buildWarnings": "rustup could not canonicalize path messages"
+}

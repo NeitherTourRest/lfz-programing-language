@@ -1,7 +1,7 @@
 # LFZ 语言与解释器 — 程序设计课程作业
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-> 最后更新: 2026-09-27 by release-manager
+> 最后更新: 2026-10-24 by release-manager
 > 仓库地址: https://github.com/NeitherTourRest/lfz-programing-language
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
@@ -12,9 +12,9 @@ LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、�
 | P0 | 团队就绪（脚手架通过 S1–S5） | ✅ 已完成 |
 | P0.5 | 版本基线（git init + 初始提交 + `v0.1.0` 标签） | ✅ 已完成 |
 | P2 | 语言设计（`docs/spec/` v1 三件套冻结，D-016） | ✅ 已完成 · 里程碑 **`v0.2.0`** |
-| P3 | 解释器核心（loader / lexer / ast / parser / evaluator / builtins(54) / CLI） | ✅ 已完成 |
+| P3 | 解释器核心（loader / lexer / ast / parser / evaluator / builtins(69) / CLI） | ✅ 已完成 |
 | P4 | 工具链（CLI、一键测试 runner、打包脚本） | ✅ 已完成 |
-| P5 | 黑盒测试集（27 正向 + 62 负例 + 1 豁免，共 90 用例；覆盖矩阵） | ✅ 已完成 · 里程碑 **`v0.3-tested`** |
+| P5 | 黑盒测试集（31 正向 + 98 负例 + 1 豁免，共 130 用例；覆盖矩阵） | ✅ 已完成 · 里程碑 **`v0.3-tested`** |
 | P6 | 性能基准（LFZ vs Python，预热 + 多轮 + 中位数） | ✅ 已完成 |
 | P7 | 文档（人类手册 5 篇 + AI 指南 / skill） | ✅ 已完成 |
 | P8 | 应用（`app/sortviz.lfz` 341 行，5 算法） | ✅ 已完成 · 里程碑 **`v0.4-app`** |
@@ -26,13 +26,16 @@ LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、�
 ## 质量基线（实测）
 | 项 | 命令 | 实测结果 |
 | -- | -- | -- |
-| 构建 | `cargo build` | **0 warning / 0 error**（零第三方依赖，仅 std） |
-| 单元测试 | `cargo test` | **482 passed / 0 failed / 0 ignored**（lib 379 + main 48 + cli 28 + test_runner 12 + unit 15） |
-| 黑盒测试 | `cargo run -- test` | **90 个用例，通过 90，失败 0，错误 0**（exit 0，一个命令跑全部） |
+| 构建 | `cargo build --release` | **exit 0**（仅 std；本机 rustup 路径 canonicalize 提示，不宣称零 warning） |
+| 单元测试 | `cargo test` | **494 passed / 0 failed / 0 ignored**（lib 388 + main 48 + cli 28 + test_runner 15 + unit 15） |
+| 黑盒测试 | `cargo run -- test` | **130 个用例，通过 130，失败 0，错误 0**（exit 0，一个命令跑全部） |
 | 端到端 | `cargo run -- run examples/hello.lfz` | `Hello, LFZ!`（exit 0） |
 | 应用 | `cargo run -- run app/sortviz.lfz` | exit 0；**5 算法**全部 `[校验通过]`；**341 行** |
-| 发布产物 | `dist\lfz.exe` | **710144 B**（`lfz 1.0.1`，自包含，由当前源码同源重建） |
+| 发布产物 | `dist\lfz.exe` | **766464 B**（`lfz 1.0.1`，自包含，由当前源码同源重建） |
 
+> 本轮已实现 15 个新内置（总计 69）与 `range(lo, hi)`，含获用户追认的 `readFile` / `writeFile` / `appendFile`。独立定向验证 74/74，runner 干净工作目录 130/130；详见 [T11-v11-reverification.md](docs/reports/T11-v11-reverification.md)。同题 8 盲测因原任务材料不全未重跑，历史 2/8 基线保留；本轮不打 `v1.3.0`，Cargo 版本仍为 1.0.1。
+>
+> 本地发布产物 SHA256：`149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`。`dist/` 为忽略的构建目录；可用 `scripts/build-release.ps1` 重建。构建与发布版黑盒原始证据见 [T11-v11-release-evidence/](docs/reports/T11-v11-release-evidence/)。
 ## 交付物索引（8 项）
 | # | 交付物 | 位置 | 评分项 |
 | -- | -- | -- | -- |
@@ -103,16 +106,16 @@ cargo run -- examples/hello.lfz
 lfz Hello.lfz
 # 输出: Hello, LFZ!
 
-# 构建发布版（scripts\build-release.ps1 → dist\lfz.exe 710144 B（~694 KB），自包含，含冒烟测试）
+# 构建发布版（scripts\build-release.ps1 → dist\lfz.exe 766464 B（~749 KiB），自包含，含冒烟测试）
 powershell -File scripts\build-release.ps1
 
 # 安装到用户 PATH（scripts\install-lfz.ps1 默认 dry-run，带 PATH 备份与 -Uninstall）
 powershell -File scripts\install-lfz.ps1
 
-# 运行单元测试（482 passed）
+# 运行单元测试（494 passed）
 cargo test
 
-# 运行黑盒测试集（一个命令跑全部，90 用例）
+# 运行黑盒测试集（一个命令跑全部，130 用例）
 cargo run -- test
 
 # 运行示例应用（排序算法可视化）
