@@ -1,4 +1,4 @@
-//! 内置函数表（`data-last`，契约 §10.7 全表 **54 个**；P3.9a 非高阶 47 + P3.9b 高阶 7）。
+//! 内置函数表（`data-last`，已实现 **69 个**；非高阶 62 + 高阶 7；含已授权文件 IO 三项）。
 //!
 //! 单一事实源（本模块**只读消费**，不得偏离）：
 //! - `docs/spec/interface-contract.md` §10.7（内置表 + 「数值内置形参加宽」规范性补钉）、§8.1（错误类 ↔ 变体）、
@@ -108,58 +108,73 @@ impl Builtin {
 
 /// §10.7 全表 **54 个**内置名（字母序；= [`TABLE`] 的 47 个非高阶 + [`HOF_TABLE`] 的 7 个高阶）。
 pub const BUILTIN_NAMES: &[&str] = &[
-    "abs", "assert", "ceil", "check", "del", "div", "drop", "each", "entries", "eprint", "fail",
-    "filter", "float", "floor", "has", "input", "insert", "int", "join", "keys", "len", "lower",
-    "map", "max", "maxBy", "min", "minBy", "pop", "pow", "print", "push", "rand", "randInt",
-    "range", "reduce", "removeAt", "repeat", "replace", "round", "seed", "slice", "sort", "sortBy",
-    "split", "sqrt", "startsWith", "str", "sum", "swap", "take", "trim", "type", "upper", "values",
+    "abs", "appendFile", "assert", "ceil", "check", "chr", "contains", "cos", "del", "div", "drop", "each",
+    "endsWith", "entries", "eprint", "exp", "fail", "filter", "float", "floor", "has", "indexOf",
+    "input", "insert", "int", "join", "keys", "len", "log", "lower", "map", "max", "maxBy",
+    "min", "minBy", "ord", "padEnd", "padStart", "pop", "pow", "print", "push", "rand", "randInt",
+    "range", "readFile", "reduce", "removeAt", "repeat", "replace", "round", "seed", "sin", "slice", "sort", "sortBy",
+    "split", "sqrt", "startsWith", "str", "substring", "sum", "swap", "take", "trim", "type", "upper", "values", "writeFile",
 ];
 
 /// 变参内置的「无上界」哨兵。
 const VARIADIC: usize = usize::MAX;
 
 /// **非高阶**内置函数表（字母序；与 [`HOF_TABLE`] 的并集逐项对应 [`BUILTIN_NAMES`]，由测试锁定一致性）。
-static TABLE: [Builtin; 47] = [
+static TABLE: [Builtin; 62] = [
     Builtin { name: "abs", min_args: 1, max_args: 1, func: b_abs },
+    Builtin { name: "appendFile", min_args: 2, max_args: 2, func: b_append_file },
     Builtin { name: "assert", min_args: 1, max_args: 2, func: b_assert },
     Builtin { name: "ceil", min_args: 1, max_args: 1, func: b_ceil },
     Builtin { name: "check", min_args: 1, max_args: 2, func: b_check },
+    Builtin { name: "chr", min_args: 1, max_args: 1, func: b_chr },
+    Builtin { name: "contains", min_args: 2, max_args: 2, func: b_contains },
+    Builtin { name: "cos", min_args: 1, max_args: 1, func: b_cos },
     Builtin { name: "del", min_args: 2, max_args: 2, func: b_del },
     Builtin { name: "div", min_args: 2, max_args: 2, func: b_div },
     Builtin { name: "drop", min_args: 2, max_args: 2, func: b_drop },
+    Builtin { name: "endsWith", min_args: 2, max_args: 2, func: b_ends_with },
     Builtin { name: "entries", min_args: 1, max_args: 1, func: b_entries },
     Builtin { name: "eprint", min_args: 0, max_args: VARIADIC, func: b_eprint },
+    Builtin { name: "exp", min_args: 1, max_args: 1, func: b_exp },
     Builtin { name: "fail", min_args: 0, max_args: 1, func: b_fail },
     Builtin { name: "float", min_args: 1, max_args: 1, func: b_float },
     Builtin { name: "floor", min_args: 1, max_args: 1, func: b_floor },
     Builtin { name: "has", min_args: 2, max_args: 2, func: b_has },
+    Builtin { name: "indexOf", min_args: 2, max_args: 2, func: b_index_of },
     Builtin { name: "input", min_args: 0, max_args: 1, func: b_input },
     Builtin { name: "insert", min_args: 3, max_args: 3, func: b_insert },
     Builtin { name: "int", min_args: 1, max_args: 1, func: b_int },
     Builtin { name: "join", min_args: 2, max_args: 2, func: b_join },
     Builtin { name: "keys", min_args: 1, max_args: 1, func: b_keys },
     Builtin { name: "len", min_args: 1, max_args: 1, func: b_len },
+    Builtin { name: "log", min_args: 1, max_args: 1, func: b_log },
     Builtin { name: "lower", min_args: 1, max_args: 1, func: b_lower },
     Builtin { name: "max", min_args: 1, max_args: 1, func: b_max },
     Builtin { name: "min", min_args: 1, max_args: 1, func: b_min },
+    Builtin { name: "ord", min_args: 1, max_args: 1, func: b_ord },
+    Builtin { name: "padEnd", min_args: 3, max_args: 3, func: b_pad_end },
+    Builtin { name: "padStart", min_args: 3, max_args: 3, func: b_pad_start },
     Builtin { name: "pop", min_args: 1, max_args: 1, func: b_pop },
     Builtin { name: "pow", min_args: 2, max_args: 2, func: b_pow },
     Builtin { name: "print", min_args: 0, max_args: VARIADIC, func: b_print },
     Builtin { name: "push", min_args: 2, max_args: 2, func: b_push },
     Builtin { name: "rand", min_args: 0, max_args: 0, func: b_rand },
     Builtin { name: "randInt", min_args: 2, max_args: 2, func: b_rand_int },
-    Builtin { name: "range", min_args: 1, max_args: 1, func: b_range },
+    Builtin { name: "range", min_args: 1, max_args: 2, func: b_range },
+    Builtin { name: "readFile", min_args: 1, max_args: 1, func: b_read_file },
     Builtin { name: "removeAt", min_args: 2, max_args: 2, func: b_remove_at },
     Builtin { name: "repeat", min_args: 2, max_args: 2, func: b_repeat },
     Builtin { name: "replace", min_args: 3, max_args: 3, func: b_replace },
     Builtin { name: "round", min_args: 1, max_args: 1, func: b_round },
     Builtin { name: "seed", min_args: 1, max_args: 1, func: b_seed },
+    Builtin { name: "sin", min_args: 1, max_args: 1, func: b_sin },
     Builtin { name: "slice", min_args: 3, max_args: 3, func: b_slice },
     Builtin { name: "sort", min_args: 1, max_args: 1, func: b_sort },
     Builtin { name: "split", min_args: 2, max_args: 2, func: b_split },
     Builtin { name: "sqrt", min_args: 1, max_args: 1, func: b_sqrt },
     Builtin { name: "startsWith", min_args: 2, max_args: 2, func: b_starts_with },
     Builtin { name: "str", min_args: 1, max_args: 1, func: b_str },
+    Builtin { name: "substring", min_args: 3, max_args: 3, func: b_substring },
     Builtin { name: "sum", min_args: 1, max_args: 1, func: b_sum },
     Builtin { name: "swap", min_args: 3, max_args: 3, func: b_swap },
     Builtin { name: "take", min_args: 2, max_args: 2, func: b_take },
@@ -167,6 +182,7 @@ static TABLE: [Builtin; 47] = [
     Builtin { name: "type", min_args: 1, max_args: 1, func: b_type },
     Builtin { name: "upper", min_args: 1, max_args: 1, func: b_upper },
     Builtin { name: "values", min_args: 1, max_args: 1, func: b_values },
+    Builtin { name: "writeFile", min_args: 2, max_args: 2, func: b_write_file },
 ];
 
 // ---------------------------------------------------------------------------
@@ -492,22 +508,115 @@ fn b_len(args: &[Value], span: Span) -> R<Value> {
 /// 构造结果所需容量超出可分配上限 → `OverflowError`（`容量溢出：所需容量超出可分配上限`）；
 /// **任何 `n` 均不得使进程 panic**（v1.1 补钉，ADR bug-20260927-04）。
 fn b_range(args: &[Value], span: Span) -> R<Value> {
-    let n = need_int("range", args, 0, span)?;
-    if n <= 0 {
+    let first = need_int("range", args, 0, span)?;
+    let (lo, hi) = if args.len() == 1 {
+        (0, first)
+    } else {
+        (first, need_int("range", args, 1, span)?)
+    };
+    if hi <= lo {
         return Ok(Value::array(Vec::new()));
     }
-    // 容量预检：`n` 个 `Value` 所需的字节数（`n * size_of::<Value>()`）超出 `isize::MAX`
-    // 时，`Vec::collect` 会以 `capacity overflow` **panic**（bug-20260927-04）。
-    // 提前换算为受控 `OverflowError`（Capacity）。
-    let bytes = (n as usize)
+    // i128 差值避免 MIN..MAX 的减法溢出；先检查容量再分配。
+    let n = usize::try_from(hi as i128 - lo as i128)
+        .map_err(|_| overflow(span, OverflowMsg::Capacity))?;
+    let bytes = n
         .checked_mul(std::mem::size_of::<Value>())
         .ok_or_else(|| overflow(span, OverflowMsg::Capacity))?;
     if bytes > isize::MAX as usize {
         return Err(overflow(span, OverflowMsg::Capacity));
     }
-    let items: Vec<Value> = (0..n).map(Value::Int).collect();
+    let mut items = Vec::new();
+    items.try_reserve_exact(n).map_err(|_| overflow(span, OverflowMsg::Capacity))?;
+    items.extend((lo..hi).map(Value::Int));
     Ok(Value::array(items))
 }
+
+/// O(n) 线性扫描；完全复用 `==` 的有界、环安全深比较。
+fn b_contains(args: &[Value], span: Span) -> R<Value> {
+    let xs = need_array("contains", args, 1, span)?;
+    for item in xs.borrow().iter() {
+        let equal = args[0].deep_eq_bounded(item, crate::evaluator::RECURSION_LIMIT)
+            .map_err(|depth| crate::error::recursion(depth, crate::evaluator::RECURSION_LIMIT, span))?;
+        if equal { return Ok(Value::Bool(true)); }
+    }
+    Ok(Value::Bool(false))
+}
+
+/// 首次子串位置换算为 Unicode 标量下标，保守最坏 O(n*m)。
+fn b_index_of(args: &[Value], span: Span) -> R<Value> {
+    let sub = need_str("indexOf", args, 0, span)?;
+    let s = need_str("indexOf", args, 1, span)?;
+    Ok(Value::Int(s.find(sub).map_or(-1, |byte| s[..byte].chars().count() as i64)))
+}
+
+/// O(m)，m 为后缀长度。
+fn b_ends_with(args: &[Value], span: Span) -> R<Value> {
+    let suffix = need_str("endsWith", args, 0, span)?;
+    let s = need_str("endsWith", args, 1, span)?;
+    Ok(Value::Bool(s.ends_with(suffix)))
+}
+
+/// 标量区间夹取；迭代器至多扫描到 to，不做重复字符定位。
+fn b_substring(args: &[Value], span: Span) -> R<Value> {
+    let from = need_int("substring", args, 0, span)?.max(0) as usize;
+    let to = need_int("substring", args, 1, span)?.max(0) as usize;
+    let s = need_str("substring", args, 2, span)?;
+    Ok(Value::string(if from >= to { String::new() } else {
+        s.chars().take(to).skip(from).collect()
+    }))
+}
+
+/// O(width) 标量填充；先精确检查 UTF-8 字节容量，再单次分配。
+fn pad(args: &[Value], span: Span, name: &str, start: bool) -> R<Value> {
+    let width = need_int(name, args, 0, span)?;
+    let fill = need_str(name, args, 1, span)?;
+    let s = need_str(name, args, 2, span)?;
+    if fill.is_empty() { return Err(value_error(ValueMsg::EmptyFill, span)); }
+    let len = s.chars().count();
+    if width <= 0 || width as u64 <= len as u64 { return Ok(args[2].clone()); }
+    let extra = usize::try_from(width).map_err(|_| overflow(span, OverflowMsg::Capacity))? - len;
+    let fill_len = fill.chars().count();
+    let repeats = extra / fill_len;
+    let tail = extra % fill_len;
+    let tail_bytes: usize = fill.chars().take(tail).map(char::len_utf8).sum();
+    let bytes = repeats.checked_mul(fill.len()).and_then(|n| n.checked_add(tail_bytes))
+        .and_then(|n| n.checked_add(s.len())).filter(|n| *n <= isize::MAX as usize)
+        .ok_or_else(|| overflow(span, OverflowMsg::Capacity))?;
+    let mut result = String::new();
+    result.try_reserve_exact(bytes).map_err(|_| overflow(span, OverflowMsg::Capacity))?;
+    if !start { result.push_str(s); }
+    for _ in 0..repeats { result.push_str(fill); }
+    result.extend(fill.chars().take(tail));
+    if start { result.push_str(s); }
+    Ok(Value::string(result))
+}
+
+fn b_pad_end(args: &[Value], span: Span) -> R<Value> { pad(args, span, "padEnd", false) }
+fn b_pad_start(args: &[Value], span: Span) -> R<Value> { pad(args, span, "padStart", true) }
+
+fn b_ord(args: &[Value], span: Span) -> R<Value> {
+    let s = need_str("ord", args, 0, span)?;
+    let mut chars = s.chars();
+    match (chars.next(), chars.next()) {
+        (Some(c), None) => Ok(Value::Int(c as i64)),
+        (None, _) => Err(value_error(ValueMsg::NotSingleScalar { n: 0 }, span)),
+        _ => Err(value_error(ValueMsg::NotSingleScalar { n: 2 + chars.count() }, span)),
+    }
+}
+
+fn b_chr(args: &[Value], span: Span) -> R<Value> {
+    let n = need_int("chr", args, 0, span)?;
+    let c = u32::try_from(n).ok().and_then(char::from_u32)
+        .ok_or_else(|| value_error(ValueMsg::BadCodepoint { n }, span))?;
+    Ok(Value::string(c.to_string()))
+}
+
+// 超越函数 O(1)，沿用唯一的 int→float 加宽与 IEEE 结果。
+fn b_sin(args: &[Value], span: Span) -> R<Value> { Ok(Value::Float(need_number("sin", args, 0, span)?.sin())) }
+fn b_cos(args: &[Value], span: Span) -> R<Value> { Ok(Value::Float(need_number("cos", args, 0, span)?.cos())) }
+fn b_log(args: &[Value], span: Span) -> R<Value> { Ok(Value::Float(need_number("log", args, 0, span)?.ln())) }
+fn b_exp(args: &[Value], span: Span) -> R<Value> { Ok(Value::Float(need_number("exp", args, 0, span)?.exp())) }
 
 /// `push(v, xs) -> array`：追加 `v` 的**新**数组（不改 `xs`，A1）。
 fn b_push(args: &[Value], span: Span) -> R<Value> {
@@ -1146,6 +1255,34 @@ fn b_type(args: &[Value], span: Span) -> R<Value> {
 // IO
 // ===========================================================================
 
+/// UTF-8 整文件读取，路径原样交给 OS，O(文件大小)。
+fn b_read_file(args: &[Value], span: Span) -> R<Value> {
+    let path = need_str("readFile", args, 0, span)?;
+    let bytes = std::fs::read(path)
+        .map_err(|_| io_error(format!("无法读取：{path}"), Some(span)))?;
+    let text = String::from_utf8(bytes)
+        .map_err(|_| io_error(format!("无法读取：{path}（不是合法的 UTF-8 编码）"), Some(span)))?;
+    Ok(Value::string(text))
+}
+
+fn b_write_file(args: &[Value], span: Span) -> R<Value> {
+    let path = need_str("writeFile", args, 0, span)?;
+    let contents = need_str("writeFile", args, 1, span)?;
+    std::fs::write(path, contents.as_bytes())
+        .map_err(|_| io_error(format!("无法写入：{path}"), Some(span)))?;
+    Ok(Value::Nil)
+}
+
+fn b_append_file(args: &[Value], span: Span) -> R<Value> {
+    let path = need_str("appendFile", args, 0, span)?;
+    let contents = need_str("appendFile", args, 1, span)?;
+    let mut file = std::fs::OpenOptions::new().create(true).append(true).open(path)
+        .map_err(|_| io_error(format!("无法追加：{path}"), Some(span)))?;
+    file.write_all(contents.as_bytes())
+        .map_err(|_| io_error(format!("无法追加：{path}"), Some(span)))?;
+    Ok(Value::Nil)
+}
+
 /// 各实参按显示形式（§3.7）拼接、空格连接。
 fn display_join(args: &[Value]) -> String {
     let parts: Vec<String> = args.iter().map(ToString::to_string).collect();
@@ -1324,6 +1461,143 @@ fn empty_collection_value_error(name: &str, span: Span) -> Box<LzError> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn v11_file_io_utf8_overwrite_append_and_errors() {
+        // 仅项目 Temp/，不使用 OS 临时目录；不改变全局 cwd。
+        let dir = format!("Temp/runtime-v11-io-{}", std::process::id());
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = format!("{dir}/unicode.txt");
+        let invalid = format!("{dir}/invalid.txt");
+        assert!(matches!(ok("writeFile", &[s(&path), s("中文\r\n🦀")]), Value::Nil));
+        assert_eq!(ok("readFile", &[s(&path)]).as_str(), Some("中文\r\n🦀"));
+        assert_eq!(std::fs::read(&path).unwrap(), "中文\r\n🦀".as_bytes());
+        assert!(matches!(ok("writeFile", &[s(&path), s("a")]), Value::Nil));
+        assert!(matches!(ok("appendFile", &[s(&path), s("中")]), Value::Nil));
+        assert_eq!(ok("readFile", &[s(&path)]).as_str(), Some("a中"));
+        std::fs::remove_file(&path).unwrap();
+        ok("appendFile", &[s(&path), s("created")]);
+        assert_eq!(ok("readFile", &[s(&path)]).as_str(), Some("created"));
+        std::fs::write(&invalid, [0xff, 0xfe]).unwrap();
+        assert_eq!(msg("readFile", &[s(&invalid)]), format!("无法读取：{invalid}（不是合法的 UTF-8 编码）"));
+        let missing = format!("{dir}/missing-parent/file.txt");
+        for (name, args, text) in [
+            ("readFile", vec![s(&missing)], format!("无法读取：{missing}")),
+            ("writeFile", vec![s(&missing), s("x")], format!("无法写入：{missing}")),
+            ("appendFile", vec![s(&missing), s("x")], format!("无法追加：{missing}")),
+        ] {
+            let e = super::call(name, &args, Span::new(9, 2)).unwrap_err();
+            assert_eq!(e.class_name(), "IOError");
+            assert_eq!(e.message(), text);
+            assert_eq!(e.span(), Some(Span::new(9, 2)));
+            assert_eq!(cls(name, &[i(1)]), "TypeError");
+        }
+        for name in ["writeFile", "appendFile"] {
+            assert_eq!(cls(name, &[s(&path), i(42)]), "TypeError");
+        }
+        std::fs::remove_file(path).unwrap();
+        std::fs::remove_file(invalid).unwrap();
+        std::fs::remove_dir(dir).unwrap();
+    }
+    #[test]
+    fn v11_range_two_args_and_extreme_capacity() {
+        assert_eq!(ok("range", &[i(-2), i(2)]).to_string(), "[-2, -1, 0, 1]");
+        assert_eq!(ok("range", &[i(2), i(2)]).to_string(), "[]");
+        assert_eq!(ok("range", &[i(3), i(-2)]).to_string(), "[]");
+        assert_eq!(ok("range", &[i(i64::MAX - 1), i(i64::MAX)]).to_string(), "[9223372036854775806]");
+        assert_eq!(cls("range", &[i(i64::MIN), i(i64::MAX)]), "OverflowError");
+        assert_eq!(cls("range", &[i(0), s("x")]), "TypeError");
+        assert_eq!(msg("range", &[i(0), i(1), i(2)]), "函数 range 期待 2 个参数，得到 3");
+    }
+
+    #[test]
+    fn v11_string_scalar_operations() {
+        assert_eq!(ok("indexOf", &[s("🦀"), s("中a🦀中")]).to_string(), "2");
+        assert_eq!(ok("indexOf", &[s(""), s("中")]).to_string(), "0");
+        assert_eq!(ok("indexOf", &[s("x"), s("中")]).to_string(), "-1");
+        assert_eq!(ok("endsWith", &[s("🦀"), s("中🦀")]).to_string(), "true");
+        assert_eq!(ok("endsWith", &[s(""), s("")]).to_string(), "true");
+        assert_eq!(ok("endsWith", &[s("中"), s("中🦀")]).to_string(), "false");
+        assert_eq!(ok("substring", &[i(1), i(3), s("中a🦀尾")]).to_string(), "a🦀");
+        assert_eq!(ok("substring", &[i(-1), i(99), s("中🦀")]).to_string(), "中🦀");
+        assert_eq!(ok("substring", &[i(3), i(1), s("abc")]).to_string(), "");
+        assert_eq!(ok("substring", &[i(i64::MAX), i(i64::MAX), s("中")]).to_string(), "");
+    }
+
+    #[test]
+    fn v11_padding_unicode_and_validation() {
+        assert_eq!(ok("padEnd", &[i(6), s("中🦀"), s("a")]).to_string(), "a中🦀中🦀中");
+        assert_eq!(ok("padStart", &[i(4), s("中🦀"), s("ab")]).to_string(), "中🦀ab");
+        assert_eq!(ok("padEnd", &[i(-2), s("x"), s("中")]).to_string(), "中");
+        assert_eq!(ok("padStart", &[i(1), s("x"), s("中文")]).to_string(), "中文");
+        for name in ["padEnd", "padStart"] {
+            assert_eq!(msg(name, &[i(0), s(""), s("abc")]), "填充串不能为空");
+            assert_eq!(cls(name, &[i(i64::MAX), s("🦀"), s("")]), "OverflowError");
+        }
+    }
+
+    #[test]
+    fn v11_unicode_codepoints() {
+        for (text, code) in [("A", 65), ("中", 0x4e2d), ("🦀", 0x1f980), ("\0", 0), ("\u{10ffff}", 0x10ffff)] {
+            assert_eq!(ok("ord", &[s(text)]).as_int(), Some(code));
+            assert_eq!(ok("chr", &[i(code)]).as_str(), Some(text));
+        }
+        assert_eq!(msg("ord", &[s("")]), "ord 的参数必须是单个字符（Unicode 标量数 0）");
+        assert_eq!(msg("ord", &[s("abc")]), "ord 的参数必须是单个字符（Unicode 标量数 3）");
+        for n in [-1, 0xd800, 0xdfff, 0x110000, i64::MAX] {
+            assert_eq!(msg("chr", &[i(n)]), format!("chr 的参数不是合法的 Unicode 码点：{n}"));
+        }
+    }
+
+    #[test]
+    fn v11_transcendentals_ieee_and_widening() {
+        assert_eq!(ok("sin", &[i(0)]).as_float(), Some(0.0));
+        assert_eq!(ok("cos", &[i(0)]).as_float(), Some(1.0));
+        assert_eq!(ok("log", &[i(1)]).as_float(), Some(0.0));
+        assert_eq!(ok("exp", &[i(0)]).as_float(), Some(1.0));
+        assert_eq!(ok("log", &[i(0)]).as_float(), Some(f64::NEG_INFINITY));
+        assert!(ok("log", &[i(-1)]).as_float().unwrap().is_nan());
+        assert_eq!(ok("exp", &[i(1000)]).as_float(), Some(f64::INFINITY));
+        for name in ["sin", "cos"] {
+            for x in [f64::INFINITY, f64::NEG_INFINITY, f64::NAN] {
+                assert!(ok(name, &[f(x)]).as_float().unwrap().is_nan());
+            }
+        }
+    }
+
+    #[test]
+    fn v11_contains_uses_equality_and_cycles() {
+        assert_eq!(ok("contains", &[i(1), arr(vec![f(1.0)])]).to_string(), "true");
+        assert_eq!(ok("contains", &[f(f64::NAN), arr(vec![f(f64::NAN)])]).to_string(), "false");
+        assert_eq!(ok("contains", &[arr(vec![i(1)]), arr(vec![arr(vec![i(1)])])]).to_string(), "true");
+        assert_eq!(ok("contains", &[i(1), arr(vec![])]).to_string(), "false");
+        let a = arr(vec![]);
+        let b = arr(vec![]);
+        a.as_array().unwrap().borrow_mut().push(a.clone());
+        b.as_array().unwrap().borrow_mut().push(b.clone());
+        assert_eq!(ok("contains", &[a.clone(), arr(vec![b.clone()])]).to_string(), "true");
+        a.as_array().unwrap().borrow_mut().clear();
+        b.as_array().unwrap().borrow_mut().clear();
+        assert_eq!(cls("contains", &[s("a"), s("abc")]), "TypeError");
+    }
+
+    #[test]
+    fn v11_new_builtin_errors_have_type_and_span() {
+        let cases = [
+            ("indexOf", vec![i(1), s("x")]), ("endsWith", vec![s("x"), i(1)]),
+            ("substring", vec![f(1.0), i(2), s("x")]),
+            ("padEnd", vec![i(3), i(0), s("x")]), ("padStart", vec![i(3), s("x"), i(0)]),
+            ("ord", vec![i(1)]), ("chr", vec![f(65.0)]),
+            ("sin", vec![Value::Bool(true)]), ("cos", vec![s("1")]),
+            ("log", vec![Value::Nil]), ("exp", vec![arr(vec![])]),
+            ("contains", vec![i(1), Value::Nil]),
+        ];
+        for (name, args) in cases {
+            let e = super::call(name, &args, Span::new(8, 4)).unwrap_err();
+            assert_eq!(e.class_name(), "TypeError", "{name}");
+            assert_eq!(e.span(), Some(Span::new(8, 4)));
+            assert_eq!(cls(name, &[]), "TypeError");
+        }
+    }
     use super::*;
     use crate::env::ScopeChain;
     use crate::error::R;
@@ -1950,7 +2224,7 @@ mod tests {
         assert!(is_builtin("push"));
         assert!(!is_builtin("nope"));
         assert!(lookup("nope").is_none());
-        assert_eq!(BUILTIN_NAMES.len(), 54);
+        assert_eq!(BUILTIN_NAMES.len(), 69);
         // 字母序。
         let mut sorted = BUILTIN_NAMES.to_vec();
         sorted.sort_unstable();
@@ -1958,7 +2232,7 @@ mod tests {
         // 无重复。
         let mut dedup = sorted.clone();
         dedup.dedup();
-        assert_eq!(dedup.len(), 54);
+        assert_eq!(dedup.len(), 69);
         // 两表（非高阶 + 高阶）名字并集与全表名单逐项一致。
         let mut table_names: Vec<&str> = TABLE.iter().map(|b| b.name).collect();
         table_names.extend(HOF_TABLE.iter().map(|h| h.name));
@@ -1967,8 +2241,8 @@ mod tests {
         // HOF_NAMES 与 HOF_TABLE 逐项一致。
         let hof_names: Vec<&str> = HOF_TABLE.iter().map(|h| h.name).collect();
         assert_eq!(hof_names.as_slice(), HOF_NAMES);
-        // §10.7 全表 54 个（47 非高阶 + 7 高阶）齐备。
-        assert_eq!(TABLE.len() + HOF_TABLE.len(), 54);
+        // §10.7 v1.1 全部 69 个（62 非高阶 + 7 高阶）。
+        assert_eq!(TABLE.len() + HOF_TABLE.len(), 69);
     }
 
     #[test]

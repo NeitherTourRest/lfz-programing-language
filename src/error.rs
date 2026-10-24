@@ -193,7 +193,7 @@ impl OverflowMsg {
     }
 }
 
-/// `ValueError` 子消息 —— `semantics.md` §8.1 该行给出**四条**消息模板，故为**四变体**枚举。
+/// `ValueError` 子消息 —— `semantics.md` §8.1 及 v1.1 契约共给出**七条**消息模板。
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum ValueMsg {
     /// `无法把 {src} 转换为 {dst}（'{text}'）`
@@ -208,6 +208,9 @@ pub enum ValueMsg {
     EmptyExtremum { func: String },
     /// `区间非法：{lo} >= {hi}` —— `randInt(lo, hi)` 且 `lo >= hi`（`semantics.md` §8.1）。
     BadRange { lo: i64, hi: i64 },
+    NotSingleScalar { n: usize },
+    BadCodepoint { n: i64 },
+    EmptyFill,
 }
 
 impl ValueMsg {
@@ -221,6 +224,9 @@ impl ValueMsg {
             ValueMsg::BadFormatSpec { spec } => format!("格式说明符非法：'{spec}'"),
             ValueMsg::EmptyExtremum { func } => format!("空数组没有极值（{func}）"),
             ValueMsg::BadRange { lo, hi } => format!("区间非法：{lo} >= {hi}"),
+            ValueMsg::NotSingleScalar { n } => format!("ord 的参数必须是单个字符（Unicode 标量数 {n}）"),
+            ValueMsg::BadCodepoint { n } => format!("chr 的参数不是合法的 Unicode 码点：{n}"),
+            ValueMsg::EmptyFill => "填充串不能为空".to_string(),
         }
     }
 }
@@ -971,7 +977,7 @@ mod tests {
     }
 
     #[test]
-    fn value_msg_covers_all_four_rows() {
+    fn value_msg_covers_all_seven_rows() {
         assert_eq!(
             ValueMsg::Convert {
                 src: "string".to_string(),
@@ -1001,6 +1007,20 @@ mod tests {
         );
     }
 
+    #[test]
+    fn v11_value_messages_match_contract() {
+        let cases = [
+            (ValueMsg::NotSingleScalar { n: 0 }, "ord 的参数必须是单个字符（Unicode 标量数 0）"),
+            (ValueMsg::NotSingleScalar { n: 2 }, "ord 的参数必须是单个字符（Unicode 标量数 2）"),
+            (ValueMsg::BadCodepoint { n: -1 }, "chr 的参数不是合法的 Unicode 码点：-1"),
+            (ValueMsg::BadCodepoint { n: 55296 }, "chr 的参数不是合法的 Unicode 码点：55296"),
+            (ValueMsg::EmptyFill, "填充串不能为空"),
+        ];
+        for (msg, text) in cases {
+            assert_chars_eq(&msg.message(), text);
+            assert_eq!(value(msg, Span::START).class_name(), "ValueError");
+        }
+    }
     /// P3.9a 裁定 1：`EmptyExtremum` 消息 `空数组没有极值（{func}）`，逐字符断言。
     #[test]
     fn empty_extremum_message_char_by_char() {

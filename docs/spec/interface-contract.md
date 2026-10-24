@@ -206,7 +206,7 @@ enum LfzError {
 | `str` | `str(x) -> string` | `string` | 显示形式（[semantics.md](./semantics.md) §3.7） |
 | `int` | `int(x) -> int` | `int` | `string`/`float`/`bool` → `int`；`float` **向零截断**；**`NaN` → `ValueError`；`±Inf` → `OverflowError`；有限浮点截断后超 i64 → `OverflowError`**（[semantics.md](./semantics.md) §4.5.7）；非法串 → `ValueError` |
 | `float` | `float(x) -> float` | `float` | `int`/`string`/`bool` → `float`；非法串 → `ValueError`；支持 `"inf"`/`"-inf"`/`"nan"` |
-| `ord` | `ord(c) -> int` | `int` | `c` 须为**恰好 1 个 Unicode 标量**的 `string` → 其码点（`0..=0x10FFFF`）；非 `string` → `TypeError`；标量数 ≠ 1 → `ValueError`（消息 `ord 的参数必须是单个字符（Unicode 标量数 {n}）`）。**O(1)**（v1.1 补钉） |
+| `ord` | `ord(c) -> int` | `int` | `c` 须为**恰好 1 个 Unicode 标量**的 `string` → 其码点（`0..=0x10FFFF`）；非 `string` → `TypeError`；标量数 ≠ 1 → `ValueError`（消息 `ord 的参数必须是单个字符（Unicode 标量数 {n}）`）。**成功 O(1)；非法字符串为完整报告标量数 n，错误路径 O(n)**（非 string 的 TypeError 为 O(1)；v1.1 补钉） |
 | `chr` | `chr(n) -> string` | `string` | `n` 须 `int` 且为**合法 Unicode 码点**（`0 <= n <= 0x10FFFF` 且非代理区 `0xD800..=0xDFFF`）→ 该字符；非 `int` → `TypeError`；非法码点 → `ValueError`（消息 `chr 的参数不是合法的 Unicode 码点：{n}`）。**O(1)**（v1.1 补钉） |
 | `type` | `type(x) -> string` | `string` | `"int"`/`"float"`/`"string"`/`"bool"`/`"nil"`/`"array"`/`"struct"`/`"function"` |
 | `print` | `print(...) -> nil` | `nil` | 各参数按显示形式拼接、**空格连接** + 末尾 `\n`（stdout） |
@@ -250,14 +250,14 @@ enum LfzError {
 > - **返回值**：读 → `string`；写 / 追加 → `nil`。
 > - **与 `input()` 同属"外部 IO"**：结果依赖运行环境（文件系统 / 工作目录），**不在** [semantics.md](./semantics.md) §4.5 确定性「无魔法」纪律讨论内（该纪律约束**求值顺序 / 类型 / 无隐式转换**，外部 IO 从来排除）；`seed` 的"唯一非确定源"表述**不变**（文件 IO 是**环境依赖**，非随机性）。
 > - **不得引入隐式转换**：`path` / `contents` 必须 `string`；`writeFile(p, 42)` → `TypeError`（**不**自动 `str`），需写数字请先 `str(42)`。
-> - **复杂度**：O(文件大小) 时间 + O(文件大小) 内存；**无隐藏 O(n²)**。⚠️（既有陈规，见 `FEATURE-AUDIT` §7.1）把多次读取结果 `s = s + chunk` 累积为 **O(n²)**，应改用 `push` + `join("", arr)`（O(n)）。
+> - **复杂度**：O(文件大小) 时间 + O(文件大小) 内存；**无隐藏 O(n²)**。把多次读取结果 `s = s + chunk` 累积为 **O(n²)**；循环 `push` 同样会克隆数组前缀，亦为 **O(n²)**。应预分配数组后用下标写入，或用 `map` 一次构造数组，再 `join("", arr)`（时间 O(片段数 + 总输出大小)；沿用 ADR [2026-09-27 23:40]）。
 > - **`span`** = 调用节点（内置名）首字符；属**运行期 10 类**之一。
 
 **v1.1 补钉内置的边界与复杂度（规范性）**
 
 - **`range` 参数个数**：仅接受 **1 或 2** 个参数（`min_args = 1, max_args = 2`）；`m < 1` → `函数 range 期待 1 个参数，得到 {m}`；`m > 2` → `函数 range 期待 2 个参数，得到 {m}`；非 `int` 实参 → `TypeError`（`运算符 'range' 不支持 {t} 与 int`）。两形均**物化普通 `array[int]`**（沿用 §4.5.4 array 快照）；构造结果所需容量超上限 → `OverflowError: 容量溢出：所需容量超出可分配上限`；**任何 `n`/`lo`/`hi` 均不得使进程 panic**。**复杂度** `O(n)` / `O(hi−lo)` 时间与内存，与既有同阶。
-- **字符串方法族**（`indexOf` / `endsWith` / `padEnd` / `padStart` / `substring`）：全 **data-last**、**返回新值**（string 不可变 §4.5.11）。`padEnd`/`padStart` 的 `fill == ""` → `ValueError: 填充串不能为空`；`width`/`from`/`to` 非 `int` → `TypeError`；`substring` 下标**夹取**（负数 / 越界不作 `IndexError`，与 `slice` 同口径）。**复杂度**：`indexOf` **最坏 `O(n·m)`**（n=主串标量数、m=子串标量数；**必须标注**，不得宣称 `O(n)`；实现用 `str::find` 可期望 `O(n+m)`，但**规范按保守最坏 `O(n·m)` 标注**）；`endsWith` `O(m)`；`pad*` `O(width)`；`substring` `O(to−from)`。**不引入隐藏 `O(n²)`**。
-- **`ord` / `chr`**：**O(1)**（`ord` 仅窥前 2 个标量即可判「非单字符」）。`ord` 非 `string` → `TypeError`、标量数 ≠ 1 → `ValueError`；`chr` 非 `int` → `TypeError`、非法码点 → `ValueError`。
+- **字符串方法族**（`indexOf` / `endsWith` / `padEnd` / `padStart` / `substring`）：全 **data-last**、**返回新值**（string 不可变 §4.5.11）。`padEnd`/`padStart` 的 `fill == ""` → `ValueError: 填充串不能为空`；`width`/`from`/`to` 非 `int` → `TypeError`；`substring` 下标**夹取**（负数 / 越界不作 `IndexError`，与 `slice` 同口径）。**复杂度**：`indexOf` **最坏 `O(n·m)`**（n=主串标量数、m=子串标量数；**必须标注**，不得宣称 `O(n)`；实现用 `str::find` 可期望 `O(n+m)`，但**规范按保守最坏 `O(n·m)` 标注**）；`endsWith` `O(m)`；`pad*` `O(n+m+输出宽度)`（n、m 分别为 s、fill 的标量数，包含计数成本；不能仅按 width 标注）；`substring` 非空结果 `O(min(to, len(s)))`（此处 to 已把负数夹至 0；UTF-8 须扫描到右端点或串尾，不能仅按输出子串长度标注）。`from`/`to` 均夹取到 `[0, len(s)]`；空区间可直接返回空串，不要求先遍历全串计数。**不引入隐藏 `O(n²)`**。
+- **`ord` / `chr`**：`ord` **成功 O(1)**；非法字符串须完整报告 Unicode 标量数 n，故**错误路径 O(n)**（窥前 2 个标量只能判错，不能取得消息中的 n）；非字符串类型错误 O(1)。`chr` **O(1)**。`ord` 非 `string` → `TypeError`、标量数 ≠ 1 → `ValueError`；`chr` 非 `int` → `TypeError`、非法码点 → `ValueError`。
 - **`sin` / `cos` / `log` / `exp`**：**O(1)**；`int` 实参加宽；IEEE 口径（`log(0)` → `-Inf`、`log(x<0)` → `NaN`、`exp` 溢出 → `+Inf`、`sin`/`cos` 遇 `±Inf`/`NaN` → `NaN`），见 [semantics.md](./semantics.md) §4.5.6。
 - **`contains`**：**O(n)** 线性扫描（**必须标注**；元素为容器时每次 `==` 可 > O(1)，深结构比较继承 §4.5.9 环安全）；`xs` 非 `array` → `TypeError`；**不得**放进 N 次循环对长数组反复调用（否则 `O(N·M)`）；struct 键判定用 `has(k, s)`，二者不重叠。
 
