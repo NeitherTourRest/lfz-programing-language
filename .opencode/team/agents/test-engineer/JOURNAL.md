@@ -127,3 +127,12 @@
 - 限制: append 首次创建、非法 UTF8、OS 权限尚未覆盖；runner仅断言错误类。
 - 下一步: verifier 独立验收。
 - 阻塞: 无；apply_patch 挂起后改 IO.File 完成。
+
+## [2026-10-24 17:26] LFZ Agent基准v2固定案例与执行器
+- 来源: team-lead轻量启动任务；用户重写八题，先交付包不实际派8学生。
+- 完成: cases131例，run.py执行器与自测，manifest九文件冻结，README/QA/manual-review.schema.json。
+- 证据: Python -B run.py --freeze --self-test --lfz target/release/lfz.exe --output docs/validation/agent-benchmark-v2/QA-final-evidence.json -> exit0、ok:true、cases131；最终verify_freeze成功。
+- 产出字节: cases134479、run21266、README6152、QA5288、manifest1231、schema2255、最终JSON21171。
+- 限制: 非正式盲测，功能通过仍REVIEW_REQUIRED；源码算法与隔离协议待独立verifier。固定案例不证明全部输入。
+- 下一步: verifier独立审查与正式测评另行调度。
+- 阻塞: 无；所有临时件限项目Temp，冻结文件稳定。

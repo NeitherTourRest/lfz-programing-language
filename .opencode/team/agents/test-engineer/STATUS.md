@@ -1,27 +1,32 @@
 # test-engineer — 工作状态
-> 最后更新: 2026-10-24 by test-engineer
+> 最后更新: 2026-10-24 17:26 by test-engineer
 
 ## 当前状态
-T11-13 v1.1 黑盒增量完成；target/release/lfz.exe test --json 连续两轮均 130/130 PASS、exit0。当前 31 正例文件 / 662 assert / 98 错误负例 / 1 非 .lfz 正例。
+新固定八题测评包完成，待独立verifier。没有运行八个学生Agent，不报告盲测成绩。
 
 ## 最近完成
-- 按 team-lead 任务实现 range 2参、字符串五内置、ord/chr、math四内置、contains 与 string 索引既有语义黑盒。
-- 用户追认后纳入文件 IO：UTF8 读写、append、覆盖截断、空串、缺失路径/父目录与类型错误。
-- 新增 tests/lfz/test_v11_{range,string,unicode_math,io}.lfz：4 文件 / 63 assert；tests/fixtures/v11_*.lfz：36 负例；cases.json 仅追加。
-- REPORT.md §10 / coverage-matrix.md §10 明确最新计数、覆盖和未测项。原始两轮 JSON 在 tests/evidence/T11-13-blackbox*.json。
-- 未修改既有测试内容、src/spec/guide、unit tests；未 git commit。
+- docs/validation/agent-benchmark-v2/cases.json：131固定case，B01..B08分别16/18/15/16/16/17/17/16。
+- run.py：--solutions/--lfz/--output、每进程10秒、缺题逐case MISSING、源码/案例/程序/输出hash；B08真实字节、输入不变、两轮污染输出检查覆盖。
+- 字面量正确处理Unicode、LF/CR/tab、引号/斜线、美元插值与NUL；B06任意账户键用entries数组比较。
+- manifest.json冻结TASKS/STUDENT_PROMPT/cases/run/skill四文件/解释器共9文件，不含自身；最终verify_freeze通过。
+- README.md、QA.md、manual-review.schema.json明确自动FUNCTIONAL_PASS仍REVIEW_REQUIRED，最终源码与协议由verifier另行合并。
+- QA-final-evidence.json：131参考检查与runner控制自测全部成功，正确识别错答/缺函数/非零/非法前导/缺8题/超时/状态泄漏/BFS改输入/IO错误及输入被改。常量stub仅Temp自测控制，不是LFZ参考解。
+- 字节：cases134479/run21266/README6152/QA5288/manifest1231/schema2255/最终自测21171。
+- run SHA256=5a698248db184d091bd0a41e46b861f241e7f8f2a1051cef640640671eb9e862；cases=919cfe6905ef4f4bc003d0321fe4398aab631be0ac8a0873f03c2761af6f22cd。
+- 原tests/源码/spec/guide未修改，不git、不派agent。
+- 保留前批T11-13成果：4正例组63assert+36负例，130/130黑盒连跑两次exit0（已交接）。
 
 ## 进行中
-无；待 team-lead / verifier 独立验收。
+无。
 
 ## 阻塞
-无。apply_patch 本会话挂起，最终改 exec_command IO.File UTF8 写入完成。
+无。Python安装路径有提示但实际执行exit0。run.py最终完整非空，已从Temp完整编译后原子替换。
 
 ## 下一步
-verifier 独立验证；IO append 首次创建、非法 UTF8、OS 权限场景可另批增加，本批未宣称覆盖。
+独立verifier审查固定用例/runner/manifest与manual-review schema。正式盲测须另经用户授权派学生，冻结后不能看到答案再改标准。
 
 ## 关键经验
-- IO 正例每次先覆盖固定 Temp/ 文件，再 append/读/覆盖空串，重复运行幂等。
-- range 极值测试使用小输出区间及反向空区间；全极值正向范围断言 OverflowError。
-- 原始 runner JSON 保留可重复核验；旧报告历史 90/90 与当前130/130须分清。
-- 临时文件与输出均项目 Temp/；测试永久证据先复制 tests/evidence/。
+- B07先ASCII regex提词再lower，不可Unicode.lower全文后提词（K/İ等会混入ASCII）。
+- LFZ不支持JSON的u转义，美元要转义；任意控制字符需chr拼接，动态struct键比较改entries。
+- Windows长命令有32K上限，分批写入；先Temp生成compile再os.replace，避免并发读到truncate文件。
+- JS replace替换字符串中美元单引号有特殊含义，应使用回调或切片。

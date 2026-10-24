@@ -62,6 +62,7 @@ LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、�
 | T11 修复批次全量复验（37 条款含子项 + 2 补充，**PASS 39 / FAIL 0**） | [`docs/reports/T11-reverification.md`](docs/reports/T11-reverification.md) |
 | T11 特性缺口审计（IN 7 项 / OUT 18 项 / P0 文档 7 条） | [`.opencode/team/FEATURE-AUDIT.md`](.opencode/team/FEATURE-AUDIT.md) |
 | T11 前置 skill 盲测（8 题零上下文 agent，通过 2/8） | [`docs/reports/blind-test/`](docs/reports/blind-test/) |
+| LFZ Agent 编程基准 v2（新八题集；不与旧 2/8 直接比较，正式测评未开始） | [`docs/validation/agent-benchmark-v2/TASKS.md`](docs/validation/agent-benchmark-v2/TASKS.md) |
 
 > P3 复核夹具与命令原文见 [`docs/reports/fixtures-p3-rev3/`](docs/reports/fixtures-p3-rev3/)。
 > P9 报告同时记录 2 项非阻塞遗留（`bug-20260927-01`：`s["k"]()` 未绑定 `self`；`obs-01`：README 陈旧），本 README 刷新即闭合 `obs-01`。

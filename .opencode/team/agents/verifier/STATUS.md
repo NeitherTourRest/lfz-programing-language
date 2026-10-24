@@ -1,23 +1,25 @@
 # verifier — 工作状态
-> 最后更新：2026-10-24 13:41 by verifier
+> 最后更新：2026-10-24 17:27 by verifier
 
 ## 当前状态
-T11-15本批实现及测试环境可交付；bug-20261024-V01独立复验已修复并关闭。verifier只验证，不修复。
+新基线LFZ Agent Benchmark v2可执行测评包独立审查PASS，正式八学生未派/未跑，无正式成绩；旧2/8不比较。只验证未修复。
 
-## 产出与证据
-- docs/reports/T11-v11-reverification.md及T11-v11-reverification-evidence/，历史初验失败证据保留。
-- 既有独立74/74功能witness、491/491单测、原工作区130/130黑盒结果保留；本次未重复74功能witness。
-- 修复后target/debug/lfz.exe为1387520字节，执行时SHA256随证据记录，未使用旧release。
-- 原clean-cwd同命令同副本重跑：事前无Temp目录，runner自动准备后130/130、exit0，PASS。证据clean-cwd-fixed.json。
-- 新独立CWD中Temp是普通文件：exit2、stdout空、stderr明确准备失败，原sentinel文件不变，PASS。证据temp-file-conflict.json。
-- 494单测由tooling-dev/team-lead另验，本次verifier不冒称重跑。
-- 历史8题盲测仅材料核查：5程序+2报告，完整8题原任务书未齐备；未重跑，不更新历史2/8。
+## 本轮产出
+- docs/validation/agent-benchmark-v2/REVIEW.md，含冻结hash、实际命令/输出、初验B07 FAIL→修后PASS闭环及评分限制。
+- 最终run.py hash 5a698248db184d091bd0a41e46b861f241e7f8f2a1051cef640640671eb9e862；cases131 hash919cfe6905ef4f4bc003d0321fe4398aab631be0ac8a0873f03c2761af6f22cd；manifest f2046eadca7c9f55376cbac000ccd53b25958298d10e2fc176ed0a14867c2a3e。
+- 独立CLI --self-test exit0，131参考期望与拒错/缺失/状态泄漏/字节回读/NUL键/输入变更控件PASS。
+- 独立案例/输入域核对180/180 PASS；另独立9/9控件PASS，真实默认10秒timeout=10.013815s，B08真实IO两轮及append/CRLF/错返回拒绝，空/错交卷CLI exit1、不产生认证，manifest路径错配/覆盖旧报告被拒。
+- REVIEW-V2-01初验B07 Unicode lower改变词边界，已上报由test-engineer修复；冻结版独立反例PASS、关闭。
+- 原始JSON/必要脚本已归档docs/validation/agent-benchmark-v2/review-evidence/（19文件），REVIEW提供相对链接；原Temp未清理。未git，未修改冻结文件/正式测试。
 
 ## 进行中/阻塞
-无本批实现或测试环境阻塞；盲测需恢复原8题任务书。
+本包无阻塞。功能PASS不等于学生源码/协议PASS；manual-review需真实提交后独立填写。
 
 ## 下一步
-release-manager重建发布产物并收口；team-lead另安排恢复盲测任务书与零上下文重跑。
+team-lead交付/封存包；正式另开run-id派8全新无历史学生，冻结版本/预算/提示/访问记录，交卷封存后再验。清Temp前按报告清单保存原始证据。
+
+## 历史状态
+T11-15语言实现74witness/491独立单测/130黑盒PASS；V01干净CWD测试环境缺陷修后关闭；494全量由team-lead/tooling另验，未冒记verifier重跑。
 
 ## 关键经验
-正常工作区黑盒全绿不能证明fresh checkout一键可用；使用独立CWD无破坏复现，明确Temp不存在/普通文件两种路径。原失败证据保留，复验新证据独立存放。
+先Unicode lower再ASCII分词会把K/İ变成ASCII，必须原文先切词。等冻结就绪后再CLI，避免读到并发半写文件。工具自测、功能结果、源码人工审查、协议人工审查四者分别记录，未知不当成功。

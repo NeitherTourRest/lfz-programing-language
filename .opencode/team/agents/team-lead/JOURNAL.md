@@ -100,3 +100,11 @@
 - 用户明确允许推送至 NeitherTourRest/lfz-programing-language 的 main。
 - git push origin main 成功：91b65c3..29b7265；git ls-remote 返回 29b7265125f7a2a080656808443552164f9d6896，与本地一致。
 - 旧审批阻塞解除，未新增标签；初始三处未提交事故记录保持原文。
+
+## [2026-10-24 17:27] 重写八题及固定验收包（T11-17）
+- 用户指令：不用找旧题，由团队重新写；用户后续要求继续。
+- 产出：docs/validation/agent-benchmark-v2/任务书、学生提示、131固定case、功能runner、人工审查schema、QA、manifest与独立REVIEW。
+- 验证：root自测exit0；verifier独立180项边界/期望核查和9项协议控制通过，真实默认10秒timeout、IO双轮覆写/输入保护、拒绝修改manifest/覆盖既有报告均实跑。
+- 缺陷：B07 Python先Unicode lower造成非ASCII字母混入ASCII词，独立发现后修为先分词再lower；补K/İ/ſ及NUL键、字面量编码控制。
+- 边界：工具自测不是正式8题学生成绩；自动功能通过不等于源码与隔离/预算协议审查通过；本轮正式测评未开始，旧2/8不可直接比较。
+- 冻结：manifest f2046eadca7c9f55376cbac000ccd53b25958298d10e2fc176ed0a14867c2a3e；输入解释器与skill均pin hash。下一步T11-18正式测评。

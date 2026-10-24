@@ -2,21 +2,20 @@
 > 最后更新: 2026-10-24 by team-lead
 
 ## 当前状态
-本批 T11-12/13/14/16 完成，T11-15 功能复验完成；发布收口由 release-manager 负责。整体迭代尚余历史同题 8 盲测，因原题材料不齐保持 2/8 基线，不打 v1.3.0。
+T11-17 新八题任务与验收包完成（用户明确要求不用找旧题、重新写）。新基线 LFZ-AGENT-BENCH-v2；旧2/8仅作历史，不做同题提升比较。正式八Agent测评未开始，新成绩为空。
 
-## 已完成与证据
-- 15 新内置 + range 双参，共 69；文件 IO 用户明确追认；错误类仍 12。
-- cargo test 494 passed，0 failed/ignored；黑盒 130/130；独立功能 witness 74/74。
-- V01：独立发现 fresh CWD 缺 Temp 导致 129 PASS/1 ERROR；tooling 修复 runner 目录准备，verifier 原场景复跑 130/130，冲突受控退出且不损原文件，已关闭。
-- app/sortviz.lfz 150 次排序，0 失败；docs/reports/T11-v11-app-output.txt。
-- spec 复杂度修正；guide 33 代码块符合预期，skill 20 断言+13负例通过；证据 docs/reports/T11-v11-{guide,skill}-evidence.md。
-- 需求矩阵已增量同步；独立总报告 docs/reports/T11-v11-reverification.md。
+## 本轮产出与证据
+- docs/validation/agent-benchmark-v2/TASKS.md：8题明确接口、输入边界、唯一结果/算法约束。
+- STUDENT_PROMPT.md：20分钟/5次调用、首次源码快照、过程记录、学生可见材料与提示词隔离边界。
+- cases.json 131个固定case；run.py功能验收、负例/缺题/超时识别及真实文件IO双轮校验；README/QA/人工审查schema/冻结manifest完整。
+- root实跑 --self-test exit0 ok:true；verifier独立180项用例/边界检查和9项控制检查通过。REVIEW.md保留B07参考逻辑Unicode初验失败→修后通过证据。
+- manifest SHA256 f2046eadca7c9f55376cbac000ccd53b25958298d10e2fc176ed0a14867c2a3e。冻结含任务、提示、用例、运行器、4份skill、解释器；不循环包含自身。
+- 自动功能通过始终REVIEW_REQUIRED/NOT_CERTIFIED，正式整题通过另需独立源码约束和过程协议审查，分母恒8。
+- 没改解释器/原tests/应用；未重跑无关Rust全量测试。用户原有三处事故记录保留未提交。
 
-## 进行中
-本地发布已完成：dist 766464 B，69 内置，494/130/74 验证通过；实现与验收已提交。用户已明确允许向指定 GitHub 仓库发送本轮源码、测试、文档和团队记录；8 个提交已推送至 origin/main（29b7265），git ls-remote 与本地一致，旧审批阻塞解除。初始三处事故记录完整保留未提交。
+## 下一步
+T11-18：使用冻结v2题集正式运行8个无历史学生Agent，封存源码/日志后独立验收，建立新基线；不拿执行器自测替代学生成绩。Git由release-manager审核分组，主会话执行以免子agent审批悬挂。
 
-## 阻塞 / 下一步
-8 盲测原题材料不齐，现仅5份程序/2份报告；不能把旧程序复跑当作同题盲测。后续恢复题目后再量测 AI 开发通过率。
 ## 关键经验（写给未来的自己）
 - **临时件一律放项目内 `Temp/`（用户 2026-09-27 指令，已立 ADR）**：**禁止**再往 C 盘 `%TEMP%` 写；`Temp/` 已 gitignore。纪律：① **每份任务书必须写明"临时文件放 `<repo>/Temp/`"**；② 每波任务收工后我**盘一次 `Temp/`**；③ **先保全证据再删** —— 一手证据（如盲测报告）**复制进仓库** `docs/reports/**` 再清临时件，**不得删唯一副本**；④ **正在跑的任务目录不许动**（按 mtime 判别）。历史：首次清理 C 盘 `%TEMP%\opencode\` 740 文件 / 5.31 MB → 44 文件 / 1.41 MB。
 - **「绿了 ≠ 对」再验证一次**：445 单测 + 85 黑盒 + 应用 exit 0 **都不等于规范完全符合** —— 所以用户要的「确认无误」必须用**独立的条款级符合性审计**来回答，不能用「测试全绿」糊弄。（实证：157 条款审计查出 **2 个可达 panic**，445 单测与 85 黑盒全都没抓到。）

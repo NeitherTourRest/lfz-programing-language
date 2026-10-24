@@ -161,3 +161,16 @@
 - 决策：bug-20261024-V01已修复，关闭。
 - 下一步：release-manager发布收口；8题盲测仍需原任务书，未重跑。
 - 阻塞：本批无。
+## [2026-10-24 17:27] LFZ Agent Benchmark v2测评包独立审查
+- 来源：team-lead轻量任务书，用户重写8题，新基线，不跑8学生。
+- 完成：题目/提示/评分/隔离设计审查；131例冻结版CLI自测exit0；独立案例180/180，额外拒错/缺失/真实10秒timeout/B08IO/manifest/证据保护9/9。
+- 缺陷闭环：B07先Unicode lower导致aKB错误合词，初验FAIL已上报，test-engineer修复后独立反例及原文扫描PASS，REVIEW-V2-01关闭。
+- 产出：docs/validation/agent-benchmark-v2/REVIEW.md；Temp/verifier-benchmark-v2原始JSON/脚本，关键命令/输出/hash已嵌报告。
+- 决策：可执行测评包PASS；学生功能/源码/协议审查均未运行，正式成绩未产生，旧2/8不比较。
+- 下一步：team-lead交付与封存；另轮真实学生测评。清Temp前保存原始证据。
+- 阻塞：无本包阻塞。
+
+## [2026-10-24 17:32] 审查原始证据随包归档
+- 来源：team-lead最后收口。
+- 完成：复制180项/9控件/独立CLI/原始失败JSON及必要脚本到review-evidence（19文件），另实跑B07冻结反例PASS，REVIEW相对链接更新；未覆盖失败、未清Temp、未改冻结九文件。
+- 产出：docs/validation/agent-benchmark-v2/review-evidence/；无阻塞。

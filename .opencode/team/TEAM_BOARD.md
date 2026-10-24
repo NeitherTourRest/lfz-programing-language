@@ -1,5 +1,5 @@
 # 团队任务看板
-> 2026-10-24 最终执行快照：T11-12/13/14/16 完成；494 Rust / 130 黑盒 / 74 独立功能 witness PASS；V01 已独立关闭。T11-15 同题盲测原材料不齐，2/8 基线保持，未打 v1.3.0。本批实现、验收和 dist 收口已完成；用户明确授权后 8 个提交已推送至 origin/main（29b7265），远程核对一致。
+> 2026-10-24 最终执行快照：T11-12/13/14/16 完成；494 Rust / 130 黑盒 / 74 独立功能 witness PASS；V01 已独立关闭。用户要求重写八题，启动 LFZ-AGENT-BENCH-v2；旧2/8仅作历史，未打 v1.3.0。本批实现、验收和 dist 收口已完成；用户明确授权后 8 个提交已推送至 origin/main（29b7265），远程核对一致。
 
 > 最后更新: 2026-09-27 by team-lead
 
@@ -12,7 +12,9 @@
 | T11-12 | 实现 v1.1 七项（文件 IO 已获用户追认） | core-dev + runtime-dev | ADR ✅ | ✅ 15 新内置 + range 双参 | src/builtins.rs、src/error.rs；69 内置 |
 | T11-13 | v1.1 七项正负黑盒 | test-engineer | T11-12 | ✅ 130/130 | 4 正例组 63 assert + 36 负例；tests/evidence/ |
 | T11-14 | 同步已实现 v1.1 的 AI skill 与人类指南 | ai-dx-engineer ‖ docs-writer | T11-12 | ✅ 实跑验证 | docs/reports/T11-v11-{skill,guide}-evidence.md |
-| T11-15 | 独立复验 + 同题 8 盲测 | verifier | T11-13/14 | 部分完成：功能 74/74；V01 独立关闭；盲测原题不齐 | docs/reports/T11-v11-reverification.md；2/8 基线不变 |
+| T11-15 | 独立复验 + 同题 8 盲测 | verifier | T11-13/14 | 功能复验完成；同题重跑经用户指令改为 v2 新题集 | docs/reports/T11-v11-reverification.md；2/8 基线不变 |
+| T11-17 | 重写八题任务与可执行验收包（v2新基线） | team-lead + test-engineer + verifier | 用户2026-10-24指令 | ✅ 完成：8题/131case，独立180+9核查通过；正式学生未跑 | docs/validation/agent-benchmark-v2/ |
+| T11-18 | 按冻结v2开展八Agent正式测评并建立首条新基线 | team-lead + verifier | T11-17 ✅ | 未开始：须使用单题无历史Agent、独占目录和过程日志 | 新成绩不可与旧2/8直接比较 |
 | T11-16 | 刷新需求矩阵 | requirements-analyst | — | ✅ 已同步；R202/R405 最终证据收口 | R-113/116–122/401/405 |
 
 ### T11-③ v1.1 迭代（第 1 波 ✅ 完成，2026-09-27）

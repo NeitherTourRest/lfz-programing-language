@@ -777,3 +777,16 @@
 - 状态：旧自动审批拒绝历史已因用户明确授权解除，远程推送完成；未新建或移动tag，Cargo仍1.0.1，同题8盲测未重跑，历史2/8不变。
 - 变更：仅本人STATUS/JOURNAL，使用IO.File UTF8；未执行git、网络或审批操作。
 - 下一步：主会话统一保存并推送本次收工记录。
+## [2026-10-24 17:21] 新八题 v2 测评包入口准备
+- 来源：team-lead轻量任务，用户明确要求重新出八题并继续推进。
+- 完成：读取本人STATUS与现有TASKS/STUDENT_PROMPT/manifest；根README增加TASKS入口，注明v2新题集、不与旧2/8直接比较、正式测评未开始。
+- 产出：README.md、本人STATUS/JOURNAL；包内README在核查时尚缺，未代写工程师产物，入口链接已有TASKS。
+- 边界：未改包内文件/Cargo/dist/tag，未执行git/网络/正式测评。
+- 下一步：等待独立审查PASS再只读核验提交清单；主会话统一git收口。
+## [2026-10-24 17:31] v2测评包QA通过，提交清单复核
+- 来源：team-lead轻量收口，独立REVIEW PASS后只读核对。
+- 完成：13个顶层文件及review-evidence19文件齐备；Get-FileHash核对manifest9件均吻合，manifest=f2046eadca7c9f55376cbac000ccd53b25958298d10e2fc176ed0a14867c2a3e；根README入口存在。
+- QA口径：131固定case、180独立断言、9控制PASS是工具/协议审查；正式八学生未跑，历史2/8不直接比较。
+- 分组：test(benchmark): add reviewed agent benchmark v2（完整包及review-evidence）；docs(team): link benchmark v2 and record readiness（根README+本轮团队状态）。
+- 保护：第二组须用staged快照排除原初3处事故记录，不改工作树原文；不新增tag，不动Cargo/dist。
+- 变更：仅本人STATUS/JOURNAL；未git/网络/改冻结包。下一步主会话统一提交与推送。
