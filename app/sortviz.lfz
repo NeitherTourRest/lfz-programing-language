@@ -4,19 +4,47 @@
 // 作者：app-dev ｜ 依据 .opencode/skills/lfz-programming/SKILL.md 开发
 // 语言特性：管道 |>、结构体、富插值、check/assert、;; 变量 dump
 // 运行：cargo run --quiet -- run app/sortviz.lfz
-// 说明：LFZ CLI v1 不支持命令行参数/环境变量/文件读取，
-//       故规模、种子、帧宽由下方 §0 CONFIG 常量配置（改这里即可重配置）。
+// 说明：可传 --small N --big N --seed N --no-frames；无参保留默认配置。
 // ============================================================
 
 // ---------------- §0 CONFIG（改这里即可重配置） ----------------
 let APP_NAME = "LFZ 排序算法可视化"
-let N_SMALL = 8        // 逐帧可视化规模（小）
-let N_BIG = 600        // 统计对比规模（大）
-let SEED = 42          // 随机种子（seed(n) 保证可复现）
+var N_SMALL = 8        // 逐帧可视化规模（小）
+var N_BIG = 600        // 统计对比规模（大）
+var SEED = 42          // 随机种子（seed(n) 保证可复现）
 let CELLW = 6          // 每个条形单元的字符宽度
-let SHOW_FRAMES = true // 是否输出逐帧条形图
+var SHOW_FRAMES = true // 是否输出逐帧条形图
 
-;;                     // ← 变量 dump：此刻全局仅上方 6 个配置常量
+// 参数解析只使用块局部名，保持默认 ;; 可见变量与旧版一致。
+if len(argv()) > 0 {
+    let options = argv()
+    let used = {}
+    var optionIndex = 0
+    while optionIndex < len(options) {
+        let option = options[optionIndex]
+        if has(option, used) { fail("sortviz: 重复选项 ${option}") }
+        used[option] = true
+        if option == "--no-frames" {
+            SHOW_FRAMES = false
+            optionIndex += 1
+        } else {
+            if option != "--small" && option != "--big" && option != "--seed" {
+                fail("sortviz: 未知选项 ${option}")
+            }
+            assert(optionIndex + 1 < len(options), "sortviz: ${option} 缺少整数值")
+            let value = int(options[optionIndex + 1])
+            if option == "--small" {
+                assert(value >= 1 && value <= 100, "sortviz: --small 范围 1..100")
+                N_SMALL = value
+            } else if option == "--big" {
+                assert(value >= 1 && value <= 2000, "sortviz: --big 范围 1..2000")
+                N_BIG = value
+            } else { SEED = value }
+            optionIndex += 2
+        }
+    }
+}
+;;                     // ← 变量 dump：此刻全局仅上方 6 个配置项
 
 // ---------------- §1 统计结构体（结构体 + 方法，self 原地累加） ----------------
 struct Stats {
@@ -31,15 +59,8 @@ struct Stats {
 
 // ---------------- §2 数据生成（seed + randInt，可复现） ----------------
 fn genData(n) {
-    var out = []
-    var i = 0
-    while i < n {
-        out = push(randInt(0, 100), out)
-        i += 1
-    }
-    out
+    range(n) |> map((index) => randInt(0, 100))
 }
-
 // ---------------- §3 可视化（repeat/插值 打印条形图） ----------------
 fn padRight(s, n) {
     if len(s) >= n { return s }

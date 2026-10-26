@@ -1,141 +1,65 @@
-# sortviz.lfz — LFZ 排序算法可视化（终端字符画应用）
+# LFZ 实用应用
 
-> 交付物 6（评分项 5）｜ 作者：app-dev ｜ 依据 `.opencode/skills/lfz-programming/SKILL.md` 开发
-> 源码：`app/sortviz.lfz`（单文件，341 行 / 有效行 290）｜ 开发记录：`app/DEV_RECORD.md`
+当前应用使用 LFZ 1.4.0。请从仓库根目录使用本项目 `dist/lfz.exe`，避免误用尚未更新的全局安装。开发记录见 `app/DEV_RECORD.md`，本轮实跑报告见 `docs/reports/T12-app.md`。
 
-`sortviz` 是一个纯 LFZ 编写的**终端排序算法可视化器**：生成可复现的随机数组，用 5 种排序算法排序，**逐帧打印字符条形图**（`#` 个数表示数值），统计**比较/交换/步数**，并对结果做正确性校验。LFZ v1 无图形库，故选用「字符画 + 计数」这一最贴合语言能力的展示形态。
+## jsonflow：配置驱动的 JSON 数据处理
 
----
-
-## 1. 功能列表
-
-| # | 功能 | 说明 |
-|---|------|------|
-| F1 | **5 种排序算法** | 冒泡、选择、插入、归并、快速（Lomuto 分区） |
-| F2 | **逐帧可视化** | 每趟/每轮后用 `repeat` 打印条形图，`#` 个数表示数值大小 |
-| F3 | **参数可配** | 规模 `N_SMALL`/`N_BIG`、随机种子 `SEED`、帧宽 `CELLW`、`SHOW_FRAMES` 开关（见 §5） |
-| F4 | **可复现随机** | `seed(SEED)` + `randInt` → 同种子必得同一数组 |
-| F5 | **统计** | 比较次数 / 交换次数 / 步数（结构体 `Stats` 累加） |
-| F6 | **正确性校验** | `assert`（致命）+ 与内置 `sort()` 对比；另有 150 次属性自测（`check` 非致命） |
-| F7 | **数据摘要** | 管道 `|>` 串 `min`/`max`/`sum` 输出摘要 |
-
----
-
-## 2. 运行方法
-
-在仓库根目录（PowerShell）：
+`app/jsonflow.lfz` 是单文件数据脚本：读取配置与 JSON 记录数组，按字段精确相等筛选，再投影指定字段。它将 `argv`、UTF-8 文件 IO、JSON、管道、闭包与 struct 串成实际工作流，不需要生成一份新源码才能改参数。
 
 ```powershell
-$env:Path += ";$env:USERPROFILE\.cargo\bin"
-cargo run --quiet -- run app/sortviz.lfz
+New-Item -ItemType Directory -Force Temp | Out-Null
+./dist/lfz.exe run app/jsonflow.lfz -- app/fixtures/t12/config.json app/fixtures/t12/input.json Temp/result.json
 ```
 
-- **退出码**：`0` = 全部算法校验通过；`2` = 语法/运行时错误或某个 `assert` 失败。
-- 机器可读模式：`cargo run --quiet -- run --json app/sortviz.lfz` → stdout 为 `{"ok":true}`，程序输出转 stderr。
+夹具配置为 `{"where":{"field":"status","equals":"done"},"select":["id","title"]}`，3条记录中保留2条；输出文件与 `app/fixtures/t12/expected.json` 相同，含中文、emoji与精确大整数。正常stdout是单行业务摘要，例如 `{"input":3,"output":2,"path":"Temp/result.json"}`。
 
-> ⚠️ **无命令行参数**：LFZ CLI v1 只支持 `lfz run <file>` 与 `lfz test`，不支持向脚本传参、不支持读环境变量/文件。因此本项目用**源码顶部常量**配置（文档化的可复现步骤见 §5）。
+配置约定：
 
----
+- 顶层必须恰含 `where` 和 `select`，拒绝未知字段。
+- `where` 为 `null` 时全选；否则必须恰含非空字符串 `field` 与 JSON 标量 `equals`。使用 LFZ 精确相等语义，bool不等于int，int与float按精确数值比较；不做大小写折叠或隐式字符串转换。
+- `select` 为至少一项、无重复的非空字符串数组。记录可以含额外字段，但每条记录必须为object且具备全部所选字段和筛选字段；未匹配记录也验证，不会隐藏坏数据。
+- 输入是记录数组，空数组合法。输出保留输入记录顺序；输出对象键按 UTF-8 字节序排列，文件为紧凑 JSON 加一个LF换行。
+- 参数必须恰为 `CONFIG INPUT OUTPUT` 三条非空路径，路径相对当前工作目录，不相对脚本目录。输出父目录必须已存在。
 
-## 3. 交互示例（输入 → 输出）
+程序先验证全部配置、全部记录并完成输出编码，再调用 `writeFile`。验证或编码失败时，已有输出保留；不把这个保证扩大为操作系统写入失败时的原子写保证。输出路径与输入/配置路径字面相同时拒绝。LFZ当前没有路径规范化、真实路径或硬链接识别API，**不同拼写、大小写、符号链接和硬链接别名不会被识别**；调用者必须确保OUTPUT指向独立文件。所有数据整批驻留内存，不是流式处理器。
 
-**输入**（即源码顶部 CONFIG）：`N_SMALL=8, N_BIG=600, SEED=42, CELLW=6, SHOW_FRAMES=true`
+机器状态模式：
 
-**输出节选**：
-
-```
-APP_NAME ： LFZ 排序算法可视化      ← ;; 变量 dump（此时全局仅 6 个配置常量）
-N_SMALL ： 8
-...
-== 阶段 1：小规模逐帧可视化（N=8） ==
-原始数据: [13, 91, 58, 64, 50, 62, 25, 8]
-数据摘要: min=8  max=91  sum=371  n=8
-初始条形图:
-origin        |      |######|###   |####  |###   |####  |#     |      |
-
--- 冒泡排序（逐趟）--
-bubble t=0    |      |######|###   |####  |###   |####  |#     |      |
-bubble pass 1 |      |###   |####  |###   |####  |#     |      |######|
-...
-  bubble     比较=    28  交换=    19  步数=    28  [校验通过]
-
-== 阶段 2：大规模仅统计对比（N=600，不输出逐帧） ==
-数据摘要: min=0  max=99  sum=30660  n=600
-  算法         比较次数    交换次数      步数   校验
-  bubble     比较=179510  交换= 93045  步数=179510  [校验通过]
-  selection  比较=179700  交换=   589  步数=179700  [校验通过]
-  insertion  比较= 93640  交换= 93045  步数= 93640  [校验通过]
-  merge      比较=  4803  交换=     0  步数=  5576  [校验通过]
-  quick      比较=  6473  交换=  2433  步数=  6473  [校验通过]
-
-== 阶段 3：属性自测（随机数组 × 5 算法，check 非致命） ==
-  自测 150 次排序，失败 0 次（check 非致命）
-== 完成：5 种算法全部通过正确性校验 ==
+```powershell
+./dist/lfz.exe --json run app/jsonflow.lfz -- app/fixtures/t12/config.json app/fixtures/t12/input.json Temp/result.json
 ```
 
-条形图读法：每个数值占一个单元，单元内 `#` 数量 = `数值 × CELLW ÷ 当前最大值`（`div` 向下取整），故最宽为 `CELLW` 个 `#`。
+成功时stdout仅为 `{"ok":true}`，业务摘要进入stderr。错误退出2；正常模式诊断进入stderr，机器模式错误对象进入stdout。业务JSON结果始终写入指定文件。
 
----
+自检（Python仅使用标准库；37项含独立oracle、失败保留输出、通道隔离与输入不变性）：
 
-## 4. 设计结构（文字版模块图）
-
-LFZ v1 **没有模块/import 机制**（`import` 是保留字，使用即 `SyntaxError`），因此整个应用是**单文件 + 清晰分节**：
-
-```
-app/sortviz.lfz
-├─ §0 CONFIG          配置常量（N_SMALL/N_BIG/SEED/CELLW/SHOW_FRAMES）+ `;;` dump
-├─ §1 Stats           统计结构体（cmp/swaps/steps 字段 + 4 个方法）
-├─ §2 genData(n)      seed + randInt 数据生成
-├─ §3 可视化           padRight / cellOf / barLine / hline / summarize
-├─ §4 排序算法         bubbleSort / selectionSort / insertionSort
-│                      mergeSort(+msort,mergeParts) / quickSort(+qsort,partition)
-├─ §5 校验             isSorted / runSort / selfTest
-└─ §6 驱动             阶段1 逐帧（小 N）/ 阶段2 统计（大 N）/ 阶段3 属性自测
+```powershell
+D:/app/ANACONDA/python.exe -B app/verify_jsonflow.py --lfz dist/lfz.exe --output Temp/jsonflow-check.json
 ```
 
-关键设计点：
-- **引用语义**：`array`/`struct` 是引用类型，传参按引用；排序在 `slice()` 出的副本上**原地交换**，不污染调用方数据。
-- **结构体作计数器**：`Stats` 实例经方法 `self.cmp += 1` 原地累加（`self` 引用调用方实例）。
-- **快照回调**：排序函数接收 `snap` 回调（lambda），在关键时刻输出条形图；`SHOW_FRAMES=false` 时回调为空操作。
+报告路径必须尚不存在，所有临时材料均在项目 `Temp/T12/`。筛选/投影采用filter/map与字段索引；投影对R条记录、K个所选字段需要平均O(RK)字段访问，JSON编解码及键排序另计，不声称对任意嵌套数据只需常数开销。
 
----
+## sortviz：排序算法可视化
 
-## 5. 配置方式（可复现步骤）
+`app/sortviz.lfz` 保留课程≥200有效行的完整应用：冒泡、选择、插入、归并、快速排序；逐帧字符条形图、结构体计数器、确定性随机数、正确性断言与150次属性自测。默认配置为小规模8、大规模600、种子42、帧宽6、显示逐帧；无参数的stdout与v1.3.0旧应用在旧解释器中的输出逐字节相同。
 
-因 CLI 不支持参数，改配置 = 改源码常量。示例：**切到「大规模仅统计」模式**：
+```powershell
+./dist/lfz.exe run app/sortviz.lfz
+./dist/lfz.exe run app/sortviz.lfz -- --small 4 --big 30 --seed 7 --no-frames
+./dist/lfz.exe --json run app/sortviz.lfz -- --small 4 --big 30 --seed 7 --no-frames
+```
 
-1. 打开 `app/sortviz.lfz`，把第 17 行 `let SHOW_FRAMES = true` 改为 `false`；
-2. `cargo run --quiet -- run app/sortviz.lfz` → 阶段 1 不再输出逐帧条形图，只余统计行（退出码 0）；
-3. 复原为 `true`。
+- `--small N`：1至100；`--big N`：1至2000；`--seed N`：i64整数。缺值、未知选项、重复选项和越界值拒绝，退出2。
+- `--no-frames`：关闭排序过程快照，保留一次原始数据条形图及统计/自测。默认运行不依赖stdin。
+- `genData`用 `range |> map` 一次构建数组，保持seed与随机调用顺序，避免循环push复制。手写归并仍保留教学实现的返回新数组push，不能将它宣称为运行时最优归并；大规模更适合内置sort。
+- 机器模式stdout仅状态JSON，应用显示全部进入stderr。
 
-改 `SEED`（如 42 → 7）可复现另一组数据；改 `N_BIG` 可调规模（越大越耗时，见 §7）。
+结构：配置/参数解析 → Stats计数结构体 → 数据生成 → 字符画函数 → 5个算法 → 校验/selfTest → 3阶段驱动。5项语言特色分别体现在管道数据处理、struct方法计数、富插值、assert/check与 `;;` 可见变量输出。LFZ尚无模块导入，两个应用均为清晰分节的单文件脚本。
 
----
+默认兼容与参数自检：
 
-## 6. 5 大语言特色对照
+```powershell
+D:/app/ANACONDA/python.exe -B app/verify_sortviz.py --lfz dist/lfz.exe --before-exe Temp/t12-perf/lfz-before.exe --output Temp/sortviz-check.json
+```
 
-| 特色 | 代码位置 | 说明 |
-|------|---------|------|
-| **管道 `|>`** | L55, L66–68, L256, L258, L263, L308 | `xs |> map(...) |> join("|")`；`data |> sort()`；`xs |> min()/max()/sum()`（data-last） |
-| **结构体** | L22–30（`struct Stats`） | 数据字段 + 方法（`self.cmp += 1` 原地累加） |
-| **富插值 / 格式说明符** | L29、L55、L265、全文件 | `"比较=${self.cmp:>6}"`（右对齐 6 宽）；`"${name} ${label}"` |
-| **`check` / `assert`** | L265（assert）、L292（check） | `assert` 失败致命（退出码 2）；`check` 非致命（stderr 提示、继续） |
-| **`;;`** | L19 | 变量 dump，输出 `<名> ： <值>`（内→外、遮蔽去重） |
-
----
-
-## 7. 已知限制（LFZ v1 语言/实现能力）
-
-1. **无模块系统** → 应用只能单文件（`import` 保留字，用即报错）。
-2. **无 CLI 参数 / 环境变量 / 文件读取** → 参数只能用源码常量（§5）。
-3. **无 `input()` 交互默认路径** → `input()` 在无 stdin 环境抛 `IOError: 输入结束（EOF）`，故默认运行不调用 `input`。
-4. **容器内置返回新值** → `push` 等每次返回新数组（O(n) 拷贝），归并排序用 `push` 建结果的开销随规模上升，故大规模 N 取 600（`N_BIG` 调大需注意耗时）。
-5. **浮点显示**：`/` 恒为真除法返回 `float`；本应用所有取整一律用内置 `div(a, b)`。
-
----
-
-## 8. 相关文件
-
-- 开发记录（选题/需求/迭代/踩坑/验证）：`app/DEV_RECORD.md`
-- AI 编程指南：`.opencode/skills/lfz-programming/SKILL.md`
-- 语法/语义事实源：`docs/spec/{syntax,semantics,interface-contract}.md`
+旧exe必须为v1.3.0时的1.0.1解释器（SHA `149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab`），可以从旧首轮原始输入归档恢复；脚本使用只读 `git show v1.3.0:app/sortviz.lfz` 恢复旧应用到项目Temp。自检11项，覆盖默认字节一致、固定参数可复现、150次排序自测、机器通道和8项坏参数。

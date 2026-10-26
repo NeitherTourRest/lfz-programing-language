@@ -1,0 +1,73 @@
+#42
+// jsonflow: 配置驱动的 JSON 记录筛选与字段投影。
+// lfz run app/jsonflow.lfz -- CONFIG.json INPUT.json OUTPUT.json
+// 所有配置和记录均验证完成后才写输出；集合构建采用 filter/map。
+fn require(ok, message) {
+    if !ok { fail("jsonflow: ${message}") }
+}
+fn checkKeys(obj, allowed, label) {
+    for key in keys(obj) {
+        require(contains(key, allowed), "${label} 含未知字段 ${key}")
+    }
+}
+fn project(record, fields) {
+    let out = {}
+    for field in fields { out[field] = record[field] }
+    out
+}
+fn main(args) {
+    require(len(args) == 3, "用法: jsonflow CONFIG INPUT OUTPUT")
+    let configPath = args[0]
+    let inputPath = args[1]
+    let outputPath = args[2]
+    for path in args { require(len(trim(path)) > 0, "路径不能为空") }
+    require(outputPath != inputPath && outputPath != configPath, "输出路径不能与输入或配置路径字面相同")
+    let config = readFile(configPath) |> jsonParse()
+    require(type(config) == "struct", "配置必须是 object")
+    checkKeys(config, ["where", "select"], "配置")
+    require(has("where", config) && has("select", config), "配置必须含 where 和 select")
+    let fields = config.select
+    require(type(fields) == "array", "select 必须是 array")
+    require(len(fields) > 0, "select 至少包含一个字段")
+    let seen = {}
+    for field in fields {
+        require(type(field) == "string", "select 字段必须是 string")
+        require(len(field) > 0, "select 字段不能为空")
+        require(!has(field, seen), "select 字段不能重复: ${field}")
+        seen[field] = true
+    }
+    let condition = config.where
+    if condition != nil {
+        require(type(condition) == "struct", "where 必须是 object 或 null")
+        checkKeys(condition, ["field", "equals"], "where")
+        require(has("field", condition) && has("equals", condition), "where 必须含 field 和 equals")
+        require(type(condition.field) == "string", "where.field 必须是 string")
+        require(len(condition.field) > 0, "where.field 不能为空")
+        let valueType = type(condition.equals)
+        require(valueType != "array" && valueType != "struct", "where.equals 必须是 JSON 标量")
+    }
+    let records = readFile(inputPath) |> jsonParse()
+    require(type(records) == "array", "输入必须是记录 array")
+    // 先检查全部记录，即使未匹配的记录也不能隐藏缺字段错误。
+    var index = 0
+    for record in records {
+        require(type(record) == "struct", "记录 ${index} 必须是 object")
+        for field in fields {
+            require(has(field, record), "记录 ${index} 缺少 select 字段 ${field}")
+        }
+        if condition != nil {
+            require(has(condition.field, record), "记录 ${index} 缺少 where 字段 ${condition.field}")
+        }
+        index += 1
+    }
+    let selected = records |> filter((record) => {
+        if condition == nil { true } else { record[condition.field] == condition.equals }
+    })
+    let output = selected |> map((record) => project(record, fields))
+    // 编码同样在写文件前完成，失败不产生部分结果。
+    let encoded = jsonStringify(output) + "\n"
+    let summary = jsonStringify({ input: len(records), output: len(output), path: outputPath })
+    writeFile(outputPath, encoded)
+    print(summary)
+}
+main(argv())
