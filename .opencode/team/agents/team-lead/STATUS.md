@@ -1,5 +1,5 @@
 # team-lead — 工作状态
-> 最后更新: 2026-10-25 by team-lead
+> 最后更新: 2026-10-27 by team-lead
 
 ## 当前状态
 T12功能与主要优化已独立验收；作为1.4.0候选checkpoint保存，非正式发布。72内置、argv/-e/stdin/JSON、字段索引、无声明while省空作用域，jsonflow与sortviz参数化、指南/AI skill同步。最终opt2产物759808B，SHA47ED2BFE2A2694B11BD611172CFCF0000D0BFC58E3B9BD809CA95F066DD0261F。
@@ -11,7 +11,7 @@ T12功能与主要优化已独立验收；作为1.4.0候选checkpoint保存，�
 - docs/reports/T12-independent-verification.md、T12-performance.md与T12-release-evidence为主要证据。八功能需求通过，整体效率未全面验收。
 
 ## 当前操作/下一步
-release-manager已审核候选分组与初始三用户修改保护；主会话准备代执行原子Git提交和已授权main推送，实际回执待执行后追加。正式发布继续等待剩余性能门槛，不另开择窗挑样。
+release-manager已审核候选分组与初始三用户修改保护；主会话已代执行八个原子提交与已授权main推送，远端核对9fe5e401ad4cfa7d623ec1e872558165027a9e48；后续仅保存收工记账。正式发布继续等待剩余性能门槛，不另开择窗挑样。
 初始用户DECISIONS+28/PROJECT_STATE+1/本STATUS+1事故记录保留且不提交。旧v1.3.0标签及v2原8/8、131/131题集/manifest/原始ZIP不改。
 
 ## 关键经验（写给未来的自己）

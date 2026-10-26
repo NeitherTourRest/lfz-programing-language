@@ -15,7 +15,7 @@
 | T12-05 | CLI脚本参数与代码入口 | tooling-dev | 完成，48 bin+28旧CLI+12新CLI通过 |
 | T12-06 | 黑盒与独立验证 | test-engineer/verifier | 最终522/166/91/140、app37+11与16程序/8类scope差分全通过 |
 | T12-07 | 指南、AI skill及实用示例 | docs-writer/ai-dx-engineer/app-dev | 完成：app37+11，AI30，指南35块+10探针 |
-| T12-08 | 构建、候选提交与推送 | release-manager | opt2/47ED/759808B、release522通过；候选保存待执行，无正式新标签 |
+| T12-08 | 构建、候选提交与推送 | release-manager | opt2/47ED/759808B、release522通过；八提交已推送main并核对9fe5e40（2026-10-27），无正式新标签 |
 
 ## 🔵 进行中
 | ID | 任务 | 负责 | 依赖 | 状态 | 产出/证据 |
