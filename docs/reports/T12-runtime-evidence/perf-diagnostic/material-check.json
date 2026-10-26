@@ -1,0 +1,115 @@
+{
+  "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design",
+  "environment": {
+    "TEMP": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\runtime-t12",
+    "TMP": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\runtime-t12"
+  },
+  "files": {
+    "target/release/lfz.exe": {
+      "sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d",
+      "bytes": 821248
+    },
+    "dist/lfz.exe": {
+      "sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d",
+      "bytes": 821248
+    },
+    "Temp/runtime-t12/perf-lab/lfz.exe": {
+      "sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d",
+      "bytes": 821248
+    },
+    "Temp/runtime-t12/perf-lab/root-bad.exe": {
+      "sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d",
+      "bytes": 821248
+    },
+    "Temp/runtime-t12/perf-lab/lab-good.exe": {
+      "sha256": "91fcff61b41b6df91a74b95148d3ad63f8a5238209806b0fc9428df8f241fc36",
+      "bytes": 821248
+    },
+    "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe": {
+      "sha256": "91fcff61b41b6df91a74b95148d3ad63f8a5238209806b0fc9428df8f241fc36",
+      "bytes": 821248
+    },
+    "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe": {
+      "sha256": "fc391a79d9c8b66071488d4fe4a86195dfdc8625c280c0358a665ba27a902715",
+      "bytes": 766464
+    },
+    "Temp/t12-perf/lfz-before.exe": {
+      "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+      "bytes": 766464
+    }
+  },
+  "source_comparison": {
+    "src\\ast.rs": {
+      "same_bytes": true,
+      "sha256": "75fe11ac21b1e20173b881bf400c93a259ba6b01e3487acbc108aa678ea2cecf"
+    },
+    "src\\builtins.rs": {
+      "same_bytes": true,
+      "sha256": "3402bc2a0cb0a2b8d47e35c01ee8a0df81f607e1b6451869ef5942c35806ac65"
+    },
+    "src\\cli.rs": {
+      "same_bytes": true,
+      "sha256": "28f52b5c47e374d2451d6037467df2c1fe092c0cfcfa261d72dccdf151525d55"
+    },
+    "src\\env.rs": {
+      "same_bytes": true,
+      "sha256": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc"
+    },
+    "src\\error.rs": {
+      "same_bytes": true,
+      "sha256": "bb1f2b251e68d0f14ff6cbbd67e68d4de3f0920184210d044d17f7f409dd9b9a"
+    },
+    "src\\evaluator.rs": {
+      "same_bytes": true,
+      "sha256": "7bc212abab8b617ef0859ec05fc96e24c71059e2fed9f4f0c9d67bad91d63b7c"
+    },
+    "src\\json.rs": {
+      "same_bytes": true,
+      "sha256": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f"
+    },
+    "src\\json_codec.rs": {
+      "same_bytes": true,
+      "sha256": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2"
+    },
+    "src\\lexer.rs": {
+      "same_bytes": true,
+      "sha256": "ebb952edbcd201210eb1f9c6ddebf58e2f3f998b260a11a51fe1c967848031f2"
+    },
+    "src\\lib.rs": {
+      "same_bytes": true,
+      "sha256": "bad4bc3a1f7d44f7cb2c111831b8150c006e7fa39c50604b571730e318f7e946"
+    },
+    "src\\loader.rs": {
+      "same_bytes": true,
+      "sha256": "994fe2babd0750d59b70a49a803223e520f103b7585c58f2602db72d1a59ee8a"
+    },
+    "src\\main.rs": {
+      "same_bytes": true,
+      "sha256": "2bfc42ce09c6f2173c9f7bfda95b6dfa47ab2033267eeefd810e7b4dd684c888"
+    },
+    "src\\parser.rs": {
+      "same_bytes": true,
+      "sha256": "15ed12a0aa14ad9653c7c7a8d6ba6a08cb99da6d81669b34b47b9fea4c92fd73"
+    },
+    "src\\span.rs": {
+      "same_bytes": true,
+      "sha256": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2"
+    },
+    "src\\test_runner.rs": {
+      "same_bytes": true,
+      "sha256": "b70a1e193f79d191599ee57e033f01bc25bde5e4fef0cd97d46dd418453f1597"
+    },
+    "src\\value.rs": {
+      "same_bytes": true,
+      "sha256": "ffba42a58a9edcf815f680eca536c8bc06cb906671a3b6e57956ca7753185f4b"
+    },
+    "Cargo.toml": {
+      "same_bytes": true,
+      "sha256": "a6f5a72d1132356b0e594f1a0492ff07951d6a2fc4f9b625f53dbadc9005d68a"
+    },
+    "Cargo.lock": {
+      "same_bytes": true,
+      "sha256": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4"
+    }
+  }
+}

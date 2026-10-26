@@ -1,0 +1,282 @@
+{
+  "runs": [
+    {
+      "round": 0,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 100000,
+      "ms": 27.5856,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 500000,
+      "ms": 96.1071,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 100000,
+      "ms": 28.1717,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 500000,
+      "ms": 94.1888,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 100000,
+      "ms": 31.5358,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 500000,
+      "ms": 95.4434,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 100000,
+      "ms": 29.4207,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 500000,
+      "ms": 100.1472,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 100000,
+      "ms": 30.1174,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 500000,
+      "ms": 97.0496,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 100000,
+      "ms": 28.3334,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 500000,
+      "ms": 96.6768,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 100000,
+      "ms": 31.004,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 500000,
+      "ms": 100.3317,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 100000,
+      "ms": 32.7181,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 500000,
+      "ms": 99.9574,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 100000,
+      "ms": 31.4142,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 500000,
+      "ms": 103.7225,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 100000,
+      "ms": 29.2899,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 500000,
+      "ms": 106.6425,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 100000,
+      "ms": 29.2676,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 500000,
+      "ms": 100.6825,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 100000,
+      "ms": 28.0089,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 500000,
+      "ms": 93.7855,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 100000,
+      "ms": 27.1838,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 500000,
+      "ms": 93.6834,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 100000,
+      "ms": 33.5759,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 500000,
+      "ms": 93.2659,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    }
+  ],
+  "binaries": {
+    "Temp/runtime-t12/perf-lab/root-bad.exe": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d",
+    "Temp/runtime-t12/perf-lab/lab-good.exe": "91fcff61b41b6df91a74b95148d3ad63f8a5238209806b0fc9428df8f241fc36"
+  },
+  "medians": [
+    {
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 100000,
+      "median_ms": 29.4207
+    },
+    {
+      "binary": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "n": 500000,
+      "median_ms": 97.0496
+    },
+    {
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 100000,
+      "median_ms": 29.2899
+    },
+    {
+      "binary": "Temp/runtime-t12/perf-lab/lab-good.exe",
+      "n": 500000,
+      "median_ms": 96.6768
+    }
+  ]
+}

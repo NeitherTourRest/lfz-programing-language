@@ -1,0 +1,684 @@
+{
+  "topology": [
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 3,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 12,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 48,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 192,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 768,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 3072,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 12288,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 49152,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 65536,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 131072,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 262144,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 524288,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 1048576,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 2097152,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 4194304,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 8388608,
+          "group": 0
+        }
+      ]
+    }
+  ],
+  "allowed_mask": 16777215,
+  "class_selected_cpus": {
+    "1": 0,
+    "0": 16
+  },
+  "binaries": {
+    "old": {
+      "path": "Temp/t12-perf/lfz-before.exe",
+      "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab"
+    },
+    "new": {
+      "path": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d"
+    },
+    "old-evaluator-new-rest": {
+      "path": "Temp/runtime-t12/perf-lab/old-evaluator-new-rest/target/release/lfz.exe",
+      "sha256": "e5ab594dca5cb08c02c188aa0a80386cdda8336664220ec706e214bbf6a9fcfd"
+    },
+    "old-cli-new-lib": {
+      "path": "Temp/runtime-t12/perf-lab/old-cli-new-lib/target/release/lfz.exe",
+      "sha256": "95138bbbd9b908cbeac45b4b35c5fc875092da39680cc15bcd46acbbc1471ae8"
+    }
+  },
+  "subject": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\runtime-t12\\affinity-subject.exe",
+  "rows": [
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "old",
+      "warmup": true,
+      "wall_ms_after_affinity": 110.3414,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "new",
+      "warmup": true,
+      "wall_ms_after_affinity": 191.9173,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "old-evaluator-new-rest",
+      "warmup": true,
+      "wall_ms_after_affinity": 458.2576,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "old-cli-new-lib",
+      "warmup": true,
+      "wall_ms_after_affinity": 433.793,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "old-cli-new-lib",
+      "warmup": true,
+      "wall_ms_after_affinity": 195.0119,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "old-evaluator-new-rest",
+      "warmup": true,
+      "wall_ms_after_affinity": 194.3588,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "new",
+      "warmup": true,
+      "wall_ms_after_affinity": 195.8919,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "old",
+      "warmup": true,
+      "wall_ms_after_affinity": 107.9467,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 108.9297,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 201.9314,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "old-evaluator-new-rest",
+      "warmup": false,
+      "wall_ms_after_affinity": 194.459,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "old-cli-new-lib",
+      "warmup": false,
+      "wall_ms_after_affinity": 202.516,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "old-cli-new-lib",
+      "warmup": false,
+      "wall_ms_after_affinity": 195.4638,
+      "cpu_ms": 156.25,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "old-evaluator-new-rest",
+      "warmup": false,
+      "wall_ms_after_affinity": 199.8036,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 202.3968,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 110.7332,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 115.6177,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 195.8327,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "old-evaluator-new-rest",
+      "warmup": false,
+      "wall_ms_after_affinity": 199.6518,
+      "cpu_ms": 156.25,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "old-cli-new-lib",
+      "warmup": false,
+      "wall_ms_after_affinity": 194.0504,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "old-cli-new-lib",
+      "warmup": false,
+      "wall_ms_after_affinity": 190.8063,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "old-evaluator-new-rest",
+      "warmup": false,
+      "wall_ms_after_affinity": 194.8459,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 195.5639,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 117.7014,
+      "cpu_ms": 109.375,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 120.7719,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 195.0361,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "old-evaluator-new-rest",
+      "warmup": false,
+      "wall_ms_after_affinity": 197.2473,
+      "cpu_ms": 156.25,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "old-cli-new-lib",
+      "warmup": false,
+      "wall_ms_after_affinity": 197.4644,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "old-cli-new-lib",
+      "warmup": false,
+      "wall_ms_after_affinity": 195.5963,
+      "cpu_ms": 156.25,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "old-evaluator-new-rest",
+      "warmup": false,
+      "wall_ms_after_affinity": 199.6809,
+      "cpu_ms": 156.25,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 199.5138,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 114.5728,
+      "cpu_ms": 109.375,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 114.0775,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 198.1154,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "old-evaluator-new-rest",
+      "warmup": false,
+      "wall_ms_after_affinity": 195.0588,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "old-cli-new-lib",
+      "warmup": false,
+      "wall_ms_after_affinity": 191.9888,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    }
+  ],
+  "medians": [
+    {
+      "cpu": 0,
+      "label": "old",
+      "wall_ms": 114.5728,
+      "cpu_ms": 93.75
+    },
+    {
+      "cpu": 0,
+      "label": "new",
+      "wall_ms": 198.1154,
+      "cpu_ms": 187.5
+    },
+    {
+      "cpu": 0,
+      "label": "old-evaluator-new-rest",
+      "wall_ms": 197.2473,
+      "cpu_ms": 171.875
+    },
+    {
+      "cpu": 0,
+      "label": "old-cli-new-lib",
+      "wall_ms": 195.4638,
+      "cpu_ms": 171.875
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "started_utc": "2026-10-25T15:04:19.650561+00:00",
+  "initial_quiet_seconds": 90,
+  "settle_after_each_copy_seconds": 5,
+  "affinity": "unbound; inherited normal system mask",
+  "expected_new_sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+  "status": "completed",
+  "readiness_started_utc": "2026-10-25T15:05:49.653397+00:00",
+  "exit": 0,
+  "finished_utc": "2026-10-25T15:09:26.857970+00:00"
+}

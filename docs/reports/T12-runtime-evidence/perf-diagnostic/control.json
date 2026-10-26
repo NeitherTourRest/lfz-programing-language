@@ -1,0 +1,556 @@
+{
+  "runs": [
+    {
+      "round": 0,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 100000,
+      "ms": 27.6192,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 500000,
+      "ms": 100.6593,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 29.5386,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 107.0175,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "target/release/lfz.exe",
+      "n": 100000,
+      "ms": 46.7461,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "target/release/lfz.exe",
+      "n": 500000,
+      "ms": 188.9493,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 31.4861,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 115.7684,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 54.5009,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 104.9542,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "target/release/lfz.exe",
+      "n": 100000,
+      "ms": 45.2921,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "target/release/lfz.exe",
+      "n": 500000,
+      "ms": 191.3973,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 31.3112,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 107.4725,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 100000,
+      "ms": 31.8933,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 500000,
+      "ms": 104.4937,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 100000,
+      "ms": 29.1677,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 500000,
+      "ms": 109.4613,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 57.0963,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 96.4318,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "target/release/lfz.exe",
+      "n": 100000,
+      "ms": 58.5765,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "target/release/lfz.exe",
+      "n": 500000,
+      "ms": 172.7045,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 29.0559,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 102.9622,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 32.226,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 95.488,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "target/release/lfz.exe",
+      "n": 100000,
+      "ms": 47.8191,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "target/release/lfz.exe",
+      "n": 500000,
+      "ms": 175.9593,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 40.4444,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 100.1333,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 100000,
+      "ms": 30.6493,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 500000,
+      "ms": 97.3673,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 100000,
+      "ms": 30.6251,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 500000,
+      "ms": 107.5986,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 30.1923,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 104.4705,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "target/release/lfz.exe",
+      "n": 100000,
+      "ms": 44.0646,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "target/release/lfz.exe",
+      "n": 500000,
+      "ms": 180.8717,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 28.3837,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 99.0043,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 27.6416,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 97.7336,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "target/release/lfz.exe",
+      "n": 100000,
+      "ms": 49.895,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "target/release/lfz.exe",
+      "n": 500000,
+      "ms": 170.8921,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 38.6581,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 123.8078,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 100000,
+      "ms": 37.5866,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 500000,
+      "ms": 98.2412,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 100000,
+      "ms": 28.6308,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 500000,
+      "ms": 93.4784,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 27.9011,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 103.0707,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "target/release/lfz.exe",
+      "n": 100000,
+      "ms": 47.9536,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "target/release/lfz.exe",
+      "n": 500000,
+      "ms": 172.7842,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 100000,
+      "ms": 28.9903,
+      "exit": 0,
+      "stdout": "RESULT total=5000050000\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 500000,
+      "ms": 96.1923,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    }
+  ],
+  "binaries": {
+    "Temp/t12-perf/lfz-before.exe": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+    "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe": "fc391a79d9c8b66071488d4fe4a86195dfdc8625c280c0358a665ba27a902715",
+    "target/release/lfz.exe": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d",
+    "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe": "91fcff61b41b6df91a74b95148d3ad63f8a5238209806b0fc9428df8f241fc36"
+  },
+  "medians": [
+    {
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 100000,
+      "median_ms": 30.6251
+    },
+    {
+      "binary": "Temp/t12-perf/lfz-before.exe",
+      "n": 500000,
+      "median_ms": 100.6593
+    },
+    {
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 100000,
+      "median_ms": 31.3112
+    },
+    {
+      "binary": "Temp/runtime-t12/perf-lab/old/target/release/lfz.exe",
+      "n": 500000,
+      "median_ms": 104.4705
+    },
+    {
+      "binary": "target/release/lfz.exe",
+      "n": 100000,
+      "median_ms": 47.8191
+    },
+    {
+      "binary": "target/release/lfz.exe",
+      "n": 500000,
+      "median_ms": 175.9593
+    },
+    {
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 100000,
+      "median_ms": 29.0559
+    },
+    {
+      "binary": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "n": 500000,
+      "median_ms": 99.0043
+    }
+  ]
+}

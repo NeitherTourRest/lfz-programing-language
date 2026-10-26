@@ -1,0 +1,2451 @@
+{
+  "method": {
+    "recorded_utc": "2026-10-25T15:11:39.695507+00:00",
+    "goal": "Evaluate opt-level=2 and s for current optimized T12 source, not change main Cargo or acceptance thresholds.",
+    "variants": [
+      "old149b",
+      "current7641",
+      "opt2",
+      "opts"
+    ],
+    "release_unchanged": [
+      "lto=true",
+      "codegen-units=1",
+      "strip=true"
+    ],
+    "subject": "Temp/runtime-t12/startup-candidates/subject.exe",
+    "copy_settle_seconds": 5,
+    "warmup_per_variant_case": 2,
+    "formal_runs_per_variant_case": 7,
+    "cpu_affinity": "default unpinned, no OS settings changed",
+    "order": "case order fixed, version block order reversed on odd case index",
+    "timing": "whole process perf_counter_ns, stdio captured, cwd root, TEMP/TMP project local",
+    "cases": [
+      [
+        "noop",
+        0
+      ],
+      [
+        "numeric_loop",
+        100000
+      ],
+      [
+        "numeric_loop",
+        500000
+      ],
+      [
+        "array_builtins",
+        50000
+      ],
+      [
+        "string_ops",
+        2000
+      ],
+      [
+        "string_map",
+        8000
+      ],
+      [
+        "struct_small",
+        4
+      ],
+      [
+        "struct_ops",
+        8000
+      ]
+    ],
+    "limitations": "No claim all system background load is controlled. Copies/5s wait outside timing. All outputs checked. No adaptively changed workload or thresholds."
+  },
+  "method_sha256": "d81a066cf7e8ece5099467b527f523150e057f257fd730d79fc761e630095de1",
+  "binaries": {
+    "old149b": {
+      "path": "Temp\\t12-perf\\lfz-before.exe",
+      "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+      "bytes": 766464
+    },
+    "current7641": {
+      "path": "dist\\lfz.exe",
+      "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+      "bytes": 821760
+    },
+    "opt2": {
+      "path": "Temp\\runtime-t12\\startup-candidates\\opt2\\target\\release\\lfz.exe",
+      "sha256": "e9c2894946bb134902990252f829c57e3374d65b253248302c758fb8ced4bb20",
+      "bytes": 759808
+    },
+    "opts": {
+      "path": "Temp\\runtime-t12\\startup-candidates\\opts\\target\\release\\lfz.exe",
+      "sha256": "6af924f7c2c4b5328ddd2255884e9e0839f02ff742f4e907d3c2927bb9b647ce",
+      "bytes": 632320
+    }
+  },
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "logical_cpus": 24
+  },
+  "started_utc": "2026-10-25T15:12:59.142062+00:00",
+  "cases": [
+    {
+      "name": "noop",
+      "n": 0,
+      "source_sha256": "040084ccf6c90026e962c8c46e59fe065bf9905fe90db6da64c9a4b488883401",
+      "source": "#42\nprint(\"RESULT ok=1\")\n",
+      "stdin": "",
+      "expected_stdout": "RESULT ok=1\n",
+      "original_limit_ms": 16.307000000000002,
+      "variants": {
+        "old149b": {
+          "median_ms": 18.9099,
+          "min_ms": 13.7071,
+          "max_ms": 21.6931,
+          "passes_original_limit": false,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 113.5741,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 15.9013,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 13.7071,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 20.5919,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.6931,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 19.7408,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 18.9099,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 17.9153,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 18.4887,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "current7641": {
+          "median_ms": 17.9451,
+          "min_ms": 16.0093,
+          "max_ms": 19.1474,
+          "passes_original_limit": false,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 44.8236,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 18.6483,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 19.1474,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 18.0977,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 16.9564,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 18.8817,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 16.0093,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 17.9451,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 17.3192,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "opt2": {
+          "median_ms": 14.6609,
+          "min_ms": 13.6229,
+          "max_ms": 19.5851,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 449.0259,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 15.1932,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 14.6609,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 14.4479,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 13.6229,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 13.6454,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 18.2506,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 19.5851,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 15.4497,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "opts": {
+          "median_ms": 15.1365,
+          "min_ms": 13.7045,
+          "max_ms": 21.3487,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 296.4215,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 15.5159,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 13.7045,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 15.1365,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 14.4853,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 14.5951,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.3487,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 19.9038,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 16.7262,
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "numeric_loop",
+      "n": 100000,
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "stdin": "100000\n",
+      "expected_stdout": "RESULT total=5000050000\n",
+      "original_limit_ms": 38.778479999999995,
+      "variants": {
+        "opts": {
+          "median_ms": 35.6866,
+          "min_ms": 31.0504,
+          "max_ms": 37.6236,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 53.0294,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 31.4653,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 36.9388,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 33.4088,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 35.2841,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 35.6866,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 37.2373,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 37.6236,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 31.0504,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "opt2": {
+          "median_ms": 31.5169,
+          "min_ms": 29.4605,
+          "max_ms": 33.6676,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 53.72,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 33.104,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 29.4605,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 33.3331,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 30.6468,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 31.5169,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 32.1622,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 33.6676,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 30.546,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "current7641": {
+          "median_ms": 30.6635,
+          "min_ms": 28.65,
+          "max_ms": 32.342,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 54.5083,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 31.5535,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 28.8775,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 32.342,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 31.71,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 31.0744,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 30.6635,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 28.65,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 29.0059,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "old149b": {
+          "median_ms": 34.4847,
+          "min_ms": 31.4381,
+          "max_ms": 37.4149,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 55.8117,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 34.3456,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 31.4381,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 37.4149,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 33.5286,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 34.4847,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 32.3554,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 36.4986,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 34.5994,
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "numeric_loop",
+      "n": 500000,
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "stdin": "500000\n",
+      "expected_stdout": "RESULT total=125000250000\n",
+      "original_limit_ms": 131.49684,
+      "variants": {
+        "old149b": {
+          "median_ms": 105.9182,
+          "min_ms": 102.6391,
+          "max_ms": 106.4698,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 122.9425,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 103.109,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 106.0233,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 106.1878,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 105.4153,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 102.6648,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 102.6391,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 105.9182,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 106.4698,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "current7641": {
+          "median_ms": 88.4131,
+          "min_ms": 85.6689,
+          "max_ms": 90.9669,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 110.2497,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 85.2391,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 89.3213,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 85.6689,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 88.4131,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 90.9669,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 90.8515,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 87.8029,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 86.4616,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "opt2": {
+          "median_ms": 89.603,
+          "min_ms": 86.8817,
+          "max_ms": 95.6368,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 103.8895,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 87.3415,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 88.9949,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 95.6368,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 88.3325,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 86.8817,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 93.1073,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 93.2085,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 89.603,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "opts": {
+          "median_ms": 108.1174,
+          "min_ms": 99.3702,
+          "max_ms": 115.3035,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 125.7737,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 103.0171,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 115.3035,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 108.1174,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 113.7808,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 99.4323,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 99.3702,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 104.4505,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 111.2757,
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "array_builtins",
+      "n": 50000,
+      "source_sha256": "c953291926d34db36553c622326c516f3e067f3242ab6331054860cf1bdcecc7",
+      "source": "#42\n// array_builtins: range -> map -> filter -> sort -> reduce chain.\n// LFZ side uses the native higher-order builtins; the Python side uses the\n// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nlet total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)\nprint(\"RESULT total=${total}\")\n",
+      "stdin": "50000\n",
+      "expected_stdout": "RESULT total=624975000\n",
+      "original_limit_ms": 52.305839999999996,
+      "variants": {
+        "opts": {
+          "median_ms": 47.5858,
+          "min_ms": 45.0026,
+          "max_ms": 52.2916,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 64.9844,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 46.9513,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 47.245,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 45.0026,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 48.3225,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 50.7459,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 46.0671,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 47.5858,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 52.2916,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "opt2": {
+          "median_ms": 45.4769,
+          "min_ms": 42.7625,
+          "max_ms": 49.904,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 70.0731,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 43.4337,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 42.7625,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 46.6028,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 46.9466,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 49.904,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 43.1426,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 45.4769,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 45.232,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "current7641": {
+          "median_ms": 42.4325,
+          "min_ms": 42.044,
+          "max_ms": 46.3671,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 63.841,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 42.1985,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 42.4325,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 42.3702,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 42.044,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 43.7265,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 42.2939,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 44.1098,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 46.3671,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "old149b": {
+          "median_ms": 45.0252,
+          "min_ms": 42.0538,
+          "max_ms": 48.6251,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 66.281,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 43.3233,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 42.0538,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 48.6251,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 44.175,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 43.1788,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 45.0252,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 45.8691,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 45.9902,
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "string_ops",
+      "n": 2000,
+      "source_sha256": "f8700d76d0eff2006d70fd71e118306d36a91247a70431480240a835cf403894",
+      "source": "#42\n// string_ops: build N strings with interpolation, trim/map them, join, replace,\n// split, repeat. Measures string building + the string builtins.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar parts = []\nvar i = 0\nwhile i < n {\n    parts = push(\"  item${i}  \", parts)\n    i += 1\n}\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet renamed = replace(\"item\", \"ITEM\", joined)\nlet words = split(\",\", renamed)\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "stdin": "2000\n",
+      "expected_stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+      "original_limit_ms": 28.9022,
+      "variants": {
+        "old149b": {
+          "median_ms": 35.952,
+          "min_ms": 33.282,
+          "max_ms": 39.0615,
+          "passes_original_limit": false,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 60.3556,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 35.118,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 36.3666,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 38.8822,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 33.6136,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 39.0615,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 35.952,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 34.0937,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 33.282,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "current7641": {
+          "median_ms": 35.9717,
+          "min_ms": 31.7474,
+          "max_ms": 41.1188,
+          "passes_original_limit": false,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 55.7989,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 32.8236,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 31.7474,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 35.9717,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 37.5048,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 33.0361,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 32.5989,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 41.1188,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 36.9251,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "opt2": {
+          "median_ms": 37.5401,
+          "min_ms": 37.033,
+          "max_ms": 45.4093,
+          "passes_original_limit": false,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 53.78,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 35.3684,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 37.5401,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 37.2914,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 37.033,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 37.309,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 45.4093,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 43.05,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 43.3499,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "opts": {
+          "median_ms": 35.9972,
+          "min_ms": 27.12,
+          "max_ms": 37.2248,
+          "passes_original_limit": false,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 55.1138,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 32.4067,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 34.9911,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 35.9972,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 30.1094,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 27.12,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 36.0473,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 36.8782,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 37.2248,
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "string_map",
+      "n": 8000,
+      "source_sha256": "36b2d37c68179f010b962fda81b974e3e104d65b2f64f47775e80e5e06893b0f",
+      "source": "#42\nlet n = int(input())\nlet parts = range(n) |> map((i) => \"  item${i}  \")\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet words = split(\",\", replace(\"item\", \"ITEM\", joined))\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "stdin": "8000\n",
+      "expected_stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+      "original_limit_ms": 22.5214,
+      "variants": {
+        "opts": {
+          "median_ms": 23.2326,
+          "min_ms": 22.3581,
+          "max_ms": 25.6212,
+          "passes_original_limit": false,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 45.37,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 24.5448,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 23.1584,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 23.7934,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 23.0692,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.3581,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 25.6212,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 23.2326,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 23.2612,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "opt2": {
+          "median_ms": 23.9588,
+          "min_ms": 22.3767,
+          "max_ms": 27.0091,
+          "passes_original_limit": false,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 44.9766,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 23.3262,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 24.3638,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 24.7167,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.3767,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.6398,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 23.9588,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 27.0091,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.9369,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "current7641": {
+          "median_ms": 23.3763,
+          "min_ms": 21.9287,
+          "max_ms": 25.2394,
+          "passes_original_limit": false,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 44.7353,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 23.0118,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 23.0347,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 25.2394,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 23.3763,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 24.9848,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 24.0424,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.9287,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.2266,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "old149b": {
+          "median_ms": 21.7472,
+          "min_ms": 21.3862,
+          "max_ms": 22.653,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 41.8085,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 22.2935,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.0616,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.3862,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.653,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.7472,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.6806,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.5802,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.5591,
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "struct_small",
+      "n": 4,
+      "source_sha256": "0e97d7f9b0733f36c90b5d3f786c302408741577870e370f8771660f7aaa4293",
+      "source": "#42\nlet n = int(input())\nvar total = 0\nvar j = 0\nwhile j < 1000 {\n var s = {}\n var i = 0\n while i < n { s[\"k${i}\"] = i * i\n i += 1 }\n for k in keys(s) { total += s[k] }\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "stdin": "4\n",
+      "expected_stdout": "RESULT total=14000\n",
+      "original_limit_ms": 18.7462,
+      "variants": {
+        "old149b": {
+          "median_ms": 20.4182,
+          "min_ms": 20.1216,
+          "max_ms": 23.4592,
+          "passes_original_limit": false,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 37.9792,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 20.097,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 20.7924,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 20.1639,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 20.4182,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 20.3056,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 20.1216,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.6965,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 23.4592,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "current7641": {
+          "median_ms": 19.875,
+          "min_ms": 17.6904,
+          "max_ms": 24.8656,
+          "passes_original_limit": false,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 43.2044,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 21.9304,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 20.9377,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 19.4189,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.2755,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 19.875,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 18.2004,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 24.8656,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 17.6904,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "opt2": {
+          "median_ms": 21.1138,
+          "min_ms": 18.5246,
+          "max_ms": 22.7016,
+          "passes_original_limit": false,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 43.7675,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 21.7878,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.922,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.5781,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 20.3731,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 19.9481,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.7016,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.1138,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 18.5246,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "opts": {
+          "median_ms": 21.4923,
+          "min_ms": 20.2408,
+          "max_ms": 23.3495,
+          "passes_original_limit": false,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 42.3058,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 20.6774,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.4923,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.737,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 23.3495,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 20.6485,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.1341,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.3523,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 20.2408,
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "struct_ops",
+      "n": 8000,
+      "source_sha256": "0866ba172ee83f334a6057e5a5a6ee90ba1e960b7e09db95cb34ef244245ba0e",
+      "source": "#42\n// struct_ops: build a struct/dict with N dynamic string keys, then read them\n// back using keys() and sum the values. Measures struct field write/read + keys().\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar s = {}\nvar i = 0\nwhile i < n {\n    s[\"k${i}\"] = i * i\n    i += 1\n}\nvar total = 0\nfor k in keys(s) {\n    total += s[k]\n}\nprint(\"RESULT keys=${len(s)} total=${total}\")\n",
+      "stdin": "8000\n",
+      "expected_stdout": "RESULT keys=8000 total=170634668000\n",
+      "original_limit_ms": 107.35176,
+      "variants": {
+        "opts": {
+          "median_ms": 24.6128,
+          "min_ms": 21.7497,
+          "max_ms": 26.1102,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 40.7365,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 25.4542,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 26.023,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 24.1202,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 25.2792,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 26.1102,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 24.6128,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.0841,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.7497,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "opt2": {
+          "median_ms": 21.1936,
+          "min_ms": 20.7382,
+          "max_ms": 22.6755,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 46.5264,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 20.5787,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.1402,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 20.7382,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.5512,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.1936,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.6755,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.2119,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 20.7887,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "current7641": {
+          "median_ms": 23.3245,
+          "min_ms": 21.8269,
+          "max_ms": 25.4281,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 45.8887,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 21.9644,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 22.222,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 24.0502,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 21.8269,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 24.045,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 23.0432,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 23.3245,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 25.4281,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "old149b": {
+          "median_ms": 94.3108,
+          "min_ms": 92.7042,
+          "max_ms": 98.5257,
+          "passes_original_limit": true,
+          "runs": [
+            {
+              "warmup": true,
+              "elapsed_ms": 111.3165,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": true,
+              "elapsed_ms": 97.1642,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 92.8254,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 94.3108,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 93.5021,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 98.5257,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 95.7555,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 95.1774,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "warmup": false,
+              "elapsed_ms": 92.7042,
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "ended_utc": "2026-10-25T15:15:52.067011+00:00"
+}

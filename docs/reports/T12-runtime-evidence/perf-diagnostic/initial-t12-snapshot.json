@@ -1,0 +1,29 @@
+{
+  "zip_sha256": "fc6b5a47ba423b4bbebba45c17ab547ad0c507c34e074aff0b3b60da2340c4b4",
+  "zip_bytes": 548437,
+  "entries": 20,
+  "manifest": {
+    "note": "First T12 release FB8 failure reproduction inputs, source bytes retained from pre-optimization isolated copy. Standard release profile. No source fix in this archive.",
+    "files": {
+      "src/ast.rs": "75fe11ac21b1e20173b881bf400c93a259ba6b01e3487acbc108aa678ea2cecf",
+      "src/builtins.rs": "3402bc2a0cb0a2b8d47e35c01ee8a0df81f607e1b6451869ef5942c35806ac65",
+      "src/cli.rs": "28f52b5c47e374d2451d6037467df2c1fe092c0cfcfa261d72dccdf151525d55",
+      "src/env.rs": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc",
+      "src/error.rs": "bb1f2b251e68d0f14ff6cbbd67e68d4de3f0920184210d044d17f7f409dd9b9a",
+      "src/evaluator.rs": "7bc212abab8b617ef0859ec05fc96e24c71059e2fed9f4f0c9d67bad91d63b7c",
+      "src/json.rs": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f",
+      "src/json_codec.rs": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2",
+      "src/lexer.rs": "ebb952edbcd201210eb1f9c6ddebf58e2f3f998b260a11a51fe1c967848031f2",
+      "src/lib.rs": "bad4bc3a1f7d44f7cb2c111831b8150c006e7fa39c50604b571730e318f7e946",
+      "src/loader.rs": "994fe2babd0750d59b70a49a803223e520f103b7585c58f2602db72d1a59ee8a",
+      "src/main.rs": "2bfc42ce09c6f2173c9f7bfda95b6dfa47ab2033267eeefd810e7b4dd684c888",
+      "src/parser.rs": "15ed12a0aa14ad9653c7c7a8d6ba6a08cb99da6d81669b34b47b9fea4c92fd73",
+      "src/span.rs": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2",
+      "src/test_runner.rs": "b70a1e193f79d191599ee57e033f01bc25bde5e4fef0cd97d46dd418453f1597",
+      "src/value.rs": "ffba42a58a9edcf815f680eca536c8bc06cb906671a3b6e57956ca7753185f4b",
+      "Cargo.toml": "a6f5a72d1132356b0e594f1a0492ff07951d6a2fc4f9b625f53dbadc9005d68a",
+      "Cargo.lock": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4",
+      "lfz.exe": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d"
+    }
+  }
+}

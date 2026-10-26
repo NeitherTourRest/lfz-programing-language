@@ -1,0 +1,557 @@
+{
+  "topology": [
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 3,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 12,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 48,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 192,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 768,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 3072,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 12288,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 49152,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 65536,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 131072,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 262144,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 524288,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 1048576,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 2097152,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 4194304,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 8388608,
+          "group": 0
+        }
+      ]
+    }
+  ],
+  "allowed_mask": 16777215,
+  "class_selected_cpus": {
+    "1": 0,
+    "0": 16
+  },
+  "binaries": {
+    "old": {
+      "path": "Temp/t12-perf/lfz-before.exe",
+      "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab"
+    },
+    "new": {
+      "path": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d"
+    },
+    "cold-ident": {
+      "path": "Temp/runtime-t12/perf-lab/cold-ident/target/release/lfz.exe",
+      "sha256": "54aa35d58846a86fa4fffdfff65db0213f100728acae6324702b82b642de692b"
+    }
+  },
+  "subject": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\runtime-t12\\affinity-subject.exe",
+  "rows": [
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "old",
+      "warmup": true,
+      "wall_ms_after_affinity": 118.4615,
+      "cpu_ms": 109.375,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "new",
+      "warmup": true,
+      "wall_ms_after_affinity": 198.9301,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "cold-ident",
+      "warmup": true,
+      "wall_ms_after_affinity": 488.6068,
+      "cpu_ms": 203.125,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "cold-ident",
+      "warmup": true,
+      "wall_ms_after_affinity": 198.9309,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "new",
+      "warmup": true,
+      "wall_ms_after_affinity": 201.088,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "old",
+      "warmup": true,
+      "wall_ms_after_affinity": 111.6339,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 118.5837,
+      "cpu_ms": 109.375,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 197.5606,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "cold-ident",
+      "warmup": false,
+      "wall_ms_after_affinity": 196.5929,
+      "cpu_ms": 156.25,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "cold-ident",
+      "warmup": false,
+      "wall_ms_after_affinity": 198.4874,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 212.017,
+      "cpu_ms": 203.125,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 128.4719,
+      "cpu_ms": 125.0,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 125.5643,
+      "cpu_ms": 109.375,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 226.3929,
+      "cpu_ms": 203.125,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "cold-ident",
+      "warmup": false,
+      "wall_ms_after_affinity": 244.6072,
+      "cpu_ms": 203.125,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "cold-ident",
+      "warmup": false,
+      "wall_ms_after_affinity": 204.6298,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 201.8989,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 115.2776,
+      "cpu_ms": 109.375,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 114.1787,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 197.8925,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "cold-ident",
+      "warmup": false,
+      "wall_ms_after_affinity": 200.7058,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "cold-ident",
+      "warmup": false,
+      "wall_ms_after_affinity": 202.2706,
+      "cpu_ms": 156.25,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 198.9158,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 117.2703,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 115.9549,
+      "cpu_ms": 109.375,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 199.2868,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "cold-ident",
+      "warmup": false,
+      "wall_ms_after_affinity": 200.5553,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    }
+  ],
+  "medians": [
+    {
+      "cpu": 0,
+      "label": "old",
+      "wall_ms": 117.2703,
+      "cpu_ms": 109.375
+    },
+    {
+      "cpu": 0,
+      "label": "new",
+      "wall_ms": 199.2868,
+      "cpu_ms": 187.5
+    },
+    {
+      "cpu": 0,
+      "label": "cold-ident",
+      "wall_ms": 200.7058,
+      "cpu_ms": 187.5
+    }
+  ]
+}

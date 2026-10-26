@@ -1,0 +1,17 @@
+{
+  "timestamp_utc": "2026-10-25T14:54:03.776370+00:00",
+  "system_cpu_percent_over_500ms": 9.547738693467334,
+  "old_sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+  "old_noop_same_subject_median_ms": 13.2318,
+  "old_noop_ms": [
+    13.2318,
+    13.7705,
+    11.3227,
+    13.308,
+    12.7932,
+    14.4224,
+    12.2587
+  ],
+  "original_noop_limit_ms": 16.3071,
+  "ready": true
+}

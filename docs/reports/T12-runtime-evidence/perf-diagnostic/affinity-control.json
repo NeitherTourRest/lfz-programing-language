@@ -1,0 +1,926 @@
+{
+  "topology": [
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 3,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 12,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 48,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 192,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 768,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 3072,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 12288,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 49152,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 65536,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 131072,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 262144,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 524288,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 1048576,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 2097152,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 4194304,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 8388608,
+          "group": 0
+        }
+      ]
+    }
+  ],
+  "allowed_mask": 16777215,
+  "class_selected_cpus": {
+    "1": 0,
+    "0": 16
+  },
+  "binaries": {
+    "old": {
+      "path": "Temp/t12-perf/lfz-before.exe",
+      "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab"
+    },
+    "new": {
+      "path": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d"
+    },
+    "lab-new": {
+      "path": "Temp/runtime-t12/perf-lab/current/target/release/lfz.exe",
+      "sha256": "91fcff61b41b6df91a74b95148d3ad63f8a5238209806b0fc9428df8f241fc36"
+    }
+  },
+  "subject": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\runtime-t12\\affinity-subject.exe",
+  "rows": [
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "old",
+      "warmup": true,
+      "wall_ms_after_affinity": 133.8529,
+      "cpu_ms": 109.375,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "new",
+      "warmup": true,
+      "wall_ms_after_affinity": 202.4438,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "lab-new",
+      "warmup": true,
+      "wall_ms_after_affinity": 198.6046,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "lab-new",
+      "warmup": true,
+      "wall_ms_after_affinity": 198.8658,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "new",
+      "warmup": true,
+      "wall_ms_after_affinity": 191.351,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "old",
+      "warmup": true,
+      "wall_ms_after_affinity": 110.2708,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 113.5438,
+      "cpu_ms": 109.375,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 193.5205,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 200.0153,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 194.3614,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 190.3573,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 117.7021,
+      "cpu_ms": 78.125,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 115.6683,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 197.9405,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 206.1877,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 200.6281,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 198.0427,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 121.0674,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 117.4642,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 194.6692,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 193.2502,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 204.1416,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 199.5185,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 112.3731,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 110.7029,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 196.6697,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 194.8467,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 0,
+      "label": "old",
+      "warmup": true,
+      "wall_ms_after_affinity": 303.9951,
+      "cpu_ms": 156.25,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 0,
+      "label": "new",
+      "warmup": true,
+      "wall_ms_after_affinity": 474.8806,
+      "cpu_ms": 343.75,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 0,
+      "label": "lab-new",
+      "warmup": true,
+      "wall_ms_after_affinity": 512.9444,
+      "cpu_ms": 359.375,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 1,
+      "label": "lab-new",
+      "warmup": true,
+      "wall_ms_after_affinity": 418.2633,
+      "cpu_ms": 343.75,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 1,
+      "label": "new",
+      "warmup": true,
+      "wall_ms_after_affinity": 449.737,
+      "cpu_ms": 359.375,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 1,
+      "label": "old",
+      "warmup": true,
+      "wall_ms_after_affinity": 267.1631,
+      "cpu_ms": 187.5,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 2,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 287.8919,
+      "cpu_ms": 203.125,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 2,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 486.9712,
+      "cpu_ms": 296.875,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 2,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 476.4468,
+      "cpu_ms": 406.25,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 3,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 466.5292,
+      "cpu_ms": 343.75,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 3,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 432.7207,
+      "cpu_ms": 359.375,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 3,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 330.4809,
+      "cpu_ms": 234.375,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 4,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 252.5528,
+      "cpu_ms": 203.125,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 4,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 480.8196,
+      "cpu_ms": 296.875,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 4,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 503.7504,
+      "cpu_ms": 312.5,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 5,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 582.7475,
+      "cpu_ms": 312.5,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 5,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 442.7261,
+      "cpu_ms": 359.375,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 5,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 296.8022,
+      "cpu_ms": 140.625,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 6,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 277.8945,
+      "cpu_ms": 156.25,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 6,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 455.8931,
+      "cpu_ms": 296.875,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 6,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 449.4819,
+      "cpu_ms": 343.75,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 7,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 445.9867,
+      "cpu_ms": 312.5,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 7,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 430.6336,
+      "cpu_ms": 343.75,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 7,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 215.5325,
+      "cpu_ms": 171.875,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 8,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 248.2018,
+      "cpu_ms": 140.625,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 8,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 401.3069,
+      "cpu_ms": 343.75,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 16,
+      "round": 8,
+      "label": "lab-new",
+      "warmup": false,
+      "wall_ms_after_affinity": 471.3685,
+      "cpu_ms": 375.0,
+      "affinity": 65536,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    }
+  ],
+  "medians": [
+    {
+      "cpu": 0,
+      "label": "old",
+      "wall_ms": 115.6683,
+      "cpu_ms": 93.75
+    },
+    {
+      "cpu": 0,
+      "label": "new",
+      "wall_ms": 196.6697,
+      "cpu_ms": 187.5
+    },
+    {
+      "cpu": 0,
+      "label": "lab-new",
+      "wall_ms": 200.0153,
+      "cpu_ms": 171.875
+    },
+    {
+      "cpu": 16,
+      "label": "old",
+      "wall_ms": 277.8945,
+      "cpu_ms": 171.875
+    },
+    {
+      "cpu": 16,
+      "label": "new",
+      "wall_ms": 442.7261,
+      "cpu_ms": 343.75
+    },
+    {
+      "cpu": 16,
+      "label": "lab-new",
+      "wall_ms": 471.3685,
+      "cpu_ms": 343.75
+    }
+  ]
+}

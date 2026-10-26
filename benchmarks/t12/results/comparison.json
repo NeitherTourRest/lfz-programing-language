@@ -1,0 +1,159 @@
+{
+  "initial_pass": false,
+  "failed_count": 3,
+  "cases": [
+    {
+      "name": "noop",
+      "n": 0,
+      "before_ms": 11.307,
+      "after_ms": 9.7716,
+      "limit_ms": 16.307000000000002,
+      "pass": true
+    },
+    {
+      "name": "numeric_loop",
+      "n": 10000,
+      "before_ms": 12.9676,
+      "after_ms": 15.4585,
+      "limit_ms": 17.967599999999997,
+      "pass": true
+    },
+    {
+      "name": "numeric_loop",
+      "n": 100000,
+      "before_ms": 32.3154,
+      "after_ms": 46.7782,
+      "limit_ms": 38.778479999999995,
+      "pass": false
+    },
+    {
+      "name": "numeric_loop",
+      "n": 500000,
+      "before_ms": 109.5807,
+      "after_ms": 184.6616,
+      "limit_ms": 131.49684,
+      "pass": false
+    },
+    {
+      "name": "array_builtins",
+      "n": 1000,
+      "before_ms": 12.2102,
+      "after_ms": 12.9538,
+      "limit_ms": 17.2102,
+      "pass": true
+    },
+    {
+      "name": "array_builtins",
+      "n": 10000,
+      "before_ms": 17.7717,
+      "after_ms": 17.3312,
+      "limit_ms": 22.7717,
+      "pass": true
+    },
+    {
+      "name": "array_builtins",
+      "n": 50000,
+      "before_ms": 43.5882,
+      "after_ms": 40.6782,
+      "limit_ms": 52.305839999999996,
+      "pass": true
+    },
+    {
+      "name": "struct_ops",
+      "n": 2000,
+      "before_ms": 17.4452,
+      "after_ms": 12.0809,
+      "limit_ms": 22.4452,
+      "pass": true
+    },
+    {
+      "name": "struct_ops",
+      "n": 4000,
+      "before_ms": 31.5587,
+      "after_ms": 13.8722,
+      "limit_ms": 37.87044,
+      "pass": true
+    },
+    {
+      "name": "struct_ops",
+      "n": 8000,
+      "before_ms": 89.4598,
+      "after_ms": 25.2093,
+      "limit_ms": 107.35176,
+      "pass": true
+    },
+    {
+      "name": "string_ops",
+      "n": 2000,
+      "before_ms": 23.9022,
+      "after_ms": 34.8011,
+      "limit_ms": 28.9022,
+      "pass": false
+    },
+    {
+      "name": "string_ops",
+      "n": 4000,
+      "before_ms": 84.9204,
+      "after_ms": 84.1685,
+      "limit_ms": 101.90447999999999,
+      "pass": true
+    },
+    {
+      "name": "string_ops",
+      "n": 8000,
+      "before_ms": 196.9606,
+      "after_ms": 200.0482,
+      "limit_ms": 236.35271999999998,
+      "pass": true
+    },
+    {
+      "name": "string_map",
+      "n": 2000,
+      "before_ms": 12.5219,
+      "after_ms": 14.3039,
+      "limit_ms": 17.521900000000002,
+      "pass": true
+    },
+    {
+      "name": "string_map",
+      "n": 4000,
+      "before_ms": 18.0626,
+      "after_ms": 13.8844,
+      "limit_ms": 23.0626,
+      "pass": true
+    },
+    {
+      "name": "string_map",
+      "n": 8000,
+      "before_ms": 17.5214,
+      "after_ms": 16.9673,
+      "limit_ms": 22.5214,
+      "pass": true
+    },
+    {
+      "name": "struct_small",
+      "n": 4,
+      "before_ms": 13.7462,
+      "after_ms": 15.4589,
+      "limit_ms": 18.7462,
+      "pass": true
+    },
+    {
+      "name": "struct_small",
+      "n": 16,
+      "before_ms": 28.8616,
+      "after_ms": 24.4035,
+      "limit_ms": 34.633919999999996,
+      "pass": true
+    },
+    {
+      "name": "struct_small",
+      "n": 64,
+      "before_ms": 65.2589,
+      "after_ms": 58.418,
+      "limit_ms": 78.31067999999999,
+      "pass": true
+    }
+  ],
+  "recheck": "recheck.json preserves failed recheck; no threshold changes"
+}

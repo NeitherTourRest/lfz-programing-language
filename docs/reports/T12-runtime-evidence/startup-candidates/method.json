@@ -1,0 +1,57 @@
+{
+  "recorded_utc": "2026-10-25T15:11:39.695507+00:00",
+  "goal": "Evaluate opt-level=2 and s for current optimized T12 source, not change main Cargo or acceptance thresholds.",
+  "variants": [
+    "old149b",
+    "current7641",
+    "opt2",
+    "opts"
+  ],
+  "release_unchanged": [
+    "lto=true",
+    "codegen-units=1",
+    "strip=true"
+  ],
+  "subject": "Temp/runtime-t12/startup-candidates/subject.exe",
+  "copy_settle_seconds": 5,
+  "warmup_per_variant_case": 2,
+  "formal_runs_per_variant_case": 7,
+  "cpu_affinity": "default unpinned, no OS settings changed",
+  "order": "case order fixed, version block order reversed on odd case index",
+  "timing": "whole process perf_counter_ns, stdio captured, cwd root, TEMP/TMP project local",
+  "cases": [
+    [
+      "noop",
+      0
+    ],
+    [
+      "numeric_loop",
+      100000
+    ],
+    [
+      "numeric_loop",
+      500000
+    ],
+    [
+      "array_builtins",
+      50000
+    ],
+    [
+      "string_ops",
+      2000
+    ],
+    [
+      "string_map",
+      8000
+    ],
+    [
+      "struct_small",
+      4
+    ],
+    [
+      "struct_ops",
+      8000
+    ]
+  ],
+  "limitations": "No claim all system background load is controlled. Copies/5s wait outside timing. All outputs checked. No adaptively changed workload or thresholds."
+}

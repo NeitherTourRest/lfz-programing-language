@@ -1,0 +1,684 @@
+{
+  "topology": [
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 3,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 12,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 48,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 192,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 768,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 3072,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 12288,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 1,
+      "efficiency_class": 1,
+      "groups": [
+        {
+          "mask": 49152,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 65536,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 131072,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 262144,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 524288,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 1048576,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 2097152,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 4194304,
+          "group": 0
+        }
+      ]
+    },
+    {
+      "flags": 0,
+      "efficiency_class": 0,
+      "groups": [
+        {
+          "mask": 8388608,
+          "group": 0
+        }
+      ]
+    }
+  ],
+  "allowed_mask": 16777215,
+  "class_selected_cpus": {
+    "1": 0,
+    "0": 16
+  },
+  "binaries": {
+    "old": {
+      "path": "Temp/t12-perf/lfz-before.exe",
+      "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab"
+    },
+    "new": {
+      "path": "Temp/runtime-t12/perf-lab/root-bad.exe",
+      "sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d"
+    },
+    "inline-hot": {
+      "path": "Temp/runtime-t12/perf-lab/inline-hot/target/release/lfz.exe",
+      "sha256": "a3e400b706d68fffd1273c97a722fa5bc8975e2c677115906ed94845c99e1edd"
+    },
+    "boxed-context": {
+      "path": "Temp/runtime-t12/perf-lab/boxed-context/target/release/lfz.exe",
+      "sha256": "4c0d34f7f40ba85025165b9adb9e1213bf88a765e0312976db7aefc1dde549d8"
+    }
+  },
+  "subject": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\runtime-t12\\affinity-subject.exe",
+  "rows": [
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "old",
+      "warmup": true,
+      "wall_ms_after_affinity": 113.9077,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "new",
+      "warmup": true,
+      "wall_ms_after_affinity": 191.2045,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "inline-hot",
+      "warmup": true,
+      "wall_ms_after_affinity": 458.7572,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 0,
+      "label": "boxed-context",
+      "warmup": true,
+      "wall_ms_after_affinity": 443.9746,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "boxed-context",
+      "warmup": true,
+      "wall_ms_after_affinity": 193.9271,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "inline-hot",
+      "warmup": true,
+      "wall_ms_after_affinity": 186.9207,
+      "cpu_ms": 156.25,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "new",
+      "warmup": true,
+      "wall_ms_after_affinity": 194.5942,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 1,
+      "label": "old",
+      "warmup": true,
+      "wall_ms_after_affinity": 111.0906,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 110.2872,
+      "cpu_ms": 109.375,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 189.7885,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "inline-hot",
+      "warmup": false,
+      "wall_ms_after_affinity": 191.5261,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 2,
+      "label": "boxed-context",
+      "warmup": false,
+      "wall_ms_after_affinity": 194.0162,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "boxed-context",
+      "warmup": false,
+      "wall_ms_after_affinity": 198.2046,
+      "cpu_ms": 156.25,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "inline-hot",
+      "warmup": false,
+      "wall_ms_after_affinity": 188.176,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 195.7327,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 3,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 112.4497,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 107.9973,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 195.3431,
+      "cpu_ms": 156.25,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "inline-hot",
+      "warmup": false,
+      "wall_ms_after_affinity": 192.6896,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 4,
+      "label": "boxed-context",
+      "warmup": false,
+      "wall_ms_after_affinity": 194.9411,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "boxed-context",
+      "warmup": false,
+      "wall_ms_after_affinity": 191.0036,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "inline-hot",
+      "warmup": false,
+      "wall_ms_after_affinity": 187.0907,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 200.5372,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 5,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 111.2577,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 113.0762,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 195.8361,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "inline-hot",
+      "warmup": false,
+      "wall_ms_after_affinity": 187.941,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 6,
+      "label": "boxed-context",
+      "warmup": false,
+      "wall_ms_after_affinity": 198.878,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "boxed-context",
+      "warmup": false,
+      "wall_ms_after_affinity": 195.8461,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "inline-hot",
+      "warmup": false,
+      "wall_ms_after_affinity": 189.4857,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 195.1773,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 7,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 113.3028,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "old",
+      "warmup": false,
+      "wall_ms_after_affinity": 110.7261,
+      "cpu_ms": 93.75,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "new",
+      "warmup": false,
+      "wall_ms_after_affinity": 192.6099,
+      "cpu_ms": 171.875,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "inline-hot",
+      "warmup": false,
+      "wall_ms_after_affinity": 192.174,
+      "cpu_ms": 187.5,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    },
+    {
+      "cpu": 0,
+      "round": 8,
+      "label": "boxed-context",
+      "warmup": false,
+      "wall_ms_after_affinity": 198.3419,
+      "cpu_ms": 156.25,
+      "affinity": 1,
+      "priority": 32,
+      "exit": 0,
+      "stdout": "RESULT total=125000250000\n",
+      "stderr": ""
+    }
+  ],
+  "medians": [
+    {
+      "cpu": 0,
+      "label": "old",
+      "wall_ms": 111.2577,
+      "cpu_ms": 93.75
+    },
+    {
+      "cpu": 0,
+      "label": "new",
+      "wall_ms": 195.3431,
+      "cpu_ms": 171.875
+    },
+    {
+      "cpu": 0,
+      "label": "inline-hot",
+      "wall_ms": 189.4857,
+      "cpu_ms": 171.875
+    },
+    {
+      "cpu": 0,
+      "label": "boxed-context",
+      "wall_ms": 195.8461,
+      "cpu_ms": 171.875
+    }
+  ]
+}

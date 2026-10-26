@@ -1,0 +1,25 @@
+[
+  {
+    "args": [
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "run",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\runtime-t12\\scope-dump.lfz"
+    ],
+    "exit": 0,
+    "stdout": "i ： 0\na ： 42\ni ： 1\na ： 42\n",
+    "stderr": "",
+    "expected_dump": "i ： 0\na ： 42\ni ： 1\na ： 42\n"
+  },
+  {
+    "args": [
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "run",
+      "--json",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\runtime-t12\\scope-dump.lfz"
+    ],
+    "exit": 0,
+    "stdout": "{\"ok\":true}\n",
+    "stderr": "i ： 0\na ： 42\ni ： 1\na ： 42\n",
+    "expected_dump": "i ： 0\na ： 42\ni ： 1\na ： 42\n"
+  }
+]

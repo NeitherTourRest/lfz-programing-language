@@ -1,0 +1,17 @@
+{
+  "source_file": "src/evaluator.rs",
+  "lib_tests": 404,
+  "all_rust_tests": 522,
+  "blackbox": {
+    "ok": true,
+    "total": 166,
+    "passed": 166,
+    "failed": 0,
+    "errored": 0
+  },
+  "binary_sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+  "bytes": 821760,
+  "dist_same_bytes": true,
+  "official_performance_validation": "PENDING perf-engineer",
+  "profile_changed": false
+}

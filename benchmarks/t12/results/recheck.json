@@ -1,0 +1,314 @@
+{
+  "timestamp_utc": "2026-10-24T17:04:34.195313+00:00",
+  "old_sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+  "new_sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d",
+  "method": "old/new interleaved, 2 warmups then 7 samples each; unchanged original thresholds",
+  "cases": [
+    {
+      "name": "numeric_loop",
+      "n": 100000,
+      "original_before_ms": 32.3154,
+      "original_limit_ms": 38.778479999999995,
+      "medians_ms": {
+        "old": 28.0418,
+        "new": 45.1837
+      },
+      "new_pass": false,
+      "contemporary_old_in_range": true,
+      "runs": {
+        "old": [
+          {
+            "elapsed_ms": 28.3848,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 27.5963,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 26.6919,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 28.6891,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 27.7211,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 28.0418,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 28.2784,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          }
+        ],
+        "new": [
+          {
+            "elapsed_ms": 53.8743,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 54.7726,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 44.2685,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 43.7422,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 45.1837,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 45.4641,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 44.3716,
+            "exit": 0,
+            "stdout": "RESULT total=5000050000\n",
+            "stderr": ""
+          }
+        ]
+      }
+    },
+    {
+      "name": "numeric_loop",
+      "n": 500000,
+      "original_before_ms": 109.5807,
+      "original_limit_ms": 131.49684,
+      "medians_ms": {
+        "old": 97.8648,
+        "new": 185.5143
+      },
+      "new_pass": false,
+      "contemporary_old_in_range": true,
+      "runs": {
+        "old": [
+          {
+            "elapsed_ms": 104.6956,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 96.6245,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 97.8648,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 97.545,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 96.8111,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 107.8178,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 106.8793,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          }
+        ],
+        "new": [
+          {
+            "elapsed_ms": 185.5143,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 188.3328,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 177.2514,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 172.3737,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 183.1863,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 205.307,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 193.9416,
+            "exit": 0,
+            "stdout": "RESULT total=125000250000\n",
+            "stderr": ""
+          }
+        ]
+      }
+    },
+    {
+      "name": "string_ops",
+      "n": 2000,
+      "original_before_ms": 23.9022,
+      "original_limit_ms": 28.9022,
+      "medians_ms": {
+        "old": 28.443,
+        "new": 29.0372
+      },
+      "new_pass": false,
+      "contemporary_old_in_range": true,
+      "runs": {
+        "old": [
+          {
+            "elapsed_ms": 37.5537,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 28.443,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 30.1719,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 24.0079,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 26.7652,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 34.1459,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 21.4653,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          }
+        ],
+        "new": [
+          {
+            "elapsed_ms": 29.0372,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 24.6349,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 29.0369,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 37.6931,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 29.4688,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 29.9913,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          },
+          {
+            "elapsed_ms": 26.5595,
+            "exit": 0,
+            "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+            "stderr": ""
+          }
+        ]
+      }
+    }
+  ]
+}

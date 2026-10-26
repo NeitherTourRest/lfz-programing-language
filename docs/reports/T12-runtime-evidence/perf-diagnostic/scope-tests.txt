@@ -1,0 +1,21 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+warning: hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `D:\XUE\2026fall\Program Design\lfz-programing language design\target\debug\incremental\lfz-1vrpdhlx9ibsp\s-hnjl5c4owp-0u9fwh3-working`
+
+warning: `lfz` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.91s
+     Running unittests src\lib.rs (target\debug\deps\lfz-fbb243b31d5103ce.exe)
+
+running 5 tests
+test evaluator::t12_scope_elision_tests::empty_scope_has_identical_visible_dump_order_and_values ... ok
+test evaluator::t12_scope_elision_tests::declaration_free_loop_closures_share_outer_cell ... ok
+test evaluator::t12_scope_elision_tests::declaration_free_loops_preserve_break_continue_return ... ok
+test evaluator::t12_scope_elision_tests::loops_with_decl_fn_or_struct_keep_fresh_bindings ... ok
+test evaluator::t12_scope_elision_tests::nested_shadowing_and_for_cells_are_unchanged ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 399 filtered out; finished in 0.00s
+

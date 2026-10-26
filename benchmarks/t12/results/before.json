@@ -1,0 +1,987 @@
+{
+  "label": "T12-before",
+  "timestamp_utc": "2026-10-24T16:50:47.575347+00:00",
+  "environment": {
+    "os": "Windows-11-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "logical_cpus": 24,
+    "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]",
+    "python_exe": "D:\\app\\ANACONDA\\python.exe"
+  },
+  "binary": {
+    "path": "Temp\\t12-perf\\lfz-before.exe",
+    "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+    "bytes": 766464
+  },
+  "method": {
+    "clock": "perf_counter_ns",
+    "whole_process": true,
+    "warmup": 2,
+    "runs": 7,
+    "timeout_seconds": 15,
+    "background_load_controlled": false,
+    "note": "sequential case order; total includes process startup, parsing, evaluation and output capture"
+  },
+  "cases": [
+    {
+      "name": "noop",
+      "n": 0,
+      "source_sha256": "040084ccf6c90026e962c8c46e59fe065bf9905fe90db6da64c9a4b488883401",
+      "source": "#42\nprint(\"RESULT ok=1\")\n",
+      "stdin": "",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\noop.lfz"
+      ],
+      "expected_stdout": "RESULT ok=1\n",
+      "median_ms": 11.307,
+      "min_ms": 10.3143,
+      "max_ms": 12.0346,
+      "runs": [
+        {
+          "elapsed_ms": 11.119,
+          "exit": 0,
+          "stdout": "RESULT ok=1\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 11.307,
+          "exit": 0,
+          "stdout": "RESULT ok=1\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 12.0346,
+          "exit": 0,
+          "stdout": "RESULT ok=1\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 10.7696,
+          "exit": 0,
+          "stdout": "RESULT ok=1\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 10.3143,
+          "exit": 0,
+          "stdout": "RESULT ok=1\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 11.7894,
+          "exit": 0,
+          "stdout": "RESULT ok=1\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 11.9184,
+          "exit": 0,
+          "stdout": "RESULT ok=1\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "numeric_loop",
+      "n": 10000,
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "stdin": "10000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\numeric_loop_10000.lfz"
+      ],
+      "expected_stdout": "RESULT total=50005000\n",
+      "median_ms": 12.9676,
+      "min_ms": 12.1824,
+      "max_ms": 24.6334,
+      "runs": [
+        {
+          "elapsed_ms": 12.1824,
+          "exit": 0,
+          "stdout": "RESULT total=50005000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 24.6334,
+          "exit": 0,
+          "stdout": "RESULT total=50005000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 12.4176,
+          "exit": 0,
+          "stdout": "RESULT total=50005000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 12.6477,
+          "exit": 0,
+          "stdout": "RESULT total=50005000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 12.9676,
+          "exit": 0,
+          "stdout": "RESULT total=50005000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 20.7987,
+          "exit": 0,
+          "stdout": "RESULT total=50005000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 15.216,
+          "exit": 0,
+          "stdout": "RESULT total=50005000\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "numeric_loop",
+      "n": 100000,
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "stdin": "100000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\numeric_loop_100000.lfz"
+      ],
+      "expected_stdout": "RESULT total=5000050000\n",
+      "median_ms": 32.3154,
+      "min_ms": 30.8006,
+      "max_ms": 37.9109,
+      "runs": [
+        {
+          "elapsed_ms": 37.9109,
+          "exit": 0,
+          "stdout": "RESULT total=5000050000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 37.822,
+          "exit": 0,
+          "stdout": "RESULT total=5000050000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 30.8837,
+          "exit": 0,
+          "stdout": "RESULT total=5000050000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 31.0018,
+          "exit": 0,
+          "stdout": "RESULT total=5000050000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 36.9596,
+          "exit": 0,
+          "stdout": "RESULT total=5000050000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 30.8006,
+          "exit": 0,
+          "stdout": "RESULT total=5000050000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 32.3154,
+          "exit": 0,
+          "stdout": "RESULT total=5000050000\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "numeric_loop",
+      "n": 500000,
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "stdin": "500000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\numeric_loop_500000.lfz"
+      ],
+      "expected_stdout": "RESULT total=125000250000\n",
+      "median_ms": 109.5807,
+      "min_ms": 101.7343,
+      "max_ms": 111.1537,
+      "runs": [
+        {
+          "elapsed_ms": 111.1537,
+          "exit": 0,
+          "stdout": "RESULT total=125000250000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 109.6861,
+          "exit": 0,
+          "stdout": "RESULT total=125000250000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 109.5566,
+          "exit": 0,
+          "stdout": "RESULT total=125000250000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 101.7343,
+          "exit": 0,
+          "stdout": "RESULT total=125000250000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 110.094,
+          "exit": 0,
+          "stdout": "RESULT total=125000250000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 105.9951,
+          "exit": 0,
+          "stdout": "RESULT total=125000250000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 109.5807,
+          "exit": 0,
+          "stdout": "RESULT total=125000250000\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "array_builtins",
+      "n": 1000,
+      "source_sha256": "c953291926d34db36553c622326c516f3e067f3242ab6331054860cf1bdcecc7",
+      "source": "#42\n// array_builtins: range -> map -> filter -> sort -> reduce chain.\n// LFZ side uses the native higher-order builtins; the Python side uses the\n// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nlet total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)\nprint(\"RESULT total=${total}\")\n",
+      "stdin": "1000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\array_builtins_1000.lfz"
+      ],
+      "expected_stdout": "RESULT total=249500\n",
+      "median_ms": 12.2102,
+      "min_ms": 11.7919,
+      "max_ms": 12.4133,
+      "runs": [
+        {
+          "elapsed_ms": 11.82,
+          "exit": 0,
+          "stdout": "RESULT total=249500\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 12.4078,
+          "exit": 0,
+          "stdout": "RESULT total=249500\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 12.2468,
+          "exit": 0,
+          "stdout": "RESULT total=249500\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 12.0868,
+          "exit": 0,
+          "stdout": "RESULT total=249500\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 11.7919,
+          "exit": 0,
+          "stdout": "RESULT total=249500\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 12.4133,
+          "exit": 0,
+          "stdout": "RESULT total=249500\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 12.2102,
+          "exit": 0,
+          "stdout": "RESULT total=249500\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "array_builtins",
+      "n": 10000,
+      "source_sha256": "c953291926d34db36553c622326c516f3e067f3242ab6331054860cf1bdcecc7",
+      "source": "#42\n// array_builtins: range -> map -> filter -> sort -> reduce chain.\n// LFZ side uses the native higher-order builtins; the Python side uses the\n// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nlet total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)\nprint(\"RESULT total=${total}\")\n",
+      "stdin": "10000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\array_builtins_10000.lfz"
+      ],
+      "expected_stdout": "RESULT total=24995000\n",
+      "median_ms": 17.7717,
+      "min_ms": 16.803,
+      "max_ms": 20.7143,
+      "runs": [
+        {
+          "elapsed_ms": 17.8431,
+          "exit": 0,
+          "stdout": "RESULT total=24995000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 17.3578,
+          "exit": 0,
+          "stdout": "RESULT total=24995000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 16.803,
+          "exit": 0,
+          "stdout": "RESULT total=24995000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 18.511,
+          "exit": 0,
+          "stdout": "RESULT total=24995000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 20.7143,
+          "exit": 0,
+          "stdout": "RESULT total=24995000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 17.7717,
+          "exit": 0,
+          "stdout": "RESULT total=24995000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 17.1972,
+          "exit": 0,
+          "stdout": "RESULT total=24995000\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "array_builtins",
+      "n": 50000,
+      "source_sha256": "c953291926d34db36553c622326c516f3e067f3242ab6331054860cf1bdcecc7",
+      "source": "#42\n// array_builtins: range -> map -> filter -> sort -> reduce chain.\n// LFZ side uses the native higher-order builtins; the Python side uses the\n// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nlet total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)\nprint(\"RESULT total=${total}\")\n",
+      "stdin": "50000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\array_builtins_50000.lfz"
+      ],
+      "expected_stdout": "RESULT total=624975000\n",
+      "median_ms": 43.5882,
+      "min_ms": 39.6244,
+      "max_ms": 49.9192,
+      "runs": [
+        {
+          "elapsed_ms": 44.1428,
+          "exit": 0,
+          "stdout": "RESULT total=624975000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 42.3074,
+          "exit": 0,
+          "stdout": "RESULT total=624975000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 41.0922,
+          "exit": 0,
+          "stdout": "RESULT total=624975000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 44.0752,
+          "exit": 0,
+          "stdout": "RESULT total=624975000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 49.9192,
+          "exit": 0,
+          "stdout": "RESULT total=624975000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 39.6244,
+          "exit": 0,
+          "stdout": "RESULT total=624975000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 43.5882,
+          "exit": 0,
+          "stdout": "RESULT total=624975000\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "struct_ops",
+      "n": 2000,
+      "source_sha256": "0866ba172ee83f334a6057e5a5a6ee90ba1e960b7e09db95cb34ef244245ba0e",
+      "source": "#42\n// struct_ops: build a struct/dict with N dynamic string keys, then read them\n// back using keys() and sum the values. Measures struct field write/read + keys().\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar s = {}\nvar i = 0\nwhile i < n {\n    s[\"k${i}\"] = i * i\n    i += 1\n}\nvar total = 0\nfor k in keys(s) {\n    total += s[k]\n}\nprint(\"RESULT keys=${len(s)} total=${total}\")\n",
+      "stdin": "2000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\struct_ops_2000.lfz"
+      ],
+      "expected_stdout": "RESULT keys=2000 total=2664667000\n",
+      "median_ms": 17.4452,
+      "min_ms": 16.787,
+      "max_ms": 19.2049,
+      "runs": [
+        {
+          "elapsed_ms": 17.6947,
+          "exit": 0,
+          "stdout": "RESULT keys=2000 total=2664667000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 17.2621,
+          "exit": 0,
+          "stdout": "RESULT keys=2000 total=2664667000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 16.8133,
+          "exit": 0,
+          "stdout": "RESULT keys=2000 total=2664667000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 17.6102,
+          "exit": 0,
+          "stdout": "RESULT keys=2000 total=2664667000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 17.4452,
+          "exit": 0,
+          "stdout": "RESULT keys=2000 total=2664667000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 16.787,
+          "exit": 0,
+          "stdout": "RESULT keys=2000 total=2664667000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 19.2049,
+          "exit": 0,
+          "stdout": "RESULT keys=2000 total=2664667000\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "struct_ops",
+      "n": 4000,
+      "source_sha256": "0866ba172ee83f334a6057e5a5a6ee90ba1e960b7e09db95cb34ef244245ba0e",
+      "source": "#42\n// struct_ops: build a struct/dict with N dynamic string keys, then read them\n// back using keys() and sum the values. Measures struct field write/read + keys().\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar s = {}\nvar i = 0\nwhile i < n {\n    s[\"k${i}\"] = i * i\n    i += 1\n}\nvar total = 0\nfor k in keys(s) {\n    total += s[k]\n}\nprint(\"RESULT keys=${len(s)} total=${total}\")\n",
+      "stdin": "4000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\struct_ops_4000.lfz"
+      ],
+      "expected_stdout": "RESULT keys=4000 total=21325334000\n",
+      "median_ms": 31.5587,
+      "min_ms": 28.7271,
+      "max_ms": 62.8614,
+      "runs": [
+        {
+          "elapsed_ms": 30.9443,
+          "exit": 0,
+          "stdout": "RESULT keys=4000 total=21325334000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 28.7271,
+          "exit": 0,
+          "stdout": "RESULT keys=4000 total=21325334000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 30.6691,
+          "exit": 0,
+          "stdout": "RESULT keys=4000 total=21325334000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 32.7154,
+          "exit": 0,
+          "stdout": "RESULT keys=4000 total=21325334000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 62.8614,
+          "exit": 0,
+          "stdout": "RESULT keys=4000 total=21325334000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 52.5396,
+          "exit": 0,
+          "stdout": "RESULT keys=4000 total=21325334000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 31.5587,
+          "exit": 0,
+          "stdout": "RESULT keys=4000 total=21325334000\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "struct_ops",
+      "n": 8000,
+      "source_sha256": "0866ba172ee83f334a6057e5a5a6ee90ba1e960b7e09db95cb34ef244245ba0e",
+      "source": "#42\n// struct_ops: build a struct/dict with N dynamic string keys, then read them\n// back using keys() and sum the values. Measures struct field write/read + keys().\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar s = {}\nvar i = 0\nwhile i < n {\n    s[\"k${i}\"] = i * i\n    i += 1\n}\nvar total = 0\nfor k in keys(s) {\n    total += s[k]\n}\nprint(\"RESULT keys=${len(s)} total=${total}\")\n",
+      "stdin": "8000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\struct_ops_8000.lfz"
+      ],
+      "expected_stdout": "RESULT keys=8000 total=170634668000\n",
+      "median_ms": 89.4598,
+      "min_ms": 87.2892,
+      "max_ms": 94.9739,
+      "runs": [
+        {
+          "elapsed_ms": 94.9739,
+          "exit": 0,
+          "stdout": "RESULT keys=8000 total=170634668000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 90.3016,
+          "exit": 0,
+          "stdout": "RESULT keys=8000 total=170634668000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 91.8116,
+          "exit": 0,
+          "stdout": "RESULT keys=8000 total=170634668000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 89.4598,
+          "exit": 0,
+          "stdout": "RESULT keys=8000 total=170634668000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 89.0483,
+          "exit": 0,
+          "stdout": "RESULT keys=8000 total=170634668000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 88.585,
+          "exit": 0,
+          "stdout": "RESULT keys=8000 total=170634668000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 87.2892,
+          "exit": 0,
+          "stdout": "RESULT keys=8000 total=170634668000\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "string_ops",
+      "n": 2000,
+      "source_sha256": "f8700d76d0eff2006d70fd71e118306d36a91247a70431480240a835cf403894",
+      "source": "#42\n// string_ops: build N strings with interpolation, trim/map them, join, replace,\n// split, repeat. Measures string building + the string builtins.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar parts = []\nvar i = 0\nwhile i < n {\n    parts = push(\"  item${i}  \", parts)\n    i += 1\n}\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet renamed = replace(\"item\", \"ITEM\", joined)\nlet words = split(\",\", renamed)\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "stdin": "2000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\string_ops_2000.lfz"
+      ],
+      "expected_stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+      "median_ms": 23.9022,
+      "min_ms": 23.0133,
+      "max_ms": 29.475,
+      "runs": [
+        {
+          "elapsed_ms": 24.0337,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 23.0133,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 24.4159,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 23.1111,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 23.5139,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 29.475,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 23.9022,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "string_ops",
+      "n": 4000,
+      "source_sha256": "f8700d76d0eff2006d70fd71e118306d36a91247a70431480240a835cf403894",
+      "source": "#42\n// string_ops: build N strings with interpolation, trim/map them, join, replace,\n// split, repeat. Measures string building + the string builtins.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar parts = []\nvar i = 0\nwhile i < n {\n    parts = push(\"  item${i}  \", parts)\n    i += 1\n}\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet renamed = replace(\"item\", \"ITEM\", joined)\nlet words = split(\",\", renamed)\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "stdin": "4000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\string_ops_4000.lfz"
+      ],
+      "expected_stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+      "median_ms": 84.9204,
+      "min_ms": 74.2623,
+      "max_ms": 109.974,
+      "runs": [
+        {
+          "elapsed_ms": 76.4347,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 106.9573,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 91.2956,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 109.974,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 80.0158,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 74.2623,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 84.9204,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "string_ops",
+      "n": 8000,
+      "source_sha256": "f8700d76d0eff2006d70fd71e118306d36a91247a70431480240a835cf403894",
+      "source": "#42\n// string_ops: build N strings with interpolation, trim/map them, join, replace,\n// split, repeat. Measures string building + the string builtins.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar parts = []\nvar i = 0\nwhile i < n {\n    parts = push(\"  item${i}  \", parts)\n    i += 1\n}\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet renamed = replace(\"item\", \"ITEM\", joined)\nlet words = split(\",\", renamed)\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "stdin": "8000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\string_ops_8000.lfz"
+      ],
+      "expected_stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+      "median_ms": 196.9606,
+      "min_ms": 129.3226,
+      "max_ms": 227.4116,
+      "runs": [
+        {
+          "elapsed_ms": 162.5423,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 129.3226,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 196.9606,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 227.4116,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 201.5103,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 216.8335,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 139.3168,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "string_map",
+      "n": 2000,
+      "source_sha256": "36b2d37c68179f010b962fda81b974e3e104d65b2f64f47775e80e5e06893b0f",
+      "source": "#42\nlet n = int(input())\nlet parts = range(n) |> map((i) => \"  item${i}  \")\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet words = split(\",\", replace(\"item\", \"ITEM\", joined))\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "stdin": "2000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\string_map_2000.lfz"
+      ],
+      "expected_stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+      "median_ms": 12.5219,
+      "min_ms": 11.7182,
+      "max_ms": 18.2353,
+      "runs": [
+        {
+          "elapsed_ms": 17.6187,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 18.2353,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 12.5219,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 11.7182,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 12.7334,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 12.3584,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 11.8868,
+          "exit": 0,
+          "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "string_map",
+      "n": 4000,
+      "source_sha256": "36b2d37c68179f010b962fda81b974e3e104d65b2f64f47775e80e5e06893b0f",
+      "source": "#42\nlet n = int(input())\nlet parts = range(n) |> map((i) => \"  item${i}  \")\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet words = split(\",\", replace(\"item\", \"ITEM\", joined))\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "stdin": "4000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\string_map_4000.lfz"
+      ],
+      "expected_stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+      "median_ms": 18.0626,
+      "min_ms": 17.1294,
+      "max_ms": 19.9038,
+      "runs": [
+        {
+          "elapsed_ms": 19.0921,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 18.8428,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 19.9038,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 18.0626,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 17.3581,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 17.8134,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 17.1294,
+          "exit": 0,
+          "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "string_map",
+      "n": 8000,
+      "source_sha256": "36b2d37c68179f010b962fda81b974e3e104d65b2f64f47775e80e5e06893b0f",
+      "source": "#42\nlet n = int(input())\nlet parts = range(n) |> map((i) => \"  item${i}  \")\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet words = split(\",\", replace(\"item\", \"ITEM\", joined))\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "stdin": "8000\n",
+      "command": [
+        "Temp\\t12-perf\\lfz-before.exe",
+        "run",
+        "Temp\\t12-perf\\string_map_8000.lfz"
+      ],
+      "expected_stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+      "median_ms": 17.5214,
+      "min_ms": 16.5448,
+      "max_ms": 21.3822,
+      "runs": [
+        {
+          "elapsed_ms": 17.5214,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 16.6983,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 16.5448,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 20.7784,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 21.3822,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 16.9167,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 17.7066,
+          "exit": 0,
+          "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+          "stderr": ""
+        }
+      ]
+    }
+  ]
+}

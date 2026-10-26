@@ -1,0 +1,31 @@
+
+x
+a b
+
+
+
+check 失败
+alpha ： 1
+beta ： 2
+gamma ： <fn gamma>
+Delta ： <struct Delta>
+local ： 99
+alpha ： 1
+beta ： 2
+gamma ： <fn gamma>
+Delta ： <struct Delta>
+localDump ： <fn localDump>
+inBlock ： 1
+alpha ： 1
+beta ： 2
+gamma ： <fn gamma>
+Delta ： <struct Delta>
+localDump ： <fn localDump>
+hit ： 0
+shadow ： 2
+alpha ： 1
+beta ： 2
+gamma ： <fn gamma>
+Delta ： <struct Delta>
+localDump ： <fn localDump>
+hit ： 1

@@ -1,0 +1,2505 @@
+{
+  "timestamp_utc": "2026-10-25T14:52:58.947301+00:00",
+  "environment": {
+    "os": "Windows-11-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "logical_cpus": 24,
+    "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]"
+  },
+  "binary_sources": {
+    "old": {
+      "path": "Temp\\t12-perf\\lfz-before.exe",
+      "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+      "bytes": 766464
+    },
+    "new": {
+      "path": "dist\\lfz.exe",
+      "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+      "bytes": 821760
+    }
+  },
+  "method": {
+    "execution_path": "Temp\\T12\\perf-subject.exe",
+    "clock": "perf_counter_ns",
+    "whole_process": true,
+    "warmup_after_each_copy": 2,
+    "runs": 7,
+    "timeout_seconds": 15,
+    "copy_excluded_from_timing": true,
+    "sha_verified_before_each_launch": true,
+    "case_order": "baseline order; old/new group order alternates by case; new left in common path afterwards",
+    "thresholds": "unchanged original before.json/before-small.json: max(before*1.2,before+5ms); noop factor1.3"
+  },
+  "cases": [
+    {
+      "name": "noop",
+      "n": 0,
+      "source": "#42\nprint(\"RESULT ok=1\")\n",
+      "source_sha256": "040084ccf6c90026e962c8c46e59fe065bf9905fe90db6da64c9a4b488883401",
+      "stdin": "",
+      "expected_stdout": "RESULT ok=1\n",
+      "original_before_ms": 11.307,
+      "original_fixed_limit_ms": 16.307000000000002,
+      "groups": {
+        "old": {
+          "median_ms": 12.7895,
+          "min_ms": 11.3214,
+          "max_ms": 14.0266,
+          "runs": [
+            {
+              "elapsed_ms": 12.4024,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 13.0043,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 11.3214,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 11.7179,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 12.7895,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 13.2748,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.0266,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "new": {
+          "median_ms": 12.8733,
+          "min_ms": 11.5526,
+          "max_ms": 14.0709,
+          "runs": [
+            {
+              "elapsed_ms": 12.8733,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.0709,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 12.989,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 12.7618,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 11.5526,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 13.0145,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 12.8088,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 1.00655224989249
+    },
+    {
+      "name": "numeric_loop",
+      "n": 10000,
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "stdin": "10000\n",
+      "expected_stdout": "RESULT total=50005000\n",
+      "original_before_ms": 12.9676,
+      "original_fixed_limit_ms": 17.967599999999997,
+      "groups": {
+        "new": {
+          "median_ms": 14.8203,
+          "min_ms": 13.2307,
+          "max_ms": 15.8254,
+          "runs": [
+            {
+              "elapsed_ms": 14.8203,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 13.2307,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.1476,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.2836,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.8254,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.9435,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.7298,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "old": {
+          "median_ms": 14.5618,
+          "min_ms": 13.7151,
+          "max_ms": 14.7782,
+          "runs": [
+            {
+              "elapsed_ms": 14.1093,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 13.7151,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.7782,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.5618,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.0482,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.6631,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.7493,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 1.017751926272851
+    },
+    {
+      "name": "numeric_loop",
+      "n": 100000,
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "stdin": "100000\n",
+      "expected_stdout": "RESULT total=5000050000\n",
+      "original_before_ms": 32.3154,
+      "original_fixed_limit_ms": 38.778479999999995,
+      "groups": {
+        "old": {
+          "median_ms": 31.7276,
+          "min_ms": 29.1503,
+          "max_ms": 34.9604,
+          "runs": [
+            {
+              "elapsed_ms": 32.4764,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 29.5013,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 34.9604,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 31.7276,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 31.7427,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 29.1503,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 31.6706,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "new": {
+          "median_ms": 28.836,
+          "min_ms": 26.7047,
+          "max_ms": 29.682,
+          "runs": [
+            {
+              "elapsed_ms": 29.5813,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 27.999,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 28.8897,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 29.682,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 28.836,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 27.2796,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 26.7047,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.9088616850943658
+    },
+    {
+      "name": "numeric_loop",
+      "n": 500000,
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "stdin": "500000\n",
+      "expected_stdout": "RESULT total=125000250000\n",
+      "original_before_ms": 109.5807,
+      "original_fixed_limit_ms": 131.49684,
+      "groups": {
+        "new": {
+          "median_ms": 87.894,
+          "min_ms": 83.2877,
+          "max_ms": 93.7416,
+          "runs": [
+            {
+              "elapsed_ms": 83.7414,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 83.2877,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 85.8626,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 87.894,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 89.2273,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 93.7416,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 92.3917,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "old": {
+          "median_ms": 104.5241,
+          "min_ms": 99.2359,
+          "max_ms": 114.1968,
+          "runs": [
+            {
+              "elapsed_ms": 99.2359,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 107.042,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 114.1968,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 100.7905,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 104.5241,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 104.7294,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 103.5351,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.8408969797396008
+    },
+    {
+      "name": "array_builtins",
+      "n": 1000,
+      "source": "#42\n// array_builtins: range -> map -> filter -> sort -> reduce chain.\n// LFZ side uses the native higher-order builtins; the Python side uses the\n// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nlet total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "c953291926d34db36553c622326c516f3e067f3242ab6331054860cf1bdcecc7",
+      "stdin": "1000\n",
+      "expected_stdout": "RESULT total=249500\n",
+      "original_before_ms": 12.2102,
+      "original_fixed_limit_ms": 17.2102,
+      "groups": {
+        "old": {
+          "median_ms": 15.8278,
+          "min_ms": 14.4848,
+          "max_ms": 17.6215,
+          "runs": [
+            {
+              "elapsed_ms": 15.2278,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.4848,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.8278,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.6215,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.9677,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.7292,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.5971,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "new": {
+          "median_ms": 15.5911,
+          "min_ms": 14.304,
+          "max_ms": 20.8819,
+          "runs": [
+            {
+              "elapsed_ms": 17.3914,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.8776,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.8819,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.5911,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.0938,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.304,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.437,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.9850453000416989
+    },
+    {
+      "name": "array_builtins",
+      "n": 10000,
+      "source": "#42\n// array_builtins: range -> map -> filter -> sort -> reduce chain.\n// LFZ side uses the native higher-order builtins; the Python side uses the\n// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nlet total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "c953291926d34db36553c622326c516f3e067f3242ab6331054860cf1bdcecc7",
+      "stdin": "10000\n",
+      "expected_stdout": "RESULT total=24995000\n",
+      "original_before_ms": 17.7717,
+      "original_fixed_limit_ms": 22.7717,
+      "groups": {
+        "new": {
+          "median_ms": 21.5629,
+          "min_ms": 20.8606,
+          "max_ms": 24.5583,
+          "runs": [
+            {
+              "elapsed_ms": 21.5629,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.0793,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.9854,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 24.5583,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.8849,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.8606,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.191,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "old": {
+          "median_ms": 21.3115,
+          "min_ms": 20.137,
+          "max_ms": 25.0129,
+          "runs": [
+            {
+              "elapsed_ms": 20.137,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 25.0129,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.8935,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.3228,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.3115,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.0011,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.1991,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 1.0117964479271755
+    },
+    {
+      "name": "array_builtins",
+      "n": 50000,
+      "source": "#42\n// array_builtins: range -> map -> filter -> sort -> reduce chain.\n// LFZ side uses the native higher-order builtins; the Python side uses the\n// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nlet total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "c953291926d34db36553c622326c516f3e067f3242ab6331054860cf1bdcecc7",
+      "stdin": "50000\n",
+      "expected_stdout": "RESULT total=624975000\n",
+      "original_before_ms": 43.5882,
+      "original_fixed_limit_ms": 52.305839999999996,
+      "groups": {
+        "old": {
+          "median_ms": 46.6437,
+          "min_ms": 42.0481,
+          "max_ms": 49.6897,
+          "runs": [
+            {
+              "elapsed_ms": 47.3692,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 45.3383,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 46.6437,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 42.0481,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 49.6897,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 48.6501,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 43.8281,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "new": {
+          "median_ms": 42.3812,
+          "min_ms": 40.6639,
+          "max_ms": 48.8828,
+          "runs": [
+            {
+              "elapsed_ms": 40.6639,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 47.3549,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 41.6326,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 48.8828,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 42.3812,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 41.1726,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 43.0342,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.908615740174986
+    },
+    {
+      "name": "struct_ops",
+      "n": 2000,
+      "source": "#42\n// struct_ops: build a struct/dict with N dynamic string keys, then read them\n// back using keys() and sum the values. Measures struct field write/read + keys().\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar s = {}\nvar i = 0\nwhile i < n {\n    s[\"k${i}\"] = i * i\n    i += 1\n}\nvar total = 0\nfor k in keys(s) {\n    total += s[k]\n}\nprint(\"RESULT keys=${len(s)} total=${total}\")\n",
+      "source_sha256": "0866ba172ee83f334a6057e5a5a6ee90ba1e960b7e09db95cb34ef244245ba0e",
+      "stdin": "2000\n",
+      "expected_stdout": "RESULT keys=2000 total=2664667000\n",
+      "original_before_ms": 17.4452,
+      "original_fixed_limit_ms": 22.4452,
+      "groups": {
+        "new": {
+          "median_ms": 17.9304,
+          "min_ms": 16.3282,
+          "max_ms": 19.684,
+          "runs": [
+            {
+              "elapsed_ms": 16.6141,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.9304,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.3297,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.0423,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.1843,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.684,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.3282,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "old": {
+          "median_ms": 20.8816,
+          "min_ms": 20.1909,
+          "max_ms": 23.455,
+          "runs": [
+            {
+              "elapsed_ms": 20.8816,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.1909,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.3854,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.7659,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.8265,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.0074,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.455,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.8586698337292161
+    },
+    {
+      "name": "struct_ops",
+      "n": 4000,
+      "source": "#42\n// struct_ops: build a struct/dict with N dynamic string keys, then read them\n// back using keys() and sum the values. Measures struct field write/read + keys().\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar s = {}\nvar i = 0\nwhile i < n {\n    s[\"k${i}\"] = i * i\n    i += 1\n}\nvar total = 0\nfor k in keys(s) {\n    total += s[k]\n}\nprint(\"RESULT keys=${len(s)} total=${total}\")\n",
+      "source_sha256": "0866ba172ee83f334a6057e5a5a6ee90ba1e960b7e09db95cb34ef244245ba0e",
+      "stdin": "4000\n",
+      "expected_stdout": "RESULT keys=4000 total=21325334000\n",
+      "original_before_ms": 31.5587,
+      "original_fixed_limit_ms": 37.87044,
+      "groups": {
+        "old": {
+          "median_ms": 34.9006,
+          "min_ms": 34.0031,
+          "max_ms": 37.0804,
+          "runs": [
+            {
+              "elapsed_ms": 34.3367,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 36.2397,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 34.0031,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 34.0471,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 37.0804,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 36.6531,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 34.9006,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "new": {
+          "median_ms": 19.4218,
+          "min_ms": 17.8714,
+          "max_ms": 22.2006,
+          "runs": [
+            {
+              "elapsed_ms": 18.0957,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.5602,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.071,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.8714,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.5206,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.2006,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.4218,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.5564890001891085
+    },
+    {
+      "name": "struct_ops",
+      "n": 8000,
+      "source": "#42\n// struct_ops: build a struct/dict with N dynamic string keys, then read them\n// back using keys() and sum the values. Measures struct field write/read + keys().\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar s = {}\nvar i = 0\nwhile i < n {\n    s[\"k${i}\"] = i * i\n    i += 1\n}\nvar total = 0\nfor k in keys(s) {\n    total += s[k]\n}\nprint(\"RESULT keys=${len(s)} total=${total}\")\n",
+      "source_sha256": "0866ba172ee83f334a6057e5a5a6ee90ba1e960b7e09db95cb34ef244245ba0e",
+      "stdin": "8000\n",
+      "expected_stdout": "RESULT keys=8000 total=170634668000\n",
+      "original_before_ms": 89.4598,
+      "original_fixed_limit_ms": 107.35176,
+      "groups": {
+        "new": {
+          "median_ms": 23.5608,
+          "min_ms": 21.3563,
+          "max_ms": 24.9508,
+          "runs": [
+            {
+              "elapsed_ms": 21.3563,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.5608,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.4465,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.9622,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.9608,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 24.9508,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 24.2008,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "old": {
+          "median_ms": 93.4633,
+          "min_ms": 91.2001,
+          "max_ms": 96.4282,
+          "runs": [
+            {
+              "elapsed_ms": 96.4282,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 92.7444,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 93.6654,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 91.7919,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 95.2409,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 91.2001,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 93.4633,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.2520861129448671
+    },
+    {
+      "name": "string_ops",
+      "n": 2000,
+      "source": "#42\n// string_ops: build N strings with interpolation, trim/map them, join, replace,\n// split, repeat. Measures string building + the string builtins.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar parts = []\nvar i = 0\nwhile i < n {\n    parts = push(\"  item${i}  \", parts)\n    i += 1\n}\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet renamed = replace(\"item\", \"ITEM\", joined)\nlet words = split(\",\", renamed)\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "f8700d76d0eff2006d70fd71e118306d36a91247a70431480240a835cf403894",
+      "stdin": "2000\n",
+      "expected_stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+      "original_before_ms": 23.9022,
+      "original_fixed_limit_ms": 28.9022,
+      "groups": {
+        "old": {
+          "median_ms": 31.052,
+          "min_ms": 28.4209,
+          "max_ms": 36.9263,
+          "runs": [
+            {
+              "elapsed_ms": 36.6178,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 31.052,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 30.8654,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 30.3046,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 35.6755,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 36.9263,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 28.4209,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "new": {
+          "median_ms": 32.1034,
+          "min_ms": 31.21,
+          "max_ms": 33.3266,
+          "runs": [
+            {
+              "elapsed_ms": 31.7103,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 32.7085,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 33.3266,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 31.3525,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 31.21,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 32.1034,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 32.3657,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": false,
+      "contemporary_old_within_original_limit": false,
+      "new_over_same_path_old": 1.0338593327321912
+    },
+    {
+      "name": "string_ops",
+      "n": 4000,
+      "source": "#42\n// string_ops: build N strings with interpolation, trim/map them, join, replace,\n// split, repeat. Measures string building + the string builtins.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar parts = []\nvar i = 0\nwhile i < n {\n    parts = push(\"  item${i}  \", parts)\n    i += 1\n}\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet renamed = replace(\"item\", \"ITEM\", joined)\nlet words = split(\",\", renamed)\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "f8700d76d0eff2006d70fd71e118306d36a91247a70431480240a835cf403894",
+      "stdin": "4000\n",
+      "expected_stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+      "original_before_ms": 84.9204,
+      "original_fixed_limit_ms": 101.90447999999999,
+      "groups": {
+        "new": {
+          "median_ms": 81.6356,
+          "min_ms": 48.7476,
+          "max_ms": 107.7991,
+          "runs": [
+            {
+              "elapsed_ms": 48.7476,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 67.9768,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 71.3395,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 102.5175,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 107.7991,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 88.3331,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 81.6356,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "old": {
+          "median_ms": 79.2464,
+          "min_ms": 75.7253,
+          "max_ms": 100.4101,
+          "runs": [
+            {
+              "elapsed_ms": 100.4101,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 92.2282,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 76.1453,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 79.2464,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 77.9027,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 75.7253,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 96.874,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 1.0301490036140444
+    },
+    {
+      "name": "string_ops",
+      "n": 8000,
+      "source": "#42\n// string_ops: build N strings with interpolation, trim/map them, join, replace,\n// split, repeat. Measures string building + the string builtins.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar parts = []\nvar i = 0\nwhile i < n {\n    parts = push(\"  item${i}  \", parts)\n    i += 1\n}\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet renamed = replace(\"item\", \"ITEM\", joined)\nlet words = split(\",\", renamed)\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "f8700d76d0eff2006d70fd71e118306d36a91247a70431480240a835cf403894",
+      "stdin": "8000\n",
+      "expected_stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+      "original_before_ms": 196.9606,
+      "original_fixed_limit_ms": 236.35271999999998,
+      "groups": {
+        "old": {
+          "median_ms": 207.3184,
+          "min_ms": 187.0654,
+          "max_ms": 220.4343,
+          "runs": [
+            {
+              "elapsed_ms": 187.0654,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 207.3184,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 207.7884,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 200.4724,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 220.4343,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 208.9133,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 207.051,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "new": {
+          "median_ms": 209.371,
+          "min_ms": 177.3962,
+          "max_ms": 253.4919,
+          "runs": [
+            {
+              "elapsed_ms": 204.1451,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 222.3053,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 253.4919,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 210.301,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 198.2127,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 209.371,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 177.3962,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 1.0099007131060245
+    },
+    {
+      "name": "string_map",
+      "n": 2000,
+      "source": "#42\nlet n = int(input())\nlet parts = range(n) |> map((i) => \"  item${i}  \")\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet words = split(\",\", replace(\"item\", \"ITEM\", joined))\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "36b2d37c68179f010b962fda81b974e3e104d65b2f64f47775e80e5e06893b0f",
+      "stdin": "2000\n",
+      "expected_stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+      "original_before_ms": 12.5219,
+      "original_fixed_limit_ms": 17.521900000000002,
+      "groups": {
+        "new": {
+          "median_ms": 16.3054,
+          "min_ms": 15.7182,
+          "max_ms": 17.664,
+          "runs": [
+            {
+              "elapsed_ms": 15.7253,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.7182,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.3054,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.664,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.3663,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.8637,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.8705,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "old": {
+          "median_ms": 16.9789,
+          "min_ms": 15.9062,
+          "max_ms": 21.459,
+          "runs": [
+            {
+              "elapsed_ms": 16.7128,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.704,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.9062,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.4446,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.9789,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.459,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.7203,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.9603331193422424
+    },
+    {
+      "name": "string_map",
+      "n": 4000,
+      "source": "#42\nlet n = int(input())\nlet parts = range(n) |> map((i) => \"  item${i}  \")\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet words = split(\",\", replace(\"item\", \"ITEM\", joined))\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "36b2d37c68179f010b962fda81b974e3e104d65b2f64f47775e80e5e06893b0f",
+      "stdin": "4000\n",
+      "expected_stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+      "original_before_ms": 18.0626,
+      "original_fixed_limit_ms": 23.0626,
+      "groups": {
+        "old": {
+          "median_ms": 24.1207,
+          "min_ms": 22.0318,
+          "max_ms": 25.1017,
+          "runs": [
+            {
+              "elapsed_ms": 25.0797,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 25.1017,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 24.1207,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 24.3762,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.8881,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.0318,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.2887,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "new": {
+          "median_ms": 20.526,
+          "min_ms": 18.4016,
+          "max_ms": 21.5179,
+          "runs": [
+            {
+              "elapsed_ms": 20.526,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.9082,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.5179,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.4016,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.61,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.1743,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.557,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": false,
+      "new_over_same_path_old": 0.850970328390138
+    },
+    {
+      "name": "string_map",
+      "n": 8000,
+      "source": "#42\nlet n = int(input())\nlet parts = range(n) |> map((i) => \"  item${i}  \")\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet words = split(\",\", replace(\"item\", \"ITEM\", joined))\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "36b2d37c68179f010b962fda81b974e3e104d65b2f64f47775e80e5e06893b0f",
+      "stdin": "8000\n",
+      "expected_stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+      "original_before_ms": 17.5214,
+      "original_fixed_limit_ms": 22.5214,
+      "groups": {
+        "new": {
+          "median_ms": 23.2557,
+          "min_ms": 21.0538,
+          "max_ms": 26.466,
+          "runs": [
+            {
+              "elapsed_ms": 26.466,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.4394,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 24.9784,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.0538,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.7571,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.2557,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 24.4618,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "old": {
+          "median_ms": 22.3205,
+          "min_ms": 20.7308,
+          "max_ms": 26.2356,
+          "runs": [
+            {
+              "elapsed_ms": 26.2356,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.7308,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.3205,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.5181,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.8481,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.9906,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.6481,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": false,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 1.0418987029860443
+    },
+    {
+      "name": "struct_small",
+      "n": 4,
+      "source": "#42\nlet n = int(input())\nvar total = 0\nvar j = 0\nwhile j < 1000 {\n var s = {}\n var i = 0\n while i < n { s[\"k${i}\"] = i * i\n i += 1 }\n for k in keys(s) { total += s[k] }\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "0e97d7f9b0733f36c90b5d3f786c302408741577870e370f8771660f7aaa4293",
+      "stdin": "4\n",
+      "expected_stdout": "RESULT total=14000\n",
+      "original_before_ms": 13.7462,
+      "original_fixed_limit_ms": 18.7462,
+      "groups": {
+        "old": {
+          "median_ms": 19.1017,
+          "min_ms": 17.5034,
+          "max_ms": 20.2487,
+          "runs": [
+            {
+              "elapsed_ms": 19.3409,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.7877,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.3632,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.1017,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.2487,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.5851,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.5034,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "new": {
+          "median_ms": 19.7752,
+          "min_ms": 18.0324,
+          "max_ms": 21.1931,
+          "runs": [
+            {
+              "elapsed_ms": 18.9533,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.7752,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.0324,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.919,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.0101,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.1931,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.9226,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": false,
+      "contemporary_old_within_original_limit": false,
+      "new_over_same_path_old": 1.0352586419009826
+    },
+    {
+      "name": "struct_small",
+      "n": 16,
+      "source": "#42\nlet n = int(input())\nvar total = 0\nvar j = 0\nwhile j < 1000 {\n var s = {}\n var i = 0\n while i < n { s[\"k${i}\"] = i * i\n i += 1 }\n for k in keys(s) { total += s[k] }\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "0e97d7f9b0733f36c90b5d3f786c302408741577870e370f8771660f7aaa4293",
+      "stdin": "16\n",
+      "expected_stdout": "RESULT total=1240000\n",
+      "original_before_ms": 28.8616,
+      "original_fixed_limit_ms": 34.633919999999996,
+      "groups": {
+        "new": {
+          "median_ms": 27.9477,
+          "min_ms": 25.8694,
+          "max_ms": 28.8414,
+          "runs": [
+            {
+              "elapsed_ms": 28.2305,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 28.8414,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 25.8694,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 27.8256,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 27.9477,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 27.9581,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 26.4818,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "old": {
+          "median_ms": 30.9417,
+          "min_ms": 29.117,
+          "max_ms": 32.0257,
+          "runs": [
+            {
+              "elapsed_ms": 32.0257,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 30.8778,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 30.373,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 31.6971,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 30.9417,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 29.117,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 31.4004,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.9032373786831364
+    },
+    {
+      "name": "struct_small",
+      "n": 64,
+      "source": "#42\nlet n = int(input())\nvar total = 0\nvar j = 0\nwhile j < 1000 {\n var s = {}\n var i = 0\n while i < n { s[\"k${i}\"] = i * i\n i += 1 }\n for k in keys(s) { total += s[k] }\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "0e97d7f9b0733f36c90b5d3f786c302408741577870e370f8771660f7aaa4293",
+      "stdin": "64\n",
+      "expected_stdout": "RESULT total=85344000\n",
+      "original_before_ms": 65.2589,
+      "original_fixed_limit_ms": 78.31067999999999,
+      "groups": {
+        "old": {
+          "median_ms": 73.2093,
+          "min_ms": 67.4449,
+          "max_ms": 80.9098,
+          "runs": [
+            {
+              "elapsed_ms": 70.5876,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 73.2093,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 80.9098,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 77.353,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 67.4449,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 75.235,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 67.5776,
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            }
+          ]
+        },
+        "new": {
+          "median_ms": 61.5621,
+          "min_ms": 59.5823,
+          "max_ms": 72.8916,
+          "runs": [
+            {
+              "elapsed_ms": 72.8916,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 60.3144,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 61.5621,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 63.1579,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 59.5823,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 60.2459,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 64.9629,
+              "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.8409054587327021
+    }
+  ],
+  "dist_path_probe": {
+    "command": [
+      "dist\\lfz.exe",
+      "run",
+      "Temp\\t12-perf\\numeric_loop_500000.lfz"
+    ],
+    "n": 500000,
+    "median_ms": 92.907,
+    "runs": [
+      {
+        "elapsed_ms": 92.907,
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      },
+      {
+        "elapsed_ms": 96.1561,
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      },
+      {
+        "elapsed_ms": 88.2974,
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      },
+      {
+        "elapsed_ms": 98.0162,
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      },
+      {
+        "elapsed_ms": 90.0918,
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      },
+      {
+        "elapsed_ms": 90.8525,
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      },
+      {
+        "elapsed_ms": 96.1501,
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      }
+    ],
+    "sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81"
+  },
+  "all_19_fixed_limits_pass": false,
+  "struct8_same_path_reduction_fraction": 0.747913887055133,
+  "struct8_original_30pct_target_pass": true
+}

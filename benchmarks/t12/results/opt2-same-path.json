@@ -1,0 +1,3409 @@
+{
+  "timestamp_utc": "2026-10-25T15:23:30.555176+00:00",
+  "environment": {
+    "os": "Windows-11-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "logical_cpus": 24,
+    "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]"
+  },
+  "binary_sources": {
+    "old": {
+      "path": "Temp\\t12-perf\\lfz-before.exe",
+      "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+      "bytes": 766464
+    },
+    "new": {
+      "path": "dist\\lfz.exe",
+      "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+      "bytes": 759808
+    }
+  },
+  "method": {
+    "execution_path": "Temp\\T12\\perf-subject.exe",
+    "clock": "perf_counter_ns",
+    "whole_process": true,
+    "settle_after_each_copy_seconds": 5.0,
+    "cpu_accounting": "GetProcessTimes user/kernel milliseconds; per-process resolution affects small values",
+    "warmup_after_each_copy": 2,
+    "runs": 7,
+    "timeout_seconds": 15,
+    "copy_excluded_from_timing": true,
+    "sha_verified_before_each_launch": true,
+    "case_order": "baseline order; old/new group order alternates by case; new left in common path afterwards",
+    "thresholds": "unchanged original before.json/before-small.json: max(before*1.2,before+5ms); noop factor1.3"
+  },
+  "cases": [
+    {
+      "name": "noop",
+      "n": 0,
+      "source": "#42\nprint(\"RESULT ok=1\")\n",
+      "source_sha256": "040084ccf6c90026e962c8c46e59fe065bf9905fe90db6da64c9a4b488883401",
+      "stdin": "",
+      "expected_stdout": "RESULT ok=1\n",
+      "original_before_ms": 11.307,
+      "original_fixed_limit_ms": 16.307000000000002,
+      "groups": {
+        "old": {
+          "median_ms": 17.481,
+          "min_ms": 14.7849,
+          "max_ms": 18.9782,
+          "runs": [
+            {
+              "elapsed_ms": 16.0418,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.7849,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.5876,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.282,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.9782,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.481,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.7075,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        },
+        "new": {
+          "median_ms": 16.2871,
+          "min_ms": 13.7458,
+          "max_ms": 18.4409,
+          "runs": [
+            {
+              "elapsed_ms": 17.5507,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.4409,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.2871,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.4224,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.8592,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.6432,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 13.7458,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT ok=1\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": false,
+      "new_over_same_path_old": 0.9317029918196897
+    },
+    {
+      "name": "numeric_loop",
+      "n": 10000,
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "stdin": "10000\n",
+      "expected_stdout": "RESULT total=50005000\n",
+      "original_before_ms": 12.9676,
+      "original_fixed_limit_ms": 17.967599999999997,
+      "groups": {
+        "new": {
+          "median_ms": 18.7616,
+          "min_ms": 16.2247,
+          "max_ms": 21.7011,
+          "runs": [
+            {
+              "elapsed_ms": 21.7011,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.2214,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.2938,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.4746,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.7616,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.6195,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.2247,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        },
+        "old": {
+          "median_ms": 21.2738,
+          "min_ms": 20.1449,
+          "max_ms": 23.0064,
+          "runs": [
+            {
+              "elapsed_ms": 20.647,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.1455,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.2738,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.0064,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.4588,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.1449,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.3046,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=50005000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 15.625,
+          "median_kernel_ms": 0.0
+        }
+      },
+      "new_pass_fixed_limit": false,
+      "contemporary_old_within_original_limit": false,
+      "new_over_same_path_old": 0.8819110831163215
+    },
+    {
+      "name": "numeric_loop",
+      "n": 100000,
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "stdin": "100000\n",
+      "expected_stdout": "RESULT total=5000050000\n",
+      "original_before_ms": 32.3154,
+      "original_fixed_limit_ms": 38.778479999999995,
+      "groups": {
+        "old": {
+          "median_ms": 37.8235,
+          "min_ms": 37.2864,
+          "max_ms": 53.7447,
+          "runs": [
+            {
+              "elapsed_ms": 37.2864,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 37.7593,
+              "user_ms": 0.0,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 37.8235,
+              "user_ms": 31.25,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 53.7447,
+              "user_ms": 0.0,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 41.1807,
+              "user_ms": 31.25,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 41.632,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 37.8231,
+              "user_ms": 0.0,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 15.625,
+          "median_kernel_ms": 31.25
+        },
+        "new": {
+          "median_ms": 29.8923,
+          "min_ms": 29.0105,
+          "max_ms": 31.6217,
+          "runs": [
+            {
+              "elapsed_ms": 30.7029,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 30.9662,
+              "user_ms": 15.625,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 29.8923,
+              "user_ms": 0.0,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 31.6217,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 29.7389,
+              "user_ms": 31.25,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 29.0105,
+              "user_ms": 0.0,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 29.0767,
+              "user_ms": 31.25,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=5000050000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 15.625,
+          "median_kernel_ms": 15.625
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.7903102568508995
+    },
+    {
+      "name": "numeric_loop",
+      "n": 500000,
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "stdin": "500000\n",
+      "expected_stdout": "RESULT total=125000250000\n",
+      "original_before_ms": 109.5807,
+      "original_fixed_limit_ms": 131.49684,
+      "groups": {
+        "new": {
+          "median_ms": 90.8044,
+          "min_ms": 88.4233,
+          "max_ms": 95.7493,
+          "runs": [
+            {
+              "elapsed_ms": 88.4233,
+              "user_ms": 78.125,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 93.0496,
+              "user_ms": 78.125,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 88.8252,
+              "user_ms": 46.875,
+              "kernel_ms": 46.875,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 90.8044,
+              "user_ms": 31.25,
+              "kernel_ms": 46.875,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 95.7493,
+              "user_ms": 78.125,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 92.1806,
+              "user_ms": 78.125,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 89.5634,
+              "user_ms": 62.5,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 78.125,
+          "median_kernel_ms": 15.625
+        },
+        "old": {
+          "median_ms": 104.9399,
+          "min_ms": 99.2112,
+          "max_ms": 117.396,
+          "runs": [
+            {
+              "elapsed_ms": 104.1756,
+              "user_ms": 78.125,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 104.9399,
+              "user_ms": 46.875,
+              "kernel_ms": 46.875,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 99.2112,
+              "user_ms": 93.75,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 117.396,
+              "user_ms": 93.75,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 102.9514,
+              "user_ms": 78.125,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 111.7884,
+              "user_ms": 93.75,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 106.631,
+              "user_ms": 78.125,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=125000250000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 78.125,
+          "median_kernel_ms": 15.625
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.8652990902411762
+    },
+    {
+      "name": "array_builtins",
+      "n": 1000,
+      "source": "#42\n// array_builtins: range -> map -> filter -> sort -> reduce chain.\n// LFZ side uses the native higher-order builtins; the Python side uses the\n// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nlet total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "c953291926d34db36553c622326c516f3e067f3242ab6331054860cf1bdcecc7",
+      "stdin": "1000\n",
+      "expected_stdout": "RESULT total=249500\n",
+      "original_before_ms": 12.2102,
+      "original_fixed_limit_ms": 17.2102,
+      "groups": {
+        "old": {
+          "median_ms": 16.2669,
+          "min_ms": 14.3473,
+          "max_ms": 19.4195,
+          "runs": [
+            {
+              "elapsed_ms": 15.0043,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.2226,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.2669,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.5506,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.3473,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.4195,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.6947,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        },
+        "new": {
+          "median_ms": 15.2496,
+          "min_ms": 14.2274,
+          "max_ms": 18.4763,
+          "runs": [
+            {
+              "elapsed_ms": 14.4341,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.2274,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 14.9606,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.3763,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.2496,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.4763,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.2061,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=249500\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.9374619626357819
+    },
+    {
+      "name": "array_builtins",
+      "n": 10000,
+      "source": "#42\n// array_builtins: range -> map -> filter -> sort -> reduce chain.\n// LFZ side uses the native higher-order builtins; the Python side uses the\n// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nlet total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "c953291926d34db36553c622326c516f3e067f3242ab6331054860cf1bdcecc7",
+      "stdin": "10000\n",
+      "expected_stdout": "RESULT total=24995000\n",
+      "original_before_ms": 17.7717,
+      "original_fixed_limit_ms": 22.7717,
+      "groups": {
+        "new": {
+          "median_ms": 21.9066,
+          "min_ms": 19.8211,
+          "max_ms": 22.877,
+          "runs": [
+            {
+              "elapsed_ms": 22.2029,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.5811,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.877,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.8211,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.6794,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.9066,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.6585,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 15.625
+        },
+        "old": {
+          "median_ms": 22.4343,
+          "min_ms": 20.5718,
+          "max_ms": 23.0472,
+          "runs": [
+            {
+              "elapsed_ms": 22.828,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.4343,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.7152,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.6048,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.0472,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.7118,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.5718,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=24995000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 15.625
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.9764779823752023
+    },
+    {
+      "name": "array_builtins",
+      "n": 50000,
+      "source": "#42\n// array_builtins: range -> map -> filter -> sort -> reduce chain.\n// LFZ side uses the native higher-order builtins; the Python side uses the\n// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nlet total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "c953291926d34db36553c622326c516f3e067f3242ab6331054860cf1bdcecc7",
+      "stdin": "50000\n",
+      "expected_stdout": "RESULT total=624975000\n",
+      "original_before_ms": 43.5882,
+      "original_fixed_limit_ms": 52.305839999999996,
+      "groups": {
+        "old": {
+          "median_ms": 44.8396,
+          "min_ms": 42.4748,
+          "max_ms": 47.1126,
+          "runs": [
+            {
+              "elapsed_ms": 45.6939,
+              "user_ms": 0.0,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 43.1801,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 42.4748,
+              "user_ms": 31.25,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 47.057,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 47.1126,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 44.8396,
+              "user_ms": 0.0,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 44.3232,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 15.625,
+          "median_kernel_ms": 15.625
+        },
+        "new": {
+          "median_ms": 43.8366,
+          "min_ms": 42.5233,
+          "max_ms": 48.4969,
+          "runs": [
+            {
+              "elapsed_ms": 44.8629,
+              "user_ms": 31.25,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 42.6933,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 43.4969,
+              "user_ms": 31.25,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 48.4969,
+              "user_ms": 0.0,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 43.8366,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 45.1676,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 42.5233,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=624975000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 15.625,
+          "median_kernel_ms": 15.625
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.9776313794057039
+    },
+    {
+      "name": "struct_ops",
+      "n": 2000,
+      "source": "#42\n// struct_ops: build a struct/dict with N dynamic string keys, then read them\n// back using keys() and sum the values. Measures struct field write/read + keys().\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar s = {}\nvar i = 0\nwhile i < n {\n    s[\"k${i}\"] = i * i\n    i += 1\n}\nvar total = 0\nfor k in keys(s) {\n    total += s[k]\n}\nprint(\"RESULT keys=${len(s)} total=${total}\")\n",
+      "source_sha256": "0866ba172ee83f334a6057e5a5a6ee90ba1e960b7e09db95cb34ef244245ba0e",
+      "stdin": "2000\n",
+      "expected_stdout": "RESULT keys=2000 total=2664667000\n",
+      "original_before_ms": 17.4452,
+      "original_fixed_limit_ms": 22.4452,
+      "groups": {
+        "new": {
+          "median_ms": 16.4218,
+          "min_ms": 16.1803,
+          "max_ms": 18.9501,
+          "runs": [
+            {
+              "elapsed_ms": 17.6715,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.2466,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.4218,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.2555,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.1803,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.3302,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.9501,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        },
+        "old": {
+          "median_ms": 20.8641,
+          "min_ms": 18.8593,
+          "max_ms": 23.6921,
+          "runs": [
+            {
+              "elapsed_ms": 21.056,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.9689,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.8593,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.9572,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.7057,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.6921,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.8641,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=2000 total=2664667000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.7870840342981485
+    },
+    {
+      "name": "struct_ops",
+      "n": 4000,
+      "source": "#42\n// struct_ops: build a struct/dict with N dynamic string keys, then read them\n// back using keys() and sum the values. Measures struct field write/read + keys().\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar s = {}\nvar i = 0\nwhile i < n {\n    s[\"k${i}\"] = i * i\n    i += 1\n}\nvar total = 0\nfor k in keys(s) {\n    total += s[k]\n}\nprint(\"RESULT keys=${len(s)} total=${total}\")\n",
+      "source_sha256": "0866ba172ee83f334a6057e5a5a6ee90ba1e960b7e09db95cb34ef244245ba0e",
+      "stdin": "4000\n",
+      "expected_stdout": "RESULT keys=4000 total=21325334000\n",
+      "original_before_ms": 31.5587,
+      "original_fixed_limit_ms": 37.87044,
+      "groups": {
+        "old": {
+          "median_ms": 37.3927,
+          "min_ms": 35.6943,
+          "max_ms": 39.9458,
+          "runs": [
+            {
+              "elapsed_ms": 39.9458,
+              "user_ms": 31.25,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 35.6943,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 37.1897,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 37.3927,
+              "user_ms": 31.25,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 38.546,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 37.6139,
+              "user_ms": 31.25,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 36.4843,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 15.625,
+          "median_kernel_ms": 0.0
+        },
+        "new": {
+          "median_ms": 19.0532,
+          "min_ms": 17.8242,
+          "max_ms": 21.0069,
+          "runs": [
+            {
+              "elapsed_ms": 18.6492,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.3651,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.8242,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.0069,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.0532,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.678,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.3942,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=4000 total=21325334000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.5095433065812311
+    },
+    {
+      "name": "struct_ops",
+      "n": 8000,
+      "source": "#42\n// struct_ops: build a struct/dict with N dynamic string keys, then read them\n// back using keys() and sum the values. Measures struct field write/read + keys().\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar s = {}\nvar i = 0\nwhile i < n {\n    s[\"k${i}\"] = i * i\n    i += 1\n}\nvar total = 0\nfor k in keys(s) {\n    total += s[k]\n}\nprint(\"RESULT keys=${len(s)} total=${total}\")\n",
+      "source_sha256": "0866ba172ee83f334a6057e5a5a6ee90ba1e960b7e09db95cb34ef244245ba0e",
+      "stdin": "8000\n",
+      "expected_stdout": "RESULT keys=8000 total=170634668000\n",
+      "original_before_ms": 89.4598,
+      "original_fixed_limit_ms": 107.35176,
+      "groups": {
+        "new": {
+          "median_ms": 21.1978,
+          "min_ms": 20.3147,
+          "max_ms": 25.4982,
+          "runs": [
+            {
+              "elapsed_ms": 25.4982,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.4442,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.1592,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.2333,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.9171,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.1978,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.3147,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        },
+        "old": {
+          "median_ms": 93.4315,
+          "min_ms": 91.0454,
+          "max_ms": 96.5758,
+          "runs": [
+            {
+              "elapsed_ms": 92.7261,
+              "user_ms": 62.5,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 91.0454,
+              "user_ms": 78.125,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 94.984,
+              "user_ms": 46.875,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 92.6139,
+              "user_ms": 62.5,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 94.1624,
+              "user_ms": 78.125,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 96.5758,
+              "user_ms": 78.125,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 93.4315,
+              "user_ms": 62.5,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT keys=8000 total=170634668000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 62.5,
+          "median_kernel_ms": 15.625
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.2268806558815817
+    },
+    {
+      "name": "string_ops",
+      "n": 2000,
+      "source": "#42\n// string_ops: build N strings with interpolation, trim/map them, join, replace,\n// split, repeat. Measures string building + the string builtins.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar parts = []\nvar i = 0\nwhile i < n {\n    parts = push(\"  item${i}  \", parts)\n    i += 1\n}\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet renamed = replace(\"item\", \"ITEM\", joined)\nlet words = split(\",\", renamed)\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "f8700d76d0eff2006d70fd71e118306d36a91247a70431480240a835cf403894",
+      "stdin": "2000\n",
+      "expected_stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+      "original_before_ms": 23.9022,
+      "original_fixed_limit_ms": 28.9022,
+      "groups": {
+        "old": {
+          "median_ms": 33.2673,
+          "min_ms": 27.1903,
+          "max_ms": 40.0719,
+          "runs": [
+            {
+              "elapsed_ms": 27.1903,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 29.1291,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 36.0681,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 35.357,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 33.2673,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 40.0719,
+              "user_ms": 0.0,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 29.7435,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 15.625,
+          "median_kernel_ms": 15.625
+        },
+        "new": {
+          "median_ms": 35.5534,
+          "min_ms": 32.8519,
+          "max_ms": 40.894,
+          "runs": [
+            {
+              "elapsed_ms": 37.0809,
+              "user_ms": 0.0,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 37.603,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 35.5534,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 32.8519,
+              "user_ms": 31.25,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 34.3109,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 40.894,
+              "user_ms": 0.0,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 33.1026,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 15.625
+        }
+      },
+      "new_pass_fixed_limit": false,
+      "contemporary_old_within_original_limit": false,
+      "new_over_same_path_old": 1.068719132601684
+    },
+    {
+      "name": "string_ops",
+      "n": 4000,
+      "source": "#42\n// string_ops: build N strings with interpolation, trim/map them, join, replace,\n// split, repeat. Measures string building + the string builtins.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar parts = []\nvar i = 0\nwhile i < n {\n    parts = push(\"  item${i}  \", parts)\n    i += 1\n}\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet renamed = replace(\"item\", \"ITEM\", joined)\nlet words = split(\",\", renamed)\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "f8700d76d0eff2006d70fd71e118306d36a91247a70431480240a835cf403894",
+      "stdin": "4000\n",
+      "expected_stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+      "original_before_ms": 84.9204,
+      "original_fixed_limit_ms": 101.90447999999999,
+      "groups": {
+        "new": {
+          "median_ms": 97.7181,
+          "min_ms": 74.7098,
+          "max_ms": 107.043,
+          "runs": [
+            {
+              "elapsed_ms": 74.7098,
+              "user_ms": 31.25,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 84.0653,
+              "user_ms": 46.875,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 84.0259,
+              "user_ms": 31.25,
+              "kernel_ms": 46.875,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 99.3905,
+              "user_ms": 46.875,
+              "kernel_ms": 46.875,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 97.7181,
+              "user_ms": 15.625,
+              "kernel_ms": 78.125,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 103.1983,
+              "user_ms": 62.5,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 107.043,
+              "user_ms": 46.875,
+              "kernel_ms": 46.875,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 46.875,
+          "median_kernel_ms": 46.875
+        },
+        "old": {
+          "median_ms": 75.879,
+          "min_ms": 62.2035,
+          "max_ms": 94.3783,
+          "runs": [
+            {
+              "elapsed_ms": 80.0168,
+              "user_ms": 31.25,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 72.2646,
+              "user_ms": 62.5,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 75.879,
+              "user_ms": 15.625,
+              "kernel_ms": 62.5,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 94.3783,
+              "user_ms": 15.625,
+              "kernel_ms": 78.125,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 90.759,
+              "user_ms": 46.875,
+              "kernel_ms": 46.875,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 65.5626,
+              "user_ms": 46.875,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 62.2035,
+              "user_ms": 46.875,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 46.875,
+          "median_kernel_ms": 31.25
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 1.2878148104218559
+    },
+    {
+      "name": "string_ops",
+      "n": 8000,
+      "source": "#42\n// string_ops: build N strings with interpolation, trim/map them, join, replace,\n// split, repeat. Measures string building + the string builtins.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar parts = []\nvar i = 0\nwhile i < n {\n    parts = push(\"  item${i}  \", parts)\n    i += 1\n}\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet renamed = replace(\"item\", \"ITEM\", joined)\nlet words = split(\",\", renamed)\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "f8700d76d0eff2006d70fd71e118306d36a91247a70431480240a835cf403894",
+      "stdin": "8000\n",
+      "expected_stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+      "original_before_ms": 196.9606,
+      "original_fixed_limit_ms": 236.35271999999998,
+      "groups": {
+        "old": {
+          "median_ms": 216.0795,
+          "min_ms": 167.3684,
+          "max_ms": 247.8159,
+          "runs": [
+            {
+              "elapsed_ms": 217.8197,
+              "user_ms": 156.25,
+              "kernel_ms": 46.875,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 247.8159,
+              "user_ms": 140.625,
+              "kernel_ms": 78.125,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 208.5291,
+              "user_ms": 140.625,
+              "kernel_ms": 62.5,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 217.283,
+              "user_ms": 93.75,
+              "kernel_ms": 109.375,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 167.3684,
+              "user_ms": 109.375,
+              "kernel_ms": 46.875,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 205.4879,
+              "user_ms": 109.375,
+              "kernel_ms": 93.75,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 216.0795,
+              "user_ms": 46.875,
+              "kernel_ms": 156.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 109.375,
+          "median_kernel_ms": 78.125
+        },
+        "new": {
+          "median_ms": 223.7371,
+          "min_ms": 202.0366,
+          "max_ms": 238.7567,
+          "runs": [
+            {
+              "elapsed_ms": 202.2244,
+              "user_ms": 109.375,
+              "kernel_ms": 78.125,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 202.0366,
+              "user_ms": 46.875,
+              "kernel_ms": 140.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 218.1929,
+              "user_ms": 109.375,
+              "kernel_ms": 93.75,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 236.6661,
+              "user_ms": 93.75,
+              "kernel_ms": 140.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 223.7371,
+              "user_ms": 109.375,
+              "kernel_ms": 93.75,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 226.579,
+              "user_ms": 109.375,
+              "kernel_ms": 109.375,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 238.7567,
+              "user_ms": 78.125,
+              "kernel_ms": 156.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 109.375,
+          "median_kernel_ms": 109.375
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 1.0354388084015373
+    },
+    {
+      "name": "string_map",
+      "n": 2000,
+      "source": "#42\nlet n = int(input())\nlet parts = range(n) |> map((i) => \"  item${i}  \")\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet words = split(\",\", replace(\"item\", \"ITEM\", joined))\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "36b2d37c68179f010b962fda81b974e3e104d65b2f64f47775e80e5e06893b0f",
+      "stdin": "2000\n",
+      "expected_stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+      "original_before_ms": 12.5219,
+      "original_fixed_limit_ms": 17.521900000000002,
+      "groups": {
+        "new": {
+          "median_ms": 15.9009,
+          "min_ms": 15.356,
+          "max_ms": 20.3197,
+          "runs": [
+            {
+              "elapsed_ms": 15.9009,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.356,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.8313,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 15.7889,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.5212,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.3197,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.8232,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 15.625,
+          "median_kernel_ms": 0.0
+        },
+        "old": {
+          "median_ms": 17.2848,
+          "min_ms": 16.8192,
+          "max_ms": 18.5198,
+          "runs": [
+            {
+              "elapsed_ms": 17.2848,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.5048,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.5198,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.4789,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 17.2472,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.8192,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 16.9326,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.9199354346014995
+    },
+    {
+      "name": "string_map",
+      "n": 4000,
+      "source": "#42\nlet n = int(input())\nlet parts = range(n) |> map((i) => \"  item${i}  \")\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet words = split(\",\", replace(\"item\", \"ITEM\", joined))\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "36b2d37c68179f010b962fda81b974e3e104d65b2f64f47775e80e5e06893b0f",
+      "stdin": "4000\n",
+      "expected_stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+      "original_before_ms": 18.0626,
+      "original_fixed_limit_ms": 23.0626,
+      "groups": {
+        "old": {
+          "median_ms": 23.2915,
+          "min_ms": 22.2469,
+          "max_ms": 25.6208,
+          "runs": [
+            {
+              "elapsed_ms": 22.2469,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.9747,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.2915,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.708,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.9122,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 24.4356,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 25.6208,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        },
+        "new": {
+          "median_ms": 18.928,
+          "min_ms": 18.3944,
+          "max_ms": 20.6882,
+          "runs": [
+            {
+              "elapsed_ms": 18.3944,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.2832,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.928,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.472,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.8366,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.6882,
+              "user_ms": 31.25,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.3815,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": false,
+      "new_over_same_path_old": 0.8126569778674625
+    },
+    {
+      "name": "string_map",
+      "n": 8000,
+      "source": "#42\nlet n = int(input())\nlet parts = range(n) |> map((i) => \"  item${i}  \")\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet words = split(\",\", replace(\"item\", \"ITEM\", joined))\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "36b2d37c68179f010b962fda81b974e3e104d65b2f64f47775e80e5e06893b0f",
+      "stdin": "8000\n",
+      "expected_stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+      "original_before_ms": 17.5214,
+      "original_fixed_limit_ms": 22.5214,
+      "groups": {
+        "new": {
+          "median_ms": 22.6906,
+          "min_ms": 21.0399,
+          "max_ms": 27.0392,
+          "runs": [
+            {
+              "elapsed_ms": 21.5777,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.6391,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 27.0392,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.6906,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.0399,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.3686,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.2014,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 15.625
+        },
+        "old": {
+          "median_ms": 21.8713,
+          "min_ms": 19.9719,
+          "max_ms": 23.8044,
+          "runs": [
+            {
+              "elapsed_ms": 21.3109,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.9213,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.9719,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.9146,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.4264,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.8044,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.8713,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 15.625
+        }
+      },
+      "new_pass_fixed_limit": false,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 1.0374600503856652
+    },
+    {
+      "name": "struct_small",
+      "n": 4,
+      "source": "#42\nlet n = int(input())\nvar total = 0\nvar j = 0\nwhile j < 1000 {\n var s = {}\n var i = 0\n while i < n { s[\"k${i}\"] = i * i\n i += 1 }\n for k in keys(s) { total += s[k] }\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "0e97d7f9b0733f36c90b5d3f786c302408741577870e370f8771660f7aaa4293",
+      "stdin": "4\n",
+      "expected_stdout": "RESULT total=14000\n",
+      "original_before_ms": 13.7462,
+      "original_fixed_limit_ms": 18.7462,
+      "groups": {
+        "old": {
+          "median_ms": 20.3191,
+          "min_ms": 18.8216,
+          "max_ms": 23.5443,
+          "runs": [
+            {
+              "elapsed_ms": 20.3191,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 23.5443,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.9646,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.2256,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.2219,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 22.9538,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.8216,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        },
+        "new": {
+          "median_ms": 20.1256,
+          "min_ms": 17.9997,
+          "max_ms": 21.3852,
+          "runs": [
+            {
+              "elapsed_ms": 17.9997,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 21.3852,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.8509,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 18.0299,
+              "user_ms": 31.25,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.1256,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 19.5627,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 20.2639,
+              "user_ms": 0.0,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=14000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 0.0,
+          "median_kernel_ms": 0.0
+        }
+      },
+      "new_pass_fixed_limit": false,
+      "contemporary_old_within_original_limit": false,
+      "new_over_same_path_old": 0.990476940415668
+    },
+    {
+      "name": "struct_small",
+      "n": 16,
+      "source": "#42\nlet n = int(input())\nvar total = 0\nvar j = 0\nwhile j < 1000 {\n var s = {}\n var i = 0\n while i < n { s[\"k${i}\"] = i * i\n i += 1 }\n for k in keys(s) { total += s[k] }\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "0e97d7f9b0733f36c90b5d3f786c302408741577870e370f8771660f7aaa4293",
+      "stdin": "16\n",
+      "expected_stdout": "RESULT total=1240000\n",
+      "original_before_ms": 28.8616,
+      "original_fixed_limit_ms": 34.633919999999996,
+      "groups": {
+        "new": {
+          "median_ms": 28.772,
+          "min_ms": 28.1177,
+          "max_ms": 31.261,
+          "runs": [
+            {
+              "elapsed_ms": 28.772,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 31.261,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 28.1848,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 28.1177,
+              "user_ms": 0.0,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 30.1744,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 28.5047,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 30.541,
+              "user_ms": 31.25,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 15.625,
+          "median_kernel_ms": 15.625
+        },
+        "old": {
+          "median_ms": 31.3626,
+          "min_ms": 29.6733,
+          "max_ms": 35.0111,
+          "runs": [
+            {
+              "elapsed_ms": 30.2716,
+              "user_ms": 31.25,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 35.0111,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 32.7649,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 31.1249,
+              "user_ms": 15.625,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 32.1743,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 31.3626,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 29.6733,
+              "user_ms": 15.625,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=1240000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 15.625,
+          "median_kernel_ms": 15.625
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.9173984299771064
+    },
+    {
+      "name": "struct_small",
+      "n": 64,
+      "source": "#42\nlet n = int(input())\nvar total = 0\nvar j = 0\nwhile j < 1000 {\n var s = {}\n var i = 0\n while i < n { s[\"k${i}\"] = i * i\n i += 1 }\n for k in keys(s) { total += s[k] }\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "0e97d7f9b0733f36c90b5d3f786c302408741577870e370f8771660f7aaa4293",
+      "stdin": "64\n",
+      "expected_stdout": "RESULT total=85344000\n",
+      "original_before_ms": 65.2589,
+      "original_fixed_limit_ms": 78.31067999999999,
+      "groups": {
+        "old": {
+          "median_ms": 69.9179,
+          "min_ms": 67.3937,
+          "max_ms": 73.2701,
+          "runs": [
+            {
+              "elapsed_ms": 69.8776,
+              "user_ms": 46.875,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 69.9179,
+              "user_ms": 46.875,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 69.3402,
+              "user_ms": 46.875,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 73.2701,
+              "user_ms": 62.5,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 67.3937,
+              "user_ms": 31.25,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 70.5163,
+              "user_ms": 46.875,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 70.7021,
+              "user_ms": 46.875,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 46.875,
+          "median_kernel_ms": 15.625
+        },
+        "new": {
+          "median_ms": 64.4819,
+          "min_ms": 61.657,
+          "max_ms": 75.5168,
+          "runs": [
+            {
+              "elapsed_ms": 70.8664,
+              "user_ms": 46.875,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 75.5168,
+              "user_ms": 31.25,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 61.657,
+              "user_ms": 31.25,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 63.7694,
+              "user_ms": 31.25,
+              "kernel_ms": 15.625,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 63.6157,
+              "user_ms": 46.875,
+              "kernel_ms": 0.0,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 66.4394,
+              "user_ms": 31.25,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            },
+            {
+              "elapsed_ms": 64.4819,
+              "user_ms": 31.25,
+              "kernel_ms": 31.25,
+              "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+              "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+              "exit": 0,
+              "stdout": "RESULT total=85344000\n",
+              "stderr": ""
+            }
+          ],
+          "median_user_ms": 31.25,
+          "median_kernel_ms": 15.625
+        }
+      },
+      "new_pass_fixed_limit": true,
+      "contemporary_old_within_original_limit": true,
+      "new_over_same_path_old": 0.9222516694580357
+    }
+  ],
+  "dist_path_probe": {
+    "command": [
+      "dist\\lfz.exe",
+      "run",
+      "Temp\\t12-perf\\numeric_loop_500000.lfz"
+    ],
+    "n": 500000,
+    "median_ms": 90.8551,
+    "runs": [
+      {
+        "elapsed_ms": 86.2823,
+        "user_ms": 62.5,
+        "kernel_ms": 15.625,
+        "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      },
+      {
+        "elapsed_ms": 94.433,
+        "user_ms": 62.5,
+        "kernel_ms": 31.25,
+        "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      },
+      {
+        "elapsed_ms": 98.3376,
+        "user_ms": 93.75,
+        "kernel_ms": 0.0,
+        "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      },
+      {
+        "elapsed_ms": 87.6282,
+        "user_ms": 78.125,
+        "kernel_ms": 0.0,
+        "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      },
+      {
+        "elapsed_ms": 88.316,
+        "user_ms": 46.875,
+        "kernel_ms": 31.25,
+        "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      },
+      {
+        "elapsed_ms": 98.072,
+        "user_ms": 78.125,
+        "kernel_ms": 15.625,
+        "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      },
+      {
+        "elapsed_ms": 90.8551,
+        "user_ms": 62.5,
+        "kernel_ms": 31.25,
+        "accounting": "GetProcessTimes; resolution may quantize short tasks to zero",
+        "exit": 0,
+        "stdout": "RESULT total=125000250000\n",
+        "stderr": ""
+      }
+    ],
+    "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f"
+  },
+  "all_19_fixed_limits_pass": false,
+  "struct8_same_path_reduction_fraction": 0.7731193441184183,
+  "struct8_original_30pct_target_pass": true,
+  "affinity": {
+    "enabled": false,
+    "logical_cpu": null,
+    "pid": 33524,
+    "scope": "harness process and inherited child process mask; no system settings",
+    "restore_verified": null
+  }
+}

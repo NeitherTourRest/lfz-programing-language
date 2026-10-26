@@ -1,0 +1,582 @@
+{
+  "timestamp_utc": "2026-10-25T14:54:37.046939+00:00",
+  "binary_sha256": "7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81",
+  "binary_bytes": 821760,
+  "method": {
+    "clock": "perf_counter_ns",
+    "whole_process": true,
+    "warmup": 2,
+    "runs": 7,
+    "timeout_seconds": 15,
+    "json_iterations": 20,
+    "peak_memory_measured": false,
+    "oracle": "Python stdlib json canonical output byte length and expected field value; ASCII JSON keys and integer values"
+  },
+  "environment": {
+    "os": "Windows-11-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]"
+  },
+  "cases": [
+    {
+      "name": "json_parse",
+      "n": 2000,
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\perf-subject.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\t12-perf\\json-parse-2000.lfz"
+      ],
+      "stdin": "",
+      "expected_stdout": "RESULT total=39980\n",
+      "input_bytes": 23781,
+      "input_sha256": "00ce69809ccb8ca06b2a17f0f8fbbe30103ca7de3a73734e43ec8b722a8f0950",
+      "canonical_output_bytes": 23781,
+      "iterations": 20,
+      "source": "#42\nlet text = readFile(\"Temp/t12-perf/json-2000.json\")\nvar total = 0\nvar j = 0\nwhile j < 20 {\n let value = jsonParse(text)\n total += value[\"k1999\"]\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "median_ms": 28.0311,
+      "min_ms": 23.3866,
+      "max_ms": 33.6997,
+      "runs": [
+        {
+          "elapsed_ms": 33.6997,
+          "stdout": "RESULT total=39980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 28.0311,
+          "stdout": "RESULT total=39980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 32.3059,
+          "stdout": "RESULT total=39980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 29.7852,
+          "stdout": "RESULT total=39980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 26.8283,
+          "stdout": "RESULT total=39980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 24.7707,
+          "stdout": "RESULT total=39980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 23.3866,
+          "stdout": "RESULT total=39980\n",
+          "stderr": "",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "name": "json_stringify",
+      "n": 2000,
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\perf-subject.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\t12-perf\\json-stringify-2000.lfz"
+      ],
+      "stdin": "",
+      "expected_stdout": "RESULT total=475620\n",
+      "input_bytes": 23781,
+      "input_sha256": "00ce69809ccb8ca06b2a17f0f8fbbe30103ca7de3a73734e43ec8b722a8f0950",
+      "canonical_output_bytes": 23781,
+      "iterations": 20,
+      "source": "#42\nlet text = readFile(\"Temp/t12-perf/json-2000.json\")\nlet value = jsonParse(text)\nvar total = 0\nvar j = 0\nwhile j < 20 {\n total += len(jsonStringify(value))\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "median_ms": 16.3712,
+      "min_ms": 15.0154,
+      "max_ms": 17.185,
+      "runs": [
+        {
+          "elapsed_ms": 15.0154,
+          "stdout": "RESULT total=475620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 17.135,
+          "stdout": "RESULT total=475620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 17.185,
+          "stdout": "RESULT total=475620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 16.7809,
+          "stdout": "RESULT total=475620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 16.2908,
+          "stdout": "RESULT total=475620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 15.3428,
+          "stdout": "RESULT total=475620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 16.3712,
+          "stdout": "RESULT total=475620\n",
+          "stderr": "",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "name": "json_parse",
+      "n": 4000,
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\perf-subject.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\t12-perf\\json-parse-4000.lfz"
+      ],
+      "stdin": "",
+      "expected_stdout": "RESULT total=79980\n",
+      "input_bytes": 49781,
+      "input_sha256": "b6b743941f80db3a13e6a14b8e770ef3769803aefef94db2e16cea820e868d87",
+      "canonical_output_bytes": 49781,
+      "iterations": 20,
+      "source": "#42\nlet text = readFile(\"Temp/t12-perf/json-4000.json\")\nvar total = 0\nvar j = 0\nwhile j < 20 {\n let value = jsonParse(text)\n total += value[\"k3999\"]\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "median_ms": 43.8104,
+      "min_ms": 41.7245,
+      "max_ms": 49.8545,
+      "runs": [
+        {
+          "elapsed_ms": 44.2723,
+          "stdout": "RESULT total=79980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 42.2448,
+          "stdout": "RESULT total=79980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 43.8104,
+          "stdout": "RESULT total=79980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 41.7245,
+          "stdout": "RESULT total=79980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 43.529,
+          "stdout": "RESULT total=79980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 47.6843,
+          "stdout": "RESULT total=79980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 49.8545,
+          "stdout": "RESULT total=79980\n",
+          "stderr": "",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "name": "json_stringify",
+      "n": 4000,
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\perf-subject.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\t12-perf\\json-stringify-4000.lfz"
+      ],
+      "stdin": "",
+      "expected_stdout": "RESULT total=995620\n",
+      "input_bytes": 49781,
+      "input_sha256": "b6b743941f80db3a13e6a14b8e770ef3769803aefef94db2e16cea820e868d87",
+      "canonical_output_bytes": 49781,
+      "iterations": 20,
+      "source": "#42\nlet text = readFile(\"Temp/t12-perf/json-4000.json\")\nlet value = jsonParse(text)\nvar total = 0\nvar j = 0\nwhile j < 20 {\n total += len(jsonStringify(value))\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "median_ms": 19.7074,
+      "min_ms": 18.3527,
+      "max_ms": 25.0061,
+      "runs": [
+        {
+          "elapsed_ms": 18.668,
+          "stdout": "RESULT total=995620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 22.1159,
+          "stdout": "RESULT total=995620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 25.0061,
+          "stdout": "RESULT total=995620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 19.7074,
+          "stdout": "RESULT total=995620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 20.4488,
+          "stdout": "RESULT total=995620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 18.3527,
+          "stdout": "RESULT total=995620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 19.2061,
+          "stdout": "RESULT total=995620\n",
+          "stderr": "",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "name": "json_parse",
+      "n": 8000,
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\perf-subject.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\t12-perf\\json-parse-8000.lfz"
+      ],
+      "stdin": "",
+      "expected_stdout": "RESULT total=159980\n",
+      "input_bytes": 101781,
+      "input_sha256": "0f20918e7fd513cc08b3f1309317155ef3ca311e6475fa12a3336204a9e6c5bf",
+      "canonical_output_bytes": 101781,
+      "iterations": 20,
+      "source": "#42\nlet text = readFile(\"Temp/t12-perf/json-8000.json\")\nvar total = 0\nvar j = 0\nwhile j < 20 {\n let value = jsonParse(text)\n total += value[\"k7999\"]\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "median_ms": 72.3843,
+      "min_ms": 66.9467,
+      "max_ms": 75.0433,
+      "runs": [
+        {
+          "elapsed_ms": 66.9467,
+          "stdout": "RESULT total=159980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 74.7295,
+          "stdout": "RESULT total=159980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 75.0433,
+          "stdout": "RESULT total=159980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 72.3843,
+          "stdout": "RESULT total=159980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 68.9213,
+          "stdout": "RESULT total=159980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 69.7924,
+          "stdout": "RESULT total=159980\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 74.5418,
+          "stdout": "RESULT total=159980\n",
+          "stderr": "",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "name": "json_stringify",
+      "n": 8000,
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\perf-subject.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\t12-perf\\json-stringify-8000.lfz"
+      ],
+      "stdin": "",
+      "expected_stdout": "RESULT total=2035620\n",
+      "input_bytes": 101781,
+      "input_sha256": "0f20918e7fd513cc08b3f1309317155ef3ca311e6475fa12a3336204a9e6c5bf",
+      "canonical_output_bytes": 101781,
+      "iterations": 20,
+      "source": "#42\nlet text = readFile(\"Temp/t12-perf/json-8000.json\")\nlet value = jsonParse(text)\nvar total = 0\nvar j = 0\nwhile j < 20 {\n total += len(jsonStringify(value))\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "median_ms": 31.2281,
+      "min_ms": 26.6821,
+      "max_ms": 33.5836,
+      "runs": [
+        {
+          "elapsed_ms": 31.9056,
+          "stdout": "RESULT total=2035620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 27.1544,
+          "stdout": "RESULT total=2035620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 26.6821,
+          "stdout": "RESULT total=2035620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 31.2281,
+          "stdout": "RESULT total=2035620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 33.5836,
+          "stdout": "RESULT total=2035620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 30.374,
+          "stdout": "RESULT total=2035620\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 32.2286,
+          "stdout": "RESULT total=2035620\n",
+          "stderr": "",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "name": "cli_eval",
+      "n": 0,
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\perf-subject.exe",
+        "-e",
+        "print(\"RESULT ok=1\")\n"
+      ],
+      "stdin": "",
+      "expected_stdout": "RESULT ok=1\n",
+      "source": "print(\"RESULT ok=1\")\n",
+      "median_ms": 12.9715,
+      "min_ms": 12.059,
+      "max_ms": 14.0121,
+      "runs": [
+        {
+          "elapsed_ms": 12.059,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 14.0121,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 13.4108,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 12.9497,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 12.9715,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 12.7567,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 13.5568,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "name": "cli_stdin",
+      "n": 0,
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\perf-subject.exe",
+        "-"
+      ],
+      "stdin": "print(\"RESULT ok=1\")\n",
+      "expected_stdout": "RESULT ok=1\n",
+      "source": "print(\"RESULT ok=1\")\n",
+      "median_ms": 13.2483,
+      "min_ms": 11.9415,
+      "max_ms": 16.119,
+      "runs": [
+        {
+          "elapsed_ms": 11.9415,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 12.2332,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 13.793,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 16.119,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 13.2483,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 12.4752,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 13.3006,
+          "stdout": "RESULT ok=1\n",
+          "stderr": "",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "name": "cli_argv",
+      "n": 0,
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\perf-subject.exe",
+        "-e",
+        "print(jsonStringify(argv()))\n",
+        "--",
+        "literal",
+        "中文",
+        "--json",
+        "-e",
+        ""
+      ],
+      "stdin": "",
+      "expected_stdout": "[\"literal\",\"中文\",\"--json\",\"-e\",\"\"]\n",
+      "source": "print(jsonStringify(argv()))\n",
+      "median_ms": 13.2192,
+      "min_ms": 11.9106,
+      "max_ms": 14.1481,
+      "runs": [
+        {
+          "elapsed_ms": 13.073,
+          "stdout": "[\"literal\",\"中文\",\"--json\",\"-e\",\"\"]\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 13.4705,
+          "stdout": "[\"literal\",\"中文\",\"--json\",\"-e\",\"\"]\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 14.1481,
+          "stdout": "[\"literal\",\"中文\",\"--json\",\"-e\",\"\"]\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 13.8607,
+          "stdout": "[\"literal\",\"中文\",\"--json\",\"-e\",\"\"]\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 13.2192,
+          "stdout": "[\"literal\",\"中文\",\"--json\",\"-e\",\"\"]\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 11.9106,
+          "stdout": "[\"literal\",\"中文\",\"--json\",\"-e\",\"\"]\n",
+          "stderr": "",
+          "exit": 0
+        },
+        {
+          "elapsed_ms": 12.3662,
+          "stdout": "[\"literal\",\"中文\",\"--json\",\"-e\",\"\"]\n",
+          "stderr": "",
+          "exit": 0
+        }
+      ]
+    }
+  ]
+}

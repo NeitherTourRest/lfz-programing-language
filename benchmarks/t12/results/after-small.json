@@ -1,0 +1,207 @@
+{
+  "label": "T12-after-small",
+  "timestamp_utc": "2026-10-24T17:04:14.518231+00:00",
+  "environment": {
+    "os": "Windows-11-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "logical_cpus": 24,
+    "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]",
+    "python_exe": "D:\\app\\ANACONDA\\python.exe"
+  },
+  "binary": {
+    "path": "dist\\lfz.exe",
+    "sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d",
+    "bytes": 821248
+  },
+  "method": {
+    "clock": "perf_counter_ns",
+    "whole_process": true,
+    "warmup": 2,
+    "runs": 7,
+    "timeout_seconds": 15,
+    "background_load_controlled": false,
+    "note": "sequential case order; total includes process startup, parsing, evaluation and output capture"
+  },
+  "cases": [
+    {
+      "name": "struct_small",
+      "n": 4,
+      "source_sha256": "0e97d7f9b0733f36c90b5d3f786c302408741577870e370f8771660f7aaa4293",
+      "source": "#42\nlet n = int(input())\nvar total = 0\nvar j = 0\nwhile j < 1000 {\n var s = {}\n var i = 0\n while i < n { s[\"k${i}\"] = i * i\n i += 1 }\n for k in keys(s) { total += s[k] }\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "stdin": "4\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\t12-perf\\struct_small_4.lfz"
+      ],
+      "expected_stdout": "RESULT total=14000\n",
+      "median_ms": 15.4589,
+      "min_ms": 15.203,
+      "max_ms": 15.912,
+      "runs": [
+        {
+          "elapsed_ms": 15.4589,
+          "exit": 0,
+          "stdout": "RESULT total=14000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 15.203,
+          "exit": 0,
+          "stdout": "RESULT total=14000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 15.912,
+          "exit": 0,
+          "stdout": "RESULT total=14000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 15.3495,
+          "exit": 0,
+          "stdout": "RESULT total=14000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 15.4599,
+          "exit": 0,
+          "stdout": "RESULT total=14000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 15.8028,
+          "exit": 0,
+          "stdout": "RESULT total=14000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 15.275,
+          "exit": 0,
+          "stdout": "RESULT total=14000\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "struct_small",
+      "n": 16,
+      "source_sha256": "0e97d7f9b0733f36c90b5d3f786c302408741577870e370f8771660f7aaa4293",
+      "source": "#42\nlet n = int(input())\nvar total = 0\nvar j = 0\nwhile j < 1000 {\n var s = {}\n var i = 0\n while i < n { s[\"k${i}\"] = i * i\n i += 1 }\n for k in keys(s) { total += s[k] }\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "stdin": "16\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\t12-perf\\struct_small_16.lfz"
+      ],
+      "expected_stdout": "RESULT total=1240000\n",
+      "median_ms": 24.4035,
+      "min_ms": 22.246,
+      "max_ms": 26.7404,
+      "runs": [
+        {
+          "elapsed_ms": 26.7404,
+          "exit": 0,
+          "stdout": "RESULT total=1240000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 25.9709,
+          "exit": 0,
+          "stdout": "RESULT total=1240000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 24.4035,
+          "exit": 0,
+          "stdout": "RESULT total=1240000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 25.3375,
+          "exit": 0,
+          "stdout": "RESULT total=1240000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 23.0944,
+          "exit": 0,
+          "stdout": "RESULT total=1240000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 22.246,
+          "exit": 0,
+          "stdout": "RESULT total=1240000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 22.6522,
+          "exit": 0,
+          "stdout": "RESULT total=1240000\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "struct_small",
+      "n": 64,
+      "source_sha256": "0e97d7f9b0733f36c90b5d3f786c302408741577870e370f8771660f7aaa4293",
+      "source": "#42\nlet n = int(input())\nvar total = 0\nvar j = 0\nwhile j < 1000 {\n var s = {}\n var i = 0\n while i < n { s[\"k${i}\"] = i * i\n i += 1 }\n for k in keys(s) { total += s[k] }\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "stdin": "64\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\t12-perf\\struct_small_64.lfz"
+      ],
+      "expected_stdout": "RESULT total=85344000\n",
+      "median_ms": 58.418,
+      "min_ms": 57.288,
+      "max_ms": 68.5485,
+      "runs": [
+        {
+          "elapsed_ms": 58.418,
+          "exit": 0,
+          "stdout": "RESULT total=85344000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 57.4569,
+          "exit": 0,
+          "stdout": "RESULT total=85344000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 57.288,
+          "exit": 0,
+          "stdout": "RESULT total=85344000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 58.5326,
+          "exit": 0,
+          "stdout": "RESULT total=85344000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 57.3368,
+          "exit": 0,
+          "stdout": "RESULT total=85344000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 68.5485,
+          "exit": 0,
+          "stdout": "RESULT total=85344000\n",
+          "stderr": ""
+        },
+        {
+          "elapsed_ms": 62.2504,
+          "exit": 0,
+          "stdout": "RESULT total=85344000\n",
+          "stderr": ""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design\Temp\runtime-t12\perf-lab\old-only-error)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.94s
+     Running unittests src\lib.rs (Temp\runtime-t12\perf-lab\old-only-error\target\debug\deps\lfz-fbb243b31d5103ce.exe)
+
+running 1 test
+Value=16 Flow=24 RValue=16 LzError=88 ValueMsg=72 Interp=64
+test evaluator::diagnostic_layout::probe_layout ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 388 filtered out; finished in 0.00s
+
