@@ -431,3 +431,17 @@ check 失败：软断言示例
 ---
 
 *（本文件为 LFZ v1 语义规范，冻结于 2026-09-23；与 [syntax.md](./syntax.md)、[interface-contract.md](./interface-contract.md) 同族。任何语法/语义/契约变更须先写 ADR，再由 language-architect 改 `docs/spec`。）*
+
+## 16. T12 显式环境参数与 JSON 语义（2026-10-25 冻结）
+
+本节为现有确定性、A1引用、A5数据面和错误模型的扩展，不改变求值顺序或语法。
+
+- `argv()` 是每次模块执行的显式外部输入快照；相同程序和相同参数产生相同参数值。既有库执行入口/测试runner默认参数为空；不同执行间不共享可变参数状态。每次返回新数组，别名/闭包调用仍取当前模块参数；用户修改数组不改变上下文。
+- `jsonParse` 消费完整、严格 JSON，`null` 映射 `nil`；整数 i64 保真，浮点有限 f64，重复解码键拒绝。`jsonStringify` 使用现有struct数据面（方法字段不参与），按UTF-8键序输出紧凑JSON；不执行用户函数、不修改输入、不将非法值静默转null。共享子树允许重复输出，当前路径环拒绝。
+- 这两个操作均是普通一参data-last内置，故 `readFile(path) |> jsonParse |> ... |> jsonStringify` 合法，管道按既有按名内置调用规则派发；这不使两JSON内置独立取值成为函数。仅argv本轮新增一等内置取值能力（契约§16.6）；不新增 JSON 字面量语法。
+- JSON 字符串与 LFZ 源码字符串不同：JSON 内 `$` 原样保留，`\$` 是非法JSON；若把 JSON 文本写入LFZ源码字符串，仍须按LFZ插值规则处理 `$`。codec 直接接收运行时字符串，不进行LFZ插值。
+- JSON容器深度限制128，与源码解析1000、AST10000、函数递归10000等限制独立。JSON的第129层是 `ValueError`，不是源码 `SyntaxError` 或 `RecursionError`。
+- 错误扩展为 `ValueMsg::JsonParse { offset, reason }` / `JsonStringify { reason }`，消息、offset口径、reason集合和检查先后顺序精确见 [interface-contract.md](./interface-contract.md) §16.3。类型/参数个数错误仍TypeError，所有运行期错误取调用span；错误类总数仍12。
+- CLI无文件入口用真实源码行号与 `<command>` / `<stdin>`，JSON错误对象中的file亦使用该伪路径；stdin读取失败无源码位置。`--json`通道规则不变。CLI文法及兼容边界见 [syntax.md](./syntax.md) §16。
+- `jsonParse(jsonStringify(x))` 对支持且无环的数据保留数据内容；float保留类型和负零，struct方法按A5被省略。对象/数组重新分配，不保留原引用同一性或共享拓扑；因此不得把此式解释为任意LFZ值或引用图的完整深拷贝。
+- argv词法优先：用户变量/形参/函数名可遮蔽；未遮蔽的重复取值共享本执行中一个函数对象，type为function、str为<fn argv>，不新增保留名。历史其它内置独立取值能力不变。

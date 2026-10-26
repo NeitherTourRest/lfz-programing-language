@@ -504,7 +504,7 @@ unary     = ("-"|"!") unary | postfix | if_expr | lambda ;
   | `lfz check <file>` | ⏸ 延后 | 同 `run`（按扩展名） | 同 `run` |
   | `lfz fmt <file>` | ⏸ 延后 | 同 `run`（按扩展名；fmt **不**自动补前导） | `CosmosAnswerError`，退出码 2 |
   | `lfz init` | ⏸ 延后 | 生成的项目 `.lfz` 模板**自动含 `#42` 首行**（新手不踩坑） | — |
-  | REPL / stdin / `-e` | ✅/⏸ | **否（豁免）** | — |
+  | REPL / stdin / `-e`（stdin/-e: T12；REPL仍延后） | 见§16 | **否（豁免）** | — |
 - 正例：`lfz run ok.lfz`（有头）→ 正常；`lfz run plain.txt`（无头非 `.lfz`）→ 正常；`lfz test`（全部测试为 `.lfz` 且带头）→ 正常。
 - 反例：`lfz run noheader.lfz` → `CosmosAnswerError`，退出码 2；`lfz run plain.txt` **不会**因缺前导报错。
 
@@ -958,3 +958,30 @@ true
 ---
 
 *（本文件为 LFZ v1 语法规范，冻结于 2026-09-23；与 [semantics.md](./semantics.md)、[interface-contract.md](./interface-contract.md) 同族。任何语法/语义/契约变更须先写 ADR，再由 language-architect 改 `docs/spec`。）*
+
+## 16. T12 CLI 代码入口与脚本参数（2026-10-25 冻结）
+
+本节只扩展命令行入口，LFZ 词法/EBNF/AST 均不变。§6-B9 的 stdin / -e 从延后设计转为本轮实现目标；REPL 仍延后，不因该条已有描述而视作已实现。
+
+接受以下形态（参数是操作系统已经分词的字符串；此处不另定义 shell 引号语法）：
+
+```text
+lfz [--json] run FILE [--json] [-- ARG...]
+lfz [--json] FILE.lfz [--json] [-- ARG...]
+lfz [--json] run -e CODE [--json] [-- ARG...]
+lfz [--json] -e CODE [--json] [-- ARG...]
+lfz [--json] run - [--json] [-- ARG...]
+lfz [--json] - [--json] [-- ARG...]
+```
+
+- `--` 仅在执行入口已经完整指定后分隔脚本参数；之后每项原样进入 `argv()`，包括空字符串、Unicode、`--json`、`-e`、`--`、`--help` 等。缺省与末尾空 `--` 均给空数组。
+- `-e` 紧随的一项无条件为源码，即使等于 `--json` / `--` / `--help`；不得在读取 CODE 前全局剥除选项。缺 CODE 为 CLI 参数错误，空 CODE 则为空程序、成功退出0。
+- 在 CODE/`--` 区域外，既有 `--json` 前置/后置形式继续可用；重复 `--json` 可幂等。其它 CLI 解析行为保持既有兼容性；本轮不顺带改变 help/version/test 的既有规则。
+- 没有 `--` 时的额外脚本参数仍报参数错误：`lfz run a.lfz b.lfz`、`lfz -e CODE extra` 均拒绝。合法正例：`lfz run a.lfz -- one --json` 得 `argv()==["one","--json"]`。
+- `lfz -e 'print(1+2)'` / `lfz run -e 'print(1+2)'` 用 `load_source`，伪路径 `<command>`；`lfz -` / `lfz run -` 读取 stdin 全部 UTF-8 源码到 EOF，用 `load_source`，伪路径 `<stdin>`；二者 `line_base=0`，不要求/不消费 `#42`，归一化/BOM纪律沿用既有 `load_source`。反例：`-e '#42\nprint(1)'` 中 `#42` 不是被消费的文件前导，按普通源码处理。
+- stdin 读取/非法UTF-8失败为加载期 `IOError: 无法读取标准输入`（无span，JSON line/col null、traceback空）。stdin源码先完整读到EOF，之后程序 `input()` 遇EOF按既有 `IOError`，不承诺可同时用同一stdin提供代码和输入数据。文件/-e模式保持input可用。
+- 无参数 `lfz` 仍报缺少子命令，不隐式等待stdin、不进入REPL。bare FILE入口仍要求 `.lfz`；run FILE 保持非 `.lfz` 扩展名豁免。
+- `--json` 仍为执行状态/错误诊断对象协议，不返回最后表达式值；print/dump/input提示走stderr，stdout恰一个状态JSON对象。程序要输出业务JSON，应正常模式调用 `print(jsonStringify(value))`。
+- 示例中的源码是 `-e` 片段；如保存为 `.lfz` 文件，文件首行仍须 `#42`。程序参数只传原始字符串，不隐式解析数字/JSON，应用自行 `int` / `jsonParse`。
+
+新增三个内置名及类型/错误/效率契约见 [interface-contract.md](./interface-contract.md) §16；这三名不与现有69内置或关键字重名；仍可按既有词法规则被用户变量/函数遮蔽，不新增保留名限制。argv一等值的最小范围见契约§16.6。

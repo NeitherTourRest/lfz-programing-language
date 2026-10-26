@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-25",
+  "scope": "设计文本/旧内置名/冻结输入结构检查，不是产品实现验收",
+  "checks": {
+    "old_builtin_name_clear_argv": true,
+    "old_builtin_name_clear_jsonParse": true,
+    "old_builtin_name_clear_jsonStringify": true,
+    "three_specs_have_T12_section": true,
+    "api_and_errors_frozen": true,
+    "cli_operand_boundary": true,
+    "frozen_docs/validation/agent-benchmark-v2/TASKS.md": true,
+    "frozen_docs/validation/agent-benchmark-v2/STUDENT_PROMPT.md": true,
+    "frozen_docs/validation/agent-benchmark-v2/cases.json": true,
+    "frozen_docs/validation/agent-benchmark-v2/run.py": true,
+    "frozen_.opencode/skills/lfz-programming/SKILL.md": true,
+    "frozen_.opencode/skills/lfz-programming/README.md": true,
+    "frozen_.opencode/skills/lfz-programming/VERIFICATION.md": true,
+    "frozen_.opencode/skills/lfz-programming/prompt-template.md": true,
+    "frozen_target/release/lfz.exe": true,
+    "historical_manifest_sha": true,
+    "old_raw_archive_present": true,
+    "argv_payload_boundary": true,
+    "shadow_and_identity_contract": true,
+    "no_reserved_name_regression": true
+  },
+  "all_pass": true
+}

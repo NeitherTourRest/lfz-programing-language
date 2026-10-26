@@ -371,3 +371,65 @@ AI 指南与 `lfz-programming` skill（计划路径 `.opencode/skills/lfz-progra
 ---
 
 *（本文件为 LFZ v1 接口契约，冻结于 2026-09-23；与 [syntax.md](./syntax.md)、[semantics.md](./semantics.md) 同族。任何语法/语义/契约变更须先写 ADR，再由 language-architect 改 `docs/spec`。）*
+
+## 16. T12 Agent 数据脚本接口（2026-10-25 冻结；实现状态见 PROJECT_STATE）
+
+本节新增三内置，名称总数 69→72；不新增 AST、关键字或错误类。沿用词法变量优先、允许遮蔽内置的既有语义；三个新名称不是关键字或不可覆盖的保留名。只有 `argv` 本轮提供一等内置值，旧69内置及两JSON内置不因本节获得独立取值能力。
+
+### 16.1 参数上下文与求值入口
+
+- `argv() -> array[string]`，严格零参数；不含解释器名、脚本名、`-e` 源码和分隔符 `--`。无脚本参数返回 `[]`。
+- 各次求值独立持有只读参数快照，不读全局 `std::env::args`、不使用进程级可变 argv。每次调用返回全新数组；修改返回数组不得影响下次调用。
+- argv 是本轮新增的一等内置函数值，别名、数组/struct 存储、闭包和高阶调用均按函数值调用规则工作；不得只匹配源码中的直接 `argv()` 文本。既有内置的直接调用/管道派发不等于其本来已是一等值。
+- 增加 `evaluator::eval_module_traced_with_args(program: &Program, args: &[String]) -> TracedRun` 和 `eval_module_traced_on_thread_with_args(program: &Program, args: &[String]) -> TracedRun`。前者通过既有大栈入口，后者供已在大栈的 CLI 使用。旧 `eval_module` / `eval_module_traced` / `_on_thread` / `run` 签名不变，默认为空参数。
+- 内置派发实现可增加上下文回调，但必须保持既有 `builtins::call` / `call_with` 入口可用；无求值上下文的直接内置调用 argv 返回空数组。参数个数错误沿用 `函数 argv 期待 0 个参数，得到 {m}`。
+- 时间/额外空间 O(参数个数+UTF-8 总字节数) 为保守上界；可共享不可变字符串，但容器必须全新。
+
+### 16.2 严格 JSON 值映射
+
+| 内置 | 参数/返回 | 行为 |
+| -- | -- | -- |
+| `jsonParse(text)` | string → 任意 JSON 可表示值 | 单个完整 JSON 文本；空白允许，尾随非空白拒绝 |
+| `jsonStringify(value)` | 任意值 → string | 紧凑、确定性 JSON；无尾换行 |
+
+- JSON `null` ↔ LFZ `nil`；bool/string/array/object 分别映射 bool/string/array/匿名 struct。对象可含任意字符串键，保留原键和值；不推断 LFZ 方法、模板或插值。
+- 严格 JSON 文法：只允许空白 U+0020、TAB、LF、CR；禁止注释、尾逗号、单引号、裸键、前导 `+`、非法前导零、NaN/Infinity、裸控制字符和 BOM。解析内容不是 LFZ 源码，`$` 和 `${...}` 都是普通字符串字符。
+- JSON 字符串允许 `\"`、`\\`、`\/`、`\b`、`\f`、`\n`、`\r`、`\t`、`\uXXXX`，必须正确组合 UTF-16 代理对；孤立高/低代理拒绝，原始 Unicode 标量包括非 BMP、NUL 转义均可往返。
+- 不含小数点/指数的数字词法按 i64 精确转换；超范围拒绝，绝不降为 float。`-0` 为 int 0。含 `.` / `e` / `E` 的词法转换为 f64；结果必须有限，拒溢出为 Inf；有限舍入与下溢至零按 IEEE-754，保留浮点负零。因此这类数不保证十进制原文精度，但 int 不丢精度。
+- 同一对象中**解码后相同**键重复即拒绝，包括 `"a"` 与 `"\u0061"`。不同对象同名键合法。
+- 解析结果 array/struct 采用一次构造。重复键检查最坏 O(k log k) 或更优；不得反复调用线性 `set` 形成 O(k²)。单遍游标消费输入，不对每个字符反复从头扫描 UTF-8。
+
+### 16.3 序列化、边界与精确错误
+
+- 支持 nil/bool/int/有限 float/string/array/struct 实例。整数十进制精确输出。浮点选最短可往返表示；若该表示无 `.`/`e`/`E`，补 `.0`，并保留负零（`-0.0`），使重新解析仍为 float。
+- string 转义双引号/反斜杠与 U+0000–U+001F（五种标准短转义优先，其余用小写十六进制 `\u00xx`）；不转义 `/`、`$` 或其它 Unicode。`\$` 不是合法 JSON 转义，不得产生。
+- struct 使用 A5 **数据面**：忽略函数值方法字段，其余字段按 UTF-8 字节序递增编码；所有数据字段递归检查。因此 `{ "x": fn() { 1 } }` 编为 `{}`，而 `[fn() { 1 }]` 不可编码；模板不是实例，拒绝。不会执行方法或用户回调。
+- 共享但无环的引用在各位置独立编码；只拒当前递归路径上的环，不能用全局 visited 错拒共享子树。不修改输入容器。
+- `JSON_DEPTH_LIMIT = 128`，只计同时打开的 array/object 容器数：标量 0，`[]`/`{}` 为 1；128 成功，进入第 129 层前拒绝，解析和序列化同口径。错误清理/析构也必须安全。
+- jsonParse 的非 string 参数 → 既有 `TypeError::BadOperands { op: "jsonParse", lt: 实际类型, rt: "string" }`；两内置严格 1 参数，个数错误沿用既有模板。
+- 新增 `ValueMsg::JsonParse { offset: usize, reason: String }` → `ValueError: JSON 解析失败（字节偏移 {offset}）：{reason}`。offset 为 UTF-8 输入从 0 开始的错误字节位置，EOF 可等于字节长度。语法错误在首次无法继续消费位置；重复键在第二个键开启双引号位置；数字转换错误在该数字起始位置；深度错误在第129个容器开启符位置。
+- JsonParse reason 仅为以下固定文本：`不是合法的 JSON`、`对象键重复`、`整数超出 i64 范围`、`浮点数超出有限范围`、`嵌套深度超过 128 层`。
+- 新增 `ValueMsg::JsonStringify { reason: String }` → `ValueError: JSON 编码失败：{reason}`；reason 仅为 `不支持函数或结构体定义`、`浮点数必须有限`、`循环引用`、`嵌套深度超过 128 层`。遇多处非法值时按数组顺序/struct 已排序数据字段深度优先检查，先遇者报错。
+- 所有错误 span 为内置调用点，仍按既有 traceback / `--json` / exit 2 传播；不截断为 null、不跳过非法数组元素、不写出部分结果。
+- 独立 lib codec（建议 `src/json_codec.rs`）与 bin 的历史 `src/json.rs` 分离，保持 runner JSON 协议。解析时间 O(n + Σk log k)，n 为输入字节数、k 为各对象键数（键比较成本另计）；空间 O(n)，递归栈有界128。编码 O(展开输出字节数 + Σk log k)，包含重复共享子树展开和键比较成本；内存含输出、对象排序临时表和深度栈，不承诺仅按唯一对象数线性。
+
+### 16.4 StructObj 内部字段索引（效率约束）
+
+可增内部 `HashMap<String, usize>` 映射字段名到 `fields` 槽位，改善 get/set/contains 平均查找成本；不得暴露随机迭代顺序。`fields` 仍保留插入序，同键 set 原位替换、动态加字段追加；所有创建/复制/删除路径须保持索引一致。数据面函数过滤、键排序、引用同一性和别名写入均不变。JSON 一次批量创建字段并一次建立索引，禁止 O(k²) 构造。HashMap 平均复杂度不等于最坏 O(1)，文档必须准确标注。
+### 16.5 CLI 入口契约
+
+完整命令形态、选项区边界、stdin错误模板及 `--json` 兼容要求冻结于 [syntax.md](./syntax.md) §16；本节规范性引用该处，禁止另行猜测。tooling-dev 使用本节16.1新求值入口，并保持现有 runner `eval_case` 为空argv的文件入口。
+### 16.6 argv 一等函数载荷与词法优先补钉
+
+- 仅 argv 新增一等取值能力；不得泛化旧69内置或 jsonParse/jsonStringify。`Closure` 可新增 `builtin: Option<&'static str>`，本轮仅合法值 `Some("argv")`。所有旧用户函数/占位构造器默认None；用户载荷与builtin标记互斥。仅显示名相同或user=None不是内置判据。
+- 每个Interp持有同一个 `Rc<Closure>` argv函数值，名字为argv，独立于用户词法env；Ident与直接调用均先查用户词法变量，未命中才回退argv。未遮蔽时 `argv == argv` 为true；`let f=argv` 后 `f==argv` 为true。函数同一性、type为 `function`、str显示 `<fn argv>` 均沿既有Func规则；A5将其视函数方法字段过滤，JSON根值/数组元素仍拒函数。
+- 用户可以用let/var/形参/函数名遮蔽argv，行为与其它名字相同；已保存别名仍指原argv函数。不能把argv直接放入globals形成新的可见debug绑定或让变量查找错误地跳过词法变量。不同执行的函数值不承诺同一性。
+- `call_user` 在占位拒绝/用户帧逻辑前识别显式builtin标记，统一直接/别名/闭包/容器/高阶路径。argv零参检查后返回当前Interp参数的新数组；方法取调用带来的self不改变argv参数。该内置不压用户函数帧、不增加用户函数递归计数；错误span及traceback按既有内置错误冒泡，别名arity消息仍使用 `argv`。
+- `Closure::named` / `anonymous` 的历史无函数体占位仍不可调用；用户定义同名argv函数没有builtin标记，仍正常执行其函数体。其它builtin标记不得无声明地开放。
+### 16.7 无直接声明 while 体的空环境消除（内部优化许可）
+
+只对 `exec_while`：循环开始前一次扫描body的**直接语句**，若无 `StmtKind::Decl` / `FnDecl` / `StructDecl`，可每轮 `exec_stmts(&body.stmts, scope)`，省略原本不含绑定的物理child Env；有任意直接声明（即使不可达）仍用原每轮新child。扫描不求值、不改变条件求值次数；不得在每轮重复O(m)扫描。其它exec_block和for迭代环境、函数调用帧一律保持现状。
+
+这不是语言作用域合并：逻辑块仍存在，只是不物化零槽位/零绑定的Env。当前未知名赋值报NameError、不创建新绑定；表达式/调用不会在调用者当前env定义名。嵌套if/for/while及函数自身按原规则建环境，所有现有绑定cell、捕获、自身self、let可变性、dump内→外声明序/遮蔽去重及first_slot编号均须不变。不得修改AST Dump.scope或丢失ScopeDebug逻辑链；未来新增绑定语句/表达式、动态eval或作用域身份反射时，必须重新审核判定器。
+
+优化不得改变Flow传播（continue/break/return）、错误/traceback、程序输出或LFZ可达递归限制；成功判据为等价性回归与独立验证，再加既定同输入性能门禁。没有观测到加速也不应改语言语义或降低性能验收。
