@@ -1,0 +1,7 @@
+{
+  "note": "首次新探针误用保留关键字字段s.self；按既有spec改s.me，非产品修复。该失败不计入30项通过。",
+  "source": "let s = {}\ns.self = s\njsonStringify(s)",
+  "exit": 2,
+  "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 字段名，但得到 'self'\",\"file\":\"<command>\",\"line\":2,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":2,\"func\":\"<module>\"}]}\n",
+  "stderr": ""
+}

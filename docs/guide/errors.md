@@ -3,7 +3,7 @@
 > LFZ 采用 **Python 风格**的错误模型：**类名 + 中文消息 + 位置（行/列）+ 源码行 + 插入符**，运行期错误附 `Traceback`。
 > 权威定义：[`docs/spec/semantics.md`](../spec/semantics.md) §8（用户可见行为）；[`docs/spec/interface-contract.md`](../spec/interface-contract.md) §8.1（实现映射）。
 > 配套：[`README.md`](README.md) ｜ [`tutorial.md`](tutorial.md) ｜ [`reference.md`](reference.md) ｜ [`testing.md`](testing.md)
-> 最后更新: 2026-10-24（T11-14：69 内置与文件 IO 已实现） by docs-writer
+> 最后更新: 2026-10-25（T12：1.4.0 参数、代码入口与 JSON） by docs-writer
 
 ---
 
@@ -87,6 +87,8 @@
 | ord 字符串不恰含一个标量 | `ord 的参数必须是单个字符（Unicode 标量数 {n}）` |
 | chr 越界或代理区码点 | `chr 的参数不是合法的 Unicode 码点：{n}` |
 | padEnd / padStart 填充串为空（即使无需补齐） | `填充串不能为空` |
+| JSON 解析失败 | `JSON 解析失败（字节偏移 {offset}）：{reason}` |
+| JSON 编码失败 | `JSON 编码失败：{reason}` |
 
 文件 IO 的参数类型错误是 TypeError（path / contents 须 string）；系统读写失败是 IOError。readFile 非法 UTF-8 是 IOError，源代码加载非法 UTF-8 是 SyntaxError。文件 IO 在求值期执行，帧非空时带 Traceback。log(0) 是 -Inf，log(-1) / sin(float("inf")) 是 NaN，均不抛异常（SE §4.5.6）。
 
@@ -290,7 +292,7 @@ SyntaxError: 嵌套深度超限（超过 1000 层）
 
 ## 6. `--json` 机器可读输出
 
-`--json` 是全局开关（可放子命令任意位置）。开启后 **stdout 只写一行 JSON**，人类可读诊断（含程序 `print` 输出）改到 stderr（`runner-contract.md §9.3`）。
+`--json` 是执行选项（可放子命令前后，但不解析 `-e` 后的源码和 `--` 后的脚本参数）。开启后 **stdout 只写一行 JSON**，人类可读诊断（含程序 `print` 输出）改到 stderr（`runner-contract.md §9.3`）。
 
 字段（`SE §8.3` 示例 4 / §8.4）：`ok`(bool) / `error`(类名，仅失败时) / `message`(中文) / `file` / `line` / `col` / `traceback`(数组，元素 `{file,line,func}`，**不折叠**)。
 
@@ -320,3 +322,27 @@ SyntaxError: 嵌套深度超限（超过 1000 层）
 - **无魔法**：条件必须 `bool`，除 `int → float` 加宽外无隐式转换；越界/缺字段/溢出/类型不符一律结构化报错（`SE §4.5.0`）。
 - **可定位**：每个错误带 `类名 + 中文消息 + 行/列 + 源码行 + 插入符`，运行期还带完整调用栈，`--json` 提供机器可读版本（特色 4，`SE §8`）。
 - **可测试**：v1 输出**逐字符稳定**（无 hint 行），黑盒测试可依赖（`SE §8.1` 末尾、`IC §11.2`）。
+
+## 8. JSON 与代码入口错误（1.4.0）
+
+JSON 两内置的类型或参数个数错误沿用 `TypeError`；内容非法为 `ValueError`，不新增错误类。解析错误的 offset 是 UTF-8 **字节**偏移，从0开始，EOF可以等于总字节数；LFZ traceback的行/列仍指向内置调用点，二者不能混用。
+
+| jsonParse reason | 条件 |
+| -- | -- |
+| `不是合法的 JSON` | 语法、转义、代理对、尾随内容或BOM等非法 |
+| `对象键重复` | 解码后键相同，偏移指第二个键的开启双引号 |
+| `整数超出 i64 范围` | 整数词法越界，偏移指数字起点 |
+| `浮点数超出有限范围` | 小数/指数词法转换为非有限值，偏移指数字起点 |
+| `嵌套深度超过 128 层` | 偏移指第129个容器开启符 |
+
+jsonStringify reason为 `不支持函数或结构体定义`、`浮点数必须有限`、`循环引用`、`嵌套深度超过 128 层`。按数组顺序或struct已排序数据字段深度优先检查，先遇者报错；方法函数字段被数据面过滤。失败不会输出截断的JSON。
+
+可直接复制的机器诊断例：
+
+```powershell
+./dist/lfz.exe --json -e 'jsonParse(argv()[0])' -- '{"中":1,"中":2}'
+```
+
+退出2；stdout的错误对象含 `error:"ValueError"`、`message:"JSON 解析失败（字节偏移 9）：对象键重复"`、`file:"<command>"`、`line:1`、`col:1`，stderr为空。完整原始JSON见 [本轮实跑证据](../reports/T12-guide-evidence.md)。请修复输入数据，不要把重复键 静默覆盖成最后值。
+
+`lfz -e CODE` 和stdin源码诊断分别使用 `<command>` 与 `<stdin>`。非法UTF-8标准输入或读取失败为加载期 `IOError: 无法读取标准输入`，无源码span，机器 `line/col` 为null、`traceback`为空；加载源文件中的非法UTF-8仍为SyntaxError。stdin源码已经读到EOF，后续 `input()` 读EOF沿既有IOError处理。正常业务JSON输出用 `print(jsonStringify(value))`；CLI `--json` 成功只给状态对象，不把业务JSON包进结果字段。

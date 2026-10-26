@@ -1,0 +1,27 @@
+{
+  ".opencode/skills/lfz-programming/SKILL.md": {
+    "bytes": 47927,
+    "sha256": "a32c1d69f111d2aa8231b79a08b4fd64fd5249c0db39a4f0c1e483177e7592da",
+    "has_t12": true
+  },
+  ".opencode/skills/lfz-programming/README.md": {
+    "bytes": 7566,
+    "sha256": "3aadeb83eb58064a79339bdc0c43ac88487f4571c726db20507f8e5ecaf4ecec",
+    "has_t12": true
+  },
+  ".opencode/skills/lfz-programming/VERIFICATION.md": {
+    "bytes": 27780,
+    "sha256": "9f1760417f670d6f7f6dab25557e6e778f33ce81d7e0fbc83e7cd4482cc586ad",
+    "has_t12": true
+  },
+  ".opencode/skills/lfz-programming/prompt-template.md": {
+    "bytes": 4958,
+    "sha256": "9567b0f4608da1b0de3df2dd6227301071f963ffa33fe078dd198442d3d0a02f",
+    "has_t12": true
+  },
+  "docs/guide/ai/README.md": {
+    "bytes": 47793,
+    "sha256": "260862c78811122059e935a2202760938455d9c7b4df0399a049a526223e8573",
+    "has_t12": true
+  }
+}

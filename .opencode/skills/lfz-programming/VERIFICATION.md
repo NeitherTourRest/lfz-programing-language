@@ -1,3 +1,5 @@
+> **当前版本：1.4.0/72内置**。旧条目为当时实跑历史；-e/stdin限制已由T12替代。最新作者回归见本文末节及docs/reports/T12-skill-evidence.md；不把本次示例实跑称为新盲测。
+
 # `lfz-programming` SKILL — 实测验证记录（ai-dx-engineer）
 
 > 证据文化：无证据不算完成。本文件记录「只凭 `SKILL.md` 能否写出可运行 LFZ 程序」的**实测**闭环。
@@ -207,7 +209,7 @@ print(sum_even([1, 2, 3, 4, 5]))
 | 1 | `print("x = ${\"a\" + \"b\"}")` → `SyntaxError: 非法字符 '\'` | 初稿未提醒 `${}` 内是 CODE 模式 | 新增陷阱 §4-8：`${}` 内写普通 `"`，不要写 `\"` |
 | 2 | `10 \|> push([1, 2])` → `TypeError`（`10` 被追加为**末参** `push([1,2],10)`） | 初稿易误以为 `10` 自动进首位 | 陷阱 §4-9 + §3 示例明确 `10 \|> push(_, [1, 2])` |
 | 3 | `let a = 1; a = 2` → `SyntaxError`（先撞 `;`），**不是** `TypeError` | 错误类样例表里误写为 `TypeError` | 改为「对 let 变量再次赋值 → TypeError」，避免 `;` 干扰 |
-| 4 | `run -e '...'` → 「只接受一个 `<file>` 参数」；`run -`（stdin）→ `IOError: 无法读取：-` | 初稿照 spec 提 `-e`/stdin 豁免，易误导 AI 去用 | §0 写死：**CLI v1 只有 `run <file>` / `test`**，无 `-e`/stdin/REPL；程序一律落成 `.lfz` 文件 |
+| 4（历史，T12已替代） | `run -e '...'` → 「只接受一个 `<file>` 参数」；`run -`（stdin）→ `IOError: 无法读取：-` | 初稿照 spec 提 `-e`/stdin 豁免，易误导 AI 去用 | §0 写死：**CLI v1 只有 `run <file>` / `test`**，无 `-e`/stdin/REPL；程序一律落成 `.lfz` 文件 |
 | 5 | `run --json` 时程序 `print` 输出走 **stderr**，stdout 只有一行 JSON | 初稿未点明，AI 可能误判输出位置 | §0 注明 `--json` 的流行为 |
 | 6 | `min([])`、`int(float("nan"))`、`int(float("inf"))` 三类易混边界 | 初稿只在表里泛写 | §4-13 / §4-18 + §2 实测样本逐条钉死 |
 
@@ -215,9 +217,9 @@ print(sum_even([1, 2, 3, 4, 5]))
 
 ---
 
-## 5. 内置函数数目核对（当前69，原始基线54）
+## 5. 内置函数数目核对（当前72，历史54/69）
 
-按 `interface-contract.md` §10.7 分组计数并逐名列出（SKILL §6）：核心/数组 21 + struct 5 + 字符串 8 + 数值/转换/IO/断言 20 = **54**。这是原始54项基线。2026-10-24 新增数组1 + 字符串5 + 数值/转换6 + 文件IO3 = 15；当前分组22 + 5 + 13 + 29 = **69**，range 重载不另计名字。
+按 `interface-contract.md` §10.7 分组计数并逐名列出（SKILL §6）：核心/数组 21 + struct 5 + 字符串 8 + 数值/转换/IO/断言 20 = **54**。这是原始54项基线。2026-10-24 新增数组1 + 字符串5 + 数值/转换6 + 文件IO3 = 15；当时分组22 + 5 + 13 + 29 = **69**，range 重载不另计名字。2026-10-25 T12新增argv/jsonParse/jsonStringify三个名称，总数 **72**。
 
 ---
 
@@ -472,3 +474,13 @@ print(len("hello"))      // 5                   else if n >= 80 { "B" }
 ## 9. 2026-10-24 已实现特性同步
 
 已同步 SKILL §6/§6.1（69内置、range双参）、README、prompt-template；依最新 interface-contract §10.7。新 exe 命令、完整源码、stdout/错误消息与退出码见 `docs/reports/T11-v11-skill-evidence.md`。本轮为示例/回归实跑，未宣称新 Agent 盲测通过率。原 D1–D7 历史证据保留，D2 单参限制由双参重载替代。
+
+## 10. 2026-10-25 T12：1.4.0 / 72 内置（当前）
+
+本轮同步四skill文件与AI指南入口docs/guide/ai/README.md。新增§6.2包括argv上下文/一等别名/遮蔽、参数--界限、-e/stdin与#42、CLI状态与业务JSON通道、严格JSON精确i64/Unicode/重复解码键/128容器/循环与共享/方法过滤；JSON与旧69内置不泛化一等值，高阶场景用lambda包装。
+
+作者示例与回归 **30/30通过**，解释器1.4.0，SHA256 fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d。5个旧分级程序和偶数求和最小基线保留通过；正负例完整命令、输入hex、stdout/stderr与退出码在docs/reports/T12-skill-evidence/results.json，可重跑脚本同目录run_examples.py。详见docs/reports/T12-skill-evidence.md。
+
+首版新探针误用关键字字段s.self造成SyntaxError，按既有spec改s.me构造环后正确得到ValueError；失败单独保留author-probe-error.json，不计为产品缺陷或30项通过。未修改解释器以迎合文档。
+
+这是作者实跑，不是新的独立Agent盲测。旧v2首轮8/8、131/131属于原冻结输入；raw-inputs-submissions.zip SHA256保持90a6a3e3d894e7a813b06463506d5cc540e0a4570d7b005a3fd27ccc6a776d84。active skill/exe更新后不能改旧manifest重新计分；旧复现先在项目Temp独立还原原输入，新测另建版本化manifest。

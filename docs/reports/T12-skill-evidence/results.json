@@ -1,0 +1,382 @@
+{
+  "date": "2026-10-25",
+  "scope": "作者示例回归；非新Agent盲测/独立产品验收",
+  "exe_sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d",
+  "exe_bytes": 821248,
+  "passed": 30,
+  "cases": [
+    {
+      "name": "documented-config-pipeline",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\ai-dx-t12\\job.lfz",
+        "--",
+        "{\"title\":\"中文🙂\",\"values\":[1,2,3,4]}"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"count\":2,\"title\":\"中文🙂\",\"total\":60}\n",
+      "stderr": ""
+    },
+    {
+      "name": "documented-argv-literals",
+      "args": [
+        "-e",
+        "print(jsonStringify(argv()))",
+        "--",
+        "中文",
+        "--json",
+        ""
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[\"中文\",\"--json\",\"\"]\n",
+      "stderr": ""
+    },
+    {
+      "name": "documented-machine-channel",
+      "args": [
+        "-e",
+        "print(jsonStringify(argv()))",
+        "--json",
+        "--",
+        "--json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "[\"--json\"]\n"
+    },
+    {
+      "name": "stdin-code",
+      "args": [
+        "run",
+        "-",
+        "--",
+        "输入🙂"
+      ],
+      "stdin_hex": "7072696e74286a736f6e537472696e676966792861726776282929290a",
+      "exit": 0,
+      "stdout": "[\"输入🙂\"]\n",
+      "stderr": ""
+    },
+    {
+      "name": "empty-code",
+      "args": [
+        "-e",
+        ""
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "code-token-json-not-option",
+      "args": [
+        "-e",
+        "--json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 1, in <module>\n    --json\n      ^\nNameError: 未定义的名字 'json'\n"
+    },
+    {
+      "name": "stdin-input-eof",
+      "args": [
+        "--json",
+        "-"
+      ],
+      "stdin_hex": "696e70757428290a",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"输入结束（EOF）\",\"file\":\"<stdin>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<stdin>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "stdin-invalid-utf8",
+      "args": [
+        "--json",
+        "-"
+      ],
+      "stdin_hex": "ff",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"无法读取标准输入\",\"file\":\"<stdin>\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "argv-identity-fresh-alias-shadow",
+      "args": [
+        "-e",
+        "let saved = argv\nlet a = argv()\na[0] = \"changed\"\nfn shadow(argv) { argv }\nassert(saved == argv)\nassert(type(argv) == \"function\")\nassert(str(argv) == \"<fn argv>\")\nassert(shadow(3) == 3)\nprint(jsonStringify(saved()))",
+        "--",
+        "original"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[\"original\"]\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-callback-lambda",
+      "args": [
+        "-e",
+        "let xs = [\"true\", \"null\", \"1.0\"] |> map((s) => jsonParse(s))\nprint(jsonStringify(xs))"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[true,null,1.0]\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-int-float-unicode-dollar",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "{\"z\":9007199254740993,\"a\":[-0.0,1.0,\"中文🙂${not_lfz}\",\"\\u0000\"]}"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"a\":[-0.0,1.0,\"中文🙂${not_lfz}\",\"\\u0000\"],\"z\":9007199254740993}\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-method-filter",
+      "args": [
+        "-e",
+        "let s = { keep: 1, method: fn() { 2 } }\nprint(jsonStringify(s))"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"keep\":1}\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-shared-noncycle",
+      "args": [
+        "-e",
+        "let x = { a: 1 }\nprint(jsonStringify([x,x]))"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[{\"a\":1},{\"a\":1}]\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-syntax",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(argv()[0])",
+        "--",
+        "{\"中\":1,}"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 9）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-duplicate",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(argv()[0])",
+        "--",
+        "{\"a\":1,\"\\u0061\":2}"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 7）：对象键重复\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-int-overflow",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(argv()[0])",
+        "--",
+        "9223372036854775808"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：整数超出 i64 范围\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-float-overflow",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(argv()[0])",
+        "--",
+        "1e309"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：浮点数超出有限范围\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-bom",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(argv()[0])",
+        "--",
+        "﻿null"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-lone-surrogate",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(argv()[0])",
+        "--",
+        "\"\\ud800\""
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 7）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-depth129",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(argv()[0])",
+        "--",
+        "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 128）：嵌套深度超过 128 层\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-depth128",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-cycle",
+      "args": [
+        "--json",
+        "-e",
+        "let s = {}\ns.me = s\njsonStringify(s)"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 编码失败：循环引用\",\"file\":\"<command>\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-function-array",
+      "args": [
+        "--json",
+        "-e",
+        "jsonStringify([fn() { 1 }])"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 编码失败：不支持函数或结构体定义\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "json-nonfinite",
+      "args": [
+        "--json",
+        "-e",
+        "jsonStringify(exp(1000))"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 编码失败：浮点数必须有限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "old-level-1",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\ai-dx-t12\\old-level-1.lfz"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "Hello, LFZ!\n",
+      "stderr": ""
+    },
+    {
+      "name": "old-level-2",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\ai-dx-t12\\old-level-2.lfz"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "hello, LFZ\n7 / 2 = 3.5\ndiv(7, 2) = 3\n-7 % 3 = 2\nround(2.5) = 2\nround(3.5) = 4\ngrade = high\nname ： LFZ\ncount ： 4\ngrade ： high\n",
+      "stderr": ""
+    },
+    {
+      "name": "old-level-3",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\ai-dx-t12\\old-level-3.lfz"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "ranking (desc):\n  Alice:  93\n  Cara:  88\n  Bob:  67\nmembers: Alice, Bob, Cara\naverage: 82.67\ntop: Alice (93)\n",
+      "stderr": ""
+    },
+    {
+      "name": "old-level-4",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\ai-dx-t12\\old-level-4.lfz"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "total=13, distinct=8\ntop 3 words (desc):\n  the:  4\n  fox:  2\n  jumps:  2\n",
+      "stderr": ""
+    },
+    {
+      "name": "old-level-5",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\ai-dx-t12\\old-level-5.lfz"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[\"L\", \"F\", \"Z\"]\nL\nZ\nL\nF\nZ\n[ab  |    7|**ab**]\n[c   |  128|**c***]\nsmall\n\nfalse\ntrue\n",
+      "stderr": ""
+    },
+    {
+      "name": "minimum-baseline",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\ai-dx-t12\\sum-even.lfz"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "6\n",
+      "stderr": ""
+    }
+  ],
+  "old_raw_zip_sha256": "90a6a3e3d894e7a813b06463506d5cc540e0a4570d7b005a3fd27ccc6a776d84",
+  "skill_sha256": "a32c1d69f111d2aa8231b79a08b4fd64fd5249c0db39a4f0c1e483177e7592da"
+}

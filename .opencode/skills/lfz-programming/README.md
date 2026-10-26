@@ -18,7 +18,7 @@
 
 | 文件 | 作用 |
 |---|---|
-| `SKILL.md` | **核心**：`#42` 铁律 + **Agent 工作流（5 步）** + 12 错误类 + 语法速查 + 24 陷阱 + **错误→修法对照表** + **§4.6 O(n) 构建性能红线** + 69 内置（含双参 range、UTF-8 文件 IO） + 分级示例 L1–L5 + 自检清单 + 提示模板 |
+| `SKILL.md` | **核心**：`#42` 铁律 + **Agent 工作流（5 步）** + 12 错误类 + 语法速查 + 24 陷阱 + **错误→修法对照表** + **§4.6 O(n) 构建性能红线** + 72 内置（含参数/JSON、双参 range、UTF-8 文件 IO） + 分级示例 L1–L5 + 自检清单 + 提示模板 |
 | `README.md` | 本文件 —— **安装与使用（最后一公里）** |
 | `prompt-template.md` | 复制即用的 prompt 骨架（新写 / 审查两类）+ 最小任务基线 |
 | `VERIFICATION.md` | **实测证据**：交付要求对照表（任务要求 + spec §11.1 五条）+ 4 个实跑程序（含输出与退出码） |
@@ -87,7 +87,7 @@ Copy-Item -Recurse -Force ".\.opencode\skills\lfz-programming\*" $dest
 $env:Path += ";$env:USERPROFILE\.cargo\bin"
 ```
 
-**入口限制（v1 实测）**：CLI 只有 `lfz run <file>`、`lfz <file>`、`lfz test`；**没有** `-e` / stdin 管道 / REPL。程序一律**先落成 `.lfz` 文件再运行**。
+**当前入口（1.4.0）**：文件运行、`-e CODE`、`run -e CODE`、`-`/`run -` stdin 源码及 `test`；脚本参数放在 `--` 后，通过 `argv()` 读取。`-e`/stdin 不要求 #42，REPL仍未实现。项目内 `dist/lfz.exe` 为当前版，外部 PATH 安装不自动更新。
 **退出码（按语境区分）**：`0` 成功；**`lfz run`** 下 `assert`/`fail` 失败 → `2`；**`lfz test`** 下有用例失败 → `1`；CLI 参数错误 / 语法或运行时错误 → `2`。
 
 ---
@@ -121,6 +121,12 @@ $LASTEXITCODE                          # 期望 0
 - **交付要求对照**（任务要求第 4 条 + spec §11.1 五条硬性要求 → SKILL 落点）：[`VERIFICATION.md`](./VERIFICATION.md) §1。
 - **语法 / 语义 / 接口契约**（唯一事实源）：`docs/spec/`。
 
-## 7. 2026-10-24 特性同步
+## 7. 2026-10-24 特性同步（历史）
 
-当前已实现 69 内置（54+15）及 range 双参；SKILL §6.1 给出新增签名与 Unicode、复杂度、IEEE、文件 IO 边界。使用当前源码重建的 `target/release/lfz.exe`；版本号仍为 v1.0.1。D1–D7 保留，D2 旧单参限制由双参重载替代。新实跑证据见 `docs/reports/T11-v11-skill-evidence.md`。8 题全新 Agent 盲测仍待 team-lead 组织，不能把示例复跑称为盲测提升。
+当时已实现 69 内置（54+15）及 range 双参；SKILL §6.1 给出新增签名与 Unicode、复杂度、IEEE、文件 IO 边界。使用当前源码重建的 `target/release/lfz.exe`；版本号仍为 v1.0.1。D1–D7 保留，D2 旧单参限制由双参重载替代。新实跑证据见 `docs/reports/T11-v11-skill-evidence.md`。当时未开展新盲测；后续v2首轮为独立新基线，不与旧题成绩直接比较。
+
+## 8. 2026-10-25 T12（当前1.4.0）
+
+72内置与Agent工作流见SKILL §6.2：argv零参/一等别名/遮蔽/隔离，严格JSON/i64/Unicode/128容器/确定性排序，以及-e/stdin/--分界。业务JSON用普通模式print(jsonStringify(...))；CLI --json只回状态。实跑证据见docs/reports/T12-skill-evidence.md；这是作者示例回归，未宣称新的Agent盲测成绩。
+
+**历史冻结输入**：v2首轮的四份skill及旧exe等九项原字节已保存在docs/reports/agent-benchmark-v2/v2-20261024-r01/raw-inputs-submissions.zip。active skill/target二进制升级后，旧runner校验当前路径的manifest不匹配是预期；不要用--freeze覆写旧manifest来掩盖变化。复现旧基线须在项目Temp内独立还原当时九项路径和manifest；新版本测评另建版本化输入与manifest，旧成绩/学生提交不改。

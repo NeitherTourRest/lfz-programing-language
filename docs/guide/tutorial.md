@@ -3,7 +3,7 @@
 > **学完你能做什么**：从零掌握 LFZ 的核心语法（`#42`、变量、控制流、函数与递归、闭包、结构体、管道 `|>`、富字符串插值、`;;`、`assert`/`check`、字符串处理），并独立写出一个能运行的小程序。
 > 每一步都有**完整可运行代码**和**实测输出**。照着敲，一次就能成功。
 > 权威定义见 [`docs/spec/`](../spec/)；本教程只讲怎么用。配套：[`README.md`](README.md) · [`reference.md`](reference.md) · [`errors.md`](errors.md) · [`testing.md`](testing.md)
-> 最后更新: 2026-10-24（T11-14：69 内置与文件 IO 已实现） by docs-writer
+> 最后更新: 2026-10-25（T12：1.4.0 参数、代码入口与 JSON） by docs-writer
 
 **说明**：所有示例的第一行都是 `#42`（LFZ 文件前导）。本文中的每段代码都已用 `cargo run --quiet -- run <文件>` 实际运行过，输出为**真实结果**。
 
@@ -425,7 +425,7 @@ LFZ 内建测试运行器。把断言写进 `tests/**/*.lfz`（首行仍是 `#42
 ```console
 $ cargo run --quiet -- test
 ...
-汇总：共 130 个用例，通过 130，失败 0，错误 0
+汇总：共 166 个用例，通过 166，失败 0，错误 0
 ```
 
 - `assert` 失败 → 该用例 `FAIL`（退出码 `1`）。
@@ -593,6 +593,46 @@ nil
 文件 IO 以 UTF-8 整文件读写。path / contents 必须 string；写数字先 str。相对路径相对于进程 cwd，与脚本路径无关；路径不展开 ~，不自动创建父目录。readFile 失败或文件不是合法 UTF-8 → IOError；writeFile / appendFile 失败也为 IOError。覆盖写会截断文件，追加写不存在时创建文件，二者成功均返回 nil。
 
 `ord` 只接受一个 Unicode 标量；`chr` 排除代理区 0xD800..0xDFFF 及越界值；`pad*` 的 fill 不能空。详细签名、复杂度和错误消息见参考 §5 与错误手册 §2。
+
+---
+
+## Step 14 — 用 JSON 连接数据与管道
+
+学完本节，你可以读取 JSON 记录，用已有的管道、闭包和 struct 处理，再输出确定性 JSON。保存为 `.lfz` 文件时仍须保留首行：
+
+```lfz
+#42
+let rows = jsonParse("[{\"id\":9007199254740993,\"title\":\"中文🙂\",\"done\":true},{\"id\":2,\"title\":\"待办\",\"done\":false}]")
+let result = rows |> filter((row) => row.done) |> map((row) => ({ id: row.id, title: row.title }))
+print(jsonStringify(result))
+```
+
+真实 stdout：
+
+```text
+[{"id":9007199254740993,"title":"中文🙂"}]
+```
+
+JSON 的 `null` 变为 LFZ `nil`，object 变为匿名 struct。整数按 i64 精确读取；带小数点或指数的数字为有限 f64，可能舍入。输出对象键按 UTF-8 字节序排列，不受插入顺序影响。不要自己写 JSON 解析器；内置还会检查重复键、非法转义和深度。
+
+`argv()` 返回 `--` 后参数，每次得到独立的新数组。它本轮支持保存为函数值：
+
+```lfz
+#42
+let saved = argv
+assert(saved == argv)
+let before = saved()
+let changed = argv()
+if len(changed) > 0 { changed[0] = "changed" }
+assert(saved() == before)
+print(jsonStringify(saved()))
+```
+
+不传参数时 stdout 为 `[]`。传参运行：`./dist/lfz.exe run FILE.lfz -- one --json`，stdout 为 `["one","--json"]`。用户变量、形参可遮蔽 `argv`，已保存别名仍可调用原函数。只有 `argv` 新增一等内置值；用 JSON 解析器做映射时写 `map((text) => jsonParse(text), texts)`，不要直接写 `map(jsonParse, texts)`。
+
+将字符串常量换成 `readFile(argv()[0]) |> jsonParse()` 即可从路径读取；相对路径基于当前工作目录。完整的三路径配置应用见 [app/jsonflow.lfz](../../app/jsonflow.lfz) 与 [应用说明](../../app/README.md)。先验证输入，再编码并写文件；普通 `writeFile` 不是原子替换。
+
+构建集合用 `map`/`filter`，或预分配后下标写入；反复 `push` 返回新数组并复制前缀，字符串循环拼接也会累计复制。struct 字段内部索引改善平均查找成本，JSON 对象还需要检查重复键和排序；这些规则不等于对所有脚本的性能保证。
 
 ---
 

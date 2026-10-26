@@ -3,7 +3,7 @@
 > LFZ 内建测试运行器（`lfz test`）。本页讲清：**怎么跑、怎么写、负例怎么放、结果怎么读**。
 > 权威契约：[`docs/spec/interface-contract.md`](../spec/interface-contract.md) §11.2（**T-R1 … T-R4**）；实现侧派生：[`docs/tooling/runner-contract.md`](../tooling/runner-contract.md)。
 > 配套：[`README.md`](README.md) ｜ [`tutorial.md`](tutorial.md) ｜ [`reference.md`](reference.md) ｜ [`errors.md`](errors.md)
-> 最后更新: 2026-10-24（T11-14：69 内置与文件 IO 已实现） by docs-writer
+> 最后更新: 2026-10-25（T12：1.4.0 参数、代码入口与 JSON） by docs-writer
 
 ---
 
@@ -19,7 +19,7 @@ $ cargo run --quiet -- test
 - 每个用例一行 `PASS/FAIL/ERROR <name>`；末尾汇总行逐字符稳定：
 
 ```text
-汇总：共 130 个用例，通过 130，失败 0，错误 0
+汇总：共 166 个用例，通过 166，失败 0，错误 0
 ```
 
 其它用法：
@@ -29,7 +29,7 @@ $ cargo run --quiet -- test <目录或文件>     # 指定发现根 / 单个用�
 $ cargo run --quiet -- test --json           # stdout 只写一行 JSON
 ```
 
-> `--json` 是全局开关，可放在任意位置（`--json test` 亦可）。
+> `--json test` 亦可。执行脚本时，`-e` 后的源码和 `--` 后的脚本参数不参与选项解析。
 
 ---
 
@@ -204,16 +204,16 @@ PASS  mini/pass_basic.lfz
 | `tests/coverage-matrix.md` | **覆盖矩阵**：逐特性 × 正常/边界/错误 |
 | `tests/REPORT.md` | **测试报告**：方法、结论、覆盖统计、已知缺陷、复现命令 |
 
-2026-10-24 本轮测试项为 494 项 Rust 测试（含 V01 修复新增 3 项）与 130 项黑盒；最终全量结果见团队复验报告。下列数量指黑盒测试。`lfz test` 在有效且非空的测试集执行前自动准备进程 cwd 下的 Temp/，保留一命令测试约定；准备失败按环境错误退出 2，stdout 为空。直接 `lfz run` 不代建 IO 父目录，单独运行文件 IO 示例时自行准备父目录。读写采用 UTF-8；还应测非法 UTF-8、非 string 参数、缺失父目录，以及 cwd 不同于脚本目录的情形。
+2026-10-25 T12当前功能基线为517项Rust测试与166项黑盒，另有91项进程检查（其中包含一次全量黑盒，不与166相加）；最终独立结论见团队T12报告。下列数量指黑盒测试。`lfz test` 在有效且非空的测试集执行前自动准备进程 cwd 下的 Temp/，保留一命令测试约定；准备失败按环境错误退出 2，stdout 为空。直接 `lfz run` 不代建 IO 父目录，单独运行文件 IO 示例时自行准备父目录。读写采用 UTF-8；还应测非法 UTF-8、非 string 参数、缺失父目录，以及 cwd 不同于脚本目录的情形。
 
-当前基线（见 [`tests/REPORT.md`](../tests/REPORT.md)）：`cargo run --quiet -- test` → **130 PASS / 0 FAIL / 0 ERROR**，退出码 `0`。
+当前基线（见 [`tests/REPORT.md`](../../tests/REPORT.md)）：`cargo run --quiet -- test` → **166 PASS / 0 FAIL / 0 ERROR**，退出码 `0`。
 
 ### 7.1 运行全量并查看结果
 
 ```console
 $ cargo run --quiet -- test
 ...
-汇总：共 130 个用例，通过 130，失败 0，错误 0
+汇总：共 166 个用例，通过 166，失败 0，错误 0
 $ echo $LASTEXITCODE
 0
 ```
@@ -231,3 +231,17 @@ $ echo $LASTEXITCODE
 | 想调试单条用例 | `cargo run --quiet -- run <用例文件>` 直接运行它。 |
 
 > 测试只依赖 `docs/spec/` 的公开行为，**不读解释器实现、不改解释器源码**；发现缺陷出缺陷单（见 `tests/REPORT.md` §7）。
+
+## 9. 测试参数、JSON 与可复现输入
+
+除正常往返，还应覆盖：空参数/Unicode/字面`--json`、CODE恰为选项文本、stdin非法UTF-8与EOF、精确i64/有限float、解码后重复键、Unicode代理对、128/129层、环与共享非环、方法字段过滤及输出通道。JSON文本偏移按UTF-8字节验证，源码span单独验证。当前可复现进程检查：
+
+```powershell
+D:/app/ANACONDA/python.exe -B tests/t12_cli_check.py --lfz dist/lfz.exe --output Temp/guide-cli-check.json --full-suite
+```
+
+参数格式以脚本 `--help` 为准；输出报告路径必须尚不存在。完整覆盖与原始证据见 [T12-blackbox.md](../reports/T12-blackbox.md)。应用独立oracle见 [应用说明](../../app/README.md)，验证错误输入不会覆盖已有结果文件、重复参数运行字节一致。
+
+指南的新示例逐项运行证据见 [T12-guide-evidence.md](../reports/T12-guide-evidence.md)。不要由短进程含启动耗时直接推断渐近复杂度；本轮效率结论只引用最终 [T12-performance.md](../reports/T12-performance.md)，首版回归与修复记录均保留。
+
+历史 `LFZ-AGENT-BENCH-v2` 首轮8/8是当时冻结输入的成绩，不能作为新版本的自动成绩。旧九项输入已保全在 `docs/reports/agent-benchmark-v2/v2-20261024-r01/raw-inputs-submissions.zip`；当前skill或binary变化后，旧manifest在开发目录校验失败是预期。复现旧轮时在项目Temp还原原路径和原字节；新轮另建版本化输入及manifest，不覆盖旧manifest、用例或成绩。

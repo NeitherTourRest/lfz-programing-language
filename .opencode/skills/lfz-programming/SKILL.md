@@ -6,9 +6,9 @@ description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也�
 # LFZ 编程指南（AI 专用）
 
 > 读者：**未接触过 LFZ 的编程 Agent**。目标：只凭本文件写出**正确、可运行**的 LFZ 程序。
-> 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（冻结 v1）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
+> 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（含 T12 §16）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
 > 使用纪律：**只允许使用本文件列出的语法**。不要用 Python / C / JS 的规则去猜 LFZ——LFZ 在若干处刻意不同（见 §4）。
-> **版本对齐（2026-10-24）**：当前源码重建的 `target/release/lfz.exe` 已实现 **69 个内置**（54+15）及 `range` 双参重载。版本号仍为 v1.0.1，v1.1 指本轮特性批次。新增实跑证据见 `docs/reports/T11-v11-skill-evidence.md`。旧 dist 不能作为本轮能力依据。
+> **版本对齐（2026-10-25）**：项目内 `dist/lfz.exe` / `target/release/lfz.exe` 为 **1.4.0，72 个内置**（54+15+3），支持 argv、JSON、`-e` 和 stdin 源码。T12 示例实跑证据见 `docs/reports/T12-skill-evidence.md`；项目外 PATH 中的旧解释器不保证具备这些能力。
 
 > 🚫 **硬纪律：不要凭记忆写 LFZ。** 本文件**没写的语法一律视为不存在**；拿不准就先查 §10 列出的 spec，或改用本文件已列出的等价写法。宁可用保守写法，也不要"猜一个大概像 Python 的写法"。
 
@@ -24,7 +24,7 @@ description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也�
   cargo run --quiet -- test                 # 运行测试集
   ```
 - **退出码（按语境区分，详见 §5）**：`0` 成功；**`lfz run` 下 `assert` / `fail` 失败（运行期错误）→ `2`**；**`lfz test` 下有用例失败 → `1`**；CLI 参数错误 / 语法错误 / 运行时错误 / 用例 error → `2`。
-- **本 CLI v1 只支持 `lfz run <file>` 与 `lfz test`**：没有 `-e`、没有 stdin 管道、没有 REPL（`run -` 会把 `-` 当文件名 → `IOError`）。**把程序写成 `.lfz` 文件再 `run`**。
+- **1.4.0 入口**：`lfz run FILE [-- ARG...]`、`lfz FILE.lfz [-- ARG...]`、`lfz -e CODE [-- ARG...]`（也可 `run -e`）、`lfz - [-- ARG...]`（也可 `run -`）。`-e`/stdin 源码不加 `#42`；REPL 未实现，无参调用仍报错。参数/JSON 工作流见 §6.2。
 
 ---
 
@@ -58,7 +58,7 @@ $LASTEXITCODE                         # 必须打印 0
 
 - 违反 → 程序以 **`CosmosAnswerError: 你忘记了宇宙的答案`** 终止（退出码 `2`）。
 - **只按扩展名触发**：扩展名（ASCII 大小写不敏感）为 `lfz` 才要求，`.lfz` / `.LFZ` / `.Lfz` 都算。
-- **豁免**：非 `.lfz` 文件（如 `.txt`）、以及 REPL / stdin / `run -e`（spec 定义为豁免入口；本 CLI v1 未实现后三者）。
+- **豁免**：`run` 加载的非 `.lfz` 文件，以及 `-e` / stdin 源码；后两者不要求、不消费 `#42`。REPL 仍未实现。
 - **无任何变体**（违反即 `CosmosAnswerError`）：`# 42`、`#42 `（尾随空格）、`#42\t`、`##42`、`#43`、`#42abc`、首行前的空行/空格/Tab。
 - **只有 3 字节 `#42` 而无换行符** → 也不行。**空 `.lfz` 文件** → 也不行。
 - **BOM 豁免**：文件开头可有 UTF-8 BOM（`EF BB BF`），跳过后再要求 `#42`。
@@ -242,7 +242,7 @@ let q = 10 |> push(_, [1, 2])      // _ 占位：注入到该位 → push(10, [1
     - `let ys = push(9, xs)` —— **不**改 `xs`；`sort(xs)` 不改 `xs`。
     - 唯一原地改的是**赋值语法** `a[i] = v` / `s.k = v`。
 
-11. **69 个内置按 data-last 约定**（见 §6）；容器/字符串被操作对象恒为末参。
+11. **72 个内置按 data-last 约定**（见 §6）；容器/字符串被操作对象恒为末参。
 
 12. **`round` 是银行家舍入（四舍六入五成双）**：`round(2.5) == 2`、`round(3.5) == 4`。
 
@@ -323,7 +323,7 @@ let q = 10 |> push(_, [1, 2])      // _ 占位：注入到该位 → push(10, [1
 | `ValueError: 格式说明符非法：…` | 格式串拼错 / 用了**动态宽度**（§3 插值） | 用 `:>6` `:<6` `:^6` `:0>5`（fill+对齐）、`:.2f`、`:05d`、`:x`；**宽度须字面数字**，动态宽度用 `repeat` 手工补（§3） |
 | `TypeError: 运算符 '[]' 不支持 string 与 array / struct` | 对 **string** 取下标（§4-22） | 字符串不可下标 → 先 `split("", s)`，再对数组索引 |
 | `ValueError: 区间非法：lo >= hi` | `randInt(lo, hi)` 且 `lo >= hi`（§6） | 保证 `lo < hi`（区间为 `[lo, hi)`） |
-| `IOError: 输入结束（EOF）` | 在无输入环境用了 `input()`（§6） | 别依赖 stdin（本 CLI v1 无 stdin 管道） |
+| `IOError: 输入结束（EOF）` | 在无输入环境用了 `input()`（§6） | 提供实际输入；stdin 源码模式已读到 EOF，不能再从同一 stdin 提供数据 |
 | `AssertionError: 断言失败：…` | `assert`/`fail` 条件不成立（§5） | 复核条件；**软校验用 `check`**（非致命） |
 | `RecursionError: 递归深度超限（超过 10000 层）` | 递归无终止条件 / 太深（§2） | 补终止条件，或改写成 `while`/`for` 循环 |
 
@@ -392,7 +392,7 @@ print("continue")
 
 ---
 
-## 6. 内置函数 69 个（data-last）
+## 6. 内置函数 72 个（data-last）
 
 > **约定**：凡对容器 / 字符串操作者，**被操作对象恒为最后一个参数**；`xs |> f(...)` 把 `xs` 注入末参。**凡容器更新一律返回新值、不改原容器**（A1），除非用赋值语法 `a[i]=` / `s.k=`。参数类型/个数不符 → `TypeError`。
 
@@ -450,9 +450,59 @@ print("continue")
 
 文件路径原样交给 OS；相对路径基于**进程 CWD**（不是脚本目录），不展开 `~`、不规范化、不自动建父目录。当前项目只在项目内读写，临时件放 `Temp/`；内置本身不实施沙箱。错误均为 `IOError`：读失败 `无法读取：{path}`；非法 UTF-8 `无法读取：{path}（不是合法的 UTF-8 编码）`；写失败 `无法写入：{path}`；追加失败 `无法追加：{path}`。`writeFile(p,42)` 不隐式转换，应先 `str(42)`。外部 IO 依赖环境。大量片段遵循 §4.6，避免循环拼接或 push 的 O(n²)。
 
-完整可运行增量示例及 stdout/退出码见 `docs/reports/T11-v11-skill-evidence.md`，使用当前源码重建的 `target/release/lfz.exe`。
+完整可运行增量示例及 stdout/退出码见 `docs/reports/T11-v11-skill-evidence.md`，使用项目内 `dist/lfz.exe`（1.4.0）。
 
 ---
+
+
+## 6.2 Agent 数据脚本：argv、JSON 与直接执行（1.4.0）
+
+| API | 签名与边界 |
+| -- | -- |
+| `argv()` | 零参 → 新 `array[string]`；不含程序/脚本名或 `--`；无参数为 `[]`。每次返回新数组，修改它不会改下次参数。 |
+| `jsonParse(text)` | 严格单个 JSON → LFZ 值；`null`→`nil`，object→匿名 struct；必须传 string。 |
+| `jsonStringify(value)` | JSON 可表示值 → 无换行紧凑 string；对象数据字段按 UTF-8 键序输出。 |
+
+**复制调用模板（PowerShell，仓库根目录）**。其中 `-e` 的 CODE 是片段，若保存为 `.lfz` 则仍须首行 `#42`：
+
+```powershell
+.\dist\lfz.exe -e 'print(jsonStringify(argv()))' -- '中文' '--json' ''
+# stdout: ["中文","--json",""]
+.\dist\lfz.exe -e 'print(jsonStringify(argv()))' --json -- '--json'
+# stdout: {"ok":true}；业务 JSON ["--json"] 写 stderr
+.\dist\lfz.exe run Temp/job.lfz -- CONFIG.json INPUT.json OUTPUT.json
+```
+
+- `--` 后每项原样传给 `argv()`，空串/Unicode/`--json`/`-e`/`--help` 都是数据；无 `--` 的额外参数报 CLI 错误。
+- `-e` 下一项**无条件是 CODE**；例如 `lfz -e --json` 把 `--json` 当源码报错，不能把它吞成选项。CODE 之后的 `--json` 才是机器输出选项。
+- **业务 JSON**：正常模式 `print(jsonStringify(value))` 写 stdout；**CLI `--json`**：stdout 只写执行状态/错误对象，程序 print/dump/input 提示转 stderr，不返回最后表达式。不要把业务输出与状态对象混在一起解析。
+- `lfz -` / `lfz run -` 把 stdin **全部 UTF-8 源码**读到 EOF，错误路径名 `<stdin>`；读失败/非法 UTF-8 为 `IOError: 无法读取标准输入`。此时程序 `input()` 会遇 EOF；代码与数据不要共用这个入口。文件/`-e` 模式仍可用 `input()` 读取单行输入。
+- `argv` 是本轮唯一新增的一等内置值：可 `let getArgs = argv` 后调用；`argv == argv` 为 true，`type(argv)` 为 `"function"`，`str(argv)` 为 `"<fn argv>"`。词法变量/形参优先，可遮蔽它；保存的别名仍有效。**JSON 两内置与旧69内置未泛化为一等值**，写 `map((s) => jsonParse(s), texts)`，不要写 `map(jsonParse, texts)`。
+
+**完整程序：参数传配置，管道处理，确定性业务 JSON 输出。** 保存为 `Temp/job.lfz`；传入唯一参数 `{"title":"中文🙂","values":[1,2,3,4]}`（操作系统参数分词由调用者负责）：
+
+```lfz
+#42
+let args = argv()
+assert(len(args) == 1, "需要一个 JSON 配置参数")
+let config = jsonParse(args[0])
+let values = config.values |> filter((x) => x % 2 == 0) |> map((x) => x * 10)
+let result = { title: config.title, count: len(values), total: sum(values) }
+print(jsonStringify(result))
+```
+
+stdout：`{"count":2,"title":"中文🙂","total":60}`，exit 0。来自文件的 JSON 同样用 `readFile(path) |> jsonParse()`，输出用 `writeFile(path, jsonStringify(value))`；先验证/编码完成，再写文件，避免错误路径覆盖已有输出。无需自写 JSON parser，也不要用字符串拼接构造 JSON。
+
+**严格数据边界**（spec 契约 §16.2–16.3）：
+
+- 整数词法按 i64 精确解析，`9007199254740993` 不降为 float；超出 `[-9223372036854775808,9223372036854775807]` 报错。含小数点/指数的数字为有限 f64；允许舍入/下溢至零，保留负零。编码整值 float 补 `.0`，重新解析仍为 float。
+- 禁止 BOM、注释、尾逗号、重复**解码后**对象键、非法前导零、NaN/Inf、裸控制字符及孤立 UTF-16 代理；正确代理对、Unicode/NUL 转义可往返。JSON 文本内 `$`/`${...}` 是数据，不进行 LFZ 插值；序列化不产生非法 JSON 转义 `\$`。
+- 解析/编码最多同时打开 **128 层 array/object**；标量深度0，128允许，129拒绝。当前路径上的循环引用拒绝；共享但无环的子对象可在多个位置编码。
+- struct 按既有 A5 数据面**跳过函数方法字段**，其余键稳定排序；函数根值、数组函数元素和 struct 模板拒绝。不会调用方法，不把非法值改成 null。
+- `ValueError: JSON 解析失败（字节偏移 {offset}）：{reason}`。offset 从0计 **UTF-8 字节**，不是字符数；reason 为 `不是合法的 JSON` / `对象键重复` / `整数超出 i64 范围` / `浮点数超出有限范围` / `嵌套深度超过 128 层`。
+- `ValueError: JSON 编码失败：{reason}`，reason 为 `不支持函数或结构体定义` / `浮点数必须有限` / `循环引用` / `嵌套深度超过 128 层`。非string解析参数/数量错误为 TypeError。错误位置仍指 LFZ 内置调用点，run exit2；`--json` 提供结构化诊断。
+
+**效率约束**：继续使用 §4.6 的 map 或预分配，不用循环 push/字符串累积。JSON 单遍字节游标与一次容器构造；解析 O(n+Σk log k)，编码包含展开输出和键排序成本（字符串比较另计）。struct 内部字段索引改善**平均**查找，不承诺最坏 O(1)，排序/复制/编码也不因此变成 O(1)。性能实测由 `docs/reports/T12-performance.md` 提供，本指南不把源码改动直接称为加速。
 
 ## 7. 可运行示例（分级，含真实输出）
 
@@ -679,6 +729,7 @@ true
 - [ ] 是否写/期待了旧的编号错误码？（**禁止**；只有类名 + 中文消息）
 - [ ] 代码块是否都含 `#42` 首行？（片段是否注明）
 - [ ] **没有对 `string` 取下标**？（`s[i]` → `TypeError`；先 `split("", s)` 再对数组索引，见 §4-22）
+- [ ] 脚本参数是否放在 `--` 后？业务 JSON 是否与 CLI `--json` 状态区分？JSON 是否用内置而非手写拼接/解析？
 - [ ] **大 n 下没有在循环里用 `s = s + ...` 或 `push` 累积**？（O(n²)；用 §4.6 的 `range |> map |> join` 或「预分配 + 下标写」）
 - [ ] 循环体内用了 `let`？（**可以**，每轮新绑定——不要因此改用 `var` 提升到循环外，见 §4-23）
 - [ ] 退出码是否按语境理解？（`lfz run` 下 assert 失败 → `2`；`lfz test` 下用例失败 → `1`）
@@ -718,9 +769,9 @@ print(sum_even([1, 2, 3, 4, 5]))
 
 ## 10. 权威来源
 
-- 语法：`docs/spec/syntax.md`｜语义：`docs/spec/semantics.md`｜接口/错误/内置表：`docs/spec/interface-contract.md`（冻结 v1）。
+- 语法：`docs/spec/syntax.md`｜语义：`docs/spec/semantics.md`｜接口/错误/内置表：`docs/spec/interface-contract.md`（含 T12 §16）。
 - runner/CLI 契约：`docs/tooling/runner-contract.md`。
 - 本指南的实测验证记录：同目录 `VERIFICATION.md`（§8 为 T11-③ 的 D1–D7 修订实测证据）。
 - 本 skill 包的**安装与使用**：同目录 `README.md`（三种安装方式 + 运行前提 + 不做什么）。
 - 示例源码目录：`docs/guide/ai/examples/`（`01_hello` / `02_basics` / `03_students` / **`04_wordcount`**）。
-- 人类向正文档：`docs/guide/ai/README.md`（与本文件内容一致）。
+- AI指南入口：`docs/guide/ai/README.md`（与本文件内容同步）；人类向手册：`docs/guide/README.md`。

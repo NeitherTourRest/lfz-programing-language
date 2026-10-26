@@ -1,0 +1,266 @@
+[
+  {
+    "document": "README.md",
+    "block": 1,
+    "file": "Temp\\docs-v11\\README-1.lfz",
+    "exit": 0,
+    "stdout": "Hello, LFZ!\n",
+    "stderr": ""
+  },
+  {
+    "document": "README.md",
+    "block": 2,
+    "file": "Temp\\docs-v11\\README-2.lfz",
+    "exit": 0,
+    "stdout": "你好，LFZ！\n这是第 1 次问候。\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 1,
+    "file": "Temp\\docs-v11\\tutorial-1.lfz",
+    "exit": 0,
+    "stdout": "Hello, LFZ!\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 2,
+    "file": "Temp\\docs-v11\\tutorial-2.lfz",
+    "exit": 0,
+    "stdout": "pi = 3.14, count = 3, type = int\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 3,
+    "file": "Temp\\docs-v11\\tutorial-3.lfz",
+    "exit": 0,
+    "stdout": "5 是正数\n0..4 的和 = 10\n元素 10\n元素 20\n元素 30\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 4,
+    "file": "Temp\\docs-v11\\tutorial-4.lfz",
+    "exit": 0,
+    "stdout": "捕获当轮 cell -> 0\n捕获当轮 cell -> 2\n捕获当轮 cell -> 4\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 5,
+    "file": "Temp\\docs-v11\\tutorial-5.lfz",
+    "exit": 0,
+    "stdout": "fact(5) = 120\nfib(10) = 55\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 6,
+    "file": "Temp\\docs-v11\\tutorial-6.lfz",
+    "exit": 0,
+    "stdout": "1 2 3\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 7,
+    "file": "Temp\\docs-v11\\tutorial-7.lfz",
+    "exit": 0,
+    "stdout": "Alice(93)\ntrue\nAlice 现分数 80, isTop=false\n1\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 8,
+    "file": "Temp\\docs-v11\\tutorial-8.lfz",
+    "exit": 0,
+    "stdout": "总和 = 17\n翻倍 = [10, 6, 16, 2]\n大于 3 = [5, 8]\n升序 = [1, 3, 5, 8]\n用 _ 插位: 4\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 9,
+    "file": "Temp\\docs-v11\\tutorial-9.lfz",
+    "exit": 0,
+    "stdout": "你好，LFZ！\nn=00042  hex=2a  right=    42\npi=3.14\n字面量花括号: { } 与美元: ${n}\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 10,
+    "file": "Temp\\docs-v11\\tutorial-10.lfz",
+    "exit": 0,
+    "stdout": "[ab   ]\n[   ab]\n[ ab  ]\n[**ab***]\n[ab*****]\n[00042]\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 11,
+    "file": "Temp\\docs-v11\\tutorial-11.lfz",
+    "exit": 0,
+    "stdout": "alpha ： 1\nbeta ： two\ngreet ： <fn greet>\nPoint ： <struct Point>\np ： {x: 1, y: 2}\ndone\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 12,
+    "file": "Temp\\docs-v11\\tutorial-12.lfz",
+    "exit": 0,
+    "stdout": "check 之后继续运行\nassert 通过，继续\n",
+    "stderr": "check 失败：不相等（软断言，不致命）\n"
+  },
+  {
+    "document": "tutorial.md",
+    "block": 13,
+    "file": "Temp\\docs-v11\\tutorial-13.lfz",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"Temp\\docs-v11\\tutorial-13.lfz\", line 2, in <module>\n    assert(1 == 2, \"一比二大？\")\n    ^\nAssertionError: 断言失败：一比二大？\n"
+  },
+  {
+    "document": "tutorial.md",
+    "block": 14,
+    "file": "Temp\\docs-v11\\tutorial-14.lfz",
+    "exit": 0,
+    "stdout": "Student ： <struct Student>\naverage ： <fn average>\nroster ： [{name: \"Alice\", score: 93}, {name: \"Bob\", score: 67}, {name: \"Cara\", score: 88}, {name: \"Dan\", score: 100}]\n名单：\n  Alice(93): A\n  Bob(67): C\n  Cara(88): B\n  Dan(100): A\n\n排名：\n  1. Dan(100): A\n  2. Alice(93): A\n  3. Cara(88): B\n  4. Bob(67): C\n\n平均分 = 87.00\n最高分 = Dan（100）\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 15,
+    "file": "Temp\\docs-v11\\tutorial-15.lfz",
+    "exit": 0,
+    "stdout": "len(s) = 3\ncs[0] = a\nout = ABC\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 16,
+    "file": "Temp\\docs-v11\\tutorial-16.lfz",
+    "exit": 0,
+    "stdout": "[ab   ]\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 17,
+    "file": "Temp\\docs-v11\\tutorial-17.lfz",
+    "exit": 0,
+    "stdout": "[-2, -1, 0, 1]\n2 true\n你🙂\n你🙂x🙂x\n🙂x🙂x你\n128578 🙂\n0.0 1.0 0.0 1.0\n-inf nan inf nan\ntrue\nnil\nnil\n你好🙂\n",
+    "stderr": ""
+  },
+  {
+    "document": "tutorial.md",
+    "block": 18,
+    "file": "Temp\\docs-v11\\tutorial-18.lfz",
+    "exit": 0,
+    "stdout": "名单：\n  Alice(93): A 及格\n  Bob(67): C 及格\n  Cara(88): B 及格\n  Dan(100): A 及格\n  Eve(55): C 不及格\nA 档人数 = 2\n平均分 = 80.60\n",
+    "stderr": "check 失败：有 1 人不及格\n"
+  },
+  {
+    "document": "reference.md",
+    "block": 1,
+    "file": "Temp\\docs-v11\\reference-1.lfz",
+    "exit": 0,
+    "stdout": "a\na\nb\nc\n",
+    "stderr": ""
+  },
+  {
+    "document": "reference.md",
+    "block": 2,
+    "file": "Temp\\docs-v11\\reference-2.lfz",
+    "exit": 0,
+    "stdout": "ABC\nABC\n",
+    "stderr": ""
+  },
+  {
+    "document": "reference.md",
+    "block": 3,
+    "file": "Temp\\docs-v11\\reference-3.lfz",
+    "exit": 0,
+    "stdout": "[ab   ]\n[   ab]\n",
+    "stderr": ""
+  },
+  {
+    "document": "reference.md",
+    "block": 4,
+    "file": "Temp\\docs-v11\\reference-4.lfz",
+    "exit": 0,
+    "stdout": "false\ntrue\n\n",
+    "stderr": ""
+  },
+  {
+    "document": "errors.md",
+    "block": 1,
+    "file": "Temp\\docs-v11\\errors-1.lfz",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "  File \"Temp\\docs-v11\\errors-1.lfz\", line 2\n    let x = 1 $ 2\n              ^\nSyntaxError: 非法字符 '$'\n"
+  },
+  {
+    "document": "errors.md",
+    "block": 2,
+    "file": "Temp\\docs-v11\\errors-2.lfz",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"Temp\\docs-v11\\errors-2.lfz\", line 5, in <module>\n    let r = half(10)\n            ^\n  File \"Temp\\docs-v11\\errors-2.lfz\", line 3, in half\n        n / 0\n        ^\nZeroDivisionError: 除以零\n"
+  },
+  {
+    "document": "errors.md",
+    "block": 3,
+    "file": "Temp\\docs-v11\\errors-3.lfz",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "File \"Temp\\docs-v11\\errors-3.lfz\", line 1\nCosmosAnswerError: 你忘记了宇宙的答案\n"
+  },
+  {
+    "document": "errors.md",
+    "block": 4,
+    "file": "Temp\\docs-v11\\errors-4.lfz",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"Temp\\docs-v11\\errors-4.lfz\", line 2, in <module>\n    assert(1 == 2, \"一比二大？\")\n    ^\nAssertionError: 断言失败：一比二大？\n"
+  },
+  {
+    "document": "errors.md",
+    "block": 5,
+    "file": "Temp\\docs-v11\\errors-5.lfz",
+    "exit": 0,
+    "stdout": "继续运行\n",
+    "stderr": "check 失败：软断言示例\n"
+  },
+  {
+    "document": "testing.md",
+    "block": 1,
+    "file": "Temp\\docs-v11\\testing-1.lfz",
+    "exit": 0,
+    "stdout": "",
+    "stderr": "check 失败：软检查不致命\n"
+  },
+  {
+    "document": "testing.md",
+    "block": 2,
+    "file": "Temp\\docs-v11\\testing-2.lfz",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "document": "testing.md",
+    "block": 3,
+    "file": "Temp\\docs-v11\\testing-3.lfz",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"Temp\\docs-v11\\testing-3.lfz\", line 3, in <module>\n    assert(1 == 2, \"这个断言故意失败\")\n    ^\nAssertionError: 断言失败：这个断言故意失败\n"
+  },
+  {
+    "document": "testing.md",
+    "block": 4,
+    "file": "Temp\\docs-v11\\testing-4.lfz",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "File \"Temp\\docs-v11\\testing-4.lfz\", line 1\nCosmosAnswerError: 你忘记了宇宙的答案\n"
+  }
+]

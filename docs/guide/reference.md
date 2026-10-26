@@ -2,7 +2,7 @@
 
 > 每一条都标注了 **spec 章节号**（`SY` = [`docs/spec/syntax.md`](../spec/syntax.md)，`SE` = [`docs/spec/semantics.md`](../spec/semantics.md)，`IC` = [`docs/spec/interface-contract.md`](../spec/interface-contract.md)）。本参考是**导读**，权威定义以 spec 为准。
 > 配套：上手 [`README.md`](README.md) ｜ 教程 [`tutorial.md`](tutorial.md) ｜ 错误 [`errors.md`](errors.md) ｜ 测试 [`testing.md`](testing.md)
-> 最后更新: 2026-10-24（T11-14：69 内置与文件 IO 已实现） by docs-writer
+> 最后更新: 2026-10-25（T12：1.4.0 参数、代码入口与 JSON） by docs-writer
 
 ---
 
@@ -220,7 +220,7 @@ print()                           // 空行
 
 ---
 
-## 5. 内置函数速查（69 个，全部 **data-last**）
+## 5. 内置函数速查（72 个，全部 **data-last**）
 
 > 出处：IC §10.7。约定：**被操作数据恒为最后一个参数**；`xs |> f(...)` 把 `xs` 注入末参。**除赋值语法外一律"返回新值、不改原容器"**（A1，SE §4.5.2）。参数类型/数量不符 → `TypeError`。
 
@@ -312,8 +312,26 @@ print()                           // 空行
 
 > 文件 IO 的 path / contents 须 string，不隐式转换；写数字先 str(42)。相对路径基于解释器进程当前工作目录，与脚本所在目录无关。路径原样交给 OS，不展开 ~，不自动创建父目录，不做规范化或沙箱；二进制/目录 API 不提供。读返回 string，写/追加返回 nil；时间及内存按文件大小计；结果依赖文件系统与 cwd。多片段拼接用 map 或预分配数组后 join，循环 push 也会复制前缀。
 > sin/cos/log/exp 接受 int 并加宽为 float；大于 2^53 的整数加宽可能失精度。NaN/Inf 遵 IEEE-754；`/ 0` 和 `% 0` 仍抛 ZeroDivisionError。
-> `seed` 未调用时用时间种子——这是 LFZ 唯一的非确定来源（IC §10.7）。
+> `seed` 未调用时用时间种子；文件 IO 还依赖文件系统与 cwd。需要可复现时，固定种子、输入内容及显式参数（IC §10.7、§16）。
 > 数值内置加宽口径：`floor`/`ceil`/`round`/`sqrt`/`pow`/`sin`/`cos`/`log`/`exp` 接受 `int` 并加宽为 `float`；`abs` 同型不加宽（IC §10.7「数值内置形参加宽」）。
+
+### 5.5 参数与 JSON（3；1.4.0，IC §16）
+
+| 内置 | 签名 | 说明 |
+| -- | -- | -- |
+| `argv` | `argv() -> array[string]` | 本次执行 `--` 后参数，不含解释器/脚本名；每次返回新数组，无参数为 `[]` |
+| `jsonParse` | `jsonParse(text) -> value` | 严格单个 JSON 文本；null/bool/string/array/object → nil/bool/string/array/匿名 struct |
+| `jsonStringify` | `jsonStringify(value) -> string` | 紧凑 JSON，无尾换行；struct 数据字段按 UTF-8 字节序排列 |
+
+- JSON 整数词法必须在 i64 范围，超出即 `ValueError`，不退化成浮点。带 `.`/`e`/`E` 的词法为有限 f64；有限舍入和下溢遵 IEEE-754，保留浮点负零。序列化 float 保留类型，例如 `1.0` 和 `-0.0`，不等同于通用 `str` 的格式规则。
+- 禁止 BOM、注释、尾逗号、单引号、裸键、前导 `+`/非法零、NaN/Infinity、裸控制字符；空白仅空格/TAB/LF/CR。正确解码 UTF-16 代理对，拒孤立代理。解码后重复键拒绝，如 `"a"` 和 `"\u0061"`。
+- 解析内容里的 `$`、`${...}` 是普通数据。序列化不转义 `$`、`/` 和其它 Unicode；控制字符、双引号和反斜杠按 JSON 转义。
+- 同时打开的 array/object 容器最多128层；标量为0层，空容器为1层，解析与编码同口径。循环引用拒绝；共享但无环子树可重复编码。
+- struct 使用数据面，忽略函数值方法字段；根函数、数组中的函数和结构体模板拒绝，NaN/Inf拒绝；不执行方法、不修改输入、不返回部分结果。错误和精确偏移见 [errors.md §8](errors.md)。
+- `argv` 是一等函数值，`type(argv)=="function"`、`str(argv)=="<fn argv>"`，同次执行身份稳定；词法变量仍优先，可遮蔽。只有该内置在本轮新增取值能力；其它内置作回调须用 lambda 包裹，例如 `map((s) => jsonParse(s), texts)`。
+- 解析时间 O(n + Σk log k)，n为输入字节数、k为各对象键数，键比较成本另计；空间O(n)，递归128有界。编码时间按展开输出字节数与各对象键排序计，共享子树每次出现都计入输出。struct字段索引为平均查找优化，不能称最坏O(1)；不暴露哈希迭代顺序。
+
+代码入口为 `lfz [run] -e CODE [-- ARG...]` 和 `lfz [run] - [-- ARG...]`，分别显示伪路径 `<command>` / `<stdin>`，源码行从1开始且无需文件 `#42` 前导。stdin读取UTF-8到EOF，随后 `input()` 读EOF报IOError。文件入口原前导规则不变。CLI `--json` 为状态协议，不自动返回最后表达式；`-e` 下一项及 `--` 之后均不解析选项。
 
 ---
 
@@ -347,6 +365,6 @@ print()                           // 空行
 | 优先级、管道脱糖 | `syntax.md` §4 |
 | 27 条歧义消解（A1–A27） | `syntax.md` §5 |
 | `;;` 语义、值显示、求值语义、错误模型 | `semantics.md` §3.6、§3.7、§4.5、§8 |
-| 69 个内置函数表 | `interface-contract.md` §10.7 |
+| 72 个内置函数表 | `interface-contract.md` §10.7、§16 |
 | 错误类实现映射、loader、`Span`、帧 | `interface-contract.md` §8.1、§10 |
 | 下游硬性要求（含 docs / runner 契约） | `interface-contract.md` §11 |

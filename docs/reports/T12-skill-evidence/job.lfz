@@ -1,0 +1,7 @@
+#42
+let args = argv()
+assert(len(args) == 1, "需要一个 JSON 配置参数")
+let config = jsonParse(args[0])
+let values = config.values |> filter((x) => x % 2 == 0) |> map((x) => x * 10)
+let result = { title: config.title, count: len(values), total: sum(values) }
+print(jsonStringify(result))

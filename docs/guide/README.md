@@ -3,7 +3,7 @@
 > 面向**人类开发者**的 LFZ 手册。目标：让你在 **5 分钟**内装好 LFZ、跑通第一个程序、看懂常见报错。
 > 权威语法/语义以 `docs/spec/` 为准；本手册只做讲解与示例，不定义新语法。
 > 配套：教程 [`tutorial.md`](tutorial.md) ｜ 参考 [`reference.md`](reference.md) ｜ 错误模型 [`errors.md`](errors.md) ｜ 测试 [`testing.md`](testing.md)
-> 最后更新: 2026-10-24（T11-14：69 内置与文件 IO 已实现） by docs-writer
+> 最后更新: 2026-10-25（T12：1.4.0 参数、代码入口与 JSON） by docs-writer
 
 ---
 
@@ -19,7 +19,7 @@ LFZ（读作 "elf-zee"）是一门**动态类型、表达式导向**的通用脚
 - **无魔法**：条件必须是 `bool`；除了 `int → float` 加宽外无隐式转换；越界 / 缺字段 / 溢出 / 类型不符一律结构化报错。
 - **仪式感**：每个 `.lfz` 文件以第一行 `#42` 起手——"宇宙的答案"，缺失即报错。
 
-当前已实现 **69 个内置**，包括双参 range、字符串查找/补齐/子串、ord/chr、sin/cos/log/exp、contains 与 UTF-8 文件 IO。签名和边界见参考 §5；相对文件路径基于进程当前工作目录。
+当前已实现 **72 个内置**，包括双参 range、字符串查找/补齐/子串、ord/chr、sin/cos/log/exp、contains、UTF-8 文件 IO，以及 `argv`、`jsonParse`、`jsonStringify`。签名和边界见参考 §5；相对文件路径基于进程当前工作目录。
 
 完整形式定义见 [`docs/spec/syntax.md`](../spec/syntax.md)；语义见 [`docs/spec/semantics.md`](../spec/semantics.md)。
 
@@ -27,7 +27,7 @@ LFZ（读作 "elf-zee"）是一门**动态类型、表达式导向**的通用脚
 
 ## 2. 准备环境（约 2 分钟）
 
-LFZ 解释器用 **Rust** 实现，**无第三方依赖**，只需要 Rust 工具链。
+当前版本为 **1.4.0**。仓库内已有 `dist/lfz.exe` 时，可直接使用它，不必先构建；不要误用尚未更新的全局安装。自行构建时，LFZ 解释器用 **Rust** 实现，**无第三方依赖**，需要 Rust 工具链。
 
 - 安装 Rust：见 <https://www.rust-lang.org/tools/install>（安装后重启终端，确保 `cargo` 在 PATH）。
 - 验证：`cargo --version` 能输出版本号即可。
@@ -104,12 +104,12 @@ $ cargo run --quiet -- run greeting.lfz
 |---|---|
 | `cargo build` | 构建解释器 |
 | `cargo run --quiet -- run <file>` | 运行一个 LFZ 脚本（`.lfz` 文件首行须 `#42`） |
-| `cargo run --quiet -- run --json <file>` | 运行并以**一行 JSON** 输出结果（机器可读） |
+| `cargo run --quiet -- run --json <file>` | 运行并以**一行 JSON** 输出执行状态/错误（机器可读） |
 | `cargo run --quiet -- test` | 运行测试集（默认发现 `tests/**/*.lfz`，排除 `tests/fixtures`） |
 | `cargo run --quiet -- test --json` | 测试的机器可读输出 |
 | `cargo run --quiet -- --help` | 查看 CLI 帮助 |
 
-> `--json` 是全局开关，可放在子命令任意位置；开启后 **stdout 只写 JSON**，程序输出改到 stderr（`docs/tooling/runner-contract.md` §9.3）。详见 [`errors.md` §6](errors.md)。
+> `--json` 是执行选项，可放在源码参数和脚本参数区域以外的选项位置；开启后 **stdout 只写 JSON**，程序输出改到 stderr（`docs/tooling/runner-contract.md` §9.3）。详见 [`errors.md` §6](errors.md)。
 
 ---
 
@@ -146,7 +146,36 @@ $ cargo run --quiet -- run greeting.lfz
 | 想做的事 | 读 |
 |---|---|
 | 跟着例子从零写一个完整小程序 | [`tutorial.md`](tutorial.md) |
-| 查语法、运算符优先级、69 个内置函数 | [`reference.md`](reference.md) |
+| 查语法、运算符优先级、72 个内置函数 | [`reference.md`](reference.md) |
 | 搞懂 12 类错误、`Traceback`、退出码、`--json` | [`errors.md`](errors.md) |
 | 写测试、跑测试、覆盖矩阵 | [`testing.md`](testing.md) |
 | 权威语法 / 语义 / 接口契约 | [`../spec/`](../spec/) |
+
+## 8. 用参数和 JSON 写可复用脚本（1.4.0）
+
+从仓库根目录执行。`-e` 直接运行一项源码，不需要 `#42`，也不会自动打印最后表达式；要显示结果就调用 `print`：
+
+```powershell
+./dist/lfz.exe -e 'print(jsonStringify(argv()))' -- '中文' '--json' ''
+```
+
+stdout：`["中文","--json",""]`。`--` 之后每项原样交给脚本，数字和 JSON 也先是字符串；由脚本按需调用 `int` 或 `jsonParse`。文件入口同样支持 `lfz run file.lfz -- ARG...`。没有 `--` 的额外参数仍报错。
+
+标准输入也能提供整段源码：
+
+```powershell
+'print(1 + 2)' | ./dist/lfz.exe -
+```
+
+stdout 为 `3`。stdin 源码先读到 EOF，再执行；此模式不能同时从同一 stdin 向 `input()` 提供数据。文件/`-e` 模式仍可使用 `input()`。REPL 尚未实现；无参数运行不会等待输入。
+
+普通模式的 `print(jsonStringify(value))` 用于输出业务 JSON；CLI 的 `--json` 输出执行状态，成功时 stdout 为 `{"ok":true}`，程序的 `print` 转到 stderr。把 `--json` 放在脚本参数 `--` 之后，只会传给 `argv()`。
+
+真实应用见 [jsonflow](../../app/README.md)：
+
+```powershell
+New-Item -ItemType Directory -Force Temp | Out-Null
+./dist/lfz.exe run app/jsonflow.lfz -- app/fixtures/t12/config.json app/fixtures/t12/input.json Temp/guide-result.json
+```
+
+它读取配置和记录数组，筛选并投影字段，将结果写入指定文件。换配置和路径即可复用。另一个应用 [sortviz](../../app/README.md) 支持 `--small`、`--big`、`--seed` 和 `--no-frames`，不再需要改源码常量。

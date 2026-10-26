@@ -26,8 +26,10 @@
    确认**退出码为 `0`** 再交付；若报错，按指南 §4.5「错误类 → 原因 → 修法」修正后重跑。
 8. **字符串处理纪律**：不要对 `string` 取下标（`s[i]` 非法 → 先 `split("", s)`，见指南 §4-22）；
    **大 n 时不要在循环里用 `s = s + …` 或 `push` 累积**（O(n²)，用指南 §4.6 的 O(n) 写法）。
-9. 当前已实现 69 内置及 range(n)/range(lo,hi)，使用指南 §6 已列签名。字符串按 Unicode 标量计数；indexOf 最坏 O(n·m)，contains 线性扫描。文件 IO 为 UTF-8，相对路径基于进程 CWD；本项目只在项目内读写，临时件放 Temp/，父目录需存在。
-10. 附 stdout 与真实退出码，文件 IO 标明路径及副作用。
+9. 当前1.4.0已实现 72 内置及 range(n)/range(lo,hi)，使用指南 §6 已列签名。字符串按 Unicode 标量计数；indexOf 最坏 O(n·m)，contains 线性扫描。文件 IO 为 UTF-8，相对路径基于进程 CWD；本项目只在项目内读写，临时件放 Temp/，父目录需存在。
+10. 参数须放CLI的 -- 后，用argv()读取；JSON用jsonParse/jsonStringify，不手写拼接/解析。业务JSON正常模式输出，--json为执行状态；详见指南§6.2。
+11. -e/stdin源码无需#42；stdin源码已读到EOF，不能再从同一stdin读数据。JSON两内置作高阶回调要lambda包装，不直接取其函数值。
+12. 附 stdout/stderr 与真实退出码，文件 IO 标明路径及副作用。
 
 【输出格式】
 - 一个或多个 ```lfz 代码块（含 `#42` 首行）；
@@ -54,6 +56,7 @@
 - 大循环里是否用 `s = s + …` / `push` 累积（应为指南 §4.6 的 O(n) 写法）；
 - 退出码是否理解正确（`lfz run` 下 assert 失败 → `2`；`lfz test` 下用例失败 → `1`）；
 - 是否按 §6.1 核对 data-last、Unicode 标量、空 fill、ord/chr、IEEE 数学与 IO 的 CWD/UTF-8 边界；
+- 参数是否放在 -- 后、argv返回值修改是否不影响下一次调用；业务JSON和CLI --json是否区分；JSON是否符合i64/Unicode/128容器/重复键边界；
 - 是否出现/期待了旧的编号错误码（禁止，只有类名 + 中文消息）。
 
 【代码】
@@ -82,3 +85,15 @@ print(sum_even([1, 2, 3, 4, 5]))
 ```
 
 输出：`6`
+
+## 模板 C：Agent 数据脚本调用约定
+
+```text
+使用LFZ 1.4.0，读取argv()[0]的JSON配置，按任务完成数据处理。
+若交付.lfz文件，首行必须#42；用-e执行的CODE不加该前导。
+正常stdout只输出一个jsonStringify业务结果，诊断写eprint。
+若调用者要求CLI --json，则业务print改走stderr，stdout仅执行状态。
+参数始终放在--之后，包括JSON文本、空串、--json字面数据。
+配置先jsonParse并验证，输出先完整jsonStringify后再writeFile。
+报告真实命令、stdout/stderr、退出码和文件副作用。
+```

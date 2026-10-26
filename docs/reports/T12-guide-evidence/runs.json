@@ -1,0 +1,779 @@
+{
+  "date": "2026-10-25",
+  "binary": "dist/lfz.exe",
+  "binary_sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d",
+  "blocks": [
+    {
+      "document": "README.md",
+      "block": 1,
+      "file": "Temp\\docs-t12\\README-1.lfz",
+      "source": "#42\nprint(\"Hello, LFZ!\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\README-1.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "Hello, LFZ!\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "README.md",
+      "block": 2,
+      "file": "Temp\\docs-t12\\README-2.lfz",
+      "source": "#42\nlet name = \"LFZ\"\nvar visits = 0\nvisits += 1\nprint(\"你好，${name}！\")\nprint(\"这是第 ${visits} 次问候。\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\README-2.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "你好，LFZ！\n这是第 1 次问候。\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 1,
+      "file": "Temp\\docs-t12\\tutorial-1.lfz",
+      "source": "#42\nprint(\"Hello, LFZ!\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-1.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "Hello, LFZ!\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 2,
+      "file": "Temp\\docs-t12\\tutorial-2.lfz",
+      "source": "#42\nlet pi = 3.14\nvar count = 0\ncount = count + 1\ncount += 2\nprint(\"pi = ${pi}, count = ${count}, type = ${type(count)}\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-2.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "pi = 3.14, count = 3, type = int\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 3,
+      "file": "Temp\\docs-t12\\tutorial-3.lfz",
+      "source": "#42\nlet n = 5\nif n > 0 {\n    print(\"${n} 是正数\")\n} else {\n    print(\"${n} 不是正数\")\n}\n\nvar i = 0\nvar acc = 0\nwhile i < n {\n    acc += i\n    i += 1\n}\nprint(\"0..${n - 1} 的和 = ${acc}\")\n\nlet xs = [10, 20, 30]\nfor x in xs {\n    print(\"元素 ${x}\")\n}\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-3.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "5 是正数\n0..4 的和 = 10\n元素 10\n元素 20\n元素 30\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 4,
+      "file": "Temp\\docs-t12\\tutorial-4.lfz",
+      "source": "#42\nvar i = 0\nvar fns = []\nwhile i < 3 {\n    let x = i * 2\n    fns = push(() => x, fns)\n    i += 1\n}\nfor f in fns { print(\"捕获当轮 cell -> ${f()}\") }\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-4.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "捕获当轮 cell -> 0\n捕获当轮 cell -> 2\n捕获当轮 cell -> 4\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 5,
+      "file": "Temp\\docs-t12\\tutorial-5.lfz",
+      "source": "#42\nfn fact(n) {\n    if n <= 1 { 1 } else { n * fact(n - 1) }\n}\nfn fib(n) {\n    if n < 2 { n } else { fib(n - 1) + fib(n - 2) }\n}\nprint(\"fact(5) = ${fact(5)}\")\nprint(\"fib(10) = ${fib(10)}\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-5.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "fact(5) = 120\nfib(10) = 55\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 6,
+      "file": "Temp\\docs-t12\\tutorial-6.lfz",
+      "source": "#42\nfn makeCounter() {\n    var n = 0\n    fn inc() {\n        n += 1\n        n\n    }\n    inc\n}\nlet c = makeCounter()\nprint(\"${c()} ${c()} ${c()}\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-6.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "1 2 3\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 7,
+      "file": "Temp\\docs-t12\\tutorial-7.lfz",
+      "source": "#42\nstruct Student {\n    name: \"\",\n    score: 0,\n    fn isTop() => self.score >= 90,\n    fn line() => \"${self.name}(${self.score})\",\n}\nlet s = Student { name: \"Alice\", score: 93 }\nprint(s.line())\nprint(s.isTop())\ns.score = 80\nprint(\"${s.name} 现分数 ${s.score}, isTop=${s.isTop()}\")\nlet d = { \"k\": 1 }\nprint(d[\"k\"])\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-7.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "Alice(93)\ntrue\nAlice 现分数 80, isTop=false\n1\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 8,
+      "file": "Temp\\docs-t12\\tutorial-8.lfz",
+      "source": "#42\nlet xs = [5, 3, 8, 1]\nlet total = xs |> sum()\nprint(\"总和 = ${total}\")\nlet doubled = xs |> map((x) => x * 2)\nprint(\"翻倍 = ${doubled}\")\nlet big = xs |> filter((x) => x > 3)\nprint(\"大于 3 = ${big}\")\nlet sorted = xs |> sort()\nprint(\"升序 = ${sorted}\")\nprint(\"用 _ 插位: ${8 |> div(_, 2)}\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-8.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "总和 = 17\n翻倍 = [10, 6, 16, 2]\n大于 3 = [5, 8]\n升序 = [1, 3, 5, 8]\n用 _ 插位: 4\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 9,
+      "file": "Temp\\docs-t12\\tutorial-9.lfz",
+      "source": "#42\nlet name = \"LFZ\"\nlet n = 42\nlet pi = 3.14159\nprint(\"你好，${name}！\")\nprint(\"n=${n:05d}  hex=${n:x}  right=${n:>6}\")\nprint(\"pi=${pi:.2f}\")\nprint(\"字面量花括号: { } 与美元: \\${n}\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-9.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "你好，LFZ！\nn=00042  hex=2a  right=    42\npi=3.14\n字面量花括号: { } 与美元: ${n}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 10,
+      "file": "Temp\\docs-t12\\tutorial-10.lfz",
+      "source": "#42\nlet s = \"ab\"\nprint(\"[${s:<5}]\")     // 左对齐\nprint(\"[${s:>5}]\")     // 右对齐\nprint(\"[${s:^5}]\")     // 居中\nprint(\"[${s:*^7}]\")    // fill '*' + 居中\nprint(\"[${s:*<7}]\")    // fill '*' + 左对齐\nprint(\"[${42:05d}]\")   // 补零\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-10.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "[ab   ]\n[   ab]\n[ ab  ]\n[**ab***]\n[ab*****]\n[00042]\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 11,
+      "file": "Temp\\docs-t12\\tutorial-11.lfz",
+      "source": "#42\nlet alpha = 1\nvar beta = \"two\"\nfn greet(n) => \"${n}!\"\nstruct Point { x: 0, y: 0, }\nlet p = Point { x: 1, y: 2 }\n;;\nprint(\"done\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-11.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "alpha ： 1\nbeta ： two\ngreet ： <fn greet>\nPoint ： <struct Point>\np ： {x: 1, y: 2}\ndone\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 12,
+      "file": "Temp\\docs-t12\\tutorial-12.lfz",
+      "source": "#42\ncheck(1 == 1, \"相等\")\ncheck(1 == 2, \"不相等（软断言，不致命）\")\nprint(\"check 之后继续运行\")\nassert(2 + 2 == 4, \"算术应当正确\")\nprint(\"assert 通过，继续\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-12.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "check 之后继续运行\nassert 通过，继续\n",
+      "stderr": "check 失败：不相等（软断言，不致命）\n",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 13,
+      "file": "Temp\\docs-t12\\tutorial-13.lfz",
+      "source": "#42\nassert(1 == 2, \"一比二大？\")\nprint(\"这行不会执行\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-13.lfz"
+      ],
+      "exit": 2,
+      "expected_exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"Temp\\docs-t12\\tutorial-13.lfz\", line 2, in <module>\n    assert(1 == 2, \"一比二大？\")\n    ^\nAssertionError: 断言失败：一比二大？\n",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 14,
+      "file": "Temp\\docs-t12\\tutorial-14.lfz",
+      "source": "#42\n// grades.lfz — 成绩分析器（教程最终程序）\nstruct Student {\n    name: \"\",\n    score: 0,\n    fn grade() => if self.score >= 90 { \"A\" } else { if self.score >= 80 { \"B\" } else { \"C\" } },\n    fn line() => \"${self.name}(${self.score}): ${self.grade()}\",\n}\n\nfn average(sts) {\n    assert(len(sts) > 0, \"average() 需要非空数组\")\n    var total = 0\n    for s in sts { total += s.score }\n    total / len(sts)\n}\n\nlet roster = [\n    Student { name: \"Alice\", score: 93 },\n    Student { name: \"Bob\", score: 67 },\n    Student { name: \"Cara\", score: 88 },\n    Student { name: \"Dan\", score: 100 },\n]\n\n;;\n\nprint(\"名单：\")\nfor s in roster { print(\"  \" + s.line()) }\n\nlet ranked = roster |> sortBy((s) => -s.score)\nprint(\"\")\nprint(\"排名：\")\nvar rank = 1\nfor s in ranked {\n    print(\"  ${rank}. ${s.line()}\")\n    rank += 1\n}\n\nprint(\"\")\nprint(\"平均分 = ${average(roster):.2f}\")\nlet top = ranked |> maxBy((s) => s.score)\nprint(\"最高分 = ${top.name}（${top.score}）\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-14.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "Student ： <struct Student>\naverage ： <fn average>\nroster ： [{name: \"Alice\", score: 93}, {name: \"Bob\", score: 67}, {name: \"Cara\", score: 88}, {name: \"Dan\", score: 100}]\n名单：\n  Alice(93): A\n  Bob(67): C\n  Cara(88): B\n  Dan(100): A\n\n排名：\n  1. Dan(100): A\n  2. Alice(93): A\n  3. Cara(88): B\n  4. Bob(67): C\n\n平均分 = 87.00\n最高分 = Dan（100）\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 15,
+      "file": "Temp\\docs-t12\\tutorial-15.lfz",
+      "source": "#42\nlet s = \"abc\"\nlet cs = split(\"\", s)              // [\"a\", \"b\", \"c\"]，一次 O(n)\nprint(\"len(s) = ${len(s)}\")        // Unicode 标量数\nprint(\"cs[0] = ${cs[0]}\")          // 之后下标 O(1)\n\n// 逐字符转大写再拼回：map 一次构造数组，再 join\nlet parts = map((c) => upper(c), cs)\nprint(\"out = ${join(\"\", parts)}\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-15.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "len(s) = 3\ncs[0] = a\nout = ABC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 16,
+      "file": "Temp\\docs-t12\\tutorial-16.lfz",
+      "source": "#42\nlet w = 5\nprint(\"[\" + padEnd(w, \" \", \"ab\") + \"]\")   // [ab   ]\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-16.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "[ab   ]\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 17,
+      "file": "Temp\\docs-t12\\tutorial-17.lfz",
+      "source": "#42\nprint(range(-2, 2))\nlet s = \"a你🙂b\"\nprint(indexOf(\"🙂\", s), endsWith(\"b\", s))\nprint(substring(1, 3, s))\nprint(padEnd(5, \"🙂x\", \"你\"))\nprint(padStart(5, \"🙂x\", \"你\"))\nprint(ord(\"🙂\"), chr(128578))\nprint(sin(0), cos(0), log(1), exp(0))\nprint(log(0), log(-1), exp(1000), sin(float(\"inf\")))\nprint(contains({k: [1]}, [{k: [1]}]))\nlet p = \"Temp/docs-v11/note.txt\"\nprint(writeFile(p, \"你好\"))\nprint(appendFile(p, \"🙂\"))\nprint(readFile(p))\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-17.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "[-2, -1, 0, 1]\n2 true\n你🙂\n你🙂x🙂x\n🙂x🙂x你\n128578 🙂\n0.0 1.0 0.0 1.0\n-inf nan inf nan\ntrue\nnil\nnil\n你好🙂\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 18,
+      "file": "Temp\\docs-t12\\tutorial-18.lfz",
+      "source": "#42\nlet rows = jsonParse(\"[{\\\"id\\\":9007199254740993,\\\"title\\\":\\\"中文🙂\\\",\\\"done\\\":true},{\\\"id\\\":2,\\\"title\\\":\\\"待办\\\",\\\"done\\\":false}]\")\nlet result = rows |> filter((row) => row.done) |> map((row) => ({ id: row.id, title: row.title }))\nprint(jsonStringify(result))\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-18.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "[{\"id\":9007199254740993,\"title\":\"中文🙂\"}]\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 19,
+      "file": "Temp\\docs-t12\\tutorial-19.lfz",
+      "source": "#42\nlet saved = argv\nassert(saved == argv)\nlet before = saved()\nlet changed = argv()\nif len(changed) > 0 { changed[0] = \"changed\" }\nassert(saved() == before)\nprint(jsonStringify(saved()))\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-19.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "[]\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "tutorial.md",
+      "block": 20,
+      "file": "Temp\\docs-t12\\tutorial-20.lfz",
+      "source": "#42\n// 练习参考：在 grades.lfz 基础上加了 isPass / check / filter / reduce\nstruct Student {\n    name: \"\",\n    score: 0,\n    fn grade() => if self.score >= 90 { \"A\" } else { if self.score >= 80 { \"B\" } else { \"C\" } },\n    fn isPass() => self.score >= 60,\n    fn line() => \"${self.name}(${self.score}): ${self.grade()} ${if self.isPass() { \"及格\" } else { \"不及格\" }}\",\n}\n\nfn averageReduce(sts) {\n    assert(len(sts) > 0, \"averageReduce() 需要非空数组\")\n    let total = reduce((acc, s) => acc + s.score, 0, sts)\n    total / len(sts)\n}\n\nlet roster = [\n    Student { name: \"Alice\", score: 93 },\n    Student { name: \"Bob\", score: 67 },\n    Student { name: \"Cara\", score: 88 },\n    Student { name: \"Dan\", score: 100 },\n    Student { name: \"Eve\", score: 55 },\n]\n\nprint(\"名单：\")\nfor s in roster { print(\"  \" + s.line()) }\n\nlet failed = roster |> filter((s) => !s.isPass())\ncheck(len(failed) == 0, \"有 ${len(failed)} 人不及格\")\n\nlet aStudents = roster |> filter((s) => s.score >= 90)\nprint(\"A 档人数 = ${len(aStudents)}\")\nprint(\"平均分 = ${averageReduce(roster):.2f}\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\tutorial-20.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "名单：\n  Alice(93): A 及格\n  Bob(67): C 及格\n  Cara(88): B 及格\n  Dan(100): A 及格\n  Eve(55): C 不及格\nA 档人数 = 2\n平均分 = 80.60\n",
+      "stderr": "check 失败：有 1 人不及格\n",
+      "passed": true
+    },
+    {
+      "document": "reference.md",
+      "block": 1,
+      "file": "Temp\\docs-t12\\reference-1.lfz",
+      "source": "#42\nlet s = \"abc\"\nlet cs = split(\"\", s)          // [\"a\", \"b\", \"c\"]，一次 O(n)\nprint(cs[0])                   // a\nfor c in cs { print(c) }       // 顺序遍历，总 O(n)\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\reference-1.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "a\na\nb\nc\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "reference.md",
+      "block": 2,
+      "file": "Temp\\docs-t12\\reference-2.lfz",
+      "source": "#42\nlet cs = split(\"\", \"abc\")\nlet parts = map((c) => upper(c), cs)\nprint(join(\"\", parts))             // ABC\nlet out = map((c) => \"\", cs)\nfor i in range(len(cs)) {\n    out[i] = upper(cs[i])\n}\nprint(join(\"\", out))               // ABC\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\reference-2.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "ABC\nABC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "reference.md",
+      "block": 3,
+      "file": "Temp\\docs-t12\\reference-3.lfz",
+      "source": "#42\nlet width = 5\nprint(\"[\" + padEnd(width, \" \", \"ab\") + \"]\")  // [ab   ]\nprint(\"[\" + padStart(width, \" \", \"ab\") + \"]\") // [   ab]\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\reference-3.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "[ab   ]\n[   ab]\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "reference.md",
+      "block": 4,
+      "file": "Temp\\docs-t12\\reference-4.lfz",
+      "source": "#42\nlet t = [[0, 0], [0, 0]]\nt[1][0] = 7                       // 链式下标赋值\nlet xs = []\nprint(len(xs) > 0 && xs[0] == 1)  // false，短路不越界\nprint(len(xs) == 0 || xs[0] == 1) // true\nprint()                           // 空行\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\reference-4.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "false\ntrue\n\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "errors.md",
+      "block": 1,
+      "file": "Temp\\docs-t12\\errors-1.lfz",
+      "source": "#42\nlet x = 1 $ 2\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\errors-1.lfz"
+      ],
+      "exit": 2,
+      "expected_exit": 2,
+      "stdout": "",
+      "stderr": "  File \"Temp\\docs-t12\\errors-1.lfz\", line 2\n    let x = 1 $ 2\n              ^\nSyntaxError: 非法字符 '$'\n",
+      "passed": true
+    },
+    {
+      "document": "errors.md",
+      "block": 2,
+      "file": "Temp\\docs-t12\\errors-2.lfz",
+      "source": "#42\nfn half(n) {\n    n / 0\n}\nlet r = half(10)\nprint(r)\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\errors-2.lfz"
+      ],
+      "exit": 2,
+      "expected_exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"Temp\\docs-t12\\errors-2.lfz\", line 5, in <module>\n    let r = half(10)\n            ^\n  File \"Temp\\docs-t12\\errors-2.lfz\", line 3, in half\n        n / 0\n        ^\nZeroDivisionError: 除以零\n",
+      "passed": true
+    },
+    {
+      "document": "errors.md",
+      "block": 3,
+      "file": "Temp\\docs-t12\\errors-3.lfz",
+      "source": "print(\"hello\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\errors-3.lfz"
+      ],
+      "exit": 2,
+      "expected_exit": 2,
+      "stdout": "",
+      "stderr": "File \"Temp\\docs-t12\\errors-3.lfz\", line 1\nCosmosAnswerError: 你忘记了宇宙的答案\n",
+      "passed": true
+    },
+    {
+      "document": "errors.md",
+      "block": 4,
+      "file": "Temp\\docs-t12\\errors-4.lfz",
+      "source": "#42\nassert(1 == 2, \"一比二大？\")\nprint(\"这行不会执行\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\errors-4.lfz"
+      ],
+      "exit": 2,
+      "expected_exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"Temp\\docs-t12\\errors-4.lfz\", line 2, in <module>\n    assert(1 == 2, \"一比二大？\")\n    ^\nAssertionError: 断言失败：一比二大？\n",
+      "passed": true
+    },
+    {
+      "document": "errors.md",
+      "block": 5,
+      "file": "Temp\\docs-t12\\errors-5.lfz",
+      "source": "#42\ncheck(1 == 2, \"软断言示例\")\nprint(\"继续运行\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\errors-5.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "继续运行\n",
+      "stderr": "check 失败：软断言示例\n",
+      "passed": true
+    },
+    {
+      "document": "testing.md",
+      "block": 1,
+      "file": "Temp\\docs-t12\\testing-1.lfz",
+      "source": "#42\n// tests/lfz/test_arithmetic.lfz（示意）\nassert(1 + 1 == 2, \"加法\")\nassert(7 / 2 == 3.5, \"除法返回 float\")\nassert(div(7, 2) == 3, \"div 向下取整\")\nassert(-7 % 3 == 2, \"Python 取模\")\ncheck(1 == 2, \"软检查不致命\")          // 失败只写 stderr，用例仍 PASS\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\testing-1.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "",
+      "stderr": "check 失败：软检查不致命\n",
+      "passed": true
+    },
+    {
+      "document": "testing.md",
+      "block": 2,
+      "file": "Temp\\docs-t12\\testing-2.lfz",
+      "source": "#42\n// mini/pass_basic.lfz — 一个正向用例\nassert(1 + 1 == 2, \"加法\")\nassert([1, 2, 3] |> sum() == 6, \"管道求和\")\nlet doubled = [1, 2, 3] |> map((x) => x * 2)\nassert(doubled == [2, 4, 6], \"map 翻倍\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\testing-2.lfz"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "document": "testing.md",
+      "block": 3,
+      "file": "Temp\\docs-t12\\testing-3.lfz",
+      "source": "#42\n// mini/fail_assert.lfz — 故意让 assert 失败的用例（演示 FAIL 与退出码 1）\nassert(1 == 2, \"这个断言故意失败\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\testing-3.lfz"
+      ],
+      "exit": 2,
+      "expected_exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"Temp\\docs-t12\\testing-3.lfz\", line 3, in <module>\n    assert(1 == 2, \"这个断言故意失败\")\n    ^\nAssertionError: 断言失败：这个断言故意失败\n",
+      "passed": true
+    },
+    {
+      "document": "testing.md",
+      "block": 4,
+      "file": "Temp\\docs-t12\\testing-4.lfz",
+      "source": "print(\"no header here\")\n",
+      "command": [
+        "dist\\lfz.exe",
+        "run",
+        "Temp\\docs-t12\\testing-4.lfz"
+      ],
+      "exit": 2,
+      "expected_exit": 2,
+      "stdout": "",
+      "stderr": "File \"Temp\\docs-t12\\testing-4.lfz\", line 1\nCosmosAnswerError: 你忘记了宇宙的答案\n",
+      "passed": true
+    }
+  ],
+  "probes": [
+    {
+      "name": "README_argv_literals",
+      "args": [
+        "-e",
+        "print(jsonStringify(argv()))",
+        "--",
+        "中文",
+        "--json",
+        ""
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "[\"中文\",\"--json\",\"\"]\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true
+    },
+    {
+      "name": "README_stdin",
+      "args": [
+        "-"
+      ],
+      "stdin_hex": "7072696e742831202b2032290a",
+      "exit": 0,
+      "stdout": "3\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true
+    },
+    {
+      "name": "tutorial_argv_with_args",
+      "args": [
+        "run",
+        "Temp/docs-t12/tutorial-19.lfz",
+        "--",
+        "one",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "[\"one\",\"--json\"]\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true
+    },
+    {
+      "name": "errors_duplicate_utf8_offset",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(argv()[0])",
+        "--",
+        "{\"中\":1,\"中\":2}"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 9）：对象键重复\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true,
+        "stderr": true
+      },
+      "passed": true
+    },
+    {
+      "name": "errors_nonfinite",
+      "args": [
+        "--json",
+        "-e",
+        "jsonStringify(exp(1000))"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 编码失败：浮点数必须有限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true,
+        "stderr": true
+      },
+      "passed": true
+    },
+    {
+      "name": "errors_stdin_bad_utf8",
+      "args": [
+        "--json",
+        "-"
+      ],
+      "stdin_hex": "ff",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"无法读取标准输入\",\"file\":\"<stdin>\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true,
+        "stderr": true
+      },
+      "passed": true
+    },
+    {
+      "name": "expression_no_auto_print",
+      "args": [
+        "-e",
+        "1 + 2"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true
+    },
+    {
+      "name": "state_json_not_business",
+      "args": [
+        "--json",
+        "-e",
+        "print(jsonStringify({answer:42}))"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "{\"answer\":42}\n",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr_business": true
+      },
+      "passed": true
+    },
+    {
+      "name": "README_jsonflow",
+      "args": [
+        "run",
+        "app/jsonflow.lfz",
+        "--",
+        "app/fixtures/t12/config.json",
+        "app/fixtures/t12/input.json",
+        "Temp/guide-result.json"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"input\":3,\"output\":2,\"path\":\"Temp/guide-result.json\"}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "output_bytes": true
+      },
+      "passed": true
+    },
+    {
+      "name": "sortviz_parameter_command",
+      "args": [
+        "run",
+        "app/sortviz.lfz",
+        "--",
+        "--small",
+        "4",
+        "--big",
+        "30",
+        "--seed",
+        "7",
+        "--no-frames"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "APP_NAME ： LFZ 排序算法可视化\nN_SMALL ： 4\nN_BIG ： 30\nSEED ： 7\nCELLW ： 6\nSHOW_FRAMES ： false\n\n== LFZ 排序算法可视化 — sortviz ==\n配置：N_SMALL=4  N_BIG=30  SEED=7  CELLW=6  SHOW_FRAMES=false\n\n\n== 阶段 1：小规模逐帧可视化（N=4） ==\n原始数据: [87, 4, 46, 3]\n数据摘要: min=3  max=87  sum=140  n=4\n初始条形图:\norigin        |######|      |###   |      |\n\n-- 冒泡排序（逐趟）--\n  bubble     比较=     6  交换=     5  步数=     6  [校验通过]\n\n-- 选择排序（逐轮）--\n  selection  比较=     6  交换=     1  步数=     6  [校验通过]\n\n-- 插入排序（逐张）--\n  insertion  比较=     6  交换=     5  步数=     6  [校验通过]\n\n-- 归并排序（分治）--\n  merge      比较=     5  交换=     0  步数=     8  [校验通过]\n\n-- 快速排序（逐次分区）--\n  quick      比较=     6  交换=     1  步数=     6  [校验通过]\n\n== 阶段 2：大规模仅统计对比（N=30，不输出逐帧） ==\n数据摘要: min=0  max=98  sum=1457  n=30\n  算法         比较次数    交换次数      步数   校验\n  bubble     比较=   407  交换=   236  步数=   407  [校验通过]\n  selection  比较=   435  交换=    27  步数=   435  [校验通过]\n  insertion  比较=   262  交换=   236  步数=   262  [校验通过]\n  merge      比较=   116  交换=     0  步数=   148  [校验通过]\n  quick      比较=   114  交换=    56  步数=   114  [校验通过]\n\n== 阶段 3：属性自测（随机数组 × 5 算法，check 非致命） ==\n  自测 150 次排序，失败 0 次（check 非致命）\n\n== 完成：5 种算法全部通过正确性校验 ==\n",
+      "stderr": "",
+      "checks": {
+        "exit": true
+      },
+      "passed": true
+    }
+  ],
+  "blocks_total": 35,
+  "blocks_passed": 35,
+  "probes_total": 10,
+  "probes_passed": 10,
+  "guide_sha256": {
+    "docs\\guide\\errors.md": "edab34365e16ba6e3e830a306e0d938aa173273800876f155a896cb24cad3f67",
+    "docs\\guide\\README.md": "2d6c70f28672690910a006f517a895a36fd3fa163481d32b20921b353f487edb",
+    "docs\\guide\\reference.md": "d2e80c5c18f2ea3065610d60cfbb3ff40f80ad0f0b1d5a9a6f5b285d642614e3",
+    "docs\\guide\\testing.md": "c0f95f9b82abfec34c0ad766f43f229bfbed4c200453634ed1e5730c8d58a837",
+    "docs\\guide\\tutorial.md": "bd3420f2a3c5c6958d26e9d05050bdd8631279f19b2f35ac2c96d19fa86f2718"
+  }
+}
