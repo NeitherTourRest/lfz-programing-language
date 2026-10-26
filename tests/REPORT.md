@@ -1,3 +1,11 @@
+# T12 当前实测快照（2026-10-25）
+
+release 1.4.0正式黑盒 **166/166 PASS，0 FAIL/ERROR，exit 0**；原130项保留，新增4正例组64 assert及32负例。另 `tests/t12_cli_check.py --lfz target/release/lfz.exe --output Temp/T12/test-engineer/recheck.json --full-suite` 可执行91项进程验收（含一次正式全量），本轮91/91通过。
+
+完整报告见 [T12-blackbox.md](../docs/reports/T12-blackbox.md)，一手证据见 `docs/reports/T12-blackbox-evidence/`。解释器SHA256 `fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d`。下面旧90/130等数字属于各自历史阶段，不是当前总数。
+
+---
+
 # LFZ 黑盒测试集 — 测试报告（P5）
 
 > 交付物：评分项 2（20 分）｜ 负责人: test-engineer ｜ 状态: **定稿（P5.4）+ 等价路径补测（P5.6）+ 容量溢出回归（P5.7）+ 解析期上限回归（P5.8）** ｜ 最后更新: 2026-09-27

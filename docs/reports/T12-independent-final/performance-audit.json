@@ -1,0 +1,231 @@
+{
+  "scope": "independent arithmetic/hash/method/output audit; no new timing window",
+  "new_sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+  "counts": {
+    "PASS": 15,
+    "ENVIRONMENT_INDETERMINATE": 3,
+    "FAIL": 1
+  },
+  "old_new_formal_runs": 266,
+  "dist_formal_runs": 7,
+  "new_features_formal_runs": 63,
+  "cases": [
+    {
+      "name": "noop",
+      "n": 0,
+      "status": "PASS",
+      "old_ms": 17.481,
+      "new_ms": 16.2871,
+      "fixed_limit_ms": 16.307000000000002,
+      "paired_ratio": 0.9317029918196897,
+      "old_user_ms": 0.0,
+      "new_user_ms": 0.0
+    },
+    {
+      "name": "numeric_loop",
+      "n": 10000,
+      "status": "ENVIRONMENT_INDETERMINATE",
+      "old_ms": 21.2738,
+      "new_ms": 18.7616,
+      "fixed_limit_ms": 17.967599999999997,
+      "paired_ratio": 0.8819110831163215,
+      "old_user_ms": 15.625,
+      "new_user_ms": 0.0
+    },
+    {
+      "name": "numeric_loop",
+      "n": 100000,
+      "status": "PASS",
+      "old_ms": 37.8235,
+      "new_ms": 29.8923,
+      "fixed_limit_ms": 38.778479999999995,
+      "paired_ratio": 0.7903102568508995,
+      "old_user_ms": 15.625,
+      "new_user_ms": 15.625
+    },
+    {
+      "name": "numeric_loop",
+      "n": 500000,
+      "status": "PASS",
+      "old_ms": 104.9399,
+      "new_ms": 90.8044,
+      "fixed_limit_ms": 131.49684,
+      "paired_ratio": 0.8652990902411762,
+      "old_user_ms": 78.125,
+      "new_user_ms": 78.125
+    },
+    {
+      "name": "array_builtins",
+      "n": 1000,
+      "status": "PASS",
+      "old_ms": 16.2669,
+      "new_ms": 15.2496,
+      "fixed_limit_ms": 17.2102,
+      "paired_ratio": 0.9374619626357819,
+      "old_user_ms": 0.0,
+      "new_user_ms": 0.0
+    },
+    {
+      "name": "array_builtins",
+      "n": 10000,
+      "status": "PASS",
+      "old_ms": 22.4343,
+      "new_ms": 21.9066,
+      "fixed_limit_ms": 22.7717,
+      "paired_ratio": 0.9764779823752023,
+      "old_user_ms": 0.0,
+      "new_user_ms": 0.0
+    },
+    {
+      "name": "array_builtins",
+      "n": 50000,
+      "status": "PASS",
+      "old_ms": 44.8396,
+      "new_ms": 43.8366,
+      "fixed_limit_ms": 52.305839999999996,
+      "paired_ratio": 0.9776313794057039,
+      "old_user_ms": 15.625,
+      "new_user_ms": 15.625
+    },
+    {
+      "name": "struct_ops",
+      "n": 2000,
+      "status": "PASS",
+      "old_ms": 20.8641,
+      "new_ms": 16.4218,
+      "fixed_limit_ms": 22.4452,
+      "paired_ratio": 0.7870840342981485,
+      "old_user_ms": 0.0,
+      "new_user_ms": 0.0
+    },
+    {
+      "name": "struct_ops",
+      "n": 4000,
+      "status": "PASS",
+      "old_ms": 37.3927,
+      "new_ms": 19.0532,
+      "fixed_limit_ms": 37.87044,
+      "paired_ratio": 0.5095433065812311,
+      "old_user_ms": 15.625,
+      "new_user_ms": 0.0
+    },
+    {
+      "name": "struct_ops",
+      "n": 8000,
+      "status": "PASS",
+      "old_ms": 93.4315,
+      "new_ms": 21.1978,
+      "fixed_limit_ms": 107.35176,
+      "paired_ratio": 0.2268806558815817,
+      "old_user_ms": 62.5,
+      "new_user_ms": 0.0
+    },
+    {
+      "name": "string_ops",
+      "n": 2000,
+      "status": "ENVIRONMENT_INDETERMINATE",
+      "old_ms": 33.2673,
+      "new_ms": 35.5534,
+      "fixed_limit_ms": 28.9022,
+      "paired_ratio": 1.068719132601684,
+      "old_user_ms": 15.625,
+      "new_user_ms": 0.0
+    },
+    {
+      "name": "string_ops",
+      "n": 4000,
+      "status": "PASS",
+      "old_ms": 75.879,
+      "new_ms": 97.7181,
+      "fixed_limit_ms": 101.90447999999999,
+      "paired_ratio": 1.2878148104218559,
+      "old_user_ms": 46.875,
+      "new_user_ms": 46.875
+    },
+    {
+      "name": "string_ops",
+      "n": 8000,
+      "status": "PASS",
+      "old_ms": 216.0795,
+      "new_ms": 223.7371,
+      "fixed_limit_ms": 236.35271999999998,
+      "paired_ratio": 1.0354388084015373,
+      "old_user_ms": 109.375,
+      "new_user_ms": 109.375
+    },
+    {
+      "name": "string_map",
+      "n": 2000,
+      "status": "PASS",
+      "old_ms": 17.2848,
+      "new_ms": 15.9009,
+      "fixed_limit_ms": 17.521900000000002,
+      "paired_ratio": 0.9199354346014995,
+      "old_user_ms": 0.0,
+      "new_user_ms": 15.625
+    },
+    {
+      "name": "string_map",
+      "n": 4000,
+      "status": "PASS",
+      "old_ms": 23.2915,
+      "new_ms": 18.928,
+      "fixed_limit_ms": 23.0626,
+      "paired_ratio": 0.8126569778674625,
+      "old_user_ms": 0.0,
+      "new_user_ms": 0.0
+    },
+    {
+      "name": "string_map",
+      "n": 8000,
+      "status": "FAIL",
+      "old_ms": 21.8713,
+      "new_ms": 22.6906,
+      "fixed_limit_ms": 22.5214,
+      "paired_ratio": 1.0374600503856652,
+      "old_user_ms": 0.0,
+      "new_user_ms": 0.0
+    },
+    {
+      "name": "struct_small",
+      "n": 4,
+      "status": "ENVIRONMENT_INDETERMINATE",
+      "old_ms": 20.3191,
+      "new_ms": 20.1256,
+      "fixed_limit_ms": 18.7462,
+      "paired_ratio": 0.990476940415668,
+      "old_user_ms": 0.0,
+      "new_user_ms": 0.0
+    },
+    {
+      "name": "struct_small",
+      "n": 16,
+      "status": "PASS",
+      "old_ms": 31.3626,
+      "new_ms": 28.772,
+      "fixed_limit_ms": 34.633919999999996,
+      "paired_ratio": 0.9173984299771064,
+      "old_user_ms": 15.625,
+      "new_user_ms": 15.625
+    },
+    {
+      "name": "struct_small",
+      "n": 64,
+      "status": "PASS",
+      "old_ms": 69.9179,
+      "new_ms": 64.4819,
+      "fixed_limit_ms": 78.31067999999999,
+      "paired_ratio": 0.9222516694580357,
+      "old_user_ms": 46.875,
+      "new_user_ms": 31.25
+    }
+  ],
+  "R304": "OPEN",
+  "peak_memory_measured": false,
+  "notes": [
+    "profile opt2 and while change both present; benefits not attributable solely to one",
+    "whole process wall includes startup; user/kernel accounting may quantize short tasks",
+    "three reference failures with old also over threshold remain indeterminate, not passes",
+    "one string_map8k exceeds fixed absolute line with old within; no new window selected"
+  ]
+}

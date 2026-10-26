@@ -1,0 +1,4 @@
+#42
+let x = {"next": nil}
+x.next = x
+jsonStringify(x)

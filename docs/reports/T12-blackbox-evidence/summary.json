@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-25",
+  "binary_sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d",
+  "formal_suite": {
+    "ok": true,
+    "total": 166,
+    "passed": 166,
+    "failed": 0,
+    "errored": 0
+  },
+  "process_checks": {
+    "total": 91,
+    "passed": 91,
+    "failed": 0
+  },
+  "new_positive_groups": 4,
+  "new_positive_assertions": {
+    "test_t12_argv.lfz": 12,
+    "test_t12_json_references.lfz": 8,
+    "test_t12_json_unicode.lfz": 16,
+    "test_t12_json_values.lfz": 28
+  },
+  "new_negative_cases": 32,
+  "old_manifest_entries_preserved_exact_values": 99,
+  "script_sha256": "e48077dfbb29e19c73bf745a281affbd4539b1a72eb49b01a479657ee4179db2",
+  "evidence_sha256": "f4d12a73caa1f035b66371f716016437bcf633edc503c5dc2998670c3d2620e8"
+}

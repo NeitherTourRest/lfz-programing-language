@@ -1,0 +1,323 @@
+{
+  "scope": "independent old/new semantic differential for spec16.7",
+  "date": "2026-10-25",
+  "old_sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+  "new_sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+  "passed": 16,
+  "categories": [
+    "direct_declarations",
+    "dump_visibility",
+    "empty_body",
+    "errors_no_implicit_binding",
+    "flow",
+    "nested_scope",
+    "outer_capture",
+    "unreachable_declarations"
+  ],
+  "cases": [
+    {
+      "name": "outer_cell",
+      "category": "outer_capture",
+      "source": "#42\nfn make() {\n var x=0\n var i=0\n let fs=[nil,nil,nil]\n while i<3 {\n  fs[i]=()=>x\n  x+=1\n  i+=1\n }\n x=99\n print([fs[0](),fs[1](),fs[2]()])\n}\nmake()\n",
+      "expected_exit": 0,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 0,
+          "stdout": "[99, 99, 99]\n",
+          "stderr": ""
+        },
+        "new": {
+          "exit": 0,
+          "stdout": "[99, 99, 99]\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "let_fresh",
+      "category": "direct_declarations",
+      "source": "#42\nvar i=0\nlet fs=[nil,nil,nil]\nwhile i<3 {\n let x=i\n fs[i]=()=>x\n i+=1\n}\nprint([fs[0](),fs[1](),fs[2]()])\n",
+      "expected_exit": 0,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 0,
+          "stdout": "[0, 1, 2]\n",
+          "stderr": ""
+        },
+        "new": {
+          "exit": 0,
+          "stdout": "[0, 1, 2]\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "var_fresh",
+      "category": "direct_declarations",
+      "source": "#42\nvar i=0\nlet fs=[nil,nil,nil]\nwhile i<3 {\n var x=i\n fs[i]=()=>{x+=1\n x}\n i+=1\n}\nprint([fs[0](),fs[1](),fs[2](),fs[0]()])\n",
+      "expected_exit": 0,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 0,
+          "stdout": "[1, 2, 3, 2]\n",
+          "stderr": ""
+        },
+        "new": {
+          "exit": 0,
+          "stdout": "[1, 2, 3, 2]\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "fn_fresh",
+      "category": "direct_declarations",
+      "source": "#42\nvar i=0\nlet fs=[nil,nil]\nwhile i<2 {\n fn f()=>f\n fs[i]=f\n i+=1\n}\nprint([fs[0]()==fs[0],fs[1]()==fs[1],fs[0]==fs[1]])\n",
+      "expected_exit": 0,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 0,
+          "stdout": "[true, true, false]\n",
+          "stderr": ""
+        },
+        "new": {
+          "exit": 0,
+          "stdout": "[true, true, false]\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "struct_fresh",
+      "category": "direct_declarations",
+      "source": "#42\nvar i=0\nlet fs=[nil,nil,nil]\nwhile i<3 {\n struct S { n:i, fn value()=>self.n }\n fs[i]=S{}\n i+=1\n}\nprint([fs[0].value(),fs[1].value(),fs[2].value()])\n",
+      "expected_exit": 0,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 0,
+          "stdout": "[0, 1, 2]\n",
+          "stderr": ""
+        },
+        "new": {
+          "exit": 0,
+          "stdout": "[0, 1, 2]\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "unreachable_decl",
+      "category": "unreachable_declarations",
+      "source": "#42\nvar i=0\nwhile i<3 {\n i+=1\n continue\n let never=999\n}\nprint(i)\n",
+      "expected_exit": 0,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 0,
+          "stdout": "3\n",
+          "stderr": ""
+        },
+        "new": {
+          "exit": 0,
+          "stdout": "3\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "nested_if_shadow",
+      "category": "nested_scope",
+      "source": "#42\nlet x=42\nvar i=0\nlet fs=[nil,nil,nil]\nwhile i<3 {\n if true { let x=i\n  fs[i]=()=>x }\n i+=1\n}\nprint([x,fs[0](),fs[1](),fs[2]()])\n",
+      "expected_exit": 0,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 0,
+          "stdout": "[42, 0, 1, 2]\n",
+          "stderr": ""
+        },
+        "new": {
+          "exit": 0,
+          "stdout": "[42, 0, 1, 2]\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "nested_for_fresh",
+      "category": "nested_scope",
+      "source": "#42\nvar i=0\nlet fs=[nil,nil,nil,nil]\nwhile i<2 {\n for n in range(2) { fs[i*2+n]=()=>n }\n i+=1\n}\nprint([fs[0](),fs[1](),fs[2](),fs[3]()])\n",
+      "expected_exit": 0,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 0,
+          "stdout": "[0, 1, 0, 1]\n",
+          "stderr": ""
+        },
+        "new": {
+          "exit": 0,
+          "stdout": "[0, 1, 0, 1]\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "nested_while",
+      "category": "nested_scope",
+      "source": "#42\nvar i=0\nvar j=0\nlet fs=[nil,nil,nil,nil]\nwhile i<2 {\n j=0\n while j<2 {\n  let x=i*2+j\n  fs[x]=()=>x\n  j+=1\n }\n i+=1\n}\nprint([fs[0](),fs[1](),fs[2](),fs[3]()])\n",
+      "expected_exit": 0,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 0,
+          "stdout": "[0, 1, 2, 3]\n",
+          "stderr": ""
+        },
+        "new": {
+          "exit": 0,
+          "stdout": "[0, 1, 2, 3]\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "dump_order",
+      "category": "dump_visibility",
+      "source": "#42\nlet alpha=1\nfn work(){\n let alpha=2\n let beta=3\n var i=0\n while i<2 {\n  ;;\n  if true { let beta=9\n   ;; }\n  i+=1\n }\n}\nwork()\n",
+      "expected_exit": 0,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 0,
+          "stdout": "alpha ： 2\nbeta ： 3\ni ： 0\nwork ： <fn work>\nbeta ： 9\nalpha ： 2\ni ： 0\nwork ： <fn work>\nalpha ： 2\nbeta ： 3\ni ： 1\nwork ： <fn work>\nbeta ： 9\nalpha ： 2\ni ： 1\nwork ： <fn work>\n",
+          "stderr": ""
+        },
+        "new": {
+          "exit": 0,
+          "stdout": "alpha ： 2\nbeta ： 3\ni ： 0\nwork ： <fn work>\nbeta ： 9\nalpha ： 2\ni ： 0\nwork ： <fn work>\nalpha ： 2\nbeta ： 3\ni ： 1\nwork ： <fn work>\nbeta ： 9\nalpha ： 2\ni ： 1\nwork ： <fn work>\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "closure_dump",
+      "category": "dump_visibility",
+      "source": "#42\nfn work(){\n let alpha=2\n var i=0\n let fs=[nil,nil]\n while i<2 {\n  fs[i]=()=>{;;\n   alpha+i}\n  i+=1\n }\n print([fs[0](),fs[1]()])\n}\nwork()\n",
+      "expected_exit": 0,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 0,
+          "stdout": "fs ： [<fn>, <fn>]\ni ： 2\nalpha ： 2\nwork ： <fn work>\nfs ： [<fn>, <fn>]\ni ： 2\nalpha ： 2\nwork ： <fn work>\n[4, 4]\n",
+          "stderr": ""
+        },
+        "new": {
+          "exit": 0,
+          "stdout": "fs ： [<fn>, <fn>]\ni ： 2\nalpha ： 2\nwork ： <fn work>\nfs ： [<fn>, <fn>]\ni ： 2\nalpha ： 2\nwork ： <fn work>\n[4, 4]\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "break_continue_return",
+      "category": "flow",
+      "source": "#42\nfn work(){\n var i=0\n var total=0\n while i<9 {\n  i+=1\n  if i==2 {continue}\n  if i==6 {return total}\n  total+=i\n }\n -1\n}\nprint(work())\nvar n=0\nwhile true {\n n+=1\n if n==3 {break}\n}\nprint(n)\n",
+      "expected_exit": 0,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 0,
+          "stdout": "13\n3\n",
+          "stderr": ""
+        },
+        "new": {
+          "exit": 0,
+          "stdout": "13\n3\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "empty_body",
+      "category": "empty_body",
+      "source": "#42\nvar i=0\nfn next(){i+=1\n i<4}\nwhile next() {}\nwhile false {}\nprint(i)\n",
+      "expected_exit": 0,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 0,
+          "stdout": "4\n",
+          "stderr": ""
+        },
+        "new": {
+          "exit": 0,
+          "stdout": "4\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "unknown_name",
+      "category": "errors_no_implicit_binding",
+      "source": "#42\nwhile true {\n ghost=1\n break\n}\n",
+      "expected_exit": 2,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-while\\unknown_name.lfz\", line 3, in <module>\n     ghost=1\n     ^\nNameError: 未定义的名字 'ghost'\n"
+        },
+        "new": {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-while\\unknown_name.lfz\", line 3, in <module>\n     ghost=1\n     ^\nNameError: 未定义的名字 'ghost'\n"
+        }
+      }
+    },
+    {
+      "name": "immutable_let",
+      "category": "errors_no_implicit_binding",
+      "source": "#42\nlet x=0\nwhile x<1 {\n x=1\n}\n",
+      "expected_exit": 2,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-while\\immutable_let.lfz\", line 4, in <module>\n     x=1\n     ^\nTypeError: 不能重新赋值 let 变量 'x'；let 只锁重绑定，不锁内容\n"
+        },
+        "new": {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-while\\immutable_let.lfz\", line 4, in <module>\n     x=1\n     ^\nTypeError: 不能重新赋值 let 变量 'x'；let 只锁重绑定，不锁内容\n"
+        }
+      }
+    },
+    {
+      "name": "error_trace",
+      "category": "errors_no_implicit_binding",
+      "source": "#42\nfn failLoop(){\n var i=0\n while i<2 {\n  i+=1\n  if i==2 {fail(\"expected trace\")}\n }\n}\nfailLoop()\n",
+      "expected_exit": 2,
+      "equal": true,
+      "runs": {
+        "old": {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-while\\error_trace.lfz\", line 9, in <module>\n    failLoop()\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-while\\error_trace.lfz\", line 6, in failLoop\n      if i==2 {fail(\"expected trace\")}\n               ^\nAssertionError: expected trace\n"
+        },
+        "new": {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-while\\error_trace.lfz\", line 9, in <module>\n    failLoop()\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-while\\error_trace.lfz\", line 6, in failLoop\n      if i==2 {fail(\"expected trace\")}\n               ^\nAssertionError: expected trace\n"
+        }
+      }
+    }
+  ]
+}

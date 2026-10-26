@@ -1,0 +1,23 @@
+#42
+// T12 runner空argv、一等函数身份、别名/闭包/容器/遮蔽。
+assert(argv() == [], "t12_argv_runner_default_empty")
+assert(type(argv) == "function", "t12_argv_function_type")
+assert(str(argv) == "<fn argv>", "t12_argv_function_display")
+assert(argv == argv, "t12_argv_identity")
+let saved = argv
+assert(saved == argv, "t12_argv_alias_identity")
+let container = [saved]
+assert(container[0]() == [], "t12_argv_array_call")
+fn capture() { saved() }
+assert(capture() == [], "t12_argv_closure_call")
+let callbacks = [saved,saved] |> map(fn(f) { f() })
+assert(callbacks == [[],[]], "t12_argv_hof_callback")
+fn shadow(argv) { argv() }
+assert(shadow(fn() { ["shadow"] }) == ["shadow"], "t12_argv_parameter_shadow")
+assert(saved() == [], "t12_argv_saved_after_shadow")
+fn localShadow() {
+    let argv = fn() { ["local"] }
+    argv()
+}
+assert(localShadow() == ["local"], "t12_argv_let_shadow")
+assert(saved() == [], "t12_argv_original_after_local_shadow")

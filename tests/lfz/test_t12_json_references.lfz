@@ -1,0 +1,20 @@
+#42
+// T12 容器128层、方法数据面、共享引用、索引更新。
+let deep = jsonParse(repeat(128, "[") + "0" + repeat(128, "]"))
+assert(jsonStringify(deep) == repeat(128, "[") + "0" + repeat(128, "]"), "t12_json_depth128")
+let shared = {"value": [1,2]}
+assert(jsonStringify([shared,shared]) == "[{\"value\":[1,2]},{\"value\":[1,2]}]", "t12_json_shared_noncycle")
+assert(shared.value == [1,2], "t12_json_encode_does_not_mutate")
+struct Box {
+    x: 4,
+    fn explode() { fail("method must not run") },
+}
+let box = Box {}
+assert(jsonStringify(box) == "{\"x\":4}", "t12_json_method_filtered_not_called")
+box.x = 8
+assert(jsonStringify(box) == "{\"x\":8}", "t12_json_existing_slot_update")
+box.newField = 9
+assert(jsonStringify(box) == "{\"newField\":9,\"x\":8}", "t12_json_new_slot_append_sorted")
+let onlyMethod = {"m": fn() { 1 }}
+assert(jsonStringify(onlyMethod) == "{}", "t12_json_function_field_filtered")
+assert(jsonStringify({"a": {"a": 1}}) == "{\"a\":{\"a\":1}}", "t12_json_same_key_different_objects")

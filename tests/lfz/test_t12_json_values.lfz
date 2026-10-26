@@ -1,0 +1,38 @@
+#42
+// T12 jsonParse/jsonStringify：精确数值与严格映射。
+assert(jsonParse("null") == nil, "t12_json_null")
+assert(jsonParse("true") == true, "t12_json_true")
+assert(jsonParse("false") == false, "t12_json_false")
+assert(jsonParse("9223372036854775807") == 9223372036854775807, "t12_json_i64max")
+assert(jsonParse("-9223372036854775808") == -9223372036854775808, "t12_json_i64min")
+assert(jsonParse("9007199254740993") == 9007199254740993, "t12_json_no_float_precision_loss")
+assert(type(jsonParse("1")) == "int", "t12_json_integer_type")
+assert(type(jsonParse("1e0")) == "float", "t12_json_exponent_float")
+assert(type(jsonParse("1.0")) == "float", "t12_json_decimal_float")
+assert(jsonStringify(jsonParse("-0.0")) == "-0.0", "t12_json_negative_float_zero")
+assert(jsonStringify(jsonParse("-0")) == "0", "t12_json_negative_int_zero")
+assert(jsonParse("1e-9999") == 0.0, "t12_json_float_underflow")
+assert(jsonStringify(1.0) == "1.0", "t12_json_float_type_roundtrip")
+assert(jsonStringify(nil) == "null", "t12_json_encode_nil")
+assert(jsonStringify([true, false, nil, -12]) == "[true,false,null,-12]", "t12_json_compact_array")
+assert(jsonStringify(jsonParse("{}")) == "{}", "t12_json_empty_object")
+assert(jsonStringify(jsonParse("[]")) == "[]", "t12_json_empty_array")
+assert(jsonParse(" \t\n\r [1,2] \n") == [1,2], "t12_json_whitespace")
+let obj = jsonParse("{\"z\":1,\"a\":2,\"中\":3,\"A\":4}")
+assert(jsonStringify(obj) == "{\"A\":4,\"a\":2,\"z\":1,\"中\":3}", "t12_json_utf8_key_sort")
+assert(jsonStringify(obj) == jsonStringify(obj), "t12_json_repeat_determinism")
+assert(keys(obj) == ["A","a","z","中"], "t12_json_struct_keys")
+let alias = obj
+alias["added"] = 99
+assert(obj["added"] == 99, "t12_json_parsed_struct_alias")
+let removed = del("z", obj)
+assert(has("z", obj), "t12_json_del_original_unchanged")
+assert(!has("z", removed), "t12_json_del_new_index")
+removed["new"] = 5
+assert(removed["new"] == 5, "t12_json_del_then_dynamic_insert")
+let copied = removed
+copied.a = 42
+assert(copied.a == 42, "t12_json_copy_slot_replaces")
+assert(obj.a == 2, "t12_json_copy_original_unchanged")
+let parsed = ["1", "2"] |> map(fn(x) { jsonParse(x) })
+assert(parsed == [1,2], "t12_json_pipeline_map_lambda")

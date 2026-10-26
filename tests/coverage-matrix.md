@@ -1,3 +1,19 @@
+# T12 当前覆盖快照（2026-10-25）
+
+当前正式166/166通过；旧130保留，以下为T12新增覆盖。下面旧阶段统计按原日期保留。
+
+| 特性 | 用例组文件 | 正常/边界assert | 错误用例 | 状态 | 证据 |
+| -- | -- | -- | -- | -- | -- |
+| JSON映射/整数/浮点/struct数据面 | `tests/lfz/test_t12_json_values.lfz` | 28 | 32负例中parse/encode类 | 通过 | `docs/reports/T12-blackbox-evidence/release-suite.json` |
+| Unicode/转义/任意键/美元 | `test_t12_json_unicode.lfz` | 16 | 孤立代理/非法控制/错误escape/BOM | 通过 | 同上 |
+| JSON引用/方法过滤/128层/索引 | `test_t12_json_references.lfz` | 8 | 129层/双容器环/函数/模板/Inf/NaN | 通过 | 同上 |
+| argv默认/身份/别名/闭包/HOF/遮蔽 | `test_t12_argv.lfz` | 12 | 直接/别名arity | 通过 | 同上 |
+| CLI入口/参数原样/JSON通道/精确错误 | `tests/t12_cli_check.py` | 91项进程检查，含一次166项runner | 按独立命令检查 | 通过 | `docs/reports/T12-blackbox-evidence/release-cli.json` |
+
+负例总计32，位于 `tests/fixtures/t12_*.lfz` 并只追加到 `tests/cases.json`；不将每行重复归类重复计数。准确输入与断言粒度见脚本与完整报告 [T12-blackbox.md](../docs/reports/T12-blackbox.md)。
+
+---
+
 # LFZ 黑盒测试 — 覆盖矩阵（定稿）
 
 > 唯一写者: test-engineer ｜ 状态: **定稿（P5.4）+ 等价路径补测（P5.6）+ 容量溢出回归（P5.7）+ 解析期上限回归（P5.8）** ｜ 最后更新: 2026-09-27

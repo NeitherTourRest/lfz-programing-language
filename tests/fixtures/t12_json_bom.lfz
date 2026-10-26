@@ -1,0 +1,2 @@
+#42
+jsonParse(chr(65279) + "null")

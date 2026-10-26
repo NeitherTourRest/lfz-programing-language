@@ -1,0 +1,2818 @@
+{
+  "schema": "LFZ-T12-BLACKBOX-1",
+  "date": "2026-10-25",
+  "binary": "target\\release\\lfz.exe",
+  "binary_sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d",
+  "total": 91,
+  "passed": 91,
+  "failed": 0,
+  "cases": [
+    {
+      "name": "argv_inline_0",
+      "args": [
+        "-e",
+        "assert(jsonStringify(argv()) == (\"[\\\"\\\",\\\"中文🙂\\\",\\\"--json\\\",\\\"-e\\\",\\\"--\\\",\\\"--help\\\",\\\"test\\\",\\\"a b\\\",\\\"\\${x}\\\"]\"), \"args\")\nlet old=argv()\nold[0]=\"changed\"\nassert(argv()[0]==\"\", \"fresh\")\nlet f=argv\nassert(f()==argv(),\"alias\")\nlet fs=[f]\nassert(fs[0]()==argv(),\"container\")\nlet h={\"f\":f}\nassert(h[\"f\"]()==argv(),\"struct_call\")\nassert(map(fn(g){g()},[f,f])==[argv(),argv()],\"hof\")\nprint(\"ok\")",
+        "--",
+        "",
+        "中文🙂",
+        "--json",
+        "-e",
+        "--",
+        "--help",
+        "test",
+        "a b",
+        "${x}"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "ok\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "ok\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.013004900014493614
+    },
+    {
+      "name": "argv_stdin_0",
+      "args": [
+        "-",
+        "--",
+        "",
+        "中文🙂",
+        "--json",
+        "-e",
+        "--",
+        "--help",
+        "test",
+        "a b",
+        "${x}"
+      ],
+      "stdin_hex": "617373657274286a736f6e537472696e676966792861726776282929203d3d2028225b5c225c222c5c22e4b8ade69687f09f99825c222c5c222d2d6a736f6e5c222c5c222d655c222c5c222d2d5c222c5c222d2d68656c705c222c5c22746573745c222c5c226120625c222c5c225c247b787d5c225d22292c20226172677322290a6c6574206f6c643d6172677628290a6f6c645b305d3d226368616e676564220a617373657274286172677628295b305d3d3d22222c2022667265736822290a6c657420663d617267760a617373657274286628293d3d6172677628292c22616c69617322290a6c65742066733d5b665d0a6173736572742866735b305d28293d3d6172677628292c22636f6e7461696e657222290a6c657420683d7b2266223a667d0a61737365727428685b2266225d28293d3d6172677628292c227374727563745f63616c6c22290a617373657274286d617028666e2867297b6728297d2c5b662c665d293d3d5b6172677628292c6172677628295d2c22686f6622290a7072696e7428226f6b2229",
+      "expected": {
+        "exit": 0,
+        "stdout": "ok\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "ok\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.011016700009349734
+    },
+    {
+      "name": "argv_inline_1",
+      "args": [
+        "run",
+        "-e",
+        "assert(jsonStringify(argv()) == (\"[\\\"\\\",\\\"中文🙂\\\",\\\"--json\\\",\\\"-e\\\",\\\"--\\\",\\\"--help\\\",\\\"test\\\",\\\"a b\\\",\\\"\\${x}\\\"]\"), \"args\")\nlet old=argv()\nold[0]=\"changed\"\nassert(argv()[0]==\"\", \"fresh\")\nlet f=argv\nassert(f()==argv(),\"alias\")\nlet fs=[f]\nassert(fs[0]()==argv(),\"container\")\nlet h={\"f\":f}\nassert(h[\"f\"]()==argv(),\"struct_call\")\nassert(map(fn(g){g()},[f,f])==[argv(),argv()],\"hof\")\nprint(\"ok\")",
+        "--",
+        "",
+        "中文🙂",
+        "--json",
+        "-e",
+        "--",
+        "--help",
+        "test",
+        "a b",
+        "${x}"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "ok\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "ok\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009788000024855137
+    },
+    {
+      "name": "argv_stdin_1",
+      "args": [
+        "run",
+        "-",
+        "--",
+        "",
+        "中文🙂",
+        "--json",
+        "-e",
+        "--",
+        "--help",
+        "test",
+        "a b",
+        "${x}"
+      ],
+      "stdin_hex": "617373657274286a736f6e537472696e676966792861726776282929203d3d2028225b5c225c222c5c22e4b8ade69687f09f99825c222c5c222d2d6a736f6e5c222c5c222d655c222c5c222d2d5c222c5c222d2d68656c705c222c5c22746573745c222c5c226120625c222c5c225c247b787d5c225d22292c20226172677322290a6c6574206f6c643d6172677628290a6f6c645b305d3d226368616e676564220a617373657274286172677628295b305d3d3d22222c2022667265736822290a6c657420663d617267760a617373657274286628293d3d6172677628292c22616c69617322290a6c65742066733d5b665d0a6173736572742866735b305d28293d3d6172677628292c22636f6e7461696e657222290a6c657420683d7b2266223a667d0a61737365727428685b2266225d28293d3d6172677628292c227374727563745f63616c6c22290a617373657274286d617028666e2867297b6728297d2c5b662c665d293d3d5b6172677628292c6172677628295d2c22686f6622290a7072696e7428226f6b2229",
+      "expected": {
+        "exit": 0,
+        "stdout": "ok\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "ok\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009543400024995208
+    },
+    {
+      "name": "argv_file_0",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\args.lfz",
+        "--",
+        "",
+        "中文🙂",
+        "--json",
+        "-e",
+        "--",
+        "--help",
+        "test",
+        "a b",
+        "${x}"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "ok\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "ok\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01159189996542409
+    },
+    {
+      "name": "argv_file_1",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\args.lfz",
+        "--",
+        "",
+        "中文🙂",
+        "--json",
+        "-e",
+        "--",
+        "--help",
+        "test",
+        "a b",
+        "${x}"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "ok\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "ok\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009396999957971275
+    },
+    {
+      "name": "empty_inline",
+      "args": [
+        "-e",
+        ""
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009476999985054135
+    },
+    {
+      "name": "empty_run_inline",
+      "args": [
+        "run",
+        "-e",
+        ""
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009845099993981421
+    },
+    {
+      "name": "empty_stdin",
+      "args": [
+        "-"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015790499979630113
+    },
+    {
+      "name": "empty_stdin_run",
+      "args": [
+        "run",
+        "-"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010210699983872473
+    },
+    {
+      "name": "trailing_separator",
+      "args": [
+        "-e",
+        "assert(argv()==[])",
+        "--"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009088799997698516
+    },
+    {
+      "name": "missing_inline",
+      "args": [
+        "-e"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": "",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: '-e' 需要一个 CODE 参数\n用法: lfz <file> | lfz run <file> | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.012457499979063869
+    },
+    {
+      "name": "missing_run_inline",
+      "args": [
+        "run",
+        "-e"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": "",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: '-e' 需要一个 CODE 参数\n用法: lfz <file> | lfz run <file> | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010445200023241341
+    },
+    {
+      "name": "extra_inline",
+      "args": [
+        "-e",
+        "1",
+        "extra"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": "",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: '-e' 只接受一个 CODE 参数；脚本参数须放在 -- 后\n用法: lfz <file> | lfz run <file> | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009293000039178878
+    },
+    {
+      "name": "extra_file",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\args.lfz",
+        "extra"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": "",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'run' 只接受一个 <file> 参数\n用法: lfz <file> | lfz run <file> | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.011917900003027171
+    },
+    {
+      "name": "separator_before_entry",
+      "args": [
+        "--",
+        "x"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": "",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 裸文件调用只接受一个 <file> 参数\n用法: lfz <file> | lfz run <file> | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.008925999980419874
+    },
+    {
+      "name": "separator_without_run_entry",
+      "args": [
+        "run",
+        "--",
+        "x"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": "",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'run' 只接受一个 <file> 参数\n用法: lfz <file> | lfz run <file> | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.008615800004918128
+    },
+    {
+      "name": "no_args",
+      "args": [],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": "",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 缺少子命令\n用法: lfz <file> | lfz run <file> | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009043900005053729
+    },
+    {
+      "name": "code_token_literal_--json",
+      "args": [
+        "--json",
+        "-e",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": null,
+        "message": null,
+        "file": "<command>",
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'json'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "file": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.00903029995970428
+    },
+    {
+      "name": "code_token_literal_--",
+      "args": [
+        "--json",
+        "-e",
+        "--"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": null,
+        "message": null,
+        "file": "<command>",
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 表达式，但得到 '文件末尾'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "file": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009844299987889826
+    },
+    {
+      "name": "code_token_literal_--help",
+      "args": [
+        "--json",
+        "-e",
+        "--help"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": null,
+        "message": null,
+        "file": "<command>",
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'help'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "file": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009167800017166883
+    },
+    {
+      "name": "json_boundary_21",
+      "args": [
+        "--json",
+        "-e",
+        "print(\"payload\")"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "{\"ok\":true}\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "payload\n",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "payload_stderr": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009323600039351732
+    },
+    {
+      "name": "json_boundary_22",
+      "args": [
+        "-e",
+        "print(\"payload\")",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "{\"ok\":true}\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "payload\n",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "payload_stderr": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01128519995836541
+    },
+    {
+      "name": "json_boundary_23",
+      "args": [
+        "--json",
+        "run",
+        "-e",
+        "print(\"payload\")",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "{\"ok\":true}\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "payload\n",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "payload_stderr": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.012459799996577203
+    },
+    {
+      "name": "json_boundary_24",
+      "args": [
+        "-e",
+        "print(\"--json\")",
+        "--",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "--json\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "--json\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009965200035367161
+    },
+    {
+      "name": "stdin_bad_utf8",
+      "args": [
+        "--json",
+        "-"
+      ],
+      "stdin_hex": "ff",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "IOError",
+        "message": "无法读取标准输入",
+        "file": "<stdin>",
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"无法读取标准输入\",\"file\":\"<stdin>\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "no_location": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01656120002735406
+    },
+    {
+      "name": "stdin_runtime_location",
+      "args": [
+        "--json",
+        "-"
+      ],
+      "stdin_hex": "6c657420783d310a312f300a",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ZeroDivisionError",
+        "message": null,
+        "file": "<stdin>",
+        "line": 2,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"<stdin>\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"<stdin>\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "file": true,
+        "line": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010408999980427325
+    },
+    {
+      "name": "inline_runtime_location",
+      "args": [
+        "--json",
+        "-e",
+        "1/0"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ZeroDivisionError",
+        "message": null,
+        "file": "<command>",
+        "line": 1,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "file": true,
+        "line": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01543400000082329
+    },
+    {
+      "name": "stdin_input_eof",
+      "args": [
+        "--json",
+        "-"
+      ],
+      "stdin_hex": "696e70757428290a",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "IOError",
+        "message": null,
+        "file": "<stdin>",
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"输入结束（EOF）\",\"file\":\"<stdin>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<stdin>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "file": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.025266200012993068
+    },
+    {
+      "name": "inline_input_data",
+      "args": [
+        "-e",
+        "print(input())"
+      ],
+      "stdin_hex": "68656c6c6f0a",
+      "expected": {
+        "exit": 0,
+        "stdout": "hello\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "hello\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01557749998755753
+    },
+    {
+      "name": "inline_not_auto_print",
+      "args": [
+        "-e",
+        "40+2"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.017068699991796166
+    },
+    {
+      "name": "stdin_bom_crlf",
+      "args": [
+        "-"
+      ],
+      "stdin_hex": "efbbbf7072696e74283432290d0a",
+      "expected": {
+        "exit": 0,
+        "stdout": "42\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "42\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.014629099983721972
+    },
+    {
+      "name": "parse_exact_0",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 0）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.00964359997306019,
+      "json_input_utf8_hex": ""
+    },
+    {
+      "name": "parse_exact_1",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 1）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 1）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.02145360002759844,
+      "json_input_utf8_hex": "3031"
+    },
+    {
+      "name": "parse_exact_2",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 0）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009804799978155643,
+      "json_input_utf8_hex": "2b31"
+    },
+    {
+      "name": "parse_exact_3",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 2）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 2）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010288899997249246,
+      "json_input_utf8_hex": "312e"
+    },
+    {
+      "name": "parse_exact_4",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 3）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 3）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010067700000945479,
+      "json_input_utf8_hex": "31652b"
+    },
+    {
+      "name": "parse_exact_5",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 3）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 3）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.011033999966457486,
+      "json_input_utf8_hex": "5b312c5d"
+    },
+    {
+      "name": "parse_exact_6",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 7）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 7）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009834800031967461,
+      "json_input_utf8_hex": "7b2261223a312c7d"
+    },
+    {
+      "name": "parse_exact_7",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 5）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 5）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009562699997331947,
+      "json_input_utf8_hex": "747275652066616c7365"
+    },
+    {
+      "name": "parse_exact_8",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 5）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 5）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010176300012972206,
+      "json_input_utf8_hex": "22e4b8ad2278"
+    },
+    {
+      "name": "parse_exact_9",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 7）：对象键重复",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 7）：对象键重复\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009854500007349998,
+      "json_input_utf8_hex": "7b2261223a312c2261223a327d"
+    },
+    {
+      "name": "parse_exact_10",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 7）：对象键重复",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 7）：对象键重复\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010707699984777719,
+      "json_input_utf8_hex": "7b2261223a312c225c7530303631223a327d"
+    },
+    {
+      "name": "parse_exact_11",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 9）：对象键重复",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 9）：对象键重复\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009758999978657812,
+      "json_input_utf8_hex": "7b22e4b8ad223a302c22e4b8ad223a317d"
+    },
+    {
+      "name": "parse_exact_12",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 0）：整数超出 i64 范围",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：整数超出 i64 范围\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010280300048179924,
+      "json_input_utf8_hex": "39323233333732303336383534373735383038"
+    },
+    {
+      "name": "parse_exact_13",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 0）：整数超出 i64 范围",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：整数超出 i64 范围\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009199999971315265,
+      "json_input_utf8_hex": "2d39323233333732303336383534373735383039"
+    },
+    {
+      "name": "parse_exact_14",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 0）：浮点数超出有限范围",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：浮点数超出有限范围\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.012794599984772503,
+      "json_input_utf8_hex": "316539393939"
+    },
+    {
+      "name": "parse_exact_15",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 128）：嵌套深度超过 128 层",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 128）：嵌套深度超过 128 层\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010675700032152236,
+      "json_input_utf8_hex": "5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b305d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d"
+    },
+    {
+      "name": "parse_exact_16",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 0）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010154199961107224,
+      "json_input_utf8_hex": "efbbbf6e756c6c"
+    },
+    {
+      "name": "parse_exact_17",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 1）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 1）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009847400011494756,
+      "json_input_utf8_hex": "220022"
+    },
+    {
+      "name": "parse_exact_18",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 2）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 2）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009497899969574064,
+      "json_input_utf8_hex": "225c78343122"
+    },
+    {
+      "name": "parse_exact_19",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 7）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 7）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010248799982946366,
+      "json_input_utf8_hex": "225c756438303022"
+    },
+    {
+      "name": "parse_exact_20",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 3）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 3）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.012533500033896416,
+      "json_input_utf8_hex": "225c756463303022"
+    },
+    {
+      "name": "parse_exact_21",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 0）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.012480500037781894,
+      "json_input_utf8_hex": "4e614e"
+    },
+    {
+      "name": "parse_exact_22",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 0）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010416599980089813,
+      "json_input_utf8_hex": "496e66696e697479"
+    },
+    {
+      "name": "parse_exact_23",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 0）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010166299995034933,
+      "json_input_utf8_hex": "2f2a782a2f31"
+    },
+    {
+      "name": "parse_exact_24",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 1）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 1）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.011137499997857958,
+      "json_input_utf8_hex": "2d"
+    },
+    {
+      "name": "parse_exact_25",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 2）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 2）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01010750001296401,
+      "json_input_utf8_hex": "2d3031"
+    },
+    {
+      "name": "parse_exact_26",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 2）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 2）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009702400013338774,
+      "json_input_utf8_hex": "3165"
+    },
+    {
+      "name": "parse_exact_27",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 1）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 1）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009757300023920834,
+      "json_input_utf8_hex": "307831"
+    },
+    {
+      "name": "parse_exact_28",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 2）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 2）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009140999987721443,
+      "json_input_utf8_hex": "312e6532"
+    },
+    {
+      "name": "parse_exact_29",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 3）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 3）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01471379998838529,
+      "json_input_utf8_hex": "31652b2b32"
+    },
+    {
+      "name": "parse_exact_30",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 4）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 4）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.012795299990102649,
+      "json_input_utf8_hex": "6e756c6c0b"
+    },
+    {
+      "name": "parse_exact_31",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 0）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009925599966663867,
+      "json_input_utf8_hex": "c2a06e756c6c"
+    },
+    {
+      "name": "parse_exact_32",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\json-input.txt"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 解析失败（字节偏移 9）：不是合法的 JSON",
+        "file": "<command>",
+        "line": 1,
+        "col": 1
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 9）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true,
+        "col": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.00983339996309951,
+      "json_input_utf8_hex": "225c75643830305c753030343122"
+    },
+    {
+      "name": "encode_exact_0",
+      "args": [
+        "--json",
+        "-e",
+        "jsonStringify(fn(){1})"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 编码失败：不支持函数或结构体定义",
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 编码失败：不支持函数或结构体定义\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009389100014232099
+    },
+    {
+      "name": "encode_exact_1",
+      "args": [
+        "--json",
+        "-e",
+        "jsonStringify([fn(){1}])"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 编码失败：不支持函数或结构体定义",
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 编码失败：不支持函数或结构体定义\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009647400001995265
+    },
+    {
+      "name": "encode_exact_2",
+      "args": [
+        "--json",
+        "-e",
+        "jsonStringify(exp(10000))"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 编码失败：浮点数必须有限",
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 编码失败：浮点数必须有限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009782200038898736
+    },
+    {
+      "name": "encode_exact_3",
+      "args": [
+        "--json",
+        "-e",
+        "jsonStringify(log(-1))"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 编码失败：浮点数必须有限",
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 编码失败：浮点数必须有限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009893300011754036
+    },
+    {
+      "name": "encode_exact_4",
+      "args": [
+        "--json",
+        "-e",
+        "let x={\"n\":nil}\nx.n=x\njsonStringify(x)"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 编码失败：循环引用",
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 编码失败：循环引用\",\"file\":\"<command>\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009753899998031557
+    },
+    {
+      "name": "encode_exact_5",
+      "args": [
+        "--json",
+        "-e",
+        "var x=0\nfor i in range(129){x=[x]}\njsonStringify(x)"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "ValueError",
+        "message": "JSON 编码失败：嵌套深度超过 128 层",
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 编码失败：嵌套深度超过 128 层\",\"file\":\"<command>\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.009768899995833635
+    },
+    {
+      "name": "json_independent_roundtrip_0",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "null"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "null\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "null\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.00929120002547279
+    },
+    {
+      "name": "json_independent_roundtrip_1",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "true"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "true\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "true\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01671980001265183
+    },
+    {
+      "name": "json_independent_roundtrip_2",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "false"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "false\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "false\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01234919996932149
+    },
+    {
+      "name": "json_independent_roundtrip_3",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "0"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "0\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015275600017048419
+    },
+    {
+      "name": "json_independent_roundtrip_4",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "-1"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "-1\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "-1\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.011751200014259666
+    },
+    {
+      "name": "json_independent_roundtrip_5",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "9223372036854775807"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "9223372036854775807\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "9223372036854775807\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.010592900041956455
+    },
+    {
+      "name": "json_independent_roundtrip_6",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "-9223372036854775808"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "-9223372036854775808\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "-9223372036854775808\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.013203099952079356
+    },
+    {
+      "name": "json_independent_roundtrip_7",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "9007199254740993"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "9007199254740993\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "9007199254740993\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.012506800005212426
+    },
+    {
+      "name": "json_independent_roundtrip_8",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "\"\\u4e2d\\u6587\\ud83d\\ude42\""
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "\"中文🙂\"\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "\"中文🙂\"\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.011756799998693168
+    },
+    {
+      "name": "json_independent_roundtrip_9",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "\"${x}\""
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "\"${x}\"\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "\"${x}\"\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.013161999988369644
+    },
+    {
+      "name": "json_independent_roundtrip_10",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "\"\\u0000\\b\\f\\n\\r\\t/\\\\\\\"\""
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "\"\\u0000\\b\\f\\n\\r\\t/\\\\\\\"\"\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "\"\\u0000\\b\\f\\n\\r\\t/\\\\\\\"\"\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.013982900010887533
+    },
+    {
+      "name": "json_independent_roundtrip_11",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "[]"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "[]\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "[]\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01192410005023703
+    },
+    {
+      "name": "json_independent_roundtrip_12",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "{}"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "{}\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "{}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.011217599967494607
+    },
+    {
+      "name": "json_independent_roundtrip_13",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "[1,true,null]"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "[1,true,null]\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "[1,true,null]\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.014445099979639053
+    },
+    {
+      "name": "json_independent_roundtrip_14",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "{\"z\":1,\"a\":[false,null],\"\\ud83d\\ude42\":{\"\\u4e2d\":\"x\"}}"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "{\"a\":[false,null],\"z\":1,\"🙂\":{\"中\":\"x\"}}\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "{\"a\":[false,null],\"z\":1,\"🙂\":{\"中\":\"x\"}}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.011216300015803427
+    },
+    {
+      "name": "json_independent_roundtrip_15",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(argv()[0])))",
+        "--",
+        "{\"\":0,\"a b\":1,\"${x}\":2}"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "{\"\":0,\"${x}\":2,\"a b\":1}\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "{\"\":0,\"${x}\":2,\"a b\":1}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.012590400001499802
+    },
+    {
+      "name": "all_control_escapes_real",
+      "args": [
+        "-e",
+        "print(jsonStringify(readFile(argv()[0])))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\test-engineer\\controls.bin"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.018225999956484884
+    },
+    {
+      "name": "float_underflow_negative_zero",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(\"-1e-9999\")))"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": "-0.0\n",
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "-0.0\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016775699972640723
+    },
+    {
+      "name": "argv_alias_error",
+      "args": [
+        "--json",
+        "-e",
+        "let f=argv\nf(1)"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 2,
+        "stdout": null,
+        "error": "TypeError",
+        "message": "函数 argv 期待 0 个参数，得到 1",
+        "file": "<command>",
+        "line": 2,
+        "col": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 argv 期待 0 个参数，得到 1\",\"file\":\"<command>\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "single_json": true,
+        "error": true,
+        "message": true,
+        "file": true,
+        "line": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.020839800010435283
+    },
+    {
+      "name": "official_full_suite",
+      "args": [
+        "test",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "exit": 0,
+        "stdout": null,
+        "error": null,
+        "message": null,
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"total\":166,\"passed\":166,\"failed\":0,\"errored\":0,\"cases\":[{\"name\":\"abs_i64_min_overflow\",\"path\":\"tests/fixtures/abs_i64_min.lfz\",\"verdict\":\"PASS\"},{\"name\":\"ast_depth_10000_terms_is_expr_too_deep\",\"path\":\"tests/fixtures/ast_depth_overflow.lfz\",\"verdict\":\"PASS\"},{\"name\":\"syntax_break_outside_loop\",\"path\":\"tests/fixtures/break_outside_loop.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_ceil_inf_overflow_error\",\"path\":\"tests/fixtures/ceil_inf.lfz\",\"verdict\":\"PASS\"},{\"name\":\"syntax_continue_outside_loop\",\"path\":\"tests/fixtures/continue_outside_loop.lfz\",\"verdict\":\"PASS\"},{\"name\":\"deep_recursion_exceeds_limit\",\"path\":\"tests/fixtures/deep_recursion.lfz\",\"verdict\":\"PASS\"},{\"name\":\"del_method_field_is_field_error\",\"path\":\"tests/fixtures/del_method_field.lfz\",\"verdict\":\"PASS\"},{\"name\":\"del_missing_data_field\",\"path\":\"tests/fixtures/del_missing_data_field.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_div_non_int_type_error\",\"path\":\"tests/fixtures/div_non_int.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_div_by_zero\",\"path\":\"tests/fixtures/div_zero.lfz\",\"verdict\":\"PASS\"},{\"name\":\"preamble_empty_file\",\"path\":\"tests/fixtures/empty.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_fail_assertion_error\",\"path\":\"tests/fixtures/fail_raises.lfz\",\"verdict\":\"PASS\"},{\"name\":\"field_bracket_read_missing_field_error\",\"path\":\"tests/fixtures/field_bracket_missing.lfz\",\"verdict\":\"PASS\"},{\"name\":\"field_dot_read_missing_field_error\",\"path\":\"tests/fixtures/field_dot_missing.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_filter_predicate_not_bool\",\"path\":\"tests/fixtures/filter_predicate_not_bool.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_float_bad_string\",\"path\":\"tests/fixtures/float_bad_string.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_floor_nan_value_error\",\"path\":\"tests/fixtures/floor_nan.lfz\",\"verdict\":\"PASS\"},{\"name\":\"for_over_string_not_iterable\",\"path\":\"tests/fixtures/for_over_string.lfz\",\"verdict\":\"PASS\"},{\"name\":\"syntax_hash_mid_program\",\"path\":\"tests/fixtures/hash_mid_program.lfz\",\"verdict\":\"PASS\"},{\"name\":\"if_condition_not_bool\",\"path\":\"tests/fixtures/if_condition_not_bool.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_insert_index_too_large\",\"path\":\"tests/fixtures/insert_index_too_large.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_insert_negative_index\",\"path\":\"tests/fixtures/insert_negative_index.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_int_bad_string\",\"path\":\"tests/fixtures/int_bad_string.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_int_inf_overflow_error\",\"path\":\"tests/fixtures/int_inf.lfz\",\"verdict\":\"PASS\"},{\"name\":\"int_literal_exceeds_i64\",\"path\":\"tests/fixtures/int_literal_overflow.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_int_nan_value_error\",\"path\":\"tests/fixtures/int_nan.lfz\",\"verdict\":\"PASS\"},{\"name\":\"interp_bad_format_specifier\",\"path\":\"tests/fixtures/interp_bad_format.lfz\",\"verdict\":\"PASS\"},{\"name\":\"interp_format_type_mismatch\",\"path\":\"tests/fixtures/interp_format_type_mismatch.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_join_non_string_element\",\"path\":\"tests/fixtures/join_non_string_element.lfz\",\"verdict\":\"PASS\"},{\"name\":\"let_compound_rebind_is_type_error\",\"path\":\"tests/fixtures/let_compound_rebind.lfz\",\"verdict\":\"PASS\"},{\"name\":\"let_rebind_is_type_error\",\"path\":\"tests/fixtures/let_rebind.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_maxBy_empty_value_error\",\"path\":\"tests/fixtures/maxBy_empty.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_max_empty_value_error\",\"path\":\"tests/fixtures/max_empty.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_minBy_empty_value_error\",\"path\":\"tests/fixtures/minBy_empty.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_min_empty_value_error\",\"path\":\"tests/fixtures/min_empty.lfz\",\"verdict\":\"PASS\"},{\"name\":\"preamble_missing_first_line\",\"path\":\"tests/fixtures/missing_preamble.lfz\",\"verdict\":\"PASS\"},{\"name\":\"modulo_by_zero\",\"path\":\"tests/fixtures/mod_zero.lfz\",\"verdict\":\"PASS\"},{\"name\":\"undefined_name\",\"path\":\"tests/fixtures/name_error.lfz\",\"verdict\":\"PASS\"},{\"name\":\"int_overflow_add\",\"path\":\"tests/fixtures/overflow_add.lfz\",\"verdict\":\"PASS\"},{\"name\":\"parse_nesting_1001_is_nesting_too_deep\",\"path\":\"tests/fixtures/parse_nesting_overflow.lfz\",\"verdict\":\"PASS\"},{\"name\":\"pipe_multiple_placeholders\",\"path\":\"tests/fixtures/pipe_multiple_placeholders.lfz\",\"verdict\":\"PASS\"},{\"name\":\"pipe_rhs_not_function\",\"path\":\"tests/fixtures/pipe_rhs_not_function.lfz\",\"verdict\":\"PASS\"},{\"name\":\"pipe_underscore_in_lambda\",\"path\":\"tests/fixtures/pipe_underscore_in_lambda.lfz\",\"verdict\":\"PASS\"},{\"name\":\"syntax_placeholder_in_binding\",\"path\":\"tests/fixtures/placeholder_binding.lfz\",\"verdict\":\"PASS\"},{\"name\":\"non_lfz_file_no_preamble_required\",\"path\":\"tests/fixtures/plain_ok.txt\",\"verdict\":\"PASS\"},{\"name\":\"builtin_pop_empty_index_error\",\"path\":\"tests/fixtures/pop_empty.lfz\",\"verdict\":\"PASS\"},{\"name\":\"preamble_no_newline_eof\",\"path\":\"tests/fixtures/preamble_no_newline.lfz\",\"verdict\":\"PASS\"},{\"name\":\"preamble_trailing_space\",\"path\":\"tests/fixtures/preamble_trailing_space.lfz\",\"verdict\":\"PASS\"},{\"name\":\"preamble_trailing_tab\",\"path\":\"tests/fixtures/preamble_trailing_tab.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_randInt_bad_range\",\"path\":\"tests/fixtures/randInt_bad_range.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_range_capacity_overflow\",\"path\":\"tests/fixtures/range_capacity_overflow.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_removeAt_negative_out_of_range\",\"path\":\"tests/fixtures/removeAt_negative_out_of_range.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_removeAt_out_of_range\",\"path\":\"tests/fixtures/removeAt_out_of_range.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_repeat_capacity_overflow\",\"path\":\"tests/fixtures/repeat_capacity_overflow.lfz\",\"verdict\":\"PASS\"},{\"name\":\"syntax_return_outside_function\",\"path\":\"tests/fixtures/return_outside_fn.lfz\",\"verdict\":\"PASS\"},{\"name\":\"syntax_single_semicolon\",\"path\":\"tests/fixtures/single_semi.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_sort_mixed_types\",\"path\":\"tests/fixtures/sort_mixed_types.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_sum_overflow\",\"path\":\"tests/fixtures/sum_overflow.lfz\",\"verdict\":\"PASS\"},{\"name\":\"builtin_swap_out_of_range\",\"path\":\"tests/fixtures/swap_out_of_range.lfz\",\"verdict\":\"PASS\"},{\"name\":\"syntax_illegal_character\",\"path\":\"tests/fixtures/syntax_illegal_char.lfz\",\"verdict\":\"PASS\"},{\"name\":\"syntax_unclosed_paren\",\"path\":\"tests/fixtures/syntax_unclosed_paren.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_argv_alias_arity\",\"path\":\"tests/fixtures/t12_argv_alias_arity.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_argv_arity\",\"path\":\"tests/fixtures/t12_argv_arity.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_bad_escape\",\"path\":\"tests/fixtures/t12_json_bad_escape.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_bare_key\",\"path\":\"tests/fixtures/t12_json_bare_key.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_bom\",\"path\":\"tests/fixtures/t12_json_bom.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_comment\",\"path\":\"tests/fixtures/t12_json_comment.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_decoded_duplicate\",\"path\":\"tests/fixtures/t12_json_decoded_duplicate.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_duplicate\",\"path\":\"tests/fixtures/t12_json_duplicate.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_empty\",\"path\":\"tests/fixtures/t12_json_empty.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_encode_array_cycle\",\"path\":\"tests/fixtures/t12_json_encode_array_cycle.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_encode_array_function\",\"path\":\"tests/fixtures/t12_json_encode_array_function.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_encode_cycle\",\"path\":\"tests/fixtures/t12_json_encode_cycle.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_encode_depth129\",\"path\":\"tests/fixtures/t12_json_encode_depth129.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_encode_function\",\"path\":\"tests/fixtures/t12_json_encode_function.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_encode_inf\",\"path\":\"tests/fixtures/t12_json_encode_inf.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_encode_nan\",\"path\":\"tests/fixtures/t12_json_encode_nan.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_encode_template\",\"path\":\"tests/fixtures/t12_json_encode_template.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_float_overflow\",\"path\":\"tests/fixtures/t12_json_float_overflow.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_high_surrogate\",\"path\":\"tests/fixtures/t12_json_high_surrogate.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_integer_overflow\",\"path\":\"tests/fixtures/t12_json_integer_overflow.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_integer_underflow\",\"path\":\"tests/fixtures/t12_json_integer_underflow.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_leading_zero\",\"path\":\"tests/fixtures/t12_json_leading_zero.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_low_surrogate\",\"path\":\"tests/fixtures/t12_json_low_surrogate.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_object_trailing_comma\",\"path\":\"tests/fixtures/t12_json_object_trailing_comma.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_parse_arity\",\"path\":\"tests/fixtures/t12_json_parse_arity.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_parse_depth129\",\"path\":\"tests/fixtures/t12_json_parse_depth129.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_parse_type\",\"path\":\"tests/fixtures/t12_json_parse_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_raw_control\",\"path\":\"tests/fixtures/t12_json_raw_control.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_single_quote\",\"path\":\"tests/fixtures/t12_json_single_quote.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_stringify_arity\",\"path\":\"tests/fixtures/t12_json_stringify_arity.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_trailing_comma\",\"path\":\"tests/fixtures/t12_json_trailing_comma.lfz\",\"verdict\":\"PASS\"},{\"name\":\"t12_json_trailing_content\",\"path\":\"tests/fixtures/t12_json_trailing_content.lfz\",\"verdict\":\"PASS\"},{\"name\":\"operator_type_mismatch\",\"path\":\"tests/fixtures/type_error_add.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_appendFile_missing_parent\",\"path\":\"tests/fixtures/v11_appendFile_missing_parent.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_appendFile_type\",\"path\":\"tests/fixtures/v11_appendFile_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_chr_above_max\",\"path\":\"tests/fixtures/v11_chr_above_max.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_chr_negative\",\"path\":\"tests/fixtures/v11_chr_negative.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_chr_surrogate_high\",\"path\":\"tests/fixtures/v11_chr_surrogate_high.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_chr_surrogate_low\",\"path\":\"tests/fixtures/v11_chr_surrogate_low.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_chr_type\",\"path\":\"tests/fixtures/v11_chr_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_contains_string\",\"path\":\"tests/fixtures/v11_contains_string.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_cos_type\",\"path\":\"tests/fixtures/v11_cos_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_endsWith_type\",\"path\":\"tests/fixtures/v11_endsWith_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_exp_type\",\"path\":\"tests/fixtures/v11_exp_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_indexOf_type\",\"path\":\"tests/fixtures/v11_indexOf_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_log_type\",\"path\":\"tests/fixtures/v11_log_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_ord_combining\",\"path\":\"tests/fixtures/v11_ord_combining.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_ord_empty\",\"path\":\"tests/fixtures/v11_ord_empty.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_ord_multiple\",\"path\":\"tests/fixtures/v11_ord_multiple.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_ord_type\",\"path\":\"tests/fixtures/v11_ord_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_padEnd_empty_fill\",\"path\":\"tests/fixtures/v11_padEnd_empty_fill.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_padEnd_empty_fill_noop\",\"path\":\"tests/fixtures/v11_padEnd_empty_fill_noop.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_padEnd_width_type\",\"path\":\"tests/fixtures/v11_padEnd_width_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_padStart_empty_fill\",\"path\":\"tests/fixtures/v11_padStart_empty_fill.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_padStart_fill_type\",\"path\":\"tests/fixtures/v11_padStart_fill_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_range_hi_type\",\"path\":\"tests/fixtures/v11_range_hi_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_range_lo_type\",\"path\":\"tests/fixtures/v11_range_lo_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_range_no_args\",\"path\":\"tests/fixtures/v11_range_no_args.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_range_three_args\",\"path\":\"tests/fixtures/v11_range_three_args.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_range_two_capacity\",\"path\":\"tests/fixtures/v11_range_two_capacity.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_readFile_missing\",\"path\":\"tests/fixtures/v11_readFile_missing.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_readFile_type\",\"path\":\"tests/fixtures/v11_readFile_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_sin_type\",\"path\":\"tests/fixtures/v11_sin_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_string_index_read\",\"path\":\"tests/fixtures/v11_string_index_read.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_string_index_write\",\"path\":\"tests/fixtures/v11_string_index_write.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_substring_from_type\",\"path\":\"tests/fixtures/v11_substring_from_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_substring_to_type\",\"path\":\"tests/fixtures/v11_substring_to_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_writeFile_missing_parent\",\"path\":\"tests/fixtures/v11_writeFile_missing_parent.lfz\",\"verdict\":\"PASS\"},{\"name\":\"v11_writeFile_type\",\"path\":\"tests/fixtures/v11_writeFile_type.lfz\",\"verdict\":\"PASS\"},{\"name\":\"divide_by_zero\",\"path\":\"tests/fixtures/zero_division.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_arithmetic.lfz\",\"path\":\"tests/lfz/test_arithmetic.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_builtins_array.lfz\",\"path\":\"tests/lfz/test_builtins_array.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_builtins_convert.lfz\",\"path\":\"tests/lfz/test_builtins_convert.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_builtins_higher_order.lfz\",\"path\":\"tests/lfz/test_builtins_higher_order.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_builtins_io.lfz\",\"path\":\"tests/lfz/test_builtins_io.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_builtins_math.lfz\",\"path\":\"tests/lfz/test_builtins_math.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_builtins_random.lfz\",\"path\":\"tests/lfz/test_builtins_random.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_builtins_string.lfz\",\"path\":\"tests/lfz/test_builtins_string.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_builtins_struct.lfz\",\"path\":\"tests/lfz/test_builtins_struct.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_closures.lfz\",\"path\":\"tests/lfz/test_closures.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_cycle_safety.lfz\",\"path\":\"tests/lfz/test_cycle_safety.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_division_modulo.lfz\",\"path\":\"tests/lfz/test_division_modulo.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_dump.lfz\",\"path\":\"tests/lfz/test_dump.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_equivalence_paths.lfz\",\"path\":\"tests/lfz/test_equivalence_paths.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_functions.lfz\",\"path\":\"tests/lfz/test_functions.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_if_else.lfz\",\"path\":\"tests/lfz/test_if_else.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_int_min.lfz\",\"path\":\"tests/lfz/test_int_min.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_interpolation.lfz\",\"path\":\"tests/lfz/test_interpolation.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_let_var.lfz\",\"path\":\"tests/lfz/test_let_var.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_literals.lfz\",\"path\":\"tests/lfz/test_literals.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_loops.lfz\",\"path\":\"tests/lfz/test_loops.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_parse_limits.lfz\",\"path\":\"tests/lfz/test_parse_limits.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_pipe.lfz\",\"path\":\"tests/lfz/test_pipe.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_preamble.lfz\",\"path\":\"tests/lfz/test_preamble.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_precedence.lfz\",\"path\":\"tests/lfz/test_precedence.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_reference_semantics.lfz\",\"path\":\"tests/lfz/test_reference_semantics.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_structs.lfz\",\"path\":\"tests/lfz/test_structs.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_t12_argv.lfz\",\"path\":\"tests/lfz/test_t12_argv.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_t12_json_references.lfz\",\"path\":\"tests/lfz/test_t12_json_references.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_t12_json_unicode.lfz\",\"path\":\"tests/lfz/test_t12_json_unicode.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_t12_json_values.lfz\",\"path\":\"tests/lfz/test_t12_json_values.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_v11_io.lfz\",\"path\":\"tests/lfz/test_v11_io.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_v11_range.lfz\",\"path\":\"tests/lfz/test_v11_range.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_v11_string.lfz\",\"path\":\"tests/lfz/test_v11_string.lfz\",\"verdict\":\"PASS\"},{\"name\":\"tests/lfz/test_v11_unicode_math.lfz\",\"path\":\"tests/lfz/test_v11_unicode_math.lfz\",\"verdict\":\"PASS\"}]}\n",
+      "stderr": "\nx\na b\n\n\n\ncheck 失败\nalpha ： 1\nbeta ： 2\ngamma ： <fn gamma>\nDelta ： <struct Delta>\nlocal ： 99\nalpha ： 1\nbeta ： 2\ngamma ： <fn gamma>\nDelta ： <struct Delta>\nlocalDump ： <fn localDump>\ninBlock ： 1\nalpha ： 1\nbeta ： 2\ngamma ： <fn gamma>\nDelta ： <struct Delta>\nlocalDump ： <fn localDump>\nhit ： 0\nshadow ： 2\nalpha ： 1\nbeta ： 2\ngamma ： <fn gamma>\nDelta ： <struct Delta>\nlocalDump ： <fn localDump>\nhit ： 1\n",
+      "checks": {
+        "exit": true,
+        "all_suite_pass": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.09261200000764802
+    }
+  ]
+}

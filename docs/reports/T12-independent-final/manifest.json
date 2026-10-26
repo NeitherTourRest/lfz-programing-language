@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-25",
+  "binary_sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+  "conclusion": "functional and while scope semantics PASS; R304 OPEN; checkpoint only",
+  "files": {
+    "audit_performance.py": {
+      "bytes": 4398,
+      "sha256": "6caaf8c71d2e76b2495c30cba4e4d782b8cfc9c28502b4b618c82156b74c2f4c"
+    },
+    "binary.json": {
+      "bytes": 249,
+      "sha256": "2f99a56c130c3189781e785d13e1701b2e9bec3ba02fbb938ef5ceb7fe4f7785"
+    },
+    "cargo-test-release.txt": {
+      "bytes": 34031,
+      "sha256": "a94fdb26c91b5aebe78159e1c91f4f8ced005104ab553d0bddb36ceb4bbacf96"
+    },
+    "cli.json": {
+      "bytes": 102030,
+      "sha256": "b255787a1ad5b2323dc89b619114ede67c264ecfb9b2c5dc91d94346dba218d8"
+    },
+    "independent-140.json": {
+      "bytes": 82174,
+      "sha256": "a87cd085be10a234c03608752376e78da3ed915156d4c32c0e60ad0f01288c69"
+    },
+    "jsonflow.json": {
+      "bytes": 27133,
+      "sha256": "f33e76600e7af9fd38569c7e6204d186989c509f1f352ea94e331e106c996da1"
+    },
+    "performance-audit.json": {
+      "bytes": 6166,
+      "sha256": "8cad0d2081b34e808fc9447394e1c5805b489ec446454b2bc18e51989e71f8a5"
+    },
+    "sortviz.json": {
+      "bytes": 9975,
+      "sha256": "5c2d0eef019c0448567ac5e4e48c5ef6e8b7412679c6fee1c89abc12ffe245d6"
+    },
+    "while-differential.json": {
+      "bytes": 11548,
+      "sha256": "0c59a2dc68ce177f6bbf9bf085b320ddbbd10d5d23682d39760bba45f89085a2"
+    },
+    "while_compare.py": {
+      "bytes": 4562,
+      "sha256": "8d41dda3cf1a933ee9128cc298856ab92bc6b4da702eea93f9903406d2262ac3"
+    }
+  }
+}

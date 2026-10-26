@@ -1,0 +1,4 @@
+#42
+let x = [nil]
+x[0] = x
+jsonStringify(x)

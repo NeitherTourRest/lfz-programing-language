@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-25",
+  "scope": "T12 preliminary functional evidence; performance acceptance open",
+  "files": {
+    "cargo-test.txt": {
+      "bytes": 33622,
+      "sha256": "a8a6f4f949adb904bbcdacb8432436f10b335d6b494ddc77b57ca55590637bab"
+    },
+    "check.py": {
+      "bytes": 7810,
+      "sha256": "18c794e66d29f7480d506cf9a0e6adb5507bf7dd4d1682c89ab81b58b26a7ace"
+    },
+    "cli.json": {
+      "bytes": 102030,
+      "sha256": "87c5b94df7048a2a5386aa62ca201dc54052397ecc79ab18a5e40cb058640d64"
+    },
+    "independent-rerun.json": {
+      "bytes": 82174,
+      "sha256": "5e52edb2e18985e861fcac57c2dd1459ab4eef72aad73096cb34669544ea3f63"
+    },
+    "independent-witness.json": {
+      "bytes": 81400,
+      "sha256": "36e5f1bfbcb934b85d130c02a1290f9ad012a917d31ccf548ac100b1fe72d91a"
+    },
+    "jsonflow.json": {
+      "bytes": 27133,
+      "sha256": "9679735aba80ca4435577aa4d1c8a86725aacaa6806efec238c645e4d6098feb"
+    },
+    "library-build.txt": {
+      "bytes": 295,
+      "sha256": "ba24f18e0471f677913c7a2260a5784719bf9544b361a2687c5ac39bd04e54c4"
+    },
+    "library-rerun.txt": {
+      "bytes": 742,
+      "sha256": "3f1fa594ccf5f8a2d88f5cbcb4888ba02186d717f170a3848dd4c63afa669799"
+    },
+    "library-result.txt": {
+      "bytes": 78,
+      "sha256": "2300e0f1bf66bd157c94e7e7be85bb657eefef88753bf6d60b2347f85b14d3ec"
+    },
+    "library.rs": {
+      "bytes": 1411,
+      "sha256": "cfcebd67769b31b4d88954f4e7e7a787e47678fcf674d7207466cdc42f735724"
+    },
+    "run-library.ps1": {
+      "bytes": 1153,
+      "sha256": "92631c5af3cf29b653ad7f1200586367d32ef1196452b0b0743c4c4078519066"
+    },
+    "sortviz.json": {
+      "bytes": 9975,
+      "sha256": "04c6f3f9e9e05d08b4aacc7d070aa93d71ba9799ad8640e843922281a4d74bc8"
+    }
+  }
+}

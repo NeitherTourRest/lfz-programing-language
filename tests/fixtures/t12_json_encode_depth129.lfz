@@ -1,0 +1,4 @@
+#42
+var x = 0
+for i in range(129) { x = [x] }
+jsonStringify(x)

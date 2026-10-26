@@ -1,0 +1,3 @@
+#42
+struct X { a: 1 }
+jsonStringify(X)
