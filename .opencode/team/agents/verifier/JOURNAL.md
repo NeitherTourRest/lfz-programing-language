@@ -183,3 +183,17 @@
 - 验证：manual-review Draft202012 schema/8唯一ID/hash联结通过；最终8/8整题PASS，新v2基线，不与历史2/8比较。
 - 下一步：team-lead发布归档，保留原字节，不改本轮答案。
 - 阻塞：无。
+## [2026-10-25 22:30] T12独立功能验收阶段收工
+- 来源：team-lead派发与额度中断后继续指令，轻量恢复。
+- 完成：独立全Rust517/官方166与CLI91/应用37+11/自编140witness及六上下文Rust库probe通过；旧测试和v2冻结输入保护核对通过。
+- 产出：docs/reports/T12-independent-verification.md、T12-independent-evidence原始记录与复现脚本、目录hash清单。恢复后140witness和库probe新输出复跑通过，无须旧临时夹具。
+- 决策：功能PASS，R304效率仍FAIL，不能宣布整体发布通过；相同FB8E产物路径观察不能代替最终同条件验收。
+- 下一步：runtime最终修复hash到位后重新验收受影响功能与效率。
+- 阻塞：R304超阈；未改任何产品交付物，未Git。
+## [2026-10-25 23:37] T12最终opt2候选独立复验
+- 来源：team-lead最终hash47ed轻量启动任务，性能测量已全部结束。
+- 完成：最终522 Rust/166黑盒/91CLI/app37+11/140独立witness全部实跑PASS；新增while旧新差分16程序8类逐字节一致。
+- 产出：docs/reports/T12-independent-final含原始结果/脚本/manifest，主报告追加最终候选节；FB8历史与原始证据保留。
+- 决策：功能及窄作用域语义通过；独立审计perf原数据仍15/19绝对门槛通过、3环境不确定、1失败，R304 OPEN。可审阅checkpoint，非正式发布。
+- 下一步：由team-lead保存审阅结果、跟踪效率开放项，未来新产物另派复验。
+- 阻塞：R304未全过；没有修源码、改测试、操作Git或另择性能窗口。

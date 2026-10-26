@@ -1,6 +1,6 @@
 [package]
 name = "lfz"
-version = "1.0.1"
+version = "1.4.0"
 edition = "2021"
 
 [lib]
@@ -19,6 +19,9 @@ path = "src/main.rs"
 # codegen-units = 1   —— 单编译单元，最大化优化（牺牲少量编译时间）。
 # strip = true        —— 去除符号表，显著减小体积。
 [profile.release]
+# T12 A/B取舍：opt-level=2减少体积和启动开销；部分计算负载可能略慢。
+# 保留LTO/单codegen/strip；实测与未通过门槛见T12-runtime-startup-candidates.md。
+opt-level = 2
 lto = true
 codegen-units = 1
 strip = true

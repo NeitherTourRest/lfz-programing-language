@@ -1,21 +1,21 @@
 # requirements-analyst — 工作状态
-> 最后更新: 2026-10-24 13:42 by requirements-analyst
+> 最后更新: 2026-10-25 by requirements-analyst
 
 ## 当前状态
-- T11-16 已完成需求文档增量同步；REQUIREMENTS.md v3 保留 v2 历史并以前置快照区分当前证据。
-- R-401 实际 spec 字节数（syntax/semantics/interface-contract）：70043 / 41143 / 45830。
-- R-113 扩为69内置；R-116~R-122 对应 range 双参、字符串5项、ord/chr、数学4项、contains、文件IO3项及string索引固化。R-405记录最新复杂度修订，已按最新spec/reference/skill文本核对PASS。
+T12-02最终候选需求收口完成：R-123~127/R-205/R-406/R-504八项功能需求通过；R-304保持进行中/OPEN、未通过。整体是候选checkpoint，不是正式release，不宣称本轮全部效率目标达成。
 
-## 进行中
-- 无。本轮仅执行文档核对，产品验收引用verifier独立报告。
+## 产出与证据
+- 最终解释器1.4.0、72内置/12错误类，759808B，SHA256 47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f；profile opt-level2，其余lto/codegen/strip不变。
+- verifier最终回执：522release（404+48+28+12+15+15）、166官方/91进程、140自编、app37+11全PASS；§16.7旧149b与新47ED的16程序/8类差分，stdout/stderr/exit逐字节相同。证据T12-independent-verification.md及T12-independent-final/。
+- 作者skill30与人指南35+10为历史FB8E证据，最终模式由独立抽查/进程复验补证，不虚称所有作者块都在最终hash重跑。
+- R304最终opt2全组15/19过原绝对线、3环境不确定、1map8k22.6906>22.5214；string4k虽过原线paired慢28.8%披露。struct8k93.4315→21.1978、numeric500k104.9399→90.8044只说明局部收益；原19门槛不改。
+- 仅文档核对，不自行运行产品验收、不git、不修改他人产物；历史v2和全部原失败证据保留。
 
-## 阻塞 / 需要支持
-- V01已由verifier 13:41独立复验关闭；原clean-cwd 130/130 exit0，Temp普通文件冲突exit2/stdout空/内容保留。R-202通过。tooling全量494/494 PASS；verifier原491独立单测来源保留区分。
-- 8同题盲测任务书不齐，本轮未重跑，历史2/8不变。
+## 进行中 / 下一步
+交team-lead/release-manager按候选checkpoint收口；后续R304按原门槛处理，不能以功能通过或包体缩小替代效率通过。
 
-## 下一步
-- 本批需求收口完成，交team-lead/release-manager汇总；后续恢复8题原任务材料后另做盲测。
+## 阻塞 / 需支持
+无需求侧阻塞；R304仍开放并明确传递给下一轮。
 
 ## 关键经验
-- 不把工作区130黑盒通过混同干净CWD验收；不以witness替代全新agent盲测。
-- 不删除/重编号历史需求；只修改需求及本人状态/日志，不git、不派agent。
+最终成绩绑定精确hash；局部加速、绝对合格线与paired退化要并列陈述；候选检查点不等同正式发布。

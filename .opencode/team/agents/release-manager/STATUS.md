@@ -1,27 +1,18 @@
 # release-manager — 工作状态
-> 最后更新：2026-10-24 18:57 by release-manager
+> 最后更新：2026-10-25 23:35 by release-manager
 
 ## 当前状态
-v1.3.0交付里程碑已实际发布完成。主会话完成fa1eb12归档、53e6d88交付两个提交，创建v1.3.0附注标签并原子推送main与tag成功；远程main与tag剥离均为53e6d88a...，附注对象39d17f3a...。正式结果8/8整题、131/131功能用例、8源码约束与8协议审查PASS。本角色未执行Git写入或网络，不改冻结解释器。
+T12 1.4.0候选工作快照准备完成，非正式发布，不创建v1.4.0标签。最终47ED功能独立PASS；R-304仍OPEN（19原线15达线、3环境不确定、1map8k未过）。主会话可代执行8组候选提交与main推送；本角色未Git写入。
 
-## 产出 / 验证证据
-- README.md、docs/reports/delivery-checklist.md已链接docs/reports/agent-benchmark-v2/v2-20261024-r01/REVIEW.md及certified-results.json，注明新基线、不直接与历史2/8比较。
-- 模型从记录会话核验为gpt-6.1-sol/medium；8独立无历史分题会话，33配对工具调用审查PASS。9次LFZ自调、各题首次均exit0（8/8），仅学生自选测试辅指标，不代表首跑通过冻结验收。
-- 隔离仅分题无历史派发、指令约束和记录工具审计，不声称OS隔离。
-- 本角色只读核对certified=8/8、cases=131/131；新增正式链接均存在；原始ZIP字节/哈希与raw-archive.json一致。
-- 新增正式报告目录.gitattributes，唯一规则 `* -text`；git check-attr text对sealed/B01/solution.lfz、certified-results.json、raw-inputs-submissions.zip均为unset，保护后续clone的原文字节。
-- Cargo仍1.0.1、69内置、494 Rust测试、130正式黑盒；dist766464B，SHA256=149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB。未重编译、未改Cargo/dist，保持冻结pin。
+## 产出与证据
+- README.md、delivery-checklist.md、T12-release-plan.md已引用72内置、最终522/166/91、应用37+11、140witness与16旧新差分覆盖8类while范围且stdout/stderr/exit逐字节一致。最终独立报告T12-independent-verification.md及T12-independent-final/；作者指南35块+10/AI30保留各自证据语境，不冒称新盲测。
+- 最终target/dist759808B、SHA256 47ED2BFE2A2694B11BD611172CFCF0000D0BFC58E3B9BD809CA95F066DD0261F；Cargo1.4.0、opt-level2、LTO/codegen1/strip。final-opt2/绑定构建/522 release测试/Cargo/源hash。
+- 性能只报同期实测局部：struct8k93.431→21.198ms（耗时约-77.3%），numeric500k104.940→90.804ms；startup16.287<=16.307ms余量小。map8k22.691>22.521、old21.871在线，其它3项环境不确定；不把15/19说全部通过。
+- T12-release-evidence/checkpoint-preflight.json及commit-groups.json提供逐路径hash/8组清单；preflight-check.py可在开始提交前刷新，纳入最终独立材料/角色记录；开始提交后不可误当全历史审计。
+- 原99cases前缀保留+32新增、旧LFZ/Rust测试无修改、v2包/旧报告目录无Git改动；初始用户3保护块各1。文本及新增ZIP成员凭据模式检查不替代全知敏感性证明。
 
-## 已完成提交（主会话执行）
-1. fa1eb12：test(benchmark): archive certified v2 first run — docs/reports/agent-benchmark-v2/v2-20261024-r01/完整目录，含.gitattributes、sealed、tool-traces、runner/review证据、ZIP及root最终总清单。
-2. 53e6d88：docs(release): record v2 baseline and T11 closure — README、delivery-checklist及本轮团队共享/专属状态。原初3处事故改动仍通过staged快照排除，工作树原文保留。
-
-## 下一步 / 边界
-- 主会话回执：git tag -a v1.3.0 -F ...成功；git push --atomic origin main refs/tags/v1.3.0成功，远程main与tag剥离一致。后续本角色收工回执单独提交并推送main，v1.3.0继续锚53e6d88，不移动标签。
-- v1.3.0是交付里程碑标签，解释器版本仍1.0.1；不将新八题与旧2/8称为同题提升。
-- 本文件记录来自主会话的实际Git回执；本角色本轮仅只读Git属性核对，无Git写操作。
+## 阻塞/下一步
+R-304不完成，后续再处理开放效率项；本轮仅候选checkpoint，旧v1.3.0不移动。主会话最后更新自己状态/日志、等待其余记录落盘后刷新preflight，再按明确分组与3份过滤stage快照提交/推送main，核对远程HEAD。实际回执出现前不虚构已推送。
 
 ## 关键经验
-- 保留原始ZIP之外，对证据目录显式text=unset防止Git行尾归一化使原始hash失配。
-- 功能结果与人工源码/协议结论分文件绑定哈希；不能用runner占位结果代替人工认证。
-- 自调首跑是自选输入过程指标，与冻结验收整题通过率分别表述。
+staged快照只排除用户初始28/1/1新增，工作树原文保留，禁止git add .或整文件stage混合记录。新skill/exe不冒用旧v2 manifest；旧9输入从原ZIP恢复，旧成绩不改算。性能门槛不能用局部收益抵消；候选保存与正式发布明确分开。

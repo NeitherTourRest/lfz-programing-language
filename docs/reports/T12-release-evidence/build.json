@@ -1,0 +1,29 @@
+{
+  "stage": "T12 release build only; functional independent review pending",
+  "date": "2026-10-25 01:00 Asia/Shanghai",
+  "version": "1.4.0",
+  "command": "Temp/toolchain/cargo/bin/cargo.exe build --release",
+  "exit_code": 0,
+  "build_seconds": 12.72,
+  "rustup_home": "Temp/toolchain/rustup",
+  "cargo_home": "Temp/toolchain/cargo",
+  "temp": "Temp/toolchain",
+  "files": [
+    {
+      "path": "target/release/lfz.exe",
+      "bytes": 821248,
+      "sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d"
+    },
+    {
+      "path": "dist/lfz.exe",
+      "bytes": 821248,
+      "sha256": "fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d"
+    }
+  ],
+  "version_output": "lfz 1.4.0",
+  "old_binary": "Temp/t12-perf/lfz-before.exe",
+  "old_binary_sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+  "warnings": "rustup could not canonicalize ancestor paths; no claim of zero tool warnings",
+  "git_operations": "none",
+  "external_install_modified": false
+}

@@ -12,3 +12,12 @@
 - 完成: 角色定义与活文档建立
 - 产出: `.opencode/agents/app-dev.md`
 - 下一步: 等待 team-lead 调度
+
+## [2026-10-25 01:04] T12实用应用与sortviz参数化
+- 来源: team-lead T12任务书，用户自主方向授权。
+- 完成: 阅读LFZ编程skill与spec§16；jsonflow配置筛选/投影、严格验证后输出；sortviz四参数与range/map生成；README/开发记录同步。
+- 产出: app/jsonflow.lfz、fixtures/t12三文件、verify_jsonflow.py、sortviz.lfz、verify_sortviz.py；docs/reports/T12-app.md与T12-app-evidence。
+- 证据: release自检37/37+11/11，均exit0；默认sortviz与旧源码+旧exe stdout逐字节一致，150自测0失败；sortviz362行/311有效行。
+- 决策: 整批JSON数据流，不凑新应用200行；输入输出别名识别受API限制，README公开，验证失败保留输出不等于原子IO。
+- 下一步: 独立验收与统一发布。
+- 阻塞: 无。

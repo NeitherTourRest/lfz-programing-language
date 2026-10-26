@@ -1,56 +1,72 @@
 # LFZ 语言与解释器 — 程序设计课程作业
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-> 最后更新: 2026-10-24 by release-manager
+> 最后更新: 2026-10-25 by release-manager
 > 仓库地址: https://github.com/NeitherTourRest/lfz-programing-language
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
-## 当前状态
+## T12 1.4.0 候选工作快照：Agent 数据脚本工作流
+
+当前源码与项目内构建版本为 **1.4.0 候选工作快照、72 内置，非正式发布**；不创建 `v1.4.0` 标签，旧 `v1.3.0` 不移动。最终47ED二进制的功能已独立复验通过：522项Rust release、166项黑盒、91项进程检查、应用37+11项、140个自编witness，另16个旧新差分覆盖8类while范围，stdout/stderr/exit逐字节一致。R-304 保持开放：19 项原绝对性能线中 15 项达线、3 项环境不确定、1 项未通过。源码和完整成功/失败证据可作为候选 checkpoint 提交保存，不代表整体效率或正式版本验收完成。
+
+- `argv()` 与 `--` 脚本参数，支持空字符串、Unicode 和字面量选项；`-e CODE`、stdin 源码入口方便 Agent 直接执行片段。
+- `jsonParse` / `jsonStringify`：精确 i64、有限浮点、Unicode、严格重复键检查、有界深度和环拒绝；struct 数据面按 UTF-8 键序输出确定性 JSON。
+- [jsonflow](app/README.md)：用配置和参数驱动 JSON 筛选、字段投影及结果文件；[sortviz](app/README.md) 新增规模、种子与帧显示参数，默认输出与旧版一致。
+- [T12 黑盒](docs/reports/T12-blackbox.md)、[应用验证](docs/reports/T12-app.md)、[人类指南](docs/reports/T12-guide-evidence.md)、[AI 指南](docs/reports/T12-skill-evidence.md)及[性能报告](docs/reports/T12-performance.md)分别保留证据。功能结果不替代性能门槛，最终验收与交付状态以项目状态和最终报告为准。
+
+## 课程阶段记录（历史里程碑，T12以本页顶部为准）
 | 阶段 | 内容 | 状态 |
 | -- | -- | -- |
 | P0 | 团队就绪（脚手架通过 S1–S5） | ✅ 已完成 |
 | P0.5 | 版本基线（git init + 初始提交 + `v0.1.0` 标签） | ✅ 已完成 |
 | P2 | 语言设计（`docs/spec/` v1 三件套冻结，D-016） | ✅ 已完成 · 里程碑 **`v0.2.0`** |
-| P3 | 解释器核心（loader / lexer / ast / parser / evaluator / builtins(69) / CLI） | ✅ 已完成 |
+| P3 | 解释器核心（loader / lexer / ast / parser / evaluator / builtins(72) / CLI） | ✅ 已完成 |
 | P4 | 工具链（CLI、一键测试 runner、打包脚本） | ✅ 已完成 |
-| P5 | 黑盒测试集（31 正向 + 98 负例 + 1 豁免，共 130 用例；覆盖矩阵） | ✅ 已完成 · 里程碑 **`v0.3-tested`** |
+| P5 | 黑盒测试集（35 正向 + 130 负例 + 1 豁免，共 166 用例；覆盖矩阵） | ✅ 已完成 · 里程碑 **`v0.3-tested`** |
 | P6 | 性能基准（LFZ vs Python，预热 + 多轮 + 中位数） | ✅ 已完成 |
 | P7 | 文档（人类手册 5 篇 + AI 指南 / skill） | ✅ 已完成 |
-| P8 | 应用（`app/sortviz.lfz` 341 行，5 算法） | ✅ 已完成 · 里程碑 **`v0.4-app`** |
+| P8 | 应用（`app/sortviz.lfz` 362 行，5 算法；JSON 数据脚本 jsonflow） | ✅ 已完成 · 里程碑 **`v0.4-app`** |
 | P9 | 独立验收（交付物级，verifier） | ✅ 已完成 · 结论 **CONCERNS（无阻塞）** |
 | P10 | 交付完整性（README 刷新 + 交付清单核对 + 提交） | ✅ 已完成 · 里程碑 **`v1.2.1`** |
 
 > **本 README 由 release-manager 在每个阶段里程碑实时更新**，以反映最新交付状态、Git 基线与版本标签。
 
-## 质量基线（实测）
+## T12 当前功能验证（不等同于最终发布验收）
 | 项 | 命令 | 实测结果 |
 | -- | -- | -- |
 | 构建 | `cargo build --release` | **exit 0**（仅 std；本机 rustup 路径 canonicalize 提示，不宣称零 warning） |
-| 单元测试 | `cargo test` | **494 passed / 0 failed / 0 ignored**（lib 388 + main 48 + cli 28 + test_runner 15 + unit 15） |
-| 黑盒测试 | `cargo run -- test` | **130 个用例，通过 130，失败 0，错误 0**（exit 0，一个命令跑全部） |
+| Rust release 回归 | `cargo test --release` | **522 passed / 0 failed / 0 ignored**（lib 404 + main 48 + cli 28 + cli_t12 12 + test_runner 15 + unit 15） |
+| 黑盒测试 | `cargo run -- test` | **166 个用例，通过 166，失败 0，错误 0**（exit 0，一个命令跑全部） |
 | 端到端 | `cargo run -- run examples/hello.lfz` | `Hello, LFZ!`（exit 0） |
-| 应用 | `cargo run -- run app/sortviz.lfz` | exit 0；**5 算法**全部 `[校验通过]`；**341 行** |
-| 发布产物 | `dist\lfz.exe` | **766464 B**（`lfz 1.0.1`，自包含，由当前源码同源重建） |
+| 应用 | `cargo run -- run app/sortviz.lfz` | exit 0；**5 算法**全部 `[校验通过]`；**362 行**，150 次排序自测无失败 |
+| 最终候选构建 | `dist\lfz.exe` | **759808 B**（`lfz 1.4.0`，release opt-level=2；与 target/release 同 hash，非正式发布） |
 
-> 本轮已实现 15 个新内置（总计 69）与 `range(lo, hi)`，含获用户追认的 `readFile` / `writeFile` / `appendFile`。独立定向验证 74/74，runner 干净工作目录 130/130；详见 [T11-v11-reverification.md](docs/reports/T11-v11-reverification.md)。用户已授权改用新八题建立 v2 基线，正式首轮结果见下方报告；历史 2/8 保留且不作跨题集提升比较。Cargo 版本仍为 1.0.1，`v1.3.0` 交付里程碑包含上述已验收实现、测试与 v2 正式首轮证据；Git 附注标签为发布凭据，解释器版本保持 1.0.1。
+> **T11 / v1.3.0 历史发布基线**：当轮已实现 15 个新内置（总计 69）与 `range(lo, hi)`，含获用户追认的 `readFile` / `writeFile` / `appendFile`。独立定向验证 74/74，runner 干净工作目录 130/130；详见 [T11-v11-reverification.md](docs/reports/T11-v11-reverification.md)。用户已授权改用新八题建立 v2 基线，正式首轮结果见下方报告；历史 2/8 保留且不作跨题集提升比较。Cargo 版本仍为 1.0.1，`v1.3.0` 交付里程碑包含上述已验收实现、测试与 v2 正式首轮证据；Git 附注标签为发布凭据，解释器版本保持 1.0.1。
 >
-> 本地发布产物 SHA256：`149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`。`dist/` 为忽略的构建目录；可用 `scripts/build-release.ps1` 重建。构建与发布版黑盒原始证据见 [T11-v11-release-evidence/](docs/reports/T11-v11-release-evidence/)。
+> **T11 历史产物** SHA256：`149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`。`dist/` 为忽略的构建目录；可用 `scripts/build-release.ps1` 重建。构建与发布版黑盒原始证据见 [T11-v11-release-evidence/](docs/reports/T11-v11-release-evidence/)。
+候选 SHA256：`47ED2BFE2A2694B11BD611172CFCF0000D0BFC58E3B9BD809CA95F066DD0261F`；[最终构建与522项日志](docs/reports/T12-release-evidence/final-opt2/build-final.json)绑定 Cargo、profile 和源码哈希。profile 采用实测的体积/启动取舍 `opt-level=2`，保留 LTO、单 codegen 与 strip；不能将多项优化的全部效果单独归因于字段索引。
+
+[性能报告](docs/reports/T12-performance.md)披露同期同路径：结构体8000键 93.431→21.198ms（耗时约减少77.3%），500k数值循环104.940→90.804ms；startup 16.287ms在原16.307ms线内、余量很小。string_map8000项22.691ms高于原22.521ms线；另外3项因同期旧版也超参考而标环境不确定，均不算通过。部分负载即使在绝对线内仍比同期旧版慢，完整原始值和失败记录保留。
+
 ## 交付物索引（8 项）
 | # | 交付物 | 位置 | 评分项 |
 | -- | -- | -- | -- |
 | 1 | LFZ 语法规则文档 | `docs/spec/`（syntax / semantics / interface-contract） | — |
-| 2 | LFZ 解释器源程序 | `src/`（15 文件，Rust 仅 std） | 1（20 分） |
+| 2 | LFZ 解释器源程序 | `src/`（16 文件，Rust 仅 std） | 1（20 分） |
 | 3 | LFZ 完整黑盒测试集 | `tests/`（`lfz/` + `fixtures/` + `cases.json` + `coverage-matrix.md` + `REPORT.md`） | 2（20 分） |
 | 4 | LFZ 性能测试报告 | `benchmarks/` + `docs/reports/performance.md` | 3（10 分） |
 | 5 | 开发指南（人 + AI） | `docs/guide/` + `docs/guide/ai/` + `.opencode/skills/lfz-programming/` | 4（20 分） |
-| 6 | 应用源代码 + 开发记录 | `app/sortviz.lfz` + `app/DEV_RECORD.md` | 5（30 分） |
+| 6 | 应用源代码 + 开发记录 | `app/sortviz.lfz` + `app/jsonflow.lfz` + `app/DEV_RECORD.md` | 5（30 分） |
 | 7 | Git 历史记录 | `.git/`（仓库历史 + 版本标签） | — |
 | 8 | 系统介绍 PPT | `docs/slides/`（`LFZ-defense.pptx` 14 页 + `demo-script.md` + `qa-prep.md`） | — |
 
 ## 验收与证据
 | 证据 | 位置 |
 | -- | -- |
+| T12 最终47ED独立功能验收（不含效率通过结论） | [独立报告](docs/reports/T12-independent-verification.md)、[最终原始材料](docs/reports/T12-independent-final/)；522/166/91、应用37+11、140witness、16旧新while差分 |
+| T12 应用、指南与构建 | [应用 37+11 项](docs/reports/T12-app.md)、[人类指南 35 代码块+10 探针](docs/reports/T12-guide-evidence.md)、[AI 30 探针](docs/reports/T12-skill-evidence.md)、[最终候选构建证据](docs/reports/T12-release-evidence/final-opt2/build-final.json) |
+| T12 性能（R-304 未过门槛）与待发布计划 | [性能报告](docs/reports/T12-performance.md)、[发布准备](docs/reports/T12-release-plan.md) |
 | P3 解释器核心验收（rev.3 终验 **PASS**，缺陷闭环 10/10，新增回归 0） | [`docs/reports/P3-verification.md`](docs/reports/P3-verification.md) |
 | P9 交付物级独立验收（8 项逐项实跑，**CONCERNS（无阻塞）**） | [`docs/reports/P9-verification.md`](docs/reports/P9-verification.md) |
 | 黑盒测试报告（覆盖矩阵说明 + 已知偏差自认） | [`tests/REPORT.md`](tests/REPORT.md) |
@@ -110,16 +126,16 @@ cargo run -- examples/hello.lfz
 lfz Hello.lfz
 # 输出: Hello, LFZ!
 
-# 构建发布版（scripts\build-release.ps1 → dist\lfz.exe 766464 B（~749 KiB），自包含，含冒烟测试）
+# 构建项目内开发版（自包含，含冒烟测试；最终字节数以构建证据为准）
 powershell -File scripts\build-release.ps1
 
 # 安装到用户 PATH（scripts\install-lfz.ps1 默认 dry-run，带 PATH 备份与 -Uninstall）
 powershell -File scripts\install-lfz.ps1
 
-# 运行单元测试（494 passed）
-cargo test
+# 运行 Rust release 测试（最终候选522 passed）
+cargo test --release
 
-# 运行黑盒测试集（一个命令跑全部，130 用例）
+# 运行黑盒测试集（一个命令跑全部，当前 166 用例）
 cargo run -- test
 
 # 运行示例应用（排序算法可视化）
@@ -131,6 +147,24 @@ cargo run -- run app/sortviz.lfz
 > #42
 > print("Hello, LFZ!")
 > ```
+
+## Agent 数据脚本示例（T12 候选工作快照）
+
+使用本项目构建的 `dist/lfz.exe`；已有全局安装可能仍是旧版。源码片段入口不要求 `#42`，保存为 `.lfz` 文件时仍要求首行前导。
+
+```powershell
+./dist/lfz.exe -e 'print(jsonStringify(argv()))' -- '中文' '--json' ''
+# ["中文","--json",""]
+'print(1 + 2)' | ./dist/lfz.exe -
+# 3
+New-Item -ItemType Directory -Force Temp | Out-Null
+./dist/lfz.exe run app/jsonflow.lfz -- app/fixtures/t12/config.json app/fixtures/t12/input.json Temp/result.json
+./dist/lfz.exe run app/sortviz.lfz -- --small 4 --big 30 --seed 7 --no-frames
+```
+
+`--json` 是解释器状态协议：stdout 为单个状态对象，程序输出转到 stderr。业务 JSON 可在普通模式调用 `print(jsonStringify(value))`。stdin 源码会读到 EOF，不能同时从同一 stdin 再读业务输入。`argv` 是本轮唯一新增可一等取值的内置；JSON 内置用作高阶回调时须由 lambda 包裹。jsonflow 输出路径须与输入、配置实际指向不同文件；其路径别名识别与非原子写入限制见应用 README。
+
+旧 v2 首轮的题目、manifest、成绩及原始 ZIP 保持不变。开发版 skill/二进制已变化，旧 manifest 在当前开发目录中拒绝校验是预期；复现旧基线须从归档在项目 Temp 中恢复旧输入，不重写旧 manifest，不以旧 8/8 作为新版本盲测成绩。
 
 ## 许可证
 本项目采用 **MIT License**，全文见 [`LICENSE`](LICENSE)。

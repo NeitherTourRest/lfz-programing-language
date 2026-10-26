@@ -1181,3 +1181,51 @@
 - 本地只读session日志提供实际gpt-6.1-sol/medium、8独立session和33记录工具调用/返回；只归档工具动作/结果及元数据，排除私有推理、系统/developer及无关会话，不声称OS隔离。
 - 学生9次LFZ自行调试均在预算内；不给正式验收反馈后修改本轮答案。原始字节ZIP与总清单归档，Git报告目录禁换行归一以保持SHA。
 - T11发布门禁闭环，按既定计划创建v1.3.0附注交付里程碑；解释器仍1.0.1，冻结SHA不变，不为了标签重建/改动测评输入。后续改进另开新测评轮次。
+### [2026-10-25 00:48] [team-lead] T12：面向Agent的数据脚本工作流
+- 来源：用户授权自主决定下一轮方向，要求有特色、实用、适合Agent与高效。
+- 范围：脚本参数argv、-e与stdin源码入口、严格确定性JSON解析/序列化；以现有管道与struct能力构建数据处理示例，并测量性能与兼容性。
+- 顺序：架构契约先行，运行时/工具链分工实现，独立黑盒和验收，指南/skill与应用同步，发布经理收口。具体API与边界以architect追加契约为准。
+- 暂不引入模块/异常语法等大型文法扩展；以真实数据交换链路体现语言特色。
+- 保留v2首轮原始归档与冻结输入，禁止覆盖既有成绩；新源码/skill/binary采用新版本，不伪称旧manifest仍覆盖当前开发版。
+- 保留本轮开始前3处用户事故记录修改；项目外只读，临时材料限Temp。
+### [2026-10-25 01:10] [language-architect] T12 Agent 数据脚本契约：argv、无文件代码入口与严格 JSON
+- 来源：用户明确授权下一轮自主决定开发方向，目标为特色、实用、Agent 友好和高效；team-lead 将本轮限于 argv / -e / stdin / JSON，不加入新 AST、模块或异常语法。
+- 决定：新增 `argv()` / `jsonParse(text)` / `jsonStringify(value)` 三个内置（69→72）；参数随求值实例注入，不读取进程全局 argv；CLI 仅 `--` 后传给脚本，`-e` 后一项无条件作为源码。启用 `lfz -e` / `lfz run -e` 与 `lfz -` / `lfz run -`，保持文件入口、退出码和 `--json` 单对象协议。
+- JSON：独立 lib codec，不复用 bin 私有且历史宽松的 json.rs；严格十进制 JSON、null↔nil、i64 整数保真、有限 f64、拒重复键、128 容器深度上限。序列化沿用合一 struct 数据面，跳过函数方法字段，键按 UTF-8 字节排序；拒环及其他不支持值，允许共享非环引用重复编码。新增两个 ValueMsg 子消息，不新增错误类。
+- 特色与取舍：强化 LFZ 已有 data-last 管道、确定性 struct 和机器可读诊断的组合。给 Agent 一个短程序完成文件→JSON→管道变换→JSON 文件的闭环；不以大量语法糖制造特色。argv 是显式环境输入、JSON 输出稳定，便于复现和审查。
+- 性能：单遍字节游标解析，容器一次构造；对象重复键检查 O(k log k) 而非反复线性查找；序列化直接追加缓冲、对象排序 O(k log k)，禁止循环拼接整段前缀。深度 128 先拒绝以保护递归解析/析构。
+- 兼容：旧 eval API 默认空参数；JSON codec 不改变 runner JSON；没有 -- 时多余脚本参数仍报错。三个新增内置名成为不可覆盖的内置保留名，属于明确的小型源兼容边界；不改变其它名称/AST。
+- 冻结测评：既有 v2 manifest 与首轮归档不改。旧二进制/skill 已包含在首轮 raw-inputs-submissions.zip；后续测评必须使用新的版本化输入副本及新 manifest，不能覆盖历史输入再宣称同一基线。
+- 后续：先更新 spec，再由 runtime-dev/tooling-dev 实现，test-engineer/verifier 独立验收；本 ADR 不声称已经实现或性能已提升。
+### [2026-10-25 00:50] [language-architect] T12 索引实现许可及前条时间订正
+- 前一条 T12 契约 ADR 标题中的 01:10 为误写，实际记录时间为本条附近 00:50；只追加订正，不重写历史条目。
+- team-lead 纳入效率目标：允许 runtime-dev 为 StructObj 增加字段名→槽位的内部 HashMap 索引，保留 fields 插入序、别名、同键替换、动态加字段、数据面方法过滤及外显键排序。索引只能加速查找，不得参与可观察遍历顺序。
+- JSON 对象批量构造必须避免逐字段线性 set 导致 O(k²)：可用 BTreeSet 检重、Vec 一次收集再 from_fields，并一次建索引。索引增删/替换/克隆等实现路径必须通过既有测试和必要回归。
+
+### [2026-10-25 00:54] [runtime-dev] T12 JSON错误变体专项写者授权
+- team-lead明确授权runtime-dev本轮唯一维护src/error.rs的JsonParse/JsonStringify两ValueMsg变体及消息；其余既有错误行为不变。实现依据interface-contract §16冻结契约。
+
+### [2026-10-25 00:55] [language-architect] T12 argv 一等值最小载荷与遮蔽语义订正
+- 原因：实现复核发现既有内置仅在直接调用/管道调用按名称派发，普通Ident并不解析成内置函数值；既有调用明确词法变量优先，允许遮蔽。前T12条目“内置保留名/不可覆盖”是错误假设，现撤回该新增限制；不改变旧语义，不将旧69内置或jsonParse/jsonStringify泛化为一等值。
+- 决定：仅argv新增一等内置函数值。Closure允许新增builtin: Option<&'static str>，仅该内置为Some("argv")；旧用户/占位闭包为None。用户载荷与内置载荷互斥；仅同名name或user=None不能被当成argv。
+- 同一性/显示：每Interp持有单一Rc<Closure>，未遮蔽时argv重复取值/别名为同一函数，==为true，type为function，str为<fn argv>。仅在词法查名未命中时回退到该值；let/var/形参/函数名等可按原规则遮蔽，提前保存的别名仍持有原函数值。
+- 调用：直接、别名、容器、闭包和高阶回调统一call_user的builtin分支；读取执行中的Interp参数，不用进程全局状态。该分支先于无user占位拒绝和用户帧压栈，零参检查按内置，忽略方法调用附加self；不计用户递归深度、不压用户函数帧。错误调用span由原冒泡路径处理。
+- 限制：占位闭包仍不可调用，用户自定义名叫argv的函数仍按用户函数执行；旧内置独立取值能力维持原样。本裁定只补实现边界，不增加第三项语法变化。
+### [2026-10-25 01:04] [app-dev] T12应用数据契约与输出保证边界
+- jsonflow使用严格{where,select}配置，where=null全选，否则标量精确相等筛选；所有记录先验证再filter/map投影，完成编码后writeFile。
+- 验证或编码失败保留已有输出；不承诺IO失败原子替换。拒绝输出与配置/输入字面相同路径，但不识别路径别名，调用者需确保独立文件，README明确。
+- sortviz参数解析使用块局部名字维持默认dump与stdout兼容；只替换genData为range/map保持随机顺序，保留教学归并现有实现。
+### [2026-10-25 22:48] [language-architect] T12 仅无直接声明 while 体的空环境消除许可
+- 背景：功能首版已独立验证，固定numeric500k性能门禁未过；本条只审核保语义优化，不宣称性能已恢复。team-lead将候选收窄为while，for与其它exec_block不改。
+- 裁定：执行一个while前仅扫描一次body直接语句；若无StmtKind::Decl/FnDecl/StructDecl，可每轮以传入Scope直接exec_stmts而不物化空child Env。有任一直接声明即维持原每轮新child，包含不可达声明；不根据某次分支动态猜测。后续AST新增绑定语句须重新审核判定器。
+- 论证：当前赋值只写已存在绑定，未知名字报NameError；只有三种直接声明写当前env。空env不含槽位/cell，lookup/assign/capture/dump遍历它无贡献；nested if仍建立原分支子环境，for仍每轮建立含迭代变量的新环境，函数调用仍独立帧。parent空child首槽=父末槽，其再建child首槽相同，所以跳过该空层不改变现有局部槽位编号或同一cell。
+- 边界：保留逻辑块作用域与AST Dump.scope/ScopeDebug契约，只消除无可观察绑定的物理Env；不能合并含声明的迭代、for Env、函数帧或其它exec_block。不改captured/self_val、条件求值次数/顺序、Flow/错误span/traceback。若未来引入eval/作用域反射或新绑定表达式须重新评估。
+- 验收：循环外共享cell捕获、嵌套分支逐轮局部独立cell、直接声明三种回退、;;顺序/遮蔽/JSON通道、for快照与逐轮cell、continue/break/return、未知变量/let错误与traceback和first_slot等价探针，旧/新输出逐字对照；再跑全部回归与测前已冻结性能门禁，不为过线改变numeric500k工作量/阈值。
+### [2026-10-25] [team-lead] T12发布候选采用opt-level=2，保留效率验收缺口
+- 依据：T12-runtime-startup-candidates.md预先固定8项对照，所有288次输出正确；opt2体积减少7.54%，启动17.95→14.66ms，500k循环约1.3%差异，大对象更快；部分其它负载有2%～7%成本。opt-size虽更小但长循环代价更高，不采用。
+- 决策：由release-manager唯一修改主release profile为opt-level=2；lto/codegen-units/strip、语言语义及测试不变，最终hash另行全量验收。不是以体积改善冒称所有性能达标。
+- 门槛：原19项绝对线不变，旧失败/环境受限与所有候选数据保留。最终若未全过，保留候选提交与开放R304，不创建正式v1.4.0发布标签，也不把待验收条目标完成。
+
+### [2026-10-25 23:36] [team-lead] 补记opt2决策标题时间与候选保存边界
+- 前述仅带日期的opt2条目记录了最终构建前的批准；此处补齐规定的时分标题格式，以本次补记时间为准，不更改旧条目或伪造决策先后。
+- 最终47ED功能和作用域语义已独立验证，性能R304仍开放；本轮只保存并推送可审阅候选，不创建正式v1.4.0标签。原阈值、未过项、环境限制和回归数据继续保留。

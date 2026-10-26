@@ -210,3 +210,23 @@
 - 决策: [2026-10-24 13:32] ADR；沿用 [2026-09-27 23:40] push+join 实测订正。
 - 下一步: 指南作者同步；需求作者刷新字节数。
 - 阻塞: 无；无临时件、无 git 操作。
+
+## [2026-10-25 00:55] T12 Agent 数据脚本设计冻结
+- 来源：team-lead T12-01；用户授权自主确定实用/Agent友好/高效方向。
+- 完成：先追加ADR，再写三spec §16；argv两上下文API、CLI-e/stdin和--边界、严格JSON两ValueMsg、字段索引效率约束。已把冻结接口及时传回team-lead供实现。
+- 产出：docs/reports/T12-design.md、T12-design-checks.json；设计检查核对旧内置重名与v2九输入hash。没有运行新产品功能。
+- 决策：新codec独立，不改runner JSON；int保真/重复键拒绝/深度128；struct沿A5数据面；旧manifest不覆盖。
+- 下一步：runtime/tooling实现，test/verifier/perf依冻结契约独立验收。
+- 阻塞：无。
+## [2026-10-25 00:56] argv 一等载荷与遮蔽紧急补钉
+- 来源：team-lead轻量唤醒，runtime-dev实作复核。
+- 完成：核查源码确认旧内置按名派发而非一等值、词法变量可遮蔽；接受仅argv的Closure.builtin显式标记、Interp单一Rc及统一call_user派发。撤回初稿保留名假设，追加ADR，更新三spec/报告/结构检查。
+- 产出：契约§16.6；报告追加同名let函数遮蔽及saved别名+局部形参遮蔽精确探针。20项结构检查PASS，不替代新功能实跑。
+- 下一步：runtime依最小边界实现；指南不得泛称内置一等化；map解析JSON应使用用户fn包装。
+- 阻塞：无；未动源码/测试/他人记录，无git。
+## [2026-10-25 22:48] 无声明 while 空环境消除设计审核
+- 来源：team-lead轻量紧急任务，numeric500k固定性能门禁未过。
+- 完成：静态核查exec_block/while/for/lookup/assign/make_closure/visible_entries/Env first_slot与§4.5.3/10.5。准许仅while直接无Decl/FnDecl/StructDecl一次扫描跳过空Env，保留所有逻辑scope/声明与for迭代环境。
+- 产出：追加ADR、契约§16.7、T12-design报告8类旧新差分witness清单；已先消息回裁定。
+- 下一步：runtime最小实现，test/verifier独立等价性回归，perf按冻结阈值测量。
+- 阻塞：无；设计许可不代表产品/性能实证，未改源码或测试，无git。

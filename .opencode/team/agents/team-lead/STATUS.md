@@ -1,22 +1,18 @@
 # team-lead — 工作状态
-> 最后更新: 2026-10-24 by team-lead
+> 最后更新: 2026-10-25 by team-lead
 
 ## 当前状态
-T11-18 正式v2首轮测评完成，T11实现/文档/需求/验证与新基线闭环。独立认证8/8整题、131/131功能用例；新基线不与历史2/8计算提升。v1.3.0附注交付里程碑已创建并原子推送，发布提交53e6d88；解释器仍1.0.1以保持冻结hash。
+T12功能与主要优化已独立验收；作为1.4.0候选checkpoint保存，非正式发布。72内置、argv/-e/stdin/JSON、字段索引、无声明while省空作用域，jsonflow与sortviz参数化、指南/AI skill同步。最终opt2产物759808B，SHA47ED2BFE2A2694B11BD611172CFCF0000D0BFC58E3B9BD809CA95F066DD0261F。
 
-## 产出与证据
-- docs/reports/agent-benchmark-v2/v2-20261024-r01/SUMMARY.md、REVIEW.md、functional-results.json、manual-review.json、certified-results.json。
-- 8独立fork_turns=none会话，仅本题/skill/exe；实际gpt-6.1-sol/medium从会话turn_context确认。原model unknown字段保留演变记录。
-- 8题源码约束PASS；33次工具调用与33返回逐一审计，未见越界读取/联网/外部求解/委派。9次学生LFZ自调，日志次数和预算一致，8题首个记录均exit0（学生自选测试辅指标）。
-- 协议按指令隔离+记录工具轨迹的声明范围PASS，不声称OS隔离或未记录系统行为的证明。私有推理/系统提示未导出。
-- 131用例含147独立验收进程全PASS；源代码与过程审查独立绑定SHA256，不给学生验收反馈后重写本轮答案。
-- raw-inputs-submissions.zip 665764B，SHA90a6a3e3d894e7a813b06463506d5cc540e0a4570d7b005a3fd27ccc6a776d84，117项原始字节全回读一致；artifact-manifest覆盖311其他文件。
-- 原始学生源码、首次快照、日志、提示、run元信息、tool-traces、187份runner证据、冻结9项输入均已留存。报告目录.gitattributes禁换行归一。
-- 未改解释器/原tests/应用或冻结skill，未重编译；既有69内置/494 Rust/130黑盒与冻结解释器hash不变。
+## 最终证据
+- 独立release522/166官方/91进程/140自编/app37+11全通过；16旧新程序覆盖8类while边界，stdout/stderr/exit逐字节一致。
+- 原19性能线：15通过，3环境不确定，1map8k22.691>22.521；R304保持OPEN，不打正式v1.4.0标签，不以局部收益抵消未过项。
+- 数字500k104.940→90.804ms，大对象8k93.431→21.198ms；string4k paired慢28.8%也披露。微观LLVM原因未确定，所有失败/诊断/初版exact源和exe保留。
+- docs/reports/T12-independent-verification.md、T12-performance.md与T12-release-evidence为主要证据。八功能需求通过，整体效率未全面验收。
 
-## 交付 / 后续
-release-manager已审发布文档和两提交分组；主会话已代执行Git、v1.3.0附注tag和原子推送，远程main与tag剥离指向发布提交53e6d88，避免子agent审批悬挂。后续收工记录不移动标签。原有三处事故记录保留未提交。
-后续若优化skill或语言，基于冻结v2另开新轮测评，不能修改本轮已交卷答案或降低验收标准再重算。
+## 当前操作/下一步
+release-manager已审核候选分组与初始三用户修改保护；主会话准备代执行原子Git提交和已授权main推送，实际回执待执行后追加。正式发布继续等待剩余性能门槛，不另开择窗挑样。
+初始用户DECISIONS+28/PROJECT_STATE+1/本STATUS+1事故记录保留且不提交。旧v1.3.0标签及v2原8/8、131/131题集/manifest/原始ZIP不改。
 
 ## 关键经验（写给未来的自己）
 - **临时件一律放项目内 `Temp/`（用户 2026-09-27 指令，已立 ADR）**：**禁止**再往 C 盘 `%TEMP%` 写；`Temp/` 已 gitignore。纪律：① **每份任务书必须写明"临时文件放 `<repo>/Temp/`"**；② 每波任务收工后我**盘一次 `Temp/`**；③ **先保全证据再删** —— 一手证据（如盲测报告）**复制进仓库** `docs/reports/**` 再清临时件，**不得删唯一副本**；④ **正在跑的任务目录不许动**（按 mtime 判别）。历史：首次清理 C 盘 `%TEMP%\opencode\` 740 文件 / 5.31 MB → 44 文件 / 1.41 MB。

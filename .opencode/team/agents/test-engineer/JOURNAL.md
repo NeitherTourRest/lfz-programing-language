@@ -136,3 +136,12 @@
 - 限制: 非正式盲测，功能通过仍REVIEW_REQUIRED；源码算法与隔离协议待独立verifier。固定案例不证明全部输入。
 - 下一步: verifier独立审查与正式测评另行调度。
 - 阻塞: 无；所有临时件限项目Temp，冻结文件稳定。
+
+
+## [2026-10-25] T12黑盒与CLI进程检查
+- 来源：team-lead T12-06完整任务书，冻结契约§16。
+- 完成：新增4正例组64assert及32负例，原130与99清单条目保持；正式166/166、独立进程91/91通过（含一次全量runner）。
+- 产出：tests/t12_cli_check.py、tests/lfz/test_t12_*.lfz、tests/fixtures/t12_*.lfz、cases.json、REPORT/coverage与docs/reports/T12-blackbox.md及原始证据。
+- 决策：按契约编写，不改变语义；作者insert误用和Windows NUL参数问题已透明记录。
+- 下一步：verifier独立验收。
+- 阻塞：无。未Git、不改实现、不修改冻结v2。

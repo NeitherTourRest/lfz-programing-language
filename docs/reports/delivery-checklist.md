@@ -8,6 +8,26 @@
 
 > **2026-10-24 本轮补充核对（T11-12/13/14/16）**：8 项交付物位置保持齐备。当前 69 内置、494 Rust 测试（388+48+28+15+15）、130 黑盒；语言 witness 74/74，V01 干净 CWD 130/130 已独立闭环，详见 `T11-v11-reverification.md`。本地执行 `scripts/build-release.ps1` exit 0，`dist/lfz.exe` 766464 B、`lfz 1.0.1`，hello 冒烟输出 `Hello, LFZ!`；发布版 `dist/lfz.exe test --json` total/passed=130、failed/errored=0、exit 0。SHA256=`149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，原文见 `T11-v11-release-evidence/`。构建有本机 rustup canonicalize 提示，不声称零 warning。`dist/` 被忽略，仅本地刷新、不强制入库；版本仍 1.0.1，既有 8 个 tag 不变，本轮不打 v1.3.0。同题 8 盲测缺原题材料未重跑，历史 2/8 不变。下文 2026-09-27 原始计数、缺陷和历史标签信息保留其当时语境；当前状态以本补充及本轮独立报告为准。
 > **2026-10-24 v2 正式首轮补充核对**：新增[正式独立验收报告](agent-benchmark-v2/v2-20261024-r01/REVIEW.md)与[认证结果](agent-benchmark-v2/v2-20261024-r01/certified-results.json)，run-id `v2-20261024-r01`：8/8 整题、131/131 功能用例，8 份源码约束与协议审查均 PASS；学生共 9 次 LFZ 自调，各题首次自调均 exit 0（8/8），仅为自选测试辅指标。模型为会话日志确认的 `gpt-6.1-sol / medium`；隔离范围为分题无历史派发、指令约束及已记录工具审计，未声称 OS 隔离。新八题是独立 v2 基线，不以历史 2/8 计算提升。[原始字节 ZIP](agent-benchmark-v2/v2-20261024-r01/raw-inputs-submissions.zip)及其[哈希清单](agent-benchmark-v2/v2-20261024-r01/raw-archive.json)提供 Git 行尾归一化之外的原文留存。当前解释器仍为 Cargo 1.0.1 / 69 内置 / 494 Rust 测试 / 130 正式黑盒；dist 766464 B、SHA256 `149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，本轮不重编译或改 Cargo，保持冻结 pin。`v1.3.0` 交付里程碑包含已验收的 v1.1 实现、测试/指南及 v2 正式首轮认证与原始证据；Git 附注标签为发布凭据，不等同于解释器 1.0.1 的版本变更。上方“本轮不打 v1.3.0”仅描述前一批发布时点。
+## 2026-10-25 T12 1.4.0 候选工作快照（非正式发布）
+
+当前 Cargo 1.4.0、72内置，最终候选release opt-level=2，target/dist均759808B、SHA256 `47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f`。R-304仍开放，**不打v1.4.0正式标签、不移动v1.3.0**。允许保存源码和可复现成功/失败报告的候选checkpoint；这与正式发布是不同状态，当前不虚构提交/推送回执。
+
+| 本轮交付 | 位置与证据 | 当前结论 |
+| -- | -- | -- |
+| 契约 | `docs/spec/`三件套§16、`T12-design.md` | argv、代码入口、严格确定性JSON、字段索引及while作用域优化边界；不增加语言文法 |
+| 运行时与CLI | `src/json_codec.rs`及相关runtime/CLI；`T12-release-evidence/final-opt2/` | 最终cargo test --release **522/522**（404+48+28+12+15+15），0failed/ignored |
+| 正式黑盒与进程 | `T12-blackbox.md`、`T12-blackbox-evidence/` | 阶段166/166、91/91；91含一次全量黑盒，不累加为独立新用例。最终47ED独立复验已通过 |
+| 独立功能 | `T12-independent-verification.md`及原始目录 | 最终47ED独立PASS：522/166/91、140witness、应用37+11、16旧新差分覆盖8类while范围且stdout/stderr/exit逐字节一致；见T12-independent-final/ |
+| 应用与指南 | `T12-app.md`、`T12-guide-evidence.md`、`T12-skill-evidence.md` | jsonflow37、sortviz11，150排序自测；人类35代码块+10探针、AI30探针作者证据。最终binary已由verifier复验；不将作者回归冒充独立盲测 |
+| 性能 | `T12-performance.md`、`benchmarks/t12/results/opt2-same-path.json`及opt2新功能数据 | 19原绝对线15达线、3环境不确定、1未通过；R-304开放，不用局部收益抵消失败 |
+| 最终构建 | `T12-release-evidence/final-opt2/build-final.json`、两日志、Cargo快照、源码hash | 759808B/47ED，opt2且LTO/codegen1/strip不变；旧FB8阶段记录保留，不冒用为最终hash |
+| Git准备 | `T12-release-plan.md`及checkpoint预检/文件分组清单 | 仅准备，主会话代执行候选提交与main推送；本角色未Git写入。初始用户3处28/1/1行保留 |
+
+局部实测：结构体8k旧93.431→新21.198ms（耗时减少约77.3%），numeric500k旧104.940→新90.804ms，startup新16.287ms在原16.307ms线内。string_map8k新22.691ms超22.521ms、旧21.871ms在线；其余3项同期旧也超线而环境不确定。所有计时含进程启动等完整开销，限定该轮条件；不是所有负载都加速或已达到整体效率目标的证明。
+
+课程8项交付物仍在原位置，PPT本轮未变。jsonflow不识别路径别名、写入不是原子操作，调用者应指定独立输出文件；具体限制见`app/README.md`。旧v2题集、manifest、原始ZIP与成绩不改，active skill/exe变更属于新版本边界；复现旧基线在项目Temp恢复原9输入，后续测评另建版本。项目外安装未更新。
+
+---
 ## 0. 结论速览
 
 | 维度 | 结论 |

@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-25 23:23 Asia/Shanghai",
+  "status": "final opt2 candidate build and Rust tests complete; performance acceptance pending; not tagged or published",
+  "version": "1.4.0",
+  "profile": {
+    "opt_level": 2,
+    "lto": true,
+    "codegen_units": 1,
+    "strip": true
+  },
+  "profile_reason": "Team-lead approved measured startup/size tradeoff; selected compute workloads can cost 2-7% vs opt3; see T12-runtime-startup-candidates.md",
+  "build": {
+    "command": "Temp/toolchain/cargo/bin/cargo.exe build --release",
+    "exit": 0,
+    "seconds": 11.81,
+    "log": "build-release.txt"
+  },
+  "tests": {
+    "command": "Temp/toolchain/cargo/bin/cargo.exe test --release",
+    "exit": 0,
+    "passed": 522,
+    "failed": 0,
+    "ignored": 0,
+    "groups": [
+      404,
+      48,
+      28,
+      12,
+      15,
+      15
+    ],
+    "log": "cargo-test-release.txt"
+  },
+  "binary": {
+    "paths": [
+      "target/release/lfz.exe",
+      "dist/lfz.exe"
+    ],
+    "bytes": 759808,
+    "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+    "version_output": "lfz 1.4.0"
+  },
+  "source_hashes": "source-hashes.json",
+  "cargo_snapshots": [
+    "Cargo.toml.txt",
+    "Cargo.lock.txt"
+  ],
+  "environment": {
+    "rustup_home": "Temp/toolchain/rustup",
+    "cargo_home": "Temp/toolchain/cargo",
+    "temp": "Temp/toolchain",
+    "tmp": "Temp/toolchain"
+  },
+  "scope": "No Git writes, no external installation changes, old v1.3.0 tag and frozen v2 unchanged. Rust tests do not imply R-304 performance acceptance.",
+  "warnings": "rustup canonicalize ancestor-path warnings retained in logs"
+}

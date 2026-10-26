@@ -201,3 +201,40 @@
 - 证据：旧exe red.lfz → TypeError期待1参；red-io.lfz → readFile NameError。cargo历史路径不存在，恢复后调用被中断，尚无新源码编译/测试通过证据。定向/全量测试由team-lead接手。
 - 边界：仅builtins.rs及自身STATUS/JOURNAL，未改spec/黑盒/guide，未commit。
 - 下一步：统一编译/复验；architect裁决ord/substring/pad复杂度。
+
+## [2026-10-25 00:57] T12-04 Agent数据运行时
+- 来源：team-lead任务及冻结interface-contract §16；error.rs两变体专项授权已追加ADR。
+- 完成：argv上下文/身份/别名与默认兼容、严格JSON72内置、StructObj字段索引；新增11项边界单测。
+- 产出：src/{json_codec,evaluator,builtins,value,error,lib}.rs；docs/reports/T12-runtime-evidence.md及4原始日志。cargo test --lib399/399通过。
+- 订正：首轮argv Rust期望漏数组字符串引号，订正后全过；保留失败日志。
+- 下一步：CLI/黑盒/性能/独立验收。
+- 阻塞：无；未git、未改其他角色交付物。
+
+
+## [2026-10-25 01:11] T12数字循环性能异常隔离诊断
+- 来源：team-lead紧急任务，轻量启动。
+- 完成：HEAD旧源码/同字节当前源码同1.90标准profile隔离重建；7轮交错数字循环控制；根target慢binary原字节复制后按路径/名字条件出现正常与较慢两档。所有输出正确，精确机制未知。
+- 产出：docs/reports/T12-runtime-performance-diagnostic.md及perf-diagnostic9份原始证据。FB8E同字节末组target181.38ms/Temp同名174.66ms/dist99.22ms，不能归因为源码或缓存bug。
+- 决策：不盲改argv/索引，不调整阈值或规模；按team-lead指定Temp/T12/perf-subject.exe统一旧新条件后由perf复测。
+- 下一步：perf正式复测/独立验证。
+- 阻塞：无；本次未修改源码/Cargo参数、不git、不清target。
+
+
+## [2026-10-25 22:52] T12恢复后的CPU控制与窄while优化
+- 来源：team-lead紧急任务恢复，轻量启动；上轮额度中断不等于完成。
+- 诊断：同subject/同CPU/同优先级与CPUtime确认首版主要回归仍存在。cold/inline/Box/Rc索引及模块撤回候选均未形成有效修复，所有控制源码/结果保全；不宣称编译器或缓存根因。
+- 完成：architect批准无直接Decl/FnDecl/StructDecl的while省每轮空Env，检查循环前一次；5项语义回归、全Rust522/522、黑盒166/166、实际dump文本与JSON通道PASS。
+- 性能证据：固定CPU0 500k旧113.12/首版197.72/候选101.81ms，CPU93.75/171.875/78.125ms；正式全负载性能由perf另测。
+- 产出：src/evaluator.rs；docs/reports/T12-runtime-performance-diagnostic.md与完整原始证据。target/dist821760B，SHA7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81；首版exactexe/source/Cargo快照及variant源码归档均逐项回读。
+- 纪律：未改Cargo/profile/阈值/旧测试，不git；构建复制dist已专项授权，全部临时项目内；安全清约248MB已完成中间物保留唯一证据。
+- 下一步：perf正式复验，verifier独立验收，发布经理收口。
+- 阻塞：无代码阻塞，性能验收待定。
+
+
+## [2026-10-25 23:16] T12最后两项构建候选筛选
+- 来源：team-lead轻量启动，聚焦启动与短任务效率，不再扩展无结论模块诊断。
+- 完成：隔离opt-level=2与s，其余release参数不变；方法先冻结，4版本同subject/换字节5秒/2预热7正式/8case，288进程输出全部正确。
+- 证据：docs/reports/T12-runtime-startup-candidates.md及startup-candidates归档。opt2体积821760→759808B、noop17.9451→14.6609ms，500k88.4131→89.6030ms、大struct23.3245→21.1936ms；其余部分负载成本增加。opts632320B但500k108.1174ms不优先。
+- 门槛：原固定线未改，8项旧5/8、7641 4/8、opt2/opts5/8；不是完整19项性能通过。
+- 下一步：建议team-lead决定opt2体积/启动取舍，release-manager唯一改主profile后完整复验。
+- 纪律：主Cargo/dist及正式源码均未改，不git；全部临时/归档项目内，未删旧失败证据。

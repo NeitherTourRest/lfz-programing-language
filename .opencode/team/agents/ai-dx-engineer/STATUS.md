@@ -1,21 +1,21 @@
 # ai-dx-engineer — 工作状态
-
-> 最后更新：2026-10-24 13:36 by ai-dx-engineer
+> 最后更新：2026-10-25 01:11 by ai-dx-engineer
 
 ## 当前状态
-T11-14 完成：skill 四文件同步当前已实现69内置（54+15）及 range 双参；D1–D7保留，VERIFICATION原D2单参失败记录明确标为历史。只写自己的skill/证据，未改spec/guide/README根文件/源码/测试，未git，未派agent。
+T12 AI指南同步完成，等待独立验收/发布收口；未宣称新Agent盲测成绩。四skill文件与team-lead专项授权的docs/guide/ai/README.md已对齐1.4.0、72内置、argv/-e/stdin/严格JSON；旧54/69及旧CLI限制仅保留在明确历史实测条目。
 
 ## 本轮产出与证据
-- `.opencode/skills/lfz-programming/SKILL.md`：41721 B；新增§6.1完整签名/data-last、Unicode标量、空fill、ord/chr错误消息与最新复杂度、IEEE数学、IO UTF-8/CWD/错误；去除未实现及sin不提供的陈旧声明。
-- 同包 `README.md` 6434 B / `VERIFICATION.md` 25605 B / `prompt-template.md` 3722 B。
-- `docs/reports/T11-v11-skill-evidence.md` 5516 B：亲跑 target/release/lfz.exe（762880 B）；增量20assert → v11 skill OK/exit0；13负例各exit2（消息符合）；SKILL L1–L5均exit0；最小基线→6、IEEE边界→nan nan nan/exit0。
-- 临时件全在项目 `Temp/ai-dx-v11/`；完整增量源码、负例表达式、真实输出与SHA256已存报告，可由team-lead统一清理。
+- SKILL.md 47927B / README.md 7566B / VERIFICATION.md 27780B / prompt-template.md 4958B；AI指南入口47793B。
+- docs/reports/T12-skill-evidence.md及同名目录：run_examples.py、results.json、job.lfz、files.json、author-probe-error.json。
+- 作者实跑30/30：JSON配置管道、参数字面保真/隔离别名遮蔽、机器状态和业务输出分流、-e/stdin/EOF/UTF8、i64/f64负零/Unicode/$/NUL、重复解码键/字节offset/128-129容器/环共享/方法过滤与编码错误；原L1–L5与最小基线均过。
+- dist/lfz.exe 1.4.0，821248B，SHA256 fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d。重跑命令：D:/app/ANACONDA/python.exe -B docs/reports/T12-skill-evidence/run_examples.py，exit0。
+- 首次测试作者误写s.self关键字字段，改s.me构造环后通过；失败保留，不改产品实现。
 
-## 进行中/阻塞
-无。没有宣称完成新的8题Agent盲测；那是team-lead后续独立组织的验证。
+## 进行中 / 阻塞
+无。没有写人类五指南/应用/spec/源码/测试/看板，没有执行Git或再委派。
 
 ## 下一步
-team-lead组织T11-15新Agent盲测/独立验收，release-manager接手提交发布。
+team-lead安排独立验收与发布；若今后要宣称新skill的Agent成功率，另开版本化输入/新Agent任务，不能把本作者回归当盲测。
 
 ## 关键经验
-v1.1为特性批次，Cargo版本仍1.0.1，不能仅据版本号推断能力；使用当前源码重建的exe。ord非法字符串必须完整统计n（错误路径O(n)）；substring含UTF-8前缀扫描；pad含主串/fill计数。旧负例证据须保留并标明历史，不能继续作为当前限制。
+argv是本轮唯一新增一等内置，JSON及旧69内置不可直接map为函数值，必须lambda包装。active skill/exe更新后旧v2 manifest校验失败属预期；raw ZIP原九项输入仍封存且SHA90a6a3e3d894e7a813b06463506d5cc540e0a4570d7b005a3fd27ccc6a776d84不变，绝不重freeze旧manifest掩盖输入变化。全部临时件/TEMP限项目Temp/ai-dx-t12，外部只读。

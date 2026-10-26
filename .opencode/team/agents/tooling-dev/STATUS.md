@@ -1,25 +1,24 @@
 # tooling-dev — 工作状态
-> 最后更新：2026-10-24 13:39 by tooling-dev
+> 最后更新：2026-10-25 00:57 by tooling-dev
 
 ## 当前状态
-bug-20261024-V01 的 runner 最小修复已完成，等待 verifier 独立复验。未改解释器 IO 语义、正式 LFZ 测试或其他角色产物，未执行 git 操作。
+T12-05 CLI 实现和定向测试完成，待team-lead全量与verifier独立验收。未改runtime/spec/冻结v2或原有测试，未Git。
 
-## 产出 / 验证证据
-- `src/test_runner.rs`：discover 成功且用例集非空后、首个用例执行前，`create_dir_all("Temp")`；失败 stderr 中文诊断，stdout 空，exit 2，不改变 cwd。
-- `tests/test_runner.rs`：新增 3 条 e2e，复用正式 `test_v11_io.lfz`，覆盖无 Temp 的默认一命令与显式目录 JSON、cwd 不变、Temp 同名文件冲突（文本/JSON均不执行脚本且不覆盖文件）、无效/空测试集不创建目录。
-- `docs/tooling/runner-contract.md`：v1.3、§1.1 测试工作目录准备与错误通道说明。请 team-lead 转告 test-engineer。
-- 先补测试后修复：`cargo test --test test_runner fresh_cwd_io_suite_prepares_temp -- --exact` 修前 FAILED（IOError：无法写入 Temp/v11_io_roundtrip.txt，exit 2）；修后 `cargo test --test test_runner` 15/15 passed。
-- 全量 `cargo test` exit 0，494 passed（388 + 48 + 28 + 15 + 15），0 failed / ignored；日志 `Temp/tooling-v01-cargo-test.txt`。cargo 存在增量缓存 hard-link 失败后复制的环境 warning，不声称 0 warning。
-- 当前工作区 `target/debug/lfz.exe test --json`：130/130 passed，failed 0，errored 0，exit 0。
-- 复制完整 tests 到独立 cwd `Temp/tooling-v01-clean-c3cb31b0f8834cdf8642b2f3d3588816/`，启动前无 Temp，执行 `target/debug/lfz.exe test --json`（exe 用绝对路径）：130/130 passed，exit 0，执行后 Temp 为目录。结果 `Temp/tooling-v01-clean-c3cb31b0f8834cdf8642b2f3d3588816/result.json`。
-- 所有测试进程 TEMP/TMP 均指向项目 `Temp/toolchain`；RUSTUP_HOME=`Temp/toolchain/rustup`，CARGO_HOME=`Temp/toolchain/cargo`，cargo 1.90.0。
+## 产出与证据
+- src/cli.rs：保护-e CODE和--后script参数的选项扫描；保留旧无--额外参数错误。支持lfz [run] -e CODE、lfz [run] -、显式/裸文件--参数。
+- 文件/源码统一load→lex→parse→eval与AST析构在同一大栈；调用eval_module_traced_on_thread_with_args，runner eval_case仍默认[]。
+- stdin读UTF8到EOF；失败IOError无法读取标准输入，无span；伪路径<command>/<stdin>，line_base0；状态JSON、print/dump/input通道规则不变。
+- tests/cli_t12.rs新增12集成测试；旧tests/cli.rs 28/28与bin原48/48均保持原样通过。
+- 命令：cargo test --test cli --test cli_t12（40/40，exit0）、cargo test --bin lfz（48/48，exit0）。环境RUSTUP_HOME/CARGO_HOME/TEMP/TMP全指项目Temp/toolchain。
+- 永久日志docs/tooling/evidence/T12/{cli-tests,bin-tests}.txt，原始Temp/T12/tooling/同名副本。存在环境路径/增量hard-link警告，不称零warning。
+- docs/tooling/runner-contract.md §10同步新CLI，§9旧全局摘除描述更新；src/main.rs说明同步。
+- 字节：src/cli.rs 45335，main.rs 779，cli_t12.rs 6066，runner-contract.md 16860。
 
-## 进行中 / 阻塞
-无；独立验收由 verifier 负责，未自行关闭 V01。
+## 进行中/阻塞
+无；等待全量与独立验收。runtime同时开发，计数可能继续增加，以最终执行证据为准。
 
 ## 下一步
-team-lead 唤醒 verifier 重跑原 clean-cwd witness，并更新全量计数 491 → 494。跨角色契约变更 ADR 请 team-lead 追加（本任务明确仅准许 runner/对应测试/契约/本人状态）。
+team-lead协调黑盒/指南/应用/最终构建；需要缺陷修复再唤醒。
 
 ## 关键经验
-- ignored 目录可能隐藏 fresh checkout 的测试环境依赖；必须从无 Temp 的独立 cwd 实跑完整 tests。
-- runner 准备约定测试目录，不要求 IO 内置自动创建任意父目录；发现失败或空集不应产生准备副作用。
+-e紧随token必须无条件源码，不能先全局剥除--json；--只在完整执行入口后转为脚本参数。旧parse形态保留以免改动原测试；test/help/version原解析兼容。

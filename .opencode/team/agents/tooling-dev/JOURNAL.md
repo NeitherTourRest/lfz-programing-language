@@ -122,3 +122,11 @@
 - 决策：不改 cwd；仅有效非空集在执行前准备 Temp；IO 语言语义不变。请 team-lead 统一转告 test-engineer 并追加跨角色 ADR。
 - 下一步：verifier 重跑原 witness，team-lead 更新看板与计数。
 - 阻塞：无；cargo 有环境 hard-link fallback warning，无源码告警结论。
+## [2026-10-25 00:57] T12-05 CLI源码入口与脚本参数
+- 来源：team-lead任务书；architect冻结syntax §16及interface-contract §16。
+- 完成：--字面参数透传、-e与stdin源码入口、统一大栈求值和错误路径；保护CODE/argv里的--json；保持旧文件/runner行为。
+- 产出：src/cli.rs、src/main.rs、tests/cli_t12.rs、docs/tooling/runner-contract.md及evidence/T12日志。
+- 验证：原cli28+新增12集成全通过，bin原48全通过，均exit0；全部临时文件和cargo环境项目内。
+- 决策：无新增语义，按architect契约；原tests/cli.rs未修改，未Git。
+- 下一步：全量回归与独立验收由team-lead统筹。
+- 阻塞：无。

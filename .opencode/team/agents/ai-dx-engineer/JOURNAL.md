@@ -64,3 +64,11 @@
 - 决策：无新语义决策，转述最新spec。
 - 下一步：team-lead组织新Agent盲测与独立验收；临时件Temp/ai-dx-v11由其统一清理。
 - 阻塞：无。
+
+## [2026-10-25 01:11] T12 Agent参数/JSON工作流指南同步
+- 来源：team-lead T12任务；后追加专项授权AI指南入口docs/guide/ai/README.md。
+- 完成：四skill与AI入口统一1.4.0/72内置，补--参数保真、-e/stdin、argv别名遮蔽/隔离、严格JSON/i64/Unicode/错误offset/深度/循环/方法过滤及平均索引复杂度；保留历史实测但明确旧CLI限制被替代。
+- 产出：docs/reports/T12-skill-evidence.md及raw目录；30/30作者示例/边界/旧L1–L5和最小基线通过，exe hash fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d。首次作者探针误写s.self，按spec改s.me，无产品修复。
+- 决策：无新语言决策；旧v2 raw ZIP hash保持90a6a3e3d894e7a813b06463506d5cc540e0a4570d7b005a3fd27ccc6a776d84，不修改旧manifest/题目/成绩/学生提交。
+- 下一步：独立验收/发布；新Agent效果需另测，不以作者回归冒充盲测。
+- 阻塞：无；未git、未委派，临时件项目Temp。

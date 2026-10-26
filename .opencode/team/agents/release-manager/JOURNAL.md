@@ -806,3 +806,31 @@
 - 版本边界：v1.3.0为交付里程碑；解释器1.0.1及冻结hash不变，新基线8/8整题、131/131功能，不比较旧2/8。
 - 本次仅更新本人STATUS/JOURNAL，未Git/网络、未改发布文档或报告。
 - 下一步：主会话单独提交并push main保存收工回执；v1.3.0继续锚53e6d88，不移动已发布tag。
+## [2026-10-25 01:00] T12阶段一1.4.0版本与release构建
+- 来源：team-lead原子任务，仅版本/构建，不扩发布文档或Git。
+- 完成：Cargo.toml升1.4.0，cargo同步Cargo.lock；release构建exit0，12.72s，复制项目dist并核对hash/version。
+- 产出：docs/reports/T12-release-evidence/build-release.txt、build.json；target/release与dist均821248B，SHA256 FB8E5653827DE1E1C3F73B81D37F21314AD41ADFDC4D99F37CB8CA5F6491F47D。
+- 决策：本轮版本/后续标签为1.4.0/v1.4.0；旧v1.3.0与冻结v2证据不动。
+- 下一步：主调度性能复测与独立验收后，再唤醒最终交付收口。
+- 阻塞：无。未Git，未更新外部安装。
+## [2026-10-25 22:31] T12恢复后发布准备（尚不发布）
+- 来源：team-lead前置任务经账号额度中断，用户22:25明确继续；轻量恢复本角色状态。
+- 完成：README/交付清单同步T12功能事实和证据，明确R-304未过/待发布；写8组原子提交计划与用户初始修改保护。
+- 产出：T12-release-plan.md、T12-release-evidence/preflight.json；171路径快照、原99cases保留+32新增、旧测试/冻结v2无变动、3用户块各1、模式凭据扫描0命中。文档链接无缺失，自己文档diff --check通过。
+- 决策：不Git、不tag、不push；FB8构建只作历史阶段快照，等待最终hash与原阈性能通过。
+- 下一步：性能/独立完成后再次唤醒收口；主会话代执行Git避免审批悬挂。
+- 阻塞：R-304性能仍未过，发布尚不能完成。
+## [2026-10-25 23:23] opt-level=2最终候选构建与Rust release回归
+- 来源：team-lead批准经A/B测量的体积/启动取舍，要求主Cargo显式opt-level=2，保持其他profile与1.4.0版本。
+- 完成：重建release exit0/11.81s，复制dist并核hash；cargo test --release exit0，522/522（404+48+28+12+15+15），0failed/ignored。
+- 产出：docs/reports/T12-release-evidence/final-opt2/，含build-final.json、两日志、Cargo/lock快照、16源文件hash及禁行尾归一属性。target/dist均759808B，SHA256 47ED2BFE2A2694B11BD611172CFCF0000D0BFC58E3B9BD809CA95F066DD0261F。
+- 决策：仅体积/启动取舍批准，不等于R-304通过；最终性能仅针对本hash按原线测一次，失败不改线。
+- 下一步：主调度安排性能与独立最终验收；如仍受限只作有证据候选checkpoint，不打正式v1.4.0标签。
+- 阻塞：R-304仍待最终验收；未Git、未外部安装，旧tag/v2不动。
+## [2026-10-25 23:35] 最终47ED候选checkpoint准备收口
+- 来源：team-lead批准保存候选工作快照；最终verifier已回执功能PASS，性能15/19、3环境不确定、1失败，R-304继续开放。
+- 完成：README/清单/提交计划明确最终47ED/759808B/opt2、522/166/91、应用37+11/140witness/16旧新while差分；不创建v1.4.0正式标签，不移动v1.3.0。
+- 产出：checkpoint-preflight.json、commit-groups.json、可复跑preflight-check.py及禁行尾归一属性；8组明确逐路径建议，3用户块快照保护不变，旧测试/旧v2不变。
+- 决策：主会话代执行候选提交和main推送；本角色未Git写入，实际回执未出现前不写已推送。角色/root最后状态落盘后需刷新清单。
+- 下一步：原阈效率开放项留待后续迭代；本轮只保存有证据候选，不把局部收益抵消未过门槛。
+- 阻塞：R-304开放，正式发布不能完成；候选checkpoint准备已完成。
