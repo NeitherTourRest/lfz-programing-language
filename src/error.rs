@@ -211,6 +211,8 @@ pub enum ValueMsg {
     NotSingleScalar { n: usize },
     BadCodepoint { n: i64 },
     EmptyFill,
+    JsonParse { offset: usize, reason: String },
+    JsonStringify { reason: String },
 }
 
 impl ValueMsg {
@@ -227,6 +229,8 @@ impl ValueMsg {
             ValueMsg::NotSingleScalar { n } => format!("ord 的参数必须是单个字符（Unicode 标量数 {n}）"),
             ValueMsg::BadCodepoint { n } => format!("chr 的参数不是合法的 Unicode 码点：{n}"),
             ValueMsg::EmptyFill => "填充串不能为空".to_string(),
+            ValueMsg::JsonParse { offset, reason } => format!("JSON 解析失败（字节偏移 {offset}）：{reason}"),
+            ValueMsg::JsonStringify { reason } => format!("JSON 编码失败：{reason}"),
         }
     }
 }

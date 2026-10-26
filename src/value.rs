@@ -25,6 +25,7 @@ use crate::ast::{Body, Expr};
 use crate::env::{Cell, ScopeChain};
 use std::cell::RefCell;
 use std::cmp::Ordering;
+use std::collections::HashMap;
 use std::fmt;
 use std::rc::Rc;
 
@@ -582,48 +583,56 @@ fn num_order(a: &Value, b: &Value) -> Ordering {
 /// - 字段按**插入序**存储（含方法字段）；支持**动态加字段**（§4.5.8）。
 /// - **数据面**（显示 / `keys` / `values` / `entries` / `len` / `has` / `==`）一律
 ///   **过滤函数值字段**（A5），且按键的 **UTF-8 字节序升序**访问（B3）。
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default)]
 pub struct StructObj {
     fields: Vec<(String, Value)>,
+    index: HashMap<String, usize>,
+}
+
+// 索引只是内部加速结构，不把随机哈希迭代序暴露到Debug。
+impl fmt::Debug for StructObj {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("StructObj").field("fields", &self.fields).finish()
+    }
 }
 
 impl StructObj {
     /// 空实例。
     #[must_use]
     pub fn new() -> Self {
-        Self { fields: Vec::new() }
+        Self::default()
     }
 
     /// 由字段（插入序）构造。
     #[must_use]
     pub fn from_fields(fields: Vec<(String, Value)>) -> Self {
-        Self { fields }
+        let mut index = HashMap::with_capacity(fields.len());
+        for (i, (key, _)) in fields.iter().enumerate() {
+            index.entry(key.clone()).or_insert(i); // 保留旧first-match行为与原fields。
+        }
+        Self { fields, index }
     }
 
     /// 读取字段（**含**方法字段；`s.k` 与 `s["k"]` 均走此处）；缺失 → `None`。
     #[must_use]
     pub fn get(&self, key: &str) -> Option<&Value> {
-        self.fields
-            .iter()
-            .find(|(k, _)| k == key)
-            .map(|(_, v)| v)
+        self.index.get(key).map(|&i| &self.fields[i].1)
     }
 
     /// 写入 / 新增字段（**原地**修改，A1）：已存在则替换，否则动态新增（§4.5.8）。
     pub fn set(&mut self, key: &str, value: Value) {
-        for (k, v) in &mut self.fields {
-            if k == key {
-                *v = value;
-                return;
-            }
+        if let Some(&i) = self.index.get(key) {
+            self.fields[i].1 = value;
+        } else {
+            self.index.insert(key.to_string(), self.fields.len());
+            self.fields.push((key.to_string(), value));
         }
-        self.fields.push((key.to_string(), value));
     }
 
     /// 是否存在该字段（**含**方法字段）。
     #[must_use]
     pub fn contains(&self, key: &str) -> bool {
-        self.fields.iter().any(|(k, _)| k == key)
+        self.index.contains_key(key)
     }
 
     /// 全部字段（插入序，**含**方法字段）。
@@ -708,6 +717,8 @@ pub struct Closure {
     pub def_scope: Rc<ScopeChain>,
     /// 用户函数载荷（形参 / 体 / 捕获 cell）；占位闭包为 `None`。
     pub user: Option<Rc<UserFn>>,
+    /// 上下文内置标签（T12仅argv）；不与占位闭包混淆。
+    pub builtin: Option<&'static str>,
 }
 
 impl Closure {
@@ -717,6 +728,7 @@ impl Closure {
             name: Some(name.into()),
             def_scope,
             user: None,
+            builtin: None,
         }
     }
 
@@ -726,6 +738,7 @@ impl Closure {
             name: None,
             def_scope,
             user: None,
+            builtin: None,
         }
     }
 
@@ -735,6 +748,7 @@ impl Closure {
             name,
             def_scope,
             user: Some(user),
+            builtin: None,
         }
     }
 }
@@ -1157,5 +1171,29 @@ mod tests {
         assert_eq!(Value::array(vec![]).order_kind(), None);
         assert_eq!(Value::empty_object().order_kind(), None);
         assert_eq!(Value::struct_def("P").order_kind(), None);
+    }
+}
+
+#[cfg(test)]
+mod t12_index_tests {
+    use super::*;
+    #[test]
+    fn index_preserves_first_match_updates_clone_and_insertion_order() {
+        let mut o = StructObj::from_fields(vec![("dup".into(), Value::Int(1)),
+            ("dup".into(), Value::Int(2)), ("中".into(), Value::Int(3))]);
+        assert_eq!(o.get("dup").unwrap().to_string(), "1");
+        o.set("dup", Value::Int(4));
+        o.set("new", Value::Int(5));
+        assert_eq!(o.raw_fields()[0].1.to_string(), "4");
+        assert_eq!(o.raw_fields()[1].1.to_string(), "2");
+        assert_eq!(o.raw_fields()[3].0, "new");
+        let mut copy = o.clone();
+        copy.set("new", Value::Int(8));
+        assert_eq!(o.get("new").unwrap().to_string(), "5");
+        assert_eq!(copy.get("new").unwrap().to_string(), "8");
+        assert!(copy.contains("中")); assert!(!copy.contains("missing"));
+        assert!(!format!("{o:?}").contains("index"));
+        for n in 0..2000 { o.set(&format!("key{n}"), Value::Int(n)); }
+        for n in 0..2000 { assert_eq!(o.get(&format!("key{n}")).unwrap().as_int(), Some(n)); }
     }
 }

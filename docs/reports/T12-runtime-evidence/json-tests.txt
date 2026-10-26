@@ -1,0 +1,23 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+warning: hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `D:\XUE\2026fall\Program Design\lfz-programing language design\target\debug\incremental\lfz-0hy94ljq6ohu6\s-hnikyshgjr-1ufqmu0-working`
+
+warning: `lfz` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src\lib.rs (target\debug\deps\lfz-54e50da9b678038f.exe)
+
+running 8 tests
+test json_codec::tests::builtins_check_types_arity_and_default_context ... ok
+test json_codec::tests::rejects_non_json_grammar_at_first_byte ... ok
+test json_codec::tests::exact_i64_and_float_type_sign_roundtrip ... ok
+test json_codec::tests::cycles_rejected_but_shared_subtrees_repeat_and_do_not_mutate ... ok
+test json_codec::tests::method_filtering_key_order_and_invalid_value_precedence ... ok
+test json_codec::tests::rejects_duplicate_decoded_keys_but_allows_nested_names ... ok
+test json_codec::tests::unicode_escapes_and_arbitrary_keys_are_data ... ok
+test json_codec::tests::container_depth_limit_matches_encoder ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 391 filtered out; finished in 0.00s
+

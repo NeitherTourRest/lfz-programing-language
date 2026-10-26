@@ -199,7 +199,12 @@ pub fn eval_module(program: &Program) -> R<Value> {
 ///
 /// `result` 为最后一条语句的值（顶层 `return` 防御性接受；无语句 → `nil`）。
 pub fn eval_module_traced(program: &Program) -> TracedRun {
-    on_eval_stack(|| eval_module_on_thread(program))
+    eval_module_traced_with_args(program, &[])
+}
+
+/// 独立脚本参数快照；沿用大栈保证。
+pub fn eval_module_traced_with_args(program: &Program, args: &[String]) -> TracedRun {
+    on_eval_stack(|| eval_module_on_thread_with_args(program, args))
 }
 
 /// 在**专用大栈线程**（[`EVAL_STACK_SIZE`] = 256 MiB ≥ 64 MiB）上运行 `f` 并返回其结果
@@ -253,12 +258,18 @@ where
 /// 供已位于大栈线程的调用方（如 CLI 经 [`on_eval_stack`]）复用，使 `parse` 与 `eval`
 /// 处于**同一**大栈（§10.9 R-S2「整条流水线同栈」），避免嵌套线程。
 pub fn eval_module_traced_on_thread(program: &Program) -> TracedRun {
-    eval_module_on_thread(program)
+    eval_module_traced_on_thread_with_args(program, &[])
+}
+
+/// 调用方已在大栈；不重复创建线程。
+pub fn eval_module_traced_on_thread_with_args(program: &Program, args: &[String]) -> TracedRun {
+    eval_module_on_thread_with_args(program, args)
 }
 
 /// [`eval_module_traced`] 的实际求值体（在求值线程上运行）。
-fn eval_module_on_thread(program: &Program) -> TracedRun {
+fn eval_module_on_thread_with_args(program: &Program, args: &[String]) -> TracedRun {
     let mut interp = Interp::new();
+    interp.script_args = args.iter().map(|s| Value::string(s.clone())).collect();
     let top = Scope {
         env: Rc::clone(&interp.globals),
         captured: Rc::new(Vec::new()),
@@ -356,6 +367,8 @@ enum AssignOutcome {
 struct Interp {
     /// 模块顶层作用域（globals）；所有函数调用帧直接挂在它之下。
     globals: Rc<RefCell<Env>>,
+    script_args: Vec<Value>,
+    argv_function: Value,
     /// 函数表下标分配器（traceback 用）；`1` 起，`0` 保留给模块帧（§10.3）。
     next_func_id: u32,
     /// 当前求值帧深度（用户函数调用层数，§4.5.5）。
@@ -368,7 +381,11 @@ struct Interp {
 
 impl Interp {
     fn new() -> Self {
+        let mut argv_closure = Closure::named("argv", Rc::new(ScopeChain::empty()));
+        argv_closure.builtin = Some("argv");
         Self {
+            script_args: Vec::new(),
+            argv_function: Value::function(argv_closure),
             globals: Env::root(),
             next_func_id: 1,
             depth: 0,
@@ -671,6 +688,9 @@ impl Interp {
 
     /// `while cond body`：每轮求值条件；每轮**新块作用域**（§4.5.3）。
     fn exec_while(&mut self, cond: &Expr, body: &Block, scope: &Scope) -> R<Flow> {
+        // 仅直接声明在此块创建绑定；嵌套块自行管理其作用域。
+        let binds_locals = body.stmts.iter().any(|s| matches!(s.node,
+            StmtKind::Decl { .. } | StmtKind::FnDecl(_) | StmtKind::StructDecl(_)));
         loop {
             let c = match self.eval_expr(cond, scope)? {
                 Flow::Value(v) => v,
@@ -679,7 +699,9 @@ impl Interp {
             if !as_condition(&c, cond.span)? {
                 break;
             }
-            match self.exec_block(body, scope)? {
+            let flow = if binds_locals { self.exec_block(body, scope)? }
+                else { self.exec_stmts(&body.stmts, scope)? };
+            match flow {
                 Flow::Value(_) => {}
                 Flow::Break => break,
                 Flow::Continue => continue,
@@ -956,6 +978,7 @@ impl Interp {
             ExprKind::Interp(is) => self.eval_interp(is, span, scope),
             ExprKind::Ident(name) => match self.lookup(scope, name) {
                 Some(v) => Ok(Flow::Value(v)),
+                None if name == "argv" => Ok(Flow::Value(self.argv_function.clone())),
                 None => Err(name_error(name.clone(), span)),
             },
             ExprKind::SelfRef => match &scope.self_val {
@@ -1148,6 +1171,13 @@ impl Interp {
                     };
                     return self.call_func(v, argv, span, None, piped);
                 }
+                if name == "argv" {
+                    let args = match self.eval_args(args, scope)? {
+                        Step::Done(v) => v,
+                        Step::Flow(f) => return Ok(f),
+                    };
+                    return self.call_func(self.argv_function.clone(), args, span, None, piped);
+                }
                 if builtins::is_builtin(name) {
                     let argv = match self.eval_args(args, scope)? {
                         Step::Done(v) => v,
@@ -1275,6 +1305,12 @@ impl Interp {
         span: Span,
         self_override: Option<Value>,
     ) -> R<Value> {
+        if cl.builtin == Some("argv") {
+            if !argv.is_empty() {
+                return Err(type_error(TypeMsg::ArgCount { name: "argv".into(), n: 0, m: argv.len() }, span));
+            }
+            return Ok(Value::array(self.script_args.clone()));
+        }
         let Some(user) = cl.user.as_ref() else {
             // 占位闭包（无函数体）不可调用。
             return Err(type_error(
@@ -3556,5 +3592,175 @@ mod tests {
         let e = eval_module(&bad_prog).unwrap_err();
         assert_eq!(e.class_name(), "TypeError");
         assert_eq!(e.message(), "条件必须是 bool，得到 int");
+    }
+}
+
+#[cfg(test)]
+mod t12_tests {
+    use super::*;
+    fn run(src: &str, args: &[&str]) -> R<Value> {
+        let tokens = crate::lexer::lex(src, 0)?;
+        let program = crate::parser::parse(&tokens)?;
+        eval_module_traced_with_args(&program, &args.iter().map(|s| (*s).to_string()).collect::<Vec<_>>()).result
+    }
+    #[test]
+    fn argv_snapshot_identity_alias_closure_hof_and_shadowing() {
+        let src = r#"
+assert(argv == argv)
+assert(type(argv) == "function")
+assert(str(argv) == "<fn argv>")
+let f = argv
+let saved = f()
+saved[0] = "changed"
+assert(f()[0] == "中")
+let store = [f]
+assert(store[0]() == f())
+let object = {"call": f}
+assert(object.call() == f())
+fn capture() => f()
+assert(capture() == f())
+let out = map((x) => f(), [1,2])
+assert(out[0] == f())
+fn apply(z) => z()
+assert(apply(f) == f())
+let argv = () => ["shadow"]
+assert(argv()[0] == "shadow")
+f()
+"#;
+        assert_eq!(run(src, &["中", "", "--json"]).unwrap().to_string(), r#"["中", "", "--json"]"#);
+        assert_eq!(run("argv()", &[]).unwrap().to_string(), "[]");
+        assert_eq!(run("argv()", &["fresh"]).unwrap().to_string(), r#"["fresh"]"#);
+        assert_eq!(run("argv()", &[]).unwrap().to_string(), "[]");
+    }
+    #[test]
+    fn argv_bad_arity_has_call_site_and_no_added_user_frame() {
+        let tokens = crate::lexer::lex("let f = argv\nf(1)\n", 0).unwrap();
+        let program = crate::parser::parse(&tokens).unwrap();
+        let result = eval_module_traced_with_args(&program, &[]);
+        assert_eq!(result.frames.len(), 1);
+        let e = result.result.unwrap_err();
+        assert_eq!(e.message(), "函数 argv 期待 0 个参数，得到 1");
+        assert_eq!(e.span(), Some(Span::new(2, 1)));
+    }
+}
+
+
+#[cfg(test)]
+mod t12_scope_elision_tests {
+    use super::*;
+    fn eval(src: &str) -> Value {
+        let tokens = crate::lexer::lex(src, 0).unwrap();
+        let program = crate::parser::parse(&tokens).unwrap();
+        eval_module(&program).unwrap()
+    }
+    #[test]
+    fn declaration_free_loop_closures_share_outer_cell() {
+        eval(r#"
+fn make() {
+    var x = 0
+    var i = 0
+    let fs = [nil, nil, nil]
+    while i < 3 {
+        fs[i] = () => x
+        x += 1
+        i += 1
+    }
+    fs
+}
+let fs = make()
+assert(fs[0]() == 3)
+assert(fs[1]() == 3)
+assert(fs[2]() == 3)
+"#);
+    }
+    #[test]
+    fn loops_with_decl_fn_or_struct_keep_fresh_bindings() {
+        eval(r#"
+var i = 0
+let fs = [nil, nil, nil]
+while i < 3 {
+    let current = i
+    fs[i] = () => current
+    i += 1
+}
+assert(fs[0]() == 0)
+assert(fs[1]() == 1)
+assert(fs[2]() == 2)
+i = 0
+while i < 3 {
+    fn f() => f
+    fs[i] = f
+    i += 1
+}
+assert(fs[0]() == fs[0])
+assert(fs[1]() == fs[1])
+assert(fs[0] != fs[1])
+i = 0
+while i < 3 {
+    struct S { n: i }
+    fs[i] = S {}
+    i += 1
+}
+assert(fs[0].n == 0)
+assert(fs[1].n == 1)
+assert(fs[2].n == 2)
+"#);
+    }
+    #[test]
+    fn nested_shadowing_and_for_cells_are_unchanged() {
+        eval(r#"
+let marker = 42
+var i = 0
+let fs = [nil, nil, nil]
+while i < 3 {
+    if true { let marker = i
+        fs[i] = () => marker }
+    i += 1
+}
+assert(marker == 42)
+assert(fs[0]() == 0)
+assert(fs[1]() == 1)
+assert(fs[2]() == 2)
+for n in range(3) { fs[n] = () => n }
+assert(fs[0]() == 0)
+assert(fs[1]() == 1)
+assert(fs[2]() == 2)
+"#);
+    }
+    #[test]
+    fn declaration_free_loops_preserve_break_continue_return() {
+        assert_eq!(eval(r#"
+fn work() {
+    var i = 0
+    var total = 0
+    while i < 10 {
+        i += 1
+        if i == 2 { continue }
+        if i == 5 { return total }
+        total += i
+    }
+    -1
+}
+assert(work() == 8)
+var i = 0
+while true {
+    i += 1
+    if i == 3 { break }
+}
+i
+"#).as_int(), Some(3));
+    }
+    #[test]
+    fn empty_scope_has_identical_visible_dump_order_and_values() {
+        let interp = Interp::new();
+        interp.globals.borrow_mut().define_named("a", Value::Int(7), true);
+        interp.globals.borrow_mut().define_named("b", Value::Int(8), false);
+        let scope = Scope { env: Rc::clone(&interp.globals), captured: Rc::new(Vec::new()), self_val: None };
+        let outer = scope.child();
+        outer.env.borrow_mut().define_named("a", Value::Int(9), true);
+        let empty = outer.child();
+        let visible = |s: &Scope| render_dump(&interp.visible_entries(s));
+        assert_eq!(visible(&outer), "a ： 9\nb ： 8\n");
+        assert_eq!(visible(&empty), visible(&outer));
     }
 }

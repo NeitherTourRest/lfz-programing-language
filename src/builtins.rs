@@ -1,4 +1,4 @@
-//! 内置函数表（`data-last`，已实现 **69 个**；非高阶 62 + 高阶 7；含已授权文件 IO 三项）。
+//! 内置函数表（`data-last`，已实现 **72 个**；非高阶 65 + 高阶 7；含已授权文件 IO 三项）。
 //!
 //! 单一事实源（本模块**只读消费**，不得偏离）：
 //! - `docs/spec/interface-contract.md` §10.7（内置表 + 「数值内置形参加宽」规范性补钉）、§8.1（错误类 ↔ 变体）、
@@ -108,9 +108,9 @@ impl Builtin {
 
 /// §10.7 全表 **54 个**内置名（字母序；= [`TABLE`] 的 47 个非高阶 + [`HOF_TABLE`] 的 7 个高阶）。
 pub const BUILTIN_NAMES: &[&str] = &[
-    "abs", "appendFile", "assert", "ceil", "check", "chr", "contains", "cos", "del", "div", "drop", "each",
+    "abs", "appendFile", "argv", "assert", "ceil", "check", "chr", "contains", "cos", "del", "div", "drop", "each",
     "endsWith", "entries", "eprint", "exp", "fail", "filter", "float", "floor", "has", "indexOf",
-    "input", "insert", "int", "join", "keys", "len", "log", "lower", "map", "max", "maxBy",
+    "input", "insert", "int", "join", "jsonParse", "jsonStringify", "keys", "len", "log", "lower", "map", "max", "maxBy",
     "min", "minBy", "ord", "padEnd", "padStart", "pop", "pow", "print", "push", "rand", "randInt",
     "range", "readFile", "reduce", "removeAt", "repeat", "replace", "round", "seed", "sin", "slice", "sort", "sortBy",
     "split", "sqrt", "startsWith", "str", "substring", "sum", "swap", "take", "trim", "type", "upper", "values", "writeFile",
@@ -120,9 +120,10 @@ pub const BUILTIN_NAMES: &[&str] = &[
 const VARIADIC: usize = usize::MAX;
 
 /// **非高阶**内置函数表（字母序；与 [`HOF_TABLE`] 的并集逐项对应 [`BUILTIN_NAMES`]，由测试锁定一致性）。
-static TABLE: [Builtin; 62] = [
+static TABLE: [Builtin; 65] = [
     Builtin { name: "abs", min_args: 1, max_args: 1, func: b_abs },
     Builtin { name: "appendFile", min_args: 2, max_args: 2, func: b_append_file },
+    Builtin { name: "argv", min_args: 0, max_args: 0, func: b_argv },
     Builtin { name: "assert", min_args: 1, max_args: 2, func: b_assert },
     Builtin { name: "ceil", min_args: 1, max_args: 1, func: b_ceil },
     Builtin { name: "check", min_args: 1, max_args: 2, func: b_check },
@@ -145,6 +146,8 @@ static TABLE: [Builtin; 62] = [
     Builtin { name: "insert", min_args: 3, max_args: 3, func: b_insert },
     Builtin { name: "int", min_args: 1, max_args: 1, func: b_int },
     Builtin { name: "join", min_args: 2, max_args: 2, func: b_join },
+    Builtin { name: "jsonParse", min_args: 1, max_args: 1, func: b_json_parse },
+    Builtin { name: "jsonStringify", min_args: 1, max_args: 1, func: b_json_stringify },
     Builtin { name: "keys", min_args: 1, max_args: 1, func: b_keys },
     Builtin { name: "len", min_args: 1, max_args: 1, func: b_len },
     Builtin { name: "log", min_args: 1, max_args: 1, func: b_log },
@@ -2224,7 +2227,7 @@ mod tests {
         assert!(is_builtin("push"));
         assert!(!is_builtin("nope"));
         assert!(lookup("nope").is_none());
-        assert_eq!(BUILTIN_NAMES.len(), 69);
+        assert_eq!(BUILTIN_NAMES.len(), 72);
         // 字母序。
         let mut sorted = BUILTIN_NAMES.to_vec();
         sorted.sort_unstable();
@@ -2232,7 +2235,7 @@ mod tests {
         // 无重复。
         let mut dedup = sorted.clone();
         dedup.dedup();
-        assert_eq!(dedup.len(), 69);
+        assert_eq!(dedup.len(), 72);
         // 两表（非高阶 + 高阶）名字并集与全表名单逐项一致。
         let mut table_names: Vec<&str> = TABLE.iter().map(|b| b.name).collect();
         table_names.extend(HOF_TABLE.iter().map(|h| h.name));
@@ -2241,8 +2244,8 @@ mod tests {
         // HOF_NAMES 与 HOF_TABLE 逐项一致。
         let hof_names: Vec<&str> = HOF_TABLE.iter().map(|h| h.name).collect();
         assert_eq!(hof_names.as_slice(), HOF_NAMES);
-        // §10.7 v1.1 全部 69 个（62 非高阶 + 7 高阶）。
-        assert_eq!(TABLE.len() + HOF_TABLE.len(), 69);
+        // §10.7 v1.1 全部 72 个（65 非高阶 + 7 高阶）。
+        assert_eq!(TABLE.len() + HOF_TABLE.len(), 72);
     }
 
     #[test]
@@ -2455,4 +2458,13 @@ mod tests {
             "函数 reduce 期待 3 个参数，得到 2"
         );
     }
+}
+
+// T12：无上下文调用argv为空；解释器经自身快照派发。
+fn b_argv(_args: &[Value], _span: Span) -> R<Value> { Ok(Value::array(Vec::new())) }
+fn b_json_parse(args: &[Value], span: Span) -> R<Value> {
+    crate::json_codec::parse(need_str("jsonParse", args, 0, span)?, span)
+}
+fn b_json_stringify(args: &[Value], span: Span) -> R<Value> {
+    crate::json_codec::stringify(&args[0], span).map(Value::string)
 }

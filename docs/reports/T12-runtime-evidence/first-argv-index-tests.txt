@@ -1,0 +1,34 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.0.1 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+warning: hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `D:\XUE\2026fall\Program Design\lfz-programing language design\target\debug\incremental\lfz-0hy94ljq6ohu6\s-hnikyshgjr-1ufqmu0-working`
+
+warning: `lfz` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.06s
+     Running unittests src\lib.rs (target\debug\deps\lfz-54e50da9b678038f.exe)
+
+running 3 tests
+test evaluator::t12_tests::argv_bad_arity_has_call_site_and_no_added_user_frame ... ok
+test evaluator::t12_tests::argv_snapshot_identity_alias_closure_hof_and_shadowing ... FAILED
+test value::t12_index_tests::index_preserves_first_match_updates_clone_and_insertion_order ... ok
+
+failures:
+
+---- evaluator::t12_tests::argv_snapshot_identity_alias_closure_hof_and_shadowing stdout ----
+
+thread 'evaluator::t12_tests::argv_snapshot_identity_alias_closure_hof_and_shadowing' panicked at src\evaluator.rs:3625:9:
+assertion `left == right` failed
+  left: "[\"中\", \"\", \"--json\"]"
+ right: "[中, , --json]"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    evaluator::t12_tests::argv_snapshot_identity_alias_closure_hof_and_shadowing
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 396 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
