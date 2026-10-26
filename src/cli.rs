@@ -49,7 +49,7 @@ use lfz::lexer;
 use lfz::loader::{self, Loaded};
 use lfz::parser;
 use lfz::span::Span;
-use std::io::Write;
+use std::io::{Read, Write};
 
 /// 成功。
 pub const EXIT_OK: i32 = 0;
@@ -73,6 +73,9 @@ LFZ 解释器
 用法:
   lfz <file>           运行 LFZ 脚本（裸调用；等价 lfz run <file>）
   lfz run <file>       运行 LFZ 脚本
+  lfz -e CODE [-- ARG...]  直接执行代码（也可 lfz run -e CODE）
+  lfz - [-- ARG...]       从标准输入读取源码到 EOF（也可 lfz run -）
+  lfz FILE.lfz -- ARG...  原样传入脚本参数，可用 argv() 读取
   lfz test [路径...]   运行黑盒测试（默认发现 tests/**/*.lfz，排除 tests/fixtures）
   lfz --help, -h       显示本帮助
   lfz --version, -V    显示版本
@@ -87,7 +90,7 @@ LFZ 解释器
 
 选项:
   --json               以机器可读 JSON 输出（stdout 只写 JSON；程序输出与人类可读诊断转 stderr）
-                       位置不限，以下写法等价：
+                       源码和 -- 后脚本参数以外的位置可用，以下写法等价：
                          lfz --json <file>       lfz <file> --json
                          lfz run --json <file>   lfz run <file> --json
 
@@ -96,7 +99,15 @@ LFZ 解释器
   1  测试有用例失败（assert / fail 抛 AssertionError）
   2  CLI 参数错误 / LFZ 语法或运行时错误 / 用例 error / 运行环境错误
 
+代码与参数:
+  -e CODE 的 CODE 原样作为源码，不要求 #42；- 源码入口读取 UTF-8 到 EOF。
+  脚本参数必须在 -- 后，argv() 不含程序名/脚本名。-- 后的 --json 是普通参数。
+  stdin 源码读取后 input() 将遇到 EOF；文件和 -e 模式可继续读取标准输入。
+  --json 只输出执行状态对象；需要业务 JSON 时正常模式 print(jsonStringify(value))。
+
 示例:
+  lfz -e 'print(1+2)'
+  lfz -e 'print(argv())' -- first second
   lfz examples/hello.lfz
   lfz run examples/hello.lfz
   lfz --json examples/hello.lfz
@@ -114,6 +125,12 @@ enum Command {
     Run { path: String },
     /// `lfz <file>`（裸文件调用，P4.4；等价 `lfz run <file>`，但入口须为 `.lfz`）。
     Script { path: String },
+    /// 带显式 `--` 参数的文件入口。
+    RunArgs { path: String, args: Vec<String> },
+    ScriptArgs { path: String, args: Vec<String> },
+    /// `-e CODE` 与 `-` 标准输入源码入口。
+    Eval { code: String, args: Vec<String> },
+    Stdin { args: Vec<String> },
     /// `lfz test [路径...]`。
     Test { paths: Vec<String> },
     /// `--help` / `-h`。
@@ -126,11 +143,10 @@ enum Command {
 ///
 /// 与真实进程解耦：`out` / `err` 可为任意 [`Write`]（生产用 stdout/stderr，测试用内存缓冲）。
 ///
-/// `--json` 是**全局开关**：出现在任意位置即可，被先行摘除后再解析子命令。开启后 stdout 只写 JSON。
+/// `--json` 仅在选项位置生效；CODE 与 `--` 后的脚本参数不参与选项解析。
 pub fn execute(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32 {
-    let json = args.iter().any(|a| a == "--json");
-    let rest: Vec<String> = args.iter().filter(|a| *a != "--json").cloned().collect();
-    match parse_args(&rest) {
+    let (rest, script_args, json) = split_options(args);
+    match parse_command(&rest, script_args) {
         Ok(Command::Help) => {
             let _ = write!(out, "{HELP}");
             EXIT_OK
@@ -141,6 +157,10 @@ pub fn execute(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32
         }
         Ok(Command::Run { path }) => run_file(&path, json, out, err),
         Ok(Command::Script { path }) => run_script(&path, json, out, err),
+        Ok(Command::RunArgs { path, args }) => run_file_with_args(&path, &args, json, out, err),
+        Ok(Command::ScriptArgs { path, args }) => run_script_with_args(&path, &args, json, out, err),
+        Ok(Command::Eval { code, args }) => run_source(Some(&code), &args, json, out, err),
+        Ok(Command::Stdin { args }) => run_source(None, &args, json, out, err),
         Ok(Command::Test { paths }) => crate::test_runner::run(&paths, json, out, err),
         Err(msg) => {
             let _ = writeln!(err, "lfz: {msg}");
@@ -153,40 +173,72 @@ pub fn execute(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32
     }
 }
 
-/// 解析参数为 [`Command`]；失败返回中文错误信息（由调用方写 stderr）。
+/// 仅摘除选项区域的 `--json`，保护源码与脚本参数的原始字符串。
+fn split_options(args: &[String]) -> (Vec<String>, Option<Vec<String>>, bool) {
+    let mut rest = Vec::new();
+    let mut json = false;
+    let mut i = 0;
+    while i < args.len() {
+        let a = &args[i];
+        if a == "--json" {
+            json = true;
+            i += 1;
+        } else if a == "--" && execution_ready(&rest) {
+            return (rest, Some(args[i + 1..].to_vec()), json);
+        } else {
+            let code_operand = a == "-e"
+                && (rest.is_empty() || (rest.len() == 1 && rest[0] == "run"));
+            rest.push(a.clone());
+            i += 1;
+            if code_operand && i < args.len() {
+                rest.push(args[i].clone());
+                i += 1;
+            }
+        }
+    }
+    (rest, None, json)
+}
+
+fn execution_ready(args: &[String]) -> bool {
+    match args {
+        [a, _] if a == "-e" => true,
+        [a, b, _] if a == "run" && b == "-e" => true,
+        [a, b] if a == "run" && b != "-e" => true,
+        [a] => a == "-" || (!a.starts_with('-') && a != "run" && a != "test"),
+        _ => false,
+    }
+}
+
+#[cfg(test)]
 fn parse_args(args: &[String]) -> Result<Command, String> {
-    let mut it = args.iter();
-    let first = match it.next() {
-        Some(a) => a,
-        None => return Err("缺少子命令".to_string()),
-    };
-    match first.as_str() {
-        "--help" | "-h" => Ok(Command::Help),
-        "--version" | "-V" => Ok(Command::Version),
-        "run" => {
-            let path = match it.next() {
-                Some(p) => p.clone(),
-                None => return Err("'run' 需要一个 <file> 参数".to_string()),
-            };
-            if it.next().is_some() {
-                return Err("'run' 只接受一个 <file> 参数".to_string());
-            }
-            Ok(Command::Run { path })
-        }
-        // `lfz test [路径...]`：零或多个路径参数（目录 → 递归发现；文件 → 直接运行）。
-        "test" => Ok(Command::Test {
-            paths: it.cloned().collect(),
-        }),
-        // 裸文件调用：`lfz <file>`（等价 `lfz run <file>`）。以 `-` 开头者视为未知选项。
-        other if other.starts_with('-') => Err(format!("未知选项 '{other}'")),
-        other => {
-            if it.next().is_some() {
-                return Err("裸文件调用只接受一个 <file> 参数".to_string());
-            }
-            Ok(Command::Script {
-                path: other.to_string(),
-            })
-        }
+    let (rest, script_args, _) = split_options(args);
+    parse_command(&rest, script_args)
+}
+
+/// 解析参数为命令；无 `--` 时仍拒绝额外的脚本参数。
+fn parse_command(args: &[String], script_args: Option<Vec<String>>) -> Result<Command, String> {
+    let first = args.first().ok_or_else(|| "缺少子命令".to_string())?;
+    if matches!(first.as_str(), "--help" | "-h") { return Ok(Command::Help); }
+    if matches!(first.as_str(), "--version" | "-V") { return Ok(Command::Version); }
+    if first == "test" { return Ok(Command::Test { paths: args[1..].to_vec() }); }
+    let explicit = first == "run";
+    let input = if explicit { &args[1..] } else { args };
+    let target = input.first().ok_or_else(|| "'run' 需要一个 <file> 参数".to_string())?;
+    if target == "-e" {
+        let code = input.get(1).ok_or_else(|| "'-e' 需要一个 CODE 参数".to_string())?;
+        if input.len() != 2 { return Err("'-e' 只接受一个 CODE 参数；脚本参数须放在 -- 后".to_string()); }
+        return Ok(Command::Eval { code: code.clone(), args: script_args.unwrap_or_default() });
+    }
+    if input.len() != 1 {
+        return Err(if explicit { "'run' 只接受一个 <file> 参数" } else { "裸文件调用只接受一个 <file> 参数" }.to_string());
+    }
+    if target == "-" { return Ok(Command::Stdin { args: script_args.unwrap_or_default() }); }
+    if !explicit && target.starts_with('-') { return Err(format!("未知选项 '{target}'")); }
+    match (explicit, script_args) {
+        (true, None) => Ok(Command::Run { path: target.clone() }),
+        (false, None) => Ok(Command::Script { path: target.clone() }),
+        (true, Some(args)) => Ok(Command::RunArgs { path: target.clone(), args }),
+        (false, Some(args)) => Ok(Command::ScriptArgs { path: target.clone(), args }),
     }
 }
 
@@ -332,13 +384,17 @@ pub(crate) fn traceback_json(
 /// **≥64 MiB 大栈线程**（复用求值用的 256 MiB [`evaluator::on_eval_stack`]）上运行，
 /// 保证 `PARSE_DEPTH_LIMIT`（1000）层可达、深左偏 AST 的递归析构不溢出。
 pub(crate) fn eval_case(path: &str) -> CaseEval {
-    evaluator::on_eval_stack(|| eval_case_on_stack(path))
+    eval_file_with_args(path, &[])
 }
 
 /// [`eval_case`] 的流水线体（在 [`evaluator::on_eval_stack`] 的大栈线程上运行）。
-fn eval_case_on_stack(path: &str) -> CaseEval {
-    // 加载期：失败（IOError / NotUtf8 / CosmosAnswerError）时无源码视图。
-    let loaded = match loader::load_file(path) {
+fn eval_file_with_args(path: &str, args: &[String]) -> CaseEval {
+    evaluator::on_eval_stack(|| eval_loaded_on_stack(loader::load_file(path), args))
+}
+
+/// 文件、代码和stdin共用已加载源码流水线；调用者须位于大栈。
+fn eval_loaded_on_stack(loaded: lfz::error::R<Loaded>, args: &[String]) -> CaseEval {
+    let loaded = match loaded {
         Ok(l) => l,
         Err(e) => {
             return CaseEval::Failed {
@@ -372,7 +428,7 @@ fn eval_case_on_stack(path: &str) -> CaseEval {
     };
     // 运行期：用 `eval_module_traced` 取帧栈（§10.3 / D-008 影响段）；
     // 已在流水线大栈线程上，故用**当前线程**求值体（§10.9 R-S2 同栈），不再嵌套开线程。
-    let traced = evaluator::eval_module_traced_on_thread(&program);
+    let traced = evaluator::eval_module_traced_on_thread_with_args(&program, args);
     if traced.result.is_ok() {
         return CaseEval::Passed;
     }
@@ -391,9 +447,31 @@ fn eval_case_on_stack(path: &str) -> CaseEval {
 /// - `json == true`：stdout **只写一行 JSON**（成功 `{"ok":true}`；失败为 §8.3 示例 4 形状），
 ///   人类可读错误块**不**写 stdout；退出码同 D-008（错误 → [`EXIT_ERROR`]）。
 fn run_file(path: &str, json: bool, out: &mut dyn Write, err: &mut dyn Write) -> i32 {
-    // P4.2-fix：`--json` 下把 `print` / `input` 提示重定向到 stderr，保证 stdout 恒为单个 JSON。
+    run_file_with_args(path, &[], json, out, err)
+}
+
+fn run_file_with_args(path: &str, args: &[String], json: bool, out: &mut dyn Write, err: &mut dyn Write) -> i32 {
     lfz::builtins::set_stdout_to_stderr(json);
-    let eval = eval_case(path);
+    let eval = eval_file_with_args(path, args);
+    report_eval(path, &eval, json, out, err)
+}
+
+fn run_source(code: Option<&str>, args: &[String], json: bool, out: &mut dyn Write, err: &mut dyn Write) -> i32 {
+    lfz::builtins::set_stdout_to_stderr(json);
+    let path = if code.is_some() { "<command>" } else { "<stdin>" };
+    let eval = evaluator::on_eval_stack(|| {
+        let loaded = match code {
+            Some(text) => loader::load_source(text),
+            None => {
+                let mut text = String::new();
+                match std::io::stdin().read_to_string(&mut text) {
+                    Ok(_) => loader::load_source(&text),
+                    Err(_) => Err(Box::new(LzError::Io { msg: "无法读取标准输入".to_string(), span: None })),
+                }
+            }
+        };
+        eval_loaded_on_stack(loaded, args)
+    });
     report_eval(path, &eval, json, out, err)
 }
 
@@ -404,9 +482,13 @@ fn run_file(path: &str, json: bool, out: &mut dyn Write, err: &mut dyn Write) ->
 /// 以 `.lfz` 结尾但**不存在**时，交由 [`eval_case`] → `loader` 产出既有
 /// `IOError: 无法读取：<path>`（同样退出码 [`EXIT_ERROR`]）。
 fn run_script(path: &str, json: bool, out: &mut dyn Write, err: &mut dyn Write) -> i32 {
+    run_script_with_args(path, &[], json, out, err)
+}
+
+fn run_script_with_args(path: &str, args: &[String], json: bool, out: &mut dyn Write, err: &mut dyn Write) -> i32 {
     lfz::builtins::set_stdout_to_stderr(json);
     let eval = if is_lfz_path(path) {
-        eval_case(path)
+        eval_file_with_args(path, args)
     } else {
         // 与解释器错误**同源**渲染：`--json` 下得到唯一合法 JSON（`IOError` + `line/col:null`），
         // 非 `--json` 下得到 `IOError: 只支持 .lfz 脚本文件：'<path>'`。

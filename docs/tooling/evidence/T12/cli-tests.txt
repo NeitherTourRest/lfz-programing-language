@@ -1,0 +1,68 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.0.1 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+warning: hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `D:\XUE\2026fall\Program Design\lfz-programing language design\target\debug\incremental\lfz-3cwv4ih05fb0p\s-hnikyjexo0-0bxe61n-working`
+
+warning: `lfz` (lib) generated 1 warning
+warning: hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `D:\XUE\2026fall\Program Design\lfz-programing language design\target\debug\incremental\cli-3u3uxv1en3r9j\s-hnikykgoe7-06mq6jb-working`
+
+warning: hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `D:\XUE\2026fall\Program Design\lfz-programing language design\target\debug\incremental\lfz-1sglfwqnx006h\s-hnikykgxp1-1q1i67w-working`
+
+warning: `lfz` (test "cli") generated 1 warning
+warning: `lfz` (bin "lfz") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.91s
+     Running tests\cli.rs (target\debug\deps\cli-d5b07651ca897d67.exe)
+
+running 28 tests
+test hello_example_runs_and_prints ... ok
+test bare_json_before_file_works ... ok
+test json_run_success_is_ok_true_exit_0 ... ok
+test bare_missing_file_exits_2_with_friendly_message ... ok
+test missing_file_is_io_error_exit_2 ... ok
+test json_run_missing_file_io_error_shape ... ok
+test bare_non_lfz_extension_rejected_exit_2 ... ok
+test bare_json_after_file_works ... ok
+test json_flag_accepted_after_file ... ok
+test dump_without_json_still_writes_stdout ... ok
+test json_run_assert_failure_shape ... ok
+test json_run_print_success_redirects_to_stderr ... ok
+test json_run_dump_and_print_share_channel_in_order ... ok
+test json_run_dump_success_redirects_to_stderr ... ok
+test json_run_runtime_error_matches_example2_traceback ... ok
+test bare_two_files_is_usage_error_exit_2 ... ok
+test bare_no_extension_rejected_exit_2 ... ok
+test no_args_is_usage_error_exit_2 ... ok
+test json_run_dump_before_error_redirects_to_stderr ... ok
+test json_run_missing_preamble_shape ... ok
+test json_run_syntax_error_shape ... ok
+test missing_preamble_exits_2_with_cosmos_answer ... ok
+test json_run_print_before_error_redirects_to_stderr ... ok
+test run_subcommand_does_not_restrict_extension ... ok
+test help_and_version_exit_0 ... ok
+test runtime_error_exits_2_with_traceback ... ok
+test syntax_error_exits_2_with_position_and_no_traceback ... ok
+test bare_file_runs_like_run ... ok
+
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.66s
+
+     Running tests\cli_t12.rs (target\debug\deps\cli_t12-5191768c22ca82e0.exe)
+
+running 12 tests
+test stdin_invalid_utf8_is_io_error_without_fabricated_location ... ok
+test argv_preserves_all_literal_values_after_separator ... ok
+test command_and_stdin_errors_have_correct_line_origin ... ok
+test json_argv_does_not_activate_status_mode ... ok
+test no_implicit_stdin_or_last_value_printing ... ok
+test eval_and_file_read_input_but_stdin_code_is_at_eof ... ok
+test json_flags_before_and_after_code_are_status_only ... ok
+test missing_code_and_undelimited_extra_args_are_errors ... ok
+test stdin_source_both_spellings_normalizes_bom_and_crlf ... ok
+test eval_both_spellings_and_empty_program ... ok
+test code_operands_that_look_like_options_are_never_removed ... ok
+test file_and_bare_file_receive_args_but_keep_header_rules ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+

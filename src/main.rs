@@ -3,7 +3,7 @@
 //! 命令行为见 [`cli`]：`lfz run <file>` / `lfz run --json <file>` / `lfz test [路径...]` /
 //! `lfz test --json` / `lfz --help` / `lfz --version`。
 //! 错误格式化与退出码映射（`0/1/2`）在 [`cli`]；一键测试 runner 在 [`test_runner`]；
-//! JSON 解析 / 编码在 [`json`]。
+//! JSON 状态协议在 [`json`]；支持 `-e CODE` / `-` 源码入口及 `--` 脚本参数。
 //!
 //! **本批不做**：REPL。
 

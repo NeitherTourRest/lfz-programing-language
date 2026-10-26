@@ -146,7 +146,7 @@ runner **不改变 cwd**，所以测试正文中的 `Temp/...` 相对进程启�
 
 > 权威字段来源：`semantics.md` **§8.3 示例 4** / **§8.4**（`run --json`）；`test --json` 的汇总形态为本契约扩展（spec 未定义，**与 `run --json` 同源复用错误字段**）。
 > **硬性约束**：`--json` 模式下 **stdout 只写一行 JSON**；人类可读的报告 / 诊断一律转 **stderr**。
-> `--json` 为全局开关，可出现在 `run` / `test` 子命令的任意位置。
+> `--json` 可出现在 `run` / `test` 的选项位置；T12 起，`-e` 紧随的 CODE 与执行入口之后 `--` 分隔的脚本参数均按字面保留，不参加选项解析。
 
 ### 9.1 `lfz run --json <file>`
 
@@ -194,7 +194,7 @@ runner **不改变 cwd**，所以测试正文中的 `Temp/...` 相对进程启�
 
 | 条目 | 落点 |
 |---|---|
-| `--json` 标志解析 | `src/cli.rs::execute`（任意位置摘除） |
+| `--json` 标志解析 | `src/cli.rs::split_options`（保护 CODE 与 `--` 后脚本参数） |
 | `run --json` 字段 | `src/cli.rs::{success_json, error_json, push_error_fields, traceback_json}` |
 | `test --json` 汇总 | `src/test_runner.rs::run`（`json` 分支）+ `case_json` |
 | JSON 编码 | `src/json.rs::encode`（紧凑单行、非 ASCII 原样） |
@@ -202,3 +202,25 @@ runner **不改变 cwd**，所以测试正文中的 `Temp/...` 相对进程启�
 | e2e | `tests/cli.rs::json_*`（成功 + 缺 `#42` + 语法错 + 运行期错 + 断言失败 + IOError）、`tests/test_runner.rs::json_*` |
 | 输出重定向（P4.2-fix） | `src/builtins.rs::{set_stdout_to_stderr, b_print, b_input}`；置位点 `src/cli.rs::run_file` / `src/test_runner.rs::run` |
 | 输出重定向 e2e | `tests/cli.rs::json_run_print_success_redirects_to_stderr` / `tests/cli.rs::json_run_print_before_error_redirects_to_stderr` / `tests/test_runner.rs::json_print_case_stdout_is_single_json` |
+
+## 10. T12 代码入口和脚本参数（2026-10-25）
+
+规范来源：[syntax.md §16](../spec/syntax.md)、[interface-contract.md §16](../spec/interface-contract.md)。本节同步实现接口，不改变 test-runner 的发现、期望、汇总或退出码。
+
+- `lfz run FILE [-- ARG...]`、`lfz FILE.lfz [-- ARG...]`：文件入口保持原前导和扩展名规则；只有 `--` 后进入 `argv()`，没有分隔符的额外项仍为 CLI 参数错误。
+- `lfz [run] -e CODE [-- ARG...]`：执行单项源码，不要求 `#42`，错误伪路径为 `<command>`。CODE 可以为空，也可以恰好等于 `--json`、`--`、`--help`，都按源码执行。
+- `lfz [run] - [-- ARG...]`：从 stdin 读取全部 UTF-8 源码至 EOF；错误伪路径 `<stdin>`。读取失败或非法 UTF-8 为 `IOError: 无法读取标准输入`，无 span；`--json` 中 line/col 为 null、traceback 为 []。
+- 两种源码入口复用 `load_source`：BOM/CRLF 归一化、line_base=0，第一行就是 line 1；解析、求值和 AST 析构均处在既有大栈线程。
+- stdin 源码先完整读取到 EOF，因此程序随后 `input()` 按原契约得到 EOF 错误；文件和 `-e` 可继续通过 stdin 提供程序输入。
+- `--json` 在 CODE/脚本参数区外仍支持原前后位置、重复幂等；程序 print/dump/input 提示转 stderr，stdout 为唯一状态 JSON。不会自动打印最后表达式的值；业务 JSON 使用正常模式 `print(jsonStringify(value))`。
+- `argv()` 不含解释器名/文件名/CODE/分隔符，保留空字符串、Unicode、空格和所有以 `-` 开头的值。CLI 经 `eval_module_traced_on_thread_with_args` 传递求值上下文；test-runner 的 `eval_case` 默认为空参数。
+- help/version/test 保持此前解析行为；无参仍是参数错误，未新增隐式stdin或REPL。
+
+### 10.1 实现与验证
+
+- 参数拆分：`src/cli.rs::{split_options,execution_ready,parse_command}`。
+- 统一加载/求值：`eval_file_with_args`、`eval_loaded_on_stack`、`run_source`；无参数旧文件和runner入口保持可用。
+- 原 `tests/cli.rs` 28 条与 bin crate 48 条全部原样通过。
+- 新 `tests/cli_t12.rs` 12 条进程集成测试覆盖：两种拼写、空程序/空参数/Unicode、-- 字面参数、源码选项形字符串、机器状态通道、UTF-8失败、错误行号、input和EOF、文件前导与扩展名兼容。
+- 复现：项目内配置 RUSTUP_HOME/CARGO_HOME/TEMP/TMP 后执行 `cargo test --test cli --test cli_t12` 及 `cargo test --bin lfz`。
+- 首轮日志：[集成测试](./evidence/T12/cli-tests.txt)、[bin单测](./evidence/T12/bin-tests.txt)（原始临时副本 Temp/T12/tooling/）；全量与独立验收由team-lead另行汇总。构建存在环境路径/增量hard-link警告，不声称零warning。
