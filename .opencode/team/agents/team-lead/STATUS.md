@@ -47,3 +47,5 @@ T15进展：源码冻结1a5a3d1c…/782848B，549release、178官方、13精确�
 
 ## T16-A最终验收（2026-10-29）
 65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7/783872B：独立562harness、attempt13/check117/CLI91含178、旧app37+11/jsonbatch38/JSON140、RustAPI见证及32组64进程旧新差分全部通过。core6+runtime7新unit。A仅来源元数据/定位sidecar/整数home模块基础，未实现导入/执行；UserFn公开构造需新home_module，旧位置形状/CLI/T15Result字段保持。R304OPEN，无A计时不tag。B草案已保存，候选Git收口中。
+
+> T16-A实际Git回执（2026-10-29）：五组已推送main，远端26fff25add63ef0b33a4432b046fa310ee07c975；原用户三块28/1/1保持未提交。A基础完成、B仅草案，R304OPEN不tag。
