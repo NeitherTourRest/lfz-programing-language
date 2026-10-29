@@ -1,0 +1,27 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `release` profile [optimized] target(s) in 23.38s
+     Running unittests src\lib.rs (target\release\deps\lfz-63397fd2d9985014.exe)
+
+running 1 test
+test evaluator::t15_attempt_tests::t15_attempt_success_and_recovered_json ... FAILED
+
+failures:
+
+---- evaluator::t15_attempt_tests::t15_attempt_success_and_recovered_json stdout ----
+
+thread 'evaluator::t15_attempt_tests::t15_attempt_success_and_recovered_json' panicked at src\evaluator.rs:3900:5:
+called `Result::unwrap()` on an `Err` value: Syntax { msg: UnexpectedToken { expected: "字段名", got: "'class'" }, span: Span { line: 5, col: 49 } }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    evaluator::t15_attempt_tests::t15_attempt_success_and_recovered_json
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 412 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

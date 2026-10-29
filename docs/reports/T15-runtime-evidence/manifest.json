@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-29",
+  "state": "author functional validation; independent verification/performance pending",
+  "files": {
+    "src/builtins.rs": {
+      "bytes": 112175,
+      "sha256": "0b69680b4b0029c0b4eb2ddd3ba86ecf22fa82cdab25cbec4d3a832e43a0c151"
+    },
+    "src/evaluator.rs": {
+      "bytes": 157567,
+      "sha256": "f73936372f577f0e89a1b860364b607f91687ca413ac76246f033bb1057623e2"
+    },
+    "Cargo.toml": {
+      "bytes": 795,
+      "sha256": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c"
+    },
+    "Cargo.lock": {
+      "bytes": 147,
+      "sha256": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4"
+    },
+    "target/release/lfz.exe": {
+      "bytes": 782848,
+      "sha256": "1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c"
+    }
+  },
+  "logs": {
+    "build-release.txt": "c54468806df441fd0c4a6f688dc90a899a0eb2f8f1726cbe66eba8c60577ceba",
+    "cargo-test-release.txt": "e25f86a7e86dcafc51c447db43cc56802d749f5158a2b1ba4813928f0d72b7d4",
+    "green-all.txt": "6cad3fa22c6b0ebe7fec1d65771ec0ce23d311012c9157e33fd1753fd7faa4dd",
+    "green-initial.txt": "a9bc3a0cd1bb6314def6c84e6e9c499c7111e5ffe6e6432361b408968b828c56",
+    "red-missing-feature.txt": "93fa8f2d399bd102c4847df3ec83a29258aa16f8db4bb8a4dc3aa601367d36d9",
+    "red.txt": "0af42d966eaf6f90ed566d5145bcbf7910a2f7595310fd24c26bfb4f1ed20317"
+  },
+  "tests": {
+    "passed": 549,
+    "failed": 0,
+    "ignored": 0,
+    "new_unit_tests": 7
+  },
+  "existing_test_change_authorization": "team-lead explicitly approved names/dedup 73 and special attempt union; all old behavior assertions and generic 72/HOF7 remain"
+}

@@ -1,0 +1,33 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `release` profile [optimized] target(s) in 21.69s
+     Running unittests src\lib.rs (target\release\deps\lfz-63397fd2d9985014.exe)
+
+running 7 tests
+test evaluator::t15_attempt_tests::t15_alias_side_effects_and_escaped_closure_ids ... ok
+test evaluator::t15_attempt_tests::t15_attempt_success_and_recovered_json ... ok
+test evaluator::t15_attempt_tests::t15_nonrecoverable_classification_and_preserved_state ... ok
+test evaluator::t15_attempt_tests::t15_restores_complete_callers_span_on_success_and_failure ... ok
+test evaluator::t15_attempt_tests::t15_boundary_validation_and_shadowing ... ok
+test evaluator::t15_attempt_tests::t15_recoverable_error_classes_and_json_data ... FAILED
+test evaluator::t15_attempt_tests::t15_many_failures_nesting_and_future_trace ... ok
+
+failures:
+
+---- evaluator::t15_attempt_tests::t15_recoverable_error_classes_and_json_data stdout ----
+
+thread 'evaluator::t15_attempt_tests::t15_recoverable_error_classes_and_json_data' panicked at src\evaluator.rs:4025:31:
+called `Result::unwrap()` on an `Err` value: Syntax { msg: UnexpectedToken { expected: "')'", got: "'.'" }, span: Span { line: 1, col: 23 } }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    evaluator::t15_attempt_tests::t15_recoverable_error_classes_and_json_data
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 measured; 412 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `--lib`

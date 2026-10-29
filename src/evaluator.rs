@@ -1178,6 +1178,13 @@ impl Interp {
                     };
                     return self.call_func(self.argv_function.clone(), args, span, None, piped);
                 }
+                if name == "attempt" {
+                    let argv = match self.eval_args(args, scope)? {
+                        Step::Done(v) => v,
+                        Step::Flow(f) => return Ok(f),
+                    };
+                    return Ok(Flow::Value(self.attempt_call(&argv, span)?));
+                }
                 if builtins::is_builtin(name) {
                     let argv = match self.eval_args(args, scope)? {
                         Step::Done(v) => v,
@@ -1295,6 +1302,60 @@ impl Interp {
                 span,
             )),
         }
+    }
+
+    /// §18：仅此边界恢复调用状态；用户副作用及函数ID表不回滚。
+    fn attempt_call(&mut self, args: &[Value], span: Span) -> R<Value> {
+        if args.len() != 1 {
+            return Err(type_error(TypeMsg::ArgCount { name: "attempt".into(), n: 1, m: args.len() }, span));
+        }
+        let Value::Func(cl) = &args[0] else {
+            return Err(type_error(TypeMsg::NotCallable { t: args[0].type_name().into() }, span));
+        };
+        if cl.builtin != Some("argv") {
+            let Some(user) = &cl.user else {
+                return Err(type_error(TypeMsg::NotCallable { t: "function".into() }, span));
+            };
+            if !user.params.is_empty() {
+                return Err(type_error(TypeMsg::ArgCount { name: cl.name.as_deref().unwrap_or("<fn>").into(), n: user.params.len(), m: 0 }, span));
+            }
+        }
+        let saved_trace = self.trace.clone();
+        let saved_depth = self.depth;
+        let result = match self.call_value(&args[0], &[], span) {
+            Ok(value) => Value::object(vec![
+                ("ok".into(), Value::Bool(true)), ("value".into(), value), ("error".into(), Value::Nil),
+            ]),
+            Err(error) if Self::attempt_recoverable(&error) => {
+                let location = |n: Option<u32>| n.map(|v| Value::Int(i64::from(v))).unwrap_or(Value::Nil);
+                let frames = self.trace.iter().map(|frame| {
+                    let name = if frame.func_id == MODULE_FUNC_ID { "<module>" }
+                        else { self.func_names.get(frame.func_id as usize).and_then(|n| n.as_deref()).unwrap_or("<fn>") };
+                    Value::object(vec![("func".into(), Value::string(name)),
+                        ("line".into(), Value::Int(i64::from(frame.span.line))),
+                        ("col".into(), Value::Int(i64::from(frame.span.col)))])
+                }).collect();
+                let data = Value::object(vec![
+                    ("class".into(), Value::string(error.class_name())),
+                    ("message".into(), Value::string(error.message())),
+                    ("line".into(), location(error.span().map(|s| s.line))),
+                    ("col".into(), location(error.span().map(|s| s.col))),
+                    ("traceback".into(), Value::array(frames)),
+                ]);
+                Value::object(vec![("ok".into(), Value::Bool(false)), ("value".into(), Value::Nil), ("error".into(), data)])
+            }
+            Err(error) => return Err(error), // 原样保留故障帧，不吞终止类错误。
+        };
+        self.trace = saved_trace;
+        self.depth = saved_depth;
+        Ok(result)
+    }
+
+    fn attempt_recoverable(error: &LzError) -> bool {
+        matches!(error, LzError::Name { .. } | LzError::Type { .. } | LzError::Index { .. }
+            | LzError::Field { .. } | LzError::DivZero { .. } | LzError::Value { .. }
+            | LzError::Io { .. } | LzError::Assert { .. }
+            | LzError::Overflow { msg: OverflowMsg::IntegerOutOfRange, .. })
     }
 
     /// 用户函数调用：新调用帧 + 参数绑定 +（A2 捕获链）+ 函数体求值。
@@ -3879,4 +3940,120 @@ assert(xs[1] == "changed")
         assert!(!error.message().contains("bool"));
         assert_eq!(error.span(), Some(span));
     }
+}
+
+#[cfg(test)]
+mod t15_attempt_tests {
+    use super::*;
+    fn run(src: &str) -> R<Value> {
+        let tokens = crate::lexer::lex(src, 0)?;
+        let program = crate::parser::parse(&tokens)?;
+        eval_module(&program)
+    }
+    #[test]
+    fn t15_attempt_success_and_recovered_json() {
+        run(r#"
+let good = attempt(() => jsonParse("{\"n\":3}"))
+assert(good.ok && good.value.n == 3 && good.error == nil)
+let bad = attempt(() => jsonParse("{"))
+assert(!bad.ok && bad.value == nil && bad.error["class"] == "ValueError")
+assert(attempt(() => nil).ok)
+"#).unwrap();
+    }
+    #[test]
+    fn t15_many_failures_nesting_and_future_trace() {
+        run(r#"
+var i = 0
+while i < 15000 {
+ let r = attempt(() => 1/0)
+ assert(!r.ok)
+ i += 1
+}
+assert(attempt(() => attempt(() => fail("nested"))).value.ok == false)
+fn sum(n) { if n == 0 { 0 } else { n + sum(n-1) } }
+assert(sum(20) == 210)
+"#).unwrap();
+        let tokens=crate::lexer::lex("attempt(() => 1/0)\nfn fresh() => missing\nfresh()",0).unwrap();
+        let p=crate::parser::parse(&tokens).unwrap();
+        let outcome=eval_module_traced(&p);
+        assert_eq!(outcome.result.unwrap_err().class_name(), "NameError");
+        assert_eq!(outcome.frames.len(),2);
+    }
+    #[test]
+    fn t15_alias_side_effects_and_escaped_closure_ids() {
+        run(r#"
+let xs=[0]
+var escaped=()=>0
+let bad=attempt(() => {
+ xs[0]=7
+ let local=8
+ escaped=()=>local
+ fail("after write")
+})
+assert(!bad.ok && xs[0] == 7 && escaped() == 8)
+let good=attempt(()=>xs)
+good.value[0]=9
+assert(xs[0] == 9)
+let f=attempt(() => (()=>42))
+assert(f.value() == 42)
+"#).unwrap();
+    }
+    #[test]
+    fn t15_boundary_validation_and_shadowing() {
+        for source in ["attempt()", "attempt(1)", "attempt((x)=>x)", "attempt(unknown)", "attempt(()=>1,2)"] {
+            let e=run(source).unwrap_err();
+            assert!(matches!(e.class_name(), "TypeError"|"NameError"));
+        }
+        run(r#"
+assert(attempt(() => attempt(1)).error["class"] == "TypeError")
+assert(attempt(argv).ok)
+fn attempt(x)=>x+2
+assert(attempt(3)==5)
+"#).unwrap();
+    }
+    #[test]
+    fn t15_recoverable_error_classes_and_json_data() {
+        for (body, class) in [
+            ("missing", "NameError"), ("1+true", "TypeError"),
+            ("[1][9]", "IndexError"), ("({}).missing", "FieldError"),
+            ("1/0", "ZeroDivisionError"), ("int(\"bad\")", "ValueError"),
+            ("readFile(\"Temp/T15-runtime/not-existing-input.xyz\")", "IOError"),
+            ("fail(\"x\")", "AssertionError"),
+            ("9223372036854775807+1", "OverflowError")
+        ] {
+            let src=format!("let r=attempt(() => {body})\nassert(!r.ok && r.error[\"class\"] == \"{class}\")\njsonStringify(r)");
+            assert!(run(&src).unwrap().as_str().is_some(),"{body}");
+        }
+    }
+    #[test]
+    fn t15_nonrecoverable_classification_and_preserved_state() {
+        let span=Span::new(9,4);
+        let errors=[LzError::Recursion {depth:10001,limit:10000,span},
+            LzError::Overflow {span,msg:OverflowMsg::Capacity},
+            LzError::CosmosAnswer {span},
+            LzError::Syntax {span,msg:crate::error::SyntaxMsg::IncompleteExpr}];
+        for error in errors { assert!(!Interp::attempt_recoverable(&error)); }
+        let f=run("()=>1").unwrap();
+        let mut interp=Interp::new();
+        interp.depth=RECURSION_LIMIT;
+        interp.trace.push(TraceFrame {func_id:0,span});
+        let before=interp.trace.clone();
+        assert_eq!(interp.attempt_call(&[f],span).unwrap_err().class_name(),"RecursionError");
+        assert_eq!(interp.trace,before);
+        assert_eq!(interp.depth,RECURSION_LIMIT);
+    }
+    #[test]
+    fn t15_restores_complete_callers_span_on_success_and_failure() {
+        for source in ["()=>1", "()=>1/0"] {
+            let f=run(source).unwrap();
+            let mut interp=Interp::new();
+            let saved=TraceFrame {func_id:0,span:Span::new(33,9)};
+            interp.trace.push(saved);
+            let result=interp.attempt_call(&[f],Span::new(7,2)).unwrap();
+            assert!(result.as_struct().is_some());
+            assert_eq!(interp.trace, vec![saved]);
+            assert_eq!(interp.depth,0);
+        }
+    }
+
 }
