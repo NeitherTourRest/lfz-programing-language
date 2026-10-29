@@ -693,6 +693,8 @@ pub type CapturedVar = (Rc<str>, Cell, bool);
 /// 只读 AST（`params` / `body`）+ A2 **captured cell 列表** + traceback 用的 `func_id`。
 #[derive(Clone, Debug)]
 pub struct UserFn {
+    /// 定义模块身份（T16-A仅ENTRY；不持有模块Env）。
+    pub home_module: crate::source::ModuleId,
     /// 形参名，按声明序。
     pub params: Vec<String>,
     /// 函数体 AST。

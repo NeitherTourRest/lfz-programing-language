@@ -102,7 +102,14 @@ unsafe impl<T> Send for Transfer<T> {}
 ///
 /// 错误模型 `LzError`（`error.rs`，只读）**不携带**帧栈字段，故帧栈由本结构在**错误发生时**
 /// 自最外层→最内层带出，供 CLI / tooling 组装 `Traceback (most recent call last):` 输出。
+struct RunOrigins {
+    sources: Rc<crate::source::SourceMap>,
+    frame_sources: Vec<crate::source::SourceId>,
+    error_source: Option<crate::source::SourceId>,
+}
+
 pub struct TracedRun {
+    origins: Option<RunOrigins>,
     /// 求值结果（最后一条语句的值；出错则为 `Err`）。
     pub result: R<Value>,
     /// 帧栈，**最外层 → 最内层**（§10.3）：首帧恒为模块帧 `<module>`，末帧为出错点所在帧。
@@ -112,6 +119,46 @@ pub struct TracedRun {
 }
 
 impl TracedRun {
+    /// 按§19完整校验后原子替换来源sidecar；旧求值入口不自动附加。
+    pub fn attach_origins(
+        &mut self,
+        sources: Rc<crate::source::SourceMap>,
+        frame_sources: Vec<crate::source::SourceId>,
+        error_source: Option<crate::source::SourceId>,
+    ) -> Result<(), crate::source::SourceMetadataError> {
+        use crate::source::SourceMetadataError as E;
+        if frame_sources.len() != self.frames.len() {
+            return Err(E::FrameCount { expected: self.frames.len(), actual: frame_sources.len() });
+        }
+        for &id in &frame_sources {
+            if sources.get(id).is_none() { return Err(E::UnknownSource { id }); }
+        }
+        match (&self.result, error_source) {
+            (Ok(_), Some(_)) => return Err(E::UnexpectedErrorSource),
+            (Err(_), None) => return Err(E::MissingErrorSource),
+            _ => {}
+        }
+        if let Some(id) = error_source {
+            if sources.get(id).is_none() { return Err(E::UnknownSource { id }); }
+        }
+        self.origins = Some(RunOrigins { sources, frame_sources, error_source });
+        Ok(())
+    }
+
+    /// 实际帧下标的来源；宿主修改帧数后不猜测或回退来源。
+    pub fn frame_source(&self, index: usize) -> Option<&crate::source::SourceRecord> {
+        let origins = self.origins.as_ref()?;
+        if self.frames.len() != origins.frame_sources.len() { return None; }
+        self.frames.get(index)?;
+        origins.sources.get(*origins.frame_sources.get(index)?)
+    }
+
+    pub fn error_source(&self) -> Option<&crate::source::SourceRecord> {
+        if self.result.is_ok() { return None; }
+        let origins = self.origins.as_ref()?;
+        origins.sources.get(origins.error_source?)
+    }
+
     /// 该帧在 traceback 中的**显示名**（§8.4）：`<module>` / 函数名 / `<fn>`。
     #[must_use]
     pub fn frame_name(&self, frame: &TraceFrame) -> Rc<str> {
@@ -288,6 +335,7 @@ fn eval_module_on_thread_with_args(program: &Program, args: &[String]) -> Traced
         Err(e) => Err(e),
     };
     TracedRun {
+        origins: None,
         result,
         frames: std::mem::take(&mut interp.trace),
         func_names: std::mem::take(&mut interp.func_names),
@@ -365,6 +413,7 @@ enum AssignOutcome {
 
 /// 树遍历解释器：模块全局环境 + 单调递增的 `func_id` 分配器 + traceback 帧栈。
 struct Interp {
+    active_module: crate::source::ModuleId,
     /// 模块顶层作用域（globals）；所有函数调用帧直接挂在它之下。
     globals: Rc<RefCell<Env>>,
     script_args: Vec<Value>,
@@ -386,6 +435,7 @@ impl Interp {
         Self {
             script_args: Vec::new(),
             argv_function: Value::function(argv_closure),
+            active_module: crate::source::ModuleId::ENTRY,
             globals: Env::root(),
             next_func_id: 1,
             depth: 0,
@@ -583,6 +633,7 @@ impl Interp {
         // 函数表：`func_id → 名字`（`None` = 匿名 `<fn>`），报错时反查（§10.3）。
         self.func_names.push(name.map(Rc::from));
         let user = UserFn {
+            home_module: self.active_module,
             params,
             body,
             captured: Rc::new(captured),
@@ -4056,4 +4107,116 @@ assert(attempt(3)==5)
         }
     }
 
+}
+
+#[cfg(test)]
+mod t16_a_origin_tests {
+    use super::*;
+    use crate::source::{ModuleId, SourceId, SourceMap, SourceMetadataError as E, SourceRecord};
+    fn run(text: &str) -> TracedRun {
+        let tokens = crate::lexer::lex(text, 0).unwrap();
+        let program = crate::parser::parse(&tokens).unwrap();
+        eval_module_traced(&program)
+    }
+    fn sources() -> Rc<SourceMap> {
+        let mut map = SourceMap::new();
+        for name in ["entry.lfz", "lib.lfz"] {
+            map.insert(SourceRecord { identity: None, display_path: name.into(), loaded: None }).unwrap();
+        }
+        Rc::new(map)
+    }
+    fn attach_error(run: &mut TracedRun) {
+        run.attach_origins(sources(), vec![SourceId(0); run.frames.len()], Some(SourceId(0))).unwrap();
+    }
+    fn retained(run: &TracedRun) {
+        assert_eq!(run.error_source().unwrap().display_path, "entry.lfz");
+        assert_eq!(run.frame_source(0).unwrap().display_path, "entry.lfz");
+    }
+    #[test]
+    fn t16_a_legacy_origins_are_absent() {
+        for text in ["1", "missing", "fn f() => 1/0\nf()"] {
+            let out = run(text);
+            assert!(out.origins.is_none());
+            assert!(out.frame_source(0).is_none());
+            assert!(out.error_source().is_none());
+        }
+    }
+    #[test]
+    fn t16_a_home_module_is_integer_entry_for_all_legacy_closures() {
+        for text in ["() => 1", "fn f() => 1\nf", "fn outer() => () => 1\nouter()"] {
+            let out = run(text);
+            let Value::Func(f) = out.result.unwrap() else { panic!("expected closure") };
+            assert_eq!(f.user.as_ref().unwrap().home_module, ModuleId::ENTRY);
+        }
+        assert_eq!(Interp::new().active_module, ModuleId::ENTRY);
+    }
+    #[test]
+    fn t16_a_valid_sources_use_frame_indices_and_can_replace_atomically() {
+        let mut out = run("fn f() => 1/0\nf()");
+        assert_eq!(out.frames.len(), 2);
+        out.attach_origins(sources(), vec![SourceId(0), SourceId(1)], Some(SourceId(1))).unwrap();
+        assert_eq!(out.frame_source(0).unwrap().display_path, "entry.lfz");
+        assert_eq!(out.frame_source(1).unwrap().display_path, "lib.lfz");
+        assert_eq!(out.error_source().unwrap().display_path, "lib.lfz");
+        assert!(out.frame_source(2).is_none());
+        assert!(out.frame_source(usize::MAX).is_none());
+        attach_error(&mut out);
+        retained(&out);
+    }
+    #[test]
+    fn t16_a_rejected_error_metadata_preserves_old_sidecar_and_order() {
+        let mut out = run("fn f() => 1/0\nf()");
+        attach_error(&mut out);
+        assert_eq!(out.attach_origins(sources(), vec![SourceId(99)], None), Err(E::FrameCount { expected: 2, actual: 1 }));
+        retained(&out);
+        assert_eq!(out.attach_origins(sources(), vec![SourceId(99), SourceId(98)], None), Err(E::UnknownSource { id: SourceId(99) }));
+        retained(&out);
+        assert_eq!(out.attach_origins(sources(), vec![SourceId(0), SourceId(1)], None), Err(E::MissingErrorSource));
+        retained(&out);
+        assert_eq!(out.attach_origins(sources(), vec![SourceId(0), SourceId(1)], Some(SourceId(99))), Err(E::UnknownSource { id: SourceId(99) }));
+        retained(&out);
+    }
+    #[test]
+    fn t16_a_success_metadata_rejects_error_source_before_its_lookup() {
+        let mut out = run("1");
+        out.attach_origins(sources(), vec![SourceId(1)], None).unwrap();
+        assert_eq!(out.attach_origins(sources(), vec![SourceId(0)], Some(SourceId(99))), Err(E::UnexpectedErrorSource));
+        assert_eq!(out.frame_source(0).unwrap().display_path, "lib.lfz");
+        assert!(out.error_source().is_none());
+    }
+    #[test]
+    fn t16_a_host_mutation_and_missing_loaded_text_remain_safe() {
+        let mut out = run("missing");
+        attach_error(&mut out);
+        assert!(out.frame_source(0).unwrap().loaded.is_none());
+        out.frames.clear();
+        assert!(out.frame_source(0).is_none());
+        out.result = Ok(Value::Nil);
+        assert!(out.error_source().is_none());
+        let mut out = run("1");
+        out.attach_origins(sources(), vec![SourceId(0)], None).unwrap();
+        out.result = Err(type_error(TypeMsg::NotCallable { t: "nil".into() }, Span::new(1, 1)));
+        assert!(out.error_source().is_none());
+    }
+    #[test]
+    fn t16_a_attempt_keeps_entry_and_fixed_old_record_shape() {
+        let tokens = crate::lexer::lex("() => 1/0", 0).unwrap();
+        let program = crate::parser::parse(&tokens).unwrap();
+        let mut interp = Interp::new();
+        let scope = Scope { env: Rc::clone(&interp.globals), captured: Rc::new(Vec::new()), self_val: None };
+        let Flow::Value(f) = interp.exec_stmts(&program.stmts, &scope).unwrap() else { panic!("closure") };
+        let saved = TraceFrame { func_id: 0, span: Span::new(9, 3) };
+        interp.trace.push(saved);
+        let result = interp.attempt_call(&[f], Span::new(5, 2)).unwrap();
+        assert_eq!(interp.active_module, ModuleId::ENTRY);
+        assert_eq!(interp.trace, vec![saved]);
+        assert_eq!(interp.depth, 0);
+        let json = crate::json_codec::stringify(&result, Span::new(1, 1)).unwrap();
+        assert!(!json.contains("file"));
+        run(r#"let r = attempt(() => 1/0)
+assert(keys(r) == ["error", "ok", "value"])
+assert(keys(r.error) == ["class", "col", "line", "message", "traceback"])
+assert(keys(r.error.traceback[0]) == ["col", "func", "line"])
+"#).result.unwrap();
+    }
 }

@@ -1,0 +1,20 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `release` profile [optimized] target(s) in 46.00s
+     Running unittests src\lib.rs (target\release\deps\lfz-63397fd2d9985014.exe)
+
+running 7 tests
+test evaluator::t16_a_origin_tests::t16_a_attempt_keeps_entry_and_fixed_old_record_shape ... ok
+test evaluator::t16_a_origin_tests::t16_a_success_metadata_rejects_error_source_before_its_lookup ... ok
+test evaluator::t16_a_origin_tests::t16_a_valid_sources_use_frame_indices_and_can_replace_atomically ... ok
+test evaluator::t16_a_origin_tests::t16_a_rejected_error_metadata_preserves_old_sidecar_and_order ... ok
+test evaluator::t16_a_origin_tests::t16_a_host_mutation_and_missing_loaded_text_remain_safe ... ok
+test evaluator::t16_a_origin_tests::t16_a_legacy_origins_are_absent ... ok
+test evaluator::t16_a_origin_tests::t16_a_home_module_is_integer_entry_for_all_legacy_closures ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 425 filtered out; finished in 0.00s
+
