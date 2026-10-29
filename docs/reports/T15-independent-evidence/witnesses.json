@@ -1,0 +1,311 @@
+{
+  "date": "2026-10-29",
+  "sha256": "1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c",
+  "passed": 38,
+  "rows": [
+    {
+      "name": "nil_and_function",
+      "json": false,
+      "source": "let a=attempt(()=>nil)\nassert(a.ok && a.value==nil && a.error==nil)\nlet b=attempt(()=>()=>7)\nassert(b.value()==7)",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "nil_and_function",
+      "json": true,
+      "source": "let a=attempt(()=>nil)\nassert(a.ok && a.value==nil && a.error==nil)\nlet b=attempt(()=>()=>7)\nassert(b.value()==7)",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": ""
+    },
+    {
+      "name": "nested_boundary",
+      "json": false,
+      "source": "let a=attempt(()=>attempt(4))\nassert(!a.ok && a.error[\"class\"]==\"TypeError\")\nlet b=attempt(()=>attempt(()=>fail(\"nested\")))\nassert(b.ok && !b.value.ok)",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "nested_boundary",
+      "json": true,
+      "source": "let a=attempt(()=>attempt(4))\nassert(!a.ok && a.error[\"class\"]==\"TypeError\")\nlet b=attempt(()=>attempt(()=>fail(\"nested\")))\nassert(b.ok && !b.value.ok)",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": ""
+    },
+    {
+      "name": "alias_and_rebound",
+      "json": false,
+      "source": "let xs=[1]\nlet a=attempt(()=>{xs[0]=8\nfail(\"changed\")})\nassert(!a.ok && xs[0]==8)\nlet b=attempt(()=>xs)\nb.value[0]=9\nassert(xs[0]==9)",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "alias_and_rebound",
+      "json": true,
+      "source": "let xs=[1]\nlet a=attempt(()=>{xs[0]=8\nfail(\"changed\")})\nassert(!a.ok && xs[0]==8)\nlet b=attempt(()=>xs)\nb.value[0]=9\nassert(xs[0]==9)",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": ""
+    },
+    {
+      "name": "closure_ids",
+      "json": false,
+      "source": "var saved=()=>0\nlet a=attempt(()=>{fn escaped()=>1/0\nsaved=escaped\nfail(\"save\")})\nlet b=attempt(saved)\nassert(b.error.traceback[-1].func==\"escaped\")\nfn later()=>9\nassert(attempt(later).value==9)",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "closure_ids",
+      "json": true,
+      "source": "var saved=()=>0\nlet a=attempt(()=>{fn escaped()=>1/0\nsaved=escaped\nfail(\"save\")})\nlet b=attempt(saved)\nassert(b.error.traceback[-1].func==\"escaped\")\nfn later()=>9\nassert(attempt(later).value==9)",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": ""
+    },
+    {
+      "name": "trace_data_independent",
+      "json": false,
+      "source": "fn bad()=>missing_probe\nlet a=attempt(bad)\na.error.traceback[0].func=\"changed\"\nlet b=attempt(bad)\nassert(b.error.traceback[0].func==\"<module>\")\nassert(b.error.traceback[-1].func==\"bad\")",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "trace_data_independent",
+      "json": true,
+      "source": "fn bad()=>missing_probe\nlet a=attempt(bad)\na.error.traceback[0].func=\"changed\"\nlet b=attempt(bad)\nassert(b.error.traceback[0].func==\"<module>\")\nassert(b.error.traceback[-1].func==\"bad\")",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": ""
+    },
+    {
+      "name": "many_errors_then_recursion",
+      "json": false,
+      "source": "var i=0\nwhile i<12000 {let r=attempt(()=>1/0)\nassert(!r.ok)\ni+=1}\nfn fac(n)=>if n==0 {1} else {n*fac(n-1)}\nassert(attempt(()=>fac(8)).value==40320)",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "many_errors_then_recursion",
+      "json": true,
+      "source": "var i=0\nwhile i<12000 {let r=attempt(()=>1/0)\nassert(!r.ok)\ni+=1}\nfn fac(n)=>if n==0 {1} else {n*fac(n-1)}\nassert(attempt(()=>fac(8)).value==40320)",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": ""
+    },
+    {
+      "name": "argv_and_pipeline",
+      "json": false,
+      "source": "assert(attempt(argv).value==[\"x\",\"中文\",\"\"])\nlet r=(()=>jsonParse(\"true\")) |> attempt\nassert(r.ok && r.value)",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "argv_and_pipeline",
+      "json": true,
+      "source": "assert(attempt(argv).value==[\"x\",\"中文\",\"\"])\nlet r=(()=>jsonParse(\"true\")) |> attempt\nassert(r.ok && r.value)",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": ""
+    },
+    {
+      "name": "shadow",
+      "json": false,
+      "source": "fn attempt(x)=>x+10\nassert(attempt(2)==12)",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "shadow",
+      "json": true,
+      "source": "fn attempt(x)=>x+10\nassert(attempt(2)==12)",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": ""
+    },
+    {
+      "name": "captured_self",
+      "json": false,
+      "source": "let obj={n:8,f:()=>attempt(()=>self.n)}\nassert(obj.f().value==8)",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "captured_self",
+      "json": true,
+      "source": "let obj={n:8,f:()=>attempt(()=>self.n)}\nassert(obj.f().value==8)",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": ""
+    },
+    {
+      "name": "input_validation_depth",
+      "json": false,
+      "source": "let text=repeat(129,\"[\")+\"0\"+repeat(129,\"]\")\nassert(attempt(()=>jsonParse(text)).error[\"class\"]==\"ValueError\")",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "input_validation_depth",
+      "json": true,
+      "source": "let text=repeat(129,\"[\")+\"0\"+repeat(129,\"]\")\nassert(attempt(()=>jsonParse(text)).error[\"class\"]==\"ValueError\")",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": ""
+    },
+    {
+      "name": "overflow_business",
+      "json": false,
+      "source": "assert(attempt(()=>9223372036854775807+1).error[\"class\"]==\"OverflowError\")",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "overflow_business",
+      "json": true,
+      "source": "assert(attempt(()=>9223372036854775807+1).error[\"class\"]==\"OverflowError\")",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": ""
+    },
+    {
+      "name": "left_to_right_once",
+      "json": false,
+      "source": "var n=0\nfn arg(){n+=1\n()=>n}\nassert(attempt(arg()).value==1 && n==1)",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "left_to_right_once",
+      "json": true,
+      "source": "var n=0\nfn arg(){n+=1\n()=>n}\nassert(attempt(arg()).value==1 && n==1)",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": ""
+    },
+    {
+      "name": "nonfunc",
+      "json": false,
+      "source": "attempt(2)",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 1, in <module>\n    attempt(2)\n    ^\nTypeError: 不可调用：int 不是函数\n"
+    },
+    {
+      "name": "nonfunc",
+      "json": true,
+      "source": "attempt(2)",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"不可调用：int 不是函数\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "arg_eval",
+      "json": false,
+      "source": "attempt(1/0)",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 1, in <module>\n    attempt(1/0)\n            ^\nZeroDivisionError: 除以零\n"
+    },
+    {
+      "name": "arg_eval",
+      "json": true,
+      "source": "attempt(1/0)",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"<command>\",\"line\":1,\"col\":9,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "callback_arity",
+      "json": false,
+      "source": "attempt((x)=>x)",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 1, in <module>\n    attempt((x)=>x)\n    ^\nTypeError: 函数 <fn> 期待 1 个参数，得到 0\n"
+    },
+    {
+      "name": "callback_arity",
+      "json": true,
+      "source": "attempt((x)=>x)",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 <fn> 期待 1 个参数，得到 0\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "capacity",
+      "json": false,
+      "source": "attempt(()=>range(9223372036854775807))",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 1, in <module>\n    attempt(()=>range(9223372036854775807))\n    ^\n  File \"<command>\", line 1, in <fn>\n    attempt(()=>range(9223372036854775807))\n                ^\nOverflowError: 容量溢出：所需容量超出可分配上限\n"
+    },
+    {
+      "name": "capacity",
+      "json": true,
+      "source": "attempt(()=>range(9223372036854775807))",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"OverflowError\",\"message\":\"容量溢出：所需容量超出可分配上限\",\"file\":\"<command>\",\"line\":1,\"col\":13,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "nested_capacity",
+      "json": false,
+      "source": "attempt(()=>attempt(()=>range(9223372036854775807)))",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 1, in <module>\n    attempt(()=>attempt(()=>range(9223372036854775807)))\n    ^\n  File \"<command>\", line 1, in <fn>\n    attempt(()=>attempt(()=>range(9223372036854775807)))\n                ^\n  File \"<command>\", line 1, in <fn>\n    attempt(()=>attempt(()=>range(9223372036854775807)))\n                            ^\nOverflowError: 容量溢出：所需容量超出可分配上限\n"
+    },
+    {
+      "name": "nested_capacity",
+      "json": true,
+      "source": "attempt(()=>attempt(()=>range(9223372036854775807)))",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"OverflowError\",\"message\":\"容量溢出：所需容量超出可分配上限\",\"file\":\"<command>\",\"line\":1,\"col\":25,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "syntax",
+      "json": false,
+      "source": "attempt(()=>{let =})",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"<command>\", line 1\n    attempt(()=>{let =})\n                     ^\nSyntaxError: 这里期待 变量名，但得到 '='\n"
+    },
+    {
+      "name": "syntax",
+      "json": true,
+      "source": "attempt(()=>{let =})",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 变量名，但得到 '='\",\"file\":\"<command>\",\"line\":1,\"col\":18,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "late_error_clean",
+      "json": false,
+      "source": "fn gone()=>1/0\nlet r=attempt(gone)\nfn fresh()=>missing_probe\nfresh()",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 4, in <module>\n    fresh()\n    ^\n  File \"<command>\", line 3, in fresh\n    fn fresh()=>missing_probe\n                ^\nNameError: 未定义的名字 'missing_probe'\n"
+    },
+    {
+      "name": "late_error_clean",
+      "json": true,
+      "source": "fn gone()=>1/0\nlet r=attempt(gone)\nfn fresh()=>missing_probe\nfresh()",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'missing_probe'\",\"file\":\"<command>\",\"line\":3,\"col\":13,\"traceback\":[{\"file\":\"<command>\",\"line\":4,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":3,\"func\":\"fresh\"}]}\n",
+      "stderr": ""
+    }
+  ]
+}

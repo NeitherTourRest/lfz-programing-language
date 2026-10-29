@@ -263,3 +263,6 @@ IO 正例固定先覆盖写 Temp/v11_io_roundtrip.txt，再追加并读取，最
 ## T14非执行check公开进程补充（2026-10-29）
 
 新增tests/t14_cli_check.py **117/117通过，exit0**；覆盖三来源/JSON/CODE边界/usage/加载位置/非静态保证/18文件字节哨兵组合及旧run兼容。最终83f56a19…/774656B，完整报告[ T14黑盒报告 ](../docs/reports/T14-blackbox.md)，原始证据docs/reports/T14-blackbox-evidence/final-cli-corrected-20261029.json。官方LFZ runner仍166；本轮不改任何既有LFZ/Rust/manifest用例，不叠加计数。首次116/117为作者非法UTF8 oracle误写，原JSON保留，按既有规范纠正新脚本后117通过；不是产品缺陷修复。
+
+## T15受控错误恢复（2026-10-29）
+官方178/178、0失败/错误、exit0；旧166+4正LFZ+8新增清单负例。公开精确进程13/13（另计），Result/九类可捕错误/嵌套状态/副作用/trace恢复/边界与容量传播全过。指定1a5a3d1c…/782848B，详情[ T15黑盒报告 ](../docs/reports/T15-blackbox.md)与T15-blackbox-evidence。原131清单值前缀保留，旧用例未改，Recursion资源边界未做真实abort，交单元/独立安全见证。

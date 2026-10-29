@@ -1,0 +1,28 @@
+#42
+let fs = [() => missing_t15_name, () => 1 + true, () => [1][8], () => ({}).missing, () => 1 / 0, () => jsonParse("bad"), () => readFile(""), () => assert(false), () => 9223372036854775807 + 1]
+let classes = ["NameError", "TypeError", "IndexError", "FieldError", "ZeroDivisionError", "ValueError", "IOError", "AssertionError", "OverflowError"]
+var i = 0
+for f in fs {
+ let r = attempt(f)
+ assert(r.ok == false)
+ assert(r.value == nil)
+ assert(r.error["class"] == classes[i])
+ assert(type(r.error.message) == "string")
+ assert(len(r.error.message) > 0)
+ assert(type(r.error.line) == "int")
+ assert(type(r.error.col) == "int")
+ assert(len(keys(r.error)) == 5)
+ assert(len(r.error.traceback) >= 2)
+ let frame = r.error.traceback[len(r.error.traceback)-1]
+ assert(type(frame.func) == "string")
+ assert(type(frame.line) == "int")
+ assert(type(frame.col) == "int")
+ assert(len(keys(frame)) == 3)
+ assert(attempt(() => 7).value == 7)
+ i += 1
+}
+let failResult = attempt(() => fail("t15 failure"))
+assert(failResult.error["class"] == "AssertionError")
+assert(attempt(() => attempt(3)).error["class"] == "TypeError")
+assert(attempt(() => attempt((x) => x)).error["class"] == "TypeError")
+assert(attempt(() => jsonStringify([() => 1])).error["class"] == "ValueError")

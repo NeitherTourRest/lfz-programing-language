@@ -1,0 +1,12 @@
+#42
+let records = ["{\"x\":1}", "bad", "{\"x\":3}", "", "{\"x\":4,\"x\":5}", "9223372036854775808"]
+let rs = map((text) => attempt(() => jsonParse(text)), records)
+assert(len(rs) == 6)
+assert(rs[0].ok && rs[0].value.x == 1)
+assert(rs[1].ok == false && rs[1].error["class"] == "ValueError")
+assert(rs[2].ok && rs[2].value.x == 3)
+assert(rs[3].ok == false && rs[4].ok == false && rs[5].ok == false)
+let json = jsonStringify(rs)
+let back = jsonParse(json)
+assert(back[2].value.x == 3)
+assert(back[1].error["class"] == "ValueError")

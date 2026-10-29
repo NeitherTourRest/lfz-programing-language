@@ -561,3 +561,15 @@ $ echo $LASTEXITCODE
 | 原run/check内置/help/文件命名兼容 | 同上 | 5 | 通过 |
 
 总117/117，证据T14-blackbox-evidence/final-cli-corrected-20261029.json；83f56a19…/774656B。官方166清单/用例不改，原作者oracle差异及首次失败见T14报告，不隐藏。
+
+## T15错误恢复增量（2026-10-29）
+| 范围 | 新用例/证据 | 状态 |
+| -- | -- | -- |
+| Result形状/原值别名/函数/argv/管道/遮蔽 | test_t15_results.lfz | 通过 |
+| 九类可捕错误/错误字段/嵌套校验/JSON编码 | test_t15_errors.lfz | 通过 |
+| 容器cell副作用/逃逸闭包/连续失败/递归/HOF/trace数据隔离 | test_t15_state.lfz | 通过 |
+| good-bad-good JSON批处理与错误序列化 | test_t15_batch.lfz | 通过 |
+| arity/非函数/求参/容量与嵌套容量/语法先行 | 8个fixtures/t15_*及manifest追加 | 通过 |
+| 精确消息/位置/完整trace及后继错误/IO与输出不回滚 | t15_cli_check.py 13进程 | 通过 |
+
+官方178/178，公开13/13另计，指定1a5a3d1c…/782848B。Recursion不可捕边界由单元/独立安全见证处理，本角色不做真实abort，不虚计覆盖。

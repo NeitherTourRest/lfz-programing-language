@@ -1,0 +1,33 @@
+#42
+var cell = 0
+let xs = [1]
+let o = {x: 1}
+let r = attempt(() => { cell = 10
+ xs[0] = 8
+ o.x = 9
+ fail("keep changes") })
+assert(r.ok == false)
+assert(cell == 10 && xs[0] == 8 && o.x == 9)
+let holder = {f: nil}
+let escaped = attempt(() => { let v = 12
+ holder.f = () => v
+ fail("escape") })
+assert(escaped.ok == false)
+assert(holder.f() == 12)
+var i = 0
+while i < 100 {
+ let bad = attempt(() => 1 / 0)
+ assert(bad.error["class"] == "ZeroDivisionError")
+ i += 1
+}
+fn fact(n) { if n <= 1 { return 1 }
+ n * fact(n-1) }
+assert(fact(10) == 3628800)
+let nested = attempt(() => attempt(() => 1 / 0))
+assert(nested.ok && nested.value.ok == false)
+let mapped = map((x) => attempt(() => 10 / x), [2, 0, 5])
+assert(mapped[0].ok && mapped[1].ok == false && mapped[2].ok)
+let before = attempt(() => 1 / 0)
+before.error.traceback[0].func = "changed"
+let after = attempt(() => 1 / 0)
+assert(after.error.traceback[0].func == "<module>")

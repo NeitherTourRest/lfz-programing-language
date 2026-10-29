@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-29",
+  "phase": "preimplementation missing attempt, not regression",
+  "binary_sha256": "83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79",
+  "exit": 2,
+  "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'attempt'\",\"file\":\"tests/lfz/test_t15_results.lfz\",\"line\":2,\"col\":9,\"traceback\":[{\"file\":\"tests/lfz/test_t15_results.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+  "stderr": "",
+  "new_positive_files": 4,
+  "new_negative_files": 8,
+  "old_manifest_entries": 131,
+  "old_entries_values_preserved": true
+}

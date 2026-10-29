@@ -1,0 +1,26 @@
+[
+  {
+    "path": "tests\\lfz\\test_t15_batch.lfz",
+    "exit": 0,
+    "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+    "stderr": ""
+  },
+  {
+    "path": "tests\\lfz\\test_t15_errors.lfz",
+    "exit": 0,
+    "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+    "stderr": ""
+  },
+  {
+    "path": "tests\\lfz\\test_t15_results.lfz",
+    "exit": 0,
+    "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+    "stderr": ""
+  },
+  {
+    "path": "tests\\lfz\\test_t15_state.lfz",
+    "exit": 0,
+    "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+    "stderr": ""
+  }
+]

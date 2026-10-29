@@ -1,0 +1,30 @@
+#42
+let n = attempt(() => nil)
+assert(n.ok == true)
+assert(n.value == nil)
+assert(n.error == nil)
+assert(len(keys(n)) == 3)
+for v in [false, true, 0, -7, 1.5, "中文🙂"] {
+ let r = attempt(() => v)
+ assert(r.ok)
+ assert(r.value == v)
+ assert(r.error == nil)
+}
+let xs = [1]
+let a = attempt(() => xs)
+a.value[0] = 9
+assert(xs[0] == 9)
+let obj = {x: 1}
+let b = attempt(() => obj)
+b.value.x = 8
+assert(obj.x == 8)
+let f = attempt(() => () => 42)
+assert(f.value() == 42)
+let arg = attempt(argv)
+assert(arg.ok)
+assert(type(arg.value) == "array")
+let p = (() => 8) |> attempt
+assert(p.ok && p.value == 8)
+fn shadow() { let attempt = (x) => x + 1
+ attempt(4) }
+assert(shadow() == 5)

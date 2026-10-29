@@ -138,6 +138,14 @@
     {"path": "fixtures/t12_json_encode_inf.lfz", "name": "t12_json_encode_inf", "expect": {"error": "ValueError"}},
     {"path": "fixtures/t12_json_encode_nan.lfz", "name": "t12_json_encode_nan", "expect": {"error": "ValueError"}},
     {"path": "fixtures/t12_argv_arity.lfz", "name": "t12_argv_arity", "expect": {"error": "TypeError"}},
-    {"path": "fixtures/t12_argv_alias_arity.lfz", "name": "t12_argv_alias_arity", "expect": {"error": "TypeError"}}
+    {"path": "fixtures/t12_argv_alias_arity.lfz", "name": "t12_argv_alias_arity", "expect": {"error": "TypeError"}},
+    {"path": "fixtures/t15_arity0.lfz", "name": "t15_arity0", "expect": {"error": "TypeError"}},
+    {"path": "fixtures/t15_arity2.lfz", "name": "t15_arity2", "expect": {"error": "TypeError"}},
+    {"path": "fixtures/t15_nonfunc.lfz", "name": "t15_nonfunc", "expect": {"error": "TypeError"}},
+    {"path": "fixtures/t15_callback_arity.lfz", "name": "t15_callback_arity", "expect": {"error": "TypeError"}},
+    {"path": "fixtures/t15_argument_evaluation.lfz", "name": "t15_argument_evaluation", "expect": {"error": "ZeroDivisionError"}},
+    {"path": "fixtures/t15_capacity.lfz", "name": "t15_capacity", "expect": {"error": "OverflowError"}},
+    {"path": "fixtures/t15_nested_capacity.lfz", "name": "t15_nested_capacity", "expect": {"error": "OverflowError"}},
+    {"path": "fixtures/t15_syntax.lfz", "name": "t15_syntax", "expect": {"error": "SyntaxError"}}
   ]
 }
