@@ -1,0 +1,15 @@
+exit=2
+Traceback (most recent call last):
+  File "app/jsonbatch.lfz", line 31, in <module>
+    main(argv())
+    ^
+  File "app/jsonbatch.lfz", line 22, in main
+        let rows = range(count) |> map((i) => parseLine(pieces[i], i + 1))
+                   ^
+  File "app/jsonbatch.lfz", line 22, in <fn>
+        let rows = range(count) |> map((i) => parseLine(pieces[i], i + 1))
+                                              ^
+  File "app/jsonbatch.lfz", line 7, in parseLine
+        let result = attempt(() => jsonParse(text))
+                     ^
+NameError: 未定义的名字 'attempt'

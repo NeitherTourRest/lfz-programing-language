@@ -1,0 +1,27 @@
+[
+  {
+    "path": "app/jsonbatch.lfz",
+    "bytes": 1443,
+    "sha256": "adcc2a25dd3237082b043f0c1be99d66545a9cc2f47cb6e873c5756debafb0c7"
+  },
+  {
+    "path": "app/verify_jsonbatch.py",
+    "bytes": 5357,
+    "sha256": "69da2e21038d3da64e9ae1bc0a71afe6e85a1b90cd7b39cc008f8679c755bcec"
+  },
+  {
+    "path": "app/fixtures/t15/mixed.jsonl",
+    "bytes": 59,
+    "sha256": "f6ccb3246ed48994d841672e2d2fb5f9493b2b6b08bdd581b9dc5855c70284fe"
+  },
+  {
+    "path": "app/t15-evidence/results.json",
+    "bytes": 241464,
+    "sha256": "90242f24def7f8a2f9672f330251230dbb8629af7dd04f81991c7e89a0fe852d"
+  },
+  {
+    "path": "app/t15-evidence/preimplementation-red.txt",
+    "bytes": 587,
+    "sha256": "2209ca17c9bb5200b99ec812efc4580e3bc3ac684e72fdb592927ae51af1a5e6"
+  }
+]

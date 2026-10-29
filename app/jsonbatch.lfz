@@ -1,0 +1,31 @@
+#42
+// JSONL batch: one result per physical LF-delimited line, including blank lines.
+fn require(ok, message) {
+    if !ok { fail("jsonbatch: ${message}") }
+}
+fn parseLine(text, lineNumber) {
+    let result = attempt(() => jsonParse(text))
+    ({ line: lineNumber, ok: result.ok, value: result.value, error: result.error })
+}
+fn main(args) {
+    require(len(args) == 2, "用法: jsonbatch INPUT.jsonl OUTPUT.json")
+    let inputPath = args[0]
+    let outputPath = args[1]
+    require(len(trim(inputPath)) > 0 && len(trim(outputPath)) > 0, "路径不能为空")
+    require(inputPath != outputPath, "输出路径不能与输入路径字面相同")
+    // readFile is whole-file UTF-8 IO, not a streaming reader.
+    let text = replace("\r\n", "\n", readFile(inputPath))
+    let pieces = split("\n", text)
+    let count = if len(text) == 0 { 0 } else {
+        if endsWith("\n", text) { len(pieces) - 1 } else { len(pieces) }
+    }
+    let rows = range(count) |> map((i) => parseLine(pieces[i], i + 1))
+    let passed = len(filter((row) => row.ok, rows))
+    let output = { total: count, passed: passed, failed: count - passed, rows: rows }
+    // Complete parsing, recovery and encoding before touching the output file.
+    let encoded = jsonStringify(output) + "\n"
+    let summary = jsonStringify({ total: count, passed: passed, failed: count - passed, path: outputPath })
+    writeFile(outputPath, encoded)
+    print(summary)
+}
+main(argv())
