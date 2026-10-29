@@ -1,0 +1,21 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `release` profile [optimized] target(s) in 39.80s
+     Running unittests src\lib.rs (target\release\deps\lfz-63397fd2d9985014.exe)
+
+running 8 tests
+test evaluator::t13_call_join_tests::t13_join_error_type_order_and_exact_span_are_unchanged ... ok
+test builtins::t13_join_cycle_tests::t13_join_non_string_self_cycle_reports_type_without_reborrowing ... ok
+test evaluator::t13_call_join_tests::t13_callback_body_error_keeps_callback_and_module_frames ... ok
+test evaluator::t13_call_join_tests::t13_callback_parameters_keep_fresh_cells_and_reassignment ... ok
+test evaluator::t13_call_join_tests::t13_callback_arity_error_keeps_call_site_without_pushing_frame ... ok
+test evaluator::t13_call_join_tests::t13_callbacks_keep_snapshot_container_alias_and_left_to_right ... ok
+test evaluator::t13_call_join_tests::t13_join_keeps_unicode_empty_elements_and_source_alias ... ok
+test evaluator::t13_call_join_tests::t13_callback_keeps_captured_self_and_shadowing ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 404 filtered out; finished in 0.00s
+

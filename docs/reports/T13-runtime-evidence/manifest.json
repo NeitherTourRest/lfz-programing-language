@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-27",
+  "role": "runtime-dev",
+  "status": "candidate functional pass; performance pending independent measurement",
+  "base_commit": "cbc974b631d225e34a746ad96410f02b629b3c37",
+  "rust_tests": 530,
+  "test_groups": [
+    412,
+    48,
+    28,
+    12,
+    15,
+    15
+  ],
+  "baseline_semantic_regressions": 7,
+  "candidate_semantic_regressions": 8,
+  "profile_changed": false,
+  "dist_changed": false,
+  "files": [
+    {
+      "path": "src/evaluator.rs",
+      "bytes": 150300,
+      "sha256": "6827ed43a23eb5f1285a448df802d5b69cf1d247b51a9f40c0691e0ee051b889"
+    },
+    {
+      "path": "src/builtins.rs",
+      "bytes": 112151,
+      "sha256": "b6f9d7ccf282754cd5ed517289309934df8471e26476a0ab62c44c7384aa626b"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 795,
+      "sha256": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c"
+    },
+    {
+      "path": "Cargo.lock",
+      "bytes": 147,
+      "sha256": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4"
+    },
+    {
+      "path": "target/release/lfz.exe",
+      "bytes": 761344,
+      "sha256": "9cda0c6fd5d85178335e8b758a843fc5f66574826bab4a80f2418a318e171cf9"
+    },
+    {
+      "path": "dist/lfz.exe",
+      "bytes": 759808,
+      "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f"
+    },
+    {
+      "path": "docs/reports/T13-runtime-evidence/baseline-regressions.txt",
+      "bytes": 1362,
+      "sha256": "6a1d4a1b42a725bf3fe643f58f78ae363bf60e209bdc89f4aff569fd589ec1ce"
+    },
+    {
+      "path": "docs/reports/T13-runtime-evidence/candidate-regressions.txt",
+      "bytes": 1471,
+      "sha256": "9f0520bcca9b44d51036996badbdc06b6c9c0ea36533e8868930b6e9abb7e8a5"
+    },
+    {
+      "path": "docs/reports/T13-runtime-evidence/cargo-test-release.txt",
+      "bytes": 34942,
+      "sha256": "9e17b2db42082d0f81a9b2820da98155339c2823c49ef2d57c7b1c726c39b0b4"
+    },
+    {
+      "path": "docs/reports/T13-runtime-evidence/build-release.txt",
+      "bytes": 358,
+      "sha256": "4673940594ea5a8c88944206752f2afff0caeb0602f111bde66ec27089daee7b"
+    }
+  ]
+}

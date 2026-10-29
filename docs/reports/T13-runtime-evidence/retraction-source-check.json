@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-27",
+  "decision": "reject T13 performance candidate; restore production prefix exactly and retain all added tests",
+  "compiled_after_retraction": false,
+  "test_status": "deferred to coordinated T14 full release validation",
+  "files": [
+    {
+      "path": "src/evaluator.rs",
+      "base_commit": "cbc974b631d225e34a746ad96410f02b629b3c37",
+      "base_prefix_sha256": "59981d01a98d4601ae74b9e56d0ea96234c6e9fb609e6fba44cf4c80816a4ee3",
+      "restored_prefix_sha256": "59981d01a98d4601ae74b9e56d0ea96234c6e9fb609e6fba44cf4c80816a4ee3",
+      "production_prefix_byte_equal": true,
+      "retained_new_tests": 7,
+      "restored_source_sha256": "bd26b59e29274c26f4e96e0928ab8cb9bb41fea2dffa4ba69fc684891940e78e"
+    },
+    {
+      "path": "src/builtins.rs",
+      "base_commit": "cbc974b631d225e34a746ad96410f02b629b3c37",
+      "base_prefix_sha256": "529bffd4927ea479529f93f68a0d00f26dfa370cd1a9262d56cc9f5281606213",
+      "restored_prefix_sha256": "529bffd4927ea479529f93f68a0d00f26dfa370cd1a9262d56cc9f5281606213",
+      "production_prefix_byte_equal": true,
+      "retained_new_tests": 1,
+      "restored_source_sha256": "d503f5ff7c330d1f2fb7729b5af9a63badf51f558f41c34d5af8fac4207a2387"
+    }
+  ]
+}

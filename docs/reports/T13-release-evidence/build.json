@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-27",
+  "status": "T13 binary preservation only; independent verification and performance measurement pending",
+  "version": "1.4.0",
+  "binary": {
+    "source": "target/release/lfz.exe",
+    "copy": "dist/lfz.exe",
+    "bytes": 761344,
+    "sha256": "9cda0c6fd5d85178335e8b758a843fc5f66574826bab4a80f2418a318e171cf9"
+  },
+  "previous_t12": {
+    "path": "Temp/t13-perf/lfz-t12.exe",
+    "bytes": 759808,
+    "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f"
+  },
+  "profile": {
+    "opt_level": 2,
+    "lto": true,
+    "codegen_units": 1,
+    "strip": true,
+    "modified_by_this_task": false
+  },
+  "reported_runtime_checks": {
+    "source": "team-lead task receipt",
+    "command": "cargo test --release",
+    "passed": 530,
+    "independently_rerun_by_release_manager": false
+  },
+  "source_hashes": "source-hashes.json",
+  "scope": "Verified existing target hash, copied identical bytes to project dist, recorded source/Cargo hashes; no recompilation, no Git writes, no external install or T12 report modifications"
+}

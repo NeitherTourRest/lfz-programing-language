@@ -1,0 +1,17 @@
+
+running 12 tests
+test stdin_invalid_utf8_is_io_error_without_fabricated_location ... ok
+test argv_preserves_all_literal_values_after_separator ... ok
+test command_and_stdin_errors_have_correct_line_origin ... ok
+test json_argv_does_not_activate_status_mode ... ok
+test no_implicit_stdin_or_last_value_printing ... ok
+test eval_and_file_read_input_but_stdin_code_is_at_eof ... ok
+test json_flags_before_and_after_code_are_status_only ... ok
+test stdin_source_both_spellings_normalizes_bom_and_crlf ... ok
+test missing_code_and_undelimited_extra_args_are_errors ... ok
+test eval_both_spellings_and_empty_program ... ok
+test code_operands_that_look_like_options_are_never_removed ... ok
+test file_and_bare_file_receive_args_but_keep_header_rules ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+

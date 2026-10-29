@@ -1,0 +1,1980 @@
+{
+  "date": "2026-10-27",
+  "old": {
+    "path": "Temp\\t13-perf\\lfz-t12.exe",
+    "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f"
+  },
+  "new": {
+    "path": "dist\\lfz.exe",
+    "sha256": "9cda0c6fd5d85178335e8b758a843fc5f66574826bab4a80f2418a318e171cf9"
+  },
+  "programs": 31,
+  "categories": [
+    "argument_flow",
+    "error_trace",
+    "fresh_cells",
+    "hof_snapshot",
+    "join_error",
+    "join_success",
+    "rebind_alias",
+    "self_recursion"
+  ],
+  "comparisons": 62,
+  "processes": 124,
+  "passed": 62,
+  "rows": [
+    {
+      "name": "direct_zero_multi_pipeline",
+      "category": "argument_flow",
+      "mode": "human",
+      "source": "#42\nfn zero() => 42\nfn combine(a,b,c) => a*100+b*10+c\nassert(zero()==42)\nassert(combine(1,2,3)==123)\nassert((3 |> combine(1,2))==123)\nvar seen = \"\"\nfn mark(x) { seen = seen + str(x)\n x }\nassert(combine(mark(4),mark(5),mark(6))==456)\nassert(seen==\"456\")\n",
+      "source_sha256": "f5a6984f98303b69ae39f55ff4eb61621ea55933da15768c8c519d26cf5b2634",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "direct_zero_multi_pipeline",
+      "category": "argument_flow",
+      "mode": "json",
+      "source": "#42\nfn zero() => 42\nfn combine(a,b,c) => a*100+b*10+c\nassert(zero()==42)\nassert(combine(1,2,3)==123)\nassert((3 |> combine(1,2))==123)\nvar seen = \"\"\nfn mark(x) { seen = seen + str(x)\n x }\nassert(combine(mark(4),mark(5),mark(6))==456)\nassert(seen==\"456\")\n",
+      "source_sha256": "f5a6984f98303b69ae39f55ff4eb61621ea55933da15768c8c519d26cf5b2634",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "all_empty_skip_callbacks",
+      "category": "argument_flow",
+      "mode": "human",
+      "source": "#42\nvar count=0\nfn bad(a,b,c) { count += 1\n 0 }\nassert(map(bad,[])==[])\nassert(filter(bad,[])==[])\nassert(reduce(bad,17,[])==17)\nassert(sortBy(bad,[])==[])\neach(bad,[])\nassert(count==0)\nassert(map(argv,[])==[])\n",
+      "source_sha256": "ce5de214a2c6a3a9217b13fab4dd2eaf42a1e64e5092dcad211b44b952b27a9d",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "all_empty_skip_callbacks",
+      "category": "argument_flow",
+      "mode": "json",
+      "source": "#42\nvar count=0\nfn bad(a,b,c) { count += 1\n 0 }\nassert(map(bad,[])==[])\nassert(filter(bad,[])==[])\nassert(reduce(bad,17,[])==17)\nassert(sortBy(bad,[])==[])\neach(bad,[])\nassert(count==0)\nassert(map(argv,[])==[])\n",
+      "source_sha256": "ce5de214a2c6a3a9217b13fab4dd2eaf42a1e64e5092dcad211b44b952b27a9d",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "reduce_three_alias",
+      "category": "argument_flow",
+      "mode": "human",
+      "source": "#42\nlet xs=[1,2,3,4]\nassert(reduce((acc,x)=>acc*10+x,0,xs)==1234)\nassert(xs==[1,2,3,4])\nassert(sortBy((x)=>-x,xs)==[4,3,2,1])\nassert(minBy((x)=>-x,xs)==4)\nassert(maxBy((x)=>-x,xs)==1)\n",
+      "source_sha256": "e0bf50f86ff078c8ef8a18cfb7e267c2f5de5959b0cdfe2ad806539c02002dd6",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "reduce_three_alias",
+      "category": "argument_flow",
+      "mode": "json",
+      "source": "#42\nlet xs=[1,2,3,4]\nassert(reduce((acc,x)=>acc*10+x,0,xs)==1234)\nassert(xs==[1,2,3,4])\nassert(sortBy((x)=>-x,xs)==[4,3,2,1])\nassert(minBy((x)=>-x,xs)==4)\nassert(maxBy((x)=>-x,xs)==1)\n",
+      "source_sha256": "e0bf50f86ff078c8ef8a18cfb7e267c2f5de5959b0cdfe2ad806539c02002dd6",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "escaping_parameter_cells",
+      "category": "fresh_cells",
+      "mode": "human",
+      "source": "#42\nfn make(n) { n+=10\n () => { n+=2\n n } }\nlet a=map(make,[1,2,3])\nassert(a[2]()==15)\nassert(a[0]()==13)\nassert(a[2]()==17)\nassert(a[1]()==14)\nlet b=make(1)\nassert(b()==13)\nassert(a[0]()==15)\n",
+      "source_sha256": "6957add70e780de39876472c7999a5ee4f3e7a43f66608bbe956c8cc09480e17",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "escaping_parameter_cells",
+      "category": "fresh_cells",
+      "mode": "json",
+      "source": "#42\nfn make(n) { n+=10\n () => { n+=2\n n } }\nlet a=map(make,[1,2,3])\nassert(a[2]()==15)\nassert(a[0]()==13)\nassert(a[2]()==17)\nassert(a[1]()==14)\nlet b=make(1)\nassert(b()==13)\nassert(a[0]()==15)\n",
+      "source_sha256": "6957add70e780de39876472c7999a5ee4f3e7a43f66608bbe956c8cc09480e17",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "parameter_rebind_vs_alias",
+      "category": "rebind_alias",
+      "mode": "human",
+      "source": "#42\nlet x=[1]\nlet o={n:2}\nfn edit(a,b) { a[0]+=4\n b.n+=5\n a=[99]\n b={n:99}\n [a,b] }\nlet r=edit(x,o)\nassert(x==[5])\nassert(o.n==7)\nassert(r[0]==[99])\nassert(r[1].n==99)\nlet rows=[x,o]\nlet seen=map((v)=>{v},rows)\nseen[0][0]=8\nseen[1].n=9\nassert(x[0]==8)\nassert(o.n==9)\n",
+      "source_sha256": "e06beac48ee4c825081f4d9827bafaf2d36b7898ab774d5635e01a1a9d56d90c",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "parameter_rebind_vs_alias",
+      "category": "rebind_alias",
+      "mode": "json",
+      "source": "#42\nlet x=[1]\nlet o={n:2}\nfn edit(a,b) { a[0]+=4\n b.n+=5\n a=[99]\n b={n:99}\n [a,b] }\nlet r=edit(x,o)\nassert(x==[5])\nassert(o.n==7)\nassert(r[0]==[99])\nassert(r[1].n==99)\nlet rows=[x,o]\nlet seen=map((v)=>{v},rows)\nseen[0][0]=8\nseen[1].n=9\nassert(x[0]==8)\nassert(o.n==9)\n",
+      "source_sha256": "e06beac48ee4c825081f4d9827bafaf2d36b7898ab774d5635e01a1a9d56d90c",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "self_nested_recursion_shadow",
+      "category": "self_recursion",
+      "mode": "human",
+      "source": "#42\nlet o={n:6,work:(xs)=>map((x)=>self.n+x,xs)}\nassert(o.work([1,2])==[7,8])\nfn fact(n) { if n==0 {return 1}\n n*fact(n-1) }\nassert(map(fact,[0,1,5])==[1,1,120])\nfn shadow(argv) => map((x)=>argv+x,[1,2])\nassert(shadow(9)==[10,11])\nlet saved=argv\nfn invoke(f) => f()\nassert(invoke(saved)==[\"one\",\"中文\",\"\"])\n",
+      "source_sha256": "de7685c74394b710779acee58dbe9103aaad485f1fc301896f4ffb3f058bc98d",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "self_nested_recursion_shadow",
+      "category": "self_recursion",
+      "mode": "json",
+      "source": "#42\nlet o={n:6,work:(xs)=>map((x)=>self.n+x,xs)}\nassert(o.work([1,2])==[7,8])\nfn fact(n) { if n==0 {return 1}\n n*fact(n-1) }\nassert(map(fact,[0,1,5])==[1,1,120])\nfn shadow(argv) => map((x)=>argv+x,[1,2])\nassert(shadow(9)==[10,11])\nlet saved=argv\nfn invoke(f) => f()\nassert(invoke(saved)==[\"one\",\"中文\",\"\"])\n",
+      "source_sha256": "de7685c74394b710779acee58dbe9103aaad485f1fc301896f4ffb3f058bc98d",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "map_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "human",
+      "source": "#42\nlet source=[3,1,2]\nlet result=map((x)=>{source[1]=99\n x},source)\nassert(result==[3,1,2])\nassert(source[1]==99)\n",
+      "source_sha256": "5c55e98221e830df9a75547763c8ef6ca2e1f446335e5fec4d2ff2ea8939922a",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "map_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "json",
+      "source": "#42\nlet source=[3,1,2]\nlet result=map((x)=>{source[1]=99\n x},source)\nassert(result==[3,1,2])\nassert(source[1]==99)\n",
+      "source_sha256": "5c55e98221e830df9a75547763c8ef6ca2e1f446335e5fec4d2ff2ea8939922a",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "filter_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "human",
+      "source": "#42\nlet source=[3,1,2]\nlet result=filter((x)=>{source[1]=99\n true},source)\nassert(result==[3,1,2])\nassert(source[1]==99)\n",
+      "source_sha256": "83afed055edaa8fff844345e0d5f0c8cd1e3a16ec10099ec33ae2fcf325fb0f6",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "filter_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "json",
+      "source": "#42\nlet source=[3,1,2]\nlet result=filter((x)=>{source[1]=99\n true},source)\nassert(result==[3,1,2])\nassert(source[1]==99)\n",
+      "source_sha256": "83afed055edaa8fff844345e0d5f0c8cd1e3a16ec10099ec33ae2fcf325fb0f6",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "reduce_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "human",
+      "source": "#42\nlet source=[3,1,2]\nlet result=reduce((acc,x)=>{source[1]=99\n acc*10+x},0,source)\nassert(result==312)\nassert(source[1]==99)\n",
+      "source_sha256": "ac9bdf60ce07e1a794aad006147e7fdd35d7c5c696613a85d2df169deb2691b3",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "reduce_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "json",
+      "source": "#42\nlet source=[3,1,2]\nlet result=reduce((acc,x)=>{source[1]=99\n acc*10+x},0,source)\nassert(result==312)\nassert(source[1]==99)\n",
+      "source_sha256": "ac9bdf60ce07e1a794aad006147e7fdd35d7c5c696613a85d2df169deb2691b3",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "sortBy_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "human",
+      "source": "#42\nlet source=[3,1,2]\nlet result=sortBy((x)=>{source[1]=99\n x},source)\nassert(result==[1,2,3])\nassert(source[1]==99)\n",
+      "source_sha256": "5e834770dc5bafd538faebbdc89d95336e8bdfd2998e13ea2a8e8b5fa355fb63",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "sortBy_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "json",
+      "source": "#42\nlet source=[3,1,2]\nlet result=sortBy((x)=>{source[1]=99\n x},source)\nassert(result==[1,2,3])\nassert(source[1]==99)\n",
+      "source_sha256": "5e834770dc5bafd538faebbdc89d95336e8bdfd2998e13ea2a8e8b5fa355fb63",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "minBy_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "human",
+      "source": "#42\nlet source=[3,1,2]\nlet result=minBy((x)=>{source[1]=99\n x},source)\nassert(result==1)\nassert(source[1]==99)\n",
+      "source_sha256": "23151772317d638df6ad572f6f30ded5182607c5e1faf138b0e1076de091e8c0",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "minBy_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "json",
+      "source": "#42\nlet source=[3,1,2]\nlet result=minBy((x)=>{source[1]=99\n x},source)\nassert(result==1)\nassert(source[1]==99)\n",
+      "source_sha256": "23151772317d638df6ad572f6f30ded5182607c5e1faf138b0e1076de091e8c0",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "maxBy_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "human",
+      "source": "#42\nlet source=[3,1,2]\nlet result=maxBy((x)=>{source[1]=99\n x},source)\nassert(result==3)\nassert(source[1]==99)\n",
+      "source_sha256": "8d44f8cc398ceb7743b466239a4aa5a0c1552749370a1acf6b9c91ebbba3f5b9",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "maxBy_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "json",
+      "source": "#42\nlet source=[3,1,2]\nlet result=maxBy((x)=>{source[1]=99\n x},source)\nassert(result==3)\nassert(source[1]==99)\n",
+      "source_sha256": "8d44f8cc398ceb7743b466239a4aa5a0c1552749370a1acf6b9c91ebbba3f5b9",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "each_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "human",
+      "source": "#42\nlet source=[3,1,2]\nvar order=0\neach((x)=>{source[1]=99\n order=order*10+x},source)\nassert(order==312)\nassert(source[1]==99)\n",
+      "source_sha256": "1d72272c74df1b64c636df80ee94c96b983b5cd38d32d89c6239fcdd747079c4",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "each_source_snapshot",
+      "category": "hof_snapshot",
+      "mode": "json",
+      "source": "#42\nlet source=[3,1,2]\nvar order=0\neach((x)=>{source[1]=99\n order=order*10+x},source)\nassert(order==312)\nassert(source[1]==99)\n",
+      "source_sha256": "1d72272c74df1b64c636df80ee94c96b983b5cd38d32d89c6239fcdd747079c4",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "nested_snapshot_shared_values",
+      "category": "hof_snapshot",
+      "mode": "human",
+      "source": "#42\nlet a=[1]\nlet b=[2]\nlet rows=[a,b]\nlet out=map((x)=>{rows[1]=[9]\n x[0]+=10\n x},rows)\nassert(out==[[11],[12]])\nassert(a==[11])\nassert(b==[12])\nassert(rows[1]==[9])\n",
+      "source_sha256": "b9e0d0119d817f69c349d80d495017a5b2d5e1487f1603c4c5454ff9d6da4132",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "nested_snapshot_shared_values",
+      "category": "hof_snapshot",
+      "mode": "json",
+      "source": "#42\nlet a=[1]\nlet b=[2]\nlet rows=[a,b]\nlet out=map((x)=>{rows[1]=[9]\n x[0]+=10\n x},rows)\nassert(out==[[11],[12]])\nassert(a==[11])\nassert(b==[12])\nassert(rows[1]==[9])\n",
+      "source_sha256": "b9e0d0119d817f69c349d80d495017a5b2d5e1487f1603c4c5454ff9d6da4132",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "join_unicode_nul_alias",
+      "category": "join_success",
+      "mode": "human",
+      "source": "#42\nlet nul=chr(0)\nlet a=[\"\", \"中\", \"🙂\", nul, \"\"]\nlet alias=a\nlet result=join(\"|\",a)\nassert(result==\"|中|🙂|\"+nul+\"|\")\nassert(join(\"\",a)==\"中🙂\"+nul)\nassert(join(\"x\",[])==\"\")\nassert(join(\"x\",[\"\"])==\"\")\nalias[1]=\"changed\"\nassert(result==\"|中|🙂|\"+nul+\"|\")\nassert(a[1]==\"changed\")\n",
+      "source_sha256": "a6bfd682692b2d5142bd70116296d71c1c43074d7dd6f8bde5ef499f986ee345",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "join_unicode_nul_alias",
+      "category": "join_success",
+      "mode": "json",
+      "source": "#42\nlet nul=chr(0)\nlet a=[\"\", \"中\", \"🙂\", nul, \"\"]\nlet alias=a\nlet result=join(\"|\",a)\nassert(result==\"|中|🙂|\"+nul+\"|\")\nassert(join(\"\",a)==\"中🙂\"+nul)\nassert(join(\"x\",[])==\"\")\nassert(join(\"x\",[\"\"])==\"\")\nalias[1]=\"changed\"\nassert(result==\"|中|🙂|\"+nul+\"|\")\nassert(a[1]==\"changed\")\n",
+      "source_sha256": "a6bfd682692b2d5142bd70116296d71c1c43074d7dd6f8bde5ef499f986ee345",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": null,
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 0,
+          "stdout_hex": "7b226f6b223a747275657d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "direct_arity",
+      "category": "error_trace",
+      "mode": "human",
+      "source": "#42\nfn f(a,b)=>a+b\nf(1)\n",
+      "source_sha256": "762a69a7ef138e95deb5c2680a0de9de3c0b59e3b8ec91c33cc4a173b37913a3",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520332c20696e203c6d6f64756c653e0a20202020662831290a202020205e0a547970654572726f723a20e587bde695b0206620e69c9fe5be85203220e4b8aae58f82e695b0efbc8ce5be97e588b020310a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520332c20696e203c6d6f64756c653e0a20202020662831290a202020205e0a547970654572726f723a20e587bde695b0206620e69c9fe5be85203220e4b8aae58f82e695b0efbc8ce5be97e588b020310a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "direct_arity",
+      "category": "error_trace",
+      "mode": "json",
+      "source": "#42\nfn f(a,b)=>a+b\nf(1)\n",
+      "source_sha256": "762a69a7ef138e95deb5c2680a0de9de3c0b59e3b8ec91c33cc4a173b37913a3",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e587bde695b0206620e69c9fe5be85203220e4b8aae58f82e695b0efbc8ce5be97e588b02031222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e587bde695b0206620e69c9fe5be85203220e4b8aae58f82e695b0efbc8ce5be97e588b02031222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "map_arity",
+      "category": "error_trace",
+      "mode": "human",
+      "source": "#42\nfn f(a,b)=>a+b\nmap(f,[1])\n",
+      "source_sha256": "89065cce8b3c896ab718726ed3c6d56558769b6d8a020ca6a4260f8402591b73",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520332c20696e203c6d6f64756c653e0a202020206d617028662c5b315d290a202020205e0a547970654572726f723a20e587bde695b0206620e69c9fe5be85203220e4b8aae58f82e695b0efbc8ce5be97e588b020310a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520332c20696e203c6d6f64756c653e0a202020206d617028662c5b315d290a202020205e0a547970654572726f723a20e587bde695b0206620e69c9fe5be85203220e4b8aae58f82e695b0efbc8ce5be97e588b020310a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "map_arity",
+      "category": "error_trace",
+      "mode": "json",
+      "source": "#42\nfn f(a,b)=>a+b\nmap(f,[1])\n",
+      "source_sha256": "89065cce8b3c896ab718726ed3c6d56558769b6d8a020ca6a4260f8402591b73",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e587bde695b0206620e69c9fe5be85203220e4b8aae58f82e695b0efbc8ce5be97e588b02031222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e587bde695b0206620e69c9fe5be85203220e4b8aae58f82e695b0efbc8ce5be97e588b02031222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "reduce_arity",
+      "category": "error_trace",
+      "mode": "human",
+      "source": "#42\nreduce((x)=>x,0,[1])\n",
+      "source_sha256": "f722cbeedf1b5acb41d53e97226baf1b54401dd3a4de31ed94e1b8ce3b067f09",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a20202020726564756365282878293d3e782c302c5b315d290a202020205e0a547970654572726f723a20e587bde695b0203c666e3e20e69c9fe5be85203120e4b8aae58f82e695b0efbc8ce5be97e588b020320a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a20202020726564756365282878293d3e782c302c5b315d290a202020205e0a547970654572726f723a20e587bde695b0203c666e3e20e69c9fe5be85203120e4b8aae58f82e695b0efbc8ce5be97e588b020320a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "reduce_arity",
+      "category": "error_trace",
+      "mode": "json",
+      "source": "#42\nreduce((x)=>x,0,[1])\n",
+      "source_sha256": "f722cbeedf1b5acb41d53e97226baf1b54401dd3a4de31ed94e1b8ce3b067f09",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e587bde695b0203c666e3e20e69c9fe5be85203120e4b8aae58f82e695b0efbc8ce5be97e588b02032222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e587bde695b0203c666e3e20e69c9fe5be85203120e4b8aae58f82e695b0efbc8ce5be97e588b02032222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "argv_alias_arity",
+      "category": "error_trace",
+      "mode": "human",
+      "source": "#42\nlet saved=argv\nfn f() => saved(1)\nf()\n",
+      "source_sha256": "6f14079f2eb674da4bfc5c5bbb7ed5024749dfc6a2ba8c8c50d75bd976f76f10",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520342c20696e203c6d6f64756c653e0a202020206628290a202020205e0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520332c20696e20660a20202020666e20662829203d3e2073617665642831290a20202020202020202020202020205e0a547970654572726f723a20e587bde695b0206172677620e69c9fe5be85203020e4b8aae58f82e695b0efbc8ce5be97e588b020310a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520342c20696e203c6d6f64756c653e0a202020206628290a202020205e0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520332c20696e20660a20202020666e20662829203d3e2073617665642831290a20202020202020202020202020205e0a547970654572726f723a20e587bde695b0206172677620e69c9fe5be85203020e4b8aae58f82e695b0efbc8ce5be97e588b020310a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "argv_alias_arity",
+      "category": "error_trace",
+      "mode": "json",
+      "source": "#42\nlet saved=argv\nfn f() => saved(1)\nf()\n",
+      "source_sha256": "6f14079f2eb674da4bfc5c5bbb7ed5024749dfc6a2ba8c8c50d75bd976f76f10",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e587bde695b0206172677620e69c9fe5be85203020e4b8aae58f82e695b0efbc8ce5be97e588b02031222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c22636f6c223a31312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a342c2266756e63223a223c6d6f64756c653e227d2c7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c2266756e63223a2266227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e587bde695b0206172677620e69c9fe5be85203020e4b8aae58f82e695b0efbc8ce5be97e588b02031222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c22636f6c223a31312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a342c2266756e63223a223c6d6f64756c653e227d2c7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c2266756e63223a2266227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "argv_hof_arity",
+      "category": "error_trace",
+      "mode": "human",
+      "source": "#42\nmap(argv,[1])\n",
+      "source_sha256": "9a03768035fdfd2a199a4cccdb681e83470d3f692dd011b89da9625ba07c2743",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206d617028617267762c5b315d290a202020205e0a547970654572726f723a20e587bde695b0206172677620e69c9fe5be85203020e4b8aae58f82e695b0efbc8ce5be97e588b020310a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206d617028617267762c5b315d290a202020205e0a547970654572726f723a20e587bde695b0206172677620e69c9fe5be85203020e4b8aae58f82e695b0efbc8ce5be97e588b020310a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "argv_hof_arity",
+      "category": "error_trace",
+      "mode": "json",
+      "source": "#42\nmap(argv,[1])\n",
+      "source_sha256": "9a03768035fdfd2a199a4cccdb681e83470d3f692dd011b89da9625ba07c2743",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e587bde695b0206172677620e69c9fe5be85203020e4b8aae58f82e695b0efbc8ce5be97e588b02031222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e587bde695b0206172677620e69c9fe5be85203020e4b8aae58f82e695b0efbc8ce5be97e588b02031222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "not_function",
+      "category": "error_trace",
+      "mode": "human",
+      "source": "#42\nmap(1,[1])\n",
+      "source_sha256": "4bb236a6a5ad58aad993804503459a072cd97a45f84fd81ddf89ee68ce1d00c5",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206d617028312c5b315d290a202020205e0a547970654572726f723a20e4b88de58fafe8b083e794a8efbc9a696e7420e4b88de698afe587bde695b00a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206d617028312c5b315d290a202020205e0a547970654572726f723a20e4b88de58fafe8b083e794a8efbc9a696e7420e4b88de698afe587bde695b00a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "not_function",
+      "category": "error_trace",
+      "mode": "json",
+      "source": "#42\nmap(1,[1])\n",
+      "source_sha256": "4bb236a6a5ad58aad993804503459a072cd97a45f84fd81ddf89ee68ce1d00c5",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e4b88de58fafe8b083e794a8efbc9a696e7420e4b88de698afe587bde695b0222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e4b88de58fafe8b083e794a8efbc9a696e7420e4b88de698afe587bde695b0222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "empty_min",
+      "category": "error_trace",
+      "mode": "human",
+      "source": "#42\nminBy((x)=>x,[])\n",
+      "source_sha256": "e517fcadafccb2bcf94164665a1ea649bff8e03b0b3ee0a014e913fe773ab419",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "ValueError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206d696e4279282878293d3e782c5b5d290a202020205e0a56616c75654572726f723a20e7a9bae695b0e7bb84e6b2a1e69c89e69e81e580bcefbc886d696e4279efbc890a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206d696e4279282878293d3e782c5b5d290a202020205e0a56616c75654572726f723a20e7a9bae695b0e7bb84e6b2a1e69c89e69e81e580bcefbc886d696e4279efbc890a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "empty_min",
+      "category": "error_trace",
+      "mode": "json",
+      "source": "#42\nminBy((x)=>x,[])\n",
+      "source_sha256": "e517fcadafccb2bcf94164665a1ea649bff8e03b0b3ee0a014e913fe773ab419",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "ValueError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a2256616c75654572726f72222c226d657373616765223a22e7a9bae695b0e7bb84e6b2a1e69c89e69e81e580bcefbc886d696e4279efbc89222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a2256616c75654572726f72222c226d657373616765223a22e7a9bae695b0e7bb84e6b2a1e69c89e69e81e580bcefbc886d696e4279efbc89222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "empty_max",
+      "category": "error_trace",
+      "mode": "human",
+      "source": "#42\nmaxBy((x)=>x,[])\n",
+      "source_sha256": "3168b63bf1d6aa9794890a2465c4a2171f5ce726255f216f6549cab2b790428e",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "ValueError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206d61784279282878293d3e782c5b5d290a202020205e0a56616c75654572726f723a20e7a9bae695b0e7bb84e6b2a1e69c89e69e81e580bcefbc886d61784279efbc890a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206d61784279282878293d3e782c5b5d290a202020205e0a56616c75654572726f723a20e7a9bae695b0e7bb84e6b2a1e69c89e69e81e580bcefbc886d61784279efbc890a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "empty_max",
+      "category": "error_trace",
+      "mode": "json",
+      "source": "#42\nmaxBy((x)=>x,[])\n",
+      "source_sha256": "3168b63bf1d6aa9794890a2465c4a2171f5ce726255f216f6549cab2b790428e",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "ValueError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a2256616c75654572726f72222c226d657373616765223a22e7a9bae695b0e7bb84e6b2a1e69c89e69e81e580bcefbc886d61784279efbc89222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a2256616c75654572726f72222c226d657373616765223a22e7a9bae695b0e7bb84e6b2a1e69c89e69e81e580bcefbc886d61784279efbc89222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "nested_body_trace",
+      "category": "error_trace",
+      "mode": "human",
+      "source": "#42\nfn inner(x)=>x/0\nfn middle(xs)=>map(inner,xs)\nfn outer()=>middle([3])\nouter()\n",
+      "source_sha256": "27fa76fcc71bc4570877fc7b33756b2ddc31213a344e3a9e2bab6a1cc3df4f4d",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "ZeroDivisionError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520352c20696e203c6d6f64756c653e0a202020206f7574657228290a202020205e0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520342c20696e206f757465720a20202020666e206f7574657228293d3e6d6964646c65285b335d290a202020202020202020202020202020205e0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520332c20696e206d6964646c650a20202020666e206d6964646c65287873293d3e6d617028696e6e65722c7873290a202020202020202020202020202020202020205e0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e20696e6e65720a20202020666e20696e6e65722878293d3e782f300a20202020202020202020202020202020205e0a5a65726f4469766973696f6e4572726f723a20e999a4e4bba5e99bb60a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520352c20696e203c6d6f64756c653e0a202020206f7574657228290a202020205e0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520342c20696e206f757465720a20202020666e206f7574657228293d3e6d6964646c65285b335d290a202020202020202020202020202020205e0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520332c20696e206d6964646c650a20202020666e206d6964646c65287873293d3e6d617028696e6e65722c7873290a202020202020202020202020202020202020205e0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e20696e6e65720a20202020666e20696e6e65722878293d3e782f300a20202020202020202020202020202020205e0a5a65726f4469766973696f6e4572726f723a20e999a4e4bba5e99bb60a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "nested_body_trace",
+      "category": "error_trace",
+      "mode": "json",
+      "source": "#42\nfn inner(x)=>x/0\nfn middle(xs)=>map(inner,xs)\nfn outer()=>middle([3])\nouter()\n",
+      "source_sha256": "27fa76fcc71bc4570877fc7b33756b2ddc31213a344e3a9e2bab6a1cc3df4f4d",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "ZeroDivisionError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a225a65726f4469766973696f6e4572726f72222c226d657373616765223a22e999a4e4bba5e99bb6222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a31342c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a352c2266756e63223a223c6d6f64756c653e227d2c7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a342c2266756e63223a226f75746572227d2c7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c2266756e63223a226d6964646c65227d2c7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a22696e6e6572227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a225a65726f4469766973696f6e4572726f72222c226d657373616765223a22e999a4e4bba5e99bb6222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a31342c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a352c2266756e63223a223c6d6f64756c653e227d2c7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a342c2266756e63223a226f75746572227d2c7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a332c2266756e63223a226d6964646c65227d2c7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a22696e6e6572227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "bad_bool",
+      "category": "error_trace",
+      "mode": "human",
+      "source": "#42\nfilter((x)=>x,[1])\n",
+      "source_sha256": "60797fef26d89fa46a77f1c4c9f0f108f5b5daef9386b726fe2fc6937f955226",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a2020202066696c746572282878293d3e782c5b315d290a202020205e0a547970654572726f723a20e69da1e4bbb6e5bf85e9a1bbe698af20626f6f6cefbc8ce5be97e588b020696e740a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a2020202066696c746572282878293d3e782c5b315d290a202020205e0a547970654572726f723a20e69da1e4bbb6e5bf85e9a1bbe698af20626f6f6cefbc8ce5be97e588b020696e740a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "bad_bool",
+      "category": "error_trace",
+      "mode": "json",
+      "source": "#42\nfilter((x)=>x,[1])\n",
+      "source_sha256": "60797fef26d89fa46a77f1c4c9f0f108f5b5daef9386b726fe2fc6937f955226",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e69da1e4bbb6e5bf85e9a1bbe698af20626f6f6cefbc8ce5be97e588b020696e74222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e69da1e4bbb6e5bf85e9a1bbe698af20626f6f6cefbc8ce5be97e588b020696e74222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "join_sep_first",
+      "category": "join_error",
+      "mode": "human",
+      "source": "#42\njoin(1,nil)\n",
+      "source_sha256": "8d89e48702a1a26592221e989d4a2586b8d4e4652835cb7fc82727fa09adf704",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206a6f696e28312c6e696c290a202020205e0a547970654572726f723a20e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c8120696e7420e4b88e20737472696e670a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206a6f696e28312c6e696c290a202020205e0a547970654572726f723a20e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c8120696e7420e4b88e20737472696e670a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "join_sep_first",
+      "category": "join_error",
+      "mode": "json",
+      "source": "#42\njoin(1,nil)\n",
+      "source_sha256": "8d89e48702a1a26592221e989d4a2586b8d4e4652835cb7fc82727fa09adf704",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c8120696e7420e4b88e20737472696e67222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c8120696e7420e4b88e20737472696e67222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "join_array_second",
+      "category": "join_error",
+      "mode": "human",
+      "source": "#42\njoin(\",\",nil)\n",
+      "source_sha256": "993734cef846eb58bdd1eccabff4eb3f5ce5983b15d86548954b6aca9f520ca4",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206a6f696e28222c222c6e696c290a202020205e0a547970654572726f723a20e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c81206e696c20e4b88e2061727261790a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206a6f696e28222c222c6e696c290a202020205e0a547970654572726f723a20e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c81206e696c20e4b88e2061727261790a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "join_array_second",
+      "category": "join_error",
+      "mode": "json",
+      "source": "#42\njoin(\",\",nil)\n",
+      "source_sha256": "993734cef846eb58bdd1eccabff4eb3f5ce5983b15d86548954b6aca9f520ca4",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c81206e696c20e4b88e206172726179222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c81206e696c20e4b88e206172726179222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "join_leftmost_type",
+      "category": "join_error",
+      "mode": "human",
+      "source": "#42\njoin(\",\",[\"a\",1,true])\n",
+      "source_sha256": "e341c28c2567d6529f381701dddc4904fe2834de0c9c200c51adfcb17ca2e0c9",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206a6f696e28222c222c5b2261222c312c747275655d290a202020205e0a547970654572726f723a20e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c8120696e7420e4b88e20737472696e670a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206a6f696e28222c222c5b2261222c312c747275655d290a202020205e0a547970654572726f723a20e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c8120696e7420e4b88e20737472696e670a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "join_leftmost_type",
+      "category": "join_error",
+      "mode": "json",
+      "source": "#42\njoin(\",\",[\"a\",1,true])\n",
+      "source_sha256": "e341c28c2567d6529f381701dddc4904fe2834de0c9c200c51adfcb17ca2e0c9",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c8120696e7420e4b88e20737472696e67222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c8120696e7420e4b88e20737472696e67222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "join_self_cycle",
+      "category": "join_error",
+      "mode": "human",
+      "source": "#42\nlet x=[nil]\nx[0]=x\njoin(\",\",x)\n",
+      "source_sha256": "731ef6290a5d4bc9b85f7ef2c9c3e4115bbbd94c98d46668659447225707fad2",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520342c20696e203c6d6f64756c653e0a202020206a6f696e28222c222c78290a202020205e0a547970654572726f723a20e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c8120617272617920e4b88e20737472696e670a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520342c20696e203c6d6f64756c653e0a202020206a6f696e28222c222c78290a202020205e0a547970654572726f723a20e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c8120617272617920e4b88e20737472696e670a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "join_self_cycle",
+      "category": "join_error",
+      "mode": "json",
+      "source": "#42\nlet x=[nil]\nx[0]=x\njoin(\",\",x)\n",
+      "source_sha256": "731ef6290a5d4bc9b85f7ef2c9c3e4115bbbd94c98d46668659447225707fad2",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c8120617272617920e4b88e20737472696e67222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a342c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a342c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c8120617272617920e4b88e20737472696e67222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a342c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a342c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "join_struct_method",
+      "category": "join_error",
+      "mode": "human",
+      "source": "#42\njoin(\"/\",[{f:()=>1}])\n",
+      "source_sha256": "1d0931f406ad600d37a048ac17ef38444476e10469a91b98735e49a72becc26c",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206a6f696e28222f222c5b7b663a28293d3e317d5d290a202020205e0a547970654572726f723a20e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c812073747275637420e4b88e20737472696e670a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520322c20696e203c6d6f64756c653e0a202020206a6f696e28222f222c5b7b663a28293d3e317d5d290a202020205e0a547970654572726f723a20e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c812073747275637420e4b88e20737472696e670a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "join_struct_method",
+      "category": "join_error",
+      "mode": "json",
+      "source": "#42\njoin(\"/\",[{f:()=>1}])\n",
+      "source_sha256": "1d0931f406ad600d37a048ac17ef38444476e10469a91b98735e49a72becc26c",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c812073747275637420e4b88e20737472696e67222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e8bf90e7ae97e7aca620276a6f696e2720e4b88de694afe68c812073747275637420e4b88e20737472696e67222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": ""
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "argument_effect_before_arity",
+      "category": "error_trace",
+      "mode": "human",
+      "source": "#42\nfn mark(x) {eprint(x)\n x}\nfn f(a)=>a\nf(mark(1),mark(2))\n",
+      "source_sha256": "b234af7189dbd727380f73abe52c129989eb5af33b316ea66a1d79849b083998",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "310a320a54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520352c20696e203c6d6f64756c653e0a2020202066286d61726b2831292c6d61726b283229290a202020205e0a547970654572726f723a20e587bde695b0206620e69c9fe5be85203120e4b8aae58f82e695b0efbc8ce5be97e588b020320a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "",
+          "stderr_hex": "310a320a54726163656261636b20286d6f737420726563656e742063616c6c206c617374293a0a202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431332d76657269666965725c73616d652d696e7075742e6c667a222c206c696e6520352c20696e203c6d6f64756c653e0a2020202066286d61726b2831292c6d61726b283229290a202020205e0a547970654572726f723a20e587bde695b0206620e69c9fe5be85203120e4b8aae58f82e695b0efbc8ce5be97e588b020320a"
+        }
+      ],
+      "identical": true
+    },
+    {
+      "name": "argument_effect_before_arity",
+      "category": "error_trace",
+      "mode": "json",
+      "source": "#42\nfn mark(x) {eprint(x)\n x}\nfn f(a)=>a\nf(mark(1),mark(2))\n",
+      "source_sha256": "b234af7189dbd727380f73abe52c129989eb5af33b316ea66a1d79849b083998",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T13-verifier\\same-input.lfz",
+        "--",
+        "one",
+        "中文",
+        ""
+      ],
+      "expected_error": "TypeError",
+      "outputs": [
+        {
+          "label": "t12",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e587bde695b0206620e69c9fe5be85203120e4b8aae58f82e695b0efbc8ce5be97e588b02032222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a352c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a352c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": "310a320a"
+        },
+        {
+          "label": "t13",
+          "exit": 2,
+          "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22547970654572726f72222c226d657373616765223a22e587bde695b0206620e69c9fe5be85203120e4b8aae58f82e695b0efbc8ce5be97e588b02032222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a352c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431332d76657269666965725c5c73616d652d696e7075742e6c667a222c226c696e65223a352c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+          "stderr_hex": "310a320a"
+        }
+      ],
+      "identical": true
+    }
+  ]
+}

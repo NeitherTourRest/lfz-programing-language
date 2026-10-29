@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-27",
+  "method": "execute six exact release test harnesses named by author cargo-test log; no compilation; integration harnesses use baked release executable",
+  "passed": 530,
+  "groups": [
+    {
+      "binary": "target/release/deps/lfz-63397fd2d9985014.exe",
+      "binary_sha256": "436efd6cdbe90b1213411a9bf9b0ecb8116e88f82023dad8a7bbe644c63a4221",
+      "passed": 412,
+      "exit": 0,
+      "raw_output": "docs/reports/T13-independent-evidence/unit-harness-1.txt",
+      "output_sha256": "c8df51051398084f53629021522f27b1c6beb7b82bc7fb5cd0b37aa62ad765a5"
+    },
+    {
+      "binary": "target/release/deps/lfz-243aeb8f5c3370f1.exe",
+      "binary_sha256": "61409b3a11f34f4c6d3301f996783d6995dcdfe56f2dc0b4b9aa74a3bf82759b",
+      "passed": 48,
+      "exit": 0,
+      "raw_output": "docs/reports/T13-independent-evidence/unit-harness-2.txt",
+      "output_sha256": "990f914d309380100f32380d0c70c88d39b9e76a7fa695faa46031f721e99f82"
+    },
+    {
+      "binary": "target/release/deps/cli-d19dbfa7dd3f9d73.exe",
+      "binary_sha256": "deab9e61be169f7e63bf3f9ce21d0ae4cf9ac164dd061e922e5a8c1a44f9aad3",
+      "passed": 28,
+      "exit": 0,
+      "raw_output": "docs/reports/T13-independent-evidence/unit-harness-3.txt",
+      "output_sha256": "a92d8e950bd019eeb440cf49426220417788c292aa332fd1a7ff4f28f356ba5f"
+    },
+    {
+      "binary": "target/release/deps/cli_t12-35b857587ead196a.exe",
+      "binary_sha256": "c0d0bd44abbc25d94df2a9f8b512f07898d730d8e43b13119893c8ea3091c5a4",
+      "passed": 12,
+      "exit": 0,
+      "raw_output": "docs/reports/T13-independent-evidence/unit-harness-4.txt",
+      "output_sha256": "cb36ba77b2d79ca90ed60de100fddea38969260249152d6971a70cff80feb7e7"
+    },
+    {
+      "binary": "target/release/deps/test_runner-a9d3da191eeb2958.exe",
+      "binary_sha256": "82480ae40e2c2af36d9fd24340d253f1bc37337ba3d37c7c0516ea9d092e3631",
+      "passed": 15,
+      "exit": 0,
+      "raw_output": "docs/reports/T13-independent-evidence/unit-harness-5.txt",
+      "output_sha256": "5c933fed2a8bffdd4204063d60a9c500cd4b19951836842b34b916e7a752b842"
+    },
+    {
+      "binary": "target/release/deps/unit-ae562ae83f03ad63.exe",
+      "binary_sha256": "0c3e986366c7f8b97dfb5c9b3a7655a334ebdab73d3497dc5efa843ca7e9d798",
+      "passed": 15,
+      "exit": 0,
+      "raw_output": "docs/reports/T13-independent-evidence/unit-harness-6.txt",
+      "output_sha256": "654cbdc241961f3c67b4a6a489ac7598c53f1c560d8af1beb992f690e62789f2"
+    }
+  ]
+}

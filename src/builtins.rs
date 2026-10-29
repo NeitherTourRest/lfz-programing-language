@@ -2468,3 +2468,20 @@ fn b_json_parse(args: &[Value], span: Span) -> R<Value> {
 fn b_json_stringify(args: &[Value], span: Span) -> R<Value> {
     crate::json_codec::stringify(&args[0], span).map(Value::string)
 }
+
+#[cfg(test)]
+mod t13_join_cycle_tests {
+    use super::*;
+
+    #[test]
+    fn t13_join_non_string_self_cycle_reports_type_without_reborrowing() {
+        let cyclic = Value::array(Vec::new());
+        cyclic.as_array().unwrap().borrow_mut().push(cyclic.clone());
+        let span = Span::new(11, 5);
+        let error = call("join", &[Value::string(","), cyclic.clone()], span).unwrap_err();
+        assert_eq!(error.class_name(), "TypeError");
+        assert!(error.message().contains("array"));
+        assert_eq!(error.span(), Some(span));
+        cyclic.as_array().unwrap().borrow_mut().clear();
+    }
+}

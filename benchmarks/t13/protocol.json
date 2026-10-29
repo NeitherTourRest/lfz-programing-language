@@ -1,0 +1,233 @@
+{
+  "protocol": "T13-single-candidate-dual-baseline-v1",
+  "frozen_on_client_date": "2026-10-27",
+  "status": "frozen before candidate timing; no timing performed during preparation",
+  "whole_process": true,
+  "clock": "perf_counter_ns",
+  "warmup_runs_per_label_case": 2,
+  "formal_runs_per_label_case": 7,
+  "timeout_seconds": 15,
+  "settle_after_copy_seconds": 5,
+  "affinity": "default; no pinned CPU; inherited mask recorded",
+  "execution_path": "Temp/t13-perf/subject.exe",
+  "case_order": "original 19; label blocks rotate old/t12/new by case index mod 3",
+  "label_order": [
+    "old",
+    "t12",
+    "new"
+  ],
+  "new_capabilities": "same 9 T12 JSON/CLI cases; t12/new order alternates by case; 20 JSON operations per process",
+  "anomaly_policy": "one complete window for one changed candidate; retain every value; fail/timeout/hash/oracle mismatch aborts with partial output; no automatic retry and no replacement of slow samples",
+  "decision": "new <= original fixed line => PASS; otherwise contemporaneous old also over => ENVIRONMENT_INDETERMINATE; otherwise FAIL; original struct8 >=30% reduction goal remains; both paired ratios always reported",
+  "limitations": "cannot guarantee background OS quiet; total includes startup/parse/IO/eval; CPU can quantize to zero; no peak RSS; JSON paired ratios descriptive and cannot establish pure throughput",
+  "baselines": {
+    "old": {
+      "path": "Temp/t12-perf/lfz-before.exe",
+      "sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab"
+    },
+    "t12": {
+      "path": "Temp/t13-perf/lfz-t12.exe",
+      "sha256": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f"
+    }
+  },
+  "original_baseline_files": {
+    "benchmarks/t12/results/before.json": "ee650be02706381021f191206f22d233c567514652008884b8a6d56d97f9d396",
+    "benchmarks/t12/results/before-small.json": "b85707fea800b5b2bd1e17d4791d7c2a0f594e21929555fb1aad3d8debd334d3"
+  },
+  "supporting_scripts": {
+    "benchmarks/t12/process_measure.py": "ce7eacd78a75e9bbf87cb829e9b206cb946690edb9b96270c08c352012a01bf4",
+    "benchmarks/t13/run.py": "667627e37a90b6da52e36f712118ece76b688453b6fb50a3e06604493134cc07"
+  },
+  "cases": [
+    {
+      "name": "noop",
+      "n": 0,
+      "source": "#42\nprint(\"RESULT ok=1\")\n",
+      "source_sha256": "040084ccf6c90026e962c8c46e59fe065bf9905fe90db6da64c9a4b488883401",
+      "stdin": "",
+      "expected_stdout": "RESULT ok=1\n",
+      "original_before_ms": 11.307,
+      "original_fixed_limit_ms": 16.307000000000002
+    },
+    {
+      "name": "numeric_loop",
+      "n": 10000,
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "stdin": "10000\n",
+      "expected_stdout": "RESULT total=50005000\n",
+      "original_before_ms": 12.9676,
+      "original_fixed_limit_ms": 17.967599999999997
+    },
+    {
+      "name": "numeric_loop",
+      "n": 100000,
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "stdin": "100000\n",
+      "expected_stdout": "RESULT total=5000050000\n",
+      "original_before_ms": 32.3154,
+      "original_fixed_limit_ms": 38.778479999999995
+    },
+    {
+      "name": "numeric_loop",
+      "n": 500000,
+      "source": "#42\n// numeric_loop: sum of integers 1..N using an explicit while loop.\n// No builtin aggregation is used (no sum()) -- this measures loop + arithmetic.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar i = 1\nvar total = 0\nwhile i <= n {\n    total += i\n    i += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "70ae0bb2a17ff1b6333046d637fe16713d053d9703f6033e83d6baa142d62fda",
+      "stdin": "500000\n",
+      "expected_stdout": "RESULT total=125000250000\n",
+      "original_before_ms": 109.5807,
+      "original_fixed_limit_ms": 131.49684
+    },
+    {
+      "name": "array_builtins",
+      "n": 1000,
+      "source": "#42\n// array_builtins: range -> map -> filter -> sort -> reduce chain.\n// LFZ side uses the native higher-order builtins; the Python side uses the\n// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nlet total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "c953291926d34db36553c622326c516f3e067f3242ab6331054860cf1bdcecc7",
+      "stdin": "1000\n",
+      "expected_stdout": "RESULT total=249500\n",
+      "original_before_ms": 12.2102,
+      "original_fixed_limit_ms": 17.2102
+    },
+    {
+      "name": "array_builtins",
+      "n": 10000,
+      "source": "#42\n// array_builtins: range -> map -> filter -> sort -> reduce chain.\n// LFZ side uses the native higher-order builtins; the Python side uses the\n// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nlet total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "c953291926d34db36553c622326c516f3e067f3242ab6331054860cf1bdcecc7",
+      "stdin": "10000\n",
+      "expected_stdout": "RESULT total=24995000\n",
+      "original_before_ms": 17.7717,
+      "original_fixed_limit_ms": 22.7717
+    },
+    {
+      "name": "array_builtins",
+      "n": 50000,
+      "source": "#42\n// array_builtins: range -> map -> filter -> sort -> reduce chain.\n// LFZ side uses the native higher-order builtins; the Python side uses the\n// equivalent native builtins (map/filter/sorted/functools.reduce) -- same algorithm.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nlet total = range(n) |> map((x) => x * 7 % n) |> filter((x) => x % 2 == 0) |> sort() |> reduce((a, b) => a + b, 0)\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "c953291926d34db36553c622326c516f3e067f3242ab6331054860cf1bdcecc7",
+      "stdin": "50000\n",
+      "expected_stdout": "RESULT total=624975000\n",
+      "original_before_ms": 43.5882,
+      "original_fixed_limit_ms": 52.305839999999996
+    },
+    {
+      "name": "struct_ops",
+      "n": 2000,
+      "source": "#42\n// struct_ops: build a struct/dict with N dynamic string keys, then read them\n// back using keys() and sum the values. Measures struct field write/read + keys().\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar s = {}\nvar i = 0\nwhile i < n {\n    s[\"k${i}\"] = i * i\n    i += 1\n}\nvar total = 0\nfor k in keys(s) {\n    total += s[k]\n}\nprint(\"RESULT keys=${len(s)} total=${total}\")\n",
+      "source_sha256": "0866ba172ee83f334a6057e5a5a6ee90ba1e960b7e09db95cb34ef244245ba0e",
+      "stdin": "2000\n",
+      "expected_stdout": "RESULT keys=2000 total=2664667000\n",
+      "original_before_ms": 17.4452,
+      "original_fixed_limit_ms": 22.4452
+    },
+    {
+      "name": "struct_ops",
+      "n": 4000,
+      "source": "#42\n// struct_ops: build a struct/dict with N dynamic string keys, then read them\n// back using keys() and sum the values. Measures struct field write/read + keys().\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar s = {}\nvar i = 0\nwhile i < n {\n    s[\"k${i}\"] = i * i\n    i += 1\n}\nvar total = 0\nfor k in keys(s) {\n    total += s[k]\n}\nprint(\"RESULT keys=${len(s)} total=${total}\")\n",
+      "source_sha256": "0866ba172ee83f334a6057e5a5a6ee90ba1e960b7e09db95cb34ef244245ba0e",
+      "stdin": "4000\n",
+      "expected_stdout": "RESULT keys=4000 total=21325334000\n",
+      "original_before_ms": 31.5587,
+      "original_fixed_limit_ms": 37.87044
+    },
+    {
+      "name": "struct_ops",
+      "n": 8000,
+      "source": "#42\n// struct_ops: build a struct/dict with N dynamic string keys, then read them\n// back using keys() and sum the values. Measures struct field write/read + keys().\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar s = {}\nvar i = 0\nwhile i < n {\n    s[\"k${i}\"] = i * i\n    i += 1\n}\nvar total = 0\nfor k in keys(s) {\n    total += s[k]\n}\nprint(\"RESULT keys=${len(s)} total=${total}\")\n",
+      "source_sha256": "0866ba172ee83f334a6057e5a5a6ee90ba1e960b7e09db95cb34ef244245ba0e",
+      "stdin": "8000\n",
+      "expected_stdout": "RESULT keys=8000 total=170634668000\n",
+      "original_before_ms": 89.4598,
+      "original_fixed_limit_ms": 107.35176
+    },
+    {
+      "name": "string_ops",
+      "n": 2000,
+      "source": "#42\n// string_ops: build N strings with interpolation, trim/map them, join, replace,\n// split, repeat. Measures string building + the string builtins.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar parts = []\nvar i = 0\nwhile i < n {\n    parts = push(\"  item${i}  \", parts)\n    i += 1\n}\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet renamed = replace(\"item\", \"ITEM\", joined)\nlet words = split(\",\", renamed)\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "f8700d76d0eff2006d70fd71e118306d36a91247a70431480240a835cf403894",
+      "stdin": "2000\n",
+      "expected_stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+      "original_before_ms": 23.9022,
+      "original_fixed_limit_ms": 28.9022
+    },
+    {
+      "name": "string_ops",
+      "n": 4000,
+      "source": "#42\n// string_ops: build N strings with interpolation, trim/map them, join, replace,\n// split, repeat. Measures string building + the string builtins.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar parts = []\nvar i = 0\nwhile i < n {\n    parts = push(\"  item${i}  \", parts)\n    i += 1\n}\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet renamed = replace(\"item\", \"ITEM\", joined)\nlet words = split(\",\", renamed)\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "f8700d76d0eff2006d70fd71e118306d36a91247a70431480240a835cf403894",
+      "stdin": "4000\n",
+      "expected_stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+      "original_before_ms": 84.9204,
+      "original_fixed_limit_ms": 101.90447999999999
+    },
+    {
+      "name": "string_ops",
+      "n": 8000,
+      "source": "#42\n// string_ops: build N strings with interpolation, trim/map them, join, replace,\n// split, repeat. Measures string building + the string builtins.\n// Usage: the size N is read from stdin (one integer line).\nlet n = int(input())\nvar parts = []\nvar i = 0\nwhile i < n {\n    parts = push(\"  item${i}  \", parts)\n    i += 1\n}\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet renamed = replace(\"item\", \"ITEM\", joined)\nlet words = split(\",\", renamed)\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "f8700d76d0eff2006d70fd71e118306d36a91247a70431480240a835cf403894",
+      "stdin": "8000\n",
+      "expected_stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+      "original_before_ms": 196.9606,
+      "original_fixed_limit_ms": 236.35271999999998
+    },
+    {
+      "name": "string_map",
+      "n": 2000,
+      "source": "#42\nlet n = int(input())\nlet parts = range(n) |> map((i) => \"  item${i}  \")\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet words = split(\",\", replace(\"item\", \"ITEM\", joined))\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "36b2d37c68179f010b962fda81b974e3e104d65b2f64f47775e80e5e06893b0f",
+      "stdin": "2000\n",
+      "expected_stdout": "RESULT chars=16889 words=2000 tag=ababab\n",
+      "original_before_ms": 12.5219,
+      "original_fixed_limit_ms": 17.521900000000002
+    },
+    {
+      "name": "string_map",
+      "n": 4000,
+      "source": "#42\nlet n = int(input())\nlet parts = range(n) |> map((i) => \"  item${i}  \")\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet words = split(\",\", replace(\"item\", \"ITEM\", joined))\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "36b2d37c68179f010b962fda81b974e3e104d65b2f64f47775e80e5e06893b0f",
+      "stdin": "4000\n",
+      "expected_stdout": "RESULT chars=34889 words=4000 tag=ababab\n",
+      "original_before_ms": 18.0626,
+      "original_fixed_limit_ms": 23.0626
+    },
+    {
+      "name": "string_map",
+      "n": 8000,
+      "source": "#42\nlet n = int(input())\nlet parts = range(n) |> map((i) => \"  item${i}  \")\nlet cleaned = parts |> map((s) => trim(s))\nlet joined = join(\",\", cleaned)\nlet words = split(\",\", replace(\"item\", \"ITEM\", joined))\nlet tag = repeat(3, \"ab\")\nprint(\"RESULT chars=${len(joined)} words=${len(words)} tag=${tag}\")\n",
+      "source_sha256": "36b2d37c68179f010b962fda81b974e3e104d65b2f64f47775e80e5e06893b0f",
+      "stdin": "8000\n",
+      "expected_stdout": "RESULT chars=70889 words=8000 tag=ababab\n",
+      "original_before_ms": 17.5214,
+      "original_fixed_limit_ms": 22.5214
+    },
+    {
+      "name": "struct_small",
+      "n": 4,
+      "source": "#42\nlet n = int(input())\nvar total = 0\nvar j = 0\nwhile j < 1000 {\n var s = {}\n var i = 0\n while i < n { s[\"k${i}\"] = i * i\n i += 1 }\n for k in keys(s) { total += s[k] }\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "0e97d7f9b0733f36c90b5d3f786c302408741577870e370f8771660f7aaa4293",
+      "stdin": "4\n",
+      "expected_stdout": "RESULT total=14000\n",
+      "original_before_ms": 13.7462,
+      "original_fixed_limit_ms": 18.7462
+    },
+    {
+      "name": "struct_small",
+      "n": 16,
+      "source": "#42\nlet n = int(input())\nvar total = 0\nvar j = 0\nwhile j < 1000 {\n var s = {}\n var i = 0\n while i < n { s[\"k${i}\"] = i * i\n i += 1 }\n for k in keys(s) { total += s[k] }\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "0e97d7f9b0733f36c90b5d3f786c302408741577870e370f8771660f7aaa4293",
+      "stdin": "16\n",
+      "expected_stdout": "RESULT total=1240000\n",
+      "original_before_ms": 28.8616,
+      "original_fixed_limit_ms": 34.633919999999996
+    },
+    {
+      "name": "struct_small",
+      "n": 64,
+      "source": "#42\nlet n = int(input())\nvar total = 0\nvar j = 0\nwhile j < 1000 {\n var s = {}\n var i = 0\n while i < n { s[\"k${i}\"] = i * i\n i += 1 }\n for k in keys(s) { total += s[k] }\n j += 1\n}\nprint(\"RESULT total=${total}\")\n",
+      "source_sha256": "0e97d7f9b0733f36c90b5d3f786c302408741577870e370f8771660f7aaa4293",
+      "stdin": "64\n",
+      "expected_stdout": "RESULT total=85344000\n",
+      "original_before_ms": 65.2589,
+      "original_fixed_limit_ms": 78.31067999999999
+    }
+  ]
+}

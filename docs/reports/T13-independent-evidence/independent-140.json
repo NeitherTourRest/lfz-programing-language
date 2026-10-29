@@ -1,0 +1,2367 @@
+{
+  "date": "2026-10-25",
+  "binary_sha256": "9cda0c6fd5d85178335e8b758a843fc5f66574826bab4a80f2418a318e171cf9",
+  "seed": 42261025,
+  "passed": 140,
+  "cases": [
+    {
+      "name": "diff_0",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": "",
+      "input_json": "0",
+      "independent_expected": 0
+    },
+    {
+      "name": "diff_1",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "input_json": "1",
+      "independent_expected": 1
+    },
+    {
+      "name": "diff_2",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "-1\n",
+      "stderr": "",
+      "input_json": "-1",
+      "independent_expected": -1
+    },
+    {
+      "name": "diff_3",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "-9223372036854775808\n",
+      "stderr": "",
+      "input_json": "-9223372036854775808",
+      "independent_expected": -9223372036854775808
+    },
+    {
+      "name": "diff_4",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "9223372036854775807\n",
+      "stderr": "",
+      "input_json": "9223372036854775807",
+      "independent_expected": 9223372036854775807
+    },
+    {
+      "name": "diff_5",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "9007199254740993\n",
+      "stderr": "",
+      "input_json": "9007199254740993",
+      "independent_expected": 9007199254740993
+    },
+    {
+      "name": "diff_6",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "-9007199254740993\n",
+      "stderr": "",
+      "input_json": "-9007199254740993",
+      "independent_expected": -9007199254740993
+    },
+    {
+      "name": "diff_7",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "-0.0\n",
+      "stderr": "",
+      "input_json": "-0.0",
+      "independent_expected": -0.0
+    },
+    {
+      "name": "diff_8",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "0.0\n",
+      "stderr": "",
+      "input_json": "0.0",
+      "independent_expected": 0.0
+    },
+    {
+      "name": "diff_9",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "1.5\n",
+      "stderr": "",
+      "input_json": "1.5",
+      "independent_expected": 1.5
+    },
+    {
+      "name": "diff_10",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\n",
+      "stderr": "",
+      "input_json": "1e-300",
+      "independent_expected": 1e-300
+    },
+    {
+      "name": "diff_11",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0\n",
+      "stderr": "",
+      "input_json": "-1e+100",
+      "independent_expected": -1e+100
+    },
+    {
+      "name": "diff_12",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005\n",
+      "stderr": "",
+      "input_json": "5e-324",
+      "independent_expected": 5e-324
+    },
+    {
+      "name": "diff_13",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0\n",
+      "stderr": "",
+      "input_json": "1.7976931348623157e+308",
+      "independent_expected": 1.7976931348623157e+308
+    },
+    {
+      "name": "diff_14",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"\"\n",
+      "stderr": "",
+      "input_json": "\"\"",
+      "independent_expected": ""
+    },
+    {
+      "name": "diff_15",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"${x}\"\n",
+      "stderr": "",
+      "input_json": "\"${x}\"",
+      "independent_expected": "${x}"
+    },
+    {
+      "name": "diff_16",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"中文🙂\"\n",
+      "stderr": "",
+      "input_json": "\"\\u4e2d\\u6587\\ud83d\\ude42\"",
+      "independent_expected": "中文🙂"
+    },
+    {
+      "name": "diff_17",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"a\\u0000b\"\n",
+      "stderr": "",
+      "input_json": "\"a\\u0000b\"",
+      "independent_expected": "a\u0000b"
+    },
+    {
+      "name": "diff_18",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"\\b\\f\\n\\r\\t\"\n",
+      "stderr": "",
+      "input_json": "\"\\b\\f\\n\\r\\t\"",
+      "independent_expected": "\b\f\n\r\t"
+    },
+    {
+      "name": "diff_19",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"/\\\\\\\"\"\n",
+      "stderr": "",
+      "input_json": "\"/\\\\\\\"\"",
+      "independent_expected": "/\\\""
+    },
+    {
+      "name": "diff_20",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\" \"\n",
+      "stderr": "",
+      "input_json": "\"\\u2028\"",
+      "independent_expected": " "
+    },
+    {
+      "name": "diff_21",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"𐀀\"\n",
+      "stderr": "",
+      "input_json": "\"𐀀\"",
+      "independent_expected": "𐀀"
+    },
+    {
+      "name": "diff_22",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"é\"\n",
+      "stderr": "",
+      "input_json": "\"\\u00e9\"",
+      "independent_expected": "é"
+    },
+    {
+      "name": "diff_23",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"é\"\n",
+      "stderr": "",
+      "input_json": "\"é\"",
+      "independent_expected": "é"
+    },
+    {
+      "name": "diff_24",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"\\u001f\"\n",
+      "stderr": "",
+      "input_json": "\"\\u001f\"",
+      "independent_expected": "\u001f"
+    },
+    {
+      "name": "diff_25",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[]\n",
+      "stderr": "",
+      "input_json": "[]",
+      "independent_expected": []
+    },
+    {
+      "name": "diff_26",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"é\"\n",
+      "stderr": "",
+      "input_json": "\"\\u00e9\"",
+      "independent_expected": "é"
+    },
+    {
+      "name": "diff_27",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[[],-1,true,[0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001]]\n",
+      "stderr": "",
+      "input_json": "[[],-1,true,[1e-300]]",
+      "independent_expected": [
+        [],
+        -1,
+        true,
+        [
+          1e-300
+        ]
+      ]
+    },
+    {
+      "name": "diff_28",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[{\"\":\"a\\u0000b\",\"\\b\\f\\n\\r\\t\":[-1,1.5],\"${x}\":-9223372036854775808,\"中文🙂\":false},{},\"a\\u0000b\",-9223372036854775808]\n",
+      "stderr": "",
+      "input_json": "[{\"\":\"a\\u0000b\",\"\\u4e2d\\u6587\\ud83d\\ude42\":false,\"${x}\":-9223372036854775808,\"\\b\\f\\n\\r\\t\":[-1,1.5]},{},\"a\\u0000b\",-9223372036854775808]",
+      "independent_expected": [
+        {
+          "": "a\u0000b",
+          "中文🙂": false,
+          "${x}": -9223372036854775808,
+          "\b\f\n\r\t": [
+            -1,
+            1.5
+          ]
+        },
+        {},
+        "a\u0000b",
+        -9223372036854775808
+      ]
+    },
+    {
+      "name": "diff_29",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "false\n",
+      "stderr": "",
+      "input_json": "false",
+      "independent_expected": false
+    },
+    {
+      "name": "diff_30",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[0.0]\n",
+      "stderr": "",
+      "input_json": "[0.0]",
+      "independent_expected": [
+        0.0
+      ]
+    },
+    {
+      "name": "diff_31",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "true\n",
+      "stderr": "",
+      "input_json": "true",
+      "independent_expected": true
+    },
+    {
+      "name": "diff_32",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"a\\u0000b\"\n",
+      "stderr": "",
+      "input_json": "\"a\\u0000b\"",
+      "independent_expected": "a\u0000b"
+    },
+    {
+      "name": "diff_33",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "false\n",
+      "stderr": "",
+      "input_json": "false",
+      "independent_expected": false
+    },
+    {
+      "name": "diff_34",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "null\n",
+      "stderr": "",
+      "input_json": "null",
+      "independent_expected": null
+    },
+    {
+      "name": "diff_35",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"/\\\\\\\"\"\n",
+      "stderr": "",
+      "input_json": "\"/\\\\\\\"\"",
+      "independent_expected": "/\\\""
+    },
+    {
+      "name": "diff_36",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[-9007199254740993,\"${x}\",[-9223372036854775808,[[false,1]]]]\n",
+      "stderr": "",
+      "input_json": "[-9007199254740993,\"${x}\",[-9223372036854775808,[[false,1]]]]",
+      "independent_expected": [
+        -9007199254740993,
+        "${x}",
+        [
+          -9223372036854775808,
+          [
+            [
+              false,
+              1
+            ]
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "diff_37",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"é\"\n",
+      "stderr": "",
+      "input_json": "\"é\"",
+      "independent_expected": "é"
+    },
+    {
+      "name": "diff_38",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"\":\"\\u001f\",\"${x}\":\"\\u001f\",\"/\\\\\\\"\":{\"\\u001f\":[true,true,1.5],\"/\\\\\\\"\":-9007199254740993,\"é\":\"\",\"中文🙂\":[]},\"é\":[true]}\n",
+      "stderr": "",
+      "input_json": "{\"/\\\\\\\"\":{\"/\\\\\\\"\":-9007199254740993,\"\\u4e2d\\u6587\\ud83d\\ude42\":[],\"e\\u0301\":\"\",\"\\u001f\":[true,true,1.5]},\"\":\"\\u001f\",\"${x}\":\"\\u001f\",\"\\u00e9\":[true]}",
+      "independent_expected": {
+        "/\\\"": {
+          "/\\\"": -9007199254740993,
+          "中文🙂": [],
+          "é": "",
+          "\u001f": [
+            true,
+            true,
+            1.5
+          ]
+        },
+        "": "\u001f",
+        "${x}": "\u001f",
+        "é": [
+          true
+        ]
+      }
+    },
+    {
+      "name": "diff_39",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "false\n",
+      "stderr": "",
+      "input_json": "false",
+      "independent_expected": false
+    },
+    {
+      "name": "diff_40",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"𐀀\"\n",
+      "stderr": "",
+      "input_json": "\"\\ud800\\udc00\"",
+      "independent_expected": "𐀀"
+    },
+    {
+      "name": "diff_41",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "-9007199254740993\n",
+      "stderr": "",
+      "input_json": "-9007199254740993",
+      "independent_expected": -9007199254740993
+    },
+    {
+      "name": "diff_42",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "-0.0\n",
+      "stderr": "",
+      "input_json": "-0.0",
+      "independent_expected": -0.0
+    },
+    {
+      "name": "diff_43",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "9007199254740993\n",
+      "stderr": "",
+      "input_json": "9007199254740993",
+      "independent_expected": 9007199254740993
+    },
+    {
+      "name": "diff_44",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "true\n",
+      "stderr": "",
+      "input_json": "true",
+      "independent_expected": true
+    },
+    {
+      "name": "diff_45",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "9007199254740993\n",
+      "stderr": "",
+      "input_json": "9007199254740993",
+      "independent_expected": 9007199254740993
+    },
+    {
+      "name": "diff_46",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "-9223372036854775808\n",
+      "stderr": "",
+      "input_json": "-9223372036854775808",
+      "independent_expected": -9223372036854775808
+    },
+    {
+      "name": "diff_47",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"\\u001f\"\n",
+      "stderr": "",
+      "input_json": "\"\\u001f\"",
+      "independent_expected": "\u001f"
+    },
+    {
+      "name": "diff_48",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[{}]\n",
+      "stderr": "",
+      "input_json": "[{}]",
+      "independent_expected": [
+        {}
+      ]
+    },
+    {
+      "name": "diff_49",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "-1\n",
+      "stderr": "",
+      "input_json": "-1",
+      "independent_expected": -1
+    },
+    {
+      "name": "diff_50",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": "",
+      "input_json": "0",
+      "independent_expected": 0
+    },
+    {
+      "name": "diff_51",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"a\\u0000b\":[-9007199254740993,\"é\",{\"é\":false},{\"é\":[false,\"𐀀\",null]}],\"é\":\" \",\" \":9223372036854775807,\"𐀀\":null}\n",
+      "stderr": "",
+      "input_json": "{\" \":9223372036854775807,\"𐀀\":null,\"é\":\" \",\"a\\u0000b\":[-9007199254740993,\"é\",{\"é\":false},{\"é\":[false,\"𐀀\",null]}]}",
+      "independent_expected": {
+        " ": 9223372036854775807,
+        "𐀀": null,
+        "é": " ",
+        "a\u0000b": [
+          -9007199254740993,
+          "é",
+          {
+            "é": false
+          },
+          {
+            "é": [
+              false,
+              "𐀀",
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diff_52",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[false,\"${x}\",\" \",\"中文🙂\"]\n",
+      "stderr": "",
+      "input_json": "[false,\"${x}\",\"\\u2028\",\"\\u4e2d\\u6587\\ud83d\\ude42\"]",
+      "independent_expected": [
+        false,
+        "${x}",
+        " ",
+        "中文🙂"
+      ]
+    },
+    {
+      "name": "diff_53",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"\"\n",
+      "stderr": "",
+      "input_json": "\"\"",
+      "independent_expected": ""
+    },
+    {
+      "name": "diff_54",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{}\n",
+      "stderr": "",
+      "input_json": "{}",
+      "independent_expected": {}
+    },
+    {
+      "name": "diff_55",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005\n",
+      "stderr": "",
+      "input_json": "5e-324",
+      "independent_expected": 5e-324
+    },
+    {
+      "name": "diff_56",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"\\u001f\"\n",
+      "stderr": "",
+      "input_json": "\"\\u001f\"",
+      "independent_expected": "\u001f"
+    },
+    {
+      "name": "diff_57",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"a\\u0000b\"\n",
+      "stderr": "",
+      "input_json": "\"a\\u0000b\"",
+      "independent_expected": "a\u0000b"
+    },
+    {
+      "name": "diff_58",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "input_json": "1",
+      "independent_expected": 1
+    },
+    {
+      "name": "diff_59",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0\n",
+      "stderr": "",
+      "input_json": "1.7976931348623157e+308",
+      "independent_expected": 1.7976931348623157e+308
+    },
+    {
+      "name": "diff_60",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"\\u001f\"\n",
+      "stderr": "",
+      "input_json": "\"\\u001f\"",
+      "independent_expected": "\u001f"
+    },
+    {
+      "name": "diff_61",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "input_json": "1",
+      "independent_expected": 1
+    },
+    {
+      "name": "diff_62",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"é\":1.5}\n",
+      "stderr": "",
+      "input_json": "{\"e\\u0301\":1.5}",
+      "independent_expected": {
+        "é": 1.5
+      }
+    },
+    {
+      "name": "diff_63",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"\":-9007199254740993,\"/\\\\\\\"\":\"\\u001f\",\" \":\"é\",\"𐀀\":{}}\n",
+      "stderr": "",
+      "input_json": "{\"\":-9007199254740993,\"𐀀\":{},\" \":\"é\",\"/\\\\\\\"\":\"\\u001f\"}",
+      "independent_expected": {
+        "": -9007199254740993,
+        "𐀀": {},
+        " ": "é",
+        "/\\\"": "\u001f"
+      }
+    },
+    {
+      "name": "diff_64",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "null\n",
+      "stderr": "",
+      "input_json": "null",
+      "independent_expected": null
+    },
+    {
+      "name": "diff_65",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "null\n",
+      "stderr": "",
+      "input_json": "null",
+      "independent_expected": null
+    },
+    {
+      "name": "diff_66",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[\"é\",{\" \":-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0}]\n",
+      "stderr": "",
+      "input_json": "[\"e\\u0301\",{\"\\u2028\":-1e+100}]",
+      "independent_expected": [
+        "é",
+        {
+          " ": -1e+100
+        }
+      ]
+    },
+    {
+      "name": "diff_67",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "false\n",
+      "stderr": "",
+      "input_json": "false",
+      "independent_expected": false
+    },
+    {
+      "name": "diff_68",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[[[\"${x}\",\"中文🙂\",[\"é\",-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0,0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005]],null],\"/\\\\\\\"\",{\"\":9223372036854775807,\"\\b\\f\\n\\r\\t\":{\"\\b\\f\\n\\r\\t\":{\"\\b\\f\\n\\r\\t\":0.0,\"\\u001f\":-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0,\"é\":1.5,\"𐀀\":\"\"}},\"${x}\":null,\" \":[\"中文🙂\",[false,null],false]}]\n",
+      "stderr": "",
+      "input_json": "[[[\"${x}\",\"\\u4e2d\\u6587\\ud83d\\ude42\",[\"\\u00e9\",-1e+100,5e-324]],null],\"/\\\\\\\"\",{\"\\b\\f\\n\\r\\t\":{\"\\b\\f\\n\\r\\t\":{\"\\b\\f\\n\\r\\t\":0.0,\"\\u00e9\":1.5,\"\\u001f\":-1e+100,\"\\ud800\\udc00\":\"\"}},\"\\u2028\":[\"\\u4e2d\\u6587\\ud83d\\ude42\",[false,null],false],\"\":9223372036854775807,\"${x}\":null}]",
+      "independent_expected": [
+        [
+          [
+            "${x}",
+            "中文🙂",
+            [
+              "é",
+              -1e+100,
+              5e-324
+            ]
+          ],
+          null
+        ],
+        "/\\\"",
+        {
+          "\b\f\n\r\t": {
+            "\b\f\n\r\t": {
+              "\b\f\n\r\t": 0.0,
+              "é": 1.5,
+              "\u001f": -1e+100,
+              "𐀀": ""
+            }
+          },
+          " ": [
+            "中文🙂",
+            [
+              false,
+              null
+            ],
+            false
+          ],
+          "": 9223372036854775807,
+          "${x}": null
+        }
+      ]
+    },
+    {
+      "name": "diff_69",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "null\n",
+      "stderr": "",
+      "input_json": "null",
+      "independent_expected": null
+    },
+    {
+      "name": "diff_70",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": "",
+      "input_json": "0",
+      "independent_expected": 0
+    },
+    {
+      "name": "diff_71",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"é\"\n",
+      "stderr": "",
+      "input_json": "\"é\"",
+      "independent_expected": "é"
+    },
+    {
+      "name": "diff_72",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0\n",
+      "stderr": "",
+      "input_json": "-1e+100",
+      "independent_expected": -1e+100
+    },
+    {
+      "name": "diff_73",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[]\n",
+      "stderr": "",
+      "input_json": "[]",
+      "independent_expected": []
+    },
+    {
+      "name": "diff_74",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "null\n",
+      "stderr": "",
+      "input_json": "null",
+      "independent_expected": null
+    },
+    {
+      "name": "diff_75",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\n",
+      "stderr": "",
+      "input_json": "1e-300",
+      "independent_expected": 1e-300
+    },
+    {
+      "name": "diff_76",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "9007199254740993\n",
+      "stderr": "",
+      "input_json": "9007199254740993",
+      "independent_expected": 9007199254740993
+    },
+    {
+      "name": "diff_77",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"𐀀\"\n",
+      "stderr": "",
+      "input_json": "\"𐀀\"",
+      "independent_expected": "𐀀"
+    },
+    {
+      "name": "diff_78",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[{\"/\\\\\\\"\":0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005},{\"\":false,\"\\u001f\":-9007199254740993,\"/\\\\\\\"\":{\"\\b\\f\\n\\r\\t\":\"中文🙂\",\"\\u001f\":false,\"/\\\\\\\"\":[],\"中文🙂\":{\"é\":\"é\"}},\"中文🙂\":0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001},[\"\\u001f\",0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005],\"é\"]\n",
+      "stderr": "",
+      "input_json": "[{\"/\\\\\\\"\":5e-324},{\"\\u4e2d\\u6587\\ud83d\\ude42\":1e-300,\"\\u001f\":-9007199254740993,\"/\\\\\\\"\":{\"\\u001f\":false,\"\\u4e2d\\u6587\\ud83d\\ude42\":{\"\\u00e9\":\"\\u00e9\"},\"\\b\\f\\n\\r\\t\":\"\\u4e2d\\u6587\\ud83d\\ude42\",\"/\\\\\\\"\":[]},\"\":false},[\"\\u001f\",5e-324],\"\\u00e9\"]",
+      "independent_expected": [
+        {
+          "/\\\"": 5e-324
+        },
+        {
+          "中文🙂": 1e-300,
+          "\u001f": -9007199254740993,
+          "/\\\"": {
+            "\u001f": false,
+            "中文🙂": {
+              "é": "é"
+            },
+            "\b\f\n\r\t": "中文🙂",
+            "/\\\"": []
+          },
+          "": false
+        },
+        [
+          "\u001f",
+          5e-324
+        ],
+        "é"
+      ]
+    },
+    {
+      "name": "diff_79",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"a\\u0000b\":\" \"}\n",
+      "stderr": "",
+      "input_json": "{\"a\\u0000b\":\" \"}",
+      "independent_expected": {
+        "a\u0000b": " "
+      }
+    },
+    {
+      "name": "diff_80",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "0.0\n",
+      "stderr": "",
+      "input_json": "0.0",
+      "independent_expected": 0.0
+    },
+    {
+      "name": "diff_81",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "9007199254740993\n",
+      "stderr": "",
+      "input_json": "9007199254740993",
+      "independent_expected": 9007199254740993
+    },
+    {
+      "name": "diff_82",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\" \"\n",
+      "stderr": "",
+      "input_json": "\"\\u2028\"",
+      "independent_expected": " "
+    },
+    {
+      "name": "diff_83",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "-1\n",
+      "stderr": "",
+      "input_json": "-1",
+      "independent_expected": -1
+    },
+    {
+      "name": "diff_84",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"\":1,\"\\u001f\":[true,1.5],\"a\\u0000b\":0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005,\" \":179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0}\n",
+      "stderr": "",
+      "input_json": "{\"\\u001f\":[true,1.5],\"\\u2028\":1.7976931348623157e+308,\"a\\u0000b\":5e-324,\"\":1}",
+      "independent_expected": {
+        "\u001f": [
+          true,
+          1.5
+        ],
+        " ": 1.7976931348623157e+308,
+        "a\u0000b": 5e-324,
+        "": 1
+      }
+    },
+    {
+      "name": "diff_85",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "null\n",
+      "stderr": "",
+      "input_json": "null",
+      "independent_expected": null
+    },
+    {
+      "name": "diff_86",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "input_json": "1",
+      "independent_expected": 1
+    },
+    {
+      "name": "diff_87",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "false\n",
+      "stderr": "",
+      "input_json": "false",
+      "independent_expected": false
+    },
+    {
+      "name": "diff_88",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"\":[[{\"\":0.0,\"é\":-9007199254740993},\"é\",-0.0],true],\"${x}\":[\"é\",[\"𐀀\"],\"é\"]}\n",
+      "stderr": "",
+      "input_json": "{\"${x}\":[\"e\\u0301\",[\"\\ud800\\udc00\"],\"\\u00e9\"],\"\":[[{\"\\u00e9\":-9007199254740993,\"\":0.0},\"\\u00e9\",-0.0],true]}",
+      "independent_expected": {
+        "${x}": [
+          "é",
+          [
+            "𐀀"
+          ],
+          "é"
+        ],
+        "": [
+          [
+            {
+              "é": -9007199254740993,
+              "": 0.0
+            },
+            "é",
+            -0.0
+          ],
+          true
+        ]
+      }
+    },
+    {
+      "name": "diff_89",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "1.5\n",
+      "stderr": "",
+      "input_json": "1.5",
+      "independent_expected": 1.5
+    },
+    {
+      "name": "diff_90",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "false\n",
+      "stderr": "",
+      "input_json": "false",
+      "independent_expected": false
+    },
+    {
+      "name": "diff_91",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "null\n",
+      "stderr": "",
+      "input_json": "null",
+      "independent_expected": null
+    },
+    {
+      "name": "diff_92",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "-0.0\n",
+      "stderr": "",
+      "input_json": "-0.0",
+      "independent_expected": -0.0
+    },
+    {
+      "name": "diff_93",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "null\n",
+      "stderr": "",
+      "input_json": "null",
+      "independent_expected": null
+    },
+    {
+      "name": "diff_94",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "9223372036854775807\n",
+      "stderr": "",
+      "input_json": "9223372036854775807",
+      "independent_expected": 9223372036854775807
+    },
+    {
+      "name": "diff_95",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[\" \",[false,{\"\\u001f\":9223372036854775807}],-9223372036854775808,[{\"é\":false,\"𐀀\":{\"\\b\\f\\n\\r\\t\":0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001,\" \":-9007199254740993}},{\"\\b\\f\\n\\r\\t\":\"\\b\\f\\n\\r\\t\",\"${x}\":-0.0,\" \":[0,-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0,-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0],\"中文🙂\":\"é\"}]]\n",
+      "stderr": "",
+      "input_json": "[\" \",[false,{\"\\u001f\":9223372036854775807}],-9223372036854775808,[{\"𐀀\":{\" \":-9007199254740993,\"\\b\\f\\n\\r\\t\":1e-300},\"é\":false},{\"${x}\":-0.0,\"中文🙂\":\"é\",\"\\b\\f\\n\\r\\t\":\"\\b\\f\\n\\r\\t\",\" \":[0,-1e+100,-1e+100]}]]",
+      "independent_expected": [
+        " ",
+        [
+          false,
+          {
+            "\u001f": 9223372036854775807
+          }
+        ],
+        -9223372036854775808,
+        [
+          {
+            "𐀀": {
+              " ": -9007199254740993,
+              "\b\f\n\r\t": 1e-300
+            },
+            "é": false
+          },
+          {
+            "${x}": -0.0,
+            "中文🙂": "é",
+            "\b\f\n\r\t": "\b\f\n\r\t",
+            " ": [
+              0,
+              -1e+100,
+              -1e+100
+            ]
+          }
+        ]
+      ]
+    },
+    {
+      "name": "diff_96",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"\\b\\f\\n\\r\\t\":{\"\":[9007199254740993,null]},\"/\\\\\\\"\":false,\"a\\u0000b\":\"\\b\\f\\n\\r\\t\",\"é\":\"é\"}\n",
+      "stderr": "",
+      "input_json": "{\"a\\u0000b\":\"\\b\\f\\n\\r\\t\",\"\\b\\f\\n\\r\\t\":{\"\":[9007199254740993,null]},\"e\\u0301\":\"e\\u0301\",\"/\\\\\\\"\":false}",
+      "independent_expected": {
+        "a\u0000b": "\b\f\n\r\t",
+        "\b\f\n\r\t": {
+          "": [
+            9007199254740993,
+            null
+          ]
+        },
+        "é": "é",
+        "/\\\"": false
+      }
+    },
+    {
+      "name": "diff_97",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[null,[-9007199254740993],-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0,1.5]\n",
+      "stderr": "",
+      "input_json": "[null,[-9007199254740993],-1e+100,1.5]",
+      "independent_expected": [
+        null,
+        [
+          -9007199254740993
+        ],
+        -1e+100,
+        1.5
+      ]
+    },
+    {
+      "name": "diff_98",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "true\n",
+      "stderr": "",
+      "input_json": "true",
+      "independent_expected": true
+    },
+    {
+      "name": "diff_99",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "0.0\n",
+      "stderr": "",
+      "input_json": "0.0",
+      "independent_expected": 0.0
+    },
+    {
+      "name": "diff_100",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "-9223372036854775808\n",
+      "stderr": "",
+      "input_json": "-9223372036854775808",
+      "independent_expected": -9223372036854775808
+    },
+    {
+      "name": "diff_101",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"é\"\n",
+      "stderr": "",
+      "input_json": "\"é\"",
+      "independent_expected": "é"
+    },
+    {
+      "name": "diff_102",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"\":-0.0,\"/\\\\\\\"\":[]}\n",
+      "stderr": "",
+      "input_json": "{\"/\\\\\\\"\":[],\"\":-0.0}",
+      "independent_expected": {
+        "/\\\"": [],
+        "": -0.0
+      }
+    },
+    {
+      "name": "diff_103",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"\\b\\f\\n\\r\\t\"\n",
+      "stderr": "",
+      "input_json": "\"\\b\\f\\n\\r\\t\"",
+      "independent_expected": "\b\f\n\r\t"
+    },
+    {
+      "name": "diff_104",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "1.5\n",
+      "stderr": "",
+      "input_json": "1.5",
+      "independent_expected": 1.5
+    },
+    {
+      "name": "diff_105",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"a\\u0000b\":true,\"é\":-0.0,\" \":null,\"中文🙂\":false}\n",
+      "stderr": "",
+      "input_json": "{\" \":null,\"é\":-0.0,\"a\\u0000b\":true,\"中文🙂\":false}",
+      "independent_expected": {
+        " ": null,
+        "é": -0.0,
+        "a\u0000b": true,
+        "中文🙂": false
+      }
+    },
+    {
+      "name": "diff_106",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\" \"\n",
+      "stderr": "",
+      "input_json": "\"\\u2028\"",
+      "independent_expected": " "
+    },
+    {
+      "name": "diff_107",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[0.0,null,\"/\\\\\\\"\"]\n",
+      "stderr": "",
+      "input_json": "[0.0,null,\"/\\\\\\\"\"]",
+      "independent_expected": [
+        0.0,
+        null,
+        "/\\\""
+      ]
+    },
+    {
+      "name": "diff_108",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"𐀀\"\n",
+      "stderr": "",
+      "input_json": "\"\\ud800\\udc00\"",
+      "independent_expected": "𐀀"
+    },
+    {
+      "name": "diff_109",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "null\n",
+      "stderr": "",
+      "input_json": "null",
+      "independent_expected": null
+    },
+    {
+      "name": "diff_110",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"${x}\":false,\"a\\u0000b\":\"\\b\\f\\n\\r\\t\",\"é\":{\"\\u001f\":\"\\b\\f\\n\\r\\t\",\"/\\\\\\\"\":-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0},\" \":0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001}\n",
+      "stderr": "",
+      "input_json": "{\"${x}\":false,\"\\u2028\":1e-300,\"a\\u0000b\":\"\\b\\f\\n\\r\\t\",\"e\\u0301\":{\"\\u001f\":\"\\b\\f\\n\\r\\t\",\"/\\\\\\\"\":-1e+100}}",
+      "independent_expected": {
+        "${x}": false,
+        " ": 1e-300,
+        "a\u0000b": "\b\f\n\r\t",
+        "é": {
+          "\u001f": "\b\f\n\r\t",
+          "/\\\"": -1e+100
+        }
+      }
+    },
+    {
+      "name": "diff_111",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[false]\n",
+      "stderr": "",
+      "input_json": "[false]",
+      "independent_expected": [
+        false
+      ]
+    },
+    {
+      "name": "diff_112",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[]\n",
+      "stderr": "",
+      "input_json": "[]",
+      "independent_expected": []
+    },
+    {
+      "name": "diff_113",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "\"𐀀\"\n",
+      "stderr": "",
+      "input_json": "\"𐀀\"",
+      "independent_expected": "𐀀"
+    },
+    {
+      "name": "diff_114",
+      "args": [
+        "-e",
+        "print(jsonStringify(jsonParse(readFile(argv()[0]))))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\independent-input.json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[]\n",
+      "stderr": "",
+      "input_json": "[]",
+      "independent_expected": []
+    },
+    {
+      "name": "invalid_0",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\invalid.json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "input_utf8_hex": ""
+    },
+    {
+      "name": "invalid_1",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\invalid.json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 4）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "input_utf8_hex": "205b312c5d"
+    },
+    {
+      "name": "invalid_2",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\invalid.json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 14）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "input_utf8_hex": "7b22f09f9982223a312c2278223a7d"
+    },
+    {
+      "name": "invalid_3",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\invalid.json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 9）：对象键重复\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "input_utf8_hex": "7b22e4b8ad223a302c225c7534653264223a317d"
+    },
+    {
+      "name": "invalid_4",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\invalid.json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：整数超出 i64 范围\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "input_utf8_hex": "39323233333732303336383534373735383038"
+    },
+    {
+      "name": "invalid_5",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\invalid.json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：整数超出 i64 范围\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "input_utf8_hex": "2d39323233333732303336383534373735383039"
+    },
+    {
+      "name": "invalid_6",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\invalid.json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：浮点数超出有限范围\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "input_utf8_hex": "3165333039"
+    },
+    {
+      "name": "invalid_7",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\invalid.json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 1）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "input_utf8_hex": "3031"
+    },
+    {
+      "name": "invalid_8",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\invalid.json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 7）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "input_utf8_hex": "225c754438303022"
+    },
+    {
+      "name": "invalid_9",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\invalid.json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 5）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "input_utf8_hex": "747275652066616c7365"
+    },
+    {
+      "name": "invalid_10",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\invalid.json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 0）：不是合法的 JSON\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "input_utf8_hex": "efbbbf5b5d"
+    },
+    {
+      "name": "invalid_11",
+      "args": [
+        "--json",
+        "-e",
+        "jsonParse(readFile(argv()[0]))",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\invalid.json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 解析失败（字节偏移 128）：嵌套深度超过 128 层\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "input_utf8_hex": "5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b305d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d"
+    },
+    {
+      "name": "entry_bare",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\entry.lfz",
+        "--",
+        "中文",
+        "",
+        "--json",
+        "--",
+        "-e",
+        "--help"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[\"中文\",\"\",\"--json\",\"--\",\"-e\",\"--help\"]\n",
+      "stderr": ""
+    },
+    {
+      "name": "entry_run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\verifier-rerun\\entry.lfz",
+        "--",
+        "中文",
+        "",
+        "--json",
+        "--",
+        "-e",
+        "--help"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[\"中文\",\"\",\"--json\",\"--\",\"-e\",\"--help\"]\n",
+      "stderr": ""
+    },
+    {
+      "name": "entry_e",
+      "args": [
+        "-e",
+        "let saved=argv\nlet a=saved()\na[0]=\"changed\"\nfn f(argv) => saved()\nassert(f(42)==saved())\nlet argv=fn(){[\"local\"]}\nassert(argv()==[\"local\"])\nprint(jsonStringify(saved()))\n",
+        "--",
+        "中文",
+        "",
+        "--json",
+        "--",
+        "-e",
+        "--help"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[\"中文\",\"\",\"--json\",\"--\",\"-e\",\"--help\"]\n",
+      "stderr": ""
+    },
+    {
+      "name": "entry_rune",
+      "args": [
+        "run",
+        "-e",
+        "let saved=argv\nlet a=saved()\na[0]=\"changed\"\nfn f(argv) => saved()\nassert(f(42)==saved())\nlet argv=fn(){[\"local\"]}\nassert(argv()==[\"local\"])\nprint(jsonStringify(saved()))\n",
+        "--",
+        "中文",
+        "",
+        "--json",
+        "--",
+        "-e",
+        "--help"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[\"中文\",\"\",\"--json\",\"--\",\"-e\",\"--help\"]\n",
+      "stderr": ""
+    },
+    {
+      "name": "entry_stdin",
+      "args": [
+        "-",
+        "--",
+        "中文",
+        "",
+        "--json",
+        "--",
+        "-e",
+        "--help"
+      ],
+      "stdin_hex": "6c65742073617665643d617267760a6c657420613d736176656428290a615b305d3d226368616e676564220a666e2066286172677629203d3e20736176656428290a6173736572742866283432293d3d73617665642829290a6c657420617267763d666e28297b5b226c6f63616c225d7d0a617373657274286172677628293d3d5b226c6f63616c225d290a7072696e74286a736f6e537472696e67696679287361766564282929290a",
+      "exit": 0,
+      "stdout": "[\"中文\",\"\",\"--json\",\"--\",\"-e\",\"--help\"]\n",
+      "stderr": ""
+    },
+    {
+      "name": "entry_runstdin",
+      "args": [
+        "run",
+        "-",
+        "--",
+        "中文",
+        "",
+        "--json",
+        "--",
+        "-e",
+        "--help"
+      ],
+      "stdin_hex": "6c65742073617665643d617267760a6c657420613d736176656428290a615b305d3d226368616e676564220a666e2066286172677629203d3e20736176656428290a6173736572742866283432293d3d73617665642829290a6c657420617267763d666e28297b5b226c6f63616c225d7d0a617373657274286172677628293d3d5b226c6f63616c225d290a7072696e74286a736f6e537472696e67696679287361766564282929290a",
+      "exit": 0,
+      "stdout": "[\"中文\",\"\",\"--json\",\"--\",\"-e\",\"--help\"]\n",
+      "stderr": ""
+    },
+    {
+      "name": "shared_acyclic",
+      "args": [
+        "-e",
+        "let x={\"z\":1}\nprint(jsonStringify([x,x]))"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[{\"z\":1},{\"z\":1}]\n",
+      "stderr": ""
+    },
+    {
+      "name": "cycle",
+      "args": [
+        "--json",
+        "-e",
+        "let x={\"a\":nil}\nx.a=x\njsonStringify(x)"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 编码失败：循环引用\",\"file\":\"<command>\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "index_alias_data",
+      "args": [
+        "-e",
+        "let x={\"b\":2,\"a\":1}\nlet alias=x\nx.z=3\nlet y=del(\"b\",x)\ny.a=7\nassert(alias.a==1)\nassert(alias.z==3)\nassert(!has(\"b\",y))\nprint(jsonStringify([x,y]))"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "[{\"a\":1,\"b\":2,\"z\":3},{\"a\":7,\"z\":3}]\n",
+      "stderr": ""
+    },
+    {
+      "name": "depth_128",
+      "args": [
+        "-e",
+        "let x=jsonParse(repeat(128,\"[\")+\"0\"+repeat(128,\"]\"))\nassert(len(jsonStringify(x))==257)\nprint(\"ok\")"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "ok\n",
+      "stderr": ""
+    },
+    {
+      "name": "encode_depth_129",
+      "args": [
+        "--json",
+        "-e",
+        "var x=0\nfor i in range(129){x=[x]}\njsonStringify(x)"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"JSON 编码失败：嵌套深度超过 128 层\",\"file\":\"<command>\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "method_filter",
+      "args": [
+        "-e",
+        "struct S { x:1, fn boom(){fail(\"must not call\")} }\nprint(jsonStringify(S{}))"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout": "{\"x\":1}\n",
+      "stderr": ""
+    },
+    {
+      "name": "data_channel",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "[\"--json\"]\n"
+    }
+  ],
+  "frozen_v2": {
+    "zip_sha256": "90a6a3e3d894e7a813b06463506d5cc540e0a4570d7b005a3fd27ccc6a776d84",
+    "matched_original_inputs": {
+      "docs/validation/agent-benchmark-v2/TASKS.md": [
+        "frozen/docs/validation/agent-benchmark-v2/TASKS.md"
+      ],
+      "docs/validation/agent-benchmark-v2/STUDENT_PROMPT.md": [
+        "frozen/docs/validation/agent-benchmark-v2/STUDENT_PROMPT.md"
+      ],
+      "docs/validation/agent-benchmark-v2/cases.json": [
+        "frozen/docs/validation/agent-benchmark-v2/cases.json"
+      ],
+      "docs/validation/agent-benchmark-v2/run.py": [
+        "frozen/docs/validation/agent-benchmark-v2/run.py"
+      ],
+      ".opencode/skills/lfz-programming/SKILL.md": [
+        "frozen/.opencode/skills/lfz-programming/SKILL.md"
+      ],
+      ".opencode/skills/lfz-programming/README.md": [
+        "frozen/.opencode/skills/lfz-programming/README.md"
+      ],
+      ".opencode/skills/lfz-programming/VERIFICATION.md": [
+        "frozen/.opencode/skills/lfz-programming/VERIFICATION.md"
+      ],
+      ".opencode/skills/lfz-programming/prompt-template.md": [
+        "frozen/.opencode/skills/lfz-programming/prompt-template.md"
+      ],
+      "target/release/lfz.exe": [
+        "frozen/target/release/lfz.exe"
+      ]
+    }
+  },
+  "old_manifest_cases_preserved": 99,
+  "old_lfz_files_byte_identical": true
+}

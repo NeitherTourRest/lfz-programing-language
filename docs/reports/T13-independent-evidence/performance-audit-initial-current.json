@@ -1,0 +1,237 @@
+{
+  "date": "2026-10-27",
+  "status": "audit PASS; efficiency gate NOT PASSED",
+  "interpreter_launches": 0,
+  "raw_sha256": "74cdf5052140f47229c5d811c2a92283ebb42b040f3f47325ed1d5c8b09681ea",
+  "protocol_sha256": "74934a4ebc1f2eca5a6ea00e8d6e1c39ed5a4de5315a6cb8524d076d84c9f1bb",
+  "perf_assessment_sha256": "8e68fc322555e0d6904387d97d3ae404a579377ceacaa629939e071f21c214b2",
+  "binary_hashes": {
+    "old": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+    "t12": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+    "new": "9cda0c6fd5d85178335e8b758a843fc5f66574826bab4a80f2418a318e171cf9"
+  },
+  "formal_samples_verified": 532,
+  "warmup_samples_verified": 152,
+  "all_outputs_and_stderr_and_exit_valid": true,
+  "raw_start_end_and_current_and_release_sources_equal": true,
+  "original_thresholds_unchanged": true,
+  "medians_and_cpu_and_ratios_recomputed": true,
+  "absolute_counts": {
+    "PASS": 15,
+    "ENVIRONMENT_INDETERMINATE": 2,
+    "FAIL": 2
+  },
+  "struct8_original_30pct_target_pass": true,
+  "R304": "OPEN",
+  "cases": [
+    {
+      "name": "noop",
+      "n": 0,
+      "old_ms": 11.9053,
+      "t12_ms": 12.5256,
+      "new_ms": 12.251,
+      "original_limit_ms": 16.307000000000002,
+      "absolute_status": "PASS",
+      "new_over_old": 1.0290374875055646,
+      "new_over_t12": 0.9780768985118476
+    },
+    {
+      "name": "numeric_loop",
+      "n": 10000,
+      "old_ms": 14.435,
+      "t12_ms": 14.7942,
+      "new_ms": 14.6673,
+      "original_limit_ms": 17.967599999999997,
+      "absolute_status": "PASS",
+      "new_over_old": 1.01609282992726,
+      "new_over_t12": 0.9914223141501398
+    },
+    {
+      "name": "numeric_loop",
+      "n": 100000,
+      "old_ms": 31.7816,
+      "t12_ms": 30.52,
+      "new_ms": 28.6244,
+      "original_limit_ms": 38.778479999999995,
+      "absolute_status": "PASS",
+      "new_over_old": 0.9006595010949732,
+      "new_over_t12": 0.9378899082568808
+    },
+    {
+      "name": "numeric_loop",
+      "n": 500000,
+      "old_ms": 106.8624,
+      "t12_ms": 90.7466,
+      "new_ms": 89.5393,
+      "original_limit_ms": 131.49684,
+      "absolute_status": "PASS",
+      "new_over_old": 0.8378934031053018,
+      "new_over_t12": 0.9866959202879226
+    },
+    {
+      "name": "array_builtins",
+      "n": 1000,
+      "old_ms": 12.5015,
+      "t12_ms": 14.6423,
+      "new_ms": 16.6234,
+      "original_limit_ms": 17.2102,
+      "absolute_status": "PASS",
+      "new_over_old": 1.329712434507859,
+      "new_over_t12": 1.1352997821380522
+    },
+    {
+      "name": "array_builtins",
+      "n": 10000,
+      "old_ms": 18.5739,
+      "t12_ms": 18.6744,
+      "new_ms": 18.0889,
+      "original_limit_ms": 22.7717,
+      "absolute_status": "PASS",
+      "new_over_old": 0.973888090277217,
+      "new_over_t12": 0.968646917705522
+    },
+    {
+      "name": "array_builtins",
+      "n": 50000,
+      "old_ms": 49.4938,
+      "t12_ms": 44.4381,
+      "new_ms": 38.9636,
+      "original_limit_ms": 52.305839999999996,
+      "absolute_status": "PASS",
+      "new_over_old": 0.7872420383967285,
+      "new_over_t12": 0.8768061640799224
+    },
+    {
+      "name": "struct_ops",
+      "n": 2000,
+      "old_ms": 19.0033,
+      "t12_ms": 18.8297,
+      "new_ms": 14.3207,
+      "original_limit_ms": 22.4452,
+      "absolute_status": "PASS",
+      "new_over_old": 0.753590165918551,
+      "new_over_t12": 0.7605378736782848
+    },
+    {
+      "name": "struct_ops",
+      "n": 4000,
+      "old_ms": 33.7213,
+      "t12_ms": 17.4472,
+      "new_ms": 16.1746,
+      "original_limit_ms": 37.87044,
+      "absolute_status": "PASS",
+      "new_over_old": 0.479655292055763,
+      "new_over_t12": 0.9270599293869505
+    },
+    {
+      "name": "struct_ops",
+      "n": 8000,
+      "old_ms": 95.4243,
+      "t12_ms": 19.1801,
+      "new_ms": 19.4881,
+      "original_limit_ms": 107.35176,
+      "absolute_status": "PASS",
+      "new_over_old": 0.20422575800922824,
+      "new_over_t12": 1.0160583104363377
+    },
+    {
+      "name": "string_ops",
+      "n": 2000,
+      "old_ms": 34.7043,
+      "t12_ms": 31.244,
+      "new_ms": 32.5482,
+      "original_limit_ms": 28.9022,
+      "absolute_status": "ENVIRONMENT_INDETERMINATE",
+      "new_over_old": 0.9378722521416654,
+      "new_over_t12": 1.0417424145435925
+    },
+    {
+      "name": "string_ops",
+      "n": 4000,
+      "old_ms": 90.7068,
+      "t12_ms": 77.3909,
+      "new_ms": 81.0158,
+      "original_limit_ms": 101.90447999999999,
+      "absolute_status": "PASS",
+      "new_over_old": 0.8931612624411841,
+      "new_over_t12": 1.0468388402254012
+    },
+    {
+      "name": "string_ops",
+      "n": 8000,
+      "old_ms": 216.5298,
+      "t12_ms": 206.1769,
+      "new_ms": 234.3904,
+      "original_limit_ms": 236.35271999999998,
+      "absolute_status": "PASS",
+      "new_over_old": 1.0824856440083537,
+      "new_over_t12": 1.136841227120982
+    },
+    {
+      "name": "string_map",
+      "n": 2000,
+      "old_ms": 14.2284,
+      "t12_ms": 15.1797,
+      "new_ms": 17.6408,
+      "original_limit_ms": 17.521900000000002,
+      "absolute_status": "FAIL",
+      "new_over_old": 1.2398301987574145,
+      "new_over_t12": 1.162131003906533
+    },
+    {
+      "name": "string_map",
+      "n": 4000,
+      "old_ms": 21.3035,
+      "t12_ms": 16.6094,
+      "new_ms": 17.6924,
+      "original_limit_ms": 23.0626,
+      "absolute_status": "PASS",
+      "new_over_old": 0.8304926420541225,
+      "new_over_t12": 1.0652040410851686
+    },
+    {
+      "name": "string_map",
+      "n": 8000,
+      "old_ms": 23.0319,
+      "t12_ms": 22.0512,
+      "new_ms": 23.7622,
+      "original_limit_ms": 22.5214,
+      "absolute_status": "ENVIRONMENT_INDETERMINATE",
+      "new_over_old": 1.0317081960237757,
+      "new_over_t12": 1.07759214918009
+    },
+    {
+      "name": "struct_small",
+      "n": 4,
+      "old_ms": 16.2214,
+      "t12_ms": 17.6049,
+      "new_ms": 22.9598,
+      "original_limit_ms": 18.7462,
+      "absolute_status": "FAIL",
+      "new_over_old": 1.4154018765334684,
+      "new_over_t12": 1.3041709978471903
+    },
+    {
+      "name": "struct_small",
+      "n": 16,
+      "old_ms": 28.6191,
+      "t12_ms": 28.1385,
+      "new_ms": 30.8476,
+      "original_limit_ms": 34.633919999999996,
+      "absolute_status": "PASS",
+      "new_over_old": 1.0778675779461968,
+      "new_over_t12": 1.0962773424311885
+    },
+    {
+      "name": "struct_small",
+      "n": 64,
+      "old_ms": 72.0622,
+      "t12_ms": 64.533,
+      "new_ms": 65.5538,
+      "original_limit_ms": 78.31067999999999,
+      "absolute_status": "PASS",
+      "new_over_old": 0.9096835789082208,
+      "new_over_t12": 1.0158182635240884
+    }
+  ]
+}

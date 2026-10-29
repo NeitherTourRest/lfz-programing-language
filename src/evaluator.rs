@@ -3764,3 +3764,119 @@ i
         assert_eq!(visible(&empty), visible(&outer));
     }
 }
+
+#[cfg(test)]
+mod t13_call_join_tests {
+    use super::*;
+
+    fn run(src: &str) -> R<Value> {
+        let tokens = crate::lexer::lex(src, 0)?;
+        let program = crate::parser::parse(&tokens)?;
+        eval_module(&program)
+    }
+
+    #[test]
+    fn t13_callback_parameters_keep_fresh_cells_and_reassignment() {
+        run(r#"
+let fs = map((x) => { x += 10
+    () => { x += 1
+        x }
+}, [1, 2, 3])
+assert(fs[0]() == 12)
+assert(fs[1]() == 13)
+assert(fs[0]() == 13)
+assert(fs[2]() == 14)
+fn direct(x) { x += 1
+    x }
+assert(direct(8) == 9)
+"#).unwrap();
+    }
+
+    #[test]
+    fn t13_callbacks_keep_snapshot_container_alias_and_left_to_right() {
+        run(r#"
+let a = [1]
+let b = [2]
+let source = [a, b]
+var order = ""
+let results = map((x) => { order = order + str(x[0])
+    x[0] += 10
+    source[1] = [99]
+    x
+}, source)
+assert(order == "12")
+assert(a[0] == 11)
+assert(b[0] == 12)
+assert(results[0] == a)
+assert(results[1] == b)
+assert(source[1][0] == 99)
+assert(reduce((acc, x) => acc * 10 + x, 0, [1, 2, 3]) == 123)
+"#).unwrap();
+    }
+
+    #[test]
+    fn t13_callback_keeps_captured_self_and_shadowing() {
+        run(r#"
+let o = { n: 7, build: () => map((x) => self.n + x, [1, 2]) }
+assert(o.build() == [8, 9])
+let shadow = (argv) => argv + 1
+assert(map(shadow, [2, 3]) == [3, 4])
+fn direct(x, y) => x + y
+assert(direct(2, 3) == 5)
+assert(map((x) => direct(x, 4), [1, 2]) == [5, 6])
+"#).unwrap();
+    }
+
+    #[test]
+    fn t13_callback_arity_error_keeps_call_site_without_pushing_frame() {
+        let tokens = crate::lexer::lex("let f = (x, y) => x + y\nmap(f, [1])\n", 0).unwrap();
+        let program = crate::parser::parse(&tokens).unwrap();
+        let result = eval_module_traced(&program);
+        assert_eq!(result.frames.len(), 1);
+        let error = result.result.unwrap_err();
+        assert_eq!(error.message(), "函数 <fn> 期待 2 个参数，得到 1");
+        assert_eq!(error.span(), Some(Span::new(2, 1)));
+    }
+
+    #[test]
+    fn t13_callback_body_error_keeps_callback_and_module_frames() {
+        let tokens = crate::lexer::lex("fn bad(x) => x / 0\nmap(bad, [1])\n", 0).unwrap();
+        let program = crate::parser::parse(&tokens).unwrap();
+        let result = eval_module_traced(&program);
+        assert_eq!(result.result.as_ref().unwrap_err().class_name(), "ZeroDivisionError");
+        assert_eq!(result.frames.len(), 2);
+        assert_eq!(result.frames[0].span, Span::new(2, 1));
+        assert_eq!(result.frame_name(&result.frames[1]).as_ref(), "bad");
+    }
+
+    #[test]
+    fn t13_join_keeps_unicode_empty_elements_and_source_alias() {
+        run(r#"
+let xs = ["", "中", "🦀", ""]
+let alias = xs
+let text = join("::", xs)
+assert(text == "::中::🦀::")
+assert(join("", ["中", "🦀"]) == "中🦀")
+assert(join("/", []) == "")
+assert(join("/", [""]) == "")
+alias[1] = "changed"
+assert(text == "::中::🦀::")
+assert(xs[1] == "changed")
+"#).unwrap();
+    }
+
+    #[test]
+    fn t13_join_error_type_order_and_exact_span_are_unchanged() {
+        let span = Span::new(9, 7);
+        let error = builtins::call("join", &[Value::Int(1), Value::Nil], span).unwrap_err();
+        assert_eq!(error.class_name(), "TypeError");
+        assert!(error.message().contains("int"));
+        assert_eq!(error.span(), Some(span));
+        let items = Value::array(vec![Value::string("ok"), Value::Int(1), Value::Bool(true)]);
+        let error = builtins::call("join", &[Value::string(","), items], span).unwrap_err();
+        assert_eq!(error.class_name(), "TypeError");
+        assert!(error.message().contains("int"));
+        assert!(!error.message().contains("bool"));
+        assert_eq!(error.span(), Some(span));
+    }
+}
