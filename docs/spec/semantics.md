@@ -467,3 +467,6 @@ check 失败：软断言示例
 不捕获：CosmosAnswerError、SyntaxError、RecursionError、OverflowError::Capacity；保留原错误与帧/深度状态继续传播。宿主panic、abort、栈溢出、分配失败不是业务错误，禁止catch_unwind来伪装Result。本版IOError仍是原运行时IO错误类别，不能宣称可区分所有底层OS资源故障；未来预算/取消终止必须走不可捕获路径。
 
 边界快照在求参/校验后、回调调用前取得。成功及可恢复失败都恢复调用前depth和完整trace（包括调用者原span）；仅truncate帧不足以恢复被改写的调用者span。嵌套attempt各保存自己的边界，内部恢复不破坏外部。不可捕获错误不恢复后继续执行，沿原异常通路保留最内错误帧。恢复不回滚可见副作用：全局/捕获cell、容器修改、IO、输出、随机状态以及闭包分配都保留；不提供事务。func_names和next_func_id不可回滚，否则失败回调写出的逃逸闭包会在后续trace中错配。
+
+## 19. T16-A 身份基础与兼容（2026-10-29 冻结）
+SourceId/ModuleId分域，legacy分别ENTRY；A函数home_module与active_module均ENTRY，globals/查名/self/cell行为不变。来源可无Loaded，不得假造其它文件文本。TracedRun sidecar仅宿主诊断载荷，legacy None，坏metadata结构化拒绝且保留旧载荷。Span/LzError/TraceFrame和T15 Result三/五/三字段保持；attempt不序列化来源，不回滚用户状态/函数ID。UserFn新增字段的Rust构造迁移及精确sidecar校验见interface-contract.md §19。本批不代表模块或效率验收，R304仍OPEN。

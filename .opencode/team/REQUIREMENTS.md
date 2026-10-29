@@ -1,9 +1,20 @@
 # LFZ 需求矩阵（唯一需求事实源 · v1.1 增量对齐版）
 
 > 最后更新: 2026-10-29 by requirements-analyst
-> 版本: **v6（T15四项功能/指南/应用通过；R-304开放，非正式发布）**
+> 版本: **v7（T16-A仅来源基础通过；R-304开放，非正式发布）**
 > 本文件是**唯一需求事实源**，唯一写者 requirements-analyst，他人只读。
 > 来源: `task-info.md`（课程作业原始要求）+ 用户指令 + 已定案 ADR（见 `DECISIONS.md`）。
+
+## T16-A 增量需求（2026-10-29，仅来源基础通过）
+
+范围严格对应三spec §19、T16-A-design.md。当前候选SHA256 `65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7`、783872B、73内置；team-lead已确认dist/target同字节，独立报告`docs/reports/T16-A-independent-verification.md`实测对象为target，不冒称verifier复跑了dist复制。独立562 harness、attempt13/check117、CLI91（含178官方）、旧app37+11/新38/JSON140及新Rust API见证通过；16程序×human/JSON两模式共32组/64进程的stdout/stderr/exit逐字节一致。
+
+本节只通过模块前置宿主来源元数据及旧行为兼容，**不是import/export加载、模块图、模块执行、home globals切换或跨文件CLI诊断通过**。T16-B仅设计草案，不标实现通过。新增公开UserFn.home_module属于Rust构造API迁移，外部手写literal须补字段，不能宣传完全无Rust API变化；旧Span/LzError/TraceFrame/Loaded/Program形状、CLI和T15固定Result字段保持。R304仍进行中/OPEN，无T16-A性能窗，不正式发布；旧T15/T14及v2证据与成绩各自保持。
+
+| R-ID | 需求 | 来源 | 验证方式（可命令复现） | 状态 | 交付物 | 评分项 |
+|------|------|------|------------------------|------|--------|--------|
+| R-131 | 来源基础API提供分域SourceId/ModuleId、稳定SourceMap追加编号、LocatedFailure保留旧错误、函数整数home_module=ENTRY及TracedRun来源sidecar。来源attach完整校验后原子替换，拒绝坏长度/ID/错误来源条件且保留旧sidecar；越界/legacy查询安全None。不加载或执行模块 | 三spec §19.1–19.3 | 在项目Temp工具链环境执行`cargo test --release`全部562通过；按T16-A-independent-verification.md的rustc命令链接并运行`Temp/T16-A-verifier/witness.exe`→exit0，覆盖SourceMap空/稳定ID/未知ID/loaded=None、校验规范顺序及原子拒绝、不同帧不同来源、host后改frames/result仍安全、home_module ENTRY；容量编号上限以有界构造验证，禁止真实巨表/OOM/abort。API记录UserFn新字段迁移，无旧语言字段或错误类扩展 | 通过 | src/source.rs/lib.rs（core-dev）、value.rs/evaluator.rs（runtime-dev）、三spec与T16-A独立witness/报告（language-architect/verifier） | 1、2 |
+| R-208 | T16-A旧无模块语言与CLI兼容、T15恢复协议不变；新增基础元数据不能被当作真实多模块求值或跨文件诊断 | IC §19.4；R206/207延伸 | `cargo test --release`562/562，独立直接运行7harness亦562；沿原公开脚本attempt13/check117/CLI91含官方178、jsonflow37/sortviz11/jsonbatch38/JSON140全PASS；`D:/app/ANACONDA/python.exe -B docs/reports/T16-A-independent-evidence/differential.py`在保全独立报告要求的旧T15副本后复现16程序32组完整双流/退出码相同（重新运行前另行保全既有证据，不覆盖唯一历史记录）。旧API默认origins=None、T15三/五/三字段不读sidecar、Span/LzError/TraceFrame/Loaded/Program旧shape及旧错误JSON保持；差分属于有界见证非穷举证明，无A性能提升声明 | 通过 | 交付物2/3；作者core/runtime新增单测，T16-A-independent-evidence与报告（verifier） | 1、2 |
 
 ## T15 增量需求（2026-10-29，独立功能通过）
 

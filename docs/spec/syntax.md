@@ -1010,3 +1010,6 @@ lfz [--json] check [--json] - [--json]
 新增内置调用 `attempt(f)`，不新增记号、文法或try/catch。f必须是能以零实参调用的函数值；用 `attempt(() => jsonParse(text))` 延迟可能失败的表达式。管道 `f |> attempt` 沿原脱糖规则等价。attempt仍可被局部/捕获/全局同名绑定遮蔽；attempt本身不是一等函数值，既有argv一等范围不扩大。普通参数表达式仍左到右先求值；求参错误不在本次attempt捕获范围内。
 
 返回普通struct，成功/失败及错误字段见semantics §18、interface-contract §18。`lfz check`只解析上述调用，不检查回调参数个数或执行回调。不改变文件前导、旧run/test JSON或未捕获错误。
+
+## 19. T16-A 基础批次（2026-10-29 冻结）
+本批只增加宿主来源/模块身份载荷，不新增LFZ语法/记号/AST；import/from仍保留未实现，export旧标识符规则不变。CLI和源码前导/行列规则保持，草案不等于新文法。精确接口及后继边界见interface-contract.md §19。
