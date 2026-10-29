@@ -1,12 +1,20 @@
 # LFZ 语言与解释器 — 程序设计课程作业
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-> 最后更新: 2026-10-29 by release-manager
+> 最后更新: 2026-10-30 by release-manager
 > 仓库地址: https://github.com/NeitherTourRest/lfz-programing-language
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
-## 当前：T16-A 来源身份基础候选（2026-10-29）
+## 当前记录：T16-B 非执行模块图检查候选（2026-10-30）
+
+B提供import/export声明解析与静态依赖图检查，**仅graph check，不初始化或执行模块**。C执行层§21是后继设计，不属于B已验收能力；后续活动源码可能进入C，实现版本须按独立指纹区分。
+
+B快照1.4.0、859136B、SHA256 `8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480`，[精确18源码/2Cargo/exe归档](docs/reports/T16-B-release-evidence/build.json)保全21成员，不含C设计文档。已落盘最终独立验收报告确认：584 harness、公开38、旧attempt13/check117/CLI91含178/app37+11/jsonbatch38/JSON140，另18独立模块进程PASS；见[独立报告](docs/reports/T16-B-independent-verification.md)。默认受限环境canonicalize失败及作者控制记录保留，不能把失败环境结果冒充通过。
+
+模块图验证遵循[§20契约](docs/reports/T16-B-design.md)，图错误与来源归属不等于模块已经运行。73内置保持，旧T15 Result与CLI无模块路径保持。R304OPEN，无本批性能计时、不打正式标签；旧v2及原始测试不改。下文A/T15均属历史指纹。
+
+## T16-A 历史来源身份基础候选（绑定65a29）
 
 本批只提供Rust侧来源元数据、错误来源载荷与函数定义模块身份基础，**尚无import/export解析、模块加载或模块执行**。现CLI、T15 Result/error/trace字段及73内置保持；不是已经可用的模块系统。
 

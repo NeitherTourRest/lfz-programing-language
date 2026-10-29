@@ -270,3 +270,13 @@
 - 依据§19添加home_module/active_module ENTRY、TracedRun可选来源sidecar，严格校验原子替换和安全Option查询；旧语言/CLI/Result字段不变。
 - 新runtime7unit定向通过；与core6合并完整release562/562/build通过。target65a29eae…/783872B，日志与manifest已保全。
 - 无模块执行/性能/正式发布声明，未改旧test/dist/profile/Git；停止编译/改源交下游。
+
+## [2026-10-29] T16-B模块执行预检源码交接
+- 已按§20.8给统一旧入口添加整Program首声明guard、单module帧及两叶节点防御match；3新增unit覆盖6入口和late export副作用预阻断。
+- git diff --check通过，未编译；core统一执行release后才有行为验收，源码/报告已交team-lead。
+- 无globals/session/C实现、不改dist/profile/旧测试/Git；腾slot等C契约。
+
+## [2026-10-30] T16-B中断恢复只读核对
+- 按轻量任务仅读自身STATUS和实际evaluator guard/3unit、spec§20.8；确认Interp前完整root预检、精准首次span、单MODULE帧及两个AST防御分支均落盘。
+- git diff --check src/evaluator.rs通过；未编译、未改代码。core唯一release --lib统一验证，尚不宣称通过；若编译问题再由team-lead唤醒修复。
+- 本人收工腾slot给tooling，不Git不调度。

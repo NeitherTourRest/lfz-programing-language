@@ -1,0 +1,288 @@
+{
+  "date": "2026-10-30",
+  "baseline": "738e198",
+  "status": "B graph-check candidate; C documents planning only; production snapshots from B ZIP; R304 OPEN; no tag/Git",
+  "excluded_C_nonplanning_paths": [],
+  "snapshots": [
+    {
+      "path": ".opencode/team/DECISIONS.md",
+      "staged_copy": "Temp/T16-B-release/stage/.opencode__team__DECISIONS.md",
+      "removed_matches": 1,
+      "copy_sha256": "6a9325172dfb908454e9f7e9fdb2dce5ab9a0f8feaa0a38ee288224ecbc86bc1"
+    },
+    {
+      "path": ".opencode/team/PROJECT_STATE.md",
+      "staged_copy": "Temp/T16-B-release/stage/.opencode__team__PROJECT_STATE.md",
+      "removed_matches": 1,
+      "copy_sha256": "facd34096fe41f27770bec80f718d618dcb52a64a277d6530d3f1571038fa733"
+    },
+    {
+      "path": ".opencode/team/agents/team-lead/STATUS.md",
+      "staged_copy": "Temp/T16-B-release/stage/.opencode__team__agents__team-lead__STATUS.md",
+      "removed_matches": 1,
+      "copy_sha256": "4a802ddca577ad03f35499151ec586515f02be6b7e216d147700714262eb2f8c"
+    },
+    {
+      "path": "src/ast.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__ast.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076"
+    },
+    {
+      "path": "src/builtins.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__builtins.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "0b69680b4b0029c0b4eb2ddd3ba86ecf22fa82cdab25cbec4d3a832e43a0c151"
+    },
+    {
+      "path": "src/cli.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__cli.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "50b8a6fd72240872a3662c2e4b6a5a41b5b77d2d0fbd8719d53d0d95ccf5e385"
+    },
+    {
+      "path": "src/env.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__env.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc"
+    },
+    {
+      "path": "src/error.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__error.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "fbe276ed65307748e4415358c99cf59dee82326f3ab185341bbf34b23baee6a1"
+    },
+    {
+      "path": "src/evaluator.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__evaluator.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "4b898a8a62d8e9f9d481ce9af61822bc821a5c4e63b3d2e8ad5807153da63bed"
+    },
+    {
+      "path": "src/json.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__json.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f"
+    },
+    {
+      "path": "src/json_codec.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__json_codec.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2"
+    },
+    {
+      "path": "src/lexer.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__lexer.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "ebb952edbcd201210eb1f9c6ddebf58e2f3f998b260a11a51fe1c967848031f2"
+    },
+    {
+      "path": "src/lib.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__lib.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "e5ecee22f8aa8e357b2d932d5bb0c74044a76f63a4ee2eb476e900dc68f254ce"
+    },
+    {
+      "path": "src/loader.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__loader.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f"
+    },
+    {
+      "path": "src/main.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__main.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "247fc12340d2f6a26aa3fc5ada658cbfe72fb7ee7f85f107b05e6af27018c366"
+    },
+    {
+      "path": "src/modules.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__modules.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895"
+    },
+    {
+      "path": "src/parser.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__parser.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "58c41ba85d930dc0ef465be2a9d3c0741cfe7052d6dd9df01a825aab73e7ff5f"
+    },
+    {
+      "path": "src/source.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__source.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468"
+    },
+    {
+      "path": "src/span.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__span.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2"
+    },
+    {
+      "path": "src/test_runner.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__test_runner.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "b70a1e193f79d191599ee57e033f01bc25bde5e4fef0cd97d46dd418453f1597"
+    },
+    {
+      "path": "src/value.rs",
+      "staged_copy": "Temp/T16-B-release/stage/src__value.rs",
+      "kind": "frozen_B_source",
+      "copy_sha256": "b200177f9102c042c03f5120b15af2f487f56ce19b90c31c9a5146d1c6830fc7"
+    },
+    {
+      "path": "tests/cli_t16b.rs",
+      "staged_copy": "Temp/T16-B-release/stage/tests__cli_t16b.rs",
+      "kind": "frozen_B_test",
+      "copy_sha256": "cb9e31cb64df1283269b1c0fe1956c8ad83e1c8bac25a229b18d2d7a55897250"
+    }
+  ],
+  "groups": [
+    {
+      "sequence": 1,
+      "message": "docs(spec): define module graph checking",
+      "direct_stage_paths": [
+        ".opencode/team/REQUIREMENTS.md",
+        "docs/reports/T16-B-design.md",
+        "docs/spec/interface-contract.md",
+        "docs/spec/semantics.md",
+        "docs/spec/syntax.md"
+      ],
+      "staged_snapshot_paths": []
+    },
+    {
+      "sequence": 2,
+      "message": "feat(modules): build static module dependency graph",
+      "direct_stage_paths": [
+        "docs/reports/T16-B-core-evidence/.gitattributes",
+        "docs/reports/T16-B-core-evidence/canonicalize-control.txt",
+        "docs/reports/T16-B-core-evidence/compile-1.txt",
+        "docs/reports/T16-B-core-evidence/compile-2.txt",
+        "docs/reports/T16-B-core-evidence/generated-large-fixtures.json",
+        "docs/reports/T16-B-core-evidence/green-12.txt",
+        "docs/reports/T16-B-core-evidence/green.txt",
+        "docs/reports/T16-B-core-evidence/manifest.json",
+        "docs/reports/T16-B-core-evidence/red.txt",
+        "docs/reports/T16-B-core.md"
+      ],
+      "staged_snapshot_paths": [
+        "src/ast.rs",
+        "src/error.rs",
+        "src/lib.rs",
+        "src/loader.rs",
+        "src/modules.rs",
+        "src/parser.rs"
+      ]
+    },
+    {
+      "sequence": 3,
+      "message": "feat(cli): check module graphs without execution",
+      "direct_stage_paths": [
+        "docs/reports/T16-B-runtime.md",
+        "docs/reports/T16-B-tooling.md",
+        "docs/tooling/evidence/T16-B/.gitattributes",
+        "docs/tooling/evidence/T16-B/build.txt",
+        "docs/tooling/evidence/T16-B/cli-d19dbfa7dd3f9d73.exe.txt",
+        "docs/tooling/evidence/T16-B/cli-tests-permitted.txt",
+        "docs/tooling/evidence/T16-B/cli-tests.txt",
+        "docs/tooling/evidence/T16-B/cli_t12-35b857587ead196a.exe.txt",
+        "docs/tooling/evidence/T16-B/cli_t14-b528900585815e19.exe.txt",
+        "docs/tooling/evidence/T16-B/cli_t16b-66b0b355c7f6f4d0.exe.txt",
+        "docs/tooling/evidence/T16-B/full-tests.txt",
+        "docs/tooling/evidence/T16-B/lfz-243aeb8f5c3370f1.exe.txt",
+        "docs/tooling/evidence/T16-B/lfz-63397fd2d9985014.exe.txt",
+        "docs/tooling/evidence/T16-B/manifest.json",
+        "docs/tooling/evidence/T16-B/red.json",
+        "docs/tooling/evidence/T16-B/test_runner-a9d3da191eeb2958.exe.txt",
+        "docs/tooling/evidence/T16-B/unit-ae562ae83f03ad63.exe.txt",
+        "docs/tooling/runner-contract.md"
+      ],
+      "staged_snapshot_paths": [
+        "src/cli.rs",
+        "src/evaluator.rs"
+      ]
+    },
+    {
+      "sequence": 4,
+      "message": "test(modules): verify non-executing graph checks",
+      "direct_stage_paths": [
+        "docs/reports/T16-B-blackbox-evidence/.gitattributes",
+        "docs/reports/T16-B-blackbox-evidence/final-first.json",
+        "docs/reports/T16-B-blackbox-evidence/manifest.json",
+        "docs/reports/T16-B-blackbox-evidence/preimplementation-red.json",
+        "docs/reports/T16-B-blackbox.md",
+        "docs/reports/T16-B-independent-evidence/.gitattributes",
+        "docs/reports/T16-B-independent-evidence/attempt13.json",
+        "docs/reports/T16-B-independent-evidence/check117.json",
+        "docs/reports/T16-B-independent-evidence/check140.py",
+        "docs/reports/T16-B-independent-evidence/cli91.json",
+        "docs/reports/T16-B-independent-evidence/commands.json",
+        "docs/reports/T16-B-independent-evidence/graph-witnesses.json",
+        "docs/reports/T16-B-independent-evidence/graphs-initial.py",
+        "docs/reports/T16-B-independent-evidence/graphs.py",
+        "docs/reports/T16-B-independent-evidence/harnesses.json",
+        "docs/reports/T16-B-independent-evidence/independent140.json",
+        "docs/reports/T16-B-independent-evidence/initial-sources.json",
+        "docs/reports/T16-B-independent-evidence/jsonbatch.json",
+        "docs/reports/T16-B-independent-evidence/jsonflow.json",
+        "docs/reports/T16-B-independent-evidence/manifest.json",
+        "docs/reports/T16-B-independent-evidence/public.json",
+        "docs/reports/T16-B-independent-evidence/public.py",
+        "docs/reports/T16-B-independent-evidence/run-initial.py",
+        "docs/reports/T16-B-independent-evidence/run.py",
+        "docs/reports/T16-B-independent-evidence/sortviz.json",
+        "docs/reports/T16-B-independent-verification.md",
+        "tests/.gitattributes",
+        "tests/REPORT.md",
+        "tests/coverage-matrix.md",
+        "tests/t16b_cli_check.py"
+      ],
+      "staged_snapshot_paths": [
+        "tests/cli_t16b.rs"
+      ]
+    },
+    {
+      "sequence": 5,
+      "message": "chore(checkpoint): preserve B candidate and plans",
+      "direct_stage_paths": [
+        ".opencode/team/TEAM_BOARD.md",
+        ".opencode/team/agents/core-dev/JOURNAL.md",
+        ".opencode/team/agents/core-dev/STATUS.md",
+        ".opencode/team/agents/language-architect/JOURNAL.md",
+        ".opencode/team/agents/language-architect/STATUS.md",
+        ".opencode/team/agents/release-manager/JOURNAL.md",
+        ".opencode/team/agents/release-manager/STATUS.md",
+        ".opencode/team/agents/requirements-analyst/JOURNAL.md",
+        ".opencode/team/agents/requirements-analyst/STATUS.md",
+        ".opencode/team/agents/runtime-dev/JOURNAL.md",
+        ".opencode/team/agents/runtime-dev/STATUS.md",
+        ".opencode/team/agents/team-lead/JOURNAL.md",
+        ".opencode/team/agents/test-engineer/JOURNAL.md",
+        ".opencode/team/agents/test-engineer/STATUS.md",
+        ".opencode/team/agents/tooling-dev/JOURNAL.md",
+        ".opencode/team/agents/tooling-dev/STATUS.md",
+        ".opencode/team/agents/verifier/JOURNAL.md",
+        ".opencode/team/agents/verifier/STATUS.md",
+        "README.md",
+        "docs/reports/T16-B-release-evidence/.gitattributes",
+        "docs/reports/T16-B-release-evidence/build.json",
+        "docs/reports/T16-B-release-evidence/candidate-snapshot.zip",
+        "docs/reports/T16-B-release-evidence/cli_t16b.rs.txt",
+        "docs/reports/T16-B-release-evidence/commit-groups.json",
+        "docs/reports/T16-B-release-evidence/prepare-checkpoint.py",
+        "docs/reports/T16-B-release-evidence/source-hashes.json",
+        "docs/reports/T16-C-design-draft.md",
+        "docs/reports/T16-C-design.md",
+        "docs/reports/T16-C-interface-proposal.md",
+        "docs/reports/T17-design-draft.md",
+        "docs/reports/T17-resource-error-proposal.md",
+        "docs/reports/delivery-checklist.md"
+      ],
+      "staged_snapshot_paths": [
+        ".opencode/team/DECISIONS.md",
+        ".opencode/team/PROJECT_STATE.md",
+        ".opencode/team/agents/team-lead/STATUS.md"
+      ]
+    }
+  ]
+}

@@ -1,22 +1,19 @@
 # tooling-dev — 工作状态
-> 最后更新：2026-10-27 19:59 by tooling-dev
+> 最后更新：2026-10-30 02:52 by tooling-dev
 
 ## 当前状态
-T14非执行check CLI实现与作者验证完成，等待team-lead独立验收/交付复制。现在停止源码修改、构建和测试；未覆盖dist或Git。
+T16-B CLI静态模块图适配及作者验证完成。源码/产物已冻结，停止所有构建和测试，交team-lead独立验证和C接续；未Git/覆盖dist。
 
 ## 产出与证据
-- src/cli.rs新增CheckInput/parse_check_input/check_input/check_loaded_on_stack：file/-e/stdin仅load/lex/parse/drop，全部位于既有大栈，不求值、不建Interp、不重定向LFZ输出。
-- 合法check JSON严格ok/mode/check/executed/false及既有错误字段；普通成功空双流，usage仍stderr文本且stdout空。保护CODE；CODE外--/脚本参数/check --help拒绝。
-- tests/cli_t14.rs新增12组进程回归；旧测试未改。旧版红测0/12；候选首次11/12，按既有run同源line2,col8订正新位置期望后12/12。中间失败日志保留。
-- cargo test --release 542通过（412+48+28+12+12+15+15），0failed/ignored；cargo build --release exit0。T13新增8回归包含在412lib内。
-- 最终target/release/lfz.exe774656B，SHA83F56A194E216862C45377F4C3971B085744A7BA2363163E1EDAC6AF5E85AC79。Cargo1.4.0/opt2/profile未改，dist交release。
-- docs/tooling/runner-contract.md §11、main说明已同步；原始日志和manifest在docs/tooling/evidence/T14；作者报告docs/reports/T14-tooling.md。
+- src/cli.rs check三来源counted加载；无模块根不构图/不套图预算；有模块根只parse一次后移交ParsedEntry，图构造及析构均在大栈。
+- GraphFailure真实source_id取display_path/可选Loaded诊断，依赖错误不绘入口文本；旧JSON/usage保持。
+- tests/cli_t16b.rs七组过程测试及旧binary红见证；新增文件无旧tests改动。默认2/7因canonicalize沙箱权限；同harness提权7/7，无产品改动。
+- 默认全cargo lib439通过/8权限失败中止，完整保留；同八release harness提权584/584=447+48+28+12+12+7+15+15，0failed/ignored；build exit0。
+- 最终target/release/lfz.exe859136B，SHA8EA375DCD08098EF61D040A57A7B1AD28A28C2FDC25A5CA4921A75B728944480。未动dist/profile。
+- docs/reports/T16-B-tooling.md，docs/tooling/evidence/T16-B/manifest.json+原始日志；runner-contract §13已同步。
 
-## 阻塞/限制
-无实现阻塞。语法通过不保证运行成功，不做名称/类型/arity/IO路径静态验证，不是通用沙箱；T13性能R304保持OPEN，不据功能全绿宣布正式发布。
-
-## 下一步
-team-lead衔接独立非执行验证/黑盒、文档、交付复制与Git；若发现缺陷再由team-lead唤醒修复。原T13测窗/快照保留不混成新产物。
+## 阻塞与下一步
+无CLI实现阻塞。B仅静态图，run模块仍由runtime在所有副作用前拒绝；C初始化另行冻结实现。R304不因功能全绿关闭。后续独立验收由team-lead协调，缺陷再唤醒。
 
 ## 关键经验
-检查模式须独立于run；Program不能带回主线程析构。CODE紧随-e无条件保护，usage错误JSON例外须明确。位置断言按既有前端契约核实，不能为通过新测试改旧parser。所有临时件在项目Temp，cargo只release。
+来源错误必须携带对应Loaded，不能用root文本画依赖下划线；raw_bytes来自同一次读，legacy大root不能误套图限额。权限失败保原始记录并使用同产物许可验证，不改canonical身份策略凑绿。所有临时项目Temp，仅release复用target。

@@ -193,3 +193,9 @@
 - 产出：T16-A-core.md与原字节证据/manifest；停止编译，runtime接续。
 - 决策：旧五种public shape不变，不做模块IO/文法/运行。
 - 阻塞：无；完整验收/效率由后继，R304OPEN。
+
+## [2026-10-30] T16-B core实现与环境权限验证
+- 完成：模块AST/parser上下文、loader原始字节计数、九错误、静态图DFS/缓存/预算；六源码唯一写域。
+- 证据：编译成功、沙箱4/10仅canonicalize Os5；同harness提权1/1与10/10；实际byte两新增后最终12/12通过。
+- 保存：T16-B-core.md/证据manifest及全部失败日志；18MiB大夹具先hash后只清已核实Temp文件。
+- 下一步：tooling唯一编译全量、独立验收，停止core编译；R304OPEN无正式发布。

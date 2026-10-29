@@ -9,8 +9,8 @@
 | 子批 | 范围 | 状态 |
 | -- | -- | -- |
 | A | source identity/位置载荷/home module基础，旧行为兼容 | 完成，562及RustAPI见证/全旧回归/32组差分独立PASS，Git收口中 |
-| B | 顶层import/export与完整模块图，check不初始化 | 草案完成，待后继冻结实现 |
-| C | 独立全局、执行缓存、初始化、home globals | B后接续 |
+| B | 顶层import/export与完整模块图，check不初始化 | 独立584/公开38/新18及旧回归通过，B精确ZIP冻结，快照Git收口中 |
+| C | 独立全局、执行缓存、初始化、home globals | §21已冻，B独立通过后runtime执行实现中，唯一--lib编译 |
 | D | 跨文件CLI诊断、应用/指南/独立验证 | C后接续 |
 
 ## T15（2026-10-29）：受控错误恢复

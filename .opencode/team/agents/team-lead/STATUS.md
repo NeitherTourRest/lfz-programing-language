@@ -1,20 +1,23 @@
-# team-lead — 工作状态
-> 最后更新: 2026-10-27 by team-lead
+## 当前执行检查点（2026-10-30）
+B独立已PASS：584harness/公开38/额外18进程及旧13/117/91含178/apps/140，源8ea375/859136B。B精确ZIP21成员（18src+2Cargo+exe）582683B/SHA DB4AE08E66DD43D7A90C9DDD33706B170EE36C014114840922431C36292556CA，Temp保B exe。已GO runtime_dev_t16按§21改value/evaluator实现C，唯一--lib编译，tooling暂只准备。release_manager_t12准备B索引快照提交：所有src从ZIP，cli_t16b.rs也已要求快照；禁止add活动C源或未来C tests。C尚未验收，B checkpoint可按快照保存，C工作树保留继续。核心/parser/graph生产接口不准C owner擅改，任何疑问先汇报。R304OPEN，不tag；heartbeat lf z实际id=lfz继续。
 
-## 当前状态
-T14功能与指南已完成独立验收，候选Git提交收口中。T13两处省分配候选9cda功能通过，但完整性能15PASS/2ENV/2FAIL、多负载对T12回归；已拒收并精确恢复生产前缀cbc974b，保留8新增回归和全部失败证据。R304仍OPEN，不正式发布。
+# team-lead — 当前状态
+> 更新：2026-10-29
 
-## 证据与运行阶段
-- T13独立530/166/91/140/app37+11、31程序62差分通过；532正式+152预热性能经独立重算一致。
-- 9cda精确封存ZIP531115B/SHA8f36bf82…19成员；retraction-source-check.json确认生产前缀逐字节恢复。
-- T14三spec §17冻结；tooling_dev_t14唯一实现和release编译；test_engineer_t14公开黑盒；docs_writer_t14人类指南准备。下一派AI指南/需求/独立验证/发布。
+## 当前任务
+用户强制要求全自动连续推进直至NEXT-ITERATIONS规划全部功能实际实现验收，不能每批总结就停等。自动接续heartbeat lf z（实际id=lfz）已ACTIVE，每5分钟恢复，全部完成后停用。当前直接继续T16-B，不重复新建自动化。
 
-## 环境/保护
-target/debug/incremental已核对无编译后清可重建556MB，D1.2GB；源码/证据未删，只用release且TEMP项目内。旧v1.3/v2不改。
-原用户DECISIONS+28/PROJECT_STATE+1/本STATUS+1事故块始终保留未提交，不可直接整文件git add。
+## 已完成基线
+T16-A已推送738e198，来源/sidecar基础独立562/旧回归/RustAPI/32差分PASS，65a29/783872B；尚无模块执行。原T15 attempt及73内置保持，R304仍OPEN。
 
-## 下一步
-dist/target83f56/774656B；542/117/91含166/app37+11/140+57独立通过，人/AI指南各27通过。需求/README同步，正在按已授权main保存候选；无T14性能计时，R304OPEN，不打正式tag。
+## 运行中与顺序
+- language_architect_t16已冻结B三spec§20/§20.9，后续仅C/T17草案。
+- core_dev_t16唯一AST/parser/error/loader/modules/lib实现B图，runtime_dev_t16只evaluator/value的preflight/防御，全部落盘前不编译。
+- runtime完成小补丁可返回腾slot给tooling；tooling按Graph API接check并提供跨文件错误展示。全部接口齐后core唯一release编译，不能并发读半写源码。
+- B通过后直接C session/env/cache/home切换、D诊断应用/指南/验收，然后T17/T18/T19/T20，不要等用户说继续。
+
+## 保护与约束
+D0.30GB，所有临时项目Temp，禁止新target或debug/外部安装，唯一release编译。原用户DECISIONS+28/PROJECT_STATE+1/本STATUS+1事故块严格保留未提交，不能直接add整3文件。旧v2与tags不变，已授权验收后推main；R304不能换门槛/择窗追绿，未验收不正式发布。
 ## 关键经验（写给未来的自己）
 - **临时件一律放项目内 `Temp/`（用户 2026-09-27 指令，已立 ADR）**：**禁止**再往 C 盘 `%TEMP%` 写；`Temp/` 已 gitignore。纪律：① **每份任务书必须写明"临时文件放 `<repo>/Temp/`"**；② 每波任务收工后我**盘一次 `Temp/`**；③ **先保全证据再删** —— 一手证据（如盲测报告）**复制进仓库** `docs/reports/**` 再清临时件，**不得删唯一副本**；④ **正在跑的任务目录不许动**（按 mtime 判别）。历史：首次清理 C 盘 `%TEMP%\opencode\` 740 文件 / 5.31 MB → 44 文件 / 1.41 MB。
 - **「绿了 ≠ 对」再验证一次**：445 单测 + 85 黑盒 + 应用 exit 0 **都不等于规范完全符合** —— 所以用户要的「确认无误」必须用**独立的条款级符合性审计**来回答，不能用「测试全绿」糊弄。（实证：157 条款审计查出 **2 个可达 panic**，445 单测与 85 黑盒全都没抓到。）
@@ -49,3 +52,18 @@ T15进展：源码冻结1a5a3d1c…/782848B，549release、178官方、13精确�
 65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7/783872B：独立562harness、attempt13/check117/CLI91含178、旧app37+11/jsonbatch38/JSON140、RustAPI见证及32组64进程旧新差分全部通过。core6+runtime7新unit。A仅来源元数据/定位sidecar/整数home模块基础，未实现导入/执行；UserFn公开构造需新home_module，旧位置形状/CLI/T15Result字段保持。R304OPEN，无A计时不tag。B草案已保存，候选Git收口中。
 
 > T16-A实际Git回执（2026-10-29）：五组已推送main，远端26fff25add63ef0b33a4432b046fa310ee07c975；原用户三块28/1/1保持未提交。A基础完成、B仅草案，R304OPEN不tag。
+
+## 自动接续恢复（2026-10-30）
+此前三个agent因账户用量限制中断（提示恢复时间10月30日02:43）；当前已恢复调度，core复用已落盘B源码，唯一cargo test --release --lib modules::tests执行中；runtime只核已落防御代码和记录不并发写/编译；architect只补有界读取错误优先观测范围说明。tooling尚未接Graph，B未验收，禁止push草成源码或声称完成。D约0.28GB，不新target、不外写；原3用户块保护，heartbeat lfz仍ACTIVE。
+
+B恢复进展：core首次编译成功，默认沙箱modules10项4过6因canonicalize AccessDenied失败；同一harness提权单控1/1与完整10/10通过，三份日志保全，未改产品绕过身份契约。core获准补真实bytes边界并唯一--lib编译；tooling_dev_t14已唤醒接check图API，只写CLI不编译。runtime仅核对已落guard并收工；architect§20.10有界观测优先补钉已落并收工。后继需要core报最终绿再准tooling唯一完整release，不能并发cargo。
+
+## B接续检查点（2026-10-30）
+core最终12/12包含真实2MiB/16MiB边界通过，已停止编译；tooling CLI接入已落，新cli_t16b7/7同产物提权实跑通过，当前tooling唯一完整release/build中，候选hash尚待报告。默认沙箱canonicalize AccessDenied失败日志与同harness提权控制均保留，不改产品绕过身份规则。test_engineer_t16b准备公开过程矩阵及旧candidate缺功能红测，未验新版本。architect正在审实际B实现收敛C精确接口，只设计不改B源码；B独立验收后才能实施C。下一步收tooling最终hash，唤醒test+独立verifier复验B，再直接冻结/实现C，勿停等用户。
+
+## B候选已冻结，C精确契约接续（2026-10-30）
+最终target859136B/SHA8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480，tooling同8个release harness安全提权584/584通过（默认沙箱canonicalize权限失败全部保留），已停源码与编译。test_engineer_t16b已准针对target公开过程全测；verifier_t16a已唤醒独立B全回归/图见证，二者均不编译。dist仍A旧产物，验收前不冒充B已交付。architect已获C方向批准，冻结§21/精确Graph执行API+session/home/StructDef可选定义上下文，旧None保legacy；仅文档，B独立PASS后才能GO源码。下一心跳收测试与独立回执，B过即启动C，不停在总结。
+
+B公开验收38/38已过（T16-B-blackbox及manifest，8ea375/859136B），source hash与冻结吻合。官方178不改不叠加；独立verifier仍在复核，模块执行C仍未实现。
+
+B提交准备已完成：release脚本核固定SHA B ZIP18源码，B CLI test冻结副本，排除C非规划报告/新tests，只纳3个C规划文档；等requirements_analyst_t14闭B条目后root可最后refresh/5组snapshot提交推main。C runtime正在唯一--lib增量测试，首轮7场景5过2仅新fixture '='/'：'语法误用已修，保留日志，不改parser/旧tests；禁止为B提交stage当前C源码。

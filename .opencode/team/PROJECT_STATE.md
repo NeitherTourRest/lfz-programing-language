@@ -1,3 +1,9 @@
+## 当前执行检查点（2026-10-30）
+B独立已PASS：584harness/公开38/额外18进程及旧13/117/91含178/apps/140，源8ea375/859136B。B精确ZIP21成员（18src+2Cargo+exe）582683B/SHA DB4AE08E66DD43D7A90C9DDD33706B170EE36C014114840922431C36292556CA，Temp保B exe。已GO runtime_dev_t16按§21改value/evaluator实现C，唯一--lib编译，tooling暂只准备。release_manager_t12准备B索引快照提交：所有src从ZIP，cli_t16b.rs也已要求快照；禁止add活动C源或未来C tests。C尚未验收，B checkpoint可按快照保存，C工作树保留继续。核心/parser/graph生产接口不准C owner擅改，任何疑问先汇报。R304OPEN，不tag；heartbeat lf z实际id=lfz继续。
+
+## 最新执行入口（2026-10-29，全自动持续推进）
+用户明确要求直到NEXT-ITERATIONS全部功能实现验收，不得子批后停等。当前T16-B三spec§20已冻结（含§20.9冲突span补钉），core实现AST/parser/error/loader/modules/lib，runtime落无副作用preflight及AST防御；源全部owner落盘就绪后core唯一release编译，tooling接check图API。A已推送738e198，基线65a29/562。architecture后续C/T17仅草案，不先改源。自动接续heartbeat id=lfz已ACTIVE，每5分钟恢复未完成工作，完成全部规划功能和性能门槛后停用；不重复调度已有agent。R304OPEN，D约0.30GB，只reuse release，原用户3块28/1/1与旧v2/tags保护。
+
 # 项目全局状态
 > 当前快照：2026-10-29 by team-lead
 
@@ -126,3 +132,12 @@ T11-12/13/14/16 本批实现、黑盒与文档需求同步已完成；T11-15 的
 65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7/783872B：独立562harness、attempt13/check117/CLI91含178、旧app37+11/jsonbatch38/JSON140、RustAPI见证及32组64进程旧新差分全部通过。core6+runtime7新unit。A仅来源元数据/定位sidecar/整数home模块基础，未实现导入/执行；UserFn公开构造需新home_module，旧位置形状/CLI/T15Result字段保持。R304OPEN，无A计时不tag。B草案已保存，候选Git收口中。
 
 > T16-A实际Git回执（2026-10-29）：五组已推送main，远端26fff25add63ef0b33a4432b046fa310ee07c975；原用户三块28/1/1保持未提交。A基础完成、B仅草案，R304OPEN不tag。
+
+## 自动接续恢复（2026-10-30）
+此前三个agent因账户用量限制中断（提示恢复时间10月30日02:43）；当前已恢复调度，core复用已落盘B源码，唯一cargo test --release --lib modules::tests执行中；runtime只核已落防御代码和记录不并发写/编译；architect只补有界读取错误优先观测范围说明。tooling尚未接Graph，B未验收，禁止push草成源码或声称完成。D约0.28GB，不新target、不外写；原3用户块保护，heartbeat lfz仍ACTIVE。
+
+## B接续检查点（2026-10-30）
+core最终12/12包含真实2MiB/16MiB边界通过，已停止编译；tooling CLI接入已落，新cli_t16b7/7同产物提权实跑通过，当前tooling唯一完整release/build中，候选hash尚待报告。默认沙箱canonicalize AccessDenied失败日志与同harness提权控制均保留，不改产品绕过身份规则。test_engineer_t16b准备公开过程矩阵及旧candidate缺功能红测，未验新版本。architect正在审实际B实现收敛C精确接口，只设计不改B源码；B独立验收后才能实施C。下一步收tooling最终hash，唤醒test+独立verifier复验B，再直接冻结/实现C，勿停等用户。
+
+## B候选已冻结，C精确契约接续（2026-10-30）
+最终target859136B/SHA8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480，tooling同8个release harness安全提权584/584通过（默认沙箱canonicalize权限失败全部保留），已停源码与编译。test_engineer_t16b已准针对target公开过程全测；verifier_t16a已唤醒独立B全回归/图见证，二者均不编译。dist仍A旧产物，验收前不冒充B已交付。architect已获C方向批准，冻结§21/精确Graph执行API+session/home/StructDef可选定义上下文，旧None保legacy；仅文档，B独立PASS后才能GO源码。下一心跳收测试与独立回执，B过即启动C，不停在总结。

@@ -137,3 +137,11 @@
 - 产出：docs/reports/T14-tooling.md、docs/tooling/evidence/T14/manifest.json及五份原始日志，src/cli.rs、main说明、tests/cli_t14.rs。
 - 下一步：独立非执行见证/黑盒、指南及交付复制由team-lead衔接。
 - 阻塞：无；性能R304未关闭，不宣布正式发布。无旧测试/核心/spec/profile/dist/Git变更，收工后停止执行。
+
+## [2026-10-30 02:52] T16-B静态模块图CLI收工
+- 来源：team-lead轻量接续，三spec§20冻结含20.9/20.10。
+- 完成：check三来源counted读取/根一次parse/无声明legacy例外/有声明移交模块图/真实来源错误渲染，全部大栈析构。
+- 产出：src/cli.rs、tests/cli_t16b.rs七组、runner-contract§13、T16-B-tooling作者报告与原始日志manifest。旧dist红见证保留。
+- 验证：默认新CLI2/7和全cargo lib439+8失败均因canonicalize沙箱权限，原记录保留；按授权同release harness提权7/7及八程序584/584全过，无改产品/测试或重编译。build exit0，最终859136B/hash8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480。
+- 下一步：独立验收、交付复制、C模块初始化由team-lead接续。
+- 阻塞：无CLI实现阻塞；未改core/runtime/spec/旧tests/profile/dist/Git，不宣称模块运行或性能R304完成。收工后停止操作。

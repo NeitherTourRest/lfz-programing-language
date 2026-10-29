@@ -272,3 +272,28 @@
 - 证据：文件长度/文档diff检查exit0。未改spec/source/A产物/看板，未构建或Git。
 - 下一步：A独立通过后由team-lead批准B冻结；草案不是规范或已实现功能，R304OPEN。
 - 阻塞：无草案交付阻塞。
+
+## [2026-10-30] T16-B限读可观测优先级补钉
+- 来源：team-lead轻量恢复，因额度中断先记录真实状态；A已独立过，B core唯一release --lib验证中。
+- 完成：interface-contract §20.10追加，单file后总量优先只对实际已读bytes成立；总量剩余较小时不窥测未读尾部，不突破take(min+1)预算。
+- 保持：全部上限/消息、A接口、legacy例外不变；C/T17仅草案不冻结。另补当前B已冻结与后继草案事实，纠正上次未写收工的陈旧状态。
+- 证据：只追加规范补钉与ADR/本人记录，文档diff检查；无源码、编译、产品测试或Git操作。
+- 下一步：释放slot，由team-lead继续B验收及C冻结，不等用户追加“继续”。
+- 阻塞：无设计阻塞，R304仍OPEN。
+
+## [2026-10-30] C实际B代码审查与最小接口提案
+- 来源：team-lead轻量连续任务；读自身STATUS与当前modules/source/loader/parser/evaluator/value/CLI，B全release/hash及独立验收尚在进行。
+- 产出：T16-C-interface-proposal.md10395B、T17-resource-error-proposal.md2163B，均提案未冻§21或新增错误类。
+- 核心：新graph入口外层宿主错误Result，单Interp modules Env缓存；UserFn与StructDef默认表达式home定义上下文；fault来源在restore active前保存；attempt同步元数据但Result不加键。模板legacy caller语义不能偷偷改变。
+- 风险：StructLit.type_name仅IDENT，先用let P=lib.Point再P{}；CLI首10尾30折叠必须用原frame index查source。ExecutionLimitError需单独ADR，预算不可恢复。
+- 证据：两文件存在/长度及diff --check exit0；未改B源/spec、构建或Git。
+- 下一步：team-lead裁决graph异常接口与可选TemplateContext后冻结C；B独立过才执行源码改造。
+- 阻塞：无提案交付阻塞，R304仍OPEN。
+
+## [2026-10-30] T16-C正式接口冻结
+- 来源：实际B审查与C-interface-proposal后，team-lead批准宿主graph Result、单session/home/fault/attempt与可选模板定义context方向。
+- 产出：三spec §21、T16-C-design.md11172B、先追加ADR；B独立通过后才允许源码GO。
+- 精确接口：graph_on_thread入口/GraphExecutionError与host CLI协议，TemplateContext四字段/StructDef可选context/新构造helper，旧helpers None；默认值diagnostic frame有Recursion保护，Ok非Value Flow不吞，Err恢复active但保故障帧。
+- 证据：文档diff --check exit0，所有精确签名/owner/错误与兼容字段检查；无源码/测试/构建/Git变更。
+- 下一步：runtime/tooling按冻结契约接入并独立验收；T17新增ExecutionLimitError仍需独立ADR，不伪装现Recursion/Overflow。
+- 阻塞：无设计阻塞，R304OPEN，规范不代表实现或正式发布。

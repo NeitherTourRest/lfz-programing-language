@@ -81,3 +81,8 @@
 - 新增R131/208并依据T16-A独立562/API witness/旧公开回归及32差分组通过，绑定65a29…/783872B。
 - 仅source metadata/located failure/home整数/origins原子基础；UserFn公开字段迁移明确，旧结构shape/CLI/T15协议保持。整个模块未实现，B仅设计。
 - R304OPEN，无A性能窗/非正式发布；仅需求及本人记录，无产品测试、计时或Git写入。
+
+## [2026-10-30] T16-B静态图需求收口
+- 新增R132/133/209并通过，绑定8ea375…/859136B，独立584/38/18与旧回归全PASS。
+- 仅静态声明/完整图check和run/eval副作用前拒绝，整个T16执行未完成；C仅冻结且在实现，不提前验收。有限链接/legacy大root/有界已读字节与canonical权限控制边界明确。
+- R304OPEN，无B性能窗/正式tag；仅REQUIREMENTS及本人记录，无产品测试、编译或Git写入。

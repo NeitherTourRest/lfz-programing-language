@@ -1257,3 +1257,15 @@ T13唯一完整三标签窗口及独立审计为15PASS/2ENV/2FAIL，map三档、
 
 ### [2026-10-29] [language-architect] T16-A 来源与模块身份基础定案
 经team-lead批准，source.rs仅元数据与可选Loaded；Span/LzError/TraceFrame/Loaded/Program旧形状保持。TracedRun可选sidecar严格校验原子附加，legacy None，无坏来源回退；UserFn整数home_module，active_module ENTRY。A不启用模块/CLI/IO/globals切换，T15Result不变。单写者与Rust构造迁移写入三spec §19，冻结不等于产品验收。
+
+### [2026-10-29] [language-architect] T16-B 静态模块图定案
+A已独立验收并推送738e198，team-lead批准B草案总体与1024/128/2MiB/16MiB限额。冻结静态声明、counted loader/有界依赖读取、ModuleGraph/GraphFailure及check图；legacy无声明root不收紧，C前run整Program预检无副作用拒绝模块。A旧形状与T15Result不变，未宣称模块运行完成；后继C/T17继续设计。
+
+### [2026-10-29] [language-architect] T16-B 旧声明冲突定位补钉
+core指出旧声明无name_span；经team-lead裁定，import-import用后alias_span，import对普通声明用普通Stmt.span，导出仍ExportName.span，不猜算列且不扩旧AST字段。§20.9与设计已追加细化。
+
+### [2026-10-30] [language-architect] 模块图有界读取错误优先按已观测字节
+经team-lead确认core边界解释：take(min(单文件限额,总剩余)+1)只证明实际已读部分；单后总优先级只应用于已观测bytes，较低总剩余先触发时不为识别未读尾部而突破读取预算。§20.10追加细化，不改限额/消息或A接口。
+
+### [2026-10-30] [language-architect] T16-C 单session执行与定义上下文定案
+经team-lead批准，新增graph宿主Result入口、执行前结构验证；单Interp session/缓存与home globals切换，故障source独立保存，attempt恢复新元数据但Result不增键。graph模板Some定义上下文及独立来源/递归诊断帧，legacy None保旧caller默认语义；host异常不伪装LFZ业务错误。§21冻结，B独立过后才GO源码。

@@ -1,17 +1,17 @@
 # core-dev — 工作状态
-> 最后更新：2026-10-29 by core-dev
+> 最后更新：2026-10-30 by core-dev
 
 ## 当前状态
-T16-A来源元数据基础完成，定向release6/6通过；已通知team-lead runtime可接续编译，本角色停止编译。
+T16-B core按§20实现完成，12新unit全部通过；停止编译，tooling接续唯一全量构建。
 
 ## 产出
-src/source.rs、src/lib.rs导出、docs/reports/T16-A-core.md及证据目录。SourceId/ModuleId分域、SourceRecord可选Loaded、SourceMap安全索引/checked插入、SourceMetadataError、LocatedFailure按spec§19实现。
+src/ast.rs/error.rs/loader.rs/parser.rs/modules.rs/lib.rs；T16-B-core.md及原字节证据/manifest。AST模块声明、顶层上下文、静态图迭代DFS、canonical缓存、来源与有界读取/预算齐备。B不运行模块，C后继执行。
 
 ## 证据
-旧rlib外部消费见证rustc E0432/exit1；新增source::tests定向release6 passed/419 filtered，exit0。原始red/green及manifest保留，不冒称外部见证已在新rlib重新链接。
+旧dist check import红测exit2。首次release编译成功但sandbox测试4/10，6项helper canonicalize Os5；相同harness提权单1/1和完整10/10通过，未改产品绕过。增加真实byte边界后release no-run成功，最终提权12/12通过/435 filtered。失败/控制/最终全部保留。
 
 ## 下一步/阻塞
-runtime接续，随后全量与独立验收。无core阻塞；本批没有模块加载/文法/CLI功能，R304OPEN。
+无core阻塞。tooling集成CLI并独立验收；若canonicalize仍受沙箱限制，应如实使用已授权非沙箱验证，不改变身份契约。不编译、不Git、不调度。
 
-## 关键经验
-保留Span/Loaded/TraceFrame/LzError/Program旧shape，来源归外层记录；加载错误可无源码文本。编号上限使用private helper合成，不真实分配。所有临时项目Temp，只release；不Git/改他人产物/调度。
+## 经验
+旧Span/Loaded/TraceFrame/LzError/Program形状不改，来源外层。判定字节超限仅按限读观测数据，不推测未读实际长度。约18MiB大夹具先保SHA再按核实Temp路径清理，D低空间只release。

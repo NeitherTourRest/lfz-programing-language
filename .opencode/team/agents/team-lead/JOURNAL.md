@@ -197,3 +197,31 @@
 ## [2026-10-29] T16-A推送回执
 - 五组ad5d1de/185607e/07d312f/8d3db21/26fff25推送main，远端26fff25add63ef0b33a4432b046fa310ee07c975。
 - 原用户三块28/1/1保留。首次链接失败原始日志空白行原样保留；其他新源码文档diff检查通过。模块运行未实现，R304OPEN无正式tag。
+
+## [2026-10-29] 全自动持续执行与T16-B开工
+- 用户明确纠正不得每子批结束停等，现设置线程heartbeat自动接续id=lfz，每5分钟ACTIVE；仍在当前turn持续开发，全部T16-T20与实际性能门槛通过才停用。
+- B精确§20/20.9冻结，core AST/parser/error/loader/module graph，runtime upfront guard；所有owner代码齐才唯一release编译。原3块、旧基线保护。
+
+## [2026-10-30] 心跳恢复额度中断后的B实现
+- 读启动文件/Git/进程确认既有B代码草成未编译，无cargo/rustc；3个errored角色按原职责唤醒复用，不重建任务。
+- core唯一release定向编译，runtime无并行写，architect仅补有界读取观测边界；后续tooling接图API，尚无完成声明。
+
+## [2026-10-30] B核心定向环境对照
+- 编译成功，默认沙箱canonicalize元数据访问失败；同已编译harness提权10/10通过，不改产品，失败和对照日志均保留。
+- core补真实2MiB/16MiB边界仍唯一--lib编译，tooling只写CLI接Graph；无全功能/正式发布声明。
+
+## [2026-10-30] B CLI定向通过并接C接口审查
+- core12绿后交tooling唯一编译；CLI新7组同harness提权通过，默认sandbox5个canonicalize受限失败证据保留。完整release/build仍运行，无最终hash/发布声明。
+- 派test_engineer_t16b公开矩阵与architect C实际接口设计，不重复core/CLI owner编译。
+
+## [2026-10-30] B候选584完成进入独立，C契约准备
+- 8ea375/859136B冻结，无继续编译；test/verifier按同产物验B，保默认沙箱环境失败与提权完整通过证据。
+- C最小graph执行/hostGraphExecutionError与可选TemplateContext方向批准，architect只冻文档，等待B独立PASS才落C代码。
+
+- 本轮B公开38/38首次完整通过，官方178保持，独立验收与C契约接续。
+
+## [2026-10-30] B独立通过与C实现GO
+- B独立584/公开38/18新图见证及旧回归通过；源+exe精确ZIP DB4AE08E…21成员已封存，原始证据齐。
+- C§21已冻，GO runtime唯一value/evaluator实现/--lib编译；B提交必须冻结ZIP src和B测试快照，禁止误stage活动C代码，release已受命。
+
+- B已独立PASS并精确封存，release索引防混脚本齐；requirements B收口待回执。C session首个API绿并继续多场景单元验证，无C完成/性能通过声明。

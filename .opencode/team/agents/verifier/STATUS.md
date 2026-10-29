@@ -1,19 +1,18 @@
 # verifier — 工作状态
-> 最后更新：2026-10-29 by verifier
+> 最后更新：2026-10-30 by verifier
 
 ## 当前状态
-T16-A独立API与legacy兼容验收PASS。来源基础不是import/export实现；R304OPEN，未计时/RSS、不批准正式发布。
+T16-B静态模块图/非初始化check/run执行前拒绝及legacy兼容独立PASS。B不提供模块运行，C须另验；R304OPEN、无性能计时，不批准正式发布。
 
-## 实际证据
-- target65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7，783872B；source/Cargo测前后相同。
-- 直接7release harness562通过；attempt13/check117/CLI91内官方178/旧app37+11/jsonbatch38/旧JSON140全部实跑PASS。
-- 独立Rust API witness校验稳定来源ID/无Loaded/Loaded原文/legacyNone/验证次序/原子不改旧sidecar/多帧来源/公开字段修改后安全访问/home ENTRY，全通过。
-- 默认rustc链接release LTO库失败日志保留；匹配-C lto/opt-level2/codegen1后编译运行PASS，无库重建/源码修复。
-- 16程序human/JSON两模式32组旧1a5a对新65a29差分、64进程，完整双流与退出码逐字节一致，预期错误类校验通过。
-- docs/reports/T16-A-independent-verification.md及evidence含脚本/原始结果/manifest。
+## 实证
+- target859136B，SHA8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480；源/Cargo初末在18独立图见证阶段一致。
+- 同冻结产物提权实际8harness584，公开B过程38，旧attempt13/check117/CLI91内178、app37+11/jsonbatch38/JSON140全部通过，无编译。
+- 自编18图见证：file/-e/stdin菱形无初始化、文件NUL/CRLF哨兵不变/新文件不存在；子文件真实错误路径/行号、循环、静态首错、IO无span空trace、run late-export零副作用；legacy export及>2MiB旧root通过；实际依赖2MiB/2MiB+1、深128/129受控边界。
+- 验证脚本初始日志提取只发现1harness，在启动前报错；改列8个已保留同产物名称。独立let误修改例改var，原脚本均保留，非产品缺陷。
+- docs/reports/T16-B-independent-verification.md及evidence manifest完整。
+
+## 权限与限制
+默认沙箱canonicalize AccessDenied的作者失败/许可控制仍保留，独立用安全提权同字节，不修改产品绕过路径身份。无真实OOM/abort、无模块初始化/缓存执行/home globals运行结论。旧A/T15报告与冻结输入不改。
 
 ## 下一步
-交主调度收口A，后继B/C/D须另冻结和验证。UserFn新home_module是明确Rust构造迁移，不能宣传完全无API变化。没有真实模块执行或全跨文件CLI定位证据。
-
-## 纪律
-只验证不修复、不Git；全部Temp项目内，未改旧报告/正式测试/源/规范；无真实OOM/abort压力。已停止编译和执行。
+主调度可收口B并实施C；后继源码/二进制不冒充本8ea375窗口。已停止执行/扫描/编译，无Git或实现修复。所有Temp项目内。

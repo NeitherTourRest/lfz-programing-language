@@ -903,3 +903,17 @@
 - 决策：A仅来源/错误载荷/函数home基础，无import/export加载执行；UserFn外部Rust构造需补home_module，旧shape/T15Result不变。R304OPEN，无计时、不tag，不把B草案视实现。
 - 下一步：主会话按5组明确路径与用户28/1/1过滤快照代执行候选提交/推送；本角色未Git、不动dist/源/profile，不虚报已push。
 - 阻塞：无交付文档收口阻塞。
+## [2026-10-30] T16-B精确冻结与C前候选收口
+- 来源：team-lead要求先封存B精确源码/exe，再GO C；独立最终回执584/38/18及旧兼容全PASS。
+- 完成：21项B源码/Cargo/exe ZIP582683B/SHA DB4AE08E66DD43D7A90C9DDD33706B170EE36C014114840922431C36292556CA，全回读一致；8ea375/859136B exe另存Temp，dist已复制B后不再动。
+- 产出：README/checklist、T16-B-release-evidence/build/sourcehash/ZIP、BCLI冻结副本、5组路径及22项snapshot记录（18源码+1BCLI+3用户）。源仅ZIP，测试严格B5路径白名单，C/T17文档只规划。
+- 决策：不Git不编译不改profile；C活动src不宽泛stage，原用户28/1/1严格过滤。B仅graph check，不称模块运行，R304OPEN无计时不tag。
+- 下一步：主会话按snapshot index提交B，C活动源码继续未提交；勿误报仅余用户3块。
+- 阻塞：无保全/文档准备阻塞。
+## [2026-10-30] B最终提交前排除C非规划产物
+- 来源：team-lead确认C runtime活动并要求最终B防混过滤，主会话最后刷新清单及代Git。
+- 完成：prepare-checkpoint显式排除所有含T16-C但非design-draft/design/interface-proposal三个规划白名单的路径，记录excluded_C_nonplanning_paths；src只从固定SHA的B ZIP读18成员并核原指纹，BCLI按已冻副本，测试严格5路径白名单。
+- 产出：README/checklist引用已落B最终独立报告584/38/18及旧回归全PASS；自身记录已落。脚本只做syntax compile检查通过，未执行最终refresh，等待root/analyst记录齐后主会话最后执行。
+- 决策：不Git、不编译、不改dist/profile，不核当前C源作B hash证明；活动C源码/新测试/非规划报告不进B，C文档仅规划，不叫C验收。
+- 下一步：主会话执行最后prepare按5组snapshot index提交与推送B；原3用户块28/1/1保留，C活动改动继续未提交，不误报仅剩用户块。
+- 阻塞：无最终B交付准备阻塞，R304OPEN无计时不tag。

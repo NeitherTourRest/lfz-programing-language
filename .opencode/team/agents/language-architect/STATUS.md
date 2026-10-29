@@ -1,26 +1,29 @@
 # language-architect — 工作状态
-> 最后更新：2026-10-29 by language-architect
+> 最后更新：2026-10-30 by language-architect
 
 ## 当前状态
-T16-B设计草案已完成并交team-lead，等待A独立通过后批准冻结；A既有§19完全未改。A仅身份/定位基础，不启用模块语法/文件加载/globals切换或CLI展示，不宣称产品或性能验收完成，R304仍OPEN。
+T16-C已按team-lead批准冻结三spec §21与T16-C-design.md，B独立PASS后方GO源码；本角色收工腾slot。T17资源类仍待单独ADR，不改当前错误类。
 
-## 产出与关键决定
-- source.rs：SourceId/ModuleId不同newtype各ENTRY，SourceRecord loaded可None；SourceMap私有append-only Vec/new/get/checked insert；LocatedFailure持原错误Box与source ID。
-- SourceMetadataError明确编号/帧数/未知来源/多余或缺失错误来源；attach_origins完整校验后原子替换，失败不动旧载荷，无panic或错误文件fallback。
-- TracedRun私有可选origins，旧入口None；frame_source(index)/error_source安全Option，宿主后改公开frames/result的边界已说明。
-- UserFn home_module整数，Interp active_module ENTRY，A所有实际函数均ENTRY，不强Rc持globals；公开UserFn literal新增字段属于Rust构造迁移，不能称无API变化。
-- Span/LzError/TraceFrame/Loaded/Program保持旧形状；T15 Result三/五/三字段不加file，attempt不读sidecar；源表不持AST/Env/用户值，不扩大Transfer假设。
-- core唯一source.rs/lib.rs；runtime唯一value.rs/evaluator.rs；tooling本批只读。B/C/D仍需分别冻结。
+## 已冻结接口与补钉
+- AST ImportDecl/ExportDecl、contextual export兼容、CountedLoaded和owned load_bytes、ParsedEntry/ModuleGraph/GraphFailure、迭代DFS和1024/128/2MiB/16MiB限额。
+- 旧无模块root无新图限额；root admission前已加载/解析，不称内存沙箱。B check图不初始化，C前run整Program先无副作用拒绝模块。
+- core唯一error.rs SyntaxMsg新增变体及消息；runtime汇合入口在Interp::new前guard，单MODULE帧、originsNone。
+- §20.9：import-import后alias_span；对普通声明用普通Stmt.span，不猜列或扩旧AST。导出用ExportName.span。
+- §20.10：优先级仅已观测bytes；总剩余较少时哨兵证明总量超限，不能推断未读尾部也超单file，更不能补读越界。常量/消息均不变。
 
-## 证据
-docs/reports/T16-A-design.md 6730B；git diff --check -- docs/spec docs/reports/T16-A-design.md exit0（仅CRLF归一提示）。唯一§19标题检查、核心签名/owner/compat结构人工核对通过。ADR在写spec前只追加，本角色未动源/测试/看板或Git。
+## 后继草案
+docs/reports/T16-C-design-draft.md与T17-design-draft.md已落盘，仅草案未冻结。C须同时处理StructDef默认字段Expr定义模块上下文，不能只改UserFn；active恢复与故障source保存分离，T15 Result键不变。T17建议步数/token/deadline拆批，资源终止不被attempt吞、预算不restore；ExecutionLimitError新类需后续明确批准。
 
-## 下一步/阻塞
-core/runtime按§19实施与新增unit；独立复验旧549及公开回归。后继模块图/资源上限/缓存与home globals切换/CLI跨文件定位按B/C/D再冻结。无设计阻塞，不把基础元数据测试当模块执行证明。
+## 证据及边界
+本次仅读自身状态和当前§20尾部，追加§20.10/ADR及本人记录；未改源码、重编译、测试、看板、C/T17草案或Git。规范diff检查通过；实现/产品验收由对应owner及verifier负责，R304仍OPEN。
 
-## 关键经验
-Loaded必须可缺失，读取/编码失败仍有来源身份；不能伪造入口文本。实际trace帧下标与func_id不同，来源必须逐帧记录。公开可变frames/result被宿主修改后，早先附加校验不构成永久保证。
+## 下一步
+B独立过后按team-lead后续派发冻结C；用户已授权全自动继续，无需等用户说继续。本角色不调度其它agent。项目Temp，D盘低空间，不运行大任务。
 
-## T16-B草案（2026-10-29）
-docs/reports/T16-B-design-draft.md15785B；仅设计不改spec/source。明确ImportDecl/ExportDecl字段与export上下文兼容；保留Reserved import/from token；ModuleGraph拥有AST而SourceMap只metadata；迭代DFS，候选1024节点/128层含root/2MiB单文件/16MiB总raw bytes；root只有确认模块声明后启用预算，legacy大root不收紧，依赖limit+1限读。run/旧eval所有模块声明在任何副作用前整Program guard拒绝，B只check不初始化。建议RawSourceStats外层计数不改Loaded，GraphFailure带真实source/Loaded不得入口fallback。错误消息/限额均待B批准冻结；T15Result不加file。
-证据：文件存在/长度、文档diff检查exit0；无构建/运行产品/Git/其他产物改动。下一步A独立验收后定案B。
+## C接口提案与T17类决策（2026-10-30）
+T16-C-interface-proposal.md10395B：单Interp Session，graph新入口外层GraphExecutionError；复用图快照；home globals与fault source分别恢复/保存；attempt同步source/active但不加Result键。重点StructDef默认Expr目前在caller scope执行，建议legacy None保旧，graph Some TemplateContext记录home/captured/self及默认值诊断帧；实例化用let P=lib.Point; P{}，不扩字段路径文法。CLI折叠trace必须保实际frame index查source，不能切片后重新编号。
+T17-resource-error-proposal.md2163B：ExecutionLimitError新增类待单独ADR，绝不伪装Recursion/Overflow，不被attempt吞且预算不restore。文档diff检查通过，无spec/源/编译/Git变更。下一步team-lead裁决后冻结C，B独立通过才改源。
+
+## C正式冻结（2026-10-30）
+T16-C-design.md11172B；新eval_graph_traced_on_thread_with_args(&ModuleGraph,&[String])->Result<TracedRun,GraphExecutionError>。宿主结构验证零初始化拒绝，单Interp模块表/namespace缓存/home globals；faultSource独立记录、attempt同步新来源/active快照但固定Result不增键。StructDef.default_context:Option<TemplateContext>，新增struct_template_in_context，旧helper None；graph默认定义home/captured/self，以独立defaults_func_id诊断帧在同Recursion上限保护下执行，Ok Flow清理后传播、Err恢复active但保trace/depth。runtime唯一value/evaluator，tooling唯一CLI/main。
+文档diff检查exit0，ADR先追加；未改B冻结段、源码、测试、看板或Git，未编译。B当前584作者测试过不代替独立。下一步由team-lead按B独立结果给GO；R304OPEN。
