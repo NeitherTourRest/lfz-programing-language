@@ -445,3 +445,13 @@ check 失败：软断言示例
 - CLI无文件入口用真实源码行号与 `<command>` / `<stdin>`，JSON错误对象中的file亦使用该伪路径；stdin读取失败无源码位置。`--json`通道规则不变。CLI文法及兼容边界见 [syntax.md](./syntax.md) §16。
 - `jsonParse(jsonStringify(x))` 对支持且无环的数据保留数据内容；float保留类型和负零，struct方法按A5被省略。对象/数组重新分配，不保留原引用同一性或共享拓扑；因此不得把此式解释为任意LFZ值或引用图的完整深拷贝。
 - argv词法优先：用户变量/形参/函数名可遮蔽；未遮蔽的重复取值共享本执行中一个函数对象，type为function、str为<fn argv>，不新增保留名。历史其它内置独立取值能力不变。
+
+## 17. T14 check 的非执行保证与边界（2026-10-27 冻结）
+
+- CLI `check`只运行既有前端：loader→lexer→parser及其AST结构深度检查。成功代表该输入通过这些检查，不代表可以成功求值。源码中的 `check(condition)`仍是既有软断言内置，名字和运行行为不变。
+- 检查模式不得进入LFZ求值器，不产生用户求值帧，也不执行 `print`/`eprint`/`;;`、`input`、`writeFile`/`appendFile`/`readFile`、随机状态操作、函数调用、条件分支或循环。源码可含这些语法，但其参数也不能被求值。先有文件写语句、后有语法错时仍必须无程序写入。可无限循环的语法有效程序也只解析，不能运行。
+- 名称是否存在、运算类型、函数arity、条件是否bool、let是否被重绑定、方法self、文件IO路径是否可用、程序是否会终止，均不属于本命令的静态验证范围。例如 `unknownName`、`1 + true`、`print(1/0)`、`assert(false)`、`readFile("不存在的文件")`只要前端接受就可检查成功，实际执行仍可能报错。
+- 函数体与分支内容仍完整解析，现parser的顶层return、循环外break/continue、管道占位符和非法lvalue等上下文限制继续适用。本命令不额外改变作用域规则，不声称完整静态语义/控制流/安全分析。
+- 文件和源码加载规则、行号偏移、错误类与消息沿既有loader/lexer/parser。CLI语法详见 [syntax.md](./syntax.md) §17；正常成功双流空exit0，前端失败stderr诊断exit2；exit1仍只用于test失败，不因check输入含assert/fail/check语法而触发。
+- 合法check命令的JSON成功明确 `mode:"check"`、`executed:false`，它与run的运行成功协议有区别。前端失败的既有JSON位置记录不表示真实执行栈；本模式不构造运行期TracedRun。精确字段/顺序及usage错误例外见 [interface-contract.md](./interface-contract.md) §17。
+- 读取待检查源码或stdin属于宿主加载IO；本命令承诺不执行LFZ程序及其IO，不承诺零IO、任意输入的资源隔离或安全沙箱。stdin等待EOF/特殊源路径等待沿既有宿主行为，不作终止时间保证。对有限普通输入不应因源码含无限循环而执行或挂起。

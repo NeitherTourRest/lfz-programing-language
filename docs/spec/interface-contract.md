@@ -433,3 +433,35 @@ AI 指南与 `lfz-programming` skill（计划路径 `.opencode/skills/lfz-progra
 这不是语言作用域合并：逻辑块仍存在，只是不物化零槽位/零绑定的Env。当前未知名赋值报NameError、不创建新绑定；表达式/调用不会在调用者当前env定义名。嵌套if/for/while及函数自身按原规则建环境，所有现有绑定cell、捕获、自身self、let可变性、dump内→外声明序/遮蔽去重及first_slot编号均须不变。不得修改AST Dump.scope或丢失ScopeDebug逻辑链；未来新增绑定语句/表达式、动态eval或作用域身份反射时，必须重新审核判定器。
 
 优化不得改变Flow传播（continue/break/return）、错误/traceback、程序输出或LFZ可达递归限制；成功判据为等价性回归与独立验证，再加既定同输入性能门禁。没有观测到加速也不应改语言语义或降低性能验收。
+## 17. T14 前端检查CLI契约（2026-10-27 冻结）
+
+### 17.1 输入与执行路径
+
+规范性命令及CODE/option/分隔符边界见 [syntax.md](./syntax.md) §17；非执行及非静态承诺见 [semantics.md](./semantics.md) §17。tooling-dev实现CLI `check FILE` / `check -e CODE` / `check -`；不需要新增lib公开API或修改核心文法。
+
+- FILE使用load_file，保留扩展名/UTF8/BOM/换行/前导与错误顺序。CODE及stdin使用load_source，伪路径分别 `<command>`、`<stdin>`；stdin读取失败及非法UTF8沿既有无span IOError消息 `无法读取标准输入`。
+- 加载→lex→parse（含AST深度检查）与Program析构全在现 `evaluator::on_eval_stack` 大栈包装内执行；使用线程包装器本身不是LFZ求值。不得把深Program移出该线程到主线程析构，成功结果只需无AST的标量状态。
+- 不得调用 `eval_module*`、求值用的 `run`、`Interp::new`或内置执行入口；不建立用户运行帧、不计算argv、不重定向LFZ程序输出。错误持有Loaded及原LfzError用于诊断，不构造TracedRun。
+- CODE原样保护；CODE外 `--`（包括空尾）拒绝；`check --help`拒绝，多源/缺源/缺CODE/未知option沿CLI参数错误。CLI错误写原usage风格stderr文本、stdout空、exit2，即使存在 `--json` 也如此；不伪造LFZ错误类。唯一JSON保证限于已识别且参数合法的check命令。
+
+### 17.2 结果与精确JSON
+
+正常模式：通过时stdout/stderr均空，exit0；任一前端错误按原人类错误格式写stderr、stdout空，exit2。不能把输入里没有执行的assert/fail/check当成exit1或运行失败。
+
+合法check的 `--json` 成功stdout恰一行，UTF8，无额外程序输出：
+
+```json
+{"ok":true,"mode":"check","executed":false}
+```
+
+失败stdout恰一行，字段及顺序为：`ok:false`、`mode:"check"`、`executed:false`，再接原错误协议的 `error`、`message`、`file`、`line`、`col`、`traceback`。其中error仍是既有LFZ类名，message/span与原前端错误相同；file为原路径或伪路径，line/col为1-based或无位置时null。复用既有JSON编码与 `push_error_fields`，不能手写未转义的JSON或改旧run/test对象。
+
+前端错误不产生真实运行栈。复用原前端错误协议：有span时traceback是单个 `{file,line,func:"<module>"}` 位置记录；无span的IOError为空数组。`executed:false`明确其不是执行trace。成功仅上述三键，失败不删错误字段、不输出业务值。JSON模式不额外输出人类错误块，stderr应空（宿主进程异常除外）。
+
+### 17.3 非执行与兼容验收
+
+必须验证文件/-e/stdin三来源的合法和非法源码；CODE含 `--json`/`--`/空串/Unicode、选项前后重复、缺源/多源/缺CODE/`check --help`/CODE外 `--`；文件前导/UTF8/BOM/CRLF及准确位置；现parser上下文和深度边界。
+
+非执行见证至少包含：源内print/eprint/dump/input无程序输出/提示；writeFile/appendFile目标不存在时不创建、存在时字节不变；readFile路径错误不被运行；无限循环/递归入口只解析并在合理进程超时内返回；副作用语句之后出现词法/语法错也不产生副作用。需结合真实进程证据和调用路径审查，不只凭源码关键词搜索。
+
+原CLI测试、run/test JSON、脚本argv、loader/parser行为及内置check均不得回归。原T13源码hash和性能证据冻结不回写；T14实现后的新产物另记hash和验证结果。本节冻结的是接口目标，不宣称已经实现。

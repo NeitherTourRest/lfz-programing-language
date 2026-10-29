@@ -985,3 +985,22 @@ lfz [--json] - [--json] [-- ARG...]
 - 示例中的源码是 `-e` 片段；如保存为 `.lfz` 文件，文件首行仍须 `#42`。程序参数只传原始字符串，不隐式解析数字/JSON，应用自行 `int` / `jsonParse`。
 
 新增三个内置名及类型/错误/效率契约见 [interface-contract.md](./interface-contract.md) §16；这三名不与现有69内置或关键字重名；仍可按既有词法规则被用户变量/函数遮蔽，不新增保留名限制。argv一等值的最小范围见契约§16.6。
+## 17. T14 非执行 check 命令（2026-10-27 冻结）
+
+本节只扩展CLI，不改变LFZ词法/EBNF/AST或内置 `check(condition)`。`lfz check` 只检查前端，不执行程序；成功不能解释为运行成功。
+
+```text
+lfz [--json] check [--json] FILE [--json]
+lfz [--json] check [--json] -e CODE [--json]
+lfz [--json] check [--json] - [--json]
+```
+
+- 每次只接受一个输入。FILE接受任意路径，使用显式run的loader规则：`.lfz`扩展名ASCII不分大小写，要求并消费首行精确 `#42` 换行；其它扩展名豁免且不消费前导。`check`不套用裸文件入口的扩展名限制。名为check的文件可用 `lfz check ./check` 检查、`lfz run check` 运行；裸 `lfz check` 是缺输入的子命令错误。
+- `-e`紧随的一项无条件为完整CODE，空串亦合法；即使CODE恰为 `--json`、`--`、`--help`、`check` 也不能再解析成选项。CODE之外的 `--json` 可前置/后置，重复幂等；不得全局剥除CODE里的同名字串。
+- check不执行程序，因此不接受脚本参数。CODE外任何 `--`（含空尾分隔符）及其后参数均为CLI参数错误；其它未知option、多输入、缺输入或缺CODE均拒绝。`lfz check --help`按未知option拒绝；查看帮助用 `lfz --help`。实际路径若以 `-` 开始须写 `./-name` 或完整路径，本轮不增通用路径终止符。
+- 文件错误位置沿现load_file/lex/parse口径（消费前导后line_base=1）。`-e`以 `<command>`、stdin以 `<stdin>` 为诊断路径，使用load_source，line_base=0，不要求也不消费前导。stdin完整读取UTF-8源码到EOF；读取/解码失败沿既有 `IOError: 无法读取标准输入`（无span），不是新错误类。
+- 前端对整个源码单元进行加载、词法、语法和现有AST结构深度检查，包含未被执行的函数体/分支；语法错误不能因不可达而被忽略。不会求值表达式、调用函数、运行内置或进入循环，不读取/写入LFZ程序声明的IO路径；读取待检查源码及stdin仍属于宿主IO。
+- 正例：`lfz check -e 'print(1 / 0)'` 只要语法有效即exit0，不打印且不触发除零；`lfz check -e ''`成功。反例：`lfz check -e 'return 1'`为顶层return语法错误exit2；`lfz check x.lfz --`、`lfz check --help`为CLI参数错误exit2。
+- 正常模式成功stdout/stderr均空、exit0；前端失败stdout空、stderr沿既有诊断、exit2。合法check加 `--json` 的状态协议见 [interface-contract.md](./interface-contract.md) §17；CLI参数错误无论是否出现 `--json` 仍按旧usage约定写stderr文本，stdout空、exit2。
+
+旧run/test/裸脚本/-e/stdin执行入口、脚本参数分隔与JSON协议完全保持；新命令的实现和证据必须独立于T13冻结性能候选。
