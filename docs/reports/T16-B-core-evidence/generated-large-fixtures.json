@@ -1,0 +1,47 @@
+[
+  {
+    "bytes": 2097153,
+    "sha256": "a4d33772c5bc94002d04bc6667ca8499f5f5e85e58eeca6ed1689e5061ed79b0",
+    "path": "Temp\\T16-B-core\\tests\\41064-0\\dep.lfz"
+  },
+  {
+    "bytes": 2097152,
+    "sha256": "3ef668977b3eeb02a36b148adb924347ad4d882e5cb7cb5681c982ce91e5ec19",
+    "path": "Temp\\T16-B-core\\tests\\41064-1\\0.lfz"
+  },
+  {
+    "bytes": 2097152,
+    "sha256": "3ef668977b3eeb02a36b148adb924347ad4d882e5cb7cb5681c982ce91e5ec19",
+    "path": "Temp\\T16-B-core\\tests\\41064-1\\1.lfz"
+  },
+  {
+    "bytes": 2097152,
+    "sha256": "3ef668977b3eeb02a36b148adb924347ad4d882e5cb7cb5681c982ce91e5ec19",
+    "path": "Temp\\T16-B-core\\tests\\41064-1\\2.lfz"
+  },
+  {
+    "bytes": 2097152,
+    "sha256": "3ef668977b3eeb02a36b148adb924347ad4d882e5cb7cb5681c982ce91e5ec19",
+    "path": "Temp\\T16-B-core\\tests\\41064-1\\3.lfz"
+  },
+  {
+    "bytes": 2097152,
+    "sha256": "3ef668977b3eeb02a36b148adb924347ad4d882e5cb7cb5681c982ce91e5ec19",
+    "path": "Temp\\T16-B-core\\tests\\41064-1\\4.lfz"
+  },
+  {
+    "bytes": 2097152,
+    "sha256": "3ef668977b3eeb02a36b148adb924347ad4d882e5cb7cb5681c982ce91e5ec19",
+    "path": "Temp\\T16-B-core\\tests\\41064-1\\5.lfz"
+  },
+  {
+    "bytes": 2097152,
+    "sha256": "3ef668977b3eeb02a36b148adb924347ad4d882e5cb7cb5681c982ce91e5ec19",
+    "path": "Temp\\T16-B-core\\tests\\41064-1\\6.lfz"
+  },
+  {
+    "bytes": 2096965,
+    "sha256": "4ccd51cbf92c9e0909282c96396a61a6480e0654eb08fbbfd48229cfed63064f",
+    "path": "Temp\\T16-B-core\\tests\\41064-1\\7.lfz"
+  }
+]

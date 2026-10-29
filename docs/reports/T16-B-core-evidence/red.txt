@@ -1,0 +1,4 @@
+  File "<command>", line 1
+    import a from "./a.lfz"
+    ^
+SyntaxError: 这里期待 表达式，但得到 'import'

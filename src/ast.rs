@@ -85,6 +85,8 @@ pub type Stmt = Spanned<StmtKind>;
 /// 语句种类（对照 `syntax.md` §7 的 `statement` 产生式）。
 #[derive(Clone, Debug, PartialEq)]
 pub enum StmtKind {
+    ImportDecl(ImportDecl),
+    ExportDecl(ExportDecl),
     /// 变量声明 `let x = expr` / `var x = expr`（`decl_stmt`）。
     ///
     /// `mutable`：`let` → `false`，`var` → `true`。
@@ -1171,3 +1173,11 @@ mod tests {
         assert_ne!(a, int(6, 1, 1)); // 值不同 → 不等
     }
 }
+
+/// T16-B 顶层模块声明，来源身份由图层保存。
+#[derive(Clone, Debug, PartialEq)]
+pub struct ImportDecl { pub alias: String, pub alias_span: Span, pub path: String, pub path_span: Span }
+#[derive(Clone, Debug, PartialEq)]
+pub struct ExportDecl { pub names: Vec<ExportName> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct ExportName { pub name: String, pub span: Span }

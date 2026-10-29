@@ -1,0 +1,79 @@
+{
+  "same_binary_control": "1/1 diamond pass with approved unsandboxed execution",
+  "sandbox_initial": "compiled successfully; 4 pass / 6 fail canonicalize Os code5",
+  "same_binary_full": "10/10 pass with approved unsandboxed execution",
+  "large_fixture_bytes": 18874182.0,
+  "red": "old dist check import => SyntaxError/exit2",
+  "date": "2026-10-30",
+  "filtered": 435,
+  "new_tests": 12,
+  "files": [
+    {
+      "bytes": 39079,
+      "sha256": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076",
+      "path": "src/ast.rs"
+    },
+    {
+      "bytes": 47305,
+      "sha256": "fbe276ed65307748e4415358c99cf59dee82326f3ab185341bbf34b23baee6a1",
+      "path": "src/error.rs"
+    },
+    {
+      "bytes": 16480,
+      "sha256": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f",
+      "path": "src/loader.rs"
+    },
+    {
+      "bytes": 228661,
+      "sha256": "58c41ba85d930dc0ef465be2a9d3c0741cfe7052d6dd9df01a825aab73e7ff5f",
+      "path": "src/parser.rs"
+    },
+    {
+      "bytes": 17533,
+      "sha256": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895",
+      "path": "src/modules.rs"
+    },
+    {
+      "bytes": 882,
+      "sha256": "e5ecee22f8aa8e357b2d932d5bb0c74044a76f63a4ee2eb476e900dc68f254ce",
+      "path": "src/lib.rs"
+    },
+    {
+      "bytes": 122,
+      "sha256": "d4ae472fae4b1f0c0ab0467a0c4d4118546e190565c8f917be492c1ca6793a82",
+      "path": "docs/reports/T16-B-core-evidence/red.txt"
+    },
+    {
+      "bytes": 3534,
+      "sha256": "c5b81e08a43834eb17d82d746e818ea3664dd668b6b99bbed6c62144b647882d",
+      "path": "docs/reports/T16-B-core-evidence/compile-1.txt"
+    },
+    {
+      "bytes": 206,
+      "sha256": "6aff2c0c65265c2e0a1a026d88c0c55d6207ebfdff379fbcee0a43dc8eaec6b8",
+      "path": "docs/reports/T16-B-core-evidence/canonicalize-control.txt"
+    },
+    {
+      "bytes": 893,
+      "sha256": "c45e1f21b4a252bb2148afe1a9cf56e21698dd50ac2d70a77e8e16c014ba0528",
+      "path": "docs/reports/T16-B-core-evidence/green.txt"
+    },
+    {
+      "bytes": 530,
+      "sha256": "ac1986d0d073718b39cc6af5af9b60c955eee612072675247aef7d92f66ff55e",
+      "path": "docs/reports/T16-B-core-evidence/compile-2.txt"
+    },
+    {
+      "bytes": 1021,
+      "sha256": "a30df1d9ab4da0e7f3c2259b24819614d4a5add735bd9cc1fd27ebad549f3195",
+      "path": "docs/reports/T16-B-core-evidence/green-12.txt"
+    },
+    {
+      "bytes": 1554,
+      "sha256": "7b60f765fb9d17cb630871619070e5ac8ec5e3facf5938ce899da8976c6028f4",
+      "path": "docs/reports/T16-B-core-evidence/generated-large-fixtures.json"
+    }
+  ],
+  "scope": "core graph implementation only, runtime and CLI final build separate",
+  "final": "12/12 pass after adding 2 real bounded byte tests; release no-run build success"
+}

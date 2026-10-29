@@ -311,7 +311,7 @@ impl<'a> DepthNode<'a> {
                     nth2(i, DepthNode::Expr(iter), DepthNode::Block(body))
                 }
                 StmtKind::Return(Some(e)) => nth1(i, DepthNode::Expr(e)),
-                StmtKind::Return(None)
+                StmtKind::ImportDecl(_) | StmtKind::ExportDecl(_) | StmtKind::Return(None)
                 | StmtKind::Break
                 | StmtKind::Continue
                 | StmtKind::Dump { .. } => None,
@@ -510,7 +510,7 @@ impl<'a> Parser<'a> {
     /// `program = { NEWLINE | statement } , EOF`（§7）。
     fn parse_program(&mut self) -> R<Program> {
         let span = self.peek_span();
-        let stmts = self.parse_stmt_seq()?;
+        let stmts = self.parse_stmt_seq(true)?;
         if *self.peek() != TokenKind::Eof {
             // 顶层不应残留 `}`。
             return Err(self.unexpected("语句"));
@@ -527,7 +527,7 @@ impl<'a> Parser<'a> {
     /// 注（A9 / §3.3 规则 2，bug-07 修复）：语句首 `{` 无特例分支，经正常语句
     /// 路径解析为**匿名 struct 字面量**（`expr_stmt` → `struct_lit`）；
     /// LFZ 无裸块语句，裸块语句与 AST `Block` 语句变体均不存在。
-    fn parse_stmt_seq(&mut self) -> R<Vec<Stmt>> {
+    fn parse_stmt_seq(&mut self, top_level: bool) -> R<Vec<Stmt>> {
         let mut stmts = Vec::new();
         loop {
             // 跳过语句序列开头的换行（连续多个只跳一次；语句分隔的换行由
@@ -537,7 +537,19 @@ impl<'a> Parser<'a> {
                 TokenKind::Eof | TokenKind::RBrace => break,
                 // 语句首 `{` 无裸块特例（A9 / §3.3）：落入正常语句路径，经表达式
                 // 路径的 `parse_struct_lit(None, …)` 解析为匿名 struct 字面量。
-                _ => stmts.push(self.parse_stmt()?),
+                _ => {
+                    let import = matches!(self.peek(), TokenKind::Reserved("import"));
+                    let export = matches!(self.peek(), TokenKind::Ident(n) if n == "export")
+                        && matches!(self.tokens.get(self.pos + 1).map(|t| &t.kind), Some(TokenKind::Ident(_)));
+                    if import || export {
+                        let span = self.peek_span();
+                        if !top_level { return Err(syntax(SyntaxMsg::ModuleDeclTopLevel, span)); }
+                        if import && stmts.iter().any(|s: &Stmt| !matches!(s.node, StmtKind::ImportDecl(_))) {
+                            return Err(syntax(SyntaxMsg::ImportOrder, span));
+                        }
+                        stmts.push(if import { self.parse_import(span)? } else { self.parse_export(span)? });
+                    } else { stmts.push(self.parse_stmt()?); }
+                },
             }
             // 语句终结检查（§3.2）：下个有效记号必须是 NEWLINE / `}` / EOF。
             if *self.peek() == TokenKind::Newline {
@@ -547,6 +559,34 @@ impl<'a> Parser<'a> {
             }
         }
         Ok(stmts)
+    }
+
+    fn module_ident(&mut self) -> R<(String, Span)> {
+        let span = self.peek_span();
+        if let TokenKind::Ident(name) = self.peek().clone() { self.bump(); Ok((name, span)) }
+        else { Err(self.unexpected("标识符")) }
+    }
+    fn parse_import(&mut self, span: Span) -> R<Stmt> {
+        self.bump();
+        let (alias, alias_span) = self.module_ident()?;
+        self.expect(&TokenKind::Reserved("from"))?;
+        let path_span = self.peek_span();
+        if !matches!(self.peek(), TokenKind::StrBegin) { return Err(self.unexpected("字符串")); }
+        let parsed = self.parse_string(path_span)?;
+        let ExprKind::Str(path) = parsed.node else { return Err(syntax(SyntaxMsg::ModulePath, path_span)); };
+        if !crate::modules::valid_module_path(&path) { return Err(syntax(SyntaxMsg::ModulePath, path_span)); }
+        Ok(Spanned::new(StmtKind::ImportDecl(ImportDecl { alias, alias_span, path, path_span }), span))
+    }
+    fn parse_export(&mut self, span: Span) -> R<Stmt> {
+        self.bump();
+        let mut names = Vec::new();
+        loop {
+            let (name, span) = self.module_ident()?;
+            names.push(ExportName { name, span });
+            if !matches!(self.peek(), TokenKind::Comma) { break; }
+            self.bump();
+        }
+        Ok(Spanned::new(StmtKind::ExportDecl(ExportDecl { names }), span))
     }
 
     /// 解析一条语句（`let` / `var` 声明、控制流、赋值、表达式语句；`;` → `LoneSemicolon`）。
@@ -890,7 +930,7 @@ impl<'a> Parser<'a> {
         self.nl_stack.push(NlMode::Sig);
         // §3.8：进入块子结构 +1（开启记号 = `{`）。
         self.enter_nesting(span)?;
-        let stmts = self.parse_stmt_seq();
+        let stmts = self.parse_stmt_seq(false);
         self.leave_nesting();
         let stmts = stmts?;
         self.expect(&TokenKind::RBrace)?;

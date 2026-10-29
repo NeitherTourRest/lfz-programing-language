@@ -65,6 +65,21 @@ pub fn load_file(path: &str) -> R<Loaded> {
         Ok(bytes) => bytes,
         Err(_) => return Err(error::io(format!("无法读取：{path}"), None)),
     };
+    load_bytes(path, bytes)
+}
+
+#[derive(Clone, Debug)]
+pub struct CountedLoaded { pub loaded: Loaded, pub raw_bytes: usize }
+
+pub fn load_file_counted(path: &str) -> R<CountedLoaded> {
+    let bytes = std::fs::read(path).map_err(|_| error::io(format!("无法读取：{path}"), None))?;
+    let raw_bytes = bytes.len();
+    load_bytes(path, bytes).map(|loaded| CountedLoaded { loaded, raw_bytes })
+}
+pub fn load_source_counted(text: &str) -> R<CountedLoaded> {
+    load_source(text).map(|loaded| CountedLoaded { loaded, raw_bytes: text.len() })
+}
+pub fn load_bytes(path: &str, bytes: Vec<u8>) -> R<Loaded> {
     // 3. 按 UTF-8 解码整文件（先编码、后前导）；失败 → SyntaxError。
     let text = match String::from_utf8(bytes) {
         Ok(text) => text,

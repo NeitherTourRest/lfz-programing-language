@@ -1,0 +1,66 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `release` profile [optimized] target(s) in 24.98s
+     Running unittests src\lib.rs (target\release\deps\lfz-63397fd2d9985014.exe)
+
+running 10 tests
+test modules::tests::t16b_byte_admission_exact_limits_and_precedence ... ok
+test modules::tests::t16b_parser_rejects_nested_order_and_dynamic_paths ... ok
+test modules::tests::t16b_parser_declarations_and_export_identifiers ... ok
+test modules::tests::t16b_counted_loader_preserves_legacy_and_raw_bytes ... ok
+test modules::tests::t16b_cycle_and_missing_module_have_actual_sources ... FAILED
+test modules::tests::t16b_diamond_order_shares_snapshot_without_initialization ... FAILED
+test modules::tests::t16b_static_conflicts_forward_exports_and_first_error ... FAILED
+test modules::tests::t16b_dependency_parse_error_points_to_dependency ... FAILED
+test modules::tests::t16b_depth_boundaries_are_iterative ... FAILED
+test modules::tests::t16b_node_boundaries_are_unique_ids ... FAILED
+
+failures:
+
+---- modules::tests::t16b_cycle_and_missing_module_have_actual_sources stdout ----
+
+thread '<unnamed>' panicked at src\modules.rs:133:126:
+called `Result::unwrap()` on an `Err` value: Os { code: 5, kind: PermissionDenied, message: "拒绝访问。" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- modules::tests::t16b_diamond_order_shares_snapshot_without_initialization stdout ----
+
+thread '<unnamed>' panicked at src\modules.rs:133:126:
+called `Result::unwrap()` on an `Err` value: Os { code: 5, kind: PermissionDenied, message: "拒绝访问。" }
+
+---- modules::tests::t16b_static_conflicts_forward_exports_and_first_error stdout ----
+
+thread '<unnamed>' panicked at src\modules.rs:133:126:
+called `Result::unwrap()` on an `Err` value: Os { code: 5, kind: PermissionDenied, message: "拒绝访问。" }
+
+---- modules::tests::t16b_dependency_parse_error_points_to_dependency stdout ----
+
+thread '<unnamed>' panicked at src\modules.rs:133:126:
+called `Result::unwrap()` on an `Err` value: Os { code: 5, kind: PermissionDenied, message: "拒绝访问。" }
+
+---- modules::tests::t16b_depth_boundaries_are_iterative stdout ----
+
+thread '<unnamed>' panicked at src\modules.rs:133:126:
+called `Result::unwrap()` on an `Err` value: Os { code: 5, kind: PermissionDenied, message: "拒绝访问。" }
+
+---- modules::tests::t16b_node_boundaries_are_unique_ids stdout ----
+
+thread '<unnamed>' panicked at src\modules.rs:133:126:
+called `Result::unwrap()` on an `Err` value: Os { code: 5, kind: PermissionDenied, message: "拒绝访问。" }
+
+
+failures:
+    modules::tests::t16b_cycle_and_missing_module_have_actual_sources
+    modules::tests::t16b_dependency_parse_error_points_to_dependency
+    modules::tests::t16b_depth_boundaries_are_iterative
+    modules::tests::t16b_diamond_order_shares_snapshot_without_initialization
+    modules::tests::t16b_node_boundaries_are_unique_ids
+    modules::tests::t16b_static_conflicts_forward_exports_and_first_error
+
+test result: FAILED. 4 passed; 6 failed; 0 ignored; 0 measured; 435 filtered out; finished in 0.35s
+
+error: test failed, to rerun pass `--lib`

@@ -1,0 +1,17 @@
+
+running 12 tests
+test modules::tests::t16b_parser_declarations_and_export_identifiers ... ok
+test modules::tests::t16b_parser_rejects_nested_order_and_dynamic_paths ... ok
+test modules::tests::t16b_byte_admission_exact_limits_and_precedence ... ok
+test modules::tests::t16b_diamond_order_shares_snapshot_without_initialization ... ok
+test modules::tests::t16b_counted_loader_preserves_legacy_and_raw_bytes ... ok
+test modules::tests::t16b_dependency_parse_error_points_to_dependency ... ok
+test modules::tests::t16b_cycle_and_missing_module_have_actual_sources ... ok
+test modules::tests::t16b_static_conflicts_forward_exports_and_first_error ... ok
+test modules::tests::t16b_actual_bounded_single_file_bytes ... ok
+test modules::tests::t16b_actual_bounded_total_bytes ... ok
+test modules::tests::t16b_depth_boundaries_are_iterative ... ok
+test modules::tests::t16b_node_boundaries_are_unique_ids ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 435 filtered out; finished in 1.43s
+

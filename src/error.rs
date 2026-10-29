@@ -27,6 +27,15 @@ pub type R<T> = Result<T, Box<LzError>>;
 /// `SyntaxError` 细分消息 —— `semantics.md` §8.1「`SyntaxError` 细分消息」表，**19 条**。
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum SyntaxMsg {
+    ModuleDeclTopLevel,
+    ImportOrder,
+    ModulePath,
+    ImportConflict { name: String },
+    DuplicateExport { name: String },
+    MissingExport { name: String },
+    ModuleCycle { chain: String },
+    ModuleLimit { kind: String, limit: usize },
+    ModuleExecutionUnavailable,
     /// `非法字符 '{c}'`
     IllegalChar { c: char },
     /// `'#' 只能出现在文件首行的前导位；(字符串 / 注释 / 格式说明符内的 '#' 除外)`
@@ -79,6 +88,15 @@ impl SyntaxMsg {
     #[must_use]
     pub fn message(&self) -> String {
         match self {
+            SyntaxMsg::ModuleDeclTopLevel => "模块声明只能出现在文件顶层".into(),
+            SyntaxMsg::ImportOrder => "import 必须位于其它顶层语句之前".into(),
+            SyntaxMsg::ModulePath => "模块路径必须是非空的相对 .lfz 字符串（不含插值或 NUL）".into(),
+            SyntaxMsg::ImportConflict { name } => format!("模块导入名冲突：{name}"),
+            SyntaxMsg::DuplicateExport { name } => format!("重复导出：{name}"),
+            SyntaxMsg::MissingExport { name } => format!("导出名没有顶层声明：{name}"),
+            SyntaxMsg::ModuleCycle { chain } => format!("模块循环依赖：{chain}"),
+            SyntaxMsg::ModuleLimit { kind, limit } => format!("模块图超限：{kind}（上限 {limit}）"),
+            SyntaxMsg::ModuleExecutionUnavailable => "模块执行尚未启用".into(),
             SyntaxMsg::IllegalChar { c } => format!("非法字符 '{c}'"),
             SyntaxMsg::HashPosition => {
                 "'#' 只能出现在文件首行的前导位；(字符串 / 注释 / 格式说明符内的 '#' 除外)".to_string()
