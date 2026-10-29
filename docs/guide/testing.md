@@ -3,7 +3,7 @@
 > LFZ 内建测试运行器（`lfz test`）。本页讲清：**怎么跑、怎么写、负例怎么放、结果怎么读**。
 > 权威契约：[`docs/spec/interface-contract.md`](../spec/interface-contract.md) §11.2（**T-R1 … T-R4**）；实现侧派生：[`docs/tooling/runner-contract.md`](../tooling/runner-contract.md)。
 > 配套：[`README.md`](README.md) ｜ [`tutorial.md`](tutorial.md) ｜ [`reference.md`](reference.md) ｜ [`errors.md`](errors.md)
-> 最后更新: 2026-10-25（T12：1.4.0 参数、代码入口与 JSON） by docs-writer
+> 最后更新: 2026-10-27（T14：非执行语法检查；1.4.0候选） by docs-writer
 
 ---
 
@@ -204,7 +204,7 @@ PASS  mini/pass_basic.lfz
 | `tests/coverage-matrix.md` | **覆盖矩阵**：逐特性 × 正常/边界/错误 |
 | `tests/REPORT.md` | **测试报告**：方法、结论、覆盖统计、已知缺陷、复现命令 |
 
-2026-10-25 T12当前功能基线为517项Rust测试与166项黑盒，另有91项进程检查（其中包含一次全量黑盒，不与166相加）；最终独立结论见团队T12报告。下列数量指黑盒测试。`lfz test` 在有效且非空的测试集执行前自动准备进程 cwd 下的 Temp/，保留一命令测试约定；准备失败按环境错误退出 2，stdout 为空。直接 `lfz run` 不代建 IO 父目录，单独运行文件 IO 示例时自行准备父目录。读写采用 UTF-8；还应测非法 UTF-8、非 string 参数、缺失父目录，以及 cwd 不同于脚本目录的情形。
+2026-10-25 T12指南初测历史快照为517项Rust测试与166项黑盒，另有91项进程检查（其中包含一次全量黑盒，不与166相加）；最终独立结论见团队T12报告。下列数量指黑盒测试。`lfz test` 在有效且非空的测试集执行前自动准备进程 cwd 下的 Temp/，保留一命令测试约定；准备失败按环境错误退出 2，stdout 为空。直接 `lfz run` 不代建 IO 父目录，单独运行文件 IO 示例时自行准备父目录。读写采用 UTF-8；还应测非法 UTF-8、非 string 参数、缺失父目录，以及 cwd 不同于脚本目录的情形。
 
 当前基线（见 [`tests/REPORT.md`](../../tests/REPORT.md)）：`cargo run --quiet -- test` → **166 PASS / 0 FAIL / 0 ERROR**，退出码 `0`。
 
@@ -242,6 +242,19 @@ D:/app/ANACONDA/python.exe -B tests/t12_cli_check.py --lfz dist/lfz.exe --output
 
 参数格式以脚本 `--help` 为准；输出报告路径必须尚不存在。完整覆盖与原始证据见 [T12-blackbox.md](../reports/T12-blackbox.md)。应用独立oracle见 [应用说明](../../app/README.md)，验证错误输入不会覆盖已有结果文件、重复参数运行字节一致。
 
-指南的新示例逐项运行证据见 [T12-guide-evidence.md](../reports/T12-guide-evidence.md)。不要由短进程含启动耗时直接推断渐近复杂度；本轮效率结论只引用最终 [T12-performance.md](../reports/T12-performance.md)，首版回归与修复记录均保留。
+指南的新示例逐项运行证据见 [T12-guide-evidence.md](../reports/T12-guide-evidence.md)。不要由短进程含启动耗时直接推断渐近复杂度；T12性能历史见 [T12-performance.md](../reports/T12-performance.md)；T13内部优化候选因性能回归已拒收，全部失败数据见 [T13-performance.md](../reports/T13-performance.md)。效率门槛R304仍开放，不由功能测试通过推断提速。
 
 历史 `LFZ-AGENT-BENCH-v2` 首轮8/8是当时冻结输入的成绩，不能作为新版本的自动成绩。旧九项输入已保全在 `docs/reports/agent-benchmark-v2/v2-20261024-r01/raw-inputs-submissions.zip`；当前skill或binary变化后，旧manifest在开发目录校验失败是预期。复现旧轮时在项目Temp还原原路径和原字节；新轮另建版本化输入及manifest，不覆盖旧manifest、用例或成绩。
+
+## 10. 把语法检查放在执行前
+
+```powershell
+./dist/lfz.exe check examples/hello.lfz
+if ($LASTEXITCODE -eq 0) { ./dist/lfz.exe test }
+```
+
+check只复用前端，不能替代执行测试。测试框架应分别记录「语法通过」「运行成功」「断言通过」；退出0及`executed:false`只属于第一项。语法有效的除零、未知名、类型错误、文件读写、input和无限循环不应在check期间求值。
+
+非执行回归可准备一个已有哨兵文件和一个不存在的目标，让源码包含writeFile/appendFile；检查成功以及源码后续有语法错时，已有文件都应保持字节不变，新目标都不应创建。另查程序print/eprint/dump/input不产生输出/提示，循环只解析后及时返回。文件与stdin读取仍是宿主IO，不能称完整沙箱。
+
+合法check的JSON成功有且仅有`ok/mode/executed`三个键，错误沿原错误字段；CLI参数错误（如CODE外`--`、缺源或`check --help`）仍stdout空/stderr文本/退出2，即使传了`--json`。本轮只实跑新增指南示例与关键旧例，独立于旧35块全量记录；证据见 [T14-guide-evidence.md](../reports/T14-guide-evidence.md)。

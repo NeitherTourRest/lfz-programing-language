@@ -475,7 +475,7 @@ print(len("hello"))      // 5                   else if n >= 80 { "B" }
 
 已同步 SKILL §6/§6.1（69内置、range双参）、README、prompt-template；依最新 interface-contract §10.7。新 exe 命令、完整源码、stdout/错误消息与退出码见 `docs/reports/T11-v11-skill-evidence.md`。本轮为示例/回归实跑，未宣称新 Agent 盲测通过率。原 D1–D7 历史证据保留，D2 单参限制由双参重载替代。
 
-## 10. 2026-10-25 T12：1.4.0 / 72 内置（当前）
+## 10. 2026-10-25 T12：1.4.0 / 72 内置（历史作者阶段）
 
 本轮同步四skill文件与AI指南入口docs/guide/ai/README.md。新增§6.2包括argv上下文/一等别名/遮蔽、参数--界限、-e/stdin与#42、CLI状态与业务JSON通道、严格JSON精确i64/Unicode/重复解码键/128容器/循环与共享/方法过滤；JSON与旧69内置不泛化一等值，高阶场景用lambda包装。
 
@@ -484,3 +484,10 @@ print(len("hello"))      // 5                   else if n >= 80 { "B" }
 首版新探针误用关键字字段s.self造成SyntaxError，按既有spec改s.me构造环后正确得到ValueError；失败单独保留author-probe-error.json，不计为产品缺陷或30项通过。未修改解释器以迎合文档。
 
 这是作者实跑，不是新的独立Agent盲测。旧v2首轮8/8、131/131属于原冻结输入；raw-inputs-submissions.zip SHA256保持90a6a3e3d894e7a813b06463506d5cc540e0a4570d7b005a3fd27ccc6a776d84。active skill/exe更新后不能改旧manifest重新计分；旧复现先在项目Temp独立还原原输入，新测另建版本化manifest。
+## 11. 2026-10-29 T14：先check再run
+
+四skill文件与AI入口已同步三spec §17：六步工作流、三来源、CODE保护、正常/JSON及usage例外、非执行/非静态分析边界。CLI check与LFZ断言内置区分；检查成功不代表执行成功。
+
+作者新增示例与关键兼容 **27/27通过**，实际使用target/release/lfz.exe，774656B，SHA256 `83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79`。覆盖先检查再运行偶数求和最小基线、语法有效运行期错误、无限循环/递归/input/dump不执行、文件哨兵不改不创建、CODE字面保护、参数错误、原run JSON与非致命check内置。命令、stdout/stderr原字节hex和退出码见 `docs/reports/T14-skill-evidence/results.json`，验证器同目录run_examples.py。
+
+这是作者指南示例回归，非新Agent盲测；旧v2的8/8、131/131及其manifest不改、不重新计分。T13省分配候选被拒收，生产优化已撤回，本轮不宣称提速；R304仍OPEN，1.4.0为候选、非正式发布。

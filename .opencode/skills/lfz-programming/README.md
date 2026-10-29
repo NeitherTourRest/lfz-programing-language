@@ -18,7 +18,7 @@
 
 | 文件 | 作用 |
 |---|---|
-| `SKILL.md` | **核心**：`#42` 铁律 + **Agent 工作流（5 步）** + 12 错误类 + 语法速查 + 24 陷阱 + **错误→修法对照表** + **§4.6 O(n) 构建性能红线** + 72 内置（含参数/JSON、双参 range、UTF-8 文件 IO） + 分级示例 L1–L5 + 自检清单 + 提示模板 |
+| `SKILL.md` | **核心**：`#42` 铁律 + **Agent 工作流（6 步）** + 12 错误类 + 语法速查 + 24 陷阱 + **错误→修法对照表** + **§4.6 O(n) 构建性能红线** + 72 内置（含参数/JSON、双参 range、UTF-8 文件 IO） + 分级示例 L1–L5 + 自检清单 + 提示模板 |
 | `README.md` | 本文件 —— **安装与使用（最后一公里）** |
 | `prompt-template.md` | 复制即用的 prompt 骨架（新写 / 审查两类）+ 最小任务基线 |
 | `VERIFICATION.md` | **实测证据**：交付要求对照表（任务要求 + spec §11.1 五条）+ 4 个实跑程序（含输出与退出码） |
@@ -73,7 +73,7 @@ Copy-Item -Recurse -Force ".\.opencode\skills\lfz-programming\*" $dest
 
 ## 3. 运行前提（重要）
 
-`SKILL.md` 的**第 4 步（实跑）**要求能运行 LFZ。三种等价入口，任选其一：
+`SKILL.md` 的**第 4/5 步（先check再实跑）**要求能运行 LFZ。三种等价入口，任选其一：
 
 | 入口 | 命令 | 前提 |
 |---|---|---|
@@ -130,3 +130,7 @@ $LASTEXITCODE                          # 期望 0
 72内置与Agent工作流见SKILL §6.2：argv零参/一等别名/遮蔽/隔离，严格JSON/i64/Unicode/128容器/确定性排序，以及-e/stdin/--分界。业务JSON用普通模式print(jsonStringify(...))；CLI --json只回状态。实跑证据见docs/reports/T12-skill-evidence.md；这是作者示例回归，未宣称新的Agent盲测成绩。
 
 **历史冻结输入**：v2首轮的四份skill及旧exe等九项原字节已保存在docs/reports/agent-benchmark-v2/v2-20261024-r01/raw-inputs-submissions.zip。active skill/target二进制升级后，旧runner校验当前路径的manifest不匹配是预期；不要用--freeze覆写旧manifest来掩盖变化。复现旧基线须在项目Temp内独立还原当时九项路径和manifest；新版本测评另建版本化输入与manifest，旧成绩/学生提交不改。
+
+## T14：检查与执行分开
+
+使用1.4.0候选，先 `lfz check FILE`（或`check -e CODE`、`check -`），再按授权`lfz run FILE`。检查通过不保证运行成功。机器结果明确`mode:"check",executed:false`；usage错误即使--json仍stderr文本。CODE外--及check --help拒绝。文件前导、非执行/非静态分析与宿主IO边界见SKILL §0.6及三spec §17。源码check断言内置不变。新示例实跑见 `docs/reports/T14-skill-evidence.md`；旧T12/v2成绩不改写，R304仍开放，无整体提速或正式发布声明。

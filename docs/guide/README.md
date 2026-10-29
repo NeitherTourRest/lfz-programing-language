@@ -3,7 +3,7 @@
 > 面向**人类开发者**的 LFZ 手册。目标：让你在 **5 分钟**内装好 LFZ、跑通第一个程序、看懂常见报错。
 > 权威语法/语义以 `docs/spec/` 为准；本手册只做讲解与示例，不定义新语法。
 > 配套：教程 [`tutorial.md`](tutorial.md) ｜ 参考 [`reference.md`](reference.md) ｜ 错误模型 [`errors.md`](errors.md) ｜ 测试 [`testing.md`](testing.md)
-> 最后更新: 2026-10-25（T12：1.4.0 参数、代码入口与 JSON） by docs-writer
+> 最后更新: 2026-10-27（T14：非执行语法检查；1.4.0候选） by docs-writer
 
 ---
 
@@ -27,7 +27,7 @@ LFZ（读作 "elf-zee"）是一门**动态类型、表达式导向**的通用脚
 
 ## 2. 准备环境（约 2 分钟）
 
-当前版本为 **1.4.0**。仓库内已有 `dist/lfz.exe` 时，可直接使用它，不必先构建；不要误用尚未更新的全局安装。自行构建时，LFZ 解释器用 **Rust** 实现，**无第三方依赖**，需要 Rust 工具链。
+当前版本为 **1.4.0候选**，效率验收仍开放，尚未正式发布。仓库内已有 `dist/lfz.exe` 时，可直接使用它，不必先构建；不要误用尚未更新的全局安装。自行构建时，LFZ 解释器用 **Rust** 实现，**无第三方依赖**，需要 Rust 工具链。
 
 - 安装 Rust：见 <https://www.rust-lang.org/tools/install>（安装后重启终端，确保 `cargo` 在 PATH）。
 - 验证：`cargo --version` 能输出版本号即可。
@@ -105,11 +105,12 @@ $ cargo run --quiet -- run greeting.lfz
 | `cargo build` | 构建解释器 |
 | `cargo run --quiet -- run <file>` | 运行一个 LFZ 脚本（`.lfz` 文件首行须 `#42`） |
 | `cargo run --quiet -- run --json <file>` | 运行并以**一行 JSON** 输出执行状态/错误（机器可读） |
+| `cargo run --quiet -- check <file>` | 仅检查源码语法，不执行脚本；详见§9 |
 | `cargo run --quiet -- test` | 运行测试集（默认发现 `tests/**/*.lfz`，排除 `tests/fixtures`） |
 | `cargo run --quiet -- test --json` | 测试的机器可读输出 |
 | `cargo run --quiet -- --help` | 查看 CLI 帮助 |
 
-> `--json` 是执行选项，可放在源码参数和脚本参数区域以外的选项位置；开启后 **stdout 只写 JSON**，程序输出改到 stderr（`docs/tooling/runner-contract.md` §9.3）。详见 [`errors.md` §6](errors.md)。
+> `--json` 是执行选项，可放在源码参数和脚本参数区域以外的选项位置；合法执行命令开启后 **stdout 只写 JSON**，程序输出改到 stderr（`docs/tooling/runner-contract.md` §9.3）。详见 [`errors.md` §6](errors.md)。
 
 ---
 
@@ -179,3 +180,25 @@ New-Item -ItemType Directory -Force Temp | Out-Null
 ```
 
 它读取配置和记录数组，筛选并投影字段，将结果写入指定文件。换配置和路径即可复用。另一个应用 [sortviz](../../app/README.md) 支持 `--small`、`--big`、`--seed` 和 `--no-frames`，不再需要改源码常量。
+
+## 9. 先检查语法，再运行
+
+`lfz check` 只加载、词法分析、解析源码并做现有AST深度检查；不执行LFZ程序。可从文件、单项代码或stdin检查：
+
+```powershell
+./dist/lfz.exe check examples/hello.lfz
+./dist/lfz.exe check -e 'print(1 / 0)'
+'print("中文")' | ./dist/lfz.exe check -
+./dist/lfz.exe check --json examples/hello.lfz
+```
+
+前三条成功时双流均空、退出0；第二条不会触发除零，也不会打印。最后一条stdout恰一行 `{"ok":true,"mode":"check","executed":false}`，stderr空。`check`通过只说明语法有效，不保证名称、类型、数据或文件路径在运行时正确。它不会执行源码里的输出、输入、文件写入或无限循环；读取待检查源码及stdin仍是宿主IO，不是安全沙箱或零IO保证。
+
+可按退出码显式衔接运行：
+
+```powershell
+./dist/lfz.exe check examples/hello.lfz
+if ($LASTEXITCODE -eq 0) { ./dist/lfz.exe run examples/hello.lfz }
+```
+
+check不接收脚本参数，CODE外的 `--`（即使空尾）会报参数错误；运行时参数放到后续run。`check --help`同样拒绝，帮助用 `lfz --help`。合法输入加 `--json` 才保证一个结果对象；参数错误仍写stderr用法文本、stdout空、退出2。文件前导及完整边界见 [参考§8](reference.md#8-非执行语法检查命令) 与 [错误§9](errors.md#9-check的语法诊断与参数错误)。

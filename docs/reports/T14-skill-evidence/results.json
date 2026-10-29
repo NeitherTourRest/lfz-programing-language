@@ -1,0 +1,353 @@
+{
+  "date": "2026-10-29",
+  "timestamp_utc": "2026-10-29T02:50:38.314120+00:00",
+  "binary": "target\\release\\lfz.exe",
+  "binary_sha256": "83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79",
+  "binary_bytes": 774656,
+  "total": 27,
+  "passed": 27,
+  "kind": "author examples and compatibility; not a new Agent blind benchmark",
+  "rows": [
+    {
+      "name": "workflow_check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-ai\\job.lfz"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": ""
+    },
+    {
+      "name": "workflow_run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-ai\\job.lfz"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "360a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "nonexecution_2",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "print(1 / 0)"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "nonexecution_3",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "unknownName"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "nonexecution_4",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "1 + true"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "nonexecution_5",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "readFile(\"missing-do-not-open\")"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "nonexecution_6",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "while true {}"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "nonexecution_7",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "fn f()=>f()\nf()"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "nonexecution_8",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "input(\"no prompt\")"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "nonexecution_9",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        ";;"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "nonexecution_10",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "assert(false)"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "nonexecution_11",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "check(false,\"not called\")"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "stdin_example",
+      "args": [
+        "check",
+        "--json",
+        "-"
+      ],
+      "stdin_hex": "7072696e742831202f203029",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "code_preserved_",
+      "args": [
+        "check",
+        "-e",
+        "",
+        "--json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "code_preserved_--json",
+      "args": [
+        "check",
+        "-e",
+        "--json",
+        "--json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "code_preserved_--help",
+      "args": [
+        "check",
+        "-e",
+        "--help",
+        "--json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "code_preserved_check",
+      "args": [
+        "check",
+        "-e",
+        "check",
+        "--json"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "code_dashdash",
+      "args": [
+        "check",
+        "-e",
+        "--",
+        "--json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226d6f6465223a22636865636b222c226578656375746564223a66616c73652c226572726f72223a2253796e7461784572726f72222c226d657373616765223a22e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b02027e69687e4bbb6e69cabe5b0be27222c2266696c65223a223c636f6d6d616e643e222c226c696e65223a312c22636f6c223a332c2274726163656261636b223a5b7b2266696c65223a223c636f6d6d616e643e222c226c696e65223a312c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "syntax_error",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "return 1"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226d6f6465223a22636865636b222c226578656375746564223a66616c73652c226572726f72223a2253796e7461784572726f72222c226d657373616765223a222772657475726e2720e58faae883bde587bae78eb0e59ca8e587bde695b0e4bd93e58685222c2266696c65223a223c636f6d6d616e643e222c226c696e65223a312c22636f6c223a312c2274726163656261636b223a5b7b2266696c65223a223c636f6d6d616e643e222c226c696e65223a312c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "usage_19",
+      "args": [
+        "check",
+        "--json"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr_hex": "6c667a3a2027636865636b2720e99c80e8a6812046494c45e380812d6520434f444520e68896202d0ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+    },
+    {
+      "name": "usage_20",
+      "args": [
+        "check",
+        "--json",
+        "--help"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr_hex": "6c667a3a2027636865636b2720e69caae79fa5e98089e9a1b920272d2d68656c70270ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+    },
+    {
+      "name": "usage_21",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-ai\\job.lfz",
+        "--"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr_hex": "6c667a3a2027636865636b2720e58faae68ea5e58f97e4b880e4b8aae69da5e6ba90efbc8ce4b88de68ea5e58f97e8849ae69cace58f82e695b0e6889620434f444520e5a496e79a84202d2d0ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+    },
+    {
+      "name": "usage_22",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "print(1)",
+        "--",
+        "arg"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr_hex": "6c667a3a2027636865636b202d652720e58faae68ea5e58f97e4b880e4b8aa20434f444520e58f82e695b0efbc8ce4b88de68ea5e58f97e8849ae69cace58f82e695b00ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+    },
+    {
+      "name": "io_not_executed",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-ai/sentinel.txt\",\"changed\")\nappendFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-ai/must-not-create.txt\",\"new\")\n"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "run_divzero",
+      "args": [
+        "--json",
+        "-e",
+        "print(1 / 0)"
+      ],
+      "stdin_hex": null,
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a225a65726f4469766973696f6e4572726f72222c226d657373616765223a22e999a4e4bba5e99bb6222c2266696c65223a223c636f6d6d616e643e222c226c696e65223a312c22636f6c223a372c2274726163656261636b223a5b7b2266696c65223a223c636f6d6d616e643e222c226c696e65223a312c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "run_json_unchanged",
+      "args": [
+        "--json",
+        "-e",
+        "print(1)"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275657d0a",
+      "stderr_hex": "310a"
+    },
+    {
+      "name": "builtin_check_unchanged",
+      "args": [
+        "-e",
+        "check(false,\"soft\")\nprint(\"continue\")"
+      ],
+      "stdin_hex": null,
+      "exit": 0,
+      "stdout_hex": "636f6e74696e75650a",
+      "stderr_hex": "636865636b20e5a4b1e8b4a5efbc9a736f66740a"
+    }
+  ]
+}

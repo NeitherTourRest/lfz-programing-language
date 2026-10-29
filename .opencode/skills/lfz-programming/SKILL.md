@@ -6,9 +6,9 @@ description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也�
 # LFZ 编程指南（AI 专用）
 
 > 读者：**未接触过 LFZ 的编程 Agent**。目标：只凭本文件写出**正确、可运行**的 LFZ 程序。
-> 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（含 T12 §16）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
+> 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（含 T12 §16 / T14 §17）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
 > 使用纪律：**只允许使用本文件列出的语法**。不要用 Python / C / JS 的规则去猜 LFZ——LFZ 在若干处刻意不同（见 §4）。
-> **版本对齐（2026-10-25）**：项目内 `dist/lfz.exe` / `target/release/lfz.exe` 为 **1.4.0，72 个内置**（54+15+3），支持 argv、JSON、`-e` 和 stdin 源码。T12 示例实跑证据见 `docs/reports/T12-skill-evidence.md`；项目外 PATH 中的旧解释器不保证具备这些能力。
+> **版本对齐（2026-10-29，候选）**：项目内 `dist/lfz.exe` / `target/release/lfz.exe` 为 **1.4.0，72 个内置**（54+15+3），支持 argv、JSON、`-e`、stdin源码及非执行`check`。T12 示例实跑证据见 `docs/reports/T12-skill-evidence.md`；项目外 PATH 中的旧解释器不保证具备这些能力。
 
 > 🚫 **硬纪律：不要凭记忆写 LFZ。** 本文件**没写的语法一律视为不存在**；拿不准就先查 §10 列出的 spec，或改用本文件已列出的等价写法。宁可用保守写法，也不要"猜一个大概像 Python 的写法"。
 
@@ -28,7 +28,7 @@ description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也�
 
 ---
 
-## 0.5 Agent 标准工作流（5 步）——照做，别跳步
+## 0.5 Agent 标准工作流（6 步）——照做，别跳步
 
 > 目标：把"写 LFZ"变成一条**可执行流程**，每步都有**可验证产出**。任何一步没做，都算没完成。
 
@@ -38,7 +38,9 @@ description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也�
 
 **第 3 步 · 写代码**：一条语句一行；把 §4 的 21 条陷阱当"负面清单"逐条回避。
 
-**第 4 步 · 立刻跑（强制，不可省）**：写完**马上**运行，**必须看到退出码 `0`**：
+**第 4 步 · 先检查**：运行 `lfz check <file.lfz>`，exit0才进入执行阶段；检查不求值，具体边界见§0.6。
+
+**第 5 步 · 实跑（强制，不可省）**：按任务授权运行，核对副作用、stdout/stderr及退出码；正常成功场景**必须看到退出码 `0`**：
 
 ```bash
 $env:Path += ";$env:USERPROFILE\.cargo\bin"
@@ -48,9 +50,30 @@ $LASTEXITCODE                         # 必须打印 0
 
 出现报错（退出码 `2`）→ 用 **§4.5「错误类 → 原因 → 修法」**定位，改完**再跑**。**没跑过 = 没写完。**
 
-**第 5 步 · 交付前自检**：逐条过 **§8 自检清单**，全勾后再交。
+**第 6 步 · 交付前自检**：逐条过 **§8 自检清单**，全勾后再交。
 
 ---
+
+## 0.6 先检查，再执行（T14）
+
+依据三spec §17。以下 `lfz` 指本项目候选解释器；Windows可用 `.\dist\lfz.exe`。项目外PATH中的旧版不保证有check。
+
+```powershell
+lfz check job.lfz
+lfz check --json -e 'print(1 / 0)'
+# stdout: {"ok":true,"mode":"check","executed":false}；exit 0
+'print(1 / 0)' | lfz check --json -
+# 同上；不打印、不触发除零
+```
+
+- 三来源：`check FILE`、`check -e CODE`、`check -`。文件沿run的加载规则，`.lfz`首行仍须精确`#42`加换行；非.lfz文件豁免。CODE/stdin不要求、不消费该前导；stdin读UTF-8到EOF。
+- check只加载、词法、语法及现有AST深度检查，不求值。正常成功stdout/stderr均空、exit0；前端失败stderr诊断、stdout空、exit2。源内`print`/`eprint`/`;;`/`input`/文件IO/无限循环不执行；读取待检查源码和stdin仍是宿主IO。它不是安全沙箱，也不检查未定义名、类型、运行期arity、IO路径或终止性。
+- 合法check加`--json`：成功严格三键`ok:true,mode:"check",executed:false`；前端失败为`ok:false,mode:"check",executed:false`，再接原`error,message,file,line,col,traceback`字段。stdout恰一行、stderr空。带位置traceback只是单个`<module>`定位记录，不是实际执行栈；无位置IO错误line/col为null、traceback为空。
+- CLI参数错误是例外：即使有`--json`，仍stderr用法文本、stdout空、exit2。不要无条件json解析任意失败调用。
+- `-e`紧随的一项原样作为CODE，包括空串、`--json`、`--`、`--help`。CODE外`--json`可前后重复；check拒绝CODE外任何`--`及脚本参数、缺源/多源/缺CODE/未知选项和`check --help`。帮助用`lfz --help`。
+- check通过只代表前端通过。`print(1 / 0)`检查成功，但run会ZeroDivisionError；先check成功，再按任务授权和预期副作用执行run并核对结果。执行阶段参数才放在`--`后。
+- CLI `lfz check`与源码内非致命断言`check(cond,msg)`不同；内置数量仍72。旧run/test JSON不增加mode/executed键。
+- 本轮为1.4.0候选，R304仍OPEN，不是正式发布或整体提速声明。新增指南作者实跑另见`docs/reports/T14-skill-evidence.md`；旧v2的8/8、131/131属于原冻结输入，不重新计分。
 
 ## 1. ⚠️ 铁律（第 1 条，最先看）：`.lfz` 文件首行必须是 `#42`
 
@@ -715,6 +738,9 @@ true
 
 ## 8. 交付前自检清单（逐项打勾）
 
+- [ ] 已先check再run，分别保存检查和执行结果？check成功未当成运行成功？
+- [ ] CLI check与源码check断言区分，usage错误的--json文本例外已处理？
+
 - [ ] 每个 `.lfz` 文件**首行恰好 `#42` + 换行**？（无变体、无前导空白）
 - [ ] 没有用 `;` 作语句分隔或打印变量？（打印变量用 `;;`，独立一行）
 - [ ] 是否把 `/` 误当整除？（整除用 `div`）
@@ -750,7 +776,8 @@ true
 1. 每个 `.lfz` 文件首行恰好为 #42；
 2. 自己对照指南 §8 自检清单逐项检查；
 3. **不要对字符串取下标**（`s[i]` 非法，用 `split("", s)`）；**大 n 时不要在循环里 `s = s + …` 或 `push` 累积**（O(n²)，见指南 §4.6）；
-4. 给出预期的 stdout 输出。
+4. 先check再按任务授权run，保存两步真实结果；check不执行，不保证运行成功。
+5. 给出预期的 stdout 输出。
 ```
 
 **最小任务基线**（用来验证「只看指南能否写对」）：写一个函数，接收整数数组，返回偶数元素之和；用管道 `filter`/`reduce` 实现；打印结果。`[1,2,3,4,5]` → `6`。参考解（实测通过）：
@@ -769,7 +796,7 @@ print(sum_even([1, 2, 3, 4, 5]))
 
 ## 10. 权威来源
 
-- 语法：`docs/spec/syntax.md`｜语义：`docs/spec/semantics.md`｜接口/错误/内置表：`docs/spec/interface-contract.md`（含 T12 §16）。
+- 语法：`docs/spec/syntax.md`｜语义：`docs/spec/semantics.md`｜接口/错误/内置表：`docs/spec/interface-contract.md`（含 T12 §16 / T14 §17）。
 - runner/CLI 契约：`docs/tooling/runner-contract.md`。
 - 本指南的实测验证记录：同目录 `VERIFICATION.md`（§8 为 T11-③ 的 D1–D7 修订实测证据）。
 - 本 skill 包的**安装与使用**：同目录 `README.md`（三种安装方式 + 运行前提 + 不做什么）。

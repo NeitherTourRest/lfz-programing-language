@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-29",
+  "files": {
+    ".opencode/skills/lfz-programming/SKILL.md": {
+      "bytes": 49977,
+      "sha256": "a4bd6ba4269d859368fe758074fc2ea0bd5f330c7574614de2545b7f4f7e5fc7"
+    },
+    ".opencode/skills/lfz-programming/README.md": {
+      "bytes": 8010,
+      "sha256": "283f68301102ac8e264ff38aa493f0ab87e65c4821b5121563753a168c48c5ec"
+    },
+    ".opencode/skills/lfz-programming/VERIFICATION.md": {
+      "bytes": 28364,
+      "sha256": "286060a08bcaa5d094511f1064fca4d2f98eb3efe2cb8a7b18e47ad9e9f35b97"
+    },
+    ".opencode/skills/lfz-programming/prompt-template.md": {
+      "bytes": 5499,
+      "sha256": "1da160d4f2df57b0784235f5de1cc5debcf221fca7b9b862396c6cefb9960cbb"
+    },
+    "docs/guide/ai/README.md": {
+      "bytes": 49924,
+      "sha256": "1c66c3662817665bf4f2c95741361b59f899e482b231d58210d168ba6168c5a7"
+    },
+    "docs/reports/T14-skill-evidence.md": {
+      "bytes": 1425,
+      "sha256": "531cc0493bf174c6185944169327cd715c12ab3714203405e00b0546e73875c7"
+    },
+    "docs/reports/T14-skill-evidence/.gitattributes": {
+      "bytes": 9,
+      "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+    },
+    "docs/reports/T14-skill-evidence/results.json": {
+      "bytes": 10842,
+      "sha256": "7f207581c1fb2dd5bc5cd510a6ad1ec49060110e4ad4dc89dcddc5c683cb88a6"
+    },
+    "docs/reports/T14-skill-evidence/run_examples.py": {
+      "bytes": 4191,
+      "sha256": "fdccdb2a4665a7f7c2ea867743b29f3ba670c4a77783d41e79631e8516de7315"
+    }
+  }
+}

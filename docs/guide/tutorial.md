@@ -3,7 +3,7 @@
 > **学完你能做什么**：从零掌握 LFZ 的核心语法（`#42`、变量、控制流、函数与递归、闭包、结构体、管道 `|>`、富字符串插值、`;;`、`assert`/`check`、字符串处理），并独立写出一个能运行的小程序。
 > 每一步都有**完整可运行代码**和**实测输出**。照着敲，一次就能成功。
 > 权威定义见 [`docs/spec/`](../spec/)；本教程只讲怎么用。配套：[`README.md`](README.md) · [`reference.md`](reference.md) · [`errors.md`](errors.md) · [`testing.md`](testing.md)
-> 最后更新: 2026-10-25（T12：1.4.0 参数、代码入口与 JSON） by docs-writer
+> 最后更新: 2026-10-27（T14：非执行语法检查；1.4.0候选） by docs-writer
 
 **说明**：所有示例的第一行都是 `#42`（LFZ 文件前导）。本文中的每段代码都已用 `cargo run --quiet -- run <文件>` 实际运行过，输出为**真实结果**。
 
@@ -699,3 +699,25 @@ stderr：`check 失败：有 1 人不及格`
 ---
 
 **下一步**：查语法细节看 [`reference.md`](reference.md)；搞懂报错看 [`errors.md`](errors.md)；写自己的测试看 [`testing.md`](testing.md)。
+
+## 补充：给脚本加一道语法检查
+
+保存下面内容为 `job.lfz`。这是正常脚本，运行时才读取argv并打印业务JSON：
+
+<!-- T14-check-example -->
+```lfz
+#42
+let text = jsonStringify({message: "中文", args: argv()})
+print(text)
+```
+
+先检查，再按成功退出码执行：
+
+```powershell
+./dist/lfz.exe check --json job.lfz
+if ($LASTEXITCODE -eq 0) { ./dist/lfz.exe run job.lfz -- '输入' }
+```
+
+检查一步stdout为 `{"ok":true,"mode":"check","executed":false}`；运行一步才打印 `{"args":["输入"],"message":"中文"}`。参数属于run；不要给check加 `-- '输入'`。
+
+对比 `lfz check -e 'print(1 / 0)'` 和 `lfz -e 'print(1 / 0)'`：前者语法通过、无输出，后者实际求值并报ZeroDivisionError、退出2。通过check后仍要运行测试；它不查未定义名、类型、函数参数个数或运行时文件路径。源码内的IO、input、循环和函数调用在check期间都不执行，但命令会读取待检查文件或stdin。

@@ -1,0 +1,592 @@
+{
+  "date": "2026-10-29",
+  "timestamp_utc": "2026-10-29T02:45:25.540241+00:00",
+  "binary": "target\\release\\lfz.exe",
+  "binary_sha256": "83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79",
+  "guide_hashes": {
+    "README.md": "adff6ba4d8315cfc966eb28fe55552e8f61d407cac4c3d76c5b4131ec44864b2",
+    "reference.md": "fa64486bf67b2548f040891b74dfcb8091eac098da600f218a93c80526891948",
+    "tutorial.md": "351b4f1cc7eeb3f98b45e71e47573d0b910b3e2bc87cdb35a565e21a0bdff989",
+    "testing.md": "90e33cb042aa9815d7d44c2e42e5271dd43d7691da0d0d53d519a07431dfc268",
+    "errors.md": "619426fc92deaabe789d3f1a9863caa6d6b2681ec5c79049ea4b43a654113ad2"
+  },
+  "source_hashes": {
+    "job": "a2ada4d65a1859b141823fbd6d1a5da957731b067ebab4cb63e2f10a53ff4138",
+    "hello": "e4c9ddcf31cb25fe6e093b47a0537e81d1b97071c3d86572d88aac19ee596e20"
+  },
+  "scope": "new/affected T14 guide examples and one unchanged hello block; not historical 35-block full rerun",
+  "checks_total": 27,
+  "checks_passed": 27,
+  "rows": [
+    {
+      "name": "README_file_plain",
+      "args": [
+        "check",
+        "examples/hello.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "README_eval_no_division",
+      "args": [
+        "check",
+        "-e",
+        "print(1 / 0)"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "README_stdin_unicode",
+      "args": [
+        "check",
+        "-"
+      ],
+      "stdin_hex": "7072696e742822e4b8ade6968722290a",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "README_file_json",
+      "args": [
+        "check",
+        "--json",
+        "examples/hello.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "success_exact_bytes": true,
+        "success_keys": true,
+        "stderr_empty": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "README_check_then_run_check",
+      "args": [
+        "check",
+        "examples/hello.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "README_check_then_run_execute",
+      "args": [
+        "run",
+        "examples/hello.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "Hello, LFZ!\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "tutorial_job_check",
+      "args": [
+        "check",
+        "--json",
+        "Temp\\T14-docs\\job.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "success_exact_bytes": true,
+        "success_keys": true,
+        "stderr_empty": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "tutorial_job_run",
+      "args": [
+        "run",
+        "Temp\\T14-docs\\job.lfz",
+        "--",
+        "输入"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"args\":[\"输入\"],\"message\":\"中文\"}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "tutorial_runtime_division",
+      "args": [
+        "-e",
+        "print(1 / 0)"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 1, in <module>\n    print(1 / 0)\n          ^\nZeroDivisionError: 除以零\n",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "errors_return_json",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "return 1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"'return' 只能出现在函数体内\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "error": true,
+        "mode": true,
+        "executed": true,
+        "ok": true,
+        "stderr_empty": true,
+        "field_order": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "reference_empty_CODE",
+      "args": [
+        "check",
+        "-e",
+        ""
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "reference_CODE_literal_json",
+      "args": [
+        "check",
+        "-e",
+        "--json",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "success_exact_bytes": true,
+        "success_keys": true,
+        "stderr_empty": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "reference_options_before_after",
+      "args": [
+        "--json",
+        "check",
+        "--json",
+        "-e",
+        "print(\"--\")",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "success_exact_bytes": true,
+        "success_keys": true,
+        "stderr_empty": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "usage_missing_source",
+      "args": [
+        "check",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 需要 FILE、-e CODE 或 -\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "stderr_usage": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "usage_check_help",
+      "args": [
+        "check",
+        "--json",
+        "--help"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 未知选项 '--help'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "stderr_usage": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "usage_separator_tail",
+      "args": [
+        "check",
+        "examples/hello.lfz",
+        "--"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "stderr_usage": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "usage_separator_args",
+      "args": [
+        "check",
+        "examples/hello.lfz",
+        "--",
+        "one"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "stderr_usage": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "usage_multiple_sources",
+      "args": [
+        "check",
+        "examples/hello.lfz",
+        "examples/hello.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "stderr_usage": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "usage_missing_CODE",
+      "args": [
+        "check",
+        "-e"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check -e' 需要一个 CODE 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "stderr_usage": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "nonstatic_unknown_name",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "unknownName"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "success_exact_bytes": true,
+        "success_keys": true,
+        "stderr_empty": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "nonstatic_wrong_type",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "1 + true"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "success_exact_bytes": true,
+        "success_keys": true,
+        "stderr_empty": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "nonstatic_wrong_arity",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "len()"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "success_exact_bytes": true,
+        "success_keys": true,
+        "stderr_empty": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "nonstatic_missing_runtime_file",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "readFile(\"Temp/T14-docs/no-such-input.txt\")"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "success_exact_bytes": true,
+        "success_keys": true,
+        "stderr_empty": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "nonstatic_infinite_loop",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "while true {}"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "success_exact_bytes": true,
+        "success_keys": true,
+        "stderr_empty": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "nonstatic_output_input_file_IO",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "print(\"NO\")\neprint(\"NO\")\n;;\ninput(\"NO\")\nwriteFile(\"Temp/T14-docs/must-not-create.txt\", \"NO\")\nappendFile(\"Temp/T14-docs/sentinel.txt\", \"NO\")\n"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "success_exact_bytes": true,
+        "success_keys": true,
+        "stderr_empty": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "syntax_after_side_effects",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "print(\"NO\")\neprint(\"NO\")\n;;\ninput(\"NO\")\nwriteFile(\"Temp/T14-docs/must-not-create.txt\", \"NO\")\nappendFile(\"Temp/T14-docs/sentinel.txt\", \"NO\")\nlet =\n"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 变量名，但得到 '='\",\"file\":\"<command>\",\"line\":7,\"col\":5,\"traceback\":[{\"file\":\"<command>\",\"line\":7,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "error": true,
+        "mode": true,
+        "executed": true,
+        "ok": true,
+        "stderr_empty": true,
+        "field_order": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    },
+    {
+      "name": "unchanged_README_first_LFZ_block",
+      "args": [
+        "run",
+        "Temp\\T14-docs\\unchanged-hello.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "Hello, LFZ!\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinel_preserved": true,
+        "new_target_absent": true
+      },
+      "passed": true
+    }
+  ],
+  "witnesses": {
+    "existing_path": "Temp\\T14-docs\\sentinel.txt",
+    "before_hex": "e58e9fe5ad97e88a82006b6565700a",
+    "after_hex": "e58e9fe5ad97e88a82006b6565700a",
+    "new_path": "Temp\\T14-docs\\must-not-create.txt",
+    "new_exists": false
+  }
+}

@@ -3,7 +3,7 @@
 > LFZ 采用 **Python 风格**的错误模型：**类名 + 中文消息 + 位置（行/列）+ 源码行 + 插入符**，运行期错误附 `Traceback`。
 > 权威定义：[`docs/spec/semantics.md`](../spec/semantics.md) §8（用户可见行为）；[`docs/spec/interface-contract.md`](../spec/interface-contract.md) §8.1（实现映射）。
 > 配套：[`README.md`](README.md) ｜ [`tutorial.md`](tutorial.md) ｜ [`reference.md`](reference.md) ｜ [`testing.md`](testing.md)
-> 最后更新: 2026-10-25（T12：1.4.0 参数、代码入口与 JSON） by docs-writer
+> 最后更新: 2026-10-27（T14：非执行语法检查；1.4.0候选） by docs-writer
 
 ---
 
@@ -346,3 +346,19 @@ jsonStringify reason为 `不支持函数或结构体定义`、`浮点数必须�
 退出2；stdout的错误对象含 `error:"ValueError"`、`message:"JSON 解析失败（字节偏移 9）：对象键重复"`、`file:"<command>"`、`line:1`、`col:1`，stderr为空。完整原始JSON见 [本轮实跑证据](../reports/T12-guide-evidence.md)。请修复输入数据，不要把重复键 静默覆盖成最后值。
 
 `lfz -e CODE` 和stdin源码诊断分别使用 `<command>` 与 `<stdin>`。非法UTF-8标准输入或读取失败为加载期 `IOError: 无法读取标准输入`，无源码span，机器 `line/col` 为null、`traceback`为空；加载源文件中的非法UTF-8仍为SyntaxError。stdin源码已经读到EOF，后续 `input()` 读EOF沿既有IOError处理。正常业务JSON输出用 `print(jsonStringify(value))`；CLI `--json` 成功只给状态对象，不把业务JSON包进结果字段。
+
+## 9. check的语法诊断与参数错误
+
+`lfz check`成功只代表前端检查通过。正常模式双流空、退出0；错误写stderr、stdout空、退出2。与运行时内置 `check(false)`不同，CLI check不执行断言，也不用测试失败退出码1。
+
+```powershell
+./dist/lfz.exe check --json -e 'return 1'
+```
+
+顶层return仍被现有parser拒绝：stdout是一个`ok:false`、`mode:"check"`、`executed:false`的SyntaxError对象，含`file:"<command>"`及原1-based位置，stderr空。带位置的前端traceback只是一条`<module>`定位记录，不是执行调用栈。成功JSON恰为 `{"ok":true,"mode":"check","executed":false}`。
+
+`lfz check -e 'print(1 / 0)'`检查成功，因为没有求值；随后正常执行仍报ZeroDivisionError。这同样适用于未知名、类型、arity、let重绑定和缺失运行时IO路径，不能把语法成功当成已验证这些行为。
+
+参数错误走既有usage通道：`lfz check --json`、`lfz check --json --help`、`lfz check x.lfz --`都退出2，stdout空，stderr是用法文本，不是LFZ JSON错误对象。自动化调用必须先确认命令参数合法，再按stdout是否为结果对象处理；不能给usage错误臆造某个LFZ类名。
+
+文件加载沿原UTF8/BOM/换行/前导规则；-e/stdin不要求前导且从line1起。stdin非法UTF8/读取失败仍为无位置IOError，JSON的line/col为null、traceback空。新命令不改变run/test已有诊断和输出协议；精确约定见 [三spec §17](../spec/interface-contract.md#17-t14-前端检查cli契约2026-10-27-冻结)。

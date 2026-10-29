@@ -2,7 +2,7 @@
 
 > 每一条都标注了 **spec 章节号**（`SY` = [`docs/spec/syntax.md`](../spec/syntax.md)，`SE` = [`docs/spec/semantics.md`](../spec/semantics.md)，`IC` = [`docs/spec/interface-contract.md`](../spec/interface-contract.md)）。本参考是**导读**，权威定义以 spec 为准。
 > 配套：上手 [`README.md`](README.md) ｜ 教程 [`tutorial.md`](tutorial.md) ｜ 错误 [`errors.md`](errors.md) ｜ 测试 [`testing.md`](testing.md)
-> 最后更新: 2026-10-25（T12：1.4.0 参数、代码入口与 JSON） by docs-writer
+> 最后更新: 2026-10-27（T14：非执行语法检查；1.4.0候选） by docs-writer
 
 ---
 
@@ -367,4 +367,21 @@ print()                           // 空行
 | `;;` 语义、值显示、求值语义、错误模型 | `semantics.md` §3.6、§3.7、§4.5、§8 |
 | 72 个内置函数表 | `interface-contract.md` §10.7、§16 |
 | 错误类实现映射、loader、`Span`、帧 | `interface-contract.md` §8.1、§10 |
+| 非执行check命令、JSON标记及限制 | 三spec §17 |
 | 下游硬性要求（含 docs / runner 契约） | `interface-contract.md` §11 |
+
+## 8. 非执行语法检查命令
+
+| 形式 | 输入规则 |
+| -- | -- |
+| `lfz check FILE` | 按显式run加载任意路径；`.lfz`/`.LFZ`首行仍须精确`#42`及换行，其它扩展名豁免 |
+| `lfz check -e CODE` | CODE是紧随`-e`的完整单项字符串，无需`#42`；空CODE合法 |
+| `lfz check -` | 从stdin读UTF-8源码至EOF，无需`#42` |
+
+命令只复用现有加载/词法/语法/AST深度检查，不新增LFZ语法或内置。即使在未执行分支或函数体内，语法错误仍会拒绝；名称解析、类型、arity、let重绑定、运行时IO路径、终止性均不在检查范围。`print(1 / 0)`、`unknownName`等语法有效源码可以检查成功。语言内置 `check(condition)`仍是运行时非致命断言，与CLI子命令不同。
+
+成功正常模式双流空、退出0；前端错误stderr诊断、stdout空、退出2。合法check的JSON成功为 `{"ok":true,"mode":"check","executed":false}`；失败在这三个字段后按既有顺序接 `error/message/file/line/col/traceback`。这里的前端定位条目不表示实际执行过的调用栈。旧run/test的JSON不变。
+
+CODE原样保护，即使等于`--json`、`--`、`--help`或空字符串也按源码解析；CODE外`--json`可前后放置、重复幂等。CODE外任何`--`、多源、缺源、缺CODE、未知选项及`check --help`均是CLI参数错误：即使有`--json`也只写stderr文本、stdout空、退出2。以`-`开头的文件路径写成`./-name`或完整路径。
+
+`-e`错误伪路径为`<command>`，stdin为`<stdin>`，行列从1开始。文件的前导消费与偏移沿既有loader。读取/解码stdin失败沿用无位置的 `IOError: 无法读取标准输入`。正式契约见三spec §17；check并不承诺检查宿主读取设备不会等待，也不是安全沙箱。

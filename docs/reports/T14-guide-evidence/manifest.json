@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-29",
+  "binary": {
+    "path": "target/release/lfz.exe",
+    "bytes": 774656,
+    "sha256": "83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79"
+  },
+  "checks_total": 27,
+  "checks_passed": 27,
+  "guide_hashes": {
+    "README.md": "adff6ba4d8315cfc966eb28fe55552e8f61d407cac4c3d76c5b4131ec44864b2",
+    "reference.md": "fa64486bf67b2548f040891b74dfcb8091eac098da600f218a93c80526891948",
+    "tutorial.md": "351b4f1cc7eeb3f98b45e71e47573d0b910b3e2bc87cdb35a565e21a0bdff989",
+    "testing.md": "90e33cb042aa9815d7d44c2e42e5271dd43d7691da0d0d53d519a07431dfc268",
+    "errors.md": "619426fc92deaabe789d3f1a9863caa6d6b2681ec5c79049ea4b43a654113ad2"
+  },
+  "files": {
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "runs.json": {
+      "bytes": 15586,
+      "sha256": "6fecfe233b934641f97aa46389bb0373605f201027fe65ef5e264ddb0c54110e"
+    },
+    "verify.py": {
+      "bytes": 6985,
+      "sha256": "861e0db277e91715da345944a8876c9e1fd24ab7ae91053899cfa1033268244e"
+    }
+  },
+  "report": {
+    "path": "docs/reports/T14-guide-evidence.md",
+    "sha256": "26b3ff0ff42723dc45d15a197fa4c41f098cfc9472ea38236d16cdfb1ac31b86"
+  }
+}

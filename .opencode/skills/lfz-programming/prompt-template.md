@@ -22,7 +22,7 @@
 4. `let` 不可重绑定，需要重新赋值用 `var`。
 5. 条件/逻辑运算必须是 bool（无 truthiness）。
 6. 交付前逐条核对《LFZ 编程指南》的「自检清单」。
-7. **按指南 §0.5 工作流实跑**：写完后用 `cargo run --quiet -- run <file.lfz>` 运行，
+7. **按指南 §0.5先check再实跑**：先 `lfz check <file.lfz>`；成功只代表前端通过，再用 `cargo run --quiet -- run <file.lfz>` 运行，
    确认**退出码为 `0`** 再交付；若报错，按指南 §4.5「错误类 → 原因 → 修法」修正后重跑。
 8. **字符串处理纪律**：不要对 `string` 取下标（`s[i]` 非法 → 先 `split("", s)`，见指南 §4-22）；
    **大 n 时不要在循环里用 `s = s + …` 或 `push` 累积**（O(n²)，用指南 §4.6 的 O(n) 写法）。
@@ -96,4 +96,15 @@ print(sum_even([1, 2, 3, 4, 5]))
 参数始终放在--之后，包括JSON文本、空串、--json字面数据。
 配置先jsonParse并验证，输出先完整jsonStringify后再writeFile。
 报告真实命令、stdout/stderr、退出码和文件副作用。
+```
+
+## T14模板补充：分开检查和执行证据
+
+```text
+先用lfz check FILE / check -e CODE / check -检查生成源码。
+合法check --json结果必须有mode:"check",executed:false；usage错误stdout空/stderr文本。
+check不执行、不静态检查名称/类型/IO，不代表沙箱，也不保证运行成功。
+CODE外不能传--或脚本参数；检查通过后才按任务授权运行，运行参数放--后。
+分别报告两步命令、stdout/stderr、退出码和实际文件副作用。
+源码check(cond,msg)是独立的非致命断言内置，不是CLI check。
 ```
