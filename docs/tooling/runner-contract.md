@@ -224,3 +224,16 @@ runner **不改变 cwd**，所以测试正文中的 `Temp/...` 相对进程启�
 - 新 `tests/cli_t12.rs` 12 条进程集成测试覆盖：两种拼写、空程序/空参数/Unicode、-- 字面参数、源码选项形字符串、机器状态通道、UTF-8失败、错误行号、input和EOF、文件前导与扩展名兼容。
 - 复现：项目内配置 RUSTUP_HOME/CARGO_HOME/TEMP/TMP 后执行 `cargo test --test cli --test cli_t12` 及 `cargo test --bin lfz`。
 - 首轮日志：[集成测试](./evidence/T12/cli-tests.txt)、[bin单测](./evidence/T12/bin-tests.txt)（原始临时副本 Temp/T12/tooling/）；全量与独立验收由team-lead另行汇总。构建存在环境路径/增量hard-link警告，不声称零warning。
+## 11. T14 非执行前端检查（冻结契约§17）
+
+`lfz check FILE`、`lfz check -e CODE`、`lfz check -` 分别检查文件、直接代码及读取至EOF的stdin源码。只调用既有loader、lexer、parser（含AST深度检查），加载、解析、Program析构全位于既有大栈包装内。成功不会建立Interp或调用求值入口、用户内置、输出重定向；宿主仍需读取被检查的源码。通过语法检查不代表名称、类型、函数参数、文件路径或运行行为正确，也不是通用安全沙箱。
+
+- FILE沿显式run加载规则：任意扩展名均可；仅.lfz（ASCII大小写不敏感）要求并消费精确#42前导。CODE/stdin不要求前导，行基数0，伪路径<command>/<stdin>。
+- CODE是-e紧随的一个原始argv字符串，保留空串、Unicode以及恰为--json/--的内容；CODE外--json可前后重复。CODE外任何--（含空尾）和脚本参数均拒绝；check --help拒绝，帮助用lfz --help。
+- 普通模式成功双流空、exit0；前端失败沿既有诊断写stderr、stdout空、exit2。没有exit1或LFZ程序输出。
+- 参数合法的check --json成功唯一一行：`{"ok":true,"mode":"check","executed":false}`。失败前三键相同（ok:false），随后按原顺序error/message/file/line/col/traceback；复用现JSON编码与错误字段构造。前端错误的位置记录不是实际执行栈。
+- usage错误继续沿既有CLI约定：即使有--json仍stdout空、stderr文本、exit2；不伪造LFZ错误类。因此唯一JSON保证仅适用于参数合法的check。
+- stdin读取失败或非UTF8仍为无span IOError“无法读取标准输入”；文件UTF8/前导/行终止符和错误位置沿原loader，不另写文法。
+- 实现边界：src/cli.rs的CheckInput/parse_check_input、check_input、check_loaded_on_stack。旧run/test/argv入口和JSON对象保持既有行为；LFZ源码里的check(condition)仍是原断言内置。
+
+新增进程回归在tests/cli_t14.rs：三来源、CODE/选项保护、usage、加载及准确偏移、前端错误、非静态承诺、无程序输出/输入/循环执行、文件哨兵、解析/AST受控边界、旧JSON与argv。所有测试临时件均在项目Temp/T14，子进程有超时保护。作者证据位于docs/tooling/evidence/T14；独立非执行验收由verifier另行提供。

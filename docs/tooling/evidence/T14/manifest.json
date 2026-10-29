@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-27",
+  "status": "author functional tests PASS; independent verification pending; overall performance R304 remains OPEN",
+  "binary": {
+    "path": "target/release/lfz.exe",
+    "bytes": 774656,
+    "sha256": "83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79"
+  },
+  "tests": {
+    "red_command": "cargo test --release --test cli_t14",
+    "red_passed": 0,
+    "red_failed": 12,
+    "red_exit": 101,
+    "first_green_attempt_passed": 11,
+    "first_green_attempt_failed": 1,
+    "test_expectation_correction": "New test expected EOF line3, but both original run frontend and check report newline error line2,col8. Only new test expectation corrected; parser unchanged.",
+    "targeted_passed": 12,
+    "full_command": "cargo test --release",
+    "full_counts": [
+      412,
+      48,
+      28,
+      12,
+      12,
+      15,
+      15,
+      0
+    ],
+    "full_passed": 542,
+    "full_failed": 0,
+    "full_ignored": 0,
+    "full_exit": 0,
+    "build_command": "cargo build --release",
+    "build_exit": 0
+  },
+  "current_source_hashes": {
+    "src/cli.rs": {
+      "bytes": 49772,
+      "sha256": "85cb541b7756ec5e2b09026845f88df9f8728b8f0f1f06136ea870fb8429fe6a"
+    },
+    "src/main.rs": {
+      "bytes": 808,
+      "sha256": "247fc12340d2f6a26aa3fc5ada658cbfe72fb7ee7f85f107b05e6af27018c366"
+    },
+    "tests/cli_t14.rs": {
+      "bytes": 9738,
+      "sha256": "112d628fa2db83ce1a506338f20469fa99bc0dc06e916ce6787c442ee1ce2065"
+    },
+    "docs/tooling/runner-contract.md": {
+      "bytes": 19213,
+      "sha256": "58a5cf4ac470d2a51eb5ec346d9cfd0d53cb7ef3698bb7cb77d6ab464765ea5a"
+    },
+    "Cargo.toml": {
+      "bytes": 795,
+      "sha256": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c"
+    },
+    "Cargo.lock": {
+      "bytes": 147,
+      "sha256": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4"
+    }
+  },
+  "evidence": {
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "build-release.txt": {
+      "bytes": 358,
+      "sha256": "c54468806df441fd0c4a6f688dc90a899a0eb2f8f1726cbe66eba8c60577ceba"
+    },
+    "cargo-test-release.txt": {
+      "bytes": 35950,
+      "sha256": "bcd3321bbc7b96da33272fb4f1a1773b2f16f9335a14499f493e00cd602c5e75"
+    },
+    "green-cli-tests-first.txt": {
+      "bytes": 1960,
+      "sha256": "d97901f8500de3d6cfcb757c486eff6c0665745507845b451174f58edd2fbcab"
+    },
+    "green-cli-tests.txt": {
+      "bytes": 1455,
+      "sha256": "ff433063b9fedec4ea529e84929997947b5cf2698701c6fd8026805f2a9f1a06"
+    },
+    "red-cli-tests.txt": {
+      "bytes": 13305,
+      "sha256": "52936285525abbc9a4242af47313993a35e05431428d601e40fe1e6a1fa5250c"
+    }
+  }
+}

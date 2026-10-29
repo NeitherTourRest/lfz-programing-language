@@ -1,0 +1,120 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `release` profile [optimized] target(s) in 13.14s
+     Running tests\cli_t14.rs (target\release\deps\cli_t14-b528900585815e19.exe)
+
+running 12 tests
+test check_reports_source_paths_and_frontend_error_without_runtime_trace ... FAILED
+test check_bom_crlf_and_invalid_encoding_follow_loader ... FAILED
+test check_code_options_and_empty_code_are_preserved ... FAILED
+test check_never_runs_program_output_input_dump_or_loops ... FAILED
+test check_help_and_existing_run_protocol_remain_distinct ... FAILED
+test check_does_not_claim_runtime_name_type_or_arity_validation ... FAILED
+test check_deep_parser_and_ast_boundaries_stay_controlled ... FAILED
+test check_usage_rejects_separators_and_extra_operands_even_in_json_mode ... FAILED
+test check_three_sources_and_both_output_modes ... FAILED
+test check_file_loading_keeps_preamble_extension_and_line_offsets ... FAILED
+test check_never_creates_or_modifies_files ... FAILED
+test check_reuses_parser_context_and_checks_unreachable_bodies ... FAILED
+
+failures:
+
+---- check_reports_source_paths_and_frontend_error_without_runtime_trace stdout ----
+
+thread 'check_reports_source_paths_and_frontend_error_without_runtime_trace' panicked at tests\cli_t14.rs:34:9:
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- check_bom_crlf_and_invalid_encoding_follow_loader stdout ----
+
+thread 'check_bom_crlf_and_invalid_encoding_follow_loader' panicked at tests\cli_t14.rs:25:5:
+assertion `left == right` failed: args=["check", "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp/T14/cli-tests\\44516_0.lfz"] stdout=[] stderr=[108, 102, 122, 58, 32, 232, 163, 184, 230, 150, 135, 228, 187, 182, 232, 176, 131, 231, 148, 168, 229, 143, 170, 230, 142, 165, 229, 143, 151, 228, 184, 128, 228, 184, 170, 32, 60, 102, 105, 108, 101, 62, 32, 229, 143, 130, 230, 149, 176, 10, 231, 148, 168, 230, 179, 149, 58, 32, 108, 102, 122, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 114, 117, 110, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 116, 101, 115, 116, 32, 91, 232, 183, 175, 229, 190, 132, 46, 46, 46, 93, 239, 188, 136, 230, 155, 180, 229, 164, 154, 58, 32, 108, 102, 122, 32, 45, 45, 104, 101, 108, 112, 239, 188, 137, 10]
+  left: Some(2)
+ right: Some(0)
+
+---- check_code_options_and_empty_code_are_preserved stdout ----
+
+thread 'check_code_options_and_empty_code_are_preserved' panicked at tests\cli_t14.rs:25:5:
+assertion `left == right` failed: args=["check", "-e", ""] stdout=[] stderr=[108, 102, 122, 58, 32, 232, 163, 184, 230, 150, 135, 228, 187, 182, 232, 176, 131, 231, 148, 168, 229, 143, 170, 230, 142, 165, 229, 143, 151, 228, 184, 128, 228, 184, 170, 32, 60, 102, 105, 108, 101, 62, 32, 229, 143, 130, 230, 149, 176, 10, 231, 148, 168, 230, 179, 149, 58, 32, 108, 102, 122, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 114, 117, 110, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 116, 101, 115, 116, 32, 91, 232, 183, 175, 229, 190, 132, 46, 46, 46, 93, 239, 188, 136, 230, 155, 180, 229, 164, 154, 58, 32, 108, 102, 122, 32, 45, 45, 104, 101, 108, 112, 239, 188, 137, 10]
+  left: Some(2)
+ right: Some(0)
+
+---- check_never_runs_program_output_input_dump_or_loops stdout ----
+
+thread 'check_never_runs_program_output_input_dump_or_loops' panicked at tests\cli_t14.rs:25:5:
+assertion `left == right` failed: args=["check", "-e", "print(1)\neprint(2)\n;;\ninput(\"PROMPT\")"] stdout=[] stderr=[108, 102, 122, 58, 32, 232, 163, 184, 230, 150, 135, 228, 187, 182, 232, 176, 131, 231, 148, 168, 229, 143, 170, 230, 142, 165, 229, 143, 151, 228, 184, 128, 228, 184, 170, 32, 60, 102, 105, 108, 101, 62, 32, 229, 143, 130, 230, 149, 176, 10, 231, 148, 168, 230, 179, 149, 58, 32, 108, 102, 122, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 114, 117, 110, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 116, 101, 115, 116, 32, 91, 232, 183, 175, 229, 190, 132, 46, 46, 46, 93, 239, 188, 136, 230, 155, 180, 229, 164, 154, 58, 32, 108, 102, 122, 32, 45, 45, 104, 101, 108, 112, 239, 188, 137, 10]
+  left: Some(2)
+ right: Some(0)
+
+---- check_help_and_existing_run_protocol_remain_distinct stdout ----
+
+thread 'check_help_and_existing_run_protocol_remain_distinct' panicked at tests\cli_t14.rs:165:5:
+assertion failed: String::from_utf8_lossy(&help.stdout).contains("lfz check")
+
+---- check_does_not_claim_runtime_name_type_or_arity_validation stdout ----
+
+thread 'check_does_not_claim_runtime_name_type_or_arity_validation' panicked at tests\cli_t14.rs:25:5:
+assertion `left == right` failed: args=["check", "-e", "unknownName", "--json"] stdout=[] stderr=[108, 102, 122, 58, 32, 232, 163, 184, 230, 150, 135, 228, 187, 182, 232, 176, 131, 231, 148, 168, 229, 143, 170, 230, 142, 165, 229, 143, 151, 228, 184, 128, 228, 184, 170, 32, 60, 102, 105, 108, 101, 62, 32, 229, 143, 130, 230, 149, 176, 10, 231, 148, 168, 230, 179, 149, 58, 32, 108, 102, 122, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 114, 117, 110, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 116, 101, 115, 116, 32, 91, 232, 183, 175, 229, 190, 132, 46, 46, 46, 93, 239, 188, 136, 230, 155, 180, 229, 164, 154, 58, 32, 108, 102, 122, 32, 45, 45, 104, 101, 108, 112, 239, 188, 137, 10]
+  left: Some(2)
+ right: Some(0)
+
+---- check_deep_parser_and_ast_boundaries_stay_controlled stdout ----
+
+thread 'check_deep_parser_and_ast_boundaries_stay_controlled' panicked at tests\cli_t14.rs:25:5:
+assertion `left == right` failed: args=["check", "-e", "((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))", "--json"] stdout=[] stderr=[108, 102, 122, 58, 32, 232, 163, 184, 230, 150, 135, 228, 187, 182, 232, 176, 131, 231, 148, 168, 229, 143, 170, 230, 142, 165, 229, 143, 151, 228, 184, 128, 228, 184, 170, 32, 60, 102, 105, 108, 101, 62, 32, 229, 143, 130, 230, 149, 176, 10, 231, 148, 168, 230, 179, 149, 58, 32, 108, 102, 122, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 114, 117, 110, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 116, 101, 115, 116, 32, 91, 232, 183, 175, 229, 190, 132, 46, 46, 46, 93, 239, 188, 136, 230, 155, 180, 229, 164, 154, 58, 32, 108, 102, 122, 32, 45, 45, 104, 101, 108, 112, 239, 188, 137, 10]
+  left: Some(2)
+ right: Some(0)
+
+---- check_usage_rejects_separators_and_extra_operands_even_in_json_mode stdout ----
+
+thread 'check_usage_rejects_separators_and_extra_operands_even_in_json_mode' panicked at tests\cli_t14.rs:86:9:
+["check"]
+
+---- check_three_sources_and_both_output_modes stdout ----
+
+thread 'check_three_sources_and_both_output_modes' panicked at tests\cli_t14.rs:25:5:
+assertion `left == right` failed: args=["check", "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp/T14/cli-tests\\44516_3.lfz"] stdout=[] stderr=[108, 102, 122, 58, 32, 232, 163, 184, 230, 150, 135, 228, 187, 182, 232, 176, 131, 231, 148, 168, 229, 143, 170, 230, 142, 165, 229, 143, 151, 228, 184, 128, 228, 184, 170, 32, 60, 102, 105, 108, 101, 62, 32, 229, 143, 130, 230, 149, 176, 10, 231, 148, 168, 230, 179, 149, 58, 32, 108, 102, 122, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 114, 117, 110, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 116, 101, 115, 116, 32, 91, 232, 183, 175, 229, 190, 132, 46, 46, 46, 93, 239, 188, 136, 230, 155, 180, 229, 164, 154, 58, 32, 108, 102, 122, 32, 45, 45, 104, 101, 108, 112, 239, 188, 137, 10]
+  left: Some(2)
+ right: Some(0)
+
+---- check_file_loading_keeps_preamble_extension_and_line_offsets stdout ----
+
+thread 'check_file_loading_keeps_preamble_extension_and_line_offsets' panicked at tests\cli_t14.rs:25:5:
+assertion `left == right` failed: args=["check", "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp/T14/cli-tests\\44516_2.LFZ"] stdout=[] stderr=[108, 102, 122, 58, 32, 232, 163, 184, 230, 150, 135, 228, 187, 182, 232, 176, 131, 231, 148, 168, 229, 143, 170, 230, 142, 165, 229, 143, 151, 228, 184, 128, 228, 184, 170, 32, 60, 102, 105, 108, 101, 62, 32, 229, 143, 130, 230, 149, 176, 10, 231, 148, 168, 230, 179, 149, 58, 32, 108, 102, 122, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 114, 117, 110, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 116, 101, 115, 116, 32, 91, 232, 183, 175, 229, 190, 132, 46, 46, 46, 93, 239, 188, 136, 230, 155, 180, 229, 164, 154, 58, 32, 108, 102, 122, 32, 45, 45, 104, 101, 108, 112, 239, 188, 137, 10]
+  left: Some(2)
+ right: Some(0)
+
+---- check_never_creates_or_modifies_files stdout ----
+
+thread 'check_never_creates_or_modifies_files' panicked at tests\cli_t14.rs:25:5:
+assertion `left == right` failed: args=["check", "-e", "writeFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp/T14/cli-tests\\\\44516_1.txt\", \"overwrite\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp/T14/cli-tests\\\\44516_1.txt\", \"extra\")\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp/T14/cli-tests\\\\44516_4.txt\", \"new\")\n", "--json"] stdout=[] stderr=[108, 102, 122, 58, 32, 232, 163, 184, 230, 150, 135, 228, 187, 182, 232, 176, 131, 231, 148, 168, 229, 143, 170, 230, 142, 165, 229, 143, 151, 228, 184, 128, 228, 184, 170, 32, 60, 102, 105, 108, 101, 62, 32, 229, 143, 130, 230, 149, 176, 10, 231, 148, 168, 230, 179, 149, 58, 32, 108, 102, 122, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 114, 117, 110, 32, 60, 102, 105, 108, 101, 62, 32, 124, 32, 108, 102, 122, 32, 116, 101, 115, 116, 32, 91, 232, 183, 175, 229, 190, 132, 46, 46, 46, 93, 239, 188, 136, 230, 155, 180, 229, 164, 154, 58, 32, 108, 102, 122, 32, 45, 45, 104, 101, 108, 112, 239, 188, 137, 10]
+  left: Some(2)
+ right: Some(0)
+
+---- check_reuses_parser_context_and_checks_unreachable_bodies stdout ----
+
+thread 'check_reuses_parser_context_and_checks_unreachable_bodies' panicked at tests\cli_t14.rs:34:9:
+
+
+
+failures:
+    check_bom_crlf_and_invalid_encoding_follow_loader
+    check_code_options_and_empty_code_are_preserved
+    check_deep_parser_and_ast_boundaries_stay_controlled
+    check_does_not_claim_runtime_name_type_or_arity_validation
+    check_file_loading_keeps_preamble_extension_and_line_offsets
+    check_help_and_existing_run_protocol_remain_distinct
+    check_never_creates_or_modifies_files
+    check_never_runs_program_output_input_dump_or_loops
+    check_reports_source_paths_and_frontend_error_without_runtime_trace
+    check_reuses_parser_context_and_checks_unreachable_bodies
+    check_three_sources_and_both_output_modes
+    check_usage_rejects_separators_and_extra_operands_even_in_json_mode
+
+test result: FAILED. 0 passed; 12 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+
+error: test failed, to rerun pass `--test cli_t14`

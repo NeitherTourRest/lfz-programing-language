@@ -17,6 +17,7 @@
 //! `lfz run --json <file>`、`lfz <file> --json`、`lfz test [路径...]`
 //! （实现见 [`crate::test_runner`]）、`lfz test --json`、`--help` / `-h`、`--version` / `-V`、
 //! 错误格式化、退出码、`--json` 机器可读输出（`semantics.md` §8.3 示例 4 / §8.4）。
+//! **T14**：`check FILE` / `check -e CODE` / `check -` 仅加载与前端检查，不执行LFZ程序。
 //! **不做**：REPL。
 //!
 //! # 裸文件调用（P4.4，像 Python 那样直接跑）
@@ -76,6 +77,8 @@ LFZ 解释器
   lfz -e CODE [-- ARG...]  直接执行代码（也可 lfz run -e CODE）
   lfz - [-- ARG...]       从标准输入读取源码到 EOF（也可 lfz run -）
   lfz FILE.lfz -- ARG...  原样传入脚本参数，可用 argv() 读取
+  lfz check FILE       只检查文件语法，不执行 LFZ 程序
+  lfz check -e CODE    只检查直接代码；check - 从 stdin 检查源码
   lfz test [路径...]   运行黑盒测试（默认发现 tests/**/*.lfz，排除 tests/fixtures）
   lfz --help, -h       显示本帮助
   lfz --version, -V    显示版本
@@ -104,10 +107,14 @@ LFZ 解释器
   脚本参数必须在 -- 后，argv() 不含程序名/脚本名。-- 后的 --json 是普通参数。
   stdin 源码读取后 input() 将遇到 EOF；文件和 -e 模式可继续读取标准输入。
   --json 只输出执行状态对象；需要业务 JSON 时正常模式 print(jsonStringify(value))。
+  check 通过语法检查不代表运行成功；不检查名称、类型或文件IO，不执行脚本。
+  check 不接受脚本参数或 CODE 外的 --；合法命令的 --json 标记 executed:false。
+  CLI 参数错误仍写 stderr 文本；check --help 不受支持，请使用 lfz --help。
 
 示例:
   lfz -e 'print(1+2)'
   lfz -e 'print(argv())' -- first second
+  lfz check --json examples/hello.lfz
   lfz examples/hello.lfz
   lfz run examples/hello.lfz
   lfz --json examples/hello.lfz
@@ -117,6 +124,14 @@ LFZ 解释器
 
 /// `lfz --version` 文本（写 stdout）。
 const VERSION: &str = concat!("lfz ", env!("CARGO_PKG_VERSION"));
+
+/// 检查模式的输入来源；与执行入口分离，不携带脚本参数。
+#[derive(Debug, PartialEq, Eq)]
+enum CheckInput {
+    File(String),
+    Code(String),
+    Stdin,
+}
 
 /// 解析后的命令行。
 #[derive(Debug, PartialEq, Eq)]
@@ -131,6 +146,8 @@ enum Command {
     /// `-e CODE` 与 `-` 标准输入源码入口。
     Eval { code: String, args: Vec<String> },
     Stdin { args: Vec<String> },
+    /// 只加载、词法、语法检查，不求值。
+    Check(CheckInput),
     /// `lfz test [路径...]`。
     Test { paths: Vec<String> },
     /// `--help` / `-h`。
@@ -161,12 +178,13 @@ pub fn execute(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32
         Ok(Command::ScriptArgs { path, args }) => run_script_with_args(&path, &args, json, out, err),
         Ok(Command::Eval { code, args }) => run_source(Some(&code), &args, json, out, err),
         Ok(Command::Stdin { args }) => run_source(None, &args, json, out, err),
+        Ok(Command::Check(input)) => check_input(&input, json, out, err),
         Ok(Command::Test { paths }) => crate::test_runner::run(&paths, json, out, err),
         Err(msg) => {
             let _ = writeln!(err, "lfz: {msg}");
             let _ = writeln!(
                 err,
-                "用法: lfz <file> | lfz run <file> | lfz test [路径...]（更多: lfz --help）"
+                "用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）"
             );
             EXIT_ERROR
         }
@@ -187,7 +205,7 @@ fn split_options(args: &[String]) -> (Vec<String>, Option<Vec<String>>, bool) {
             return (rest, Some(args[i + 1..].to_vec()), json);
         } else {
             let code_operand = a == "-e"
-                && (rest.is_empty() || (rest.len() == 1 && rest[0] == "run"));
+                && (rest.is_empty() || (rest.len() == 1 && (rest[0] == "run" || rest[0] == "check")));
             rest.push(a.clone());
             i += 1;
             if code_operand && i < args.len() {
@@ -221,6 +239,12 @@ fn parse_command(args: &[String], script_args: Option<Vec<String>>) -> Result<Co
     if matches!(first.as_str(), "--help" | "-h") { return Ok(Command::Help); }
     if matches!(first.as_str(), "--version" | "-V") { return Ok(Command::Version); }
     if first == "test" { return Ok(Command::Test { paths: args[1..].to_vec() }); }
+    if first == "check" {
+        if script_args.is_some() {
+            return Err("'check' 不接受脚本参数或 CODE 外的 --".to_string());
+        }
+        return parse_check_input(&args[1..]).map(Command::Check);
+    }
     let explicit = first == "run";
     let input = if explicit { &args[1..] } else { args };
     let target = input.first().ok_or_else(|| "'run' 需要一个 <file> 参数".to_string())?;
@@ -242,12 +266,30 @@ fn parse_command(args: &[String], script_args: Option<Vec<String>>) -> Result<Co
     }
 }
 
-/// 单个用例的执行结果：供 `run`（单文件）与 [`crate::test_runner`]（批量）共用。
+/// 解析check来源；CODE之外拒绝--和额外操作数。
+fn parse_check_input(args: &[String]) -> Result<CheckInput, String> {
+    let target = args.first().ok_or_else(|| "'check' 需要 FILE、-e CODE 或 -".to_string())?;
+    if target == "-e" {
+        let code = args.get(1).ok_or_else(|| "'check -e' 需要一个 CODE 参数".to_string())?;
+        if args.len() != 2 {
+            return Err("'check -e' 只接受一个 CODE 参数，不接受脚本参数".to_string());
+        }
+        return Ok(CheckInput::Code(code.clone()));
+    }
+    if args.len() != 1 {
+        return Err("'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --".to_string());
+    }
+    if target == "-" { return Ok(CheckInput::Stdin); }
+    if target.starts_with('-') { return Err(format!("'check' 未知选项 '{target}'")); }
+    Ok(CheckInput::File(target.clone()))
+}
+
+/// 单个源码流水线结果：供run、test和前端check的错误渲染共用。
 ///
-/// **只有**「跑完全部阶段且无 `LfzError`」为 [`CaseEval::Passed`]；任一阶段报错都进
+/// 完成所选模式的全部阶段且无 `LfzError` 为 [`CaseEval::Passed`]；任一阶段报错都进
 /// [`CaseEval::Failed`] 并携带渲染所需的上下文（`loaded` / `traced` / `err`）。
 pub(crate) enum CaseEval {
-    /// 加载 → 词法 → 语法 → 求值全部成功（无任何 `LfzError`；`check` 失败不在此列）。
+    /// run/test完成加载到求值；CLI check仅完成加载到语法，不表示运行成功。
     Passed,
     /// 某阶段抛 `LfzError`。
     Failed {
@@ -438,6 +480,62 @@ fn eval_loaded_on_stack(loaded: lfz::error::R<Loaded>, args: &[String]) -> CaseE
         err,
         loaded: Some(loaded),
         traced: Some(traced),
+    }
+}
+
+/// 只做前端检查。输入加载、解析和深AST析构全部留在大栈线程内。
+/// 这里不调用求值入口，也不建立Interp或调整LFZ输出重定向。
+fn check_input(input: &CheckInput, json_mode: bool, out: &mut dyn Write, err: &mut dyn Write) -> i32 {
+    let path = match input {
+        CheckInput::File(path) => path.as_str(),
+        CheckInput::Code(_) => "<command>",
+        CheckInput::Stdin => "<stdin>",
+    };
+    let checked = evaluator::on_eval_stack(|| {
+        let loaded = match input {
+            CheckInput::File(path) => loader::load_file(path),
+            CheckInput::Code(code) => loader::load_source(code),
+            CheckInput::Stdin => {
+                let mut source = String::new();
+                match std::io::stdin().read_to_string(&mut source) {
+                    Ok(_) => loader::load_source(&source),
+                    Err(_) => Err(Box::new(LzError::Io { msg: "无法读取标准输入".to_string(), span: None })),
+                }
+            }
+        };
+        check_loaded_on_stack(loaded)
+    });
+    let passed = matches!(checked, CaseEval::Passed);
+    if json_mode {
+        let mut fields = vec![
+            ("ok".to_string(), Json::Bool(passed)),
+            ("mode".to_string(), Json::Str("check".to_string())),
+            ("executed".to_string(), Json::Bool(false)),
+        ];
+        push_error_fields(&mut fields, path, &checked);
+        let _ = writeln!(out, "{}", json::encode(&Json::Obj(fields)));
+    } else if let Some(block) = checked.render(path) {
+        let _ = write!(err, "{block}");
+    }
+    if passed { EXIT_OK } else { EXIT_ERROR }
+}
+
+/// 不返回Program：成功后在当前大栈显式drop，主线程只接收状态/诊断。
+fn check_loaded_on_stack(loaded: lfz::error::R<Loaded>) -> CaseEval {
+    let loaded = match loaded {
+        Ok(loaded) => loaded,
+        Err(error) => return CaseEval::Failed { err: *error, loaded: None, traced: None },
+    };
+    let tokens = match lexer::lex(&loaded.text, loaded.line_base) {
+        Ok(tokens) => tokens,
+        Err(error) => return CaseEval::Failed { err: *error, loaded: Some(loaded), traced: None },
+    };
+    match parser::parse(&tokens) {
+        Ok(program) => {
+            drop(program);
+            CaseEval::Passed
+        }
+        Err(error) => CaseEval::Failed { err: *error, loaded: Some(loaded), traced: None },
     }
 }
 
