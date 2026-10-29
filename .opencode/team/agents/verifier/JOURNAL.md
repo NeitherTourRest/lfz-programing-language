@@ -220,3 +220,8 @@
 - 决策：check功能PASS不表示运行或效率通过；R304OPEN，无T14性能窗，不将T13历史数据混入。
 - 下一步：交主调度继续收口，正式发布仍待效率验收。
 - 阻塞：无功能阻塞。
+
+## [2026-10-29] T15独立验收完成
+- 实际549 harness/attempt13/check117/CLI91含官方178/app37+11/jsonbatch38/JSON140全PASS；38自编进程含状态/trace/逃逸闭包等通过。
+- source/Cargo测前后不变，dist/target1a5a/782848B；原始证据及报告manifest保全。资源不可捕获通过实际执行的安全合成unit核对，无真实abort/OOM。
+- 未修复产品、编译或Git，R304OPEN，无T15性能测窗，不正式发布；交team-lead后续指南/发布收口。

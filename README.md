@@ -6,7 +6,23 @@
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
-## 当前：T14 非执行前端检查候选（2026-10-29）
+## 当前：T15 受控错误恢复候选（2026-10-29）
+
+当前项目内解释器仍为1.4.0候选，**73内置**，新增`attempt(f)`；target/dist均782848B，SHA256 `1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c`。[构建指纹](docs/reports/T15-release-evidence/build.json)保全当前源码/Cargo与精确产物。[最终独立功能验收](docs/reports/T15-independent-verification.md)已通过：549 release harness、178官方黑盒（包含在旧CLI91 full内）、attempt公开13、check117、旧应用37+11、新jsonbatch38、旧JSON/argv140及额外38独立进程全部PASS。人类指南20/20、AI示例25/25为各作者实跑结果，与独立验收分列，不累加重叠用例。
+
+`attempt`接收零参数函数并调用一次，返回`ok/value/error`三字段struct；成功nil与失败有明确区分。仅恢复规定的业务错误及整数越界，保留完整错误消息、位置和traceback。语法/前导错误、递归超限、容量溢出及宿主panic/abort/分配失败不被捕获；参数求值及attempt自身校验在恢复边界之外。它不回滚已发生的容器/cell修改、文件写入、输出或随机状态，不是事务或资源隔离。详见[契约§18](docs/spec/semantics.md)与[实现](docs/reports/T15-runtime.md)。
+
+```lfz
+#42
+let result = attempt(fn() { jsonParse("bad JSON") })
+print(result.ok)
+```
+
+[jsonbatch](app/T15-JSONBATCH.md)演示good/bad/good JSONL记录继续处理、按输入顺序输出错误数据；IO与资源边界保持原契约，输出路径别名及非原子写限制见应用说明。旧check前端检查仍不执行attempt回调。
+
+R-304仍OPEN，本轮不做T15性能计时，不把T12/T13旧成绩当当前二进制测量。仍是功能候选、非正式发布，不打v1.4.0标签，不移动旧标签与v2冻结材料。T13两项生产优化已拒收，失败证据保留。下文T14/T12数据均是各自指纹的历史记录。
+
+## T14 历史非执行前端检查候选（绑定83f56）
 
 项目内当前 `dist/lfz.exe` 为1.4.0候选、774656B，SHA256 `83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79`；[构建来源与源码指纹](docs/reports/T14-release-evidence/build.json)已保全。[最终独立验收](docs/reports/T14-independent-verification.md)已通过：542项release测试、新check公开117/117、旧CLI91/91（内含166官方黑盒）、应用37+11、旧独立140及本轮自编57见证全部PASS。人类指南27/27、AI示例27/27作者实跑通过；作者证据与独立验证分别记录，不合并虚增计数。
 

@@ -2,17 +2,18 @@
 > 最后更新：2026-10-29 by verifier
 
 ## 当前状态
-T14最终83f56候选独立check功能/非执行/兼容回归PASS。R304仍OPEN，未测T14性能，不批准整体正式发布。
+T15 1a5a候选功能及有界恢复语义独立PASS。R304仍OPEN，无T15性能测量，不批准整体正式发布。
 
-## 证据
-- dist/target774656B，SHA83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79。
-- 直接运行7个release harness542全过，无编译；check117、旧CLI91含官方166、app37+11、旧独立140全部PASS。
-- 自编57真实进程见证通过：三来源/双模式、非执行IO哨兵与不创建文件、无输出/交互、while true/递归不执行、runtime错误仅语法通过、晚语法错、与原run前端错误位置和JSON完整对象相同、CODE保护及usage。
-- 调用路径复核check只load/lex/parse，大栈内显式drop Program；无求值/用户内置执行。性能无新计时，不混T13历史hash。
-- 报告docs/reports/T14-independent-verification.md及T14-independent-evidence/含脚本、原始输出、manifest保全。
+## 独立实证
+- dist/target782848B，SHA1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c，source/Cargo测前后相同。
+- 直接执行7个release harness549全通过，无编译；新attempt13、旧check117、旧CLI91含官方178、app37+11、新jsonbatch38、旧JSON140均实跑PASS。
+- 自编38进程见证，human/JSON双模式覆盖nested、12000次失败后正常递归、逃逸闭包函数ID、error记录独立、alias、argv/pipeline/shadow/self、实参一次求值、外层校验/容量传播、后续错误无旧帧等。
+- 直接执行unit合成Recursion/Syntax/Cosmos/Capacity不可捕获分类、depth置上限后的实际attempt调用、完整caller span/depth恢复；不故意abort/OOM，不称真实物理栈压测。
+- 只读路径审核variant白名单、记录先于restore、funcID不回滚、旧Invoke及check无求值保持。授权3项内置元数据严格同步，旧行为断言保留。
+- docs/reports/T15-independent-verification.md和T15-independent-evidence含原始双流/命令/scripts/manifest。
 
 ## 下一步
-T14收工，交主调度继续需求/发布记录。无功能阻塞，正式发布性能门槛继续开放。
+交主调度完成指南/需求/发布；指南作者结果由各自独立报告提供，不虚称已跑作者全部块。无功能阻塞，正式发布仍受R304开放项限制。
 
-## 历史与经验
-T13 9cda功能PASS但性能15PASS/2ENV/2FAIL，候选被拒收、两优化撤回且8回归测试保留。T13原19成员ZIP和失败全保留。只验证不修复、不Git、临时项目Temp。首次自编中文标识符不受支持的假设已纠正为ASCII标识符+Unicode字符串，不算产品缺陷。
+## 纪律
+只验证、不修复、不Git、不编译；所有临时项目Temp。旧v2、T13失败数据及旧报告未改。

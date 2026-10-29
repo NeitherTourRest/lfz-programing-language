@@ -78,3 +78,9 @@
 - 验证：锁定83f56/774656B产物，作者新增27/27，exit0；未扩大旧例全量或新盲测。
 - 边界：R304OPEN/候选，不Git不编译不改源或其他角色文档，旧v2冻结不变。
 - 下一步：team-lead最终交付与提交；无阻塞。
+
+## [2026-10-29] T15 attempt指南及实跑完成
+- 产出：四skill+AI入口、T15-skill证据，73内置与完整恢复/副作用边界同步。
+- 命令：run_examples.py --binary target/release/lfz.exe --output docs/reports/T15-skill-evidence/results.json，exit0，25/25，1a5a…/782848B。
+- 边界：非新Agent盲测，旧v2未改；不编译/不Git/不改源或人类指南；R304OPEN，无性能承诺。
+- 下一步：team-lead独立验收/提交，无阻塞。

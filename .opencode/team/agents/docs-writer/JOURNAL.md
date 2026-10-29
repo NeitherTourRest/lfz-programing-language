@@ -60,3 +60,9 @@
 - 证据：T14-guide-evidence/runs.json与manifest，报告新增最终节；五指南和binary测前后hash一致。
 - 保护：不编译不覆盖dist不Git，其他角色产物不改，旧T12证据保留；R304仍OPEN。
 - 下一步：team-lead统一验收收口；无指南阻塞。
+
+## [2026-10-29] T15人类指南完成
+- 更新五指南73内置/attempt，新增错误恢复教程。
+- verify.py锁1a5a3d/782848B，20/20实跑通过，check/run教程与恢复边界证据已保存。
+- 原历史证据保留，未改AI/spec/src/其他角色产物，未编译/Git，R304OPEN。
+

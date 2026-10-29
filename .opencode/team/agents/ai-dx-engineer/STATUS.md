@@ -2,16 +2,16 @@
 > 最后更新：2026-10-29 by ai-dx-engineer
 
 ## 当前状态
-T14四skill文件与AI入口同步完成，作者新增示例27/27通过；可交team-lead收口。六步工作流先check再run，按三spec §17，不把语法通过当运行成功。
+T15四skill及AI入口同步完成，作者新示例与最小兼容25/25通过。新增attempt，当前73内置，事实源三spec §18。可交team-lead独立验收/提交收口。
 
 ## 产出与证据
-- .opencode/skills/lfz-programming四文件、docs/guide/ai/README.md。
-- docs/reports/T14-skill-evidence.md及同名目录run_examples.py/results.json/manifest.json/.gitattributes。
-- 验证命令：D:/app/ANACONDA/python.exe -B docs/reports/T14-skill-evidence/run_examples.py --binary target/release/lfz.exe --output docs/reports/T14-skill-evidence/results.json，exit0，27/27。
-- binary774656B，SHA83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79；关键兼容、CODE/JSON/usage、文件哨兵、循环/input不执行和最小求和基线。
+- .opencode/skills/lfz-programming/{SKILL,README,VERIFICATION,prompt-template}.md及docs/guide/ai/README.md。
+- docs/reports/T15-skill-evidence.md及目录脚本/results/manifest/.gitattributes。
+- 实跑命令见报告，exit0，25/25；锁target/release782848B/hash1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c，测前后五文档hash一致。
 
-## 边界/下一步
-仅作者示例回归，非新Agent盲测。旧v2成绩/manifest未改，不声称提速或正式发布，R304仍OPEN。没有编译、Git、改dist、源、人类指南或再委派。team-lead最终提交与独立收口。
+## 关键边界
+Result固定ok/value/error；error字段class需["class"]，无file且trace协议不同CLI。成功nil仍ok=true。资源/递归终止不捕，外层校验在边界外，副作用/函数ID不回滚；不泛化builtin一等值，argv例外。先check再run不保证运行成功。
+R304OPEN，无T15性能窗/正式发布，不声称新Agent盲测，不改旧v2。未编译/Git/改dist/源码/人类指南，Temp全部项目内。
 
-## 经验
-合法check --json才保证一个JSON；usage错误stdout空/stderr文本。CLI检查与源内check断言不同；check不静态查名/类型/IO，不是沙箱，读取源码仍是宿主IO。所有临时和TEMP在项目Temp/T14-ai，项目外只读。
+## 下一步
+由team-lead统一独立验收/发布；本角色完成并释放slot。

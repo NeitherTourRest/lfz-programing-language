@@ -2,15 +2,16 @@
 > 最后更新: 2026-10-29 by requirements-analyst
 
 ## 当前状态
-T14新增R-128/129/206/407四项需求已落矩阵。依据verifier最终报告，前三项check功能/机器协议/回归独立通过；R407指南/AI按最终作者证据及team-lead回执通过。R304继续进行中/OPEN，未测T14性能，不正式发布。
+T15新增R130/207/408/505四项通过。attempt Result协议、可恢复白名单/资源传播/完整trace与depth恢复、指南及jsonbatch均按§18和最终独立回执收口。R304仍进行中/OPEN，无T15性能窗，候选非正式发布。
 
 ## 证据
-- T14最终83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79/774656B；独立542release/check117/旧CLI91含166/app37+11/140/自编57全部通过，报告T14-independent-verification.md。
-- 人指南T14-guide-evidence.md及runs27/27，AI T14-skill-evidence/results.json27/27同hash已出现；最终T14-skill-evidence.md和角色回执齐备；人/AI各27作者示例通过与独立CLI协议相对齐，不冒称独立重跑全部作者例子。
-- T13失败候选9cda原19线15PASS/2ENV/2FAIL，已拒收两处优化恢复T12前缀，保留8测试和所有失败ZIP/原始结果。T12八功能通过及旧v2成绩作为历史保持。
+- 最终dist/target1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c、782848B，73内置/12错误类。
+- T15-independent-verification.md：549release/官方178（含于CLI91不重复相加）/attempt13/check117/旧app37+11/新jsonbatch38/JSON-argv140及38自编独立见证全PASS。安全合成资源状态、完整caller span与depth恢复、12000次失败后递归/逃逸闭包/无旧trace帧等均有独立证据。
+- 人指南20/20、AI25/25作者新增/受影响示例绑定同hash，与独立CLI语义对齐；不冒称新Agent盲测或独立全量重跑作者示例。
+- 历史T14四项通过、T12各轮hash和旧v2成绩保持。T13两优化拒收并保留8tests/全部失败ZIP及原始数据；旧性能结果不冒充T15测量。
 
 ## 下一步
-T14四项需求已收口，交team-lead连续提交；R304仍开放。无新的产品测试或计时任务，不自行运行或Git。
+交team-lead按候选提交收尾；R304继续独立追踪，不以功能通过代替效率通过。
 
 ## 阻塞/经验
-无需求侧阻塞；R304开放不能以功能、消分配或包体代替通过。历史测量严格绑定各自hash，后继源码变化不改写旧结果。
+无需求侧阻塞。仅需求与证据映射，不自行产品验收、计时或Git写入。所有产物状态绑定实际hash与时点。

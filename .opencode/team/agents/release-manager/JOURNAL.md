@@ -869,3 +869,23 @@
 - 决策：沿用原第6组30direct+3snapshot清单，不刷新已提交路径；原用户28/1/1三块严格保留。本角色不Git，第6组及push尚待主会话实际回执，不虚报已push。
 - 下一步：主会话代执行第6组及main推送；本角色准备完成。
 - 阻塞：无记账准备阻塞；R304开放限制正式发布。
+## [2026-10-29] T15产物与候选提交准备
+- 来源：team-lead轻量任务，优先复制新binary供独立验收后释放slot。
+- 完成：target/dist782848B/SHA1A5A3D1C650440929BB599961763573DEF8B56D33811A8F266688246AC63DD6C，构建/源码指纹T15-release-evidence；无编译、源码/profile修改或Git。
+- 产出：README/checklist准确73内置与attempt业务恢复/资源边界；prepare-checkpoint.py及六组路径清单，三份用户过滤快照只写Temp。2c0e079原131case保留，Cargo/v2不动，NEXT-ITERATIONS/root规划纳入。
+- 决策：549/178/13/app38只记作者/主调度回执，独立/指南仍待；R304OPEN，无T15计时，不正式发布。
+- 下一步：独立/指南最终回执后另派收口，不再改dist。
+- 阻塞：无准备阻塞。
+## [2026-10-29] T15暂存脚本用法核对与草案白名单
+- 来源：team-lead末期轻量任务，指南人20/AI25回执已齐，独立及需求终稿仍待。
+- 完成：只读核对prepare-checkpoint.py，确认生成groups与3份Temp过滤快照、记录copy_sha256；第6组仅显式追加docs/reports/T16-design-draft.md路径。
+- 决策：现在不刷新清单；所有角色/root落盘后由主会话最终执行一次。开始分组提交后禁止重跑导致已提交路径从清单消失。
+- 下一步：主会话按direct_stage_paths逐路径暂存，3份snapshot用hash-object --path与update-index，不整文件add用户混合记录；本角色未Git、不动dist源。
+- 阻塞：等待最终独立验收结果再改README/清单结论。
+## [2026-10-29] T15最终独立回执后交付文档收口
+- 来源：team-lead转verifier最终全PASS，报告终稿落盘中，要求独立/指南实际结果入README/清单并释放slot。
+- 完成：549 harness/178官方（CLI91full内）/attempt13/check117/旧app37+11/新38/旧JSON140/额外38独立进程PASS；人指南20/AI25分列作者实跑。README/checklist已改为最终功能已验收，R304OPEN、无T15计时、不打tag。
+- 产出：prepare-checkpoint状态说明更新最终功能PASS，保留T16草案显式白名单；本次不重跑清单。最终root/analyst/verifier记录齐后主会话只在首次提交前运行一次脚本，按原用户快照规则代Git。
+- 决策：本角色未Git、不动dist/源/profile，不提前写实际提交/推送回执。需求状态由analyst唯一写者关闭。
+- 下一步：主会话最终清单/分组提交与已授权main推送；用户原28/1/1三块严格保留。
+- 阻塞：无文档收口阻塞；R304仍开放限制正式发布。

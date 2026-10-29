@@ -2,17 +2,17 @@
 > 最后更新: 2026-10-29 by test-engineer
 
 ## 当前状态
-T14 check公开进程黑盒最终117/117通过，exit0，已完成。
+T15冻结契约后正式用例已准备：4正向/8负向、manifest仅追加、公开进程脚本。旧83f真实缺attempt红测NameError/exit2，4正例check语法预检全通过；最终1a5a3d1c…/782848B已实跑：官方178/178、公开13/13全部通过，不编译。
 
-## 产出与证据
-- tests/t14_cli_check.py及仅针对它的tests/.gitattributes；三来源/JSON/CODE/usage/加载位置/非静态/18字节哨兵组合/旧run兼容。
-- 指定83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79，774656B；每进程核hash。
-- docs/reports/T14-blackbox-evidence/final-cli-corrected-20261029.json，117/117，脚本SHA44e1c5d9639b5306da9779994e0acb30f62f4943aebbc116de735e4a86a42106。
-- 首次116/117为本轮作者误将非法源码UTF8预期写IOError，既有规范为SyntaxError；首次JSON完整保留，只订正新脚本oracle重跑。产品/旧测试未改。
-- T14-blackbox.md、tests/REPORT.md与coverage-matrix.md追加最终统计；官方LFZ166不变，不叠加117。
+## 产出
+- docs/reports/T15-blackbox.md：10类矩阵，包括Result形状、9类业务错误、恢复嵌套/连续、调用边界、IO/容器副作用、trace/depth恢复、不可捕获资源错误及混合JSON批处理。
+- 已向team-lead汇报，接口精确形状以最终spec为准。
 
 ## 下一步/阻塞
-交verifier独立验收，无本角色阻塞；未编译、不改dist、不Git、不调度。
+最终REPORT/coverage/证据已同步，交verifier独立验收，无本角色阻塞。Recursion资源边界只交单元/独立安全见证，不真实abort；无编译/产品源码/dist/Git修改。
 
-## 历史
-实现前旧9cda烟雾0/1证据仍保留；T12原166/91及T13拒收候选历史不改写。
+## 历史证据
+T14 check公开进程117/117、基线83f56/774656B；作者非法文件UTF8 oracle错误已修且首次116/117结果保留。T12/T13/T14原证据与旧v2不改。R304OPEN。
+
+## 边界
+不改src/spec/看板，不Git、不调度、不编译；全部Temp项目内，D仅0.31GB，不故意真实OOM/panic/abort。

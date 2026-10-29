@@ -244,3 +244,15 @@
 - 产出：T14-check-design.md 9682 B；PowerShell文档结构自查12/12通过，非产品验证；三来源/选项保护/加载与AST析构/不求值/不静态分析/旧协议兼容全部交叉引用。
 - 下一步：T13计时结束后tooling实现与独立验证；本角色收工静默。
 - 阻塞：无；未改src/Cargo/旧报告，无Git或产品/性能测试。
+
+## [2026-10-29 21:03] T15 attempt契约冻结
+- 来源：team-lead确认最小Result方案与runtime路由建议。
+- 产出：三spec §18、T15-design.md、追加ADR、STATUS。
+- 决策：白名单恢复、完整trace/depth快照、保留函数ID与用户副作用、上下文特派不改Invoke ABI。
+- 下一步：runtime实现及独立验收；无设计阻塞，未Git/产品测试。
+
+## [2026-10-29] T16本地模块后继草案
+- 产出：T16-design-draft.md10619B；文件存在/文档diff检查exit0。
+- 重点：完整静态模块图支持check无执行；全局Env和函数来源/source定位需要实质改造，拒绝拼接源码/隐式global注入。
+- 兼容：T15 Result字段不变，跨文件file定位先用于CLI；export采用上下文声明，仍需core补旧文法反例验证。
+- 未改spec/源/测试或Git，未运行大任务；草案待批准，无设计执行阻塞。

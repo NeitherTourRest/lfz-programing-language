@@ -254,3 +254,9 @@
 - 决策：不再次择窗测同候选，不将旧9CDA exe当恢复源码产物；未编译/测试/改dist/profile/spec/Git。
 - 下一步：tooling统一T14最终release验证保留8测试，恢复后结果另记；R304开放。
 - 阻塞：无源码阻塞，已向调度者报源码就绪。
+
+## [2026-10-29] T15 attempt实现与作者验收
+- 来源：team-lead明确GO，spec §18冻结。实现特殊Interp内置与完整状态恢复，variant业务白名单，非捕获原传播。
+- 证据：T15-runtime.md/manifest，549release全过、7新增unit；真实NameError红测保留，元数据3项调整已明确授权。
+- 产物782848B/1a5a3d1c…63dd6c，未改dist/profile/旧行为测试/CLI/Git，停止编译。
+- 下一步：下游独立验收；R304OPEN。

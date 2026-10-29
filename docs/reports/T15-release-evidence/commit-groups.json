@@ -1,0 +1,194 @@
+{
+  "date": "2026-10-29",
+  "baseline": "2c0e079",
+  "status": "T15 final functional PASS; R304 OPEN; no T15 timing; candidate checkpoint only; no formal tag; no Git writes",
+  "original_cases_preserved": 131,
+  "snapshots": [
+    {
+      "path": ".opencode/team/DECISIONS.md",
+      "staged_copy": "Temp/T15-release/stage/.opencode__team__DECISIONS.md",
+      "removed_matches": 1,
+      "copy_sha256": "0285fa24da159b5bd9e88cf1d634b9b7271e63416accd7d4bc60ab13b83e7bef"
+    },
+    {
+      "path": ".opencode/team/PROJECT_STATE.md",
+      "staged_copy": "Temp/T15-release/stage/.opencode__team__PROJECT_STATE.md",
+      "removed_matches": 1,
+      "copy_sha256": "ca969cb46bb0b57a45edef4eee7fc800664fb44911ab16d938b9535263625b10"
+    },
+    {
+      "path": ".opencode/team/agents/team-lead/STATUS.md",
+      "staged_copy": "Temp/T15-release/stage/.opencode__team__agents__team-lead__STATUS.md",
+      "removed_matches": 1,
+      "copy_sha256": "4a4aeee5d30197db14d2b664f8de383898463816bdc6c33bf317932478e525fd"
+    }
+  ],
+  "groups": [
+    {
+      "sequence": 1,
+      "message": "docs(spec): define controlled error recovery",
+      "direct_stage_paths": [
+        ".opencode/team/REQUIREMENTS.md",
+        "docs/reports/T15-design.md",
+        "docs/spec/interface-contract.md",
+        "docs/spec/semantics.md",
+        "docs/spec/syntax.md"
+      ],
+      "staged_snapshot_paths": []
+    },
+    {
+      "sequence": 2,
+      "message": "feat(runtime): add bounded attempt recovery",
+      "direct_stage_paths": [
+        "docs/reports/T15-runtime-evidence/.gitattributes",
+        "docs/reports/T15-runtime-evidence/build-release.txt",
+        "docs/reports/T15-runtime-evidence/cargo-test-release.txt",
+        "docs/reports/T15-runtime-evidence/green-all.txt",
+        "docs/reports/T15-runtime-evidence/green-initial.txt",
+        "docs/reports/T15-runtime-evidence/manifest.json",
+        "docs/reports/T15-runtime-evidence/red-missing-feature.txt",
+        "docs/reports/T15-runtime-evidence/red.txt",
+        "docs/reports/T15-runtime.md",
+        "src/builtins.rs",
+        "src/evaluator.rs"
+      ],
+      "staged_snapshot_paths": []
+    },
+    {
+      "sequence": 3,
+      "message": "test(runtime): cover attempt recovery boundaries",
+      "direct_stage_paths": [
+        "docs/reports/T15-blackbox-evidence/.gitattributes",
+        "docs/reports/T15-blackbox-evidence/candidate-process.json",
+        "docs/reports/T15-blackbox-evidence/candidate-process.log",
+        "docs/reports/T15-blackbox-evidence/candidate-suite-meta.json",
+        "docs/reports/T15-blackbox-evidence/candidate-suite.json",
+        "docs/reports/T15-blackbox-evidence/candidate-suite.stderr.txt",
+        "docs/reports/T15-blackbox-evidence/final-process.json",
+        "docs/reports/T15-blackbox-evidence/final-process.log",
+        "docs/reports/T15-blackbox-evidence/manifest.json",
+        "docs/reports/T15-blackbox-evidence/positive-syntax-precheck.json",
+        "docs/reports/T15-blackbox-evidence/preimplementation-red.json",
+        "docs/reports/T15-blackbox.md",
+        "docs/reports/T15-independent-evidence/.gitattributes",
+        "docs/reports/T15-independent-evidence/attempt13.json",
+        "docs/reports/T15-independent-evidence/check117.json",
+        "docs/reports/T15-independent-evidence/cli91.json",
+        "docs/reports/T15-independent-evidence/commands.json",
+        "docs/reports/T15-independent-evidence/harnesses.json",
+        "docs/reports/T15-independent-evidence/independent140.json",
+        "docs/reports/T15-independent-evidence/initial-sources.json",
+        "docs/reports/T15-independent-evidence/jsonbatch.json",
+        "docs/reports/T15-independent-evidence/jsonflow.json",
+        "docs/reports/T15-independent-evidence/manifest.json",
+        "docs/reports/T15-independent-evidence/run.py",
+        "docs/reports/T15-independent-evidence/sortviz.json",
+        "docs/reports/T15-independent-evidence/witnesses.json",
+        "docs/reports/T15-independent-evidence/witnesses.py",
+        "docs/reports/T15-independent-verification.md",
+        "tests/.gitattributes",
+        "tests/REPORT.md",
+        "tests/cases.json",
+        "tests/coverage-matrix.md",
+        "tests/fixtures/t15_argument_evaluation.lfz",
+        "tests/fixtures/t15_arity0.lfz",
+        "tests/fixtures/t15_arity2.lfz",
+        "tests/fixtures/t15_callback_arity.lfz",
+        "tests/fixtures/t15_capacity.lfz",
+        "tests/fixtures/t15_nested_capacity.lfz",
+        "tests/fixtures/t15_nonfunc.lfz",
+        "tests/fixtures/t15_syntax.lfz",
+        "tests/lfz/test_t15_batch.lfz",
+        "tests/lfz/test_t15_errors.lfz",
+        "tests/lfz/test_t15_results.lfz",
+        "tests/lfz/test_t15_state.lfz",
+        "tests/t15_cli_check.py"
+      ],
+      "staged_snapshot_paths": []
+    },
+    {
+      "sequence": 4,
+      "message": "feat(app): process mixed JSONL batches",
+      "direct_stage_paths": [
+        "app/.gitattributes",
+        "app/T15-JSONBATCH.md",
+        "app/fixtures/t15/mixed.jsonl",
+        "app/jsonbatch.lfz",
+        "app/t15-evidence/.gitattributes",
+        "app/t15-evidence/manifest.json",
+        "app/t15-evidence/preimplementation-red.txt",
+        "app/t15-evidence/results.json",
+        "app/verify_jsonbatch.py"
+      ],
+      "staged_snapshot_paths": []
+    },
+    {
+      "sequence": 5,
+      "message": "docs(guide): teach controlled error results",
+      "direct_stage_paths": [
+        ".opencode/skills/lfz-programming/README.md",
+        ".opencode/skills/lfz-programming/SKILL.md",
+        ".opencode/skills/lfz-programming/VERIFICATION.md",
+        ".opencode/skills/lfz-programming/prompt-template.md",
+        "docs/guide/README.md",
+        "docs/guide/ai/README.md",
+        "docs/guide/error-recovery.md",
+        "docs/guide/errors.md",
+        "docs/guide/reference.md",
+        "docs/guide/testing.md",
+        "docs/guide/tutorial.md",
+        "docs/reports/T15-guide-evidence.md",
+        "docs/reports/T15-guide-evidence/.gitattributes",
+        "docs/reports/T15-guide-evidence/manifest.json",
+        "docs/reports/T15-guide-evidence/runs.json",
+        "docs/reports/T15-guide-evidence/verify.py",
+        "docs/reports/T15-skill-evidence.md",
+        "docs/reports/T15-skill-evidence/.gitattributes",
+        "docs/reports/T15-skill-evidence/manifest.json",
+        "docs/reports/T15-skill-evidence/results.json",
+        "docs/reports/T15-skill-evidence/run_examples.py"
+      ],
+      "staged_snapshot_paths": []
+    },
+    {
+      "sequence": 6,
+      "message": "chore(checkpoint): preserve T15 candidate and plans",
+      "direct_stage_paths": [
+        ".opencode/team/TEAM_BOARD.md",
+        ".opencode/team/agents/ai-dx-engineer/JOURNAL.md",
+        ".opencode/team/agents/ai-dx-engineer/STATUS.md",
+        ".opencode/team/agents/app-dev/JOURNAL.md",
+        ".opencode/team/agents/app-dev/STATUS.md",
+        ".opencode/team/agents/docs-writer/JOURNAL.md",
+        ".opencode/team/agents/docs-writer/STATUS.md",
+        ".opencode/team/agents/language-architect/JOURNAL.md",
+        ".opencode/team/agents/language-architect/STATUS.md",
+        ".opencode/team/agents/release-manager/JOURNAL.md",
+        ".opencode/team/agents/release-manager/STATUS.md",
+        ".opencode/team/agents/requirements-analyst/JOURNAL.md",
+        ".opencode/team/agents/requirements-analyst/STATUS.md",
+        ".opencode/team/agents/runtime-dev/JOURNAL.md",
+        ".opencode/team/agents/runtime-dev/STATUS.md",
+        ".opencode/team/agents/team-lead/JOURNAL.md",
+        ".opencode/team/agents/test-engineer/JOURNAL.md",
+        ".opencode/team/agents/test-engineer/STATUS.md",
+        ".opencode/team/agents/verifier/JOURNAL.md",
+        ".opencode/team/agents/verifier/STATUS.md",
+        "README.md",
+        "docs/reports/NEXT-ITERATIONS.md",
+        "docs/reports/T15-release-evidence/.gitattributes",
+        "docs/reports/T15-release-evidence/build.json",
+        "docs/reports/T15-release-evidence/commit-groups.json",
+        "docs/reports/T15-release-evidence/prepare-checkpoint.py",
+        "docs/reports/T15-release-evidence/source-hashes.json",
+        "docs/reports/T16-design-draft.md",
+        "docs/reports/delivery-checklist.md"
+      ],
+      "staged_snapshot_paths": [
+        ".opencode/team/DECISIONS.md",
+        ".opencode/team/PROJECT_STATE.md",
+        ".opencode/team/agents/team-lead/STATUS.md"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-29",
+  "stage": "T15 candidate preservation; independent and guides pending; R304 OPEN; no T15 performance measurement",
+  "version": "1.4.0",
+  "binary": {
+    "paths": [
+      "target/release/lfz.exe",
+      "dist/lfz.exe"
+    ],
+    "bytes": 782848,
+    "sha256": "1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c"
+  },
+  "reported_author_checks": {
+    "source": "team-lead receipt",
+    "rust_release": 549,
+    "official": 178,
+    "public": 13,
+    "jsonbatch": 38,
+    "rerun_by_release_manager": false
+  },
+  "source_hashes": "source-hashes.json",
+  "scope": "only verified and copied existing binary; no compilation/source/profile/Git modifications"
+}

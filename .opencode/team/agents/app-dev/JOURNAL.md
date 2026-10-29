@@ -21,3 +21,9 @@
 - 决策: 整批JSON数据流，不凑新应用200行；输入输出别名识别受API限制，README公开，验证失败保留输出不等于原子IO。
 - 下一步: 独立验收与统一发布。
 - 阻塞: 无。
+## [2026-10-29] T15 jsonbatch应用
+- 来源：team-lead按§18新attempt契约派发坏JSON混批应用。
+- 完成：新增jsonbatch/夹具/Python独立oracle/说明/证据，旧83f新功能缺失红测保留，新1a5a候选38/38实跑通过。
+- 变更：仅app新增T15产物与自身记录，旧sortviz/jsonflow不动，不Git。
+- 下一步：verifier独立验收；整文件/非原子/路径别名限制已公开；R304仍OPEN。
+- 阻塞：无。
