@@ -1,0 +1,112 @@
+[
+  {
+    "name": "attempt13",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "tests/t15_cli_check.py",
+      "--binary",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "--expected-sha256",
+      "65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T16-A-independent-evidence\\attempt13.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"total\": 13, \"passed\": 13, \"output\": \"docs\\\\reports\\\\T16-A-independent-evidence\\\\attempt13.json\"}\r\n",
+    "stderr": "Failed to find real location of D:\\app\\ANACONDA\\python.exe\n"
+  },
+  {
+    "name": "check117",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "tests/t14_cli_check.py",
+      "--binary",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T16-A-independent-evidence\\check117.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T14-CHECK-BLACKBOX-1\", \"date\": \"2026-10-29\", \"timestamp_utc\": \"2026-10-29T14:01:36.853486+00:00\", \"binary\": \"target\\\\release\\\\lfz.exe\", \"binary_sha256\": \"65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7\", \"binary_bytes\": 783872, \"script_sha256\": \"44e1c5d9639b5306da9779994e0acb30f62f4943aebbc116de735e4a86a42106\", \"smoke_only\": false, \"total\": 117, \"passed\": 117, \"failed\": 0}\r\n",
+    "stderr": "Failed to find real location of D:\\app\\ANACONDA\\python.exe\n"
+  },
+  {
+    "name": "cli91",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "tests/t12_cli_check.py",
+      "--lfz",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T16-A-independent-evidence\\cli91.json",
+      "--full-suite"
+    ],
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T12-BLACKBOX-1\", \"date\": \"2026-10-25\", \"binary\": \"target\\\\release\\\\lfz.exe\", \"binary_sha256\": \"65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7\", \"total\": 91, \"passed\": 91, \"failed\": 0}\r\n",
+    "stderr": "Failed to find real location of D:\\app\\ANACONDA\\python.exe\n"
+  },
+  {
+    "name": "jsonflow",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "app/verify_jsonflow.py",
+      "--lfz",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T16-A-independent-evidence\\jsonflow.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"passed\": 37, \"report\": \"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\docs\\\\reports\\\\T16-A-independent-evidence\\\\jsonflow.json\"}\r\n",
+    "stderr": "Failed to find real location of D:\\app\\ANACONDA\\python.exe\n"
+  },
+  {
+    "name": "sortviz",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "app/verify_sortviz.py",
+      "--lfz",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "--before-exe",
+      "Temp/t12-perf/lfz-before.exe",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T16-A-independent-evidence\\sortviz.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"passed\": 11, \"report\": \"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\docs\\\\reports\\\\T16-A-independent-evidence\\\\sortviz.json\"}\r\n",
+    "stderr": "Failed to find real location of D:\\app\\ANACONDA\\python.exe\n"
+  },
+  {
+    "name": "jsonbatch",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "app/verify_jsonbatch.py",
+      "--lfz",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "--expected-sha",
+      "65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T16-A-independent-evidence\\jsonbatch.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"date\": \"2026-10-29\", \"binary_sha256\": \"65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7\", \"binary\": \"target\\\\release\\\\lfz.exe\", \"script_sha256\": \"adcc2a25dd3237082b043f0c1be99d66545a9cc2f47cb6e873c5756debafb0c7\", \"total\": 38, \"passed\": 38}\r\n",
+    "stderr": "Failed to find real location of D:\\app\\ANACONDA\\python.exe\n"
+  },
+  {
+    "name": "independent140",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "docs/reports/T16-A-independent-evidence/check140.py",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T16-A-independent-evidence\\independent140.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"passed\": 140, \"frozen_inputs\": 9, \"old_cases\": 99}\r\n",
+    "stderr": "Failed to find real location of D:\\app\\ANACONDA\\python.exe\n"
+  }
+]
