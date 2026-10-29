@@ -470,3 +470,9 @@ check 失败：软断言示例
 
 ## 19. T16-A 身份基础与兼容（2026-10-29 冻结）
 SourceId/ModuleId分域，legacy分别ENTRY；A函数home_module与active_module均ENTRY，globals/查名/self/cell行为不变。来源可无Loaded，不得假造其它文件文本。TracedRun sidecar仅宿主诊断载荷，legacy None，坏metadata结构化拒绝且保留旧载荷。Span/LzError/TraceFrame和T15 Result三/五/三字段保持；attempt不序列化来源，不回滚用户状态/函数ID。UserFn新增字段的Rust构造迁移及精确sidecar校验见interface-contract.md §19。本批不代表模块或效率验收，R304仍OPEN。
+
+## 20. T16-B 非执行图检查（2026-10-29 冻结）
+check对静态相对.lfz依赖按书写序迭代DFS构图，身份canonical去重、Visiting循环拒绝、显式导出/别名检查，不初始化、不执行LFZ IO/input/循环。图1024节点/128层含root/2MiB单文件/16MiB原始总bytes；仅成功parse并有模块声明的root admission启用，普通legacy大root规则不变，根先加载/parse不是内存沙箱。依赖limit+1限读、每身份一次快照，错误用真实来源且无Loaded不借其它文件文本；前端JSON不伪装运行栈。C前run/旧eval整Program先拒绝模块，已发生副作用不能用回滚伪装。T15Result字段不变、B图错误在任何求值前。所有精确类型/检查次序/消息/owner见interface-contract §20。
+
+## 21. T16-C 初始化、home与恢复（2026-10-30 冻结）
+单session消费完整已检查快照，依赖后序串行单次初始化、独立globals、显式namespace，导出标量快照/容器共享且无live binding。函数按定义模块globals执行，self/捕获cell规则保持，成功/Err均恢复调用者active/globals但故障trace/source保留。graph模板默认值用定义module+captured/self，每实例重新求值，显式覆盖用caller；legacy模板None保持原caller scope与原trace。默认值独立诊断帧受递归限制且不吞旧Flow。attempt同步来源/active恢复，Result三/五/三字段不增file、不回滚用户状态或函数ID。CLI真实逐帧文件定位，图宿主错误结构化拒绝不作业务失败。精确顺序、API、owner和兼容见interface-contract §21；R304仍OPEN。

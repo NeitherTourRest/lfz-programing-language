@@ -1,9 +1,21 @@
 # LFZ 需求矩阵（唯一需求事实源 · v1.1 增量对齐版）
 
-> 最后更新: 2026-10-29 by requirements-analyst
-> 版本: **v7（T16-A仅来源基础通过；R-304开放，非正式发布）**
+> 最后更新: 2026-10-30 by requirements-analyst
+> 版本: **v8（T16-B仅静态图通过，C未验收；R-304开放，非正式发布）**
 > 本文件是**唯一需求事实源**，唯一写者 requirements-analyst，他人只读。
 > 来源: `task-info.md`（课程作业原始要求）+ 用户指令 + 已定案 ADR（见 `DECISIONS.md`）。
+
+## T16-B 增量需求（2026-10-30，仅静态模块图通过）
+
+范围对应三spec §20–20.10及T16-B-design。冻结B产物SHA256 `8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480`、859136B。`docs/reports/T16-B-independent-verification.md`确认同产物584 release harness、公开38、自编18、旧attempt13/check117/CLI91含官方178、app37+11/jsonbatch38/JSON140全部PASS。本节三项通过只指静态声明、完整依赖图check及执行前拒绝，不提供模块初始化/执行或跨模块home globals运行。C的§21契约虽已冻结且实现中，尚未独立验收，不能标整个T16通过。
+
+默认sandbox canonicalize的AccessDenied及作者默认失败结果保留；独立584和图过程使用同一冻结产物在许可权限控制下执行，未改产品绕过canonical身份规则，不能声称默认环境限制消失。R304仍进行中/OPEN，无B性能计时或正式标签；旧无模块行为及历史v2成绩不重写。后继C源码/二进制不能冒充本B冻结对象。
+
+| R-ID | 需求 | 来源 | 验证方式（可命令复现） | 状态 | 交付物 | 评分项 |
+|------|------|------|------------------------|------|--------|--------|
+| R-132 | 顶层static import alias from显式相对.lfz字面路径、contextual export列表及有限导出/别名链接检查；import在其他顶层声明前，路径/重复/冲突/缺导出按规范定位。旧export标识符表达式、普通重声明规则保持，不承诺完整静态类型/名称分析 | 三spec §20.1/20.9 | 项目工具链`cargo test --release`全584通过，parser/module新增及旧测试保持；运行`D:/app/ANACONDA/python.exe -B tests/t16b_cli_check.py --binary target/release/lfz.exe --expected-sha 8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480 --output Temp/T16-B/req-public-new.json`应38/38。限定使用封存同hash和不存在输出路径；nested import/export、动态/绝对/非法路径、alias冲突及非法导出拒绝，旧export变量仍可运行 | 通过 | AST/parser/error/loader（core-dev）、tests/cli_t16b.rs与公开矩阵、独立报告 | 1、2 |
+| R-133 | check对模块root构建完整依赖图但不初始化；canonical身份去重、稳定迭代DFS、受控循环/节点/深度/原字节限额，依赖错误归真实文件。load/parse/析构在大栈，旧无模块root不受新增图限额 | 三spec §20.2–20.10 | R132公开38及独立graph-witnesses.json18全部通过；依赖含writeFile/input/while true时check返回且哨兵字节不变/新文件不创建。合法菱形/重复身份、缺文件/UTF8/#42/语法/cycle真实依赖路径定位、2MiB恰好/多1、深度128/129及无模块>2MiB旧例通过；1024节点/16MiB总量与§20.10字节优先在独立执行core harness覆盖。最多读取min(单限额,总剩余)+1，只对已读字节判单文件优先，不补读猜文件尾；图上限非RSS沙箱或性能证明 | 通过 | src/modules.rs/loader.rs（core-dev）、CLI图检查/诊断（tooling-dev）、图unit与独立进程证据 | 1、2 |
+| R-209 | B阶段run及旧eval遇整个root任何模块声明，在任何LFZ副作用前明确拒绝暂不执行；保持A旧shape、T15固定Result、73内置和无模块CLI/app行为 | 三spec §20.6/20.8；R208延伸 | `cargo test --release`584/584；独立run前写语句后export仍受控SyntaxError且哨兵不变；旧attempt13/check117/CLI91含178、jsonflow37/sortviz11/jsonbatch38/JSON140全PASS。旧无模块>2MiB源码check/run仍成功，check只图检查不执行；模块运行/缓存初始化次数/跨模块恢复身份需由后继C独立验收，不能由B菱形check推断已实现模块执行 | 通过 | evaluator执行预检（runtime-dev）、CLI/check（tooling-dev）、T16-B-independent-verification.md及证据目录 | 1、2 |
 
 ## T16-A 增量需求（2026-10-29，仅来源基础通过）
 

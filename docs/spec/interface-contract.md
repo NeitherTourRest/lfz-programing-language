@@ -543,3 +543,184 @@ A只附加载荷，不根据active状态在冒泡后猜真实错误source；后�
 core新增unit覆盖空map/插入稳定ID/loaded=None/未知ID/虚拟路径/LocatedFailure保留错误与位置。runtime新增unit覆盖legacy None、成功与错误附加、不同帧不同来源、所有拒绝变体与原子不修改、越界None、home_module ENTRY及attempt恢复后ENTRY/旧trace保持。允许合成多来源元数据，不能把它当模块执行证据。旧549测试及CLI/check/attempt/JSON/app行为继续通过；新计时前不得宣称性能改善，R304仍OPEN。
 
 B另冻结ImportDecl/ExportDecl、模块图及受控上限；C另冻结session缓存/独立globals/home切换；D接真实跨文件CLI诊断。不得预拼源码、隐式global注入或多个Interp互调绕过身份约束。
+
+## 20. T16-B 静态模块图与非执行检查（2026-10-29 冻结）
+
+### 20.1 范围和语法
+
+B只实现模块声明前端与完整静态图检查，不初始化模块；C前模块执行明确拒绝。A §19所有类型形状不改，T15 Result/error/trace三/五/三字段不改。73内置保持，旧无模块程序行为/错误字节保持。
+
+顶层语法：import IDENT from STRING_LITERAL；export IDENT (, IDENT)*。路径不允许插值（即使常量表达式）、空串、NUL、绝对/根/盘符/UNC路径；必须显式.lfz（ASCII不分大小写），允许..，不搜索或补扩展名。import/from仍用现Reserved词token；不新增全局export关键字。仅语句起始Ident("export")后同一语句紧接Ident才识别导出声明，旧export变量/赋值/调用/字段/下标/表达式均不变。两声明只允许Program直接顶层，不能用仅fn_depth/loop_depth代替完整上下文校验。import须先于任何非import顶层语句（export也是非import）；注释空行不影响。原语句终结NEWLINE/}/EOF规则保持。
+
+StmtKind新增ImportDecl(ImportDecl)、ExportDecl(ExportDecl)，结构derive沿现AST，字段精确为：
+- ImportDecl { alias: String, alias_span: Span, path: String, path_span: Span }
+- ExportDecl { names: Vec<ExportName> }
+- ExportName { name: String, span: Span }
+
+外层Stmt.span指import或上下文export起始；path为解码后字符串，path_span指引号起始。AST不持SourceId，Program旧形状不变，深度visitor把两新节点视作叶。导出名必须对应本模块直接let/var/fn/struct/import绑定，可前向列名；不隐式导出builtin或块内局部，重复导出拒绝。import alias之间、与任何其它顶层直接绑定重名拒绝；不涉及import的普通顶层重声明仍按旧规则。
+
+### 20.2 loader增量接口与raw计数
+
+core-dev新增公开CountedLoaded { pub loaded: Loaded, pub raw_bytes: usize }（derive Clone/Debug），以及：
+- pub fn load_file_counted(path: &str) -> R<CountedLoaded>
+- pub fn load_source_counted(text: &str) -> R<CountedLoaded>
+- pub fn load_bytes(path: &str, bytes: Vec<u8>) -> R<Loaded>
+
+load_bytes按现load_file读取之后的UTF8校验→BOM/换行归一→扩展名/前导逻辑；旧load_file/load_source签名和错误保持，可内部委托复用。raw_bytes在任何归一化和前导消费前按实际读入字节或text.as_bytes().len取得，不事后metadata、不重读。根的counted读取仍无新上限；只有成功parse且确含模块声明才进入图admission。旧无模块大root不被2MiB截断，图预算不是root读取/解析沙箱。
+
+依赖由图层File+Read::take(limit+1)有界读取，再load_bytes，不先无界load_file再检查。limit=min(2MiB,16MiB-当前唯一源码总量)，多读1字节用于超限检测。单文件优先于总量错误，原始计数checked_add；已缓存身份不再读/计数。失败读取沿下述模块IO消息，不修改旧root IO消息。
+
+### 20.3 modules.rs类型、API与来源归属
+
+core-dev新增pub mod modules。下列宿主结构字段均pub，derive Debug（需要克隆的叶结构可Clone；Graph不要求Clone）：
+- ParsedEntry { program: Program, loaded: Loaded, display_path: String, identity: Option<PathBuf>, base_dir: PathBuf, raw_bytes: usize }
+- ResolvedImport { alias: String, alias_span: Span, path_span: Span, target: ModuleId, span: Span }
+- ExportBinding { name: String, span: Span }
+- ModuleUnit { id: ModuleId, source_id: SourceId, program: Program, imports: Vec<ResolvedImport>, exports: Vec<ExportBinding> }
+- ModuleGraph { sources: Rc<SourceMap>, units: Vec<ModuleUnit>, entry: ModuleId, initialization_order: Vec<ModuleId> }
+- GraphFailure { sources: Rc<SourceMap>, failure: LocatedFailure }
+
+pub fn module_declaration_span(program: &Program) -> Option<Span>返回首个直接模块声明span；pub fn build_graph(entry: ParsedEntry) -> Result<ModuleGraph, GraphFailure>消费已parse的根快照，不再次读/parse。调用者必须在on_eval_stack内构图并析构所有Program，不能把深AST带回主线程drop。无声明root不调用图，不受图限制。
+
+ModuleId只索引units，SourceId只索引SourceMap，两ENTRY各0，不可互转。模块图拥有AST，SourceMap仅metadata/Loaded，不能持Env/用户值。Loaded诊断副本会增加内存，不能声称仅一份源码。图构建期间用owned SourceMap，成功/失败返回时Rc包装，不反复Rc::make_mut克隆全表。先局部load，成功insert Some(Loaded)，失败insert None记录即返回；不修改A增加setter或伪造文本。新依赖身份成功parse后才有ModuleUnit，失败来源也可占SourceId，故两ID不保证同序。
+
+文件root base是当前文件绝对父目录，CODE/stdin base为开始捕获cwd。根display_path保留原CLI路径或<command>/<stdin>以兼容旧诊断；依赖采用首次发现canonical绝对UTF8路径。identity用canonical PathBuf去重/跟随symlink，不手写lowercase。无法canonicalize的依赖用base.join(path)绝对词法路径作失败显示名（保留..允许）；无法表示为UTF8归ModulePath，定位导入者。源码快照每身份只读一次，C必须消费同图，不重读；不保证文件系统多文件原子快照。相对..及symlink不构成权限沙箱。
+
+### 20.4 限额与确定性迭代DFS
+
+冻结常量：
+- MAX_MODULES: usize = 1024，含root，唯一canonical身份计一次。
+- MAX_MODULE_DEPTH: usize = 128，显式DFS栈长度含root=1；129边在读目标前拒绝。
+- MAX_SOURCE_BYTES: usize = 2*1024*1024，单个进入图的原始源码。
+- MAX_GRAPH_BYTES: usize = 16*1024*1024，唯一原始源码总和。
+
+这些是保守初版工程限额，不是RSS上限或性能证明；token/AST/副本会放大。root前端已经成功后才图admission，超限不允许自动放宽/重试。边界127/128/129链、1023/1024/1025节点及bytes等于/多1必须有界测试，禁止真实OOM。
+
+显式栈Frame{module_id,next_import_index}及Visiting/Ready颜色，不用Rust递归DFS。先根admission及本地静态核验，然后按每模块import书写序DFS。每条边先路径/canonical身份；Visiting回边报cycle；Ready加共享边，不加深度/节点；Unseen先节点再深度预算，再限读/源码预算、parse、本地静态核验、入栈。全部边完成标Ready、append initialization_order、pop。后序稳定，同身份一次；错误不靠HashMap遍历决定先后。
+
+错误先后：每文件load/lex/parse完整成功后才静态检查；静态检查先收集全文件direct bindings，再按源码声明/名字次序选首个违规（冲突定位第二次发生的名字span，前向导出可用）。在进入依赖前完成当前文件本地核验；root图admission先于其本地核验。节点先于深度、单文件先于总bytes，循环/Ready识别先于新增预算。图错误终止无初始化。
+
+### 20.5 规范性错误和显示路径
+
+外层LzError仍12类；core扩SyntaxMsg以下变体与精确message：
+- ModuleDeclTopLevel => "模块声明只能出现在文件顶层"
+- ImportOrder => "import 必须位于其它顶层语句之前"
+- ModulePath => "模块路径必须是非空的相对 .lfz 字符串（不含插值或 NUL）"
+- ImportConflict { name: String } => "模块导入名冲突：{name}"
+- DuplicateExport { name: String } => "重复导出：{name}"
+- MissingExport { name: String } => "导出名没有顶层声明：{name}"
+- ModuleCycle { chain: String } => "模块循环依赖：{chain}"
+- ModuleLimit { kind: String, limit: usize } => "模块图超限：{kind}（上限 {limit}）"，kind仅节点数/依赖深度/单文件字节/源码总字节，limit用十进制上述常量
+- ModuleExecutionUnavailable => "模块执行尚未启用"
+
+非法声明位置/顺序在关键字span；路径在path_span；冲突/重复/缺导出在对应name span。cycle在导入者当前边span，chain按显式栈从首次重复模块到当前再闭合，用canonical显示路径和" → "分隔。节点/深度/依赖bytes超限定位导入者边span，root自身bytes超限为根Span::START。模板语法不完整（缺IDENT/from/字符串/逗号后缺名等）沿原Expected/TwoStatements等parser错误规则，不伪造成功。
+
+依赖canonicalize/open/read失败用原Io variant，msg精确"无法读取模块：{target}（导入于 {importer}:{line}:{col}）"，span=None，failure.source_id指目标失败来源（loaded=None）；root读取失败保持原IOError字节。依赖UTF8/前导/lex/parse保持原类/消息/span但source_id指真实依赖。SourceMap插入编号理论溢出在图1024限制下不可达，不panic模拟或与LFZ业务错误混为一谈。
+
+tooling从GraphFailure.sources找到failure.source_id，用其display_path/loaded做前端诊断和JSON；无Loaded不显示其它文件的下划线。前端JSON仍现字段序，file为出错文件；traceback带span时为单<module>定位项，IO无span为空。导入链在消息而非伪造运行栈；check success仍{ok:true,mode:"check",executed:false}。
+
+### 20.6 check、run、旧eval与分工
+
+tooling：同一根前端只parse一次，成功后若无模块声明走旧路径；有声明时check build_graph并在大栈drop，无模块初始化、求值/Interp/输出。root CountedLoaded/Program/base移交图，错误使用真实来源。源码内writeFile/input/while true在check完全不执行。
+
+C前run和所有公开旧eval入口对整个root Program的模块声明做执行前preflight，首个模块声明返回ModuleExecutionUnavailable的SyntaxError，任何LFZ输出/IO/初始化之前失败。仅export也拒绝；即使前面有print/writeFile也不能先执行。B run不承诺构图优先检查其它依赖错误，直接unsupported；不要默默忽略新节点。runtime exec_stmt仍对两个新变体防御性拒绝。parser禁止嵌套声明，若宿主手工构造非法AST不扩展旧前端保证。
+
+core拥有AST/parser/error消息/modules/loader计数与bytes复用/lib登记；runtime仅拥有eval preflight和两个新节点防御match，不启用globals/session；tooling拥有CLI根计数、base、check图与GraphFailure渲染/JSON。单写者串行编译：core先，runtime/tooling适配exhaustive match后唯一编译。三spec及所有旧行为测试不得由实现角色私改；仅明确新节点引起的机械元数据测试迁移先报team-lead。
+
+### 20.7 验收与C衔接
+
+必须验证旧A最终基线/549及新增、T15/T14/JSON/apps；contextual export旧变量/表达式不变；三文件/菱形/重复身份/symlink可用性；每次图隔离；前向导出/冲突/缺名；缺文件/非法UTF8/#42/parse/cycle真实路径和位置；全部限额边界/legacy大root例外；check对依赖IO/循环/递归无执行；run任意模块声明零副作用拒绝。所有fixture在项目内，不因runner默认发现把库文件当顶层独立用例。
+
+C需另冻结Session/独立Env/namespace导出快照及函数home_module切换、初始化失败与attempt恢复active module/source状态；必须消费本图一次性快照。B交付不得称模块运行完成，不新增T15Result字段，不以功能测试替代R304性能验收。
+
+### 20.8 B执行预检返回载荷与补充owner
+src/error.rs的SyntaxMsg模块变体及message匹配由core-dev唯一写，外层LzError类不增加。runtime所有旧eval入口汇合到eval_module_on_thread_with_args，在Interp::new及任何exec之前调用module_declaration_span。存在声明时立即返回TracedRun：result=Err(Syntax(ModuleExecutionUnavailable,first_decl_span))，frames=[TraceFrame{func_id:MODULE_FUNC_ID,span:first_decl_span}]，func_names=[None]，origins=None；其它旧封装按原result丢弃或暴露trace。exec_stmt两个变体另作同类错误防御。load_bytes精确接owned Vec<u8>，可直接String::from_utf8转移所有权；counted入口在移交bytes前保存len，不额外clone或重读。
+
+### 20.9 冲突定位补钉（旧AST保形）
+旧Decl/FnDecl/StructDecl没有独立name_span，禁止从名字长度或关键字列猜算。import-import冲突定位后一个ImportDecl.alias_span；import与普通直接let/var/fn/struct绑定冲突定位该普通声明Stmt.span（关键字），不扩旧AST字段。重复/缺失导出仍用精确ExportName.span。本条细化20.4/20.5名字定位，优先适用；原其它节点形状保持。
+
+### 20.10 有界读取的已观测字节与错误优先（2026-10-30 补钉）
+
+依赖读取仍为take(min(单文件限额,源码总量剩余额度)+1)的有界读取，上限、错误类和既有消息不变。单文件先于总量的优先级只对本次实际已读字节成立：先用实际bytes.len判断是否已证明单文件超限，再判断是否已证明总量超限；不能声称了解未读取的文件尾部，也不能为决定“真实总文件是否也超单文件”继续读取突破预算。
+
+例如总量仅余100字节、单文件限额2MiB时，读取最多101字节；若读到101字节，可判源码总字节超限，不能由这101字节推断整文件是否也超过2MiB，不因此补读至2MiB。若本次实际已读字节确已同时越过单文件与总量，仍按单文件优先。哨兵字节用于判定，不接纳为成功图内容。此条细化20.2/20.4的可观测范围，不改限额、消息、快照、legacy例外或A接口。
+
+## 21. T16-C 单session模块执行（2026-10-30 冻结）
+
+### 21.1 激活边界与公开宿主API
+
+B独立PASS后方可实现/启用本节。只激活已由B检查的本地ModuleGraph，不新增语法、内置、动态import、远程包、循环live binding或并行初始化。check仍仅构图不执行。旧无模块CLI及旧eval_module*入口完全保持；旧eval入口遇模块Program继续§20 guard，不能绕过图验证。
+
+runtime新增evaluator公开（GraphExecutionError derive Debug，并实现Display/std::error::Error）：
+- pub enum GraphExecutionError { InvalidGraph { reason: String }, Origins(crate::source::SourceMetadataError) }
+- pub fn eval_graph_traced_on_thread_with_args(graph: &crate::modules::ModuleGraph, args: &[String]) -> Result<TracedRun, GraphExecutionError>
+
+该函数借用B图，调用方已在on_eval_stack内，parse/build/eval/drop graph全在该大栈。禁止重读图文件、重复parse或克隆全部Program。外层Err仅宿主坏图/元数据不变量，内部TracedRun.result保留LFZ成功/错误。InvalidGraph Display为reason，Origins Display为“来源元数据不一致：{error:?}”；不新增LFZ错误类，不让attempt捕获宿主错。
+
+CLI宿主Err为stdout空、stderr精确“lfz: 模块执行上下文无效：{detail}\n”、exit2，属于合法JSON承诺中的宿主异常例外，不伪造LFZ业务成功/ValueError或InternalError大类。普通build_graph产生的合法图不得走该异常分支。
+
+### 21.2 执行前图验证及内部状态
+
+任何LFZ初始化之前完整验证：
+1) entry与所有units.id有效，units[i].id=ModuleId(i)，每unit唯一source_id且存在、loaded为Some；
+2) initialization_order是units的无重复全覆盖排列，entry最后；每import target存在且在导入者之前；
+3) 每unit.imports与Program直接ImportDecl数量/书写序/alias及span一致，alias不重复且不与其它直接绑定冲突；export metadata与Program导出名/顺序/span一致，名字有直接顶层绑定且不重复；import仍先于非import。
+失败返回InvalidGraph，reason可取稳定宿主原因，不改语言消息，零LFZ副作用。该检查是结构一致性，不重新parse或证明宿主手工伪造AST与文本对应，不构成安全沙箱。metadata无法通过A校验返回Origins，不expect/unwrap掩盖不变量。
+
+Session保持单Interp，新增私有模块实例表，实例持该模块Rc<RefCell<Env>>、可选namespace及Uninitialized/Initializing/Ready/Failed状态。模块实例表只归本次执行，不用全局static缓存。graph由入口借用，Env不持整个Program。现globals作为active模块Env别名，active_module与它一致；UserFn只整数home_module及captured cells，不强Rc持home Env。func_names/next_func_id统一分配，模块间不重置，不被attempt回滚。
+
+### 21.3 初始化、导出与结果
+
+按B initialization_order依赖后序串行初始化，每模块新独立globals。初始化前按ResolvedImport书写序绑定不可重绑定alias，值为目标Ready namespace同一Rc；未Ready是InvalidGraph，不给空对象继续或重复执行。graph模式ImportDecl/ExportDecl仅声明动作，返回Flow::Value(Nil)，不做IO或加载；legacy模式继续guard。普通语句按旧规则，结果为该Program最后Flow Value/Return，防御性Break/Continue仍Nil。
+
+模块顶层push独立MODULE_FUNC_ID=0帧，名称仍<module>、source为该unit真实来源；初始化成功清理该模块帧，下一模块不嵌套伪造根执行栈。失败立即停止整个session，不执行剩余计划或entry；故障trace只含实际已进入的模块/函数。图阶段与依赖初始化错误不在尚未运行的entry attempt边界内。无隐式初始化重试。
+
+成功后按ExportBinding书写序读取最终模块直接绑定，构造新普通struct namespace，Ready。无导出为空struct。标量是完成时快照，数组/struct/函数按现引用拓扑共享；namespace字段可按原规则修改，不回写模块变量绑定。多alias/菱形复用同namespace与一次初始化副作用。keys/JSON仍A5过滤方法，不作为导出函数反射。entry namespace也可建立，但最终TracedRun.result是entry求值结果，不自动返回namespace或业务JSON。
+
+所有模块argv使用同一显式args快照，每次argv调用仍新数组。module身份与cache只在本次session有效，不新增跨session函数Value调用API。IO/RNG及初始化次序可观察，不并行。
+
+### 21.4 UserFn home切换与故障来源
+
+UserFn现home_module在graph make_closure记录active_module。call_user先沿旧顺序做argv/placeholder/arity/递归检查；普通函数在定义模块globals下建fresh参数帧，捕获cell及self_override优先级保持。保存调用者active_module/globals，切home后执行，但必须显式收集outcome而非让?绕过上下文清理。成功和Err都恢复调用者active/globals；成功才沿旧规则pop trace/depth，Err保留故障trace/depth。
+
+新增trace_sources与trace严格同长度，每个module/函数/默认诊断帧push/pop同步。实际错误处保存fault_source，或从尚完整的故障帧来源获取；恢复active之后不可用当前caller猜错误文件。未压callee之前的参数/arity错误属于caller。最初故障来源在冒泡中不能覆盖为外层来源。
+
+attempt保存并在成功/可恢复失败后还原trace_sources、fault_source、active_module/globals及旧完整trace/depth；先用故障trace构造旧Result。不可捕获错误保留故障帧/来源，callee的active/globals安全清理仍执行。func_names/next_func_id、module实例及namespace、用户cell/IO/RNG不回滚。T15 Result/error/frame字段三/五/三不增file；跨模块Result只有各帧真实行列，无文件名，指南不得宣称完整文件定位或把路径拼进func字段绕过协议。
+
+图执行结束构造TracedRun并一次attach_origins(graph.sources,trace_sources,Err时Some(fault_source))；成功error_source=None；A校验失败向外Origins传播，不panic或错误文件fallback。legacy无模块入口继续origins=None。
+
+### 21.5 StructDef默认值定义上下文
+
+不新增lib.Point{}语法；导出模板用“let P=lib.Point”再“P{}”。模板/默认值实际所有权由runtime统一实现。
+
+value.rs新增公开TemplateContext（derive Clone/Debug）：
+- pub home_module: crate::source::ModuleId
+- pub captured: Rc<Vec<CapturedVar>>
+- pub self_val: Option<Value>
+- pub defaults_func_id: u32
+
+StructDef新增pub default_context: Option<TemplateContext>。旧Value::struct_def与struct_template签名保持，填None；新增pub fn struct_template_in_context(name: impl Into<Rc<str>>, fields: Vec<(Rc<str>,Expr)>, methods: Vec<(Rc<str>,Rc<Closure>)>, context: TemplateContext) -> Self，填Some。外部手写StructDef literal需补字段，属于明确Rust构造迁移；不得顺手改旧Value语义。
+
+legacy无模块声明始终None，eval_struct_lit继续旧实例化caller Scope默认值行为，旧trace不加帧。graph模式声明为Some，记录定义home、按现make_closure捕获算法升级/继承可见局部cells并捕获self；不强Rc持Env。默认表达式在定义globals+captured/self Scope按字段声明序重新求值，每实例可变默认独立；显式字面覆盖字段在所有默认值完成且恢复caller上下文之后，仍按caller Scope/书写序求值。graph定义上下文是新模块语义，不宣称legacy从来如此。
+
+为了默认Expr真实来源诊断，graph声明若存在默认字段，分配session全局唯一defaults_func_id，func_names显示名精确“{TemplateName}::<defaults>”；函数ID不复用不回滚。TemplateContext无默认字段时仍可分配该ID，但实例化不额外push空默认帧。调用用户方法仍原名，不把模板diagnostic frame冒充普通可调用Value。
+
+默认字段非空时，在切home/push之前按与call_user相同RECURSION_LIMIT检查depth；已到上限则在caller构造span返回原RecursionError，不进入home。否则先更新caller span为构造点，depth加1，切定义上下文，push defaults_func_id/首默认Expr span及定义SourceId。每字段eval_expr更新该帧span，错误保存定义fault source。完成全部默认值或任何Ok非Value Flow时，先pop该诊断帧/source、depth退1、恢复caller active/globals再继续/传播Flow；任一Err恢复active/globals但故障帧/source/depth保留，交外层attempt或最终错误处理。
+
+该边界不改变Flow::Return/Break/Continue传播规则，不把默认Expr当一个吞return的新LFZ函数；它只是来源/递归保护诊断帧。禁止graph默认值递归构造绕过depth保护，资源错误不被attempt捕获。相关上限验证用安全合成state或有界单元，不真实制造stack abort/OOM。不得为跨模块默认值复用caller帧而在错误文件画下划线。
+
+当前仓库StructDef构造点为Value::struct_def/struct_template；runtime调用声明路径用struct_template_in_context，保留旧helper None。新增context字段及构造机械迁移列入作者报告，不删除旧默认值行为测试。
+
+### 21.6 CLI、真实文件与owner
+
+runtime唯一value.rs/evaluator.rs：图入口/结构验证/session、函数及模板context、来源记录与attempt恢复；不改B loader/modules/AST/source。tooling唯一cli.rs与必要main说明：run file/-e/stdin根counted/load/lex/parse一次，若模块build_graph→新eval→stack内drop；check只build/drop。无需新语法或额外CLI选项。
+
+模块runtime错误CaseEval由run.error_source提供最深真实display_path/Loaded。push_error_fields.file及人类错误源码摘录使用该source；traceback_json每帧file及push_trace_frame按实际帧下标查run.frame_source。首10尾30折叠须传原实际index，不能切片后enumerate从0；JSON仍全量不折叠，原字段/键序保持。
+
+旧origins=None路径仍用原path/source逐字节；graph路径缺sidecar/来源是宿主Origins/InvalidGraph，不得伪装legacy fallback。无Loaded不借其它文件源码。初始化错误只渲染实际进入的帧，前端GraphFailure仍原B前端定位协议。
+
+### 21.7 验收与实现GO
+
+B独立PASS后方GO源码；runtime单元/整库先，tooling整合唯一编译，再公开与独立验收。必须验证三文件/菱形单次初始化/两次执行隔离，caller同名全局不串，home闭包/方法/self/局部模板/默认值及显式覆盖来源，导出快照/共享容器/namespace写入，统一argv，初始化失败零entry副作用，attempt跨模块恢复后新错无旧帧/来源，模板默认值资源保护，坏宿主图零副作用拒绝，真实跨文件人类/JSON/折叠trace以及全部legacy T15/T14/JSON/apps。check保持不初始化，C不改B限额或T15协议。
+
+新模块热路径与二进制变化必须实际性能测量后才评价效率，R304仍OPEN。规范冻结不等于实现或正式发布完成。

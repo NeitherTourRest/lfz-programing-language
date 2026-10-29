@@ -1013,3 +1013,9 @@ lfz [--json] check [--json] - [--json]
 
 ## 19. T16-A 基础批次（2026-10-29 冻结）
 本批只增加宿主来源/模块身份载荷，不新增LFZ语法/记号/AST；import/from仍保留未实现，export旧标识符规则不变。CLI和源码前导/行列规则保持，草案不等于新文法。精确接口及后继边界见interface-contract.md §19。
+
+## 20. T16-B 顶层静态模块声明（2026-10-29 冻结）
+语法import IDENT from无插值字符串、export IDENT逗号列表；import/from保留现Reserved token，export仅语句首紧接同语句IDENT为上下文声明，旧export变量/调用/赋值/字段表达式保持。两声明只允许Program直接顶层，import须先于任何其它语句；空/含NUL/绝对或非.lfz路径拒绝。图静态导出/alias、精确AST字段与诊断见interface-contract §20。B仅check完整依赖图不初始化，C前run及旧eval遇模块声明在任何副作用前SyntaxError“模块执行尚未启用”；不是模块运行已实现。
+
+## 21. T16-C 模块执行入口（2026-10-30 冻结）
+不增加B之外的语法；import/export实际初始化由graph入口执行，旧eval仍拒绝模块Program。导出模板不支持lib.Point{}新形态，使用let P=lib.Point再P{}。模块默认值定义上下文与legacy默认值调用scope区别、来源/资源诊断帧及精确API见interface-contract §21。check仍只构图不执行；B独立通过后才实施C。
