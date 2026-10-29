@@ -266,3 +266,6 @@ IO 正例固定先覆盖写 Temp/v11_io_roundtrip.txt，再追加并读取，最
 
 ## T15受控错误恢复（2026-10-29）
 官方178/178、0失败/错误、exit0；旧166+4正LFZ+8新增清单负例。公开精确进程13/13（另计），Result/九类可捕错误/嵌套状态/副作用/trace恢复/边界与容量传播全过。指定1a5a3d1c…/782848B，详情[ T15黑盒报告 ](../docs/reports/T15-blackbox.md)与T15-blackbox-evidence。原131清单值前缀保留，旧用例未改，Recursion资源边界未做真实abort，交单元/独立安全见证。
+
+## T16-B模块图公开进程（2026-10-30）
+公开tests/t16b_cli_check.py 38/38通过、exit0，锁8ea375dc…/859136B；旧65a29新增模块check0/1红测保留。涵盖三来源/非执行/真实文件位置/上下文兼容/run零副作用拒绝与bytes/depth边界。官方178基线不变，本轮不改原LFZ/Rust/cases值或将38并入官方数。详见[ T16-B黑盒报告 ](../docs/reports/T16-B-blackbox.md)。

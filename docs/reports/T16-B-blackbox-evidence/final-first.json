@@ -1,0 +1,996 @@
+{
+  "date": "2026-10-30",
+  "timestamp_utc": "2026-10-29T18:55:40.046774+00:00",
+  "binary": "target\\release\\lfz.exe",
+  "binary_sha256": "8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480",
+  "bytes": 859136,
+  "schema": "LFZ-T16-B-CLI-1",
+  "checks_total": 38,
+  "checks_passed": 38,
+  "rows": [
+    {
+      "name": "module_smoke",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\main.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "diamond_alias",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\main.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "human_success",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\main.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "streams": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "eval_base",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "import d from \"./lib/dep.lfz\"\nexport d\n"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "stdin_base",
+      "args": [
+        "check",
+        "--json",
+        "-"
+      ],
+      "stdin_hex": "696d706f727420642066726f6d20222e2f6c69622f6465702e6c667a220a6578706f727420640a",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "syntax_if",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块声明只能出现在文件顶层\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"col\":11,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "syntax_while",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块声明只能出现在文件顶层\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"col\":15,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "syntax_fn",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块声明只能出现在文件顶层\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"col\":10,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "syntax_lambda",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块声明只能出现在文件顶层\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"col\":13,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "syntax_order",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"import 必须位于其它顶层语句之前\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "path_empty",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块路径必须是非空的相对 .lfz 字符串（不含插值或 NUL）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"col\":15,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "path_extension",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块路径必须是非空的相对 .lfz 字符串（不含插值或 NUL）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"col\":15,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "path_absolute",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块路径必须是非空的相对 .lfz 字符串（不含插值或 NUL）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"col\":15,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "path_nul",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块路径必须是非空的相对 .lfz 字符串（不含插值或 NUL）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"col\":15,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "interpolated",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块路径必须是非空的相对 .lfz 字符串（不含插值或 NUL）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"col\":15,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "import_conflict",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块导入名冲突：a\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":3,\"col\":8,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "line": true,
+        "col": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "binding_conflict",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块导入名冲突：a\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "line": true,
+        "col": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "duplicate_export",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"重复导出：x\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":3,\"col\":10,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "line": true,
+        "col": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "missing_export",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"导出名没有顶层声明：missing\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"col\":8,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "line": true,
+        "col": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "builtin_export",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\bad.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"导出名没有顶层声明：print\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"col\":8,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "line": true,
+        "col": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "forward_export",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\forward.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "export_identifier_run",
+      "args": [
+        "-e",
+        "var export=1\nexport = 2\nassert(export + 1 == 3)\nlet s={export:4}\nassert(s.export==4)"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "streams": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "export_identifier_check",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\legacy.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "dependency_parse",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\err-entry.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"表达式未结束：行尾不能终止表达式；请用括号跨行\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\lib\\\\bad.lfz\",\"line\":2,\"col\":8,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\lib\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "class": true,
+        "file": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "dependency_utf8",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\err-entry.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"文件不是合法的 UTF-8 编码（首个非法字节位于字节偏移 4）\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\lib\\\\bad.lfz\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\lib\\\\bad.lfz\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "class": true,
+        "file": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "dependency_preamble",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\err-entry.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"CosmosAnswerError\",\"message\":\"你忘记了宇宙的答案\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\lib\\\\bad.lfz\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\lib\\\\bad.lfz\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "class": true,
+        "file": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "missing_dependency",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\missing-entry.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"IOError\",\"message\":\"无法读取模块：\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\lib\\\\absent.lfz（导入于 D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\missing-entry.lfz:2:1）\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\lib\\\\absent.lfz\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "class": true,
+        "file": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "cycle",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\cycle\\a.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块循环依赖：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\cycle\\\\a.lfz → \\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\cycle\\\\b.lfz → D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\cycle\\\\a.lfz\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\cycle\\\\b.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\cycle\\\\b.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "class": true,
+        "file": true,
+        "line": true,
+        "col": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "no_eval_output",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\side-entry.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\sentinel.bin": "4f524947494e414c00ff",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\never.bin": null
+      },
+      "after": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\sentinel.bin": "4f524947494e414c00ff",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\never.bin": null
+      }
+    },
+    {
+      "name": "no_eval_io",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\side-entry.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\sentinel.bin": "4f524947494e414c00ff",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\never.bin": null
+      },
+      "after": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\sentinel.bin": "4f524947494e414c00ff",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\never.bin": null
+      }
+    },
+    {
+      "name": "no_eval_loop",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\side-entry.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\sentinel.bin": "4f524947494e414c00ff",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\never.bin": null
+      },
+      "after": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\sentinel.bin": "4f524947494e414c00ff",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\never.bin": null
+      }
+    },
+    {
+      "name": "run_guard_late_export",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\run-guard.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"模块执行尚未启用\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\run-guard.lfz\",\"line\":5,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\run-guard.lfz\",\"line\":5,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "streams": true,
+        "sentinels": true,
+        "execution_error": true
+      },
+      "passed": true,
+      "before": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\sentinel.bin": "4f524947494e414c00ff",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\never.bin": null
+      },
+      "after": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\sentinel.bin": "4f524947494e414c00ff",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\never.bin": null
+      }
+    },
+    {
+      "name": "run_guard_early_import",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\run-guard.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"模块执行尚未启用\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\run-guard.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\run-guard.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "streams": true,
+        "sentinels": true,
+        "execution_error": true
+      },
+      "passed": true,
+      "before": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\sentinel.bin": "4f524947494e414c00ff",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\never.bin": null
+      },
+      "after": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\sentinel.bin": "4f524947494e414c00ff",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\never.bin": null
+      }
+    },
+    {
+      "name": "legacy_large_root",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\large-legacy.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "module_exact_bytes",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\large-module.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "module_bytes_plus_one",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\large-module.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块图超限：单文件字节（上限 2097152）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\large-module.lfz\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\large-module.lfz\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "depth128",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\chain\\0.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    },
+    {
+      "name": "depth129",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\chain\\0.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块图超限：依赖深度（上限 128）\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\chain\\\\127.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\chain\\\\127.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "keys": true,
+        "mode": true,
+        "ok": true,
+        "one_line": true,
+        "message": true,
+        "class": true,
+        "sentinels": true
+      },
+      "passed": true,
+      "before": {},
+      "after": {}
+    }
+  ],
+  "scope": "public CLI graph checking only, not module execution or performance"
+}

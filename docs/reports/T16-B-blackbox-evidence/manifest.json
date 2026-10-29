@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-30",
+  "binary": {
+    "path": "target/release/lfz.exe",
+    "bytes": 859136,
+    "sha256": "8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480"
+  },
+  "source_hashes": {
+    "src/ast.rs": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076",
+    "src/builtins.rs": "0b69680b4b0029c0b4eb2ddd3ba86ecf22fa82cdab25cbec4d3a832e43a0c151",
+    "src/cli.rs": "50b8a6fd72240872a3662c2e4b6a5a41b5b77d2d0fbd8719d53d0d95ccf5e385",
+    "src/env.rs": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc",
+    "src/error.rs": "fbe276ed65307748e4415358c99cf59dee82326f3ab185341bbf34b23baee6a1",
+    "src/evaluator.rs": "4b898a8a62d8e9f9d481ce9af61822bc821a5c4e63b3d2e8ad5807153da63bed",
+    "src/json.rs": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f",
+    "src/json_codec.rs": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2",
+    "src/lexer.rs": "ebb952edbcd201210eb1f9c6ddebf58e2f3f998b260a11a51fe1c967848031f2",
+    "src/lib.rs": "e5ecee22f8aa8e357b2d932d5bb0c74044a76f63a4ee2eb476e900dc68f254ce",
+    "src/loader.rs": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f",
+    "src/main.rs": "247fc12340d2f6a26aa3fc5ada658cbfe72fb7ee7f85f107b05e6af27018c366",
+    "src/modules.rs": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895",
+    "src/parser.rs": "58c41ba85d930dc0ef465be2a9d3c0741cfe7052d6dd9df01a825aab73e7ff5f",
+    "src/source.rs": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468",
+    "src/span.rs": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2",
+    "src/test_runner.rs": "b70a1e193f79d191599ee57e033f01bc25bde5e4fef0cd97d46dd418453f1597",
+    "src/value.rs": "b200177f9102c042c03f5120b15af2f487f56ce19b90c31c9a5146d1c6830fc7",
+    "Cargo.toml": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c",
+    "Cargo.lock": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4",
+    "tests/cli_t16b.rs": "cb9e31cb64df1283269b1c0fe1956c8ad83e1c8bac25a229b18d2d7a55897250"
+  },
+  "sources_match_author_frozen_manifest_after_run": {
+    "src/ast.rs": true,
+    "src/builtins.rs": true,
+    "src/cli.rs": true,
+    "src/env.rs": true,
+    "src/error.rs": true,
+    "src/evaluator.rs": true,
+    "src/json.rs": true,
+    "src/json_codec.rs": true,
+    "src/lexer.rs": true,
+    "src/lib.rs": true,
+    "src/loader.rs": true,
+    "src/main.rs": true,
+    "src/modules.rs": true,
+    "src/parser.rs": true,
+    "src/source.rs": true,
+    "src/span.rs": true,
+    "src/test_runner.rs": true,
+    "src/value.rs": true,
+    "Cargo.toml": true,
+    "Cargo.lock": true,
+    "tests/cli_t16b.rs": true
+  },
+  "scope": "binary verified before every public process; current sources match toolchain build manifest; not a source before/after measurement claim",
+  "files": {
+    "tests\\t16b_cli_check.py": {
+      "bytes": 8930,
+      "sha256": "18b51afec3b082cdc588172b541ae23be3bc04ccfe072834eb3979c63aa8cda3"
+    },
+    "docs\\reports\\T16-B-blackbox-evidence\\preimplementation-red.json": {
+      "bytes": 1393,
+      "sha256": "3fbf9603d5c8324d7a6dac6251434167e11d5649723bb6f8ad421703323d59c5"
+    },
+    "docs\\reports\\T16-B-blackbox-evidence\\final-first.json": {
+      "bytes": 36759,
+      "sha256": "0989a907838cc95dce1eb448eb1c74fb960cd38eb3dc603beeaad52854e93dde"
+    }
+  }
+}

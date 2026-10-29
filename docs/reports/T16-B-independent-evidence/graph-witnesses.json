@@ -1,0 +1,287 @@
+{
+  "date": "2026-10-30",
+  "binary_sha256": "8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480",
+  "checks": 18,
+  "passed": 18,
+  "source_hashes_unchanged": true,
+  "rows": [
+    {
+      "name": "diamond_no_init_file",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\root.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "watch_before": [
+        "6b656570000d0a",
+        null
+      ],
+      "watch_after": [
+        "6b656570000d0a",
+        null
+      ]
+    },
+    {
+      "name": "diamond_no_init_code",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "import left from \"./left.lfz\"\nimport right from \"./right.lfz\"\nexport left,right\n"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "watch_before": [
+        "6b656570000d0a",
+        null
+      ],
+      "watch_after": [
+        "6b656570000d0a",
+        null
+      ]
+    },
+    {
+      "name": "diamond_no_init_stdin",
+      "args": [
+        "check",
+        "--json",
+        "-"
+      ],
+      "stdin_hex": "696d706f7274206c6566742066726f6d20222e2f6c6566742e6c667a220a696d706f72742072696768742066726f6d20222e2f72696768742e6c667a220a6578706f7274206c6566742c72696768740a",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "watch_before": [
+        "6b656570000d0a",
+        null
+      ],
+      "watch_after": [
+        "6b656570000d0a",
+        null
+      ]
+    },
+    {
+      "name": "human_graph",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\root.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "watch_before": [
+        "6b656570000d0a",
+        null
+      ],
+      "watch_after": [
+        "6b656570000d0a",
+        null
+      ]
+    },
+    {
+      "name": "run_preflight",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\late.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"模块执行尚未启用\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\late.lfz\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\late.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "watch_before": [
+        "6b656570000d0a"
+      ],
+      "watch_after": [
+        "6b656570000d0a"
+      ]
+    },
+    {
+      "name": "cycle",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\cycle-a.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块循环依赖：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\cycle-a.lfz → \\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\cycle-b.lfz → D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\cycle-a.lfz\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\cycle-b.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\cycle-b.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "watch_before": [],
+      "watch_after": []
+    },
+    {
+      "name": "child_syntax",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\badentry.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 变量名，但得到 '='\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\broken.lfz\",\"line\":2,\"col\":5,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\broken.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "watch_before": [],
+      "watch_after": []
+    },
+    {
+      "name": "missing_child",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\missingentry.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"IOError\",\"message\":\"无法读取模块：\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\missing.lfz（导入于 D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\missingentry.lfz:2:1）\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\missing.lfz\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+      "stderr": "",
+      "watch_before": [],
+      "watch_after": []
+    },
+    {
+      "name": "local_conflict_before_dependency",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\firsterror.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块导入名冲突：x\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\firsterror.lfz\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\firsterror.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "watch_before": [],
+      "watch_after": []
+    },
+    {
+      "name": "child_utf8",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\utfentry.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"文件不是合法的 UTF-8 编码（首个非法字节位于字节偏移 0）\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\utf8.lfz\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\utf8.lfz\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "watch_before": [],
+      "watch_after": []
+    },
+    {
+      "name": "child_preamble",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\nopreentry.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"CosmosAnswerError\",\"message\":\"你忘记了宇宙的答案\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\nopreamble.lfz\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\nopreamble.lfz\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "watch_before": [],
+      "watch_after": []
+    },
+    {
+      "name": "legacy_export",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\legacy.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "5\n",
+      "stderr": "",
+      "watch_before": [],
+      "watch_after": []
+    },
+    {
+      "name": "legacy_gt_2m_check",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\huge-legacy.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "watch_before": [],
+      "watch_after": []
+    },
+    {
+      "name": "legacy_gt_2m_run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\huge-legacy.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "42\n",
+      "stderr": "",
+      "watch_before": [],
+      "watch_after": []
+    },
+    {
+      "name": "dep_exact_2m",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\limitentry.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "watch_before": [],
+      "watch_after": []
+    },
+    {
+      "name": "dep_over_2m",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\limitentry.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块图超限：单文件字节（上限 2097152）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\limitentry.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\limitentry.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "watch_before": [],
+      "watch_after": []
+    },
+    {
+      "name": "depth_exact_128",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\depth\\d0.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "watch_before": [],
+      "watch_after": []
+    },
+    {
+      "name": "depth_over_128",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-verifier\\graph\\depth\\d0.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块图超限：依赖深度（上限 128）\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\depth\\\\d127.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-verifier\\\\graph\\\\depth\\\\d127.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "watch_before": [],
+      "watch_after": []
+    }
+  ]
+}

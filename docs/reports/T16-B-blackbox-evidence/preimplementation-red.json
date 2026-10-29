@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-30",
+  "timestamp_utc": "2026-10-29T18:53:55.653538+00:00",
+  "binary": "dist\\lfz.exe",
+  "binary_sha256": "65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7",
+  "bytes": 783872,
+  "schema": "LFZ-T16-B-CLI-1",
+  "checks_total": 1,
+  "checks_passed": 0,
+  "rows": [
+    {
+      "name": "three_file_smoke",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-B-test\\main.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 表达式，但得到 'import'\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\main.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-test\\\\main.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": false,
+        "stderr_empty": true,
+        "keys": false,
+        "mode": true,
+        "ok": false,
+        "one_line": true,
+        "sentinels": true
+      },
+      "passed": false,
+      "before": {},
+      "after": {}
+    }
+  ],
+  "scope": "public CLI graph checking only, not module execution or performance"
+}

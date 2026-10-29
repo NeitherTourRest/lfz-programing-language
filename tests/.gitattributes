@@ -1,2 +1,3 @@
 t14_cli_check.py -text
 t15_cli_check.py -text
+t16b_cli_check.py -text
