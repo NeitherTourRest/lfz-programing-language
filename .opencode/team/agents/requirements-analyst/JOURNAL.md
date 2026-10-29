@@ -76,3 +76,8 @@
 - 独立1a5a候选549/178/attempt13/check117/旧CLI91/旧app37+11/新38/140及38自编全PASS，人20/AI25作者示例齐，R130/207/408/505通过。
 - 错误恢复/资源白名单/完整trace-depth恢复证据映射T15-independent-verification.md；不作真实abort/OOM或新盲测声明。
 - R304OPEN、无T15性能窗/候选非正式发布不变，旧v2和所有失败证据保留。仅本人需求及记录，无产品验收或Git写入。
+
+## [2026-10-29] T16-A基础需求收口
+- 新增R131/208并依据T16-A独立562/API witness/旧公开回归及32差分组通过，绑定65a29…/783872B。
+- 仅source metadata/located failure/home整数/origins原子基础；UserFn公开字段迁移明确，旧结构shape/CLI/T15协议保持。整个模块未实现，B仅设计。
+- R304OPEN，无A性能窗/非正式发布；仅需求及本人记录，无产品测试、计时或Git写入。

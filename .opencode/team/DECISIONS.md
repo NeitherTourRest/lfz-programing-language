@@ -1254,3 +1254,6 @@ T13唯一完整三标签窗口及独立审计为15PASS/2ENV/2FAIL，map三档、
 
 ### [2026-10-29] [team-lead] T15内置清单测试同步授权
 新增Interp特殊内置attempt后语言内置总数73，原普通65+高阶7表仍72。授权runtime仅更新原3项元数据期望：总名/去重73，表名并集显式加入唯一特殊名attempt后仍严格与全内置表相等；保留普通+高阶72/HOF7断言与所有旧行为测试，不删除/弱化检查。记录真实缺功能红测和对应差异，禁止以放宽行为测试换通过。
+
+### [2026-10-29] [language-architect] T16-A 来源与模块身份基础定案
+经team-lead批准，source.rs仅元数据与可选Loaded；Span/LzError/TraceFrame/Loaded/Program旧形状保持。TracedRun可选sidecar严格校验原子附加，legacy None，无坏来源回退；UserFn整数home_module，active_module ENTRY。A不启用模块/CLI/IO/globals切换，T15Result不变。单写者与Rust构造迁移写入三spec §19，冻结不等于产品验收。

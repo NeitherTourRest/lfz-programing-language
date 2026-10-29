@@ -41,3 +41,9 @@ T15进展：源码冻结1a5a3d1c…/782848B，549release、178官方、13精确�
 1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c/782848B：独立549、官方178、attempt13/check117/CLI91、旧app37+11/新jsonbatch38/JSON140及38自编见证全部通过；人指南20/AI25。73内置，候选提交收口中，R304OPEN无T15计时不正式发布。T16模块仅设计草案，当前源码不扩展。
 
 > T15实际Git回执（2026-10-29）：六组已推送main，远端a9143efbe60f851cf769c0b8bbfa831d49bfa7e3；原用户3块28/1/1保留，R304OPEN不tag。T16-design-draft已纳入，仅草案未实现。
+
+## T16启动（2026-10-29）
+用户继续，批准草案总体方向，A基础定位/函数定义模块身份先行，architect定案、core/runtime只读审查，冻结后按单写者和唯一编译串行迁移。B/C/D连续接续，不以基础准备冒称导入已实现。旧Span/LzError形状及T15Result5/3字段兼容为边界。基线e1368de/1a5a549，原3用户块不动，R304OPEN。
+
+## T16-A最终验收（2026-10-29）
+65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7/783872B：独立562harness、attempt13/check117/CLI91含178、旧app37+11/jsonbatch38/JSON140、RustAPI见证及32组64进程旧新差分全部通过。core6+runtime7新unit。A仅来源元数据/定位sidecar/整数home模块基础，未实现导入/执行；UserFn公开构造需新home_module，旧位置形状/CLI/T15Result字段保持。R304OPEN，无A计时不tag。B草案已保存，候选Git收口中。

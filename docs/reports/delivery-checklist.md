@@ -8,7 +8,15 @@
 
 > **2026-10-24 本轮补充核对（T11-12/13/14/16）**：8 项交付物位置保持齐备。当前 69 内置、494 Rust 测试（388+48+28+15+15）、130 黑盒；语言 witness 74/74，V01 干净 CWD 130/130 已独立闭环，详见 `T11-v11-reverification.md`。本地执行 `scripts/build-release.ps1` exit 0，`dist/lfz.exe` 766464 B、`lfz 1.0.1`，hello 冒烟输出 `Hello, LFZ!`；发布版 `dist/lfz.exe test --json` total/passed=130、failed/errored=0、exit 0。SHA256=`149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，原文见 `T11-v11-release-evidence/`。构建有本机 rustup canonicalize 提示，不声称零 warning。`dist/` 被忽略，仅本地刷新、不强制入库；版本仍 1.0.1，既有 8 个 tag 不变，本轮不打 v1.3.0。同题 8 盲测缺原题材料未重跑，历史 2/8 不变。下文 2026-09-27 原始计数、缺陷和历史标签信息保留其当时语境；当前状态以本补充及本轮独立报告为准。
 > **2026-10-24 v2 正式首轮补充核对**：新增[正式独立验收报告](agent-benchmark-v2/v2-20261024-r01/REVIEW.md)与[认证结果](agent-benchmark-v2/v2-20261024-r01/certified-results.json)，run-id `v2-20261024-r01`：8/8 整题、131/131 功能用例，8 份源码约束与协议审查均 PASS；学生共 9 次 LFZ 自调，各题首次自调均 exit 0（8/8），仅为自选测试辅指标。模型为会话日志确认的 `gpt-6.1-sol / medium`；隔离范围为分题无历史派发、指令约束及已记录工具审计，未声称 OS 隔离。新八题是独立 v2 基线，不以历史 2/8 计算提升。[原始字节 ZIP](agent-benchmark-v2/v2-20261024-r01/raw-inputs-submissions.zip)及其[哈希清单](agent-benchmark-v2/v2-20261024-r01/raw-archive.json)提供 Git 行尾归一化之外的原文留存。当前解释器仍为 Cargo 1.0.1 / 69 内置 / 494 Rust 测试 / 130 正式黑盒；dist 766464 B、SHA256 `149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，本轮不重编译或改 Cargo，保持冻结 pin。`v1.3.0` 交付里程碑包含已验收的 v1.1 实现、测试/指南及 v2 正式首轮认证与原始证据；Git 附注标签为发布凭据，不等同于解释器 1.0.1 的版本变更。上方“本轮不打 v1.3.0”仅描述前一批发布时点。
-## 2026-10-29 T15当前候选（功能独立验收完成）
+## 2026-10-29 T16-A当前候选（基础与兼容独立通过）
+
+当前1.4.0/783872B/SHA256 `65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7`；T16-A-release-evidence保留17src+2Cargo及产物指纹。独立报告T16-A-independent-verification.md绑定本指纹：562 release harness/attempt13/check117/CLI91含官方178/旧应用37+11/jsonbatch38/JSON140全部PASS，新Rust API witness匹配LTO配置编译执行成功，16程序双模式32组64进程差分逐字节一致，源码/Cargo前后一致。首次默认链接失败日志保留，不视作产品运行缺陷。原73内置不变，不新增语法/CLI。
+
+A仅Rust来源元数据、错误来源sidecar与函数home基础，尚无import/export解析、加载或执行；CLI与T15 Result形状不变。公开UserFn新增home_module构造字段是Rust API迁移，外部literal须补字段，不能宣称全部Rust API不变。旧Span/LzError/TraceFrame/Loaded/Program形状保持。
+
+R304OPEN，无本批性能计时、不打tag，后继T16-B草案不视作实现。候选路径组及用户28/1/1过滤快照由T16-A-release-evidence/prepare-checkpoint.py准备；主会话代Git，本角色不编译、不改源码/profile，不宽泛stage，旧v2与原测试不动。
+
+## 2026-10-29 T15历史候选（功能独立验收完成）
 
 当前73内置，新增attempt受控业务错误恢复；版本1.4.0、782848B、SHA256 `1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c`，来源及18项源码/Cargo指纹见`T15-release-evidence/`。本角色验hash复制dist，不编译、不改源码/profile。
 

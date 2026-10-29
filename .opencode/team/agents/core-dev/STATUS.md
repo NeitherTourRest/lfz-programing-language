@@ -1,17 +1,17 @@
 # core-dev — 工作状态
-> 最后更新: 2026-10-24 by core-dev
+> 最后更新：2026-10-29 by core-dev
 
 ## 当前状态
-T11-12 ValueMsg 三变体已完成，等待统一集成验证。
+T16-A来源元数据基础完成，定向release6/6通过；已通知team-lead runtime可接续编译，本角色停止编译。
 
 ## 产出
-src/error.rs 新增 NotSingleScalar { n: usize }、BadCodepoint { n: i64 }、EmptyFill，逐字中文消息及定向测试。cargo test --lib error::tests::v11_value_messages_match_contract -- --exact：1 passed / 0 failed。
+src/source.rs、src/lib.rs导出、docs/reports/T16-A-core.md及证据目录。SourceId/ModuleId分域、SourceRecord可选Loaded、SourceMap安全索引/checked插入、SourceMetadataError、LocatedFailure按spec§19实现。
 
-## 进行中 / 阻塞
-无。
+## 证据
+旧rlib外部消费见证rustc E0432/exit1；新增source::tests定向release6 passed/419 filtered，exit0。原始red/green及manifest保留，不冒称外部见证已在新rlib重新链接。
 
-## 下一步
-team-lead 统一 cargo test 与黑盒验证。
+## 下一步/阻塞
+runtime接续，随后全量与独立验收。无core阻塞；本批没有模块加载/文法/CLI功能，R304OPEN。
 
 ## 关键经验
-apply_patch 本会话两次挂起；按 team-lead 指令以 IO.File UTF8 精确替换成功。红灯测试未成功落地执行，集成方已明确要求先解除编译阻塞，实际顺序如实记录，不声称 TDD 红绿闭环。
+保留Span/Loaded/TraceFrame/LzError/Program旧shape，来源归外层记录；加载错误可无源码文本。编号上限使用private helper合成，不真实分配。所有临时项目Temp，只release；不Git/改他人产物/调度。

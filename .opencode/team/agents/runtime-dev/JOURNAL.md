@@ -260,3 +260,13 @@
 - 证据：T15-runtime.md/manifest，549release全过、7新增unit；真实NameError红测保留，元数据3项调整已明确授权。
 - 产物782848B/1a5a3d1c…63dd6c，未改dist/profile/旧行为测试/CLI/Git，停止编译。
 - 下一步：下游独立验收；R304OPEN。
+
+## [2026-10-29] T16-A运行时只读审查
+- 读取PROJECT_STATE/TEAM_BOARD/自身STATUS及runtime角色；rg与源码片段核对单globals五条依赖、UserFn/TracedRun构造点、TraceFrame Copy shape和attempt恢复路径。
+- 建议先legacy0 identity与函数origin表，不在A切换globals；session持Env避免闭包强Rc全局环，fault定位深处冻结，C补active状态恢复。
+- 未改产品/测试/spec、未编译或Git；已向team-lead汇报，待契约冻结再实施。
+
+## [2026-10-29] T16-A运行时基础实现与作者验收
+- 依据§19添加home_module/active_module ENTRY、TracedRun可选来源sidecar，严格校验原子替换和安全Option查询；旧语言/CLI/Result字段不变。
+- 新runtime7unit定向通过；与core6合并完整release562/562/build通过。target65a29eae…/783872B，日志与manifest已保全。
+- 无模块执行/性能/正式发布声明，未改旧test/dist/profile/Git；停止编译/改源交下游。

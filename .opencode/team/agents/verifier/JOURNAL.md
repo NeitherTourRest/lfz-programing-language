@@ -225,3 +225,15 @@
 - 实际549 harness/attempt13/check117/CLI91含官方178/app37+11/jsonbatch38/JSON140全PASS；38自编进程含状态/trace/逃逸闭包等通过。
 - source/Cargo测前后不变，dist/target1a5a/782848B；原始证据及报告manifest保全。资源不可捕获通过实际执行的安全合成unit核对，无真实abort/OOM。
 - 未修复产品、编译或Git，R304OPEN，无T15性能测窗，不正式发布；交team-lead后续指南/发布收口。
+
+## [2026-10-29] T16-A验收准备
+- 来源：team-lead派独立source身份/定位sidecar验证，按启动协议读全局/看板/自身状态与§19。
+- 产出：T16-A-independent-plan.md及Temp witness.rs；旧dist1a5a/782848B副本已核验保全。
+- 未编译/未启动解释器/未跑完整回归；候选hash和唯一小witness编译准许待下次唤醒。
+- R304OPEN；A仅基础准备，不宣称模块导入执行或性能通过。无实现修复/Git/外写。
+
+## [2026-10-29] T16-A最终独立验收
+- 锁65a29/783872B：562harness及13/117/91含178/app37+11/38/140实跑通过。
+- 小Rust API witness匹配LTO库编译运行成功；默认链接失败日志保留，非产品缺陷。32组/64进程旧新同路径完整双流及exit一致，源hash前后相同。
+- 报告T16-A-independent-verification.md、evidence原字节manifest及自身状态已落盘。UserFn公开字段构造迁移明确，A不等于模块功能，R304OPEN。
+- 未改实现/规范/旧报告/正式测试，无Git/外写/真实OOM或abort。现在完全收工。

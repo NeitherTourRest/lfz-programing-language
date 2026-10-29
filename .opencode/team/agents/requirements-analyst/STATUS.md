@@ -2,16 +2,16 @@
 > 最后更新: 2026-10-29 by requirements-analyst
 
 ## 当前状态
-T15新增R130/207/408/505四项通过。attempt Result协议、可恢复白名单/资源传播/完整trace与depth恢复、指南及jsonbatch均按§18和最终独立回执收口。R304仍进行中/OPEN，无T15性能窗，候选非正式发布。
+T16-A新增R131/208来源基础与兼容需求通过。仅宿主source metadata/LocatedFailure/整数home_module/原子origins基础，不是整个T16模块或import/export加载/执行通过；B仍设计草案。R304OPEN，无A性能窗，不正式发布。
 
 ## 证据
-- 最终dist/target1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c、782848B，73内置/12错误类。
-- T15-independent-verification.md：549release/官方178（含于CLI91不重复相加）/attempt13/check117/旧app37+11/新jsonbatch38/JSON-argv140及38自编独立见证全PASS。安全合成资源状态、完整caller span与depth恢复、12000次失败后递归/逃逸闭包/无旧trace帧等均有独立证据。
-- 人指南20/20、AI25/25作者新增/受影响示例绑定同hash，与独立CLI语义对齐；不冒称新Agent盲测或独立全量重跑作者示例。
-- 历史T14四项通过、T12各轮hash和旧v2成绩保持。T13两优化拒收并保留8tests/全部失败ZIP及原始数据；旧性能结果不冒充T15测量。
+- 当前65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7、783872B；独立报告实际target实跑，team-lead确认dist同字节。
+- T16-A-independent-verification.md：562harness、新Rust witness编译/执行、attempt13/check117/CLI91含178/app37+11/38/JSON140均PASS；16程序32组64进程完整双流/exit逐字节同。
+- 新SourceMap/attach校验顺序/原子拒绝/未知ID None/home ENTRY有实际API见证；UserFn新增公开home_module须外部literal迁移，不声称完全无RustAPI变化。旧Span/LzError/TraceFrame/Loaded/Program及CLI/T15字段保持。
+- 历史T15四项与人20/AI25、T14及旧v2证据保持；T13两优化拒收、8新增测试和所有失败数据/ZIP保留。
 
 ## 下一步
-交team-lead按候选提交收尾；R304继续独立追踪，不以功能通过代替效率通过。
+交team-lead候选提交；后继B/C/D须另冻结和独立验收，不能借A基础通过提前标模块完成。
 
 ## 阻塞/经验
-无需求侧阻塞。仅需求与证据映射，不自行产品验收、计时或Git写入。所有产物状态绑定实际hash与时点。
+无需求侧阻塞；只核证据映射，不自行产品测试、编译、计时或Git写入。范围与公开RustAPI迁移需逐项说明，不能用旧shape保持推导所有宿主API无变化。

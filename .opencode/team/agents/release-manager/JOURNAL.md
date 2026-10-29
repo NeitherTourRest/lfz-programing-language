@@ -889,3 +889,17 @@
 - 决策：本角色未Git、不动dist/源/profile，不提前写实际提交/推送回执。需求状态由analyst唯一写者关闭。
 - 下一步：主会话最终清单/分组提交与已授权main推送；用户原28/1/1三块严格保留。
 - 阻塞：无文档收口阻塞；R304仍开放限制正式发布。
+## [2026-10-29] T16-A来源基础候选准备
+- 来源：team-lead轻量任务，优先复制精确产物供独立验收，随后准备文档/清单。
+- 完成：target/dist783872B/SHA65A29EAEA54F32D1D2B404F22AED09389C3FFA71E6A81ACB8FA6351D32FA42B7；17src+2Cargo指纹与build记录，无编译/源码/profile/Git变更。
+- 产出：README/checklist明确A仅元数据/错误载荷/函数home，无import/export加载执行，UserFn公开构造字段迁移；562只记作者回执，独立待验。五组清单/用户3块Temp过滤快照，基线e1368de原139case保留，精确容纳T16-B草案。
+- 决策：R304OPEN，无计时/正式标签；不虚报独立验收或推送，不扩大模块实现范围。
+- 下一步：最终独立回执后补事实，root最后跑脚本再代Git；本角色不再改dist并释放slot。
+- 阻塞：无准备阻塞。
+## [2026-10-29] T16-A最终独立回执后交付文档收口
+- 来源：team-lead完整最终回执及已落T16-A-independent-verification.md。
+- 完成：README/清单改实际独立通过：562 harness/attempt13/check117/CLI91含官方178/旧app37+11/jsonbatch38/JSON140；Rust新API witness匹配LTO编译执行PASS，16程序双模式32组64进程逐字节一致，源码/Cargo前后一致。默认链接配置首次失败日志保留，非产品运行缺陷。
+- 产出：交付文档、本角色记录与prepare-checkpoint状态说明；未重跑清单，待root/analyst终稿齐后主会话首次提交前运行一次。
+- 决策：A仅来源/错误载荷/函数home基础，无import/export加载执行；UserFn外部Rust构造需补home_module，旧shape/T15Result不变。R304OPEN，无计时、不tag，不把B草案视实现。
+- 下一步：主会话按5组明确路径与用户28/1/1过滤快照代执行候选提交/推送；本角色未Git、不动dist/源/profile，不虚报已push。
+- 阻塞：无交付文档收口阻塞。

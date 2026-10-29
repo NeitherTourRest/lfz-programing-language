@@ -6,7 +6,17 @@
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
-## 当前：T15 受控错误恢复候选（2026-10-29）
+## 当前：T16-A 来源身份基础候选（2026-10-29）
+
+本批只提供Rust侧来源元数据、错误来源载荷与函数定义模块身份基础，**尚无import/export解析、模块加载或模块执行**。现CLI、T15 Result/error/trace字段及73内置保持；不是已经可用的模块系统。
+
+当前target/dist为1.4.0候选，783872B，SHA256 `65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7`，[源码与产物指纹](docs/reports/T16-A-release-evidence/build.json)已保全。[最终独立验收](docs/reports/T16-A-independent-verification.md)已通过：562 release harness、attempt13、check117、旧CLI91（含178官方黑盒）、旧应用37+11、jsonbatch38、旧JSON/argv140及新Rust API witness编译/执行全部PASS。另16程序×2模式=32组、64进程的新旧差分逐字节一致，源码/Cargo测前后指纹一致。本批没有新增LFZ语法或CLI行为。Rust witness首次默认LTO链接配置不匹配的失败日志保留，按现有库匹配编译参数后通过，不冒称产品运行缺陷。
+
+Rust库使用者注意：公开`UserFn`新增`home_module`字段，手写结构体构造须迁移；旧Span、LzError、TraceFrame、Loaded与Program形状保持。SourceId/ModuleId分域，来源表是可选元数据，不会自动读文件、规范化路径或切换globals。见[设计](docs/reports/T16-A-design.md)和[契约§19](docs/spec/interface-contract.md)。
+
+R304仍OPEN，无本批性能计时，不打正式标签、不移动旧标签与v2冻结材料。后继T16-B设计草案不是已实现能力；以下T15/T14为历史候选记录。
+
+## T15 历史受控错误恢复候选（绑定1a5a）
 
 当前项目内解释器仍为1.4.0候选，**73内置**，新增`attempt(f)`；target/dist均782848B，SHA256 `1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c`。[构建指纹](docs/reports/T15-release-evidence/build.json)保全当前源码/Cargo与精确产物。[最终独立功能验收](docs/reports/T15-independent-verification.md)已通过：549 release harness、178官方黑盒（包含在旧CLI91 full内）、attempt公开13、check117、旧应用37+11、新jsonbatch38、旧JSON/argv140及额外38独立进程全部PASS。人类指南20/20、AI示例25/25为各作者实跑结果，与独立验收分列，不累加重叠用例。
 

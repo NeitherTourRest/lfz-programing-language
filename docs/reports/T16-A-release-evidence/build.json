@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-29",
+  "status": "T16-A Rust metadata foundation candidate; independent verification pending; R304 OPEN; no performance timing or formal tag",
+  "version": "1.4.0",
+  "binary": {
+    "paths": [
+      "target/release/lfz.exe",
+      "dist/lfz.exe"
+    ],
+    "bytes": 783872,
+    "sha256": "65a29eaea54f32d1d2b404f22aed09389c3ffa71e6a81acb8fa6351d32fa42b7"
+  },
+  "reported_checks": {
+    "source": "team-lead receipt",
+    "release": 562,
+    "rerun_by_release_manager": false
+  },
+  "source_hashes": "source-hashes.json",
+  "scope": "verified existing target and copied identical bytes only; no compilation/source/profile/Git changes"
+}

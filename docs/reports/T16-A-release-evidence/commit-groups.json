@@ -1,0 +1,132 @@
+{
+  "date": "2026-10-29",
+  "baseline": "e1368de",
+  "status": "T16-A foundations and compatibility independently PASS; no import execution; R304 OPEN; no timing/tag/Git writes",
+  "original_cases_preserved": 139,
+  "snapshots": [
+    {
+      "path": ".opencode/team/DECISIONS.md",
+      "staged_copy": "Temp/T16-A-release/stage/.opencode__team__DECISIONS.md",
+      "removed_matches": 1,
+      "copy_sha256": "c977fb938d5c4cd10564cff7dbedba1e0c1438400a2a2fb26e48e6771d2e5ac6"
+    },
+    {
+      "path": ".opencode/team/PROJECT_STATE.md",
+      "staged_copy": "Temp/T16-A-release/stage/.opencode__team__PROJECT_STATE.md",
+      "removed_matches": 1,
+      "copy_sha256": "41c1d89aa811bd7197c4a41752f548b6ac7c74f5f9acbf2d9acb5ac9935304f0"
+    },
+    {
+      "path": ".opencode/team/agents/team-lead/STATUS.md",
+      "staged_copy": "Temp/T16-A-release/stage/.opencode__team__agents__team-lead__STATUS.md",
+      "removed_matches": 1,
+      "copy_sha256": "992fa6e855a4978640edd969dc69b6d8beb7709831fd02361351743609f3ef27"
+    }
+  ],
+  "groups": [
+    {
+      "sequence": 1,
+      "message": "docs(spec): define source identity foundations",
+      "direct_stage_paths": [
+        ".opencode/team/REQUIREMENTS.md",
+        "docs/reports/T16-A-design.md",
+        "docs/spec/interface-contract.md",
+        "docs/spec/semantics.md",
+        "docs/spec/syntax.md"
+      ],
+      "staged_snapshot_paths": []
+    },
+    {
+      "sequence": 2,
+      "message": "feat(source): add source identity metadata",
+      "direct_stage_paths": [
+        "docs/reports/T16-A-core-evidence/.gitattributes",
+        "docs/reports/T16-A-core-evidence/green.txt",
+        "docs/reports/T16-A-core-evidence/manifest.json",
+        "docs/reports/T16-A-core-evidence/missing-api.rs",
+        "docs/reports/T16-A-core-evidence/red.txt",
+        "docs/reports/T16-A-core.md",
+        "src/lib.rs",
+        "src/source.rs"
+      ],
+      "staged_snapshot_paths": []
+    },
+    {
+      "sequence": 3,
+      "message": "feat(runtime): attach optional source origins",
+      "direct_stage_paths": [
+        "docs/reports/T16-A-runtime-evidence/.gitattributes",
+        "docs/reports/T16-A-runtime-evidence/build-release.txt",
+        "docs/reports/T16-A-runtime-evidence/cargo-test-release.txt",
+        "docs/reports/T16-A-runtime-evidence/manifest.json",
+        "docs/reports/T16-A-runtime-evidence/targeted.txt",
+        "docs/reports/T16-A-runtime.md",
+        "src/evaluator.rs",
+        "src/value.rs"
+      ],
+      "staged_snapshot_paths": []
+    },
+    {
+      "sequence": 4,
+      "message": "test(source): verify metadata compatibility",
+      "direct_stage_paths": [
+        "docs/reports/T16-A-independent-evidence/.gitattributes",
+        "docs/reports/T16-A-independent-evidence/attempt13.json",
+        "docs/reports/T16-A-independent-evidence/check117.json",
+        "docs/reports/T16-A-independent-evidence/check140.py",
+        "docs/reports/T16-A-independent-evidence/cli91.json",
+        "docs/reports/T16-A-independent-evidence/commands.json",
+        "docs/reports/T16-A-independent-evidence/differential.json",
+        "docs/reports/T16-A-independent-evidence/differential.py",
+        "docs/reports/T16-A-independent-evidence/harnesses.json",
+        "docs/reports/T16-A-independent-evidence/independent140.json",
+        "docs/reports/T16-A-independent-evidence/initial-sources.json",
+        "docs/reports/T16-A-independent-evidence/jsonbatch.json",
+        "docs/reports/T16-A-independent-evidence/jsonflow.json",
+        "docs/reports/T16-A-independent-evidence/manifest.json",
+        "docs/reports/T16-A-independent-evidence/run.py",
+        "docs/reports/T16-A-independent-evidence/sortviz.json",
+        "docs/reports/T16-A-independent-evidence/witness-build-initial.txt",
+        "docs/reports/T16-A-independent-evidence/witness-build-lto.txt",
+        "docs/reports/T16-A-independent-evidence/witness-result.txt",
+        "docs/reports/T16-A-independent-evidence/witness.rs",
+        "docs/reports/T16-A-independent-plan.md",
+        "docs/reports/T16-A-independent-verification.md"
+      ],
+      "staged_snapshot_paths": []
+    },
+    {
+      "sequence": 5,
+      "message": "chore(checkpoint): preserve T16-A candidate",
+      "direct_stage_paths": [
+        ".opencode/team/TEAM_BOARD.md",
+        ".opencode/team/agents/core-dev/JOURNAL.md",
+        ".opencode/team/agents/core-dev/STATUS.md",
+        ".opencode/team/agents/language-architect/JOURNAL.md",
+        ".opencode/team/agents/language-architect/STATUS.md",
+        ".opencode/team/agents/release-manager/JOURNAL.md",
+        ".opencode/team/agents/release-manager/STATUS.md",
+        ".opencode/team/agents/requirements-analyst/JOURNAL.md",
+        ".opencode/team/agents/requirements-analyst/STATUS.md",
+        ".opencode/team/agents/runtime-dev/JOURNAL.md",
+        ".opencode/team/agents/runtime-dev/STATUS.md",
+        ".opencode/team/agents/team-lead/JOURNAL.md",
+        ".opencode/team/agents/verifier/JOURNAL.md",
+        ".opencode/team/agents/verifier/STATUS.md",
+        "README.md",
+        "docs/reports/T16-A-release-evidence/.gitattributes",
+        "docs/reports/T16-A-release-evidence/build.json",
+        "docs/reports/T16-A-release-evidence/commit-groups.json",
+        "docs/reports/T16-A-release-evidence/prepare-checkpoint.py",
+        "docs/reports/T16-A-release-evidence/source-hashes.json",
+        "docs/reports/T16-B-design-draft.md",
+        "docs/reports/delivery-checklist.md"
+      ],
+      "staged_snapshot_paths": [
+        ".opencode/team/DECISIONS.md",
+        ".opencode/team/PROJECT_STATE.md",
+        ".opencode/team/agents/team-lead/STATUS.md"
+      ]
+    }
+  ]
+}

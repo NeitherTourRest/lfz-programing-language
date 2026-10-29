@@ -256,3 +256,19 @@
 - 重点：完整静态模块图支持check无执行；全局Env和函数来源/source定位需要实质改造，拒绝拼接源码/隐式global注入。
 - 兼容：T15 Result字段不变，跨文件file定位先用于CLI；export采用上下文声明，仍需core补旧文法反例验证。
 - 未改spec/源/测试或Git，未运行大任务；草案待批准，无设计执行阻塞。
+
+## [2026-10-29] T16-A来源与定义模块身份接口冻结
+- 来源：team-lead批准T16草案总体，A先行；先读state/board/自身status再核实际源码，提案经两次具体回执确认。
+- 产出：三spec §19、T16-A-design.md6730B；只追加ADR再冻结接口。
+- 决定：SourceMap Loaded可None；checked insert；TracedRun sidecar严格原子校验且legacy None；UserFn整数home_module/active ENTRY；旧公开错误/位置形状及T15Result不变。owner按core/runtime拆分，不新增loader或模块执行。
+- 证据：文档diff --check exit0，§19唯一标题与签名/兼容/单写者边界核对通过；无源/测试/Git操作。
+- 下一步：core/runtime实现，独立复验；B/C/D另冻结不混入A。
+- 阻塞：无。R304仍OPEN，不宣称功能或性能已验收。
+
+## [2026-10-29] T16-B后继静态图草案
+- 来源：team-lead轻量任务，读自身STATUS及现source/AST/parser/lexer/loader接口；A契约不变。
+- 完成：T16-B-design-draft.md15785B，节点字段、上下文export兼容、图类型/所有权、迭代DFS及实际候选受控上限、失败定位、check与run临时拒绝、owner和验收矩阵。
+- 关键：图预算仅module admission后启用，普通旧大输入不变；root先读/parse不是内存沙箱，raw bytes需读时保留不事后metadata猜；依赖限读+1。B阶段run必须全Program先guard，不能先执行print再到import失败。
+- 证据：文件长度/文档diff检查exit0。未改spec/source/A产物/看板，未构建或Git。
+- 下一步：A独立通过后由team-lead批准B冻结；草案不是规范或已实现功能，R304OPEN。
+- 阻塞：无草案交付阻塞。

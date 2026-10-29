@@ -186,3 +186,10 @@
 - 证据: cargo test --lib error::tests::v11_value_messages_match_contract -- --exact，1 passed / 0 failed。
 - 流程偏差: apply_patch 红灯补丁挂起未落地，故无红灯证据；未虚称 TDD 完成。
 - 下一步: team-lead 统一集成验证。
+
+## [2026-10-29] T16-A来源元数据基础
+- 来源：team-lead授权、spec§19冻结后实现。
+- 完成：source.rs与lib.rs，外部旧库新API真实红测E0432，定向release6/6通过。
+- 产出：T16-A-core.md与原字节证据/manifest；停止编译，runtime接续。
+- 决策：旧五种public shape不变，不做模块IO/文法/运行。
+- 阻塞：无；完整验收/效率由后继，R304OPEN。
