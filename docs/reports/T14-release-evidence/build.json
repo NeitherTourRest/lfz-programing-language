@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-29",
+  "stage": "T14 preservation; functional independent verification pending; R304 OPEN; not formal release",
+  "version": "1.4.0",
+  "binary": {
+    "source": "target/release/lfz.exe",
+    "copy": "dist/lfz.exe",
+    "bytes": 774656,
+    "sha256": "83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79"
+  },
+  "profile": "unchanged opt-level=2/lto/codegen-units=1/strip",
+  "reported_checks": {
+    "source": "team-lead receipt",
+    "release_passed": 542,
+    "rerun_by_release_manager": false
+  },
+  "source_hashes": "source-hashes.json",
+  "scope": "verified hash then copied identical bytes; no rebuild/source/profile/Git changes"
+}

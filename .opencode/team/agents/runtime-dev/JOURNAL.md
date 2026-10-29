@@ -238,3 +238,19 @@
 - 门槛：原固定线未改，8项旧5/8、7641 4/8、opt2/opts5/8；不是完整19项性能通过。
 - 下一步：建议team-lead决定opt2体积/启动取舍，release-manager唯一改主profile后完整复验。
 - 纪律：主Cargo/dist及正式源码均未改，不git；全部临时/归档项目内，未删旧失败证据。
+
+## [2026-10-27 19:29] T13高阶调用与join分配优化
+- 来源：team-lead派发；用户要求自动连续推进，架构师批准两项语义不变内部优化。
+- 完成：去逐回调args.to_vec；join去Value快照，保留回调输入快照及所有既有语义。先七回归旧实现7/7，再候选8/8；cargo test --release530/530，0failed/ignored。
+- 产出：src/evaluator.rs、src/builtins.rs；docs/reports/T13-runtime.md、T13-runtime-evidence/。候选761344B、SHA9cda0c6fd5d85178335e8b758a843fc5f66574826bab4a80f2418a318e171cf9。
+- 决策：不改profile/AST/spec/旧测试/旧基线，dist47ED保持；性能由perf独占正式计时，作者停止构建/测试。
+- 下一步：双基线原19线性能与独立功能/语义验收；不得以源码少分配冒称所有负载变快。
+- 阻塞：无实现阻塞，等待独立验收；R304仍开放。
+
+## [2026-10-27 19:51] T13性能候选拒收并撤回生产实现
+- 来源：team-lead裁定正式同期测量未提供验收改善证据；verifier先核冻结源码指纹，收到GO后再撤回。
+- 完成：两源码生产前缀准确恢复cbc974b，逐字节与Git对象一致；保留全部8新增测试、原作者530功能证据/manifest及失败测量，不改历史。
+- 产出：T13-runtime-evidence/retraction-source-check.json；T13-runtime.md追加拒收与撤回节。
+- 决策：不再次择窗测同候选，不将旧9CDA exe当恢复源码产物；未编译/测试/改dist/profile/spec/Git。
+- 下一步：tooling统一T14最终release验证保留8测试，恢复后结果另记；R304开放。
+- 阻塞：无源码阻塞，已向调度者报源码就绪。

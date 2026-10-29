@@ -2,18 +2,19 @@
 > 最后更新: 2026-10-27 by team-lead
 
 ## 当前状态
-T12功能与主要优化已独立验收；作为1.4.0候选checkpoint保存，非正式发布。72内置、argv/-e/stdin/JSON、字段索引、无声明while省空作用域，jsonflow与sortviz参数化、指南/AI skill同步。最终opt2产物759808B，SHA47ED2BFE2A2694B11BD611172CFCF0000D0BFC58E3B9BD809CA95F066DD0261F。
+T14功能与指南已完成独立验收，候选Git提交收口中。T13两处省分配候选9cda功能通过，但完整性能15PASS/2ENV/2FAIL、多负载对T12回归；已拒收并精确恢复生产前缀cbc974b，保留8新增回归和全部失败证据。R304仍OPEN，不正式发布。
 
-## 最终证据
-- 独立release522/166官方/91进程/140自编/app37+11全通过；16旧新程序覆盖8类while边界，stdout/stderr/exit逐字节一致。
-- 原19性能线：15通过，3环境不确定，1map8k22.691>22.521；R304保持OPEN，不打正式v1.4.0标签，不以局部收益抵消未过项。
-- 数字500k104.940→90.804ms，大对象8k93.431→21.198ms；string4k paired慢28.8%也披露。微观LLVM原因未确定，所有失败/诊断/初版exact源和exe保留。
-- docs/reports/T12-independent-verification.md、T12-performance.md与T12-release-evidence为主要证据。八功能需求通过，整体效率未全面验收。
+## 证据与运行阶段
+- T13独立530/166/91/140/app37+11、31程序62差分通过；532正式+152预热性能经独立重算一致。
+- 9cda精确封存ZIP531115B/SHA8f36bf82…19成员；retraction-source-check.json确认生产前缀逐字节恢复。
+- T14三spec §17冻结；tooling_dev_t14唯一实现和release编译；test_engineer_t14公开黑盒；docs_writer_t14人类指南准备。下一派AI指南/需求/独立验证/发布。
 
-## 当前操作/下一步
-release-manager已审核候选分组与初始三用户修改保护；主会话已代执行八个原子提交与已授权main推送，远端核对9fe5e401ad4cfa7d623ec1e872558165027a9e48；后续仅保存收工记账。正式发布继续等待剩余性能门槛，不另开择窗挑样。
-初始用户DECISIONS+28/PROJECT_STATE+1/本STATUS+1事故记录保留且不提交。旧v1.3.0标签及v2原8/8、131/131题集/manifest/原始ZIP不改。
+## 环境/保护
+target/debug/incremental已核对无编译后清可重建556MB，D1.2GB；源码/证据未删，只用release且TEMP项目内。旧v1.3/v2不改。
+原用户DECISIONS+28/PROJECT_STATE+1/本STATUS+1事故块始终保留未提交，不可直接整文件git add。
 
+## 下一步
+dist/target83f56/774656B；542/117/91含166/app37+11/140+57独立通过，人/AI指南各27通过。需求/README同步，正在按已授权main保存候选；无T14性能计时，R304OPEN，不打正式tag。
 ## 关键经验（写给未来的自己）
 - **临时件一律放项目内 `Temp/`（用户 2026-09-27 指令，已立 ADR）**：**禁止**再往 C 盘 `%TEMP%` 写；`Temp/` 已 gitignore。纪律：① **每份任务书必须写明"临时文件放 `<repo>/Temp/`"**；② 每波任务收工后我**盘一次 `Temp/`**；③ **先保全证据再删** —— 一手证据（如盲测报告）**复制进仓库** `docs/reports/**` 再清临时件，**不得删唯一副本**；④ **正在跑的任务目录不许动**（按 mtime 判别）。历史：首次清理 C 盘 `%TEMP%\opencode\` 740 文件 / 5.31 MB → 44 文件 / 1.41 MB。
 - **「绿了 ≠ 对」再验证一次**：445 单测 + 85 黑盒 + 应用 exit 0 **都不等于规范完全符合** —— 所以用户要的「确认无误」必须用**独立的条款级符合性审计**来回答，不能用「测试全绿」糊弄。（实证：157 条款审计查出 **2 个可达 panic**，445 单测与 85 黑盒全都没抓到。）

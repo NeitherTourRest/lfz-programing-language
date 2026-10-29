@@ -142,3 +142,26 @@
 - 八提交：37bb926 / 91510d3 / 4880d21 / 5df9373 / 6b744f0 / c34d3f5 / f8cb4f1 / 9fe5e40。git push origin main成功，git ls-remote核对9fe5e401ad4cfa7d623ec1e872558165027a9e48。
 - 原用户3块未提交修改严格保留，git diff --numstat为28/0、1/0、1/0；无v1.4.0标签，旧v1.3.0 peeled53e6d88未变。
 - 后续：收工记账另作提交；下一开发轮优先处理map8k超线和string4k回归，保留原门槛及失败证据。
+
+## [2026-10-27 19:27] T13持续执行启动
+- 用户授权全自动连续推进，已按宪法派runtime/perf/architect，先窄分配优化与原门槛验收；下一阶段check CLI设计先行、实现待T13冻结后。
+- 磁盘处置：核对项目target/debug/incremental无编译进程后清可重建556MB，D1.2GB；仅release，所有Temp在项目内。
+- 保护：用户初始三块/旧v2/旧标签/所有T12失败证据不改。
+
+## [2026-10-27 19:48] T13完整窗口结束并接续T14
+- 功能独立530/166/91/140/app37+11通过；31程序62组T12/新差分一致。
+- 唯一冻结全窗532正式+152预热输出正确；15PASS/2ENV/2FAIL，原R304保持OPEN，不再挑窗口或换profile。性能数据独立审计已派发。
+- 连续后继：T14三spec §17已冻结；release先保存9cda精确小ZIP，之后tooling实施check非执行CLI。
+
+## [2026-10-27 19:50] T13候选拒收，T14正式实施
+- 19组15PASS/2ENV/2FAIL且map等对T12回归，选择撤回生产优化而保留8tests；9cda源+exe快照ZIP531115B/SHA8f36bf82…及所有失败证据已保全。
+- verifier撤回前核当前=测前=测后=release源hash；T14 tooling已派，待runtime源码撤回完成后统一release编译。
+
+## [2026-10-29] 恢复T14最终验收
+- target候选83f56a/774656B与工具链542release记录吻合，dist仍9cda历史候选，已派release替换核验。
+- test-engineer与docs-writer继续实跑，不重建源码；随后接独立验收/AI指南/需求/Git。原用户三块与所有失败数据保留。
+
+## [2026-10-29] T14最终独立验收完成
+- 83f56/774656B：542release、check117、旧CLI91含166、app37+11、140旧见证、57新进程全过；人/AI指南各27通过。
+- 原T13失败优化已撤回，8新增回归与全部失败保留；无T14性能窗，R304OPEN，候选非正式发布。
+- 已授权main提交推送进入收口，原三用户块继续保护。

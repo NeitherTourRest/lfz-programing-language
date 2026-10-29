@@ -1,23 +1,23 @@
 # release-manager — 工作状态
-> 最后更新：2026-10-27 by release-manager
+> 最后更新：2026-10-29 by release-manager
 
 ## 当前状态
-T12 1.4.0候选工作快照已由主会话完成8组原子提交并推送main，远端核对为9fe5e401ad4cfa7d623ec1e872558165027a9e48。非正式发布，无v1.4.0标签；旧v1.3.0保持不动。最终47ED功能独立PASS，R-304仍OPEN（19原线15达线、3环境不确定、1map8k未过）。本角色只记录实际回执，未Git写入。
+T14候选最终交付文档收口完成，独立check及兼容功能PASS，R304仍OPEN，无T14性能窗口，不正式发布或打v1.4.0标签。本角色不Git；主会话已完成前5组提交，第6组记账及push待主会话实际执行，不提前声称已推送。
 
-## 产出与证据
-- README.md、delivery-checklist.md、T12-release-plan.md已引用72内置、最终522/166/91、应用37+11、140witness与16旧新差分覆盖8类while范围且stdout/stderr/exit逐字节一致。最终独立报告T12-independent-verification.md及T12-independent-final/；作者指南35块+10/AI30保留各自证据语境，不冒称新盲测。
-- 最终target/dist759808B、SHA256 47ED2BFE2A2694B11BD611172CFCF0000D0BFC58E3B9BD809CA95F066DD0261F；Cargo1.4.0、opt-level2、LTO/codegen1/strip。final-opt2/绑定构建/522 release测试/Cargo/源hash。
-- 性能只报同期实测局部：struct8k93.431→21.198ms（耗时约-77.3%），numeric500k104.940→90.804ms；startup16.287<=16.307ms余量小。map8k22.691>22.521、old21.871在线，其它3项环境不确定；不把15/19说全部通过。
-- T12-release-evidence/checkpoint-preflight.json及commit-groups.json提供逐路径hash/8组清单；preflight-check.py可在开始提交前刷新，纳入最终独立材料/角色记录；开始提交后不可误当全历史审计。
-- 原99cases前缀保留+32新增、旧LFZ/Rust测试无修改、v2包/旧报告目录无Git改动；初始用户3保护块各1。文本及新增ZIP成员凭据模式检查不替代全知敏感性证明。
+## 最终证据
+- dist/target774656B、SHA83F56A194E216862C45377F4C3971B085744A7BA2363163E1EDAC6AF5E85AC79，T14-release-evidence/保全构建来源与16src/Cargo指纹。本任务未重编译、改源码/profile/dist。
+- T14-independent-verification.md及原始目录：542 release、公开check117、旧CLI91含166官方、app37+11、旧独立140、新增57见证全部实际独立PASS。人指南27/AI27作者实跑分别引用，不虚增独立计数。
+- README与delivery-checklist已改最终独立验收完成，保留check非执行/非静态分析边界、T13拒收及R304开放。公开首次116/117作者UTF8 oracle订正和原始失败保留，不虚称产品修复。
+- 本次只读git diff确认Cargo/lock、原tests/lfz与fixtures、冻结v2包和旧首轮目录无未提交改动；自己两文档diff --check通过。
+- T13两生产优化拒收并恢复原生产行为，8新增回归测试保留；9cda源码/exe ZIP及失败性能记录保留，不能当83f性能结果。
 
-## 实际Git回执（主会话执行）
-- 8组提交依次：37bb926 / 91510d3 / 4880d21 / 5df9373 / 6b744f0 / c34d3f5 / f8cb4f1 / 9fe5e40。
-- main已推送，远端HEAD核对9fe5e401ad4cfa7d623ec1e872558165027a9e48；旧v1.3.0剥离仍53e6d88aeb2467f04e0118ee408459eaf86f3a5c，无v1.4.0标签。
-- 主会话核对提交后工作树仅余用户原3块28/1/1行；本次两份角色记账待主会话最后提交再推送，不自指未产生的最终记账hash。
+## Git实际/待执行边界
+- 主会话回执前5组86acd9e/c5aa671/625dc69/8589a3c/e1ed520已提交。
+- 按主调度最新指令不再刷新prepare-groups，避免已提交路径消失；第6组继续使用原30 direct+3 snapshot清单。
+- 用户原三块28/1/1行须过滤stage快照保留工作树，不宽泛stage；旧v1.3.0不动，v1.4.0不创建。第6组及推送由主会话执行后另记实际回执。
 
-## 阻塞/下一步
-R-304继续开放，后续处理效率项；本轮仅候选checkpoint，8组源码/证据提交与推送已经完成。主会话保存最后角色记账并再推送；本角色仅更新自己的STATUS/JOURNAL，不再修改源码、报告或原始日志。
+## 下一步/阻塞
+本角色文档/记录已落盘可供第6组提交；R304保持OPEN，后续效率另批，不以T13性能或check功能通过抵消。没有最终提交记账准备阻塞。
 
 ## 关键经验
 staged快照只排除用户初始28/1/1新增，工作树原文保留，禁止git add .或整文件stage混合记录。新skill/exe不冒用旧v2 manifest；旧9输入从原ZIP恢复，旧成绩不改算。性能门槛不能用局部收益抵消；候选保存与正式发布明确分开。

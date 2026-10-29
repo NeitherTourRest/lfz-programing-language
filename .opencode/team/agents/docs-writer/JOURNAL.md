@@ -46,3 +46,17 @@
 - 决策：无新增语义；按spec§16.6保留argv遮蔽，仅argv提供新增一等取值；不声称尚未独立验收的性能提升。
 - 下一步：统一独立验收与发布，必要时同步最终契约。
 - 阻塞：无。未Git，外部资源只读，临时材料项目Temp。
+
+## [2026-10-27] T14人类指南及验证器准备
+- 来源：team-lead连续推进T14及先准备后释放slot指令。
+- 完成：五指南同步check三来源/JSON/usage例外/非执行与非静态承诺；增加先check再run教程和哨兵验证说明，1.4.0候选/R304开放界限明确。
+- 证据：diff --check、verify.py AST及prepare-only exit0；解释器启动0次，不宣称产品已实跑。
+- 下一步：最终candidate hash就绪后轻量唤醒，运行聚焦验证并写实际计数/原始流及manifest；不改旧T12证据。
+- 阻塞：仅等待最终候选；未Git、项目外只读。
+
+## [2026-10-29] T14最终候选指南聚焦实跑
+- 来源：team-lead轻量唤醒，给定83f56a候选/774656B。
+- 结果：verify.py实跑27/27，exit0；三来源/JSON/usage/新教程/无执行哨兵及一个旧hello通过；未重跑无改35块。
+- 证据：T14-guide-evidence/runs.json与manifest，报告新增最终节；五指南和binary测前后hash一致。
+- 保护：不编译不覆盖dist不Git，其他角色产物不改，旧T12证据保留；R304仍OPEN。
+- 下一步：team-lead统一验收收口；无指南阻塞。

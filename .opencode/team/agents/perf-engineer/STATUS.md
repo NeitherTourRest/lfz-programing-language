@@ -1,28 +1,26 @@
 # perf-engineer — 工作状态
-> 最后更新：2026-10-25 by perf-engineer
+> 最后更新：2026-10-27 19:46 by perf-engineer
 
 ## 当前状态
-T12最终opt2主产物全组只测一次完成，15/19在原绝对线，3环境不确定、1未通过，R304继续开放。按可审阅候选checkpoint结论保存，不宣布整体效率完成；不再新增profile/无限择窗。已通知root全部测量结束，当前收工释放slot。
+T13最终9cda候选唯一完整窗口已完成，15/19原线PASS、2环境不确定、2FAIL，R304保持OPEN。全部532正式及152预热输出/hash正确；测前测后src/Cargo/protocol相同。测量任务完成，未批准整体效率或正式发布，不追加择窗重跑。
 
-## 最终binary
-1.4.0，759808B，release opt-level=2，SHA47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f。binary由release-manager构建，本角色只测不改代码或profile。
+## 最终产物与证据
+- 新dist/target由主调度冻结：1.4.0、761344B、SHA9cda0c6fd5d85178335e8b758a843fc5f66574826bab4a80f2418a318e171cf9。
+- benchmarks/t13/protocol.json SHA74934a4ebc1f2eca5a6ea00e8d6e1c39ed5a4de5315a6cb8524d076d84c9f1bb，固定原19输入/线/旧149b和T12 47ed、5秒/2+7、三标签轮转。
+- benchmarks/t13/results/final-window.json，399871B，SHA74cdf5052140f47229c5d811c2a92283ebb42b040f3f47325ed1d5c8b09681ea；19组三标签399正式、9能力双标签126正式、真实dist7正式，共532，另152预热。全部warmup/正式原始wall/user/kernel/stdout/stderr/exit/hash保全。
+- assessment.json SHA8e68fc322555e0d6904387d97d3ae404a579377ceacaa629939e071f21c214b2；assess.py重算532+152、原线/分类/比值/所有median/min/max全PASS，未启动解释器；用项目Temp新输出复算字节hash完全相同。
+- docs/reports/T13-performance.md 12715B：测前协议、零启动预检、最终19组三标签全表/9能力表、局部收益/回归/限制。
 
-## 本轮方法与证据
-- 测前落盘方法后，默认未绑核、共同subject每copy静默5秒，原19顺序/旧新交替/2预热+7正式不变，无额外90秒。
-- benchmarks/t12/results/opt2-same-path.json：19旧新266正式值+dist7次，逐次hash/wall/user/kernel/stdout完整，输出全部正确。
-- opt2-new-features.json：9JSON/CLI×7正式=63输出独立oracle一致，每启动核最终hash。
-- opt2-assessment.json：原始两JSON SHA绑定，15PASS/3环境不确定/1FAIL，R304 OPEN及同期paired比值。
-- docs/reports/T12-performance.md开头为最终准确结论、每组old/new user/wall/paired/原线全表，所有早期失败/路径/CPU0/quiet1原始值和限制保留。
+## 结果与限制
+- FAIL：string_map2k新17.641>原17.522、old14.228；small4新22.960>18.746、old16.221。不能舍入为通过。
+- 环境不确定：string_ops2k新32.548/old34.704均超28.902；string_map8k新23.762/old23.032均超22.521，不算PASS。
+- string_map三档新/T12为1.162/1.065/1.078；string_ops8k新234.390比T12慢13.7%、比旧慢8.2%仍绝对PASS；small4新比T12慢30.4%。没有证明源码消分配转化为一致总时改善。
+- numeric500k旧106.862/T12 90.747/新89.539，dist90.165；struct8k旧95.424/T12 19.180/新19.488，原30%目标通过，主要索引收益属T12不冒充T13。
+- JSON stringify4k比T12慢25.5%、CLI eval慢10.4%明确披露；其余有快有慢，无虚构JSON原绝对线。noop12.251，parse2k24.334启动占比50.3%，不报扣启动纯吞吐。
+- string_ops主循环是累计push数组O(n²)浅复制，不是字符串拼接。精确LLVM/系统微因未确定；源码中间Vec/快照确实消除不能代替实测。CPU可能量化为0，峰值RSS未测。
 
-## 核心结果（wall含启动）
-- noop新16.287在原16.307内但余量小，不能宣称启动稳定改善。
-- numeric500k104.940→90.804ms；struct8k93.431→21.198ms（约77.3%降时，满足>=30%目标）；dist500k90.855ms。
-- numeric10k/string2k/small4同期old也超原线，环境不确定；map8k新22.691>原22.521，old21.871在线内，仍未通过。
-- string4k虽然绝对97.718<101.904达标，paired比旧75.879慢约28.8%，报告明确披露，不称全面加速。small16/64达标。
-- JSON parse2k/4k/8k27.271/42.153/71.695ms；stringify15.898/21.058/25.168；-e/stdin/argv14.758/13.140/15.299。所有输出正确，峰值RSS未采，启动占比高不报纯吞吐。
-
-## 下一步 / 限制
-R304开放，当前作为可审阅checkpoint；不打正式标签由team-lead/release-manager按整体情况处理。未通过项不得用包体缩小或局部主循环收益抵消。精确LLVM/环境微因仍未知。
+## 下一步
+独占已释放并通知team-lead。由verifier审计原始JSON/协议；R304与失败继续开放。后续实现方向由team-lead调度，不自行新增候选或窗口。
 
 ## 纪律
-性能脚本/报告/自身记录唯一写范围，未改源码/测试/冻结v2，未Git。Temp均项目内。旧before/FB8/7641/default/CPU0/quiet1原始证据完整保留，未覆盖或挑最好成绩。
+只写本轮benchmarks/t13、T13-performance、自身记录、项目Temp；旧性能资料/冻结v2/源码/Cargo/profile未改，未Git，项目外只读。

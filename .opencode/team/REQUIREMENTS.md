@@ -1,9 +1,24 @@
 # LFZ 需求矩阵（唯一需求事实源 · v1.1 增量对齐版）
 
-> 最后更新: 2026-10-25 by requirements-analyst
-> 版本: **v4（T12最终候选功能验收通过，R-304性能开放，非正式发布）**
+> 最后更新: 2026-10-29 by requirements-analyst
+> 版本: **v5（T14四项功能/指南需求通过；R-304开放，非正式发布）**
 > 本文件是**唯一需求事实源**，唯一写者 requirements-analyst，他人只读。
 > 来源: `task-info.md`（课程作业原始要求）+ 用户指令 + 已定案 ADR（见 `DECISIONS.md`）。
+
+## T14 增量需求（2026-10-29，check独立功能通过）
+
+来源为用户连续自动推进授权、team-lead定向任务及三spec §17。当前作者候选为1.4.0、72内置、12错误类，target/dist SHA256 `83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79`、774656B；team-lead回执作者release542、公开check117/117、人指南27/27通过。verifier最终报告`docs/reports/T14-independent-verification.md`及对应证据目录已确认同hash的542 release、117 check、91旧CLI（含166官方）、app37+11、140旧独立及57新增非执行见证全部通过，源码调用路径无求值且大栈内析构正确。因此R-128/R-129/R-206标为**通过**；R-407按team-lead最终AI回执与实存报告关闭：人指南27/27、AI新增及最小基线27/27，四skill和AI入口同步，均绑定同hash；这些是作者示例实跑与已独立验收CLI协议的对齐证据，不冒称新Agent盲测或verifier重新跑全部作者示例。需求分析师只核证据映射，未自行运行产品验收。
+
+下方T12各项通过和精确hash是当轮历史验收，不被T14覆盖。T13候选9cda功能530通过，但唯一完整窗口及独立审计为15 PASS/2环境不确定/2 FAIL；两项生产优化已拒收，恢复T12对应生产前缀，仅保留8新增回归测试，候选源码与exe及全部失败数据保全。证据 `T13-independent-verification.md`、`T13-performance.md`、`T13-runtime-evidence/retraction-source-check.json`。**R-304保持进行中/OPEN，原19门槛不变；当前未有T14性能测窗，不用T13或T12结果替代T14效率验收，也不正式发布。**
+
+以下命令在项目根执行；Python为 `D:/app/ANACONDA/python.exe -B`，所有新输出须使用不存在的项目内Temp路径。
+
+| R-ID | 需求 | 来源 | 验证方式（可命令复现） | 状态 | 交付物 | 评分项 |
+|------|------|------|------------------------|------|--------|--------|
+| R-128 | `lfz check`接受FILE、`-e CODE`、stdin `-`单一源码，只加载/lex/parse及既有AST深度检查；不得求值或执行程序IO/循环。文件沿run加载规则，CODE原样保留，CODE外任何`--`及check --help拒绝；成功不承诺名称/类型/arity/IO可用性 | 用户连续推进授权；syntax/semantics/IC §17 | `dist/lfz.exe check -e 'print(1 / 0)'` →exit0且双流空；`dist/lfz.exe check -e 'while true {}'`不执行循环且正常返回；`dist/lfz.exe check -e 'return 1'` →exit2；`D:/app/ANACONDA/python.exe -B tests/t14_cli_check.py --binary dist/lfz.exe --output Temp/T14/req-check-fresh.json` →全部通过，并核三来源哨兵已有文件字节不变/新文件不创建、后续前端错误也不触发副作用，CODE/usage/加载位置/原执行入口兼容。不宣称零宿主IO或安全沙箱 | 通过 | 交付物1/2/3；三spec（language-architect）、src/cli.rs/main.rs（tooling-dev）、tests/t14_cli_check.py（test-engineer） | 1、2 |
+| R-129 | 合法check的JSON显式区分检查与执行；正常成功双流空exit0，前端失败exit2。机器成功恰一行三个键ok/mode/executed，失败加既有错误字段/精确位置，旧run/test JSON不变；CLI usage错误即使带--json仍stderr文本/stdout空 | IC §17.2；R-112/125延伸 | `dist/lfz.exe check --json -e 'print(1 / 0)'` →stdout恰`{"ok":true,"mode":"check","executed":false}`一行、stderr空、exit0；`dist/lfz.exe check --json -e 'return 1'` →exit2，唯一对象按ok/mode/executed/error/message/file/line/col/traceback顺序，executed=false；`dist/lfz.exe check --json --help` →exit2、stdout空、stderr为usage文本；R-128公开脚本核字段/顺序/转义和旧run JSON | 通过 | 交付物1/2/3；三spec、src/cli.rs、tests/cli_t14.rs、公开CLI脚本 | 1、2 |
+| R-206 | T14新增CLI集成及公开进程验收覆盖正常/边界/错误与非执行见证，旧用例全部保留；深AST加载解析及析构保持既有受控边界，不把CLI过程检查数冒充LFZ runner用例数 | IC §17.3；R-201/205延伸 | 项目Temp工具链环境下`cargo test --release` →全部通过且0 failed/ignored，包含保留8项T13回归及12项cli_t14；运行R-128公开脚本→全部通过；`dist/lfz.exe test --json`仍166/166。原12/91 CLI及独立非执行/前端深度见证应绑定同一最终hash，独立报告提供可复现原始双流/退出码与文件哨兵，不能将166与包含该runner的91重复相加 | 通过 | 交付物2/3；tests/cli_t14.rs（tooling-dev）、公开脚本与覆盖报告（test-engineer）、独立报告（verifier） | 1、2 |
+| R-407 | 人/AI指南与§17一致并实跑check→run工作流；说明三来源、JSON检查标记、usage例外、CODE保护与前导规则、非执行与非静态承诺，保持LFZ check软断言及历史v2成绩独立 | R-402/406延伸；三spec §17 | `D:/app/ANACONDA/python.exe -B docs/reports/T14-guide-evidence/verify.py --binary dist/lfz.exe --expected-sha256 83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79 --output Temp/T14/req-guide-fresh.json` →27/27；AI新示例按T14-skill-evidence.md命令27/27通过并绑定最终hash，旧v2 manifest/原8/8与131/131不改；指南/skill按§17协议同步，作者实跑与T14独立CLI协议结果对齐，不把语法通过说成运行成功或性能通过 | 通过 | 交付物1/5；五指南（docs-writer）、skill四文件及docs/guide/ai入口（ai-dx-engineer）、T14示例实跑证据 | 4 |
 
 ## T12 增量需求与作者验收快照（2026-10-25）
 

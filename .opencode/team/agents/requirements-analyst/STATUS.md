@@ -1,21 +1,16 @@
 # requirements-analyst — 工作状态
-> 最后更新: 2026-10-25 by requirements-analyst
+> 最后更新: 2026-10-29 by requirements-analyst
 
 ## 当前状态
-T12-02最终候选需求收口完成：R-123~127/R-205/R-406/R-504八项功能需求通过；R-304保持进行中/OPEN、未通过。整体是候选checkpoint，不是正式release，不宣称本轮全部效率目标达成。
+T14新增R-128/129/206/407四项需求已落矩阵。依据verifier最终报告，前三项check功能/机器协议/回归独立通过；R407指南/AI按最终作者证据及team-lead回执通过。R304继续进行中/OPEN，未测T14性能，不正式发布。
 
-## 产出与证据
-- 最终解释器1.4.0、72内置/12错误类，759808B，SHA256 47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f；profile opt-level2，其余lto/codegen/strip不变。
-- verifier最终回执：522release（404+48+28+12+15+15）、166官方/91进程、140自编、app37+11全PASS；§16.7旧149b与新47ED的16程序/8类差分，stdout/stderr/exit逐字节相同。证据T12-independent-verification.md及T12-independent-final/。
-- 作者skill30与人指南35+10为历史FB8E证据，最终模式由独立抽查/进程复验补证，不虚称所有作者块都在最终hash重跑。
-- R304最终opt2全组15/19过原绝对线、3环境不确定、1map8k22.6906>22.5214；string4k虽过原线paired慢28.8%披露。struct8k93.4315→21.1978、numeric500k104.9399→90.8044只说明局部收益；原19门槛不改。
-- 仅文档核对，不自行运行产品验收、不git、不修改他人产物；历史v2和全部原失败证据保留。
+## 证据
+- T14最终83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79/774656B；独立542release/check117/旧CLI91含166/app37+11/140/自编57全部通过，报告T14-independent-verification.md。
+- 人指南T14-guide-evidence.md及runs27/27，AI T14-skill-evidence/results.json27/27同hash已出现；最终T14-skill-evidence.md和角色回执齐备；人/AI各27作者示例通过与独立CLI协议相对齐，不冒称独立重跑全部作者例子。
+- T13失败候选9cda原19线15PASS/2ENV/2FAIL，已拒收两处优化恢复T12前缀，保留8测试和所有失败ZIP/原始结果。T12八功能通过及旧v2成绩作为历史保持。
 
-## 进行中 / 下一步
-交team-lead/release-manager按候选checkpoint收口；后续R304按原门槛处理，不能以功能通过或包体缩小替代效率通过。
+## 下一步
+T14四项需求已收口，交team-lead连续提交；R304仍开放。无新的产品测试或计时任务，不自行运行或Git。
 
-## 阻塞 / 需支持
-无需求侧阻塞；R304仍开放并明确传递给下一轮。
-
-## 关键经验
-最终成绩绑定精确hash；局部加速、绝对合格线与paired退化要并列陈述；候选检查点不等同正式发布。
+## 阻塞/经验
+无需求侧阻塞；R304开放不能以功能、消分配或包体代替通过。历史测量严格绑定各自hash，后继源码变化不改写旧结果。

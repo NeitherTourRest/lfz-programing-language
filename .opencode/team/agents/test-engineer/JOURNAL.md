@@ -145,3 +145,15 @@
 - 决策：按契约编写，不改变语义；作者insert误用和Windows NUL参数问题已透明记录。
 - 下一步：verifier独立验收。
 - 阻塞：无。未Git、不改实现、不修改冻结v2。
+
+## [2026-10-27 19:56] T14 check黑盒准备及实现前红测
+- 来源：team-lead连续自动推进任务；三spec §17冻结，禁止改旧测试/实现。
+- 产出：tests/t14_cli_check.py、T14-blackbox.md、red和公开run语法oracle JSON；Python AST PASS。
+- 证据：旧9cda烟雾0/1、脚本exit1，旧进程exit2说明命令尚缺失；不是旧产品回归。公开run输出订正作者行尾位置预期，未改产品。
+- 下一步：等待最终candidate hash轻量唤醒实跑；当前收工释放slot，不编译、不Git、不改dist。
+
+## [2026-10-29 10:46] T14最终117进程验收完成
+- 来源：team-lead指定83f56a19…/774656B候选，不编译不Git。
+- 首次116/117，作者误把源码非法UTF8预期IOError，既有规范SyntaxError；保留首次结果，只纠正新脚本oracle及实际date字段后新路径重跑117/117 exit0。
+- 产出：T14黑盒最终JSON/报告、REPORT与coverage追加、仅新脚本原字节属性，自身记录。
+- 旧LFZ/Rust/manifest不改；官方166不与117叠加。无阻塞，交独立验收。

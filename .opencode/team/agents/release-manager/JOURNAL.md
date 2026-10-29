@@ -841,3 +841,31 @@
 - 决策：保存候选工作快照不等于正式发布；R-304保持OPEN。最终源码与原始日志不再修改，本角色未执行任何Git操作。
 - 下一步：主会话保存最后两份角色记账并再次推送，不自指尚未生成的记账hash。
 - 阻塞：候选保存与推送已完成；整体效率门槛仍开放，正式版本未发布。
+## [2026-10-27] T13现有构建字节保全
+- 来源：team-lead轻量任务，仅验hash、复制dist、记录构建与源码hash，立即释放slot。
+- 完成：核target为9CDA0C6FD5D85178335E8B758A843FC5F66574826BAB4A80F2418A318E171CF9/761344B后原样复制dist，并再次核对一致；T12副本仍47ED/759808B。
+- 产出：docs/reports/T13-release-evidence/build.json、source-hashes.json（16源+Cargo/lock）、.gitattributes。
+- 决策：不重编译、不改Cargo/profile、不Git、不动T12报告；530 release通过仅注明team-lead回执，未冒称本角色实跑或独立验收。
+- 下一步：主调度独立验证再测性能；本角色不再修改dist，README/清单待最终数据另派。
+- 阻塞：无产物保全阻塞，功能与性能结论仍待。
+## [2026-10-27] T14前保全T13精确候选ZIP
+- 来源：team-lead要求T14 tooling改源码前优先固定T13源/Cargo/9cda精确exe，不混入T14 §17 spec。
+- 完成：16src+Cargo.toml/lock原18项逐一核对T13 source-hashes；加761344B/9cda exe共19成员，ZIP全部回读原字节一致。
+- 产出：T13-release-evidence/candidate-snapshot.zip 531115B，SHA256 8F36BF82A0DFB9A10D74C7594CA452294212AC90A352A5570CDE09AF0D03D165；candidate-snapshot.json逐成员清单；Temp/t13-perf/lfz-t13-9cda.exe备份。
+- 决策：无spec/docs入ZIP；不编译、不改profile/dist、不Git。T13主窗口15PASS/2ENV/2FAIL由team-lead回执记录，R304仍OPEN，不发布正式版。
+- 下一步：已先消息通知主调度可启动T14 tooling；README/清单等T14完整后另派。
+- 阻塞：无归档阻塞。
+## [2026-10-29] T14 check候选产物与交付准备
+- 来源：team-lead轻量恢复，优先核hash复制dist供独立验证，后补README/清单与明确Git路径组。
+- 完成：target/dist均774656B/SHA83F56A194E216862C45377F4C3971B085744A7BA2363163E1EDAC6AF5E85AC79；T14-release-evidence记录构建来源及18源/Cargo指纹，无重编译/profile/源码变更。
+- 产出：README与交付清单补非执行check、executed:false和非静态分析边界；T13拒收与R304开放不冒用T14性能；六组commit-groups及刷新脚本，三用户块各1。
+- 决策：不Git、不正式发布、不另开T14性能窗口；542 release及指南27/27是作者/主调度回执，公开黑盒与独立结果仍待。
+- 下一步：释放slot给verifier；最终结果到位后另派收口，不再改dist。
+- 阻塞：无准备阻塞，功能独立验收未完成。
+## [2026-10-29] T14独立验收后第6组文档最终收口
+- 来源：team-lead最终回执，前5组已提交86acd9e/c5aa671/625dc69/8589a3c/e1ed520，要求本角色文档及本人记录立即落盘，不再刷新路径分组。
+- 完成：README/交付清单改为83f56/774656B实际独立PASS：542/117/旧CLI91含166/app37+11/140+新增57；人指南27/AI27分别列作者证据。明确T13生产优化拒收，R304OPEN，无T14性能窗口，无正式tag。
+- 证据：T14-independent-verification.md及原始目录；只读git diff确认Cargo/lock、旧LFZ/fixtures及冻结v2无未提交改动，自己的两文档diff --check通过。
+- 决策：沿用原第6组30direct+3snapshot清单，不刷新已提交路径；原用户28/1/1三块严格保留。本角色不Git，第6组及push尚待主会话实际回执，不虚报已push。
+- 下一步：主会话代执行第6组及main推送；本角色准备完成。
+- 阻塞：无记账准备阻塞；R304开放限制正式发布。

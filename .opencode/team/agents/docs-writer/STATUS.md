@@ -1,20 +1,17 @@
 # docs-writer — 工作状态
-> 最后更新: 2026-10-25 01:12 by docs-writer
+> 最后更新: 2026-10-29 by docs-writer
 
 ## 当前状态
-T12人类指南完成：五文件已同步LFZ1.4.0/72内置/参数代码入口/严格JSON与实用应用，全部35个LFZ块和10个新进程探针通过。功能证据绑定当前FB8E565...版，不声称性能通过。
+T14五人类指南同步与最终候选聚焦实跑完成，27/27通过，已收工。不是旧35块全量重跑。
 
-## 产出与证据
-- docs/guide/README.md 9341 B；tutorial.md 22112 B；reference.md 25987 B；errors.md 19604 B；testing.md 11681 B。
-- docs/reports/T12-guide-evidence.md与T12-guide-evidence/：35/35 LFZ块（28成功、7负例），10/10参数/Unicode/JSON错误span/通道/app探针；91/91既有进程验收重跑（包含166/166官方黑盒）。
-- 公开复现：D:/app/ANACONDA/python.exe -B docs/reports/T12-guide-evidence/verify.py，exit0，SUMMARY 35 35 10 10。
-- 真实解释器dist/lfz.exe SHA256 fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d；原始源码/命令/退出码/流、五指南工作区hash均留存。
+## 产出/证据
+- 五指南：docs/guide/README.md、reference.md、tutorial.md、testing.md、errors.md。
+- docs/reports/T14-guide-evidence.md及T14-guide-evidence/{verify.py,runs.json,manifest.json,.gitattributes}。
+- 真实运行verify.py --binary target/release/lfz.exe --expected-sha256 83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79 --output Temp/T14-docs/final-runs-20261029.json，exit0，27/27。
+- 产物774656B；每进程前及结束核hash，五指南前后hash一致。3来源/精确JSON/usage/教程提取check-run/无执行哨兵/旧hello通过；现有文件字节不变、新目标未创建。
 
-## 进行中 / 阻塞
-无。独立产品与性能验收由对应角色负责；未修改源码/spec/app/原tests/AI文档/根README，未Git，旧v2冻结材料保持。
+## 阻塞/下一步
+无指南阻塞；由team-lead统一独立验收及提交。未编译、未覆盖dist、未Git，未改其他角色产物；原T12报告及35块证据保留。
 
-## 下一步
-team-lead统一验收发布；若最终功能契约改变再唤醒同步。AI入口旧描述已报告，由ai-dx-engineer独立修订。
-
-## 关键经验
-JSON文本offset按UTF-8字节，源码span指调用点；只有argv新增一等内置，JSON作回调须lambda包装。业务JSON正常stdout与CLI --json状态协议分开。旧manifest失配不可靠重freeze抹去历史。临时件限项目Temp，公开验证脚本必须自建IO父目录。
+## 关键边界
+1.4.0候选，R304 OPEN；T13优化因性能回归拒收，不宣称提速。check仅前端，不验证名称/类型/运行时IO或终止性，合法JSON executed:false；usage错误即使--json仍stderr文本。项目外只读，Temp限项目内。

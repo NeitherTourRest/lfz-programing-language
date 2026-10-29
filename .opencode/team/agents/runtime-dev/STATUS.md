@@ -1,23 +1,21 @@
 # runtime-dev — 工作状态
-> 最后更新：2026-10-25 23:16 by runtime-dev
+> 最后更新：2026-10-27 19:51 by runtime-dev
 
 ## 当前状态
-T12实现已完成；首版数字循环回归经固定同CPU与进程CPUtime控制确认主要差距仍存在。已应用architect批准的窄while空作用域优化，并完成522 Rust/166黑盒功能验收；最终全负载性能复验待perf-engineer，不能提前判全部完成。
+T13性能候选9CDA实测未形成验收改善证据，team-lead已拒收；经verifier冻结指纹复核与明确GO，两处生产优化已准确撤回到cbc974b原实现，保留全部8新增回归测试及失败证据。未在撤回后编译/测试，交tooling协调T14统一release验证。
 
 ## 产出与证据
-- 核心T12：argv上下文/严格JSON72内置/StructObj索引。原399lib基础新增5项scope语义回归，总lib404、全Rust522（404+48+28+12+15+15）全通过。
-- src/evaluator.rs仅while前一次扫描直接Decl/FnDecl/StructDecl，无绑定时复用父scope，任一直接声明保留每轮fresh child；for、函数帧、其它exec_block不动。
-- release黑盒166/166；真实;;文本与JSON通道逐字witness PASS。
-- 标准release构建，target/dist同821760B，SHA7641b1ba98551d8726918b320d18501d62e30faa5c8c5c08fe2dc789a4748d81。Cargo/profile未改；本次获team-lead专项构建复制授权。
-- docs/reports/T12-runtime-performance-diagnostic.md及perf-diagnostic完整证据；首版FB8E exe/src/Cargo归档与各variant源码zip均保全。未为省磁盘删除唯一产物，只清已完成中间件约248MB。
+- src/evaluator.rs与src/builtins.rs完整生产前缀与cbc974b Git对象逐字节相同；仅追加7+1个新增test mods，原有测试无修改/删除。
+- docs/reports/T13-runtime-evidence/retraction-source-check.json保全前缀原/新SHA及8测试静态核对；生产前缀hash分别59981d01a98d4601ae74b9e56d0ea96234c6e9fb609e6fba44cf4c80816a4ee3、529bffd4927ea479529f93f68a0d00f26dfa370cd1a9262d56cc9f5281606213。
+- docs/reports/T13-runtime.md只追加拒收/撤回节，原9CDA候选历史作者530/530（412+48+28+12+15+15）、8/8回归日志及manifest保持，不冒充撤回后的验证。
+- 同期性能相对T12：map三档慢6.5%–16.2%、small4约30.4%、string8k约13.7%；完整原19线与限制见T13-performance.md。未定位微观原因，不继续择窗重测同候选。
+- 不改Cargo/profile/spec/dist或Git；dist47ED保持。当前target旧候选exe不能当作恢复源码产物。
 
 ## 进行中/阻塞
-无代码阻塞，等待perf统一路径正式全工作负载复验与verifier独立验收。旧低读数不是解决证明，LLVM微观根因仍未知；不得声称缓存bug或仅调度问题。
-
-- 新报告docs/reports/T12-runtime-startup-candidates.md及startup-candidates原始数据/候选exact源码binary归档。opt2 SHAe9c28949…759808B；opts632320B但500k成本明显增加，不优先建议。
+无源码撤回阻塞。保留8项测试的恢复后实跑由tooling在T14最终release统一完成；性能R-304仍开放。
 
 ## 下一步
-team-lead决定是否批准opt2取舍，再由release-manager唯一写主profile并组织完整复验；不擅改门槛、主Cargo或dist。有真实缺陷再唤醒。无源码后续待改、不与perf并发构建/跑测试，保持测量环境。发布经理后续Git收口，本角色未git。
+T14以恢复后的T12运行时推进check能力，等待协调验证。仅有实际缺陷再改运行时；不因源码少分配坚持发布未被测量支持的性能候选。
 
 ## 关键经验
-全Temp/TEMP/TMP项目内。先固定CPU并记进程CPUtime；局部cold/inline/Box/Rc/index候选均实测无效，不应用。无声明while省空Env是通用可解释优化，不改变fresh cell/可见排序与控制流，保守边界优先于继续无限构建猜测。R<Value>真实16B，不能信历史头注释指针大小说法。
+减少分配的机制成立不代表实测更快；保留失败候选源码/二进制/原始结果，准确撤回生产实现而保留新增语义回归测试。撤回后新源码必须重新构建验证，历史9CDA功能通过不可替代。

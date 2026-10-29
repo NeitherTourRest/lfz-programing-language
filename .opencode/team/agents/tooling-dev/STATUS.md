@@ -1,24 +1,22 @@
 # tooling-dev — 工作状态
-> 最后更新：2026-10-25 00:57 by tooling-dev
+> 最后更新：2026-10-27 19:59 by tooling-dev
 
 ## 当前状态
-T12-05 CLI 实现和定向测试完成，待team-lead全量与verifier独立验收。未改runtime/spec/冻结v2或原有测试，未Git。
+T14非执行check CLI实现与作者验证完成，等待team-lead独立验收/交付复制。现在停止源码修改、构建和测试；未覆盖dist或Git。
 
 ## 产出与证据
-- src/cli.rs：保护-e CODE和--后script参数的选项扫描；保留旧无--额外参数错误。支持lfz [run] -e CODE、lfz [run] -、显式/裸文件--参数。
-- 文件/源码统一load→lex→parse→eval与AST析构在同一大栈；调用eval_module_traced_on_thread_with_args，runner eval_case仍默认[]。
-- stdin读UTF8到EOF；失败IOError无法读取标准输入，无span；伪路径<command>/<stdin>，line_base0；状态JSON、print/dump/input通道规则不变。
-- tests/cli_t12.rs新增12集成测试；旧tests/cli.rs 28/28与bin原48/48均保持原样通过。
-- 命令：cargo test --test cli --test cli_t12（40/40，exit0）、cargo test --bin lfz（48/48，exit0）。环境RUSTUP_HOME/CARGO_HOME/TEMP/TMP全指项目Temp/toolchain。
-- 永久日志docs/tooling/evidence/T12/{cli-tests,bin-tests}.txt，原始Temp/T12/tooling/同名副本。存在环境路径/增量hard-link警告，不称零warning。
-- docs/tooling/runner-contract.md §10同步新CLI，§9旧全局摘除描述更新；src/main.rs说明同步。
-- 字节：src/cli.rs 45335，main.rs 779，cli_t12.rs 6066，runner-contract.md 16860。
+- src/cli.rs新增CheckInput/parse_check_input/check_input/check_loaded_on_stack：file/-e/stdin仅load/lex/parse/drop，全部位于既有大栈，不求值、不建Interp、不重定向LFZ输出。
+- 合法check JSON严格ok/mode/check/executed/false及既有错误字段；普通成功空双流，usage仍stderr文本且stdout空。保护CODE；CODE外--/脚本参数/check --help拒绝。
+- tests/cli_t14.rs新增12组进程回归；旧测试未改。旧版红测0/12；候选首次11/12，按既有run同源line2,col8订正新位置期望后12/12。中间失败日志保留。
+- cargo test --release 542通过（412+48+28+12+12+15+15），0failed/ignored；cargo build --release exit0。T13新增8回归包含在412lib内。
+- 最终target/release/lfz.exe774656B，SHA83F56A194E216862C45377F4C3971B085744A7BA2363163E1EDAC6AF5E85AC79。Cargo1.4.0/opt2/profile未改，dist交release。
+- docs/tooling/runner-contract.md §11、main说明已同步；原始日志和manifest在docs/tooling/evidence/T14；作者报告docs/reports/T14-tooling.md。
 
-## 进行中/阻塞
-无；等待全量与独立验收。runtime同时开发，计数可能继续增加，以最终执行证据为准。
+## 阻塞/限制
+无实现阻塞。语法通过不保证运行成功，不做名称/类型/arity/IO路径静态验证，不是通用沙箱；T13性能R304保持OPEN，不据功能全绿宣布正式发布。
 
 ## 下一步
-team-lead协调黑盒/指南/应用/最终构建；需要缺陷修复再唤醒。
+team-lead衔接独立非执行验证/黑盒、文档、交付复制与Git；若发现缺陷再由team-lead唤醒修复。原T13测窗/快照保留不混成新产物。
 
 ## 关键经验
--e紧随token必须无条件源码，不能先全局剥除--json；--只在完整执行入口后转为脚本参数。旧parse形态保留以免改动原测试；test/help/version原解析兼容。
+检查模式须独立于run；Program不能带回主线程析构。CODE紧随-e无条件保护，usage错误JSON例外须明确。位置断言按既有前端契约核实，不能为通过新测试改旧parser。所有临时件在项目Temp，cargo只release。

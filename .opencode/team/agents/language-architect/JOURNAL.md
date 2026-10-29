@@ -230,3 +230,17 @@
 - 产出：追加ADR、契约§16.7、T12-design报告8类旧新差分witness清单；已先消息回裁定。
 - 下一步：runtime最小实现，test/verifier独立等价性回归，perf按冻结阈值测量。
 - 阻塞：无；设计许可不代表产品/性能实证，未改源码或测试，无git。
+## [2026-10-27 19:29] T13内部分配边界与T14非执行check草案
+- 来源：team-lead自动连续推进任务；运行时具体iterator/join方案和下一check功能定向。
+- 完成：只读审查call_user/call_value/eval_args、Env fresh/cell/绑定、trace与self、HOF源快照、join借用及loader/lexer/parser/CLI来源/JSON/大栈析构路径。许可两个语义不变内部优化，不扩spec。
+- 产出：T13-design.md 6017B，T14-check-design.md 9390B；前者8类差分矩阵，后者12类命令/非执行/前端验收矩阵；只追加19:26 ADR。
+- 决策：T14先草案不实现、不混T13候选；建议check成功JSON带mode/check、executed/false，复用原错误字段；CLI参数错误是否另定义JSON由team-lead冻结。明确只前端，不做名称/类型/arity/IO路径分析。
+- 下一步：runtime实现→verifier差分→perf实测；T13冻结后T14正式契约/实现。未声称产品/性能通过。
+- 阻塞：无；未Git，未改spec/源码/测试/旧报告/他人状态/看板。
+
+## [2026-10-27 19:35] T14非执行check三spec契约冻结
+- 来源：team-lead轻量唤醒，批准草案全部边界；T13候选9cda0c6冻结，文档在计时前收口。
+- 完成：追加19:33 ADR后写syntax/semantics/interface-contract §17；报告改冻结设计，删除待定措辞，check --help与CODE外--拒绝、usage文本例外及三键JSON明确。
+- 产出：T14-check-design.md 9682 B；PowerShell文档结构自查12/12通过，非产品验证；三来源/选项保护/加载与AST析构/不求值/不静态分析/旧协议兼容全部交叉引用。
+- 下一步：T13计时结束后tooling实现与独立验证；本角色收工静默。
+- 阻塞：无；未改src/Cargo/旧报告，无Git或产品/性能测试。

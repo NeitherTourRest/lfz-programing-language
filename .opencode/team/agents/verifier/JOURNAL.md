@@ -197,3 +197,26 @@
 - 决策：功能及窄作用域语义通过；独立审计perf原数据仍15/19绝对门槛通过、3环境不确定、1失败，R304 OPEN。可审阅checkpoint，非正式发布。
 - 下一步：由team-lead保存审阅结果、跟踪效率开放项，未来新产物另派复验。
 - 阻塞：R304未全过；没有修源码、改测试、操作Git或另择性能窗口。
+## [2026-10-27 19:35] T13独立功能与参数/join差分
+- 来源：team-lead T13任务书，用户连续自动推进。
+- 完成：新9cda/761344B与源hash核对；6release harness530、CLI91含官方166、app37+11、140独立见证全部PASS；自编31程序8类双模式62组比较/124进程逐字节同，期望exit/error另核。
+- 产出：docs/reports/T13-independent-verification.md、T13-independent-evidence/含manifest、原始输出与可复现脚本。
+- 决策：无代码/官方测试/旧证据修复，无编译/Git/panic压力。既有脚本硬编码日期只注明不改。
+- 下一步：所有执行静默，等perf冻结窗口后再独立审计532值；R304仍开放。
+- 阻塞：无功能阻塞，效率尚待测。
+
+## [2026-10-27 19:49] T13性能窗口独立审计完成
+- 来源：team-lead轻量派发，仅审计冻结数据，无新增解释器启动/计时。
+- 完成：自编audit_performance.py重核532正式/152预热、3标签hash、源/Cargo前后及当前匹配、19原线/中位数/CPU/paired/独立oracle；15PASS/2ENV/2FAIL、R304 OPEN，与perf一致。
+- 产出：T13-independent-verification.md追加最终审计、performance-audit.json和initial-current证据；候选19成员ZIP SHA8f36bf82…源/bin逐成员通过，脚本支持工作树后继变更后按封存包复核。
+- 决策：功能PASS不抵消效率失败；主调度拒收候选并决定后继撤回两生产优化，8回归测试及全部失败证据保留，非本角色修复。
+- 下一步：T13收工，不自行重测；后继T14另建hash验收。
+- 阻塞：无审计阻塞，效率R304继续OPEN。
+
+## [2026-10-29] T14最终独立验收完成
+- 来源：team-lead轻量恢复派发；仅验收不修复。
+- 完成：83f56/774656B核对；7release harness542、check117、旧CLI91含166、app37+11、140独立见证均PASS；自编57进程见证非执行IO/无限循环/递归/输出、三来源双模式、语法错误位置/JSON与run前端一致。
+- 产出：T14-independent-verification.md、T14-independent-evidence/原始输出/脚本/manifest，源码调用路径审阅。
+- 决策：check功能PASS不表示运行或效率通过；R304OPEN，无T14性能窗，不将T13历史数据混入。
+- 下一步：交主调度继续收口，正式发布仍待效率验收。
+- 阻塞：无功能阻塞。

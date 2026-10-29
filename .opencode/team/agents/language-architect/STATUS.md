@@ -1,28 +1,21 @@
 # language-architect — 工作状态
-> 最后更新：2026-10-25 by language-architect
+> 最后更新：2026-10-27 19:35 by language-architect
 
 ## 当前状态
-T12-01设计契约及argv最小一等载荷补钉已冻结；已通知team-lead可安排runtime/tooling实现。没有声称新功能已实现或已加速。
+T13两项内部分配优化语义边界审查完成；T14非执行check命令已按批准草案定案到三spec §17。T13不改语言行为；T14契约已冻结但未实施新命令，不声称性能或产品通过。
 
 ## 产出与证据
-- docs/spec/syntax.md §16：argv分隔符、-e/run-e、-/run-、--json选项边界、stdin UTF8/EOF、原入口兼容。
-- docs/spec/interface-contract.md §16.1–16.5：72内置目标、两with_args求值API、一等argv上下文、严格JSON/i64/Unicode/重复键/深度128/环/精确ValueMsg、内部struct字段索引许可。
-- docs/spec/semantics.md §16：显式环境输入、数据面与引用拓扑往返边界。
-- docs/reports/T12-design.md可执行验收矩阵；T12-design-checks.json：自动检查结果如文件所载，不代替产品验收。
-- DECISIONS追加两ADR；首条标题时间误写已紧随后续条目订正，历史条目未改。旧v2 9输入与manifest未修改。
+- docs/reports/T13-design.md（6017B）：依据semantics §4.5.1–4.5.5/4.5.11、contract §10.3/10.7/16.6，审查call_user/call_value/eval_args/Env/高阶源快照/b_join。
+- 许可私有call_user用ExactSizeIterator<Item=Value>，直接Vec::into_iter、高阶slice.iter().cloned，消除高阶临时参数Vec；仍保留fresh Env/形参cell/mutable/顺序/self/trace/原arity与recursion先后。
+- 许可无回调join持数组只读Ref验证并拼接，省Value快照；检查顺序/首错/span/新字符串保持；不泛化有用户回调的源数组快照。
+- DECISIONS仅追加2026-10-27 19:26 ADR；用户初始事故记录及既有条目未改。T13报告8类独立差分矩阵是待执行输入，不冒称实测。
+- docs/reports/T14-check-design.md（冻结后9682B）：三来源、loader前导/UTF8/行偏移、CLI CODE选项保护、专属mode/check与executed/false JSON定案、大栈内AST析构、明确只语法非运行保证；12类验收矩阵及未纳入范围。
+- T14三spec §17和19:33 ADR已定案：check --help/CODE外--拒绝；usage保持文本，合法check JSON三个成功键及既有失败字段。12项文档结构自查通过，未运行产品或性能测试、不Git、不改源码/已有测试/团队看板。
 
-## 进行中 / 阻塞
-无设计阻塞。实现/测试/性能由team-lead后续调度；本人不等待产品实跑，不改源码、测试、看板或他人状态，无git操作。
-
-## 紧急补钉证据
-- 源码核查发现旧内置非一等值且可词法遮蔽，撤回初稿保留名假设；追加ADR、契约§16.6、三spec及报告同步。仅argv支持一等值，Closure.builtin显式标记，每Interp同一Rc、type=function、str=<fn argv>；别名保存/形参遮蔽探针已纳入报告。旧69及JSON二内置不泛化，JSON map须用户fn包装。
-- T12-design-checks.json新增三项边界结构检查PASS，共20项；未实现、未运行新产品测试。
-
-## 空环境优化审核
-- 按轻量任务复核exec_while/exec_block/赋值/闭包捕获/;;/first_slot，许可仅while无直接Decl/FnDecl/StructDecl体一次扫描、每轮不物化空Env。for与其它exec_block及任何声明体保持原fresh环境。追加ADR、契约§16.7及报告8类差分witness；不实现、不声称性能恢复。
-
-## 下一步
-按spec实现并独立验证。开发skill/二进制更新后，旧v2校验仅在项目Temp恢复9输入的工作区复现，不能覆盖历史manifest；新轮另建输入版本。
+## 下一步 / 阻塞
+- T13由runtime实现、verifier独立语义差分、perf按原19线实测；本设计许可不能代替证据。
+- T14可由tooling按三spec §17实施，须等T13性能计时完全结束；当前候选9cda0c6不混新CLI改动。本角色完成后静默。
+- 无设计阻塞。旧v2封存输入/manifest、T12历史结果及三处用户修改保留。
 
 ## 关键经验
-JSON codec必须独立于历史宽松runner codec；对象构造不反复线性set；序列化只按当前递归路径判环。保留既有A5方法过滤，不能擅自将函数方法字段拒绝。效率要计真实输出展开规模和字符串键比较成本，避免只看唯一图节点数。
+临时载体消除不同于语言帧消除；Rc克隆可以延后，但用户求值顺序和逃逸cell不能改。无用户调用的只读区段可避免容器快照，有回调则不能持源Ref。check只跑前端仍须大栈与深AST同栈析构，成功不能被宣传成运行有效/零IO/安全沙箱。

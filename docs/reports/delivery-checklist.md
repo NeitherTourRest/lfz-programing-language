@@ -8,6 +8,18 @@
 
 > **2026-10-24 本轮补充核对（T11-12/13/14/16）**：8 项交付物位置保持齐备。当前 69 内置、494 Rust 测试（388+48+28+15+15）、130 黑盒；语言 witness 74/74，V01 干净 CWD 130/130 已独立闭环，详见 `T11-v11-reverification.md`。本地执行 `scripts/build-release.ps1` exit 0，`dist/lfz.exe` 766464 B、`lfz 1.0.1`，hello 冒烟输出 `Hello, LFZ!`；发布版 `dist/lfz.exe test --json` total/passed=130、failed/errored=0、exit 0。SHA256=`149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，原文见 `T11-v11-release-evidence/`。构建有本机 rustup canonicalize 提示，不声称零 warning。`dist/` 被忽略，仅本地刷新、不强制入库；版本仍 1.0.1，既有 8 个 tag 不变，本轮不打 v1.3.0。同题 8 盲测缺原题材料未重跑，历史 2/8 不变。下文 2026-09-27 原始计数、缺陷和历史标签信息保留其当时语境；当前状态以本补充及本轮独立报告为准。
 > **2026-10-24 v2 正式首轮补充核对**：新增[正式独立验收报告](agent-benchmark-v2/v2-20261024-r01/REVIEW.md)与[认证结果](agent-benchmark-v2/v2-20261024-r01/certified-results.json)，run-id `v2-20261024-r01`：8/8 整题、131/131 功能用例，8 份源码约束与协议审查均 PASS；学生共 9 次 LFZ 自调，各题首次自调均 exit 0（8/8），仅为自选测试辅指标。模型为会话日志确认的 `gpt-6.1-sol / medium`；隔离范围为分题无历史派发、指令约束及已记录工具审计，未声称 OS 隔离。新八题是独立 v2 基线，不以历史 2/8 计算提升。[原始字节 ZIP](agent-benchmark-v2/v2-20261024-r01/raw-inputs-submissions.zip)及其[哈希清单](agent-benchmark-v2/v2-20261024-r01/raw-archive.json)提供 Git 行尾归一化之外的原文留存。当前解释器仍为 Cargo 1.0.1 / 69 内置 / 494 Rust 测试 / 130 正式黑盒；dist 766464 B、SHA256 `149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，本轮不重编译或改 Cargo，保持冻结 pin。`v1.3.0` 交付里程碑包含已验收的 v1.1 实现、测试/指南及 v2 正式首轮认证与原始证据；Git 附注标签为发布凭据，不等同于解释器 1.0.1 的版本变更。上方“本轮不打 v1.3.0”仅描述前一批发布时点。
+## 2026-10-29 T14当前候选补充（非正式发布）
+
+当前dist为1.4.0/774656B/SHA256 `83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79`，来源及18项源码/Cargo指纹见`T14-release-evidence/`。本角色只验hash并复制现有构建，没有重编译或改变profile。
+
+- 非执行check三入口与机器`executed:false`见spec §17和`T14-tooling.md`。只检查前端，不能推断运行成功/类型正确或IO可用，也不替代隔离措施。
+- 最终独立验收`T14-independent-verification.md`绑定83f56：542 release、公开117、旧CLI91（含166官方黑盒）、应用37+11、旧独立140及新增57见证全部PASS。原始材料T14-independent-evidence/保全；人类指南27/27、AI示例27/27分别是作者实跑证据。公开首次116/117中作者UTF8 oracle订正及首次原始结果保留，不将其误报为产品修复。
+- T13两项生产优化拒收并恢复T12生产行为，仅保留8项新增测试；9cda源码/Cargo/exe快照在`T13-release-evidence/candidate-snapshot.zip`，不与T14新产物混淆。
+- T13唯一性能窗口15PASS/2ENV/2FAIL，R-304仍OPEN。T14本轮不新增性能窗口，不拿T13成绩冒充83f性能；不正式发布、不创建v1.4.0或移动v1.3.0。
+- 本轮Git路径分组见`T14-release-evidence/commit-groups.json`；主会话已完成前5组候选提交86acd9e/c5aa671/625dc69/8589a3c/e1ed520，第6组记账与推送待实际回执，不提前写已push；初始用户3块28/1/1行仍需过滤stage快照，旧v2及原始测试不动。
+
+下文T12/P10/T11记录均保留各自历史日期、版本和hash，不作为T14最终验收结论。
+
 ## 2026-10-25 T12 1.4.0 候选工作快照（非正式发布）
 
 当前 Cargo 1.4.0、72内置，最终候选release opt-level=2，target/dist均759808B、SHA256 `47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f`。R-304仍开放，**不打v1.4.0正式标签、不移动v1.3.0**。允许保存源码和可复现成功/失败报告的候选checkpoint；这与正式发布是不同状态，当前不虚构提交/推送回执。

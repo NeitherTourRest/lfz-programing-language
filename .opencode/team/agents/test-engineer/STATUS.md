@@ -1,24 +1,18 @@
 # test-engineer — 工作状态
-> 最后更新: 2026-10-25 by test-engineer
+> 最后更新: 2026-10-29 by test-engineer
 
 ## 当前状态
-T12黑盒与CLI进程验证完成，待verifier独立验收。
+T14 check公开进程黑盒最终117/117通过，exit0，已完成。
 
 ## 产出与证据
-- 4组LFZ正例64 assert，32 fixtures负例；tests/cases.json只追加，原99条清单解码内容逐项保留，原130测试保持。
-- release1.4.0正式166/166 PASS、0 FAIL/ERROR；tests/t12_cli_check.py独立进程91/91 PASS（含一次正式全量，不重复计数）。
-- docs/reports/T12-blackbox.md与T12-blackbox-evidence/完整原始证据；tests/REPORT.md与coverage-matrix.md当前快照已同步，历史保持。
-- release hash fb8e5653827de1e1c3f73b81d37f21314ad41adfdc4d99f37cb8ca5f6491f47d。脚本e48077dfbb29e19c73bf745a281affbd4539b1a72eb49b01a479657ee4179db2。
-- 命令：D:/app/ANACONDA/python.exe -B tests/t12_cli_check.py --lfz target/release/lfz.exe --output Temp/T12/test-engineer/final-cli.json --full-suite；exit0。
+- tests/t14_cli_check.py及仅针对它的tests/.gitattributes；三来源/JSON/CODE/usage/加载位置/非静态/18字节哨兵组合/旧run兼容。
+- 指定83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79，774656B；每进程核hash。
+- docs/reports/T14-blackbox-evidence/final-cli-corrected-20261029.json，117/117，脚本SHA44e1c5d9639b5306da9779994e0acb30f62f4943aebbc116de735e4a86a42106。
+- 首次116/117为本轮作者误将非法源码UTF8预期写IOError，既有规范为SyntaxError；首次JSON完整保留，只订正新脚本oracle重跑。产品/旧测试未改。
+- T14-blackbox.md、tests/REPORT.md与coverage-matrix.md追加最终统计；官方LFZ166不变，不叠加117。
 
-## 进行中/阻塞
-无。未改实现/spec/指南/冻结v2材料，不Git，不委派。
+## 下一步/阻塞
+交verifier独立验收，无本角色阻塞；未编译、不改dist、不Git、不调度。
 
-## 下一步
-verifier独立复验；如后续binary变化，由team-lead通知同脚本复跑，不覆盖既有证据。
-
-## 关键经验
-- 旧内置不是一等函数，JSON映射要lambda包装；仅argv本轮新增一等取值。
-- 操作系统参数无法承载NUL，严格JSON错误输入应经UTF8文件传入并归档原字节。
-- 首次作者把insert当struct操作，依据spec改为del所得新struct更新；不属于产品缺陷。原始失败留Temp且报告透明记录。
-- stdout/stderr须由Python直接捕获UTF8字节，避免PowerShell解码影响中文证据。
+## 历史
+实现前旧9cda烟雾0/1证据仍保留；T12原166/91及T13拒收候选历史不改写。

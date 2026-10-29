@@ -69,3 +69,22 @@
 - opt2-same-path273正式输出正确、opt2-new-features63正式输出oracle一致、逐轮hash核验；opt2-assessment绑定SHA。
 - 15项过原线、3环境不确定、1map8k超线，R304 OPEN，不能宣布整体效率通过。numeric500k90.804ms、struct8k21.198ms约77.3%降时；string4kpaired慢28.8%也明确披露。
 - 最终报告顶端更新，原FB8/7641/路径/CPU0/quiet1失败证据全保留；不虚构LLVM微因，不以包体/主循环抵消未过项。当前作为可审阅候选checkpoint，测量结束已通知root，其它任务可恢复。未源码/Git，收工释放slot。
+
+## [2026-10-27] T13双基线测前冻结
+- 来源：team-lead全自动连续推进任务，先准备、禁止开发期间计时。
+- 产出：benchmarks/t13/freeze.py、run.py、protocol.json；docs/reports/T13-performance.md。协议SHA74934a4e…，原19线/源码oracle不变；三标签轮转，9能力双标签，固定5秒/2+7。
+- 证据：两脚本AST解析PASS，19项，预计532正式/152预热；实际启动计时0。T12 47ED字节已项目内小副本保全。
+- 下一步：最终hash/准许后只跑一次全窗并保全partial/失败，不择窗改线。
+
+## [2026-10-27] T13最终候选零启动预检
+- 产出：benchmarks/t13/results/preflight.json；旧149b/T12 47ed/新9cda三hash与761344B、protocol hash、src/Cargo hashes、原mask16777215全部核对成功。
+- 命令：run.py --new-binary dist/lfz.exe --expected-new-sha 9cda0c6fd5d85178335e8b758a843fc5f66574826bab4a80f2418a318e171cf9 --output Temp/t13-perf/final-window.json --preflight，exit0。
+- 未启动解释器/未计时，等待独占准许。
+
+## [2026-10-27 19:46] T13唯一双基线窗口收工
+- 来源：team-lead明确独占准许；其他项目agent静默，最终9cda/761344B冻结。
+- 命令：run.py --new-binary dist/lfz.exe --expected-new-sha 9cda0c6fd5d85178335e8b758a843fc5f66574826bab4a80f2418a318e171cf9 --output benchmarks/t13/results/final-window.json，exit0。一次完整窗口，无重跑排样；原19线15PASS/2环境不确定/2FAIL，R304 OPEN。
+- 证据：final-window.json SHA74cdf505…，19×3×7+9×2×7+7=532正式及152预热全部输出/hash正确，src/Cargo/protocol前后一致。assess.py零启动复核全PASS，并用Temp新输出复算字节完全相同。
+- 产出：T13-performance.md 12715B；原19组三标签/9能力全表，包含map2k、小对象4失败、map8k/string2k环境不确定和string8k/JSON stringify4k等paired回归，不以消分配替代性能结论。
+- 下一步：独占已释放，verifier独立审计；不新增profile或择窗凑门槛。
+- 阻塞：整体效率R304未通过；测量任务完成。

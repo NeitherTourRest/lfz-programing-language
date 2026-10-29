@@ -1229,3 +1229,22 @@
 ### [2026-10-25 23:36] [team-lead] 补记opt2决策标题时间与候选保存边界
 - 前述仅带日期的opt2条目记录了最终构建前的批准；此处补齐规定的时分标题格式，以本次补记时间为准，不更改旧条目或伪造决策先后。
 - 最终47ED功能和作用域语义已独立验证，性能R304仍开放；本轮只保存并推送可审阅候选，不创建正式v1.4.0标签。原阈值、未过项、环境限制和回归数据继续保留。
+
+### [2026-10-27 00:00] [team-lead] T13连续自动推进与性能证据边界
+用户明确要求全自动连续推进；无需每轮结束再请求继续。首先处理已知map超线与string4k回归，采用可解释源码优化而非布局试运气，原19绝对线及T12全部失败记录不改。新候选另建T13记录，旧v1.3/T12双基线，性能正式计时与编译互斥；验证后直接推进文档与已授权仓库main提交。正式发布仍须满足现有门槛。项目外只读，原用户三处未提交事故块保留。
+
+### [2026-10-27 19:26] [language-architect] T13参数载体与join内部分配优化边界
+- 依据：team-lead提交的两项具体实现方案及semantics §4.5.1–4.5.5/4.5.11、interface-contract §10.3/10.7/16.6。
+- 裁定：许可私有call_user使用已求值Value的标准ExactSizeIterator，直接Vec::into_iter、高阶slice.iter().cloned，保留原arity/recursion/frame/cell/self/trace顺序；许可无回调join在只读数组Ref下验证并拼接，省Value快照。
+- 不变：每用户调用fresh绑定、形参可变、容器引用语义、字符串不可变、argv特殊路径、中文错误/span/traceback；有用户回调的高阶源数组快照不能删除。
+- 范围：两项仅改变内部载体与临时分配，不扩展语言/公开API，本轮无需改spec。详细证明和独立差分矩阵见docs/reports/T13-design.md；尚不声称实现或性能通过。
+
+### [2026-10-27 19:33] [language-architect] 冻结T14非执行check命令契约
+- 来源：team-lead批准T14-check-design并明确CODE外--/check --help拒绝、usage沿既有stderr文本、合法check专属JSON。
+- 决策：新增CLI check FILE / check -e CODE / check -，只运行load→lex→parse及既有AST深度检查，绝不求值；成功仅为前端检查通过。CODE原样保护，FILE沿run加载/前导规则，stdin/-e沿load_source规则。
+- 输出：正常成功双流空exit0，前端失败stderr诊断exit2；合法check --json成功为ok/mode/check/executed/false三键对象，失败加既有error字段。参数错误仍stderr文本/stdout空/exit2，旧run/test JSON不变。
+- 范围：不新增语言语法/内置/API，不做未定义名/类型/arity/IO路径静态分析。加载、解析、AST析构须在现大栈包装内，不能调用eval_module*/run/Interp；仅宿主源码读取，不承诺零IO/安全沙箱。
+- 落点：三spec §17与docs/reports/T14-check-design.md。本次只有文档冻结，不改T13候选源码9cda0c6，产品与验收另阶段实施。
+
+### [2026-10-27 19:50] [team-lead] 拒收T13性能候选并连续实施T14
+T13唯一完整三标签窗口及独立审计为15PASS/2ENV/2FAIL，map三档、small4、string8k等相对T12有回归，消分配源码性质不足以证明实际改进。拒收9cda性能候选的两处生产优化，恢复到T12对应实现；保留8新增回归、19成员精确source+exe ZIP和全部测量数据/报告，禁止回写历史冒充恢复。验证工程师已在撤回前确认当前源码=Cargo=测前=测后hash。T14从先前运行时基础继续实现已冻结§17 check，不做额外同候选择窗，R304仍OPEN且不正式发布。

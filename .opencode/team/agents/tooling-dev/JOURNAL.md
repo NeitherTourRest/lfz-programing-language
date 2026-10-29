@@ -130,3 +130,10 @@
 - 决策：无新增语义，按architect契约；原tests/cli.rs未修改，未Git。
 - 下一步：全量回归与独立验收由team-lead统筹。
 - 阻塞：无。
+## [2026-10-27 19:59] T14非执行check命令实现与作者收工
+- 来源：team-lead按用户连续全自动推进授权，冻结三spec §17。
+- 完成：三来源CheckInput独立load/lex/parse/drop大栈路径；严格机器模式executed:false，CODE保护及usage例外；runner契约§11和帮助同步。未调用求值入口或Interp。
+- 证据：新增12组进程测试，旧实现0/12红测；首候选11/12为新测试行号期望错误，既有run/check同为line2,col8，只修新断言后12/12。所有日志保留。完整release542/542，build exit0，最终774656B/hash83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79。
+- 产出：docs/reports/T14-tooling.md、docs/tooling/evidence/T14/manifest.json及五份原始日志，src/cli.rs、main说明、tests/cli_t14.rs。
+- 下一步：独立非执行见证/黑盒、指南及交付复制由team-lead衔接。
+- 阻塞：无；性能R304未关闭，不宣布正式发布。无旧测试/核心/spec/profile/dist/Git变更，收工后停止执行。

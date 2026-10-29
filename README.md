@@ -1,12 +1,27 @@
 # LFZ 语言与解释器 — 程序设计课程作业
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-> 最后更新: 2026-10-25 by release-manager
+> 最后更新: 2026-10-29 by release-manager
 > 仓库地址: https://github.com/NeitherTourRest/lfz-programing-language
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
-## T12 1.4.0 候选工作快照：Agent 数据脚本工作流
+## 当前：T14 非执行前端检查候选（2026-10-29）
+
+项目内当前 `dist/lfz.exe` 为1.4.0候选、774656B，SHA256 `83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79`；[构建来源与源码指纹](docs/reports/T14-release-evidence/build.json)已保全。[最终独立验收](docs/reports/T14-independent-verification.md)已通过：542项release测试、新check公开117/117、旧CLI91/91（内含166官方黑盒）、应用37+11、旧独立140及本轮自编57见证全部PASS。人类指南27/27、AI示例27/27作者实跑通过；作者证据与独立验证分别记录，不合并虚增计数。
+
+```powershell
+./dist/lfz.exe check examples/hello.lfz
+./dist/lfz.exe check -e 'print(1 / 0)'
+./dist/lfz.exe --json check -e 'print(1 / 0)'
+# {"ok":true,"mode":"check","executed":false}
+```
+
+`check FILE`、`check -e CODE`、`check -`只执行加载、词法、语法和现有AST深度检查，不运行代码。普通成功双流空，失败退出2；机器结果明确`executed:false`。检查成功不代表名字、类型、参数个数、IO路径或实际执行正确，也不是资源隔离机制。它与LFZ内置`check(condition)`不同，且不接受`--`脚本参数。详见[契约§17](docs/spec/syntax.md)、[实现证据](docs/reports/T14-tooling.md)、[公开验收](docs/reports/T14-blackbox.md)、[指南](docs/reports/T14-guide-evidence.md)及[AI示例](docs/reports/T14-skill-evidence.md)。公开验收首次116/117的非法UTF8文件oracle错误按既有spec订正，首次证据保留，没有修改产品或降低旧测试要求。
+
+T13两项省分配生产优化因唯一性能窗口有回归而拒收，已恢复T12生产行为，仅保留新增回归测试。其9cda候选、16源码/Cargo/exe和全部失败证据已[独立封存](docs/reports/T13-release-evidence/candidate-snapshot.json)，[性能结果](docs/reports/T13-performance.md)为15 PASS/2 ENV/2 FAIL，R-304仍OPEN。T14不另开性能窗口，不能把T13结果当作83f新二进制的性能成绩。本轮仍是功能候选，非正式发布，不创建v1.4.0标签、不移动v1.3.0；旧v2基线和原始材料保持不变。
+
+## T12 历史候选工作快照（以下计数绑定47ED，不代表当前T14）
 
 当前源码与项目内构建版本为 **1.4.0 候选工作快照、72 内置，非正式发布**；不创建 `v1.4.0` 标签，旧 `v1.3.0` 不移动。最终47ED二进制的功能已独立复验通过：522项Rust release、166项黑盒、91项进程检查、应用37+11项、140个自编witness，另16个旧新差分覆盖8类while范围，stdout/stderr/exit逐字节一致。R-304 保持开放：19 项原绝对性能线中 15 项达线、3 项环境不确定、1 项未通过。源码和完整成功/失败证据可作为候选 checkpoint 提交保存，不代表整体效率或正式版本验收完成。
 
@@ -15,7 +30,7 @@ LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、�
 - [jsonflow](app/README.md)：用配置和参数驱动 JSON 筛选、字段投影及结果文件；[sortviz](app/README.md) 新增规模、种子与帧显示参数，默认输出与旧版一致。
 - [T12 黑盒](docs/reports/T12-blackbox.md)、[应用验证](docs/reports/T12-app.md)、[人类指南](docs/reports/T12-guide-evidence.md)、[AI 指南](docs/reports/T12-skill-evidence.md)及[性能报告](docs/reports/T12-performance.md)分别保留证据。功能结果不替代性能门槛，最终验收与交付状态以项目状态和最终报告为准。
 
-## 课程阶段记录（历史里程碑，T12以本页顶部为准）
+## 课程阶段记录（历史里程碑，当前T14以本页顶部为准）
 | 阶段 | 内容 | 状态 |
 | -- | -- | -- |
 | P0 | 团队就绪（脚手架通过 S1–S5） | ✅ 已完成 |
