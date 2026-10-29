@@ -721,3 +721,7 @@ if ($LASTEXITCODE -eq 0) { ./dist/lfz.exe run job.lfz -- '输入' }
 检查一步stdout为 `{"ok":true,"mode":"check","executed":false}`；运行一步才打印 `{"args":["输入"],"message":"中文"}`。参数属于run；不要给check加 `-- '输入'`。
 
 对比 `lfz check -e 'print(1 / 0)'` 和 `lfz -e 'print(1 / 0)'`：前者语法通过、无输出，后者实际求值并报ZeroDivisionError、退出2。通过check后仍要运行测试；它不查未定义名、类型、函数参数个数或运行时文件路径。源码内的IO、input、循环和函数调用在check期间都不执行，但命令会读取待检查文件或stdin。
+
+## T15补充：坏记录不会中断整批
+
+把可能失败的操作延迟到零参数闭包里：`let result = attempt(() => jsonParse(text))`。不能把已执行的 `jsonParse(text)`直接作为参数，否则错误发生在进入恢复边界前。随后按result.ok分支，成功读value，失败读error；完整可运行程序见[错误恢复教程](error-recovery.md)。CLI check只解析这段代码，不检查函数参数数量或错误捕获范围，仍要实际执行测试。

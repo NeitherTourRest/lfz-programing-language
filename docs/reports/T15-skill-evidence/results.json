@@ -1,0 +1,302 @@
+{
+  "date": "2026-10-29",
+  "timestamp_utc": "2026-10-29T13:15:26.748408+00:00",
+  "binary": "target\\release\\lfz.exe",
+  "binary_sha256": "1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c",
+  "checks_total": 25,
+  "checks_passed": 25,
+  "document_hashes": {
+    ".opencode/skills/lfz-programming/SKILL.md": "cfaa384ea3f8b993ab1c3b77e12fe9ddd526f3575176ac4d626d1eb28b96dd67",
+    ".opencode/skills/lfz-programming/README.md": "9ceb5b4be3b928a1ffe7d4871884709e2330fe7d4784aa4a1f3cba9c3994ccc4",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "be2b85bd905ceec6f91a97541bffc05c02d0bd035a41848a0a64b9e44b7d5dbc",
+    ".opencode/skills/lfz-programming/prompt-template.md": "59e03795a66a20d7f8d90c1dd02da9767dbc771571567df2dac48edc9fc42670",
+    "docs/guide/ai/README.md": "99e49391ae132d59069c24225f12c58cb1f4571249be9970237cdc9b20d4b024"
+  },
+  "rows": [
+    {
+      "name": ".opencode/skills/lfz-programming/SKILL.md_check",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T15-ai\\skill.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": ".opencode/skills/lfz-programming/SKILL.md_run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T15-ai\\skill.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"errors\":[{\"class\":\"ValueError\",\"col\":24,\"line\":6,\"message\":\"JSON 解析失败（字节偏移 0）：不是合法的 JSON\",\"traceback\":[{\"col\":10,\"func\":\"<module>\",\"line\":6},{\"col\":24,\"func\":\"<fn>\",\"line\":6}]}],\"values\":[{\"n\":2},{\"n\":5}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "docs/guide/ai/README.md_check",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T15-ai\\ai.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "docs/guide/ai/README.md_run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T15-ai\\ai.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"errors\":[{\"class\":\"ValueError\",\"col\":24,\"line\":6,\"message\":\"JSON 解析失败（字节偏移 0）：不是合法的 JSON\",\"traceback\":[{\"col\":10,\"func\":\"<module>\",\"line\":6},{\"col\":24,\"func\":\"<fn>\",\"line\":6}]}],\"values\":[{\"n\":2},{\"n\":5}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "nil",
+      "args": [
+        "-e",
+        "let r=attempt(()=>nil)\nassert(r.ok && r.value==nil && r.error==nil)"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "alias",
+      "args": [
+        "-e",
+        "let x=[1]\nlet r=attempt(()=>x)\nr.value[0]=8\nassert(x[0]==8)"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "function",
+      "args": [
+        "-e",
+        "let r=attempt(()=>()=>42)\nassert(r.value()==42)"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "argv",
+      "args": [
+        "-e",
+        "let r=attempt(argv)\nassert(r.ok && len(r.value)==0)"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "pipeline",
+      "args": [
+        "-e",
+        "let r=(()=>8) |> attempt\nassert(r.ok && r.value==8)"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "shadow",
+      "args": [
+        "-e",
+        "fn f(){let attempt=(x)=>x+1\n attempt(4)}\nassert(f()==5)"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "nested",
+      "args": [
+        "-e",
+        "let r=attempt(()=>attempt(3))\nassert(!r.ok && r.error[\"class\"]==\"TypeError\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "repeat",
+      "args": [
+        "-e",
+        "var i=0\nwhile i<100 {assert(!attempt(()=>1/0).ok)\ni+=1}\nassert(attempt(()=>7).value==7)"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "sideeffect",
+      "args": [
+        "-e",
+        "let x=[0]\nlet r=attempt(()=>{x[0]=9\nfail(\"bad\")})\nassert(!r.ok && x[0]==9)"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "field",
+      "args": [
+        "-e",
+        "let r=attempt(()=>({}).missing)\nassert(r.error[\"class\"]==\"FieldError\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "integer",
+      "args": [
+        "-e",
+        "let r=attempt(()=>9223372036854775807+1)\nassert(r.error[\"class\"]==\"OverflowError\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "frames",
+      "args": [
+        "-e",
+        "fn bad()=>1/0\nlet r=attempt(bad)\nassert(len(r.error.traceback)==2)\nassert(r.error.traceback[1].func==\"bad\")\nassert(len(keys(r))==3 && len(keys(r.error))==5)"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "json_failure",
+      "args": [
+        "-e",
+        "let r=attempt(()=>jsonParse(\"bad\"))\nassert(r.error[\"class\"]==\"ValueError\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "baseline",
+      "args": [
+        "-e",
+        "assert(sum([1,2,3])==6)\nassert(jsonParse(jsonStringify({a:1})).a==1)"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "arity",
+      "args": [
+        "--json",
+        "-e",
+        "attempt()"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 attempt 期待 1 个参数，得到 0\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "callback_arity",
+      "args": [
+        "--json",
+        "-e",
+        "attempt((x)=>x)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 <fn> 期待 1 个参数，得到 0\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "nonfunc",
+      "args": [
+        "--json",
+        "-e",
+        "attempt(3)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"不可调用：int 不是函数\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "capacity",
+      "args": [
+        "--json",
+        "-e",
+        "attempt(()=>range(9223372036854775807))"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"OverflowError\",\"message\":\"容量溢出：所需容量超出可分配上限\",\"file\":\"<command>\",\"line\":1,\"col\":13,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "not_first_class",
+      "args": [
+        "--json",
+        "-e",
+        "let f=attempt"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'attempt'\",\"file\":\"<command>\",\"line\":1,\"col\":7,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "builtin_needs_wrapper",
+      "args": [
+        "--json",
+        "-e",
+        "attempt(jsonParse)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'jsonParse'\",\"file\":\"<command>\",\"line\":1,\"col\":9,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "normal_uncaught",
+      "args": [
+        "--json",
+        "-e",
+        "1/0"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    }
+  ],
+  "scope": "author new T15 snippets and minimal compatibility, not fresh Agent blind benchmark"
+}

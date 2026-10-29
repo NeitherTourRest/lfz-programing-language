@@ -19,7 +19,7 @@ LFZ（读作 "elf-zee"）是一门**动态类型、表达式导向**的通用脚
 - **无魔法**：条件必须是 `bool`；除了 `int → float` 加宽外无隐式转换；越界 / 缺字段 / 溢出 / 类型不符一律结构化报错。
 - **仪式感**：每个 `.lfz` 文件以第一行 `#42` 起手——"宇宙的答案"，缺失即报错。
 
-当前已实现 **72 个内置**，包括双参 range、字符串查找/补齐/子串、ord/chr、sin/cos/log/exp、contains、UTF-8 文件 IO，以及 `argv`、`jsonParse`、`jsonStringify`。签名和边界见参考 §5；相对文件路径基于进程当前工作目录。
+当前已实现 **73 个内置**，包括双参 range、字符串查找/补齐/子串、ord/chr、sin/cos/log/exp、contains、UTF-8 文件 IO，以及 `argv`、`jsonParse`、`jsonStringify`。签名和边界见参考 §5；相对文件路径基于进程当前工作目录。
 
 完整形式定义见 [`docs/spec/syntax.md`](../spec/syntax.md)；语义见 [`docs/spec/semantics.md`](../spec/semantics.md)。
 
@@ -147,7 +147,7 @@ $ cargo run --quiet -- run greeting.lfz
 | 想做的事 | 读 |
 |---|---|
 | 跟着例子从零写一个完整小程序 | [`tutorial.md`](tutorial.md) |
-| 查语法、运算符优先级、72 个内置函数 | [`reference.md`](reference.md) |
+| 查语法、运算符优先级、73 个内置函数 | [`reference.md`](reference.md) |
 | 搞懂 12 类错误、`Traceback`、退出码、`--json` | [`errors.md`](errors.md) |
 | 写测试、跑测试、覆盖矩阵 | [`testing.md`](testing.md) |
 | 权威语法 / 语义 / 接口契约 | [`../spec/`](../spec/) |
@@ -202,3 +202,7 @@ if ($LASTEXITCODE -eq 0) { ./dist/lfz.exe run examples/hello.lfz }
 ```
 
 check不接收脚本参数，CODE外的 `--`（即使空尾）会报参数错误；运行时参数放到后续run。`check --help`同样拒绝，帮助用 `lfz --help`。合法输入加 `--json` 才保证一个结果对象；参数错误仍写stderr用法文本、stdout空、退出2。文件前导及完整边界见 [参考§8](reference.md#8-非执行语法检查命令) 与 [错误§9](errors.md#9-check的语法诊断与参数错误)。
+
+## T15：把可恢复错误变成结果
+
+当前为73内置候选，新增 `attempt(f)`，不新增try/catch文法。常用写法 `attempt(() => jsonParse(text))`；先用 `lfz check` 检查语法，再运行脚本。检查通过不保证回调可成功运行。[错误恢复教程](error-recovery.md)演示混合好坏JSON批处理，精确语义以[规范§18](../spec/semantics.md)为准。R304仍OPEN，不由新增功能推断性能提升。

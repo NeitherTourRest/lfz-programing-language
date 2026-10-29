@@ -26,7 +26,7 @@
    确认**退出码为 `0`** 再交付；若报错，按指南 §4.5「错误类 → 原因 → 修法」修正后重跑。
 8. **字符串处理纪律**：不要对 `string` 取下标（`s[i]` 非法 → 先 `split("", s)`，见指南 §4-22）；
    **大 n 时不要在循环里用 `s = s + …` 或 `push` 累积**（O(n²)，用指南 §4.6 的 O(n) 写法）。
-9. 当前1.4.0已实现 72 内置及 range(n)/range(lo,hi)，使用指南 §6 已列签名。字符串按 Unicode 标量计数；indexOf 最坏 O(n·m)，contains 线性扫描。文件 IO 为 UTF-8，相对路径基于进程 CWD；本项目只在项目内读写，临时件放 Temp/，父目录需存在。
+9. 当前1.4.0已实现 73 内置及 range(n)/range(lo,hi)，使用指南 §6 已列签名。字符串按 Unicode 标量计数；indexOf 最坏 O(n·m)，contains 线性扫描。文件 IO 为 UTF-8，相对路径基于进程 CWD；本项目只在项目内读写，临时件放 Temp/，父目录需存在。
 10. 参数须放CLI的 -- 后，用argv()读取；JSON用jsonParse/jsonStringify，不手写拼接/解析。业务JSON正常模式输出，--json为执行状态；详见指南§6.2。
 11. -e/stdin源码无需#42；stdin源码已读到EOF，不能再从同一stdin读数据。JSON两内置作高阶回调要lambda包装，不直接取其函数值。
 12. 附 stdout/stderr 与真实退出码，文件 IO 标明路径及副作用。
@@ -108,3 +108,7 @@ CODE外不能传--或脚本参数；检查通过后才按任务授权运行，�
 分别报告两步命令、stdout/stderr、退出码和实际文件副作用。
 源码check(cond,msg)是独立的非致命断言内置，不是CLI check。
 ```
+
+## T15模板补充
+
+需逐条恢复业务错误时用attempt(() => ...)，严格按指南§6.3检查ok及error["class"]。先check再run，捕获失败不回滚IO/容器副作用；资源终止不可吞。成功Result含函数/环时不能保证可JSON编码。提交时说明哪些记录成功、哪些失败，而非只报告exit0。

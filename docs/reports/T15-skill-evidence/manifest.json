@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-29",
+  "binary_sha256": "1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c",
+  "documents": {
+    ".opencode/skills/lfz-programming/SKILL.md": "cfaa384ea3f8b993ab1c3b77e12fe9ddd526f3575176ac4d626d1eb28b96dd67",
+    ".opencode/skills/lfz-programming/README.md": "9ceb5b4be3b928a1ffe7d4871884709e2330fe7d4784aa4a1f3cba9c3994ccc4",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "be2b85bd905ceec6f91a97541bffc05c02d0bd035a41848a0a64b9e44b7d5dbc",
+    ".opencode/skills/lfz-programming/prompt-template.md": "59e03795a66a20d7f8d90c1dd02da9767dbc771571567df2dac48edc9fc42670",
+    "docs/guide/ai/README.md": "99e49391ae132d59069c24225f12c58cb1f4571249be9970237cdc9b20d4b024"
+  },
+  "files": {
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "results.json": {
+      "bytes": 9162,
+      "sha256": "74bce762b9e8e60e00e9a3af18ab886c3bd55f7a2a312b18a8391b5baf5c7ccf"
+    },
+    "run_examples.py": {
+      "bytes": 4192,
+      "sha256": "81880a32081f188f6edd45c1801f3201e9cae59fccc38a8df9318c7d6fb33c74"
+    }
+  }
+}

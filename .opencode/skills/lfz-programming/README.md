@@ -134,3 +134,7 @@ $LASTEXITCODE                          # 期望 0
 ## T14：检查与执行分开
 
 使用1.4.0候选，先 `lfz check FILE`（或`check -e CODE`、`check -`），再按授权`lfz run FILE`。检查通过不保证运行成功。机器结果明确`mode:"check",executed:false`；usage错误即使--json仍stderr文本。CODE外--及check --help拒绝。文件前导、非执行/非静态分析与宿主IO边界见SKILL §0.6及三spec §17。源码check断言内置不变。新示例实跑见 `docs/reports/T14-skill-evidence.md`；旧T12/v2成绩不改写，R304仍开放，无整体提速或正式发布声明。
+
+## T15受控业务错误恢复（2026-10-29）
+
+当前73内置，新增attempt(f)；契约三spec§18，使用规则和坏JSON继续示例见SKILL.md §6.3。作者聚焦新增示例与关键兼容实际记录见docs/reports/T15-skill-evidence.md；不重跑/改写旧v2或历史T12/T14成绩，R304仍OPEN。

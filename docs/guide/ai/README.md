@@ -3,9 +3,9 @@
 > 本页同步自项目内 [LFZ 编程 skill](../../../.opencode/skills/lfz-programming/SKILL.md)，版本1.4.0；维护者 ai-dx-engineer。T12历史示例见 [原证据](../../reports/T12-skill-evidence.md)；新增check工作流见 [T14实跑证据](../../reports/T14-skill-evidence.md)。
 
 > 读者：**未接触过 LFZ 的编程 Agent**。目标：只凭本文件写出**正确、可运行**的 LFZ 程序。
-> 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（含 T12 §16 / T14 §17）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
+> 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（含 T12 §16 / T14 §17 / T15 §18）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
 > 使用纪律：**只允许使用本文件列出的语法**。不要用 Python / C / JS 的规则去猜 LFZ——LFZ 在若干处刻意不同（见 §4）。
-> **版本对齐（2026-10-29，候选）**：项目内 `dist/lfz.exe` / `target/release/lfz.exe` 为 **1.4.0，72 个内置**（54+15+3），支持 argv、JSON、`-e`、stdin源码及非执行`check`。T12 示例实跑证据见 `docs/reports/T12-skill-evidence.md`；项目外 PATH 中的旧解释器不保证具备这些能力。
+> **版本对齐（2026-10-29，候选）**：项目内 `dist/lfz.exe` / `target/release/lfz.exe` 为 **1.4.0，73 个内置**（54+15+3+1），支持 argv、JSON、`-e`、stdin源码及非执行`check`。T12 示例实跑证据见 `docs/reports/T12-skill-evidence.md`；项目外 PATH 中的旧解释器不保证具备这些能力。
 
 > 🚫 **硬纪律：不要凭记忆写 LFZ。** 本文件**没写的语法一律视为不存在**；拿不准就先查 §10 列出的 spec，或改用本文件已列出的等价写法。宁可用保守写法，也不要"猜一个大概像 Python 的写法"。
 
@@ -69,7 +69,7 @@ lfz check --json -e 'print(1 / 0)'
 - CLI参数错误是例外：即使有`--json`，仍stderr用法文本、stdout空、exit2。不要无条件json解析任意失败调用。
 - `-e`紧随的一项原样作为CODE，包括空串、`--json`、`--`、`--help`。CODE外`--json`可前后重复；check拒绝CODE外任何`--`及脚本参数、缺源/多源/缺CODE/未知选项和`check --help`。帮助用`lfz --help`。
 - check通过只代表前端通过。`print(1 / 0)`检查成功，但run会ZeroDivisionError；先check成功，再按任务授权和预期副作用执行run并核对结果。执行阶段参数才放在`--`后。
-- CLI `lfz check`与源码内非致命断言`check(cond,msg)`不同；内置数量仍72。旧run/test JSON不增加mode/executed键。
+- CLI `lfz check`与源码内非致命断言`check(cond,msg)`不同；T14未新增内置；当前T15新增attempt后共73。旧run/test JSON不增加mode/executed键。
 - 本轮为1.4.0候选，R304仍OPEN，不是正式发布或整体提速声明。新增指南作者实跑另见`docs/reports/T14-skill-evidence.md`；旧v2的8/8、131/131属于原冻结输入，不重新计分。
 
 ## 1. ⚠️ 铁律（第 1 条，最先看）：`.lfz` 文件首行必须是 `#42`
@@ -262,7 +262,7 @@ let q = 10 |> push(_, [1, 2])      // _ 占位：注入到该位 → push(10, [1
     - `let ys = push(9, xs)` —— **不**改 `xs`；`sort(xs)` 不改 `xs`。
     - 唯一原地改的是**赋值语法** `a[i] = v` / `s.k = v`。
 
-11. **72 个内置按 data-last 约定**（见 §6）；容器/字符串被操作对象恒为末参。
+11. **73 个内置按 data-last 约定**（见 §6）；容器/字符串被操作对象恒为末参。
 
 12. **`round` 是银行家舍入（四舍六入五成双）**：`round(2.5) == 2`、`round(3.5) == 4`。
 
@@ -412,7 +412,7 @@ print("continue")
 
 ---
 
-## 6. 内置函数 72 个（data-last）
+## 6. 内置函数 73 个（data-last）
 
 > **约定**：凡对容器 / 字符串操作者，**被操作对象恒为最后一个参数**；`xs |> f(...)` 把 `xs` 注入末参。**凡容器更新一律返回新值、不改原容器**（A1），除非用赋值语法 `a[i]=` / `s.k=`。参数类型/个数不符 → `TypeError`。
 
@@ -793,9 +793,45 @@ print(sum_even([1, 2, 3, 4, 5]))
 
 ## 10. 权威来源
 
-- 语法：`docs/spec/syntax.md`｜语义：`docs/spec/semantics.md`｜接口/错误/内置表：`docs/spec/interface-contract.md`（含 T12 §16 / T14 §17）。
+- 语法：`docs/spec/syntax.md`｜语义：`docs/spec/semantics.md`｜接口/错误/内置表：`docs/spec/interface-contract.md`（含 T12 §16 / T14 §17 / T15 §18）。
 - runner/CLI 契约：`docs/tooling/runner-contract.md`。
 - 本指南的实测验证记录：同目录 `VERIFICATION.md`（§8 为 T11-③ 的 D1–D7 修订实测证据）。
 - 本 skill 包的**安装与使用**：同目录 `README.md`（三种安装方式 + 运行前提 + 不做什么）。
 - 示例源码目录：`docs/guide/ai/examples/`（`01_hello` / `02_basics` / `03_students` / **`04_wordcount`**）。
 - 人类向手册：`docs/guide/README.md`；本页与机读skill共用已验证的AI速查内容。
+
+
+## 6.3 T15：把业务错误变为可检查的值
+
+事实源为三spec §18；语言内置总数为73（原72加attempt），并未使内置普遍成为一等函数。先用项目内候选 `lfz check` 检查，再run，最后核结果和副作用。
+
+`attempt(f)`恰一参，f必须是可零参调用的函数；只调用一次。成功为新struct `{ok:true,value:v,error:nil}`，失败为 `{ok:false,value:nil,error:e}`，三字段插入序固定。成功nil仍是ok=true；不要用value是否nil判断成功。value保持原引用与函数身份，不深复制。
+
+失败e字段插入序为 `class,message,line,col,traceback`；位置1-based整数、未知位置nil。traceback为完整外→内数组，每帧字段序 `func,line,col`，函数名含`<module>`/`<fn>`。无file字段（解释器上下文没有源路径），它不同于CLI错误JSON的traceback协议。记录是普通数据，改记录不会改解释器内部栈。
+
+```lfz
+#42
+let lines = ["{\"n\":2}", "bad", "{\"n\":5}"]
+var values = []
+var errors = []
+for line in lines {
+ let r = attempt(() => jsonParse(line))
+ if r.ok { values = push(r.value, values) }
+ else { errors = push(r.error, errors) }
+}
+assert(len(values) == 2 && len(errors) == 1)
+assert(errors[0]["class"] == "ValueError")
+print(jsonStringify({values: values, errors: errors}))
+```
+
+`class`是保留字，必须用`r.error["class"]`，不能写`r.error.class`。lambda内空struct须写`({}).missing`，`=> {}`本来就是块。
+
+捕获白名单为NameError、TypeError、IndexError、FieldError、ZeroDivisionError、ValueError、IOError、AssertionError、整数越界OverflowError。JSON128深度输入验证属ValueError。容量溢出、RecursionError、SyntaxError、CosmosAnswerError以及宿主panic/abort/分配失败不捕获；不得用attempt吞资源终止。IOError沿原运行时类别，不保证识别所有底层OS资源故障。
+
+参数求值、attempt参数数量/类型和f非零形参校验均在本次捕获边界外，直接报原错误；外层attempt可捕内部发生的TypeError。旧内置非一等值，写`attempt(() => jsonParse(text))`，不要写`attempt(jsonParse)`。argv是既有特例，`attempt(argv)`合法并返回参数快照。attempt自己不是一等函数，不能`let saved=attempt`；可用命名调用/管道，也可按原词法规则遮蔽。
+
+成功及可恢复失败还原调用前depth与完整trace（包括调用者span），嵌套各自独立；不可恢复错保留故障栈传播。func_names/next_func_id不回滚，失败回调写出的逃逸闭包仍有效。
+
+**没有事务回滚**：容器/全局/cell写入、文件写入、print/eprint、随机状态和闭包分配均保留。check(false)只是警告和false，attempt仍成功；assert/fail在边界内是失败值。成功value可含函数或环，不能承诺整个Result一定能jsonStringify。结构化业务失败可以让run退出0，必须自行检查每条ok，不能以进程exit0代表所有记录成功。
+
+实用完整应用见`app/jsonbatch.lfz`；当前readFile整文件驻内存，不是流式读取。新作者实跑见`docs/reports/T15-skill-evidence.md`，不覆盖旧v2冻结成绩。R304仍OPEN，无T15性能测窗，不声明提速或正式发布。

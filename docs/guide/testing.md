@@ -258,3 +258,9 @@ check只复用前端，不能替代执行测试。测试框架应分别记录「
 非执行回归可准备一个已有哨兵文件和一个不存在的目标，让源码包含writeFile/appendFile；检查成功以及源码后续有语法错时，已有文件都应保持字节不变，新目标都不应创建。另查程序print/eprint/dump/input不产生输出/提示，循环只解析后及时返回。文件与stdin读取仍是宿主IO，不能称完整沙箱。
 
 合法check的JSON成功有且仅有`ok/mode/executed`三个键，错误沿原错误字段；CLI参数错误（如CODE外`--`、缺源或`check --help`）仍stdout空/stderr文本/退出2，即使传了`--json`。本轮只实跑新增指南示例与关键旧例，独立于旧35块全量记录；证据见 [T14-guide-evidence.md](../reports/T14-guide-evidence.md)。
+
+## T15：验证失败之后仍能继续
+
+新用例应分别验证成功nil、坏JSON后继续、嵌套恢复、连续失败后成功、后续未捕获错误的trace不污染、共享容器和文件写入不回滚。边界arity/noncallable、容量错误传播应与业务错误恢复分开测试。不要通过真实OOM/abort测试不可捕获性；资源variant可用运行时单元构造见证。
+
+新增指南聚焦实跑记录见[T15-guide-evidence.md](../reports/T15-guide-evidence.md)，只代表该报告绑定候选的实际例子，不替代历史全部指南块或独立验收。先check再run，并分别记录语法、运行和断言结果；R304仍OPEN。

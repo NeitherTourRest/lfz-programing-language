@@ -491,3 +491,7 @@ print(len("hello"))      // 5                   else if n >= 80 { "B" }
 作者新增示例与关键兼容 **27/27通过**，实际使用target/release/lfz.exe，774656B，SHA256 `83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79`。覆盖先检查再运行偶数求和最小基线、语法有效运行期错误、无限循环/递归/input/dump不执行、文件哨兵不改不创建、CODE字面保护、参数错误、原run JSON与非致命check内置。命令、stdout/stderr原字节hex和退出码见 `docs/reports/T14-skill-evidence/results.json`，验证器同目录run_examples.py。
 
 这是作者指南示例回归，非新Agent盲测；旧v2的8/8、131/131及其manifest不改、不重新计分。T13省分配候选被拒收，生产优化已撤回，本轮不宣称提速；R304仍OPEN，1.4.0为候选、非正式发布。
+
+## T15受控业务错误恢复（2026-10-29）
+
+当前73内置，新增attempt(f)；契约三spec§18，使用规则和坏JSON继续示例见SKILL.md §6.3。作者聚焦新增示例与关键兼容实际记录见docs/reports/T15-skill-evidence.md；不重跑/改写旧v2或历史T12/T14成绩，R304仍OPEN。

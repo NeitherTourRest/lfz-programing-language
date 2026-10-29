@@ -220,7 +220,7 @@ print()                           // 空行
 
 ---
 
-## 5. 内置函数速查（72 个，全部 **data-last**）
+## 5. 内置函数速查（73 个，全部 **data-last**）
 
 > 出处：IC §10.7。约定：**被操作数据恒为最后一个参数**；`xs |> f(...)` 把 `xs` 注入末参。**除赋值语法外一律"返回新值、不改原容器"**（A1，SE §4.5.2）。参数类型/数量不符 → `TypeError`。
 
@@ -365,7 +365,7 @@ print()                           // 空行
 | 优先级、管道脱糖 | `syntax.md` §4 |
 | 27 条歧义消解（A1–A27） | `syntax.md` §5 |
 | `;;` 语义、值显示、求值语义、错误模型 | `semantics.md` §3.6、§3.7、§4.5、§8 |
-| 72 个内置函数表 | `interface-contract.md` §10.7、§16 |
+| 73 个内置函数表 | `interface-contract.md` §10.7、§16、§18 |
 | 错误类实现映射、loader、`Span`、帧 | `interface-contract.md` §8.1、§10 |
 | 非执行check命令、JSON标记及限制 | 三spec §17 |
 | 下游硬性要求（含 docs / runner 契约） | `interface-contract.md` §11 |
@@ -385,3 +385,15 @@ print()                           // 空行
 CODE原样保护，即使等于`--json`、`--`、`--help`或空字符串也按源码解析；CODE外`--json`可前后放置、重复幂等。CODE外任何`--`、多源、缺源、缺CODE、未知选项及`check --help`均是CLI参数错误：即使有`--json`也只写stderr文本、stdout空、退出2。以`-`开头的文件路径写成`./-name`或完整路径。
 
 `-e`错误伪路径为`<command>`，stdin为`<stdin>`，行列从1开始。文件的前导消费与偏移沿既有loader。读取/解码stdin失败沿用无位置的 `IOError: 无法读取标准输入`。正式契约见三spec §17；check并不承诺检查宿主读取设备不会等待，也不是安全沙箱。
+
+## T15：attempt(f) 受控调用
+
+| 接口 | 结果 | 边界 |
+| -- | -- | -- |
+| `attempt(f)` | 恰一参，调用零参数函数一次；新struct字段顺序为ok/value/error | f不是函数或需要非零参数，直接TypeError；求实参期间错误也在边界外 |
+
+成功 `{ok:true,value:v,error:nil}`；失败 `{ok:false,value:nil,error:e}`。成功nil也必须看ok区分。value保留原引用，不深复制。error字段按class/message/line/col/traceback插入；traceback完整外到内，帧为func/line/col，没有file。位置1-based，无位置为nil。字段class是保留字，用 `r.error["class"]`。jsonStringify仍按原规则排序键；若成功value含函数或环，不能保证整个结果可JSON编码。
+
+仅argv保持既有一等内置函数值；attempt自己和普通内置仍不能独立取值。请用闭包包装 `attempt(() => readFile(path))`，不能写 `attempt(readFile)`。管道 `f |> attempt` 等价于attempt(f)。名称可被用户绑定遮蔽。lambda要返回空struct后取字段时写 `() => ({}).missing`，避免把{}解析成函数块。
+
+可恢复和传播规则见[错误指南](errors.md)与[完整教程](error-recovery.md)。规范为syntax/semantics/interface-contract §18，内置总数73包含特殊Interp入口attempt；不改变普通/HOF ABI。

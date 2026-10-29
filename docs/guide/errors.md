@@ -362,3 +362,11 @@ jsonStringify reason为 `不支持函数或结构体定义`、`浮点数必须�
 参数错误走既有usage通道：`lfz check --json`、`lfz check --json --help`、`lfz check x.lfz --`都退出2，stdout空，stderr是用法文本，不是LFZ JSON错误对象。自动化调用必须先确认命令参数合法，再按stdout是否为结果对象处理；不能给usage错误臆造某个LFZ类名。
 
 文件加载沿原UTF8/BOM/换行/前导规则；-e/stdin不要求前导且从line1起。stdin非法UTF8/读取失败仍为无位置IOError，JSON的line/col为null、traceback空。新命令不改变run/test已有诊断和输出协议；精确约定见 [三spec §17](../spec/interface-contract.md#17-t14-前端检查cli契约2026-10-27-冻结)。
+
+## T15：恢复边界与副作用
+
+attempt回调内部的NameError、TypeError、IndexError、FieldError、ZeroDivisionError、ValueError、IOError、AssertionError及整数结果越界OverflowError可变成失败记录。assert/fail在边界外仍按原方式终止；check(false)只是警告并返回false，不是可捕获错误。
+
+SyntaxError、CosmosAnswerError、RecursionError和容量溢出OverflowError不捕获；宿主panic、abort、分配失败不是业务结果。IOError仍是原OS IO错误类别，不能据此区分所有底层资源故障。未来预算/取消也不能作为普通业务失败吞掉。
+
+恢复的是求值深度与完整调用trace/span；失败记录保存清理前完整调用者链，不虚构attempt帧。后续错误不应带有旧失败帧。全局/闭包cell、容器、文件写入、输出、随机状态及已经创建的闭包都不回滚：attempt不是事务，也不是沙箱。外层参数校验错误可以由更外层attempt捕获，但本次尚未进入回调的调用不会自行变成Result。

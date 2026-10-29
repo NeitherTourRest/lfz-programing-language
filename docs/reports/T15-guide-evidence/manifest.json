@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-29",
+  "binary_sha256": "1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c",
+  "scope": "new/affected T15 human-guide examples only; no historical full rerun",
+  "files": {
+    "docs\\reports\\T15-guide-evidence\\.gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "docs\\reports\\T15-guide-evidence\\runs.json": {
+      "bytes": 6615,
+      "sha256": "22481bfcb6e7bf4d2737a54a6daf1916161e7b72c7cc0eed84e750580dbeab39"
+    },
+    "docs\\reports\\T15-guide-evidence\\verify.py": {
+      "bytes": 3646,
+      "sha256": "b5852ab0cb0977b3db9aa9969c81797eb2260d68c7bd6de0f8bbbda9d09392b8"
+    }
+  }
+}
