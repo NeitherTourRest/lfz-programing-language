@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-29",
+  "scope": "T16-A core metadata only; runtime/full release verification separate",
+  "red_command": "rustc --edition=2021 --crate-name missing_api Temp/T16-A-core/missing-api.rs --extern lfz=target/release/liblfz.rlib -L dependency=target/release/deps -o Temp/T16-A-core/missing-api.exe",
+  "red_exit": 1,
+  "red_reason": "E0432 lfz::source missing from pre-implementation library",
+  "green_command": "cargo test --release --lib source::tests",
+  "green_exit": 0,
+  "passed": 6,
+  "filtered": 419,
+  "files": [
+    {
+      "bytes": 5420,
+      "sha256": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468",
+      "path": "src/source.rs"
+    },
+    {
+      "bytes": 840,
+      "sha256": "0792bdc59b3ec2c690aa88c0f5ebb2afb49bb448d1ecff56c8a6d6914e1c7df7",
+      "path": "src/lib.rs"
+    },
+    {
+      "bytes": 601,
+      "sha256": "c90dad0d3a30c74bfbc94a7eab585d9f1060637f0861e8195bf354b159a3252c",
+      "path": "docs/reports/T16-A-core-evidence/red.txt"
+    },
+    {
+      "bytes": 1117,
+      "sha256": "204f7e95773e2241180c12429b272db051969c74c6c885e947b63741d24beb0b",
+      "path": "docs/reports/T16-A-core-evidence/green.txt"
+    },
+    {
+      "bytes": 120,
+      "sha256": "6e4269e32247a9e8d2651eb752d6785a05cb9cf00f016f182d1f296751ad8340",
+      "path": "docs/reports/T16-A-core-evidence/missing-api.rs"
+    }
+  ]
+}

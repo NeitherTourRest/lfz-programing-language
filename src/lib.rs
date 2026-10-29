@@ -14,3 +14,5 @@ pub mod env; // 作用域 / 闭包捕获（P3.6）
 pub mod evaluator; // 树遍历求值器（P3.7 / P3.8）
 pub mod json_codec; // 严格JSON数据编解码（T12）
 pub mod builtins; // 内置函数表（P3.9）
+
+pub mod source; // T16-A 来源身份与定位元数据（不加载模块）。

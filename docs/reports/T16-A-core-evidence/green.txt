@@ -1,0 +1,19 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `release` profile [optimized] target(s) in 45.05s
+     Running unittests src\lib.rs (target\release\deps\lfz-63397fd2d9985014.exe)
+
+running 6 tests
+test source::tests::checked_id_boundary_without_mass_allocation ... ok
+test source::tests::ids_are_separate_zero_entry_domains ... ok
+test source::tests::failed_loading_can_have_source_without_loaded_text ... ok
+test source::tests::record_keeps_loaded_bytes_line_base_and_identity_without_io ... ok
+test source::tests::located_failure_keeps_existing_error_and_public_shapes ... ok
+test source::tests::insertion_is_stable_and_unknown_ids_do_not_fall_back ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 419 filtered out; finished in 0.00s
+

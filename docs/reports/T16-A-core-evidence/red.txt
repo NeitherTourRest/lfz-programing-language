@@ -1,0 +1,14 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+error[E0432]: unresolved import `lfz::source`
+ --> Temp/T16-A-core/missing-api.rs:1:10
+  |
+1 | use lfz::source::{SourceMap,SourceId};
+  |          ^^^^^^ could not find `source` in `lfz`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0432`.
