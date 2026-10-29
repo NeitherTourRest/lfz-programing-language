@@ -1,0 +1,845 @@
+{
+  "date": "2026-10-29",
+  "binary_sha256": "83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79",
+  "passed": 57,
+  "rows": [
+    {
+      "name": "io_and_output",
+      "origin": "file",
+      "json": false,
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"changed\")\nappendFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"append\")\nwriteFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/not-created.txt\",\"new\")\nprint(\"bad\")\neprint(\"bad\")\n;;\ninput(\"prompt\")",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "io_and_output",
+      "origin": "file",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"changed\")\nappendFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"append\")\nwriteFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/not-created.txt\",\"new\")\nprint(\"bad\")\neprint(\"bad\")\n;;\ninput(\"prompt\")",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "io_and_output",
+      "origin": "code",
+      "json": false,
+      "args": [
+        "check",
+        "-e",
+        "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"changed\")\nappendFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"append\")\nwriteFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/not-created.txt\",\"new\")\nprint(\"bad\")\neprint(\"bad\")\n;;\ninput(\"prompt\")"
+      ],
+      "source": "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"changed\")\nappendFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"append\")\nwriteFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/not-created.txt\",\"new\")\nprint(\"bad\")\neprint(\"bad\")\n;;\ninput(\"prompt\")",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "io_and_output",
+      "origin": "code",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"changed\")\nappendFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"append\")\nwriteFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/not-created.txt\",\"new\")\nprint(\"bad\")\neprint(\"bad\")\n;;\ninput(\"prompt\")"
+      ],
+      "source": "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"changed\")\nappendFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"append\")\nwriteFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/not-created.txt\",\"new\")\nprint(\"bad\")\neprint(\"bad\")\n;;\ninput(\"prompt\")",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "io_and_output",
+      "origin": "stdin",
+      "json": false,
+      "args": [
+        "check",
+        "-"
+      ],
+      "source": "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"changed\")\nappendFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"append\")\nwriteFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/not-created.txt\",\"new\")\nprint(\"bad\")\neprint(\"bad\")\n;;\ninput(\"prompt\")",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "io_and_output",
+      "origin": "stdin",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-"
+      ],
+      "source": "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"changed\")\nappendFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"append\")\nwriteFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/not-created.txt\",\"new\")\nprint(\"bad\")\neprint(\"bad\")\n;;\ninput(\"prompt\")",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "loop",
+      "origin": "file",
+      "json": false,
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "while true {}",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "loop",
+      "origin": "file",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "while true {}",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "loop",
+      "origin": "code",
+      "json": false,
+      "args": [
+        "check",
+        "-e",
+        "while true {}"
+      ],
+      "source": "while true {}",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "loop",
+      "origin": "code",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "while true {}"
+      ],
+      "source": "while true {}",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "loop",
+      "origin": "stdin",
+      "json": false,
+      "args": [
+        "check",
+        "-"
+      ],
+      "source": "while true {}",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "loop",
+      "origin": "stdin",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-"
+      ],
+      "source": "while true {}",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "recursive",
+      "origin": "file",
+      "json": false,
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "fn again() => again()\nagain()",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "recursive",
+      "origin": "file",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "fn again() => again()\nagain()",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "recursive",
+      "origin": "code",
+      "json": false,
+      "args": [
+        "check",
+        "-e",
+        "fn again() => again()\nagain()"
+      ],
+      "source": "fn again() => again()\nagain()",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "recursive",
+      "origin": "code",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "fn again() => again()\nagain()"
+      ],
+      "source": "fn again() => again()\nagain()",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "recursive",
+      "origin": "stdin",
+      "json": false,
+      "args": [
+        "check",
+        "-"
+      ],
+      "source": "fn again() => again()\nagain()",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "recursive",
+      "origin": "stdin",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-"
+      ],
+      "source": "fn again() => again()\nagain()",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "runtime_errors",
+      "origin": "file",
+      "json": false,
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "unknownName\n1+true\n1/0\nassert(false)\nreadFile(\"no-such-file\")",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "runtime_errors",
+      "origin": "file",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "unknownName\n1+true\n1/0\nassert(false)\nreadFile(\"no-such-file\")",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "runtime_errors",
+      "origin": "code",
+      "json": false,
+      "args": [
+        "check",
+        "-e",
+        "unknownName\n1+true\n1/0\nassert(false)\nreadFile(\"no-such-file\")"
+      ],
+      "source": "unknownName\n1+true\n1/0\nassert(false)\nreadFile(\"no-such-file\")",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "runtime_errors",
+      "origin": "code",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "unknownName\n1+true\n1/0\nassert(false)\nreadFile(\"no-such-file\")"
+      ],
+      "source": "unknownName\n1+true\n1/0\nassert(false)\nreadFile(\"no-such-file\")",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "runtime_errors",
+      "origin": "stdin",
+      "json": false,
+      "args": [
+        "check",
+        "-"
+      ],
+      "source": "unknownName\n1+true\n1/0\nassert(false)\nreadFile(\"no-such-file\")",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "runtime_errors",
+      "origin": "stdin",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-"
+      ],
+      "source": "unknownName\n1+true\n1/0\nassert(false)\nreadFile(\"no-such-file\")",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "late_syntax",
+      "origin": "file",
+      "json": false,
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"bad\")\nprint(1 + )",
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr_hex": "202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431342d76657269666965725c70726f62652e6c667a222c206c696e6520330a202020207072696e742831202b20290a20202020202020202020202020205e0a53796e7461784572726f723a20e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b0202729270a",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "late_syntax",
+      "origin": "file",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"bad\")\nprint(1 + )",
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226d6f6465223a22636865636b222c226578656375746564223a66616c73652c226572726f72223a2253796e7461784572726f72222c226d657373616765223a22e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b020272927222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d76657269666965725c5c70726f62652e6c667a222c226c696e65223a332c22636f6c223a31312c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d76657269666965725c5c70726f62652e6c667a222c226c696e65223a332c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "late_syntax",
+      "origin": "code",
+      "json": false,
+      "args": [
+        "check",
+        "-e",
+        "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"bad\")\nprint(1 + )"
+      ],
+      "source": "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"bad\")\nprint(1 + )",
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr_hex": "202046696c6520223c636f6d6d616e643e222c206c696e6520320a202020207072696e742831202b20290a20202020202020202020202020205e0a53796e7461784572726f723a20e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b0202729270a",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "late_syntax",
+      "origin": "code",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"bad\")\nprint(1 + )"
+      ],
+      "source": "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"bad\")\nprint(1 + )",
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226d6f6465223a22636865636b222c226578656375746564223a66616c73652c226572726f72223a2253796e7461784572726f72222c226d657373616765223a22e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b020272927222c2266696c65223a223c636f6d6d616e643e222c226c696e65223a322c22636f6c223a31312c2274726163656261636b223a5b7b2266696c65223a223c636f6d6d616e643e222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "late_syntax",
+      "origin": "stdin",
+      "json": false,
+      "args": [
+        "check",
+        "-"
+      ],
+      "source": "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"bad\")\nprint(1 + )",
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr_hex": "202046696c6520223c737464696e3e222c206c696e6520320a202020207072696e742831202b20290a20202020202020202020202020205e0a53796e7461784572726f723a20e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b0202729270a",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "late_syntax",
+      "origin": "stdin",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-"
+      ],
+      "source": "writeFile(\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T14-verifier/exists.txt\",\"bad\")\nprint(1 + )",
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226d6f6465223a22636865636b222c226578656375746564223a66616c73652c226572726f72223a2253796e7461784572726f72222c226d657373616765223a22e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b020272927222c2266696c65223a223c737464696e3e222c226c696e65223a322c22636f6c223a31312c2274726163656261636b223a5b7b2266696c65223a223c737464696e3e222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "unreachable_syntax",
+      "origin": "file",
+      "json": false,
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "if false { print(1 + ) }",
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr_hex": "202046696c652022443a5c5855455c3230323666616c6c5c50726f6772616d2044657369676e5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c54656d705c5431342d76657269666965725c70726f62652e6c667a222c206c696e6520320a2020202069662066616c7365207b207072696e742831202b2029207d0a202020202020202020202020202020202020202020202020205e0a53796e7461784572726f723a20e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b0202729270a",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "unreachable_syntax",
+      "origin": "file",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "if false { print(1 + ) }",
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226d6f6465223a22636865636b222c226578656375746564223a66616c73652c226572726f72223a2253796e7461784572726f72222c226d657373616765223a22e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b020272927222c2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d76657269666965725c5c70726f62652e6c667a222c226c696e65223a322c22636f6c223a32322c2274726163656261636b223a5b7b2266696c65223a22443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d76657269666965725c5c70726f62652e6c667a222c226c696e65223a322c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "unreachable_syntax",
+      "origin": "code",
+      "json": false,
+      "args": [
+        "check",
+        "-e",
+        "if false { print(1 + ) }"
+      ],
+      "source": "if false { print(1 + ) }",
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr_hex": "202046696c6520223c636f6d6d616e643e222c206c696e6520310a2020202069662066616c7365207b207072696e742831202b2029207d0a202020202020202020202020202020202020202020202020205e0a53796e7461784572726f723a20e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b0202729270a",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "unreachable_syntax",
+      "origin": "code",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "if false { print(1 + ) }"
+      ],
+      "source": "if false { print(1 + ) }",
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226d6f6465223a22636865636b222c226578656375746564223a66616c73652c226572726f72223a2253796e7461784572726f72222c226d657373616765223a22e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b020272927222c2266696c65223a223c636f6d6d616e643e222c226c696e65223a312c22636f6c223a32322c2274726163656261636b223a5b7b2266696c65223a223c636f6d6d616e643e222c226c696e65223a312c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "unreachable_syntax",
+      "origin": "stdin",
+      "json": false,
+      "args": [
+        "check",
+        "-"
+      ],
+      "source": "if false { print(1 + ) }",
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr_hex": "202046696c6520223c737464696e3e222c206c696e6520310a2020202069662066616c7365207b207072696e742831202b2029207d0a202020202020202020202020202020202020202020202020205e0a53796e7461784572726f723a20e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b0202729270a",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "unreachable_syntax",
+      "origin": "stdin",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-"
+      ],
+      "source": "if false { print(1 + ) }",
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226d6f6465223a22636865636b222c226578656375746564223a66616c73652c226572726f72223a2253796e7461784572726f72222c226d657373616765223a22e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b020272927222c2266696c65223a223c737464696e3e222c226c696e65223a312c22636f6c223a32322c2274726163656261636b223a5b7b2266696c65223a223c737464696e3e222c226c696e65223a312c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "unicode",
+      "origin": "file",
+      "json": false,
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "let text = \"中文🙂\"\nprint(text)",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "unicode",
+      "origin": "file",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "let text = \"中文🙂\"\nprint(text)",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "unicode",
+      "origin": "code",
+      "json": false,
+      "args": [
+        "check",
+        "-e",
+        "let text = \"中文🙂\"\nprint(text)"
+      ],
+      "source": "let text = \"中文🙂\"\nprint(text)",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "unicode",
+      "origin": "code",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "let text = \"中文🙂\"\nprint(text)"
+      ],
+      "source": "let text = \"中文🙂\"\nprint(text)",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "unicode",
+      "origin": "stdin",
+      "json": false,
+      "args": [
+        "check",
+        "-"
+      ],
+      "source": "let text = \"中文🙂\"\nprint(text)",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "unicode",
+      "origin": "stdin",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-"
+      ],
+      "source": "let text = \"中文🙂\"\nprint(text)",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "empty",
+      "origin": "file",
+      "json": false,
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "empty",
+      "origin": "file",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-verifier\\probe.lfz"
+      ],
+      "source": "",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "empty",
+      "origin": "code",
+      "json": false,
+      "args": [
+        "check",
+        "-e",
+        ""
+      ],
+      "source": "",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "empty",
+      "origin": "code",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        ""
+      ],
+      "source": "",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "empty",
+      "origin": "stdin",
+      "json": false,
+      "args": [
+        "check",
+        "-"
+      ],
+      "source": "",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "empty",
+      "origin": "stdin",
+      "json": true,
+      "args": [
+        "check",
+        "--json",
+        "-"
+      ],
+      "source": "",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": "",
+      "sentinel_unchanged": true,
+      "missing_not_created": true
+    },
+    {
+      "name": "code_operand",
+      "source": "--json",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "code_operand",
+      "source": "--",
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226d6f6465223a22636865636b222c226578656375746564223a66616c73652c226572726f72223a2253796e7461784572726f72222c226d657373616765223a22e8bf99e9878ce69c9fe5be8520e8a1a8e8bebee5bc8fefbc8ce4bd86e5be97e588b02027e69687e4bbb6e69cabe5b0be27222c2266696c65223a223c636f6d6d616e643e222c226c696e65223a312c22636f6c223a332c2274726163656261636b223a5b7b2266696c65223a223c636f6d6d616e643e222c226c696e65223a312c2266756e63223a223c6d6f64756c653e227d5d7d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "code_operand",
+      "source": "check",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "code_operand",
+      "source": "",
+      "exit": 0,
+      "stdout_hex": "7b226f6b223a747275652c226d6f6465223a22636865636b222c226578656375746564223a66616c73657d0a",
+      "stderr_hex": ""
+    },
+    {
+      "name": "usage",
+      "args": [
+        "check",
+        "--json",
+        "--"
+      ],
+      "exit": 2,
+      "stderr_hex": "6c667a3a2027636865636b2720e4b88de68ea5e58f97e8849ae69cace58f82e695b0e6889620434f444520e5a496e79a84202d2d0ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+    },
+    {
+      "name": "usage",
+      "args": [
+        "check",
+        "--json",
+        "--",
+        "arg"
+      ],
+      "exit": 2,
+      "stderr_hex": "6c667a3a2027636865636b2720e4b88de68ea5e58f97e8849ae69cace58f82e695b0e6889620434f444520e5a496e79a84202d2d0ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+    },
+    {
+      "name": "usage",
+      "args": [
+        "check",
+        "--json",
+        "--help"
+      ],
+      "exit": 2,
+      "stderr_hex": "6c667a3a2027636865636b2720e69caae79fa5e98089e9a1b920272d2d68656c70270ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+    },
+    {
+      "name": "usage",
+      "args": [
+        "check",
+        "--json"
+      ],
+      "exit": 2,
+      "stderr_hex": "6c667a3a2027636865636b2720e99c80e8a6812046494c45e380812d6520434f444520e68896202d0ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+    },
+    {
+      "name": "usage",
+      "args": [
+        "check",
+        "--json",
+        "-e"
+      ],
+      "exit": 2,
+      "stderr_hex": "6c667a3a2027636865636b202d652720e99c80e8a681e4b880e4b8aa20434f444520e58f82e695b00ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "LFZ-T12-sortviz-check-v1",
+  "date": "2026-10-25",
+  "lfz_sha256": "83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79",
+  "before_lfz_sha256": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+  "source_sha256": "f25f3ecf97cf0efd221adc55fa643ee43a8055a93e690760218c005093f95662",
+  "passed": 11,
+  "checks": [
+    {
+      "name": "default_byte_identical_to_v1.3.0",
+      "pass": true,
+      "stdout_sha256": "12e40cbd5d6f46f2cc70d729beaa6e55d5e1a41d614b9e98b5fe961aaef31358",
+      "stdout": "APP_NAME ： LFZ 排序算法可视化\nN_SMALL ： 8\nN_BIG ： 600\nSEED ： 42\nCELLW ： 6\nSHOW_FRAMES ： true\n\n== LFZ 排序算法可视化 — sortviz ==\n配置：N_SMALL=8  N_BIG=600  SEED=42  CELLW=6  SHOW_FRAMES=true\n\n\n== 阶段 1：小规模逐帧可视化（N=8） ==\n原始数据: [13, 91, 58, 64, 50, 62, 25, 8]\n数据摘要: min=8  max=91  sum=371  n=8\n初始条形图:\norigin        |      |######|###   |####  |###   |####  |#     |      |\n\n-- 冒泡排序（逐趟）--\nbubble t=0    |      |######|###   |####  |###   |####  |#     |      |\nbubble pass 1 |      |###   |####  |###   |####  |#     |      |######|\nbubble pass 2 |      |###   |###   |####  |#     |      |####  |######|\nbubble pass 3 |      |###   |###   |#     |      |####  |####  |######|\nbubble pass 4 |      |###   |#     |      |###   |####  |####  |######|\nbubble pass 5 |      |#     |      |###   |###   |####  |####  |######|\nbubble pass 6 |      |      |#     |###   |###   |####  |####  |######|\nbubble pass 7 |      |      |#     |###   |###   |####  |####  |######|\n  bubble     比较=    28  交换=    19  步数=    28  [校验通过]\n\n-- 选择排序（逐轮）--\nselection t=0 |      |######|###   |####  |###   |####  |#     |      |\nselection i=1 |      |######|###   |####  |###   |####  |#     |      |\nselection i=2 |      |      |###   |####  |###   |####  |#     |######|\nselection i=3 |      |      |#     |####  |###   |####  |###   |######|\nselection i=4 |      |      |#     |###   |####  |####  |###   |######|\nselection i=5 |      |      |#     |###   |###   |####  |####  |######|\nselection i=6 |      |      |#     |###   |###   |####  |####  |######|\nselection i=7 |      |      |#     |###   |###   |####  |####  |######|\n  selection  比较=    28  交换=     5  步数=    28  [校验通过]\n\n-- 插入排序（逐张）--\ninsertion t=0 |      |######|###   |####  |###   |####  |#     |      |\ninsertion i=2 |      |######|###   |####  |###   |####  |#     |      |\ninsertion i=3 |      |###   |######|####  |###   |####  |#     |      |\ninsertion i=4 |      |###   |####  |######|###   |####  |#     |      |\ninsertion i=5 |      |###   |###   |####  |######|####  |#     |      |\ninsertion i=6 |      |###   |###   |####  |####  |######|#     |      |\ninsertion i=7 |      |#     |###   |###   |####  |####  |######|      |\ninsertion i=8 |      |      |#     |###   |###   |####  |####  |######|\n  insertion  比较=    25  交换=    19  步数=    25  [校验通过]\n\n-- 归并排序（分治）--\nmerge t=0     |      |######|###   |####  |###   |####  |#     |      |\nmerge done    |      |      |#     |###   |###   |####  |####  |######|\n  merge      比较=    15  交换=     0  步数=    24  [校验通过]\n\n-- 快速排序（逐次分区）--\nquick t=0     |      |######|###   |####  |###   |####  |#     |      |\nquick pivot@0 |      |######|###   |####  |###   |####  |#     |      |\nquick pivot@1 |      |      |###   |####  |###   |####  |#     |######|\nquick pivot@7 |      |      |###   |####  |###   |####  |#     |######|\nquick pivot@2 |      |      |#     |####  |###   |####  |###   |######|\nquick pivot@4 |      |      |#     |###   |###   |####  |####  |######|\nquick pivot@6 |      |      |#     |###   |###   |####  |####  |######|\nquick done    |      |      |#     |###   |###   |####  |####  |######|\n  quick      比较=    26  交换=     5  步数=    26  [校验通过]\n\n== 阶段 2：大规模仅统计对比（N=600，不输出逐帧） ==\n数据摘要: min=0  max=99  sum=30660  n=600\n  算法         比较次数    交换次数      步数   校验\n  bubble     比较=179510  交换= 93045  步数=179510  [校验通过]\n  selection  比较=179700  交换=   589  步数=179700  [校验通过]\n  insertion  比较= 93640  交换= 93045  步数= 93640  [校验通过]\n  merge      比较=  4803  交换=     0  步数=  5576  [校验通过]\n  quick      比较=  6473  交换=  2433  步数=  6473  [校验通过]\n\n== 阶段 3：属性自测（随机数组 × 5 算法，check 非致命） ==\n  自测 150 次排序，失败 0 次（check 非致命）\n\n== 完成：5 种算法全部通过正确性校验 ==\n"
+    },
+    {
+      "name": "parameters_reproducible_150_selfchecks",
+      "pass": true,
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\dist\\lfz.exe",
+        "run",
+        "app/sortviz.lfz",
+        "--",
+        "--small",
+        "4",
+        "--big",
+        "30",
+        "--seed",
+        "7",
+        "--no-frames"
+      ],
+      "stdout": "APP_NAME ： LFZ 排序算法可视化\nN_SMALL ： 4\nN_BIG ： 30\nSEED ： 7\nCELLW ： 6\nSHOW_FRAMES ： false\n\n== LFZ 排序算法可视化 — sortviz ==\n配置：N_SMALL=4  N_BIG=30  SEED=7  CELLW=6  SHOW_FRAMES=false\n\n\n== 阶段 1：小规模逐帧可视化（N=4） ==\n原始数据: [87, 4, 46, 3]\n数据摘要: min=3  max=87  sum=140  n=4\n初始条形图:\norigin        |######|      |###   |      |\n\n-- 冒泡排序（逐趟）--\n  bubble     比较=     6  交换=     5  步数=     6  [校验通过]\n\n-- 选择排序（逐轮）--\n  selection  比较=     6  交换=     1  步数=     6  [校验通过]\n\n-- 插入排序（逐张）--\n  insertion  比较=     6  交换=     5  步数=     6  [校验通过]\n\n-- 归并排序（分治）--\n  merge      比较=     5  交换=     0  步数=     8  [校验通过]\n\n-- 快速排序（逐次分区）--\n  quick      比较=     6  交换=     1  步数=     6  [校验通过]\n\n== 阶段 2：大规模仅统计对比（N=30，不输出逐帧） ==\n数据摘要: min=0  max=98  sum=1457  n=30\n  算法         比较次数    交换次数      步数   校验\n  bubble     比较=   407  交换=   236  步数=   407  [校验通过]\n  selection  比较=   435  交换=    27  步数=   435  [校验通过]\n  insertion  比较=   262  交换=   236  步数=   262  [校验通过]\n  merge      比较=   116  交换=     0  步数=   148  [校验通过]\n  quick      比较=   114  交换=    56  步数=   114  [校验通过]\n\n== 阶段 3：属性自测（随机数组 × 5 算法，check 非致命） ==\n  自测 150 次排序，失败 0 次（check 非致命）\n\n== 完成：5 种算法全部通过正确性校验 ==\n"
+    },
+    {
+      "name": "machine_channels",
+      "pass": true,
+      "stdout": "{\"ok\":true}\n"
+    },
+    {
+      "name": "reject_--small",
+      "pass": true,
+      "exit": 2,
+      "stderr": "Traceback (most recent call last):\n  File \"app/sortviz.lfz\", line 34, in <module>\n                assert(optionIndex + 1 < len(options), \"sortviz: ${option} 缺少整数值\")\n                ^\nAssertionError: 断言失败：sortviz: --small 缺少整数值\n"
+    },
+    {
+      "name": "reject_--small_0",
+      "pass": true,
+      "exit": 2,
+      "stderr": "Traceback (most recent call last):\n  File \"app/sortviz.lfz\", line 37, in <module>\n                    assert(value >= 1 && value <= 100, \"sortviz: --small 范围 1..100\")\n                    ^\nAssertionError: 断言失败：sortviz: --small 范围 1..100\n"
+    },
+    {
+      "name": "reject_--small_101",
+      "pass": true,
+      "exit": 2,
+      "stderr": "Traceback (most recent call last):\n  File \"app/sortviz.lfz\", line 37, in <module>\n                    assert(value >= 1 && value <= 100, \"sortviz: --small 范围 1..100\")\n                    ^\nAssertionError: 断言失败：sortviz: --small 范围 1..100\n"
+    },
+    {
+      "name": "reject_--big_0",
+      "pass": true,
+      "exit": 2,
+      "stderr": "Traceback (most recent call last):\n  File \"app/sortviz.lfz\", line 40, in <module>\n                    assert(value >= 1 && value <= 2000, \"sortviz: --big 范围 1..2000\")\n                    ^\nAssertionError: 断言失败：sortviz: --big 范围 1..2000\n"
+    },
+    {
+      "name": "reject_--big_2001",
+      "pass": true,
+      "exit": 2,
+      "stderr": "Traceback (most recent call last):\n  File \"app/sortviz.lfz\", line 40, in <module>\n                    assert(value >= 1 && value <= 2000, \"sortviz: --big 范围 1..2000\")\n                    ^\nAssertionError: 断言失败：sortviz: --big 范围 1..2000\n"
+    },
+    {
+      "name": "reject_--seed_bad",
+      "pass": true,
+      "exit": 2,
+      "stderr": "Traceback (most recent call last):\n  File \"app/sortviz.lfz\", line 35, in <module>\n                let value = int(options[optionIndex + 1])\n                            ^\nValueError: 无法把 string 转换为 int（'bad'）\n"
+    },
+    {
+      "name": "reject_--unknown",
+      "pass": true,
+      "exit": 2,
+      "stderr": "Traceback (most recent call last):\n  File \"app/sortviz.lfz\", line 32, in <module>\n                    fail(\"sortviz: 未知选项 ${option}\")\n                    ^\nAssertionError: sortviz: 未知选项 --unknown\n"
+    },
+    {
+      "name": "reject_--no-frames_--no-frames",
+      "pass": true,
+      "exit": 2,
+      "stderr": "Traceback (most recent call last):\n  File \"app/sortviz.lfz\", line 25, in <module>\n            if has(option, used) { fail(\"sortviz: 重复选项 ${option}\") }\n                                   ^\nAssertionError: sortviz: 重复选项 --no-frames\n"
+    }
+  ]
+}

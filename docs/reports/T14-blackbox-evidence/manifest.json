@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-29",
+  "timestamp_utc": "2026-10-29T02:46:57.279492+00:00",
+  "binary_sha256": "83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79",
+  "final_process_cases": 117,
+  "passed": 117,
+  "first_run": {
+    "passed": 116,
+    "failed": 1,
+    "reason": "author expected IOError for source UTF8; existing loader contract specifies SyntaxError; first result preserved"
+  },
+  "files": {
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "final-cli-20261029.json": {
+      "bytes": 115097,
+      "sha256": "6c15b04a6f5d251429252173195067f411bb45b223429d7b535f94625ab1fab7"
+    },
+    "final-cli-corrected-20261029.json": {
+      "bytes": 115101,
+      "sha256": "ad2897b3c8faf6ee9e1420b18b98357ac28c21051b5c3f56a960c31a4f1b0e1f"
+    },
+    "preimplementation-public-oracles.json": {
+      "bytes": 2117,
+      "sha256": "4ca6d9d8220836d90c590444ad9cf7958335d333e6671a28a52323d5184dfafd"
+    },
+    "preimplementation-red.json": {
+      "bytes": 1196,
+      "sha256": "5e09c7f8e72efdf0b4eaad2ae69f86749bb1e704ecb7fac8ad858bec389d7f60"
+    },
+    "tests/t14_cli_check.py": {
+      "bytes": 14527,
+      "sha256": "44e1c5d9639b5306da9779994e0acb30f62f4943aebbc116de735e4a86a42106"
+    },
+    "tests/.gitattributes": {
+      "bytes": 23,
+      "sha256": "0fd6a4f43f232d2036a67f25ee70c32c5eecdcbc9c3926b8efc9d6259bcdd9e7"
+    }
+  }
+}

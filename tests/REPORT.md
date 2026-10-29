@@ -259,3 +259,7 @@ IO 正例固定先覆盖写 Temp/v11_io_roundtrip.txt，再追加并读取，最
 | 日期 | 批次 | 命令 | 结果 |
 |---|---|---|---|
 | 2026-10-24 | T11-13 | target/release/lfz.exe test --json（两次） | 130/130 PASS，exit0；4 新正例组 +36 负例 |
+
+## T14非执行check公开进程补充（2026-10-29）
+
+新增tests/t14_cli_check.py **117/117通过，exit0**；覆盖三来源/JSON/CODE边界/usage/加载位置/非静态保证/18文件字节哨兵组合及旧run兼容。最终83f56a19…/774656B，完整报告[ T14黑盒报告 ](../docs/reports/T14-blackbox.md)，原始证据docs/reports/T14-blackbox-evidence/final-cli-corrected-20261029.json。官方LFZ runner仍166；本轮不改任何既有LFZ/Rust/manifest用例，不叠加计数。首次116/117为作者非法UTF8 oracle误写，原JSON保留，按既有规范纠正新脚本后117通过；不是产品缺陷修复。

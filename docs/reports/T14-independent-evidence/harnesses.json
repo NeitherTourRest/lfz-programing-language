@@ -1,0 +1,44 @@
+[
+  {
+    "path": "target\\release\\deps\\lfz-63397fd2d9985014.exe",
+    "sha256": "3520aa16848870d534d7e273bafe86d771eace4edfff3f9bc5c060361e4f22ae",
+    "passed": 412,
+    "output": "harness-1.txt"
+  },
+  {
+    "path": "target\\release\\deps\\lfz-243aeb8f5c3370f1.exe",
+    "sha256": "ef3371e1e1156381aa27e8106f7e4db4f7bb7fb7dde85bce3fa003c3b656afe3",
+    "passed": 48,
+    "output": "harness-2.txt"
+  },
+  {
+    "path": "target\\release\\deps\\cli-d19dbfa7dd3f9d73.exe",
+    "sha256": "2969f6c4dab3d3bc7f61420ffa521fe51bc2d60f6f601537b9b5f901701fa6e5",
+    "passed": 28,
+    "output": "harness-3.txt"
+  },
+  {
+    "path": "target\\release\\deps\\cli_t12-35b857587ead196a.exe",
+    "sha256": "890f3f0b59e5d023d86ce8bdd740db6fac465c1f49601fc823ba9ea0e2e2c000",
+    "passed": 12,
+    "output": "harness-4.txt"
+  },
+  {
+    "path": "target\\release\\deps\\cli_t14-b528900585815e19.exe",
+    "sha256": "6dcb699972b2d5236c9143ca9854e7cc97937d564165a13d935ec42219146fca",
+    "passed": 12,
+    "output": "harness-5.txt"
+  },
+  {
+    "path": "target\\release\\deps\\test_runner-a9d3da191eeb2958.exe",
+    "sha256": "e8632624a890402adc1374af15de54ed011ec491f4a3606e8eb3347270307a62",
+    "passed": 15,
+    "output": "harness-6.txt"
+  },
+  {
+    "path": "target\\release\\deps\\unit-ae562ae83f03ad63.exe",
+    "sha256": "643e904e98d25e9420f0999fe48d7184794e931907b8ad7d3ae30948a0ef43da",
+    "passed": 15,
+    "output": "harness-7.txt"
+  }
+]

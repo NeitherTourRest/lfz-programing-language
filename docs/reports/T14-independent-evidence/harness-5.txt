@@ -1,0 +1,17 @@
+
+running 12 tests
+test check_never_creates_or_modifies_files ... ok
+test check_help_and_existing_run_protocol_remain_distinct ... ok
+test check_reports_source_paths_and_frontend_error_without_runtime_trace ... ok
+test check_deep_parser_and_ast_boundaries_stay_controlled ... ok
+test check_file_loading_keeps_preamble_extension_and_line_offsets ... ok
+test check_bom_crlf_and_invalid_encoding_follow_loader ... ok
+test check_reuses_parser_context_and_checks_unreachable_bodies ... ok
+test check_never_runs_program_output_input_dump_or_loops ... ok
+test check_code_options_and_empty_code_are_preserved ... ok
+test check_does_not_claim_runtime_name_type_or_arity_validation ... ok
+test check_three_sources_and_both_output_modes ... ok
+test check_usage_rejects_separators_and_extra_operands_even_in_json_mode ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.77s
+

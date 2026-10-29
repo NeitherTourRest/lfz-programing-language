@@ -1,0 +1,44 @@
+[
+  {
+    "source": "--json",
+    "exit": 2,
+    "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'json'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+    "stderr": ""
+  },
+  {
+    "source": "--help",
+    "exit": 2,
+    "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'help'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+    "stderr": ""
+  },
+  {
+    "source": "--",
+    "exit": 2,
+    "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 表达式，但得到 '文件末尾'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+    "stderr": ""
+  },
+  {
+    "source": "let x =\n",
+    "exit": 2,
+    "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"表达式未结束：行尾不能终止表达式；请用括号跨行\",\"file\":\"<command>\",\"line\":1,\"col\":8,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+    "stderr": ""
+  },
+  {
+    "source": "\nlet x =\n",
+    "exit": 2,
+    "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"表达式未结束：行尾不能终止表达式；请用括号跨行\",\"file\":\"<command>\",\"line\":2,\"col\":8,\"traceback\":[{\"file\":\"<command>\",\"line\":2,\"func\":\"<module>\"}]}\n",
+    "stderr": ""
+  },
+  {
+    "source": "return 1",
+    "exit": 2,
+    "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"'return' 只能出现在函数体内\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+    "stderr": ""
+  },
+  {
+    "source": "let x = @",
+    "exit": 2,
+    "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"非法字符 '@'\",\"file\":\"<command>\",\"line\":1,\"col\":9,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+    "stderr": ""
+  }
+]

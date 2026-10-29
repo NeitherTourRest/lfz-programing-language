@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-29",
+  "status": "T14 functionality/non-execution/compatibility PASS; R304 OPEN; no T14 timing",
+  "binary_sha256": "83f56a194e216862c45377f4c3971b085744a7ba2363163e1edac6af5e85ac79",
+  "binary_bytes": 774656,
+  "test_counts": {
+    "release_harnesses": 542,
+    "check_public": 117,
+    "old_cli": 91,
+    "official_embedded_in_cli": 166,
+    "jsonflow": 37,
+    "sortviz": 11,
+    "old_independent": 140,
+    "new_independent_processes": 57
+  },
+  "source_hashes": {
+    "src/ast.rs": "75fe11ac21b1e20173b881bf400c93a259ba6b01e3487acbc108aa678ea2cecf",
+    "src/builtins.rs": "d503f5ff7c330d1f2fb7729b5af9a63badf51f558f41c34d5af8fac4207a2387",
+    "src/cli.rs": "85cb541b7756ec5e2b09026845f88df9f8728b8f0f1f06136ea870fb8429fe6a",
+    "src/env.rs": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc",
+    "src/error.rs": "bb1f2b251e68d0f14ff6cbbd67e68d4de3f0920184210d044d17f7f409dd9b9a",
+    "src/evaluator.rs": "bd26b59e29274c26f4e96e0928ab8cb9bb41fea2dffa4ba69fc684891940e78e",
+    "src/json.rs": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f",
+    "src/json_codec.rs": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2",
+    "src/lexer.rs": "ebb952edbcd201210eb1f9c6ddebf58e2f3f998b260a11a51fe1c967848031f2",
+    "src/lib.rs": "bad4bc3a1f7d44f7cb2c111831b8150c006e7fa39c50604b571730e318f7e946",
+    "src/loader.rs": "994fe2babd0750d59b70a49a803223e520f103b7585c58f2602db72d1a59ee8a",
+    "src/main.rs": "247fc12340d2f6a26aa3fc5ada658cbfe72fb7ee7f85f107b05e6af27018c366",
+    "src/parser.rs": "15ed12a0aa14ad9653c7c7a8d6ba6a08cb99da6d81669b34b47b9fea4c92fd73",
+    "src/span.rs": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2",
+    "src/test_runner.rs": "b70a1e193f79d191599ee57e033f01bc25bde5e4fef0cd97d46dd418453f1597",
+    "src/value.rs": "ffba42a58a9edcf815f680eca536c8bc06cb906671a3b6e57956ca7753185f4b",
+    "Cargo.toml": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c",
+    "Cargo.lock": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4"
+  },
+  "files": {
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "check117.json": {
+      "bytes": 115089,
+      "sha256": "e9a7acdc9b3313c3db4a4d62b9209dbdede839dfc745f35a8e54533a6a34ace4"
+    },
+    "cli91.json": {
+      "bytes": 102108,
+      "sha256": "325e71d29aa38a2317f8d7b658161b43c17757b7f1f50051f00cc42000409175"
+    },
+    "harness-1.txt": {
+      "bytes": 26049,
+      "sha256": "217e3247fc929f24be96a279cc0dbb738b00bb45887e177c82f6c603368a363c"
+    },
+    "harness-2.txt": {
+      "bytes": 3094,
+      "sha256": "d7d673ea041cf9c813d40447c34e4830d03d87376692b225b49a703f5e29591f"
+    },
+    "harness-3.txt": {
+      "bytes": 1487,
+      "sha256": "4551a34e21dcb2936dac0f655699e41bf6e806e9370a89a808353e8577e4f975"
+    },
+    "harness-4.txt": {
+      "bytes": 848,
+      "sha256": "45e6f2c3fca3a6135a5154f4a73e6c0e77703a9b1305b0bcf0fbe253320a0a15"
+    },
+    "harness-5.txt": {
+      "bytes": 909,
+      "sha256": "075471a8a8d98073f8993b03310f08d56c72b415a4f3c582d79758b5bb1377a7"
+    },
+    "harness-6.txt": {
+      "bytes": 820,
+      "sha256": "d2f30ab7f7c709b82431507d39401ba3e8869498d3db470cf4c1e0560cb8e1b1"
+    },
+    "harness-7.txt": {
+      "bytes": 1003,
+      "sha256": "17334a9f95f82d4d629fbe6cddfc986ecc036f67bdf097bba5ce552dd89bcc1d"
+    },
+    "harnesses.json": {
+      "bytes": 1479,
+      "sha256": "d830e462391b9f7d21f6f7027697fdafd834f63d9f6f3ed18abf289b9b5f20ea"
+    },
+    "independent140.json": {
+      "bytes": 82174,
+      "sha256": "5d6ea685d051f2cb50af5b2928ed0cbf8cb7e29ea2046e5d4e235d1c19a25598"
+    },
+    "jsonflow.json": {
+      "bytes": 27133,
+      "sha256": "120b3ac1d1bdc64a3791a06f4e12eb9aa4f4b9efa59c321641f774969c8d35a2"
+    },
+    "sortviz.json": {
+      "bytes": 9975,
+      "sha256": "c2b49127128e063f2cae71a0aaa658cb3919c4ca54e228027cc45ab61639c0d9"
+    },
+    "verify.py": {
+      "bytes": 4389,
+      "sha256": "a4954b543d5f59859d5f0a0b960870c4e5d91fbad25ff7cfa237c612adcc7a99"
+    },
+    "witnesses.json": {
+      "bytes": 32984,
+      "sha256": "8035bc6adf0f0cc449482efa55866091cf3e10353adf71281aab93c8d9691c99"
+    }
+  }
+}

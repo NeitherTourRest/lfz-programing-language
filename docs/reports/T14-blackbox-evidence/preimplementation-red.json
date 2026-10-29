@@ -1,0 +1,44 @@
+{
+  "schema": "LFZ-T14-CHECK-BLACKBOX-1",
+  "date": "2026-10-27",
+  "timestamp_utc": "2026-10-27T11:55:18.335283+00:00",
+  "binary": "Temp\\t13-perf\\lfz-t13-9cda.exe",
+  "binary_sha256": "9cda0c6fd5d85178335e8b758a843fc5f66574826bab4a80f2418a318e171cf9",
+  "binary_bytes": 761344,
+  "script_sha256": "8ef7933cae418cb9828b131317cc279e9a4017af3ad4e39b78b2df1ccc8a2f00",
+  "smoke_only": true,
+  "total": 1,
+  "passed": 0,
+  "failed": 1,
+  "rows": [
+    {
+      "name": "new_check_smoke",
+      "args": [
+        "check",
+        "-e",
+        "print(\"must-not-print\")"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 裸文件调用只接受一个 <file> 参数\n用法: lfz <file> | lfz run <file> | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": false,
+        "stderr_empty": false,
+        "stdout_empty": true
+      },
+      "passed": false,
+      "elapsed_seconds": 0.0974164999788627
+    }
+  ]
+}

@@ -547,3 +547,17 @@ $ echo $LASTEXITCODE
 | 文件 IO | lfz/test_v11_io.lfz | 4 | 2 | 6 | 通过 | UTF8 中文/emoji、追加、覆盖截断空串、类型/缺父目录 |
 
 负例路径为 fixtures/v11_*.lfz，由 cases.json 声明错误类别。正常/边界计数是独立 assert 分类，不代表 runner 用例数。IO 输出限 Temp/v11_io_roundtrip.txt；每轮先覆盖，因此连续两次均通过。文件 IO 的 append 创建、非法 UTF8 内容、不可写权限场景本批尚无黑盒覆盖，不据此宣称 IO 全条款独立验收完成。
+
+## T14 check进程覆盖补充（2026-10-29）
+
+| 特性 | 用例 | 数量 | 状态 |
+| -- | -- | -- | -- |
+| 三来源/烟雾，CODE保护/JSON位置 | tests/t14_cli_check.py | 7+11 | 通过 |
+| usage普通及JSON请求例外 | 同上 | 28 | 通过 |
+| 名称/类型/IO/循环等非静态承诺 | 同上 | 24 | 通过 |
+| 加载UTF8/前导/BOM/CRLF/错误位置 | 同上 | 17 | 通过 |
+| 前端语法上下文拒绝 | 同上 | 7 | 通过 |
+| 非执行文件字节/流/提示三来源组合 | 同上 | 18 | 通过 |
+| 原run/check内置/help/文件命名兼容 | 同上 | 5 | 通过 |
+
+总117/117，证据T14-blackbox-evidence/final-cli-corrected-20261029.json；83f56a19…/774656B。官方166清单/用例不改，原作者oracle差异及首次失败见T14报告，不隐藏。
