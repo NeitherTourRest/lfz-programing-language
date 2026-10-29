@@ -1,0 +1,7 @@
+{
+  "expected_exit": 0,
+  "actual_exit": 2,
+  "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 表达式，但得到 'import'\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-tooling\\\\red\\\\root.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-tooling\\\\red\\\\root.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+  "stderr": "",
+  "old_binary_missing_feature": true
+}

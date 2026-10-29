@@ -491,19 +491,20 @@ fn check_input(input: &CheckInput, json_mode: bool, out: &mut dyn Write, err: &m
         CheckInput::Code(_) => "<command>",
         CheckInput::Stdin => "<stdin>",
     };
-    let checked = evaluator::on_eval_stack(|| {
+    let cwd = std::env::current_dir();
+    let (diagnostic_path, checked) = evaluator::on_eval_stack(|| {
         let loaded = match input {
-            CheckInput::File(path) => loader::load_file(path),
-            CheckInput::Code(code) => loader::load_source(code),
+            CheckInput::File(path) => loader::load_file_counted(path),
+            CheckInput::Code(code) => loader::load_source_counted(code),
             CheckInput::Stdin => {
                 let mut source = String::new();
                 match std::io::stdin().read_to_string(&mut source) {
-                    Ok(_) => loader::load_source(&source),
+                    Ok(_) => loader::load_source_counted(&source),
                     Err(_) => Err(Box::new(LzError::Io { msg: "无法读取标准输入".to_string(), span: None })),
                 }
             }
         };
-        check_loaded_on_stack(loaded)
+        check_loaded_on_stack(loaded, path, matches!(input, CheckInput::File(_)), cwd)
     });
     let passed = matches!(checked, CaseEval::Passed);
     if json_mode {
@@ -512,30 +513,58 @@ fn check_input(input: &CheckInput, json_mode: bool, out: &mut dyn Write, err: &m
             ("mode".to_string(), Json::Str("check".to_string())),
             ("executed".to_string(), Json::Bool(false)),
         ];
-        push_error_fields(&mut fields, path, &checked);
+        push_error_fields(&mut fields, &diagnostic_path, &checked);
         let _ = writeln!(out, "{}", json::encode(&Json::Obj(fields)));
-    } else if let Some(block) = checked.render(path) {
+    } else if let Some(block) = checked.render(&diagnostic_path) {
         let _ = write!(err, "{block}");
     }
     if passed { EXIT_OK } else { EXIT_ERROR }
 }
 
 /// 不返回Program：成功后在当前大栈显式drop，主线程只接收状态/诊断。
-fn check_loaded_on_stack(loaded: lfz::error::R<Loaded>) -> CaseEval {
-    let loaded = match loaded {
+fn check_loaded_on_stack(
+    loaded: lfz::error::R<loader::CountedLoaded>,
+    path: &str,
+    file_input: bool,
+    cwd: std::io::Result<std::path::PathBuf>,
+) -> (String, CaseEval) {
+    let failure = |error: Box<LzError>, loaded| (path.to_string(), CaseEval::Failed { err: *error, loaded, traced: None });
+    let counted = match loaded {
         Ok(loaded) => loaded,
-        Err(error) => return CaseEval::Failed { err: *error, loaded: None, traced: None },
+        Err(error) => return failure(error, None),
     };
+    let loaded = counted.loaded;
     let tokens = match lexer::lex(&loaded.text, loaded.line_base) {
         Ok(tokens) => tokens,
-        Err(error) => return CaseEval::Failed { err: *error, loaded: Some(loaded), traced: None },
+        Err(error) => return failure(error, Some(loaded)),
     };
-    match parser::parse(&tokens) {
-        Ok(program) => {
-            drop(program);
-            CaseEval::Passed
+    let program = match parser::parse(&tokens) {
+        Ok(program) => program,
+        Err(error) => return failure(error, Some(loaded)),
+    };
+    if lfz::modules::module_declaration_span(&program).is_none() {
+        drop(program);
+        return (path.to_string(), CaseEval::Passed);
+    }
+    let cwd = match cwd {
+        Ok(cwd) => cwd,
+        Err(_) => return failure(Box::new(LzError::Io { msg: "无法读取当前目录".to_string(), span: None }), Some(loaded)),
+    };
+    let identity = if file_input { std::fs::canonicalize(path).ok() } else { None };
+    let base_dir = if file_input {
+        let absolute = identity.clone().unwrap_or_else(|| cwd.join(path));
+        absolute.parent().unwrap_or(&cwd).to_path_buf()
+    } else { cwd };
+    let entry = lfz::modules::ParsedEntry { program, loaded, display_path: path.to_string(), identity, base_dir, raw_bytes: counted.raw_bytes };
+    match lfz::modules::build_graph(entry) {
+        Ok(graph) => {
+            drop(graph);
+            (path.to_string(), CaseEval::Passed)
         }
-        Err(error) => CaseEval::Failed { err: *error, loaded: Some(loaded), traced: None },
+        Err(graph) => {
+            let source = graph.sources.get(graph.failure.source_id).expect("模块图失败来源有效");
+            (source.display_path.clone(), CaseEval::Failed { err: *graph.failure.error, loaded: source.loaded.clone(), traced: None })
+        }
     }
 }
 

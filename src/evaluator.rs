@@ -315,6 +315,17 @@ pub fn eval_module_traced_on_thread_with_args(program: &Program, args: &[String]
 
 /// [`eval_module_traced`] 的实际求值体（在求值线程上运行）。
 fn eval_module_on_thread_with_args(program: &Program, args: &[String]) -> TracedRun {
+    // B过渡：扫描整个根Program，在任何LFZ语句及副作用之前拒绝模块执行。
+    if let Some(first_decl_span) = crate::modules::module_declaration_span(program) {
+        return TracedRun {
+            origins: None,
+            result: Err(Box::new(LzError::Syntax {
+                msg: crate::error::SyntaxMsg::ModuleExecutionUnavailable, span: first_decl_span,
+            })),
+            frames: vec![TraceFrame { func_id: MODULE_FUNC_ID, span: first_decl_span }],
+            func_names: vec![None],
+        };
+    }
     let mut interp = Interp::new();
     interp.script_args = args.iter().map(|s| Value::string(s.clone())).collect();
     let top = Scope {
@@ -727,6 +738,9 @@ impl Interp {
                 }
                 Ok(Flow::Value(Value::Nil))
             }
+            StmtKind::ImportDecl(_) | StmtKind::ExportDecl(_) => Err(Box::new(LzError::Syntax {
+                msg: crate::error::SyntaxMsg::ModuleExecutionUnavailable, span: stmt.span,
+            })),
             StmtKind::Expr(e) => self.eval_expr(e, scope),
         }
     }
@@ -4218,5 +4232,53 @@ assert(keys(r) == ["error", "ok", "value"])
 assert(keys(r.error) == ["class", "col", "line", "message", "traceback"])
 assert(keys(r.error.traceback[0]) == ["col", "func", "line"])
 "#).result.unwrap();
+    }
+}
+
+#[cfg(test)]
+mod t16_b_execution_guard_tests {
+    use super::*;
+    fn parse(text: &str) -> Program {
+        crate::parser::parse(&crate::lexer::lex(text, 0).unwrap()).unwrap()
+    }
+    fn check_error(error: &LzError, span: Span) {
+        assert_eq!(error.class_name(), "SyntaxError");
+        assert_eq!(error.message(), "模块执行尚未启用");
+        assert_eq!(error.span(), Some(span));
+    }
+    #[test]
+    fn t16_b_all_old_evaluation_entrypoints_preflight_entire_root() {
+        let p = parse("let x = 1\nexport x");
+        let at = Span::new(2, 1);
+        check_error(&eval_module(&p).unwrap_err(), at);
+        check_error(&run(&p).unwrap_err(), at);
+        for out in [eval_module_traced(&p), eval_module_traced_with_args(&p, &["a".into()]),
+            on_eval_stack(|| eval_module_traced_on_thread(&p)),
+            on_eval_stack(|| eval_module_traced_on_thread_with_args(&p, &["a".into()]))] {
+            check_error(out.result.as_ref().unwrap_err(), at);
+            assert_eq!(out.frames, vec![TraceFrame { func_id: 0, span: at }]);
+            assert_eq!(out.frame_name(&out.frames[0]).as_ref(), "<module>");
+            assert!(out.frame_source(0).is_none());
+        }
+    }
+    #[test]
+    fn t16_b_late_export_cannot_overwrite_file_or_execute_earlier_failure() {
+        let dir = std::path::Path::new("Temp/T16-B-runtime");
+        std::fs::create_dir_all(dir).unwrap();
+        let path = dir.join("preflight-sentinel.txt");
+        std::fs::write(&path, b"original\0bytes").unwrap();
+        let text = "writeFile(\"Temp/T16-B-runtime/preflight-sentinel.txt\", \"changed\")\nlet x=1\nexport x";
+        let out = eval_module_traced(&parse(text));
+        check_error(out.result.as_ref().unwrap_err(), Span::new(3, 1));
+        assert_eq!(std::fs::read(&path).unwrap(), b"original\0bytes");
+        let out = eval_module_traced(&parse("missing_name\nexport missing_name"));
+        check_error(out.result.as_ref().unwrap_err(), Span::new(2, 1));
+    }
+    #[test]
+    fn t16_b_first_declaration_determines_guard_without_loading_dependency() {
+        let p = parse("import a from \"./does-not-exist.lfz\"\nexport a");
+        check_error(eval_module_traced(&p).result.as_ref().unwrap_err(), Span::new(1, 1));
+        let p = parse("let export = 2\nexport + 1");
+        assert_eq!(eval_module(&p).unwrap().to_string(), "3");
     }
 }

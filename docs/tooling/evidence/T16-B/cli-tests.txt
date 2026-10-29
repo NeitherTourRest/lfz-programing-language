@@ -1,0 +1,64 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `release` profile [optimized] target(s) in 9.74s
+     Running tests\cli_t16b.rs (target\release\deps\cli_t16b-66b0b355c7f6f4d0.exe)
+
+running 7 tests
+test dependency_syntax_uses_own_path_and_source ... FAILED
+test graph_diamond_check_never_initializes_dependencies ... FAILED
+test code_and_stdin_use_captured_cwd ... FAILED
+test run_rejects_module_before_any_side_effect ... ok
+test missing_and_invalid_dependency_diagnostics_are_not_root_text ... FAILED
+test legacy_large_root_has_no_graph_budget ... ok
+test exports_conflicts_cycles_and_legacy_identifiers ... FAILED
+
+failures:
+
+---- dependency_syntax_uses_own_path_and_source stdout ----
+
+thread 'dependency_syntax_uses_own_path_and_source' panicked at tests\cli_t16b.rs:14:157:
+{"ok":false,"mode":"check","executed":false,"error":"IOError","message":"无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp/T16-B-tooling/tests\\31488-0\\./dep.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp/T16-B-tooling/tests\\31488-0\\root.lfz:2:1）","file":"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp/T16-B-tooling/tests\\31488-0\\./dep.lfz","line":null,"col":null,"traceback":[]}
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- graph_diamond_check_never_initializes_dependencies stdout ----
+
+thread 'graph_diamond_check_never_initializes_dependencies' panicked at tests\cli_t16b.rs:13:19:
+assertion `left == right` failed: Output { status: ExitStatus(ExitStatus(2)), stdout: "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"IOError\",\"message\":\"无法读取模块：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp/T16-B-tooling/tests\\\\31488-6\\\\./a.lfz（导入于 D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp/T16-B-tooling/tests\\\\31488-6\\\\root.lfz:2:1）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp/T16-B-tooling/tests\\\\31488-6\\\\./a.lfz\",\"line\":null,\"col\":null,\"traceback\":[]}\n", stderr: "" }
+  left: Some(2)
+ right: Some(0)
+
+---- code_and_stdin_use_captured_cwd stdout ----
+
+thread 'code_and_stdin_use_captured_cwd' panicked at tests\cli_t16b.rs:13:19:
+assertion `left == right` failed: Output { status: ExitStatus(ExitStatus(2)), stdout: "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"IOError\",\"message\":\"无法读取模块：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-tooling\\\\tests\\\\31488-5\\\\./dep.lfz（导入于 <command>:1:1）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-B-tooling\\\\tests\\\\31488-5\\\\./dep.lfz\",\"line\":null,\"col\":null,\"traceback\":[]}\n", stderr: "" }
+  left: Some(2)
+ right: Some(0)
+
+---- missing_and_invalid_dependency_diagnostics_are_not_root_text stdout ----
+
+thread 'missing_and_invalid_dependency_diagnostics_are_not_root_text' panicked at tests\cli_t16b.rs:14:157:
+{"ok":false,"mode":"check","executed":false,"error":"IOError","message":"无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp/T16-B-tooling/tests\\31488-2\\./absent.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp/T16-B-tooling/tests\\31488-2\\root.lfz:2:1）","file":"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp/T16-B-tooling/tests\\31488-2\\./absent.lfz","line":null,"col":null,"traceback":[]}
+
+
+---- exports_conflicts_cycles_and_legacy_identifiers stdout ----
+
+thread 'exports_conflicts_cycles_and_legacy_identifiers' panicked at tests\cli_t16b.rs:14:157:
+{"ok":false,"mode":"check","executed":false,"error":"IOError","message":"无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp/T16-B-tooling/tests\\31488-3\\./a.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp/T16-B-tooling/tests\\31488-3\\root.lfz:2:1）","file":"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp/T16-B-tooling/tests\\31488-3\\./a.lfz","line":null,"col":null,"traceback":[]}
+
+
+
+failures:
+    code_and_stdin_use_captured_cwd
+    dependency_syntax_uses_own_path_and_source
+    exports_conflicts_cycles_and_legacy_identifiers
+    graph_diamond_check_never_initializes_dependencies
+    missing_and_invalid_dependency_diagnostics_are_not_root_text
+
+test result: FAILED. 2 passed; 5 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.37s
+
+error: test failed, to rerun pass `--test cli_t16b`

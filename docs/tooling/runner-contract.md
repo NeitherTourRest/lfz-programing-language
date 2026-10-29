@@ -237,3 +237,11 @@ runner **不改变 cwd**，所以测试正文中的 `Temp/...` 相对进程启�
 - 实现边界：src/cli.rs的CheckInput/parse_check_input、check_input、check_loaded_on_stack。旧run/test/argv入口和JSON对象保持既有行为；LFZ源码里的check(condition)仍是原断言内置。
 
 新增进程回归在tests/cli_t14.rs：三来源、CODE/选项保护、usage、加载及准确偏移、前端错误、非静态承诺、无程序输出/输入/循环执行、文件哨兵、解析/AST受控边界、旧JSON与argv。所有测试临时件均在项目Temp/T14，子进程有超时保护。作者证据位于docs/tooling/evidence/T14；独立非执行验收由verifier另行提供。
+
+## 13. T16-B静态模块图检查
+
+冻结契约见三spec §20（含20.9冲突位置和20.10已观测字节预算）。check三来源使用load_file_counted/load_source_counted，raw_bytes来自同一次读取/源码字节，不metadata猜测或重读。根只lex/parse一次，无模块声明保持原前端结果且不启用图预算；有声明时将根快照移交modules::build_graph。文件base为canonical父目录，CODE/stdin为检查开始捕获cwd。整个图构造和Program/图析构均在on_eval_stack内，不初始化、不求值。
+
+失败由GraphFailure.failure.source_id定位SourceMap，用该来源display_path和可选Loaded构造原CaseEval诊断。依赖错误不得画入口文本；没有Loaded的来源不伪造文本。check机器协议仍ok/mode/executed前三键及原错误字段顺序，模块IO无span时line/col null和空traceback。B阶段run/旧eval的模块执行预检由runtime负责，在所有副作用前拒绝；B不宣称支持模块初始化。
+
+新增tests/cli_t16b.rs验证非执行菱形图、CODE/stdin相对基准、依赖真实文件与语法文本、缺失/非法UTF8、静态错误及循环、旧export标识符、legacy大根不套图限额及run零副作用拒绝。测试进程10秒有界超时，所有fixture在项目Temp/T16-B-tooling；不改既有测试。
