@@ -455,3 +455,15 @@ check 失败：软断言示例
 - 文件和源码加载规则、行号偏移、错误类与消息沿既有loader/lexer/parser。CLI语法详见 [syntax.md](./syntax.md) §17；正常成功双流空exit0，前端失败stderr诊断exit2；exit1仍只用于test失败，不因check输入含assert/fail/check语法而触发。
 - 合法check命令的JSON成功明确 `mode:"check"`、`executed:false`，它与run的运行成功协议有区别。前端失败的既有JSON位置记录不表示真实执行栈；本模式不构造运行期TracedRun。精确字段/顺序及usage错误例外见 [interface-contract.md](./interface-contract.md) §17。
 - 读取待检查源码或stdin属于宿主加载IO；本命令承诺不执行LFZ程序及其IO，不承诺零IO、任意输入的资源隔离或安全沙箱。stdin等待EOF/特殊源路径等待沿既有宿主行为，不作终止时间保证。对有限普通输入不应因源码含无限循环而执行或挂起。
+
+## 18. T15 attempt 的恢复语义（2026-10-29 冻结）
+
+`attempt(f)`恰一参；先完整求参，再校验函数值与零参数可调用性，然后进入恢复边界并调用一次f。返回新struct，字段插入序固定 `ok,value,error`：成功为 `{ok:true,value:v,error:nil}`，v是原返回值（含nil/数组/struct/函数），不深复制；可恢复失败为 `{ok:false,value:nil,error:e}`。e为新struct，字段序 `class,message,line,col,traceback`；类名/消息直接沿既有LzError，位置是1-based整数，无位置为nil。traceback是失败发生时完整外→内帧数组，每帧新struct序 `func,line,col`，func按现func_id命名规则为命名函数、`<fn>`或`<module>`。包括原调用者链，不加虚构attempt用户帧、不折叠。Interp没有文件路径，错误及帧不提供file。记录在清栈前形成；它是普通可变数据，修改不会反向修改解释器。普通jsonStringify沿A5等原规则，不能保证含函数/环的成功value可完整JSON编码。
+
+边界之外的校验：attempt参数数目错沿`函数 attempt 期待 1 个参数，得到 {m}`；非函数沿`不可调用：{t} 不是函数`；用户回调需要非零参数时沿`函数 {name} 期待 {n} 个参数，得到 0`。name沿原规则匿名为`<fn>`。这些TypeError直接传播，不作为本次失败Result，也不调用f。既有一等argv可作为零参数函数，返回当前argv快照。placeholder函数值缺用户体且非argv时沿原NotCallable(function)。外层另一个attempt仍可捕获其内部发生的上述TypeError。
+
+捕获白名单：NameError、TypeError、IndexError、FieldError、ZeroDivisionError、ValueError、IOError、AssertionError，以及OverflowError的IntegerOutOfRange。assert/fail在边界内成为失败值，边界外仍致命。check(false)仍打印原警告并返回false，不是错误。JSON128层输入验证仍是ValueError，可恢复。
+
+不捕获：CosmosAnswerError、SyntaxError、RecursionError、OverflowError::Capacity；保留原错误与帧/深度状态继续传播。宿主panic、abort、栈溢出、分配失败不是业务错误，禁止catch_unwind来伪装Result。本版IOError仍是原运行时IO错误类别，不能宣称可区分所有底层OS资源故障；未来预算/取消终止必须走不可捕获路径。
+
+边界快照在求参/校验后、回调调用前取得。成功及可恢复失败都恢复调用前depth和完整trace（包括调用者原span）；仅truncate帧不足以恢复被改写的调用者span。嵌套attempt各保存自己的边界，内部恢复不破坏外部。不可捕获错误不恢复后继续执行，沿原异常通路保留最内错误帧。恢复不回滚可见副作用：全局/捕获cell、容器修改、IO、输出、随机状态以及闭包分配都保留；不提供事务。func_names和next_func_id不可回滚，否则失败回调写出的逃逸闭包会在后续trace中错配。

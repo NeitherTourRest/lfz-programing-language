@@ -1004,3 +1004,9 @@ lfz [--json] check [--json] - [--json]
 - 正常模式成功stdout/stderr均空、exit0；前端失败stdout空、stderr沿既有诊断、exit2。合法check加 `--json` 的状态协议见 [interface-contract.md](./interface-contract.md) §17；CLI参数错误无论是否出现 `--json` 仍按旧usage约定写stderr文本，stdout空、exit2。
 
 旧run/test/裸脚本/-e/stdin执行入口、脚本参数分隔与JSON协议完全保持；新命令的实现和证据必须独立于T13冻结性能候选。
+
+## 18. T15 受控错误恢复（2026-10-29 冻结）
+
+新增内置调用 `attempt(f)`，不新增记号、文法或try/catch。f必须是能以零实参调用的函数值；用 `attempt(() => jsonParse(text))` 延迟可能失败的表达式。管道 `f |> attempt` 沿原脱糖规则等价。attempt仍可被局部/捕获/全局同名绑定遮蔽；attempt本身不是一等函数值，既有argv一等范围不扩大。普通参数表达式仍左到右先求值；求参错误不在本次attempt捕获范围内。
+
+返回普通struct，成功/失败及错误字段见semantics §18、interface-contract §18。`lfz check`只解析上述调用，不检查回调参数个数或执行回调。不改变文件前导、旧run/test JSON或未捕获错误。

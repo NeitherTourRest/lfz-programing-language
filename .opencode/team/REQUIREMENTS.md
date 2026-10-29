@@ -1,9 +1,20 @@
 # LFZ 需求矩阵（唯一需求事实源 · v1.1 增量对齐版）
 
 > 最后更新: 2026-10-29 by requirements-analyst
-> 版本: **v5（T14四项功能/指南需求通过；R-304开放，非正式发布）**
+> 版本: **v6（T15四项功能/指南/应用通过；R-304开放，非正式发布）**
 > 本文件是**唯一需求事实源**，唯一写者 requirements-analyst，他人只读。
 > 来源: `task-info.md`（课程作业原始要求）+ 用户指令 + 已定案 ADR（见 `DECISIONS.md`）。
+
+## T15 增量需求（2026-10-29，独立功能通过）
+
+依据三spec §18及T15-design。当前作者候选73内置/12错误类，SHA256 `1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c`、782848B。作者549release/178官方/13公开CLI/jsonbatch38、人指南20通过；AI新增25/25及四skill/入口同步回执已到，最终独立报告`docs/reports/T15-independent-verification.md`及证据目录确认同hash的549 release、178官方（含于91旧CLI）、attempt13、check117、旧app37+11、新jsonbatch38、旧JSON/argv140及38自编见证全PASS；完整trace/depth恢复、逃逸闭包与资源错误传播均有独立证据，资源边界采用安全单元构造而非真实abort/OOM。以下四项通过。需求分析师仅核对文档与回执，不自行运行产品验收。历史T14及T12通过保持各自时点；R304仍进行中/OPEN，无T15性能测窗，非正式发布，不能借attempt功能恢复宣称效率改善。
+
+| R-ID | 需求 | 来源 | 验证方式（可命令复现） | 状态 | 交付物 | 评分项 |
+|------|------|------|------------------------|------|--------|--------|
+| R-130 | attempt(f)严格1参零参可调用函数，仅未遮蔽直接名调用及管道；返回字段固定ok/value/error的普通Result。错误记录class/message/line/col/traceback，保持原消息位置与完整外→内帧，不添加attempt帧 | 三spec §18 | `dist/lfz.exe -e 'assert(attempt(() => 1/0).error.class == "ZeroDivisionError")'`应exit0；正式LFZ及公开脚本核成功nil/共享容器/函数、argv、遮蔽、管道、记录字段/帧顺序。外层arity/非函数/回调arity及求参错误不属于本层捕获 | 通过 | spec、runtime、tests；language-architect/runtime-dev/test-engineer | 1、2 |
+| R-207 | 恢复白名单与状态符合§18：可恢复错误恢复调用前完整trace/depth，不回滚副作用或闭包ID；语法/前导/递归/容量及宿主故障不伪装业务Result；旧回归保留 | IC/semantics §18 | `cargo test --release`全部通过；`dist/lfz.exe test --json`178/178；`D:/app/ANACONDA/python.exe -B tests/t15_cli_check.py --binary dist/lfz.exe --expected-sha256 1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c --output Temp/T15/req-cli-new.json`全部通过；独立验证nested恢复、连续失败后成功/递归、失败后未捕获错误无旧帧、逃逸闭包名称、输出/IO/cell不回滚。资源类使用单元构造，不做真实abort/OOM压测 | 通过 | runtime单测、黑盒与独立报告；runtime-dev/test-engineer/verifier | 1、2 |
+| R-408 | 人/AI指南实跑attempt批处理工作流，说明延迟回调、外层校验、Result及错误边界、非事务性、非一等内置与check仅解析；旧盲测成绩不改 | 三spec §18；R407延伸 | 人指南`D:/app/ANACONDA/python.exe -B docs/reports/T15-guide-evidence/verify.py --binary target/release/lfz.exe`20/20；AI按T15报告命令新增/受影响25/25通过并锁同hash；独立CLI语义与指南约定一致，不把作者示例冒称新盲测或性能通过 | 通过 | 五指南、skill四文件/AI入口与实跑证据；docs-writer/ai-dx-engineer | 4 |
+| R-505 | jsonbatch按行捕获JSON错误继续下一行，输出确定性结果及逐行错误；读取/配置等边界错误不被静默吞掉，错误恢复不提供文件事务 | app/T15-JSONBATCH.md；§18 | `D:/app/ANACONDA/python.exe -B app/verify_jsonbatch.py --lfz dist/lfz.exe --expected-sha 1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c --output Temp/T15/req-app-new.json`38/38；正常/坏JSON混批仍输出后续有效记录、行号及错误，坏参数/输入IO受控exit2，文件保护与现有≥200行sortviz交付保持 | 通过 | jsonbatch.lfz/verify_jsonbatch.py/T15-JSONBATCH.md；app-dev | 5 |
 
 ## T14 增量需求（2026-10-29，check独立功能通过）
 

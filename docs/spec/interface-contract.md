@@ -465,3 +465,21 @@ AI 指南与 `lfz-programming` skill（计划路径 `.opencode/skills/lfz-progra
 非执行见证至少包含：源内print/eprint/dump/input无程序输出/提示；writeFile/appendFile目标不存在时不创建、存在时字节不变；readFile路径错误不被运行；无限循环/递归入口只解析并在合理进程超时内返回；副作用语句之后出现词法/语法错也不产生副作用。需结合真实进程证据和调用路径审查，不只凭源码关键词搜索。
 
 原CLI测试、run/test JSON、脚本argv、loader/parser行为及内置check均不得回归。原T13源码hash和性能证据冻结不回写；T14实现后的新产物另记hash和验证结果。本节冻结的是接口目标，不宣称已经实现。
+
+## 18. T15 attempt 实现契约（2026-10-29 冻结）
+
+### 18.1 注册及ABI
+
+内置集合由72增至73，BUILTIN_NAMES字母序含attempt、is_builtin("attempt")为true。它是需要Interp上下文的特殊内置，不伪装普通Builtin/Hof；lookup/lookup_hof不登记attempt。无Interp的builtins::call/call_with("attempt",...)保持通用表未找到名字的NameError，不模拟空trace。旧Builtin/Hof/Invoke公开ABI不改，不泛化函数值。
+
+eval_call的Ident路径先执行原变量遮蔽查找；仅无绑定且名为attempt时按原eval_args一次求完实参，控制流仍按原规则传播，再调用私有Interp helper。不得通过再次求值AST重跑实参。helper依semantics §18先校验1参/Func/零形参（argv允许、无用户体placeholder拒绝），校验错误span取attempt调用Call节点。未进入f不新增帧；helper内部经原call_value/call_user调用f，保留fresh环境、self捕获、参数/cell及原深度检查，不造attempt帧。
+
+### 18.2 状态、错误与数据
+
+semantics §18的三字段Result、五字段error、三字段traceframe及插入顺序是规范性协议；构造用Value普通struct/array/string/int/nil，不手拼JSON。错误span与消息逐字复用LzError。函数显示名复用现规则；错误记录在恢复前取完整trace，存普通Value字符串，不保留对可变内部trace的别名。成功value保留原引用拓扑。
+
+可恢复分类须匹配Rust错误variant，OverflowMsg::IntegerOutOfRange可恢复，Capacity不可；不靠中文message字符串判断。snapshot trace.clone与depth在实际调用前获取；成功/可恢复Err恢复整个快照，不回滚func_names/next_func_id/用户状态。不可恢复Err原样返回，不能先清帧。此操作不要求更改旧call_user的错误保帧行为；仅新helper在受控边界处理。
+
+### 18.3 最低验收矩阵
+
+成功nil/标量/共享容器/返回函数；多行坏JSON混批；全部可捕获类及白名单外错误（资源错误优先单元构造验证，禁止真实abort压测）；outer arity/nonfunc/callback arity/实参求值错误位于边界外；argv、遮蔽与管道；嵌套成功/失败/外层接住内部校验错误；连续大量失败后成功、恢复后正常递归；完整trace名称/位置及失败后后续未捕获错误无旧帧；捕获失败前写出的闭包后续调用及trace标识不串；数组/cell/输出/IO不回滚；check(false)仍警告且成功；旧542测试和CLI/check/JSON协议回归。人/AI指南只引用本节并实跑，不以失败数等于0代替上述状态恢复见证。
