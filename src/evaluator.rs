@@ -110,6 +110,7 @@ struct RunOrigins {
 
 pub struct TracedRun {
     origins: Option<RunOrigins>,
+    host_diagnostics: Vec<String>,
     /// 求值结果（最后一条语句的值；出错则为 `Err`）。
     pub result: R<Value>,
     /// 帧栈，**最外层 → 最内层**（§10.3）：首帧恒为模块帧 `<module>`，末帧为出错点所在帧。
@@ -119,6 +120,7 @@ pub struct TracedRun {
 }
 
 impl TracedRun {
+    pub fn host_diagnostics(&self)->&[String]{&self.host_diagnostics}
     /// 按§19完整校验后原子替换来源sidecar；旧求值入口不自动附加。
     pub fn attach_origins(
         &mut self,
@@ -217,12 +219,19 @@ pub struct EvalLimits {
  pub deadline: Option<std::time::Instant>,
  pub cancel: Option<std::sync::Arc<std::sync::atomic::AtomicBool>>,
 }
+#[derive(Clone,Debug,Default)]
+pub struct EvalCapabilities { pub subprocess:bool }
+#[derive(Clone,Debug,Default)]
+pub struct EvalContext { pub limits:EvalLimits, pub capabilities:EvalCapabilities }
 pub fn eval_graph_traced_on_thread_with_args(g:&crate::modules::ModuleGraph,args:&[String])->Result<TracedRun,GraphExecutionError>{
  return eval_graph_traced_on_thread_with_args_and_limits(g,args,EvalLimits::default());
 }
 pub fn eval_graph_traced_on_thread_with_args_and_limits(g:&crate::modules::ModuleGraph,args:&[String],limits:EvalLimits)->Result<TracedRun,GraphExecutionError>{
+ eval_graph_traced_on_thread_with_args_and_context(g,args,EvalContext{limits,..Default::default()})
+}
+pub fn eval_graph_traced_on_thread_with_args_and_context(g:&crate::modules::ModuleGraph,args:&[String],context:EvalContext)->Result<TracedRun,GraphExecutionError> {
  validate_execution_graph(g)?;
- let mut i=Interp::new();i.limits=limits;i.script_args=args.iter().map(|s|Value::string(s.clone())).collect();
+ let mut i=Interp::new();i.limits=context.limits;i.capabilities=context.capabilities;i.script_args=args.iter().map(|s|Value::string(s.clone())).collect();
  i.modules=Some(g.units.iter().map(|u|ModuleInstance{env:Env::root(),namespace:None,state:ModuleState::Uninitialized,source:u.source_id}).collect());
  let mut result=Ok(Value::Nil);
  for id in &g.initialization_order{
@@ -246,9 +255,27 @@ pub fn eval_graph_traced_on_thread_with_args_and_limits(g:&crate::modules::Modul
   i.trace.pop();i.trace_sources.pop();
  }
  let error_source=if result.is_err(){i.fault_source.or_else(||i.trace_sources.last().copied())}else{None};
- let mut out=TracedRun{result,frames:i.trace,func_names:i.func_names,origins:None};
+ let mut out=TracedRun{result,frames:i.trace,func_names:i.func_names,host_diagnostics:i.host_diagnostics,origins:None};
  out.attach_origins(Rc::clone(&g.sources),i.trace_sources,error_source).map_err(GraphExecutionError::Origins)?;
  Ok(out)
+}
+
+fn validate_exec(args:&[Value],span:Span)->R<crate::process_control::ProcessRequest>{
+ use crate::error::ValueMsg as V;
+ if args.len()!=3{return Err(type_error(TypeMsg::ArgCount{name:"exec".into(),n:3,m:args.len()},span));}
+ let bad=|v:&Value,rt:&str|type_error(TypeMsg::BadOperands{op:"exec".into(),lt:v.type_name().into(),rt:rt.into()},span);
+ let array=args[0].as_array().ok_or_else(||bad(&args[0],"array"))?;
+ let items=array.borrow();let mut argv=Vec::new();
+ for v in items.iter(){argv.push(v.as_str().ok_or_else(||bad(v,"string"))?.to_string());}
+ let invalid=|v|crate::error::value(v,span);
+ if argv.is_empty(){return Err(invalid(V::ProcessArgvEmpty));}
+ for arg in &argv{if arg.contains('\0'){return Err(invalid(V::ProcessArgNul));}}
+ if !crate::process_control::executable_valid(&argv[0]){return Err(invalid(V::ProcessExecutable));}
+ let timeout=args[1].as_int().ok_or_else(||bad(&args[1],"int"))?;
+ let max=args[2].as_int().ok_or_else(||bad(&args[2],"int"))?;
+ if !(1..=600000).contains(&timeout){return Err(invalid(V::ProcessTimeoutRange));}
+ if !(0..=16777216).contains(&max){return Err(invalid(V::ProcessOutputRange));}
+ Ok(crate::process_control::ProcessRequest{argv,timeout_ms:timeout as u64,max_output_bytes:max as usize})
 }
 
 /// 渲染 `;;` 的可见变量（**纯函数**，便于单测；§3.6）。
@@ -334,7 +361,10 @@ pub fn eval_module_traced_with_args(program: &Program, args: &[String]) -> Trace
 }
 
 pub fn eval_module_traced_with_args_and_limits(program:&Program,args:&[String],limits:EvalLimits)->TracedRun {
- on_eval_stack(move || eval_module_traced_on_thread_with_args_and_limits(program,args,limits))
+ eval_module_traced_with_args_and_context(program,args,EvalContext{limits,..Default::default()})
+}
+pub fn eval_module_traced_with_args_and_context(program:&Program,args:&[String],context:EvalContext)->TracedRun {
+ on_eval_stack(move || eval_module_traced_on_thread_with_args_and_context(program,args,context))
 }
 
 /// 在**专用大栈线程**（[`EVAL_STACK_SIZE`] = 256 MiB ≥ 64 MiB）上运行 `f` 并返回其结果
@@ -401,10 +431,13 @@ fn eval_module_on_thread_with_args(program: &Program, args: &[String]) -> Traced
     eval_module_traced_on_thread_with_args_and_limits(program,args,EvalLimits::default())
 }
 pub fn eval_module_traced_on_thread_with_args_and_limits(program:&Program,args:&[String],limits:EvalLimits)->TracedRun {
+ eval_module_traced_on_thread_with_args_and_context(program,args,EvalContext{limits,..Default::default()})
+}
+pub fn eval_module_traced_on_thread_with_args_and_context(program:&Program,args:&[String],context:EvalContext)->TracedRun {
     // B过渡：扫描整个根Program，在任何LFZ语句及副作用之前拒绝模块执行。
     if let Some(first_decl_span) = crate::modules::module_declaration_span(program) {
         return TracedRun {
-            origins: None,
+            host_diagnostics: vec![], origins: None,
             result: Err(Box::new(LzError::Syntax {
                 msg: crate::error::SyntaxMsg::ModuleExecutionUnavailable, span: first_decl_span,
             })),
@@ -413,7 +446,7 @@ pub fn eval_module_traced_on_thread_with_args_and_limits(program:&Program,args:&
         };
     }
     let mut interp = Interp::new();
-    interp.limits=limits;
+    interp.limits=context.limits;interp.capabilities=context.capabilities;
     interp.script_args = args.iter().map(|s| Value::string(s.clone())).collect();
     let top = Scope {
         env: Rc::clone(&interp.globals),
@@ -433,7 +466,7 @@ pub fn eval_module_traced_on_thread_with_args_and_limits(program:&Program,args:&
         Err(e) => Err(e),
     };
     TracedRun {
-        origins: None,
+        host_diagnostics: std::mem::take(&mut interp.host_diagnostics), origins: None,
         result,
         frames: std::mem::take(&mut interp.trace),
         func_names: std::mem::take(&mut interp.func_names),
@@ -511,6 +544,8 @@ enum AssignOutcome {
 
 /// 树遍历解释器：模块全局环境 + 单调递增的 `func_id` 分配器 + traceback 帧栈。
 struct Interp {
+    capabilities: EvalCapabilities,
+    host_diagnostics: Vec<String>,
     limits: EvalLimits,
     modules: Option<Vec<ModuleInstance>>,
     trace_sources: Vec<crate::source::SourceId>,
@@ -535,6 +570,7 @@ impl Interp {
         let mut argv_closure = Closure::named("argv", Rc::new(ScopeChain::empty()));
         argv_closure.builtin = Some("argv");
         Self {
+            capabilities: EvalCapabilities::default(), host_diagnostics:vec![],
             limits: EvalLimits::default(),
             script_args: Vec::new(),
             argv_function: Value::function(argv_closure),
@@ -1375,6 +1411,10 @@ impl Interp {
                     };
                     return self.call_func(self.argv_function.clone(), args, span, None, piped);
                 }
+                if name == "exec" {
+                    let argv=match self.eval_args(args,scope)?{Step::Done(v)=>v,Step::Flow(f)=>return Ok(f)};
+                    return Ok(Flow::Value(self.exec_process(&argv,span)?));
+                }
                 if name == "attempt" {
                     let argv = match self.eval_args(args, scope)? {
                         Step::Done(v) => v,
@@ -1502,6 +1542,28 @@ impl Interp {
     }
 
     /// §18：仅此边界恢复调用状态；用户副作用及函数ID表不回滚。
+    fn exec_process(&mut self,args:&[Value],span:Span)->R<Value>{
+        use crate::process_control::*;
+        let request=validate_exec(args,span)?;
+        if !self.capabilities.subprocess{return Err(crate::error::value(crate::error::ValueMsg::ProcessDisabled,span));}
+        let report=run(request,ProcessControl{deadline:self.limits.deadline,cancel:self.limits.cancel.clone()});
+        self.consume_process_report(report,span)
+    }
+    fn consume_process_report(&mut self,report:crate::process_control::ProcessReport,span:Span)->R<Value>{
+        use crate::process_control::ProcessFailure as F;
+        use crate::error::{ValueMsg as V,ExecutionLimitReason as E};
+        self.host_diagnostics.extend(report.diagnostics);
+        let output=report.result.map_err(|f|match f {
+            F::Cancelled=>crate::error::execution_limit(E::Cancelled,span),F::Deadline=>crate::error::execution_limit(E::Deadline,span),
+            F::Timeout=>crate::error::value(V::ProcessTimeout,span),F::OutputLimit=>crate::error::value(V::ProcessOutputLimit,span),
+            F::Unsupported=>crate::error::value(V::ProcessUnsupported,span),
+            F::Io{operation,message}=>Box::new(LzError::Io{msg:format!("子进程{operation}失败：{message}"),span:Some(span)})
+        })?;
+        let stdout=String::from_utf8(output.stdout).map_err(|_|crate::error::value(V::ProcessUtf8,span))?;
+        let stderr=String::from_utf8(output.stderr).map_err(|_|crate::error::value(V::ProcessUtf8,span))?;
+        Ok(Value::object(vec![("stdout".into(),Value::string(stdout)),("stderr".into(),Value::string(stderr)),("exitCode".into(),output.exit_code.map_or(Value::Nil,Value::Int)),("signal".into(),output.signal.map_or(Value::Nil,Value::Int))]))
+    }
+
     fn attempt_call(&mut self, args: &[Value], span: Span) -> R<Value> {
         if args.len() != 1 {
             return Err(type_error(TypeMsg::ArgCount { name: "attempt".into(), n: 1, m: args.len() }, span));
@@ -4610,4 +4672,58 @@ mod t17_boundaries {
   reason(r,crate::error::ExecutionLimitReason::StepBudget);
  });}
 
+}
+#[cfg(test)]
+mod t18_runtime_tests {
+ use super::*;
+ use crate::process_control::*;
+ fn args()->Vec<Value>{let exe=if cfg!(windows){"C:\\test.exe"}else{"/bin/true"};vec![Value::array(vec![Value::string(exe)]),Value::Int(10),Value::Int(0)]}
+ #[test] fn executable_validation_uses_backend_platform_rules_without_spawn(){
+  let paths=if cfg!(windows){vec![(r"C:\test.exe",true),(r"\\server\share\tool.EXE",true),(r"C:test.exe",false),(r"\\?\C:\test.exe",false),(r"C:\tool.cmd",false)]}
+   else {vec![("/bin/true",true),("/tmp/空 格",true),("bin/true",false),("",false)]};
+  for (path,valid) in paths {
+   let mut a=args();a[0]=Value::array(vec![Value::string(path)]);
+   assert_eq!(crate::process_control::executable_valid(path),valid,"backend {path}");
+   assert_eq!(validate_exec(&a,Span::START).is_ok(),valid,"runtime {path}");
+  }
+ }
+ #[test] fn exec_validation_order_and_disabled_without_spawn(){
+  let at=Span::START;let mut a=args();
+  assert!(validate_exec(&a,at).is_ok());
+  a[0]=Value::array(vec![Value::string("bad\0"),Value::Int(1)]);
+  assert_eq!(validate_exec(&a,at).unwrap_err().class_name(),"TypeError");
+  a[0]=Value::array(vec![]);assert_eq!(validate_exec(&a,at).unwrap_err().message(),"子进程 argv 不能为空");
+  a=args();a[1]=Value::Int(0);a[2]=Value::Nil;
+  assert_eq!(validate_exec(&a,at).unwrap_err().class_name(),"TypeError");
+  for path in ["test.exe","C:foo.exe","C:\\foo.cmd","\\\\?\\C:\\foo.exe"] {
+   a=args();a[0]=Value::array(vec![Value::string(path)]);
+   assert_eq!(validate_exec(&a,at).unwrap_err().message(),"子进程程序必须是绝对可执行文件路径");
+  }
+  let mut i=Interp::new();assert_eq!(i.exec_process(&args(),at).unwrap_err().message(),"子进程能力未启用");
+  assert_eq!(builtins::call("exec",&args(),at).unwrap_err().message(),"子进程能力未启用");
+ }
+ #[test] fn report_utf8_and_unsigned_exit_mapping(){
+  let mut i=Interp::new();let at=Span::START;
+  let value=i.consume_process_report(ProcessReport{result:Ok(ProcessOutput{stdout:b"ok".to_vec(),stderr:vec![],exit_code:Some(4294967295),signal:None}),diagnostics:vec![]},at).unwrap();
+  assert_eq!(value.as_struct().unwrap().borrow().data_len(),4);
+  let error=i.consume_process_report(ProcessReport{result:Ok(ProcessOutput{stdout:vec![255],stderr:vec![],exit_code:Some(0),signal:None}),diagnostics:vec![]},at).unwrap_err();
+  assert_eq!(error.message(),"子进程输出不是合法 UTF-8");
+ }
+ #[test] fn global_termination_and_cleanup_diagnostics_are_not_business_result(){
+  for failure in [ProcessFailure::Cancelled,ProcessFailure::Deadline]{
+   let mut i=Interp::new();let error=i.consume_process_report(ProcessReport{result:Err(failure),diagnostics:vec!["cleanup witness".into()]},Span::START).unwrap_err();
+   assert_eq!(error.class_name(),"ExecutionLimitError");assert!(!Interp::attempt_recoverable(&error));
+   assert_eq!(i.host_diagnostics,vec!["cleanup witness"]);
+  }
+ }
+ #[test] fn attempt_preserves_cleanup_diagnostics_and_context_defaults_off(){on_eval_stack(||{
+  let p=crate::parser::parse(&crate::lexer::lex("attempt(()=>1/0)",0).unwrap()).unwrap();
+  let mut i=Interp::new();
+  let e=i.consume_process_report(ProcessReport{result:Err(ProcessFailure::Io{operation:"回收".into(),message:"injected".into()}),diagnostics:vec!["injected cleanup".into()]},Span::START).unwrap_err();
+  assert!(Interp::attempt_recoverable(&e));
+  let scope=Scope{env:i.globals.clone(),captured:Rc::new(vec![]),self_val:None};
+  assert!(i.exec_stmts(&p.stmts,&scope).is_ok());assert_eq!(i.host_diagnostics,vec!["injected cleanup"]);
+  assert!(!EvalContext::default().capabilities.subprocess);
+  assert!(eval_module_traced_on_thread(&p).host_diagnostics().is_empty());
+ });}
 }

@@ -92,6 +92,8 @@ LFZ 解释器
     非 .lfz 文件     豁免 #42 前导（如 .txt / 无扩展名），按普通源加载执行。
 
 选项:
+  --allow-process      仅本次执行启用受控子进程；必须绝对exe路径，能力不是沙箱
+                       exec捕获输出作为返回值，不转发到解释器终端
   --max-steps N        限制求值节点步数（非负十进制u64，仅运行命令）
   --timeout-ms N       求值协作截止时间（不含前端，不硬中断阻塞IO）
   --json               以机器可读 JSON 输出（stdout 只写 JSON；程序输出与人类可读诊断转 stderr）
@@ -165,12 +167,12 @@ enum Command {
 /// `--json` 仅在选项位置生效；CODE 与 `--` 后的脚本参数不参与选项解析。
 pub fn execute(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32 {
     let (rest, script_args, json, limits) = match scan_options(args) { Ok(v)=>v,Err(msg)=>return usage_error(&msg,err) };
-    if limits.is_set() && rest.first().is_some_and(|s| matches!(s.as_str(),"check"|"test"|"--help"|"-h"|"--version"|"-V")) { return usage_error("执行限额选项只适用于运行命令",err); }
+    if limits.is_set() && rest.first().is_some_and(|s| matches!(s.as_str(),"check"|"test"|"--help"|"-h"|"--version"|"-V")) { return usage_error(limits.applicability(),err); }
     let parsed=parse_command(&rest,script_args);
     if limits.is_set() {
         match parsed {
             Ok(command) if is_execution(&command) => return run_limited(command,limits,json,out,err),
-            Ok(_) => return usage_error("执行限额选项只适用于运行命令",err),
+            Ok(_) => return usage_error(limits.applicability(),err),
             Err(msg) => return usage_error(&msg,err),
         }
     }
@@ -204,9 +206,11 @@ pub fn execute(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32
 
 /// 仅摘除选项区域的 `--json`，保护源码与脚本参数的原始字符串。
 #[derive(Clone, Copy, Debug, Default)]
-struct CliLimits { max_steps:Option<u64>, timeout_ms:Option<u64> }
+struct CliLimits { max_steps:Option<u64>, timeout_ms:Option<u64>, allow_process:bool, first_capability:Option<bool> }
 impl CliLimits {
-    fn is_set(self)->bool {self.max_steps.is_some()||self.timeout_ms.is_some()}
+    fn is_set(self)->bool {self.max_steps.is_some()||self.timeout_ms.is_some()||self.allow_process}
+    fn applicability(self)-> &'static str { if self.first_capability==Some(true){"子进程能力选项只适用于运行命令"}else{"执行限额选项只适用于运行命令"} }
+    fn context(self)->Result<evaluator::EvalContext,String>{Ok(evaluator::EvalContext{limits:self.evaluation()?,capabilities:evaluator::EvalCapabilities{subprocess:self.allow_process}})}
     fn evaluation(self)->Result<evaluator::EvalLimits,String>{
         let deadline=match self.timeout_ms {
             Some(n)=>Some(std::time::Instant::now().checked_add(std::time::Duration::from_millis(n)).ok_or_else(||"选项 '--timeout-ms' 超出当前平台可表示的时间范围".to_string())?),
@@ -227,7 +231,10 @@ fn scan_options(args:&[String])->Result<(Vec<String>,Option<Vec<String>>,bool,Cl
         let a=&args[i];
         if a=="--json" {json=true;i+=1;}
         else if a=="--" && execution_ready(&rest){return Ok((rest,Some(args[i+1..].to_vec()),json,limits));}
+        else if a=="--allow-process" {if limits.allow_process{return Err("选项 '--allow-process' 不能重复".into());}limits.allow_process=true;limits.first_capability.get_or_insert(true);i+=1;}
+        else if a.starts_with("--allow-process="){return Err("选项 '--allow-process' 不接受值".into());}
         else if a=="--max-steps"||a=="--timeout-ms" {
+            limits.first_capability.get_or_insert(false);
             let slot=if a=="--max-steps"{&mut limits.max_steps}else{&mut limits.timeout_ms};
             if slot.is_some(){return Err(format!("选项 '{a}' 不能重复"));}
             let value=args.get(i+1).filter(|s|s.as_str()!="--").ok_or_else(||format!("选项 '{a}' 需要一个非负十进制 u64 参数"))?;
@@ -272,11 +279,11 @@ fn run_limited(command:Command,limits:CliLimits,json:bool,out:&mut dyn Write,err
             let graph=match lfz::modules::build_graph(lfz::modules::ParsedEntry{program,loaded,display_path:path.into(),identity,base_dir,raw_bytes:counted.raw_bytes}){
                 Ok(g)=>g,Err(g)=>{let source=g.sources.get(g.failure.source_id).expect("图失败来源");return Ok(CaseEval::Located{path:source.display_path.clone(),inner:Box::new(failure(g.failure.error,source.loaded.clone()))});}
             };
-            let evaluated=evaluator::eval_graph_traced_on_thread_with_args_and_limits(&graph,&args,limits.evaluation()?);
+            let evaluated=evaluator::eval_graph_traced_on_thread_with_args_and_context(&graph,&args,limits.context()?);
             return Ok(match evaluated{Ok(r)=>graph_run_result(r),Err(e)=>CaseEval::HostFailure(e.to_string())});
         }
-        let traced=evaluator::eval_module_traced_on_thread_with_args_and_limits(&program,&args,limits.evaluation()?);
-        if traced.result.is_ok(){Ok(CaseEval::Passed)}else{let e=(**traced.result.as_ref().unwrap_err()).clone();Ok(CaseEval::Failed{err:e,loaded:Some(loaded),traced:Some(traced)})}
+        let traced=evaluator::eval_module_traced_on_thread_with_args_and_context(&program,&args,limits.context()?);
+        Ok(legacy_run_result(traced,loaded))
     });
     match result{Ok(eval)=>report_eval(path,&eval,json,out,err),Err(message)=>usage_error(&message,err)}
 }
@@ -356,6 +363,7 @@ pub(crate) enum CaseEval {
     /// run/test完成加载到求值；CLI check仅完成加载到语法，不表示运行成功。
     Passed,
     HostFailure(String),
+    WithDiagnostics { inner:Box<CaseEval>, diagnostics:Vec<String> },
     Located { path: String, inner: Box<CaseEval> },
     /// 某阶段抛 `LfzError`。
     Failed {
@@ -369,8 +377,11 @@ pub(crate) enum CaseEval {
 }
 
 impl CaseEval {
+    pub(crate) fn passed(&self)->bool{match self{Self::Passed=>true,Self::Located{inner,..}|Self::WithDiagnostics{inner,..}=>inner.passed(),_=>false}}
+    pub(crate) fn cleanup_diagnostics(&self)->&[String]{match self{Self::WithDiagnostics{diagnostics,..}=>diagnostics,Self::Located{inner,..}=>inner.cleanup_diagnostics(),_=>&[]}}
+
     pub(crate) fn host_failure(&self) -> Option<&str> {
-        match self { Self::HostFailure(detail) => Some(detail), Self::Located { inner, .. } => inner.host_failure(), _ => None }
+        match self { Self::HostFailure(detail) => Some(detail), Self::Located { inner, .. }|Self::WithDiagnostics{inner,..} => inner.host_failure(), _ => None }
     }
 
     /// 错误的**类名**（`Passed` → `None`）。
@@ -378,7 +389,7 @@ impl CaseEval {
     pub(crate) fn error_class(&self) -> Option<&'static str> {
         match self {
             CaseEval::HostFailure(_) => None,
-            CaseEval::Located { inner, .. } => inner.error_class(),
+            CaseEval::Located { inner, .. }|CaseEval::WithDiagnostics{inner,..} => inner.error_class(),
             CaseEval::Passed => None,
             CaseEval::Failed { err, .. } => Some(err.class_name()),
         }
@@ -389,7 +400,7 @@ impl CaseEval {
     pub(crate) fn error(&self) -> Option<&LzError> {
         match self {
             CaseEval::HostFailure(_) => None,
-            CaseEval::Located { inner, .. } => inner.error(),
+            CaseEval::Located { inner, .. }|CaseEval::WithDiagnostics{inner,..} => inner.error(),
             CaseEval::Passed => None,
             CaseEval::Failed { err, .. } => Some(err),
         }
@@ -401,6 +412,7 @@ impl CaseEval {
         match self {
             CaseEval::HostFailure(detail) => Some(format!("lfz: 模块执行上下文无效：{detail}\n")),
             CaseEval::Located { path, inner } => inner.render(path),
+            CaseEval::WithDiagnostics{inner,..}=>inner.render(path),
             CaseEval::Passed => None,
             CaseEval::Failed { err, loaded, traced } => {
                 let origin = traced.as_ref().and_then(|r| r.error_source());
@@ -432,6 +444,7 @@ pub(crate) fn error_json(path: &str, eval: &CaseEval) -> Json {
 /// - `line` / `col` 取 [`LzError::span`]；`Io` 无 span 时输出 `null`；
 /// - `traceback` 为**自最外层到最内层**的完整帧表（**不折叠**，§8.4）。
 pub(crate) fn push_error_fields(fields: &mut Vec<(String, Json)>, path: &str, eval: &CaseEval) {
+    if let CaseEval::WithDiagnostics{inner,..}=eval{push_error_fields(fields,path,inner);return;}
     if let CaseEval::Located { path, inner } = eval { push_error_fields(fields, path, inner); return; }
     let CaseEval::Failed { err, traced, .. } = eval else {
         return;
@@ -565,25 +578,27 @@ fn eval_loaded_on_stack(loaded: lfz::error::R<loader::CountedLoaded>, args: &[St
             Err(error) => return CaseEval::HostFailure(error.to_string()),
         }
     } else { evaluator::eval_module_traced_on_thread_with_args(&program,args) };
-    if traced.result.is_ok() {
-        return CaseEval::Passed;
-    }
-    // 先把错误 clone 出来，再把 `traced`（含完整帧栈）移交出去。
-    let err = (**traced.result.as_ref().expect_err("已判定为 Err")).clone();
-    CaseEval::Failed {
-        err,
-        loaded: Some(loaded),
-        traced: Some(traced),
-    }
+    legacy_run_result(traced,loaded)
 }
 
 fn graph_run_result(traced: TracedRun) -> CaseEval {
+    let diagnostics=traced.host_diagnostics().to_vec();
+    let inner=(||{
     if (0..traced.frames.len()).any(|i| traced.frame_source(i).is_none()) { return CaseEval::HostFailure("来源元数据缺失".to_string()); }
     if traced.result.is_ok() { return CaseEval::Passed; }
     let Some(origin) = traced.error_source() else { return CaseEval::HostFailure("来源元数据缺失".to_string()); };
     let loaded=origin.loaded.clone();
     let err=(**traced.result.as_ref().unwrap_err()).clone();
     CaseEval::Failed { err, loaded, traced:Some(traced) }
+})();
+    with_diagnostics(inner,diagnostics)
+}
+
+fn with_diagnostics(inner:CaseEval,diagnostics:Vec<String>)->CaseEval{if diagnostics.is_empty(){inner}else{CaseEval::WithDiagnostics{inner:Box::new(inner),diagnostics}}}
+fn legacy_run_result(traced:TracedRun,loaded:Loaded)->CaseEval{
+ let diagnostics=traced.host_diagnostics().to_vec();
+ let inner=if traced.result.is_ok(){CaseEval::Passed}else{let err=(**traced.result.as_ref().unwrap_err()).clone();CaseEval::Failed{err,loaded:Some(loaded),traced:Some(traced)}};
+ with_diagnostics(inner,diagnostics)
 }
 
 /// 只做前端检查。输入加载、解析和深AST析构全部留在大栈线程内。
@@ -742,6 +757,8 @@ fn is_lfz_path(path: &str) -> bool {
         .is_some_and(|ext| ext.eq_ignore_ascii_case("lfz"))
 }
 
+pub(crate) fn write_cleanup_diagnostics(err:&mut dyn Write,diagnostics:&[String]){for line in diagnostics{let _=writeln!(err,"lfz: 子进程回收诊断：{line}");}}
+
 /// 把 [`CaseEval`] 渲染为输出并按 D-008 取退出码（[`run_file`] 与 [`run_script`] 共用）。
 ///
 /// `json == true` → stdout 只写一行 JSON；否则人类可读块写 `err`。
@@ -752,9 +769,12 @@ fn report_eval(
     out: &mut dyn Write,
     err: &mut dyn Write,
 ) -> i32 {
+    let diagnostics=eval.cleanup_diagnostics();
+    if eval.passed() && !diagnostics.is_empty(){let _=writeln!(err,"lfz: 子进程资源回收失败");write_cleanup_diagnostics(err,diagnostics);return EXIT_ERROR;}
+    write_cleanup_diagnostics(err,diagnostics);
     if let Some(detail) = eval.host_failure() { let _=writeln!(err,"lfz: 模块执行上下文无效：{detail}"); return EXIT_ERROR; }
     if json {
-        let passed = matches!(eval, CaseEval::Passed);
+        let passed = eval.passed();
         let doc = if passed {
             success_json()
         } else {
@@ -1303,4 +1323,10 @@ mod tests {
 
         let _ = std::fs::remove_dir_all(&dir);
     }
+}
+
+#[cfg(test)]mod t18_cleanup_gate_tests {
+ use super::*;
+ #[test]fn caught_cleanup_diagnostic_blocks_success_including_json(){for json in [false,true]{let e=with_diagnostics(CaseEval::Passed,vec!["injected cleanup".into()]);let(mut out,mut err)=(vec![],vec![]);assert_eq!(report_eval("x",&e,json,&mut out,&mut err),2);assert!(out.is_empty());assert_eq!(String::from_utf8(err).unwrap(),"lfz: 子进程资源回收失败\nlfz: 子进程回收诊断：injected cleanup\n");}}
+ #[test]fn resource_failure_keeps_json_and_cleanup_diagnostic_separate(){let e=with_diagnostics(CaseEval::Failed{err:LzError::ExecutionLimit{reason:lfz::error::ExecutionLimitReason::Cancelled,span:Span::START},loaded:None,traced:None},vec!["cleanup witness".into()]);let(mut out,mut err)=(vec![],vec![]);assert_eq!(report_eval("x",&e,true,&mut out,&mut err),2);let out=String::from_utf8(out).unwrap();assert!(out.contains("ExecutionLimitError"));assert!(!out.contains("cleanup"));assert_eq!(String::from_utf8(err).unwrap(),"lfz: 子进程回收诊断：cleanup witness\n");}
 }

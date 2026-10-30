@@ -1,4 +1,4 @@
-//! 内置函数表（`data-last`，已实现 **73 个**；非高阶 65 + 高阶 7 + Interp特殊1；含已授权文件 IO 三项）。
+//! 内置函数表（`data-last`，已实现 **74 个**；非高阶 65 + 高阶 7 + Interp特殊2；含已授权文件 IO 三项）。
 //!
 //! 单一事实源（本模块**只读消费**，不得偏离）：
 //! - `docs/spec/interface-contract.md` §10.7（内置表 + 「数值内置形参加宽」规范性补钉）、§8.1（错误类 ↔ 变体）、
@@ -109,7 +109,7 @@ impl Builtin {
 /// §10.7 全表 **54 个**内置名（字母序；= [`TABLE`] 的 47 个非高阶 + [`HOF_TABLE`] 的 7 个高阶）。
 pub const BUILTIN_NAMES: &[&str] = &[
     "abs", "appendFile", "argv", "assert", "attempt", "ceil", "check", "chr", "contains", "cos", "del", "div", "drop", "each",
-    "endsWith", "entries", "eprint", "exp", "fail", "filter", "float", "floor", "has", "indexOf",
+    "endsWith", "entries", "eprint", "exec", "exp", "fail", "filter", "float", "floor", "has", "indexOf",
     "input", "insert", "int", "join", "jsonParse", "jsonStringify", "keys", "len", "log", "lower", "map", "max", "maxBy",
     "min", "minBy", "ord", "padEnd", "padStart", "pop", "pow", "print", "push", "rand", "randInt",
     "range", "readFile", "reduce", "removeAt", "repeat", "replace", "round", "seed", "sin", "slice", "sort", "sortBy",
@@ -271,7 +271,7 @@ pub fn lookup_hof(name: &str) -> Option<Hof> {
 /// 是否为已实现的内置（非高阶 + 高阶**并集**，共 54）。
 #[must_use]
 pub fn is_builtin(name: &str) -> bool {
-    name == "attempt" || lookup(name).is_some() || lookup_hof(name).is_some()
+    name == "exec" || name == "attempt" || lookup(name).is_some() || lookup_hof(name).is_some()
 }
 
 /// 按名字调用**非高阶**内置（含参数个数校验）。名字不在非高阶表 → `NameError`。
@@ -279,6 +279,7 @@ pub fn is_builtin(name: &str) -> bool {
 /// 注：本入口**不覆盖** 7 个高阶内置（它们需要调用能力注入）；求值器与需要高阶的调用方请用
 /// [`call_with`]。
 pub fn call(name: &str, args: &[Value], span: Span) -> R<Value> {
+    if name=="exec" {return Err(crate::error::value(crate::error::ValueMsg::ProcessDisabled,span));}
     match lookup(name) {
         Some(b) => b.call(args, span),
         None => Err(name_error(name.to_string(), span)),
@@ -2227,7 +2228,7 @@ mod tests {
         assert!(is_builtin("push"));
         assert!(!is_builtin("nope"));
         assert!(lookup("nope").is_none());
-        assert_eq!(BUILTIN_NAMES.len(), 73);
+        assert_eq!(BUILTIN_NAMES.len(), 74);
         // 字母序。
         let mut sorted = BUILTIN_NAMES.to_vec();
         sorted.sort_unstable();
@@ -2235,10 +2236,11 @@ mod tests {
         // 无重复。
         let mut dedup = sorted.clone();
         dedup.dedup();
-        assert_eq!(dedup.len(), 73);
+        assert_eq!(dedup.len(), 74);
         // 两表（非高阶 + 高阶）名字并集与全表名单逐项一致。
         let mut table_names: Vec<&str> = TABLE.iter().map(|b| b.name).collect();
         table_names.extend(HOF_TABLE.iter().map(|h| h.name));
+        table_names.push("exec");
         table_names.push("attempt"); // Interp特殊内置，非通用表。
         table_names.sort_unstable();
         assert_eq!(table_names.as_slice(), BUILTIN_NAMES);

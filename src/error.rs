@@ -211,7 +211,7 @@ impl OverflowMsg {
     }
 }
 
-/// `ValueError` 子消息 —— `semantics.md` §8.1 及 v1.1 契约共给出**七条**消息模板。
+/// `ValueError` 子消息 —— 既有值/JSON消息及契约 §23.2 的十项子进程消息。
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum ValueMsg {
     /// `无法把 {src} 转换为 {dst}（'{text}'）`
@@ -231,6 +231,26 @@ pub enum ValueMsg {
     EmptyFill,
     JsonParse { offset: usize, reason: String },
     JsonStringify { reason: String },
+    /// `子进程能力未启用`（§23.2）。
+    ProcessDisabled,
+    /// `子进程 argv 不能为空`（§23.2）。
+    ProcessArgvEmpty,
+    /// `子进程参数不能包含 NUL`（§23.2）。
+    ProcessArgNul,
+    /// `子进程程序必须是绝对可执行文件路径`（§23.2）。
+    ProcessExecutable,
+    /// `子进程 timeoutMs 必须在 1..600000 范围内`（§23.2）。
+    ProcessTimeoutRange,
+    /// `子进程 maxOutputBytes 必须在 0..16777216 范围内`（§23.2）。
+    ProcessOutputRange,
+    /// `当前平台不支持受控子进程`（§23.2）。
+    ProcessUnsupported,
+    /// `子进程执行时间上限已到`（§23.2）。
+    ProcessTimeout,
+    /// `子进程输出超过字节上限`（§23.2）。
+    ProcessOutputLimit,
+    /// `子进程输出不是合法 UTF-8`（§23.2）。
+    ProcessUtf8,
 }
 
 impl ValueMsg {
@@ -249,6 +269,16 @@ impl ValueMsg {
             ValueMsg::EmptyFill => "填充串不能为空".to_string(),
             ValueMsg::JsonParse { offset, reason } => format!("JSON 解析失败（字节偏移 {offset}）：{reason}"),
             ValueMsg::JsonStringify { reason } => format!("JSON 编码失败：{reason}"),
+            ValueMsg::ProcessDisabled => "子进程能力未启用".to_string(),
+            ValueMsg::ProcessArgvEmpty => "子进程 argv 不能为空".to_string(),
+            ValueMsg::ProcessArgNul => "子进程参数不能包含 NUL".to_string(),
+            ValueMsg::ProcessExecutable => "子进程程序必须是绝对可执行文件路径".to_string(),
+            ValueMsg::ProcessTimeoutRange => "子进程 timeoutMs 必须在 1..600000 范围内".to_string(),
+            ValueMsg::ProcessOutputRange => "子进程 maxOutputBytes 必须在 0..16777216 范围内".to_string(),
+            ValueMsg::ProcessUnsupported => "当前平台不支持受控子进程".to_string(),
+            ValueMsg::ProcessTimeout => "子进程执行时间上限已到".to_string(),
+            ValueMsg::ProcessOutputLimit => "子进程输出超过字节上限".to_string(),
+            ValueMsg::ProcessUtf8 => "子进程输出不是合法 UTF-8".to_string(),
         }
     }
 }
@@ -1056,6 +1086,39 @@ mod tests {
             ValueMsg::BadRange { lo: 3, hi: 3 }.message(),
             "区间非法：3 >= 3"
         );
+    }
+
+    /// §23.2：十项均为既有 ValueError，消息、位置和 helper 不丢失。
+    #[test]
+    fn process_value_messages_match_contract() {
+        let cases = [
+            (ValueMsg::ProcessDisabled, "子进程能力未启用"),
+            (ValueMsg::ProcessArgvEmpty, "子进程 argv 不能为空"),
+            (ValueMsg::ProcessArgNul, "子进程参数不能包含 NUL"),
+            (ValueMsg::ProcessExecutable, "子进程程序必须是绝对可执行文件路径"),
+            (ValueMsg::ProcessTimeoutRange, "子进程 timeoutMs 必须在 1..600000 范围内"),
+            (ValueMsg::ProcessOutputRange, "子进程 maxOutputBytes 必须在 0..16777216 范围内"),
+            (ValueMsg::ProcessUnsupported, "当前平台不支持受控子进程"),
+            (ValueMsg::ProcessTimeout, "子进程执行时间上限已到"),
+            (ValueMsg::ProcessOutputLimit, "子进程输出超过字节上限"),
+            (ValueMsg::ProcessUtf8, "子进程输出不是合法 UTF-8"),
+        ];
+        assert_eq!(cases.len(), 10);
+        for (msg, expected) in cases {
+            assert_chars_eq(&msg.message(), expected);
+            let span = Span::new(41, 23);
+            let error = LzError::Value { msg: msg.clone(), span };
+            assert_eq!(error.class_name(), "ValueError");
+            assert_chars_eq(&error.message(), expected);
+            assert_eq!(error.span(), Some(span));
+            assert_eq!(error.to_string(), format!("ValueError: {expected}"));
+            let boxed = value(msg, span);
+            assert_eq!(*boxed, error);
+            assert_eq!(boxed.class_name(), "ValueError");
+            assert_eq!(boxed.span(), Some(span));
+            assert_chars_eq(&boxed.message(), expected);
+            assert_eq!(boxed.to_string(), format!("ValueError: {expected}"));
+        }
     }
 
     #[test]
