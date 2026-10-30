@@ -1,0 +1,8 @@
+#42
+import common from "common.lfz"
+fn parseLine(text, lineNumber) {
+    common.mark()
+    let result = attempt(() => jsonParse(text))
+    ({ line: lineNumber, ok: result.ok, value: result.value, error: result.error })
+}
+export parseLine

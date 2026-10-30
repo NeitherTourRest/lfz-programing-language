@@ -1,0 +1,14 @@
+#42
+import common from "common.lfz"
+import record from "record.lfz"
+fn process(text) {
+    let normalized = replace("\r\n", "\n", text)
+    let pieces = split("\n", normalized)
+    let count = if len(normalized) == 0 { 0 } else {
+        if endsWith("\n", normalized) { len(pieces) - 1 } else { len(pieces) }
+    }
+    let rows = range(count) |> map((i) => record.parseLine(pieces[i], i + 1))
+    let passed = len(filter((row) => row.ok, rows))
+    ({ total: count, passed: passed, failed: count - passed, rows: rows, moduleCalls: common.state.calls })
+}
+export process

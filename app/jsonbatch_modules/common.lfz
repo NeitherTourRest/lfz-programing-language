@@ -1,0 +1,11 @@
+#42
+let label = "jsonbatch-modules"
+let state = { calls: 0 }
+fn require(ok, message) {
+    if !ok { fail("${label}: ${message}") }
+}
+fn mark() {
+    state.calls += 1
+    state.calls
+}
+export require, mark, state

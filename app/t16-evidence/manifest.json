@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-30",
+  "binary_sha256": "cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006",
+  "binary_bytes": 902656,
+  "execution": "default sandbox denied module access; same frozen binary approved elevated run 33/33",
+  "files": [
+    {
+      "path": "app/jsonbatch_modules/common.lfz",
+      "bytes": 212,
+      "sha256": "11e6f5bf1649dc3ba227d4e6e1b8b0ffb667d1828e8ef6301ae4f38721fc7cfd"
+    },
+    {
+      "path": "app/jsonbatch_modules/record.lfz",
+      "bytes": 238,
+      "sha256": "176fbdfcfab9aa590bdcb0627d644ed1b7b5359b45a1af61f5da6cf2e5f24d1e"
+    },
+    {
+      "path": "app/jsonbatch_modules/batch.lfz",
+      "bytes": 570,
+      "sha256": "6afaa5a157d4375c2c7388331c933c76746d0c728196c1d6b487c5b3f830d406"
+    },
+    {
+      "path": "app/jsonbatch_modules/main.lfz",
+      "bytes": 760,
+      "sha256": "f8d5f441abe308ee9c1c97c6645601882fcf139acf8ee9b7352a0306d9f5a15f"
+    },
+    {
+      "path": "app/verify_jsonbatch_modules.py",
+      "bytes": 4782,
+      "sha256": "49ec3ea9cf98821c4c9dfb10c9d15ec3ee887f0efab091e20ba5795dd49f5cbc"
+    },
+    {
+      "path": "app/verify_jsonbatch.py",
+      "bytes": 5357,
+      "sha256": "69da2e21038d3da64e9ae1bc0a71afe6e85a1b90cd7b39cc008f8679c755bcec"
+    },
+    {
+      "path": "app/t16-evidence/results.json",
+      "bytes": 237903,
+      "sha256": "a4040e32ba61e129cf760472e609290b2d5c92c7e47f5aa431e52806623acfc5"
+    },
+    {
+      "path": "app/t16-evidence/default-permission-failure.json",
+      "bytes": 497,
+      "sha256": "83f6381df88a2323b1f253a9d21aec36cb2764ae611d7b5452d71ec5e03f921e"
+    }
+  ]
+}

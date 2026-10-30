@@ -1,0 +1,17 @@
+#42
+import common from "common.lfz"
+import batch from "batch.lfz"
+let label = "entry-local-do-not-use-for-common-errors"
+fn main(args) {
+    common.require(len(args) == 2, "用法: jsonbatch-modules INPUT.jsonl OUTPUT.json")
+    let inputPath = args[0]
+    let outputPath = args[1]
+    common.require(len(trim(inputPath)) > 0 && len(trim(outputPath)) > 0, "路径不能为空")
+    common.require(inputPath != outputPath, "输出路径不能与输入路径字面相同")
+    let result = batch.process(readFile(inputPath))
+    let encoded = jsonStringify(result) + "\n"
+    let summary = jsonStringify({ total: result.total, passed: result.passed, failed: result.failed, path: outputPath })
+    writeFile(outputPath, encoded)
+    print(summary)
+}
+main(argv())

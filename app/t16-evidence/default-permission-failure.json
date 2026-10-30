@@ -1,0 +1,5 @@
+{
+  "exit": 2,
+  "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"IOError\",\"message\":\"无法读取模块：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app/jsonbatch_modules\\\\common.lfz（导入于 app/jsonbatch_modules/main.lfz:2:1）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app/jsonbatch_modules\\\\common.lfz\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+  "stderr": ""
+}
