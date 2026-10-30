@@ -1,0 +1,48 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+error[E0599]: no function or associated item named `default` found for struct `span::Span` in the current scope
+    --> src\evaluator.rs:4548:16
+     |
+4548 |   i.poll(Span::default()).unwrap();token.store(true,Ordering::Release);
+     |                ^^^^^^^ function or associated item not found in `span::Span`
+     |
+    ::: src\span.rs:13:1
+     |
+  13 | pub struct Span {
+     | --------------- function or associated item `default` not found for this struct
+     |
+note: if you're trying to build a new `span::Span`, consider using `span::Span::new` which returns `span::Span`
+    --> src\span.rs:26:5
+     |
+  26 |     pub const fn new(line: u32, col: u32) -> Self {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: items from traits can only be used if the trait is implemented and in scope
+     = note: the following trait defines an item `default`, perhaps you need to implement it:
+             candidate #1: `Default`
+
+error[E0599]: no function or associated item named `default` found for struct `span::Span` in the current scope
+    --> src\evaluator.rs:4549:34
+     |
+4549 |   assert!(matches!(*i.poll(Span::default()).unwrap_err(),LzError::ExecutionLimit{reason:crate::error::ExecutionLimitReason::Cancelled,..}));
+     |                                  ^^^^^^^ function or associated item not found in `span::Span`
+     |
+    ::: src\span.rs:13:1
+     |
+  13 | pub struct Span {
+     | --------------- function or associated item `default` not found for this struct
+     |
+note: if you're trying to build a new `span::Span`, consider using `span::Span::new` which returns `span::Span`
+    --> src\span.rs:26:5
+     |
+  26 |     pub const fn new(line: u32, col: u32) -> Self {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: items from traits can only be used if the trait is implemented and in scope
+     = note: the following trait defines an item `default`, perhaps you need to implement it:
+             candidate #1: `Default`
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `lfz` (lib test) due to 2 previous errors

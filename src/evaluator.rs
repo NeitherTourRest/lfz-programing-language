@@ -211,9 +211,18 @@ fn validate_execution_graph(g:&crate::modules::ModuleGraph)->Result<(),GraphExec
 enum ModuleState{Uninitialized,Initializing,Ready,Failed}
 struct ModuleInstance{env:Rc<RefCell<Env>>,namespace:Option<Value>,state:ModuleState,source:crate::source::SourceId}
 /// 调用者必须在大栈内持有并析构graph；不重新读取或解析。
+#[derive(Clone, Debug, Default)]
+pub struct EvalLimits {
+ pub max_steps: Option<u64>,
+ pub deadline: Option<std::time::Instant>,
+ pub cancel: Option<std::sync::Arc<std::sync::atomic::AtomicBool>>,
+}
 pub fn eval_graph_traced_on_thread_with_args(g:&crate::modules::ModuleGraph,args:&[String])->Result<TracedRun,GraphExecutionError>{
+ return eval_graph_traced_on_thread_with_args_and_limits(g,args,EvalLimits::default());
+}
+pub fn eval_graph_traced_on_thread_with_args_and_limits(g:&crate::modules::ModuleGraph,args:&[String],limits:EvalLimits)->Result<TracedRun,GraphExecutionError>{
  validate_execution_graph(g)?;
- let mut i=Interp::new();i.script_args=args.iter().map(|s|Value::string(s.clone())).collect();
+ let mut i=Interp::new();i.limits=limits;i.script_args=args.iter().map(|s|Value::string(s.clone())).collect();
  i.modules=Some(g.units.iter().map(|u|ModuleInstance{env:Env::root(),namespace:None,state:ModuleState::Uninitialized,source:u.source_id}).collect());
  let mut result=Ok(Value::Nil);
  for id in &g.initialization_order{
@@ -321,7 +330,11 @@ pub fn eval_module_traced(program: &Program) -> TracedRun {
 
 /// 独立脚本参数快照；沿用大栈保证。
 pub fn eval_module_traced_with_args(program: &Program, args: &[String]) -> TracedRun {
-    on_eval_stack(|| eval_module_on_thread_with_args(program, args))
+    eval_module_traced_with_args_and_limits(program,args,EvalLimits::default())
+}
+
+pub fn eval_module_traced_with_args_and_limits(program:&Program,args:&[String],limits:EvalLimits)->TracedRun {
+ on_eval_stack(move || eval_module_traced_on_thread_with_args_and_limits(program,args,limits))
 }
 
 /// 在**专用大栈线程**（[`EVAL_STACK_SIZE`] = 256 MiB ≥ 64 MiB）上运行 `f` 并返回其结果
@@ -385,6 +398,9 @@ pub fn eval_module_traced_on_thread_with_args(program: &Program, args: &[String]
 
 /// [`eval_module_traced`] 的实际求值体（在求值线程上运行）。
 fn eval_module_on_thread_with_args(program: &Program, args: &[String]) -> TracedRun {
+    eval_module_traced_on_thread_with_args_and_limits(program,args,EvalLimits::default())
+}
+pub fn eval_module_traced_on_thread_with_args_and_limits(program:&Program,args:&[String],limits:EvalLimits)->TracedRun {
     // B过渡：扫描整个根Program，在任何LFZ语句及副作用之前拒绝模块执行。
     if let Some(first_decl_span) = crate::modules::module_declaration_span(program) {
         return TracedRun {
@@ -397,6 +413,7 @@ fn eval_module_on_thread_with_args(program: &Program, args: &[String]) -> Traced
         };
     }
     let mut interp = Interp::new();
+    interp.limits=limits;
     interp.script_args = args.iter().map(|s| Value::string(s.clone())).collect();
     let top = Scope {
         env: Rc::clone(&interp.globals),
@@ -494,6 +511,7 @@ enum AssignOutcome {
 
 /// 树遍历解释器：模块全局环境 + 单调递增的 `func_id` 分配器 + traceback 帧栈。
 struct Interp {
+    limits: EvalLimits,
     modules: Option<Vec<ModuleInstance>>,
     trace_sources: Vec<crate::source::SourceId>,
     fault_source: Option<crate::source::SourceId>,
@@ -517,6 +535,7 @@ impl Interp {
         let mut argv_closure = Closure::named("argv", Rc::new(ScopeChain::empty()));
         argv_closure.builtin = Some("argv");
         Self {
+            limits: EvalLimits::default(),
             script_args: Vec::new(),
             argv_function: Value::function(argv_closure),
             modules: None, trace_sources: vec![], fault_source: None,
@@ -538,6 +557,19 @@ impl Interp {
     ///
     /// 错误最深处的 `span` 即「引发错误的最小 AST 节点」；错误沿调用链冒泡时该 `span` 不变，
     /// 故重复覆盖到同一值是无害的（`call_user` 出错时不弹帧，当前帧恒为最内层帧）。
+    fn poll(&mut self,span:Span)->R<()> {
+        use crate::error::ExecutionLimitReason as Reason;
+        let reason = if self.limits.cancel.as_ref().is_some_and(|c|c.load(std::sync::atomic::Ordering::Acquire)) { Some(Reason::Cancelled) }
+        else if self.limits.deadline.is_some_and(|d|std::time::Instant::now()>=d) { Some(Reason::Deadline) }
+        else if self.limits.max_steps==Some(0) { Some(Reason::StepBudget) } else { None };
+        if let Some(reason)=reason {
+            let error=crate::error::execution_limit(reason,span);
+            self.note_error_span(&error);return Err(error);
+        }
+        if let Some(remaining)=self.limits.max_steps.as_mut(){*remaining-=1;}
+        Ok(())
+    }
+
     fn note_error_span(&mut self, e: &LzError) {
         if self.modules.is_some() && self.fault_source.is_none() { self.fault_source = self.trace_sources.last().copied(); }
         if let Some(span) = e.span() {
@@ -751,6 +783,7 @@ impl Interp {
     }
 
     fn exec_stmt(&mut self, stmt: &Stmt, scope: &Scope) -> R<Flow> {
+        self.poll(stmt.span)?;
         match self.exec_stmt_inner(stmt, scope) {
             Ok(flow) => Ok(flow),
             Err(e) => {
@@ -1101,6 +1134,7 @@ impl Interp {
     /// **非 `Call`** 节点）的 traceback 指向引发错误的**最小 AST 节点**，而非停留在帧初始
     /// `span`（P3 验收 bug-20260924-04）。
     fn eval_expr(&mut self, expr: &Expr, scope: &Scope) -> R<Flow> {
+        self.poll(expr.span)?;
         match self.eval_expr_inner(expr, scope) {
             Ok(flow) => Ok(flow),
             Err(e) => {
@@ -4386,7 +4420,7 @@ mod t16_c_tests {
  use super::*;
  use crate::modules::*;
  use crate::source::*;
- fn graph(texts:&[&str]) -> ModuleGraph {
+ pub(super) fn graph(texts:&[&str]) -> ModuleGraph {
   let mut sources=SourceMap::new();let mut units=vec![];
   for (i,text) in texts.iter().enumerate(){
    let loaded=crate::loader::load_source(text).unwrap();let p=crate::parser::parse(&crate::lexer::lex(&loaded.text,0).unwrap()).unwrap();
@@ -4465,4 +4499,115 @@ mod t16_c_tests {
   let g=graph(&["fn build(){struct P{x:if true {return 7}}\n P{}\n 99}\nassert(build()==7)"]);
   eval_graph_traced_on_thread_with_args(&g,&[]).unwrap().result.unwrap();
  });}
+}
+
+#[cfg(test)]
+mod t17_tests {
+ use super::*;
+ #[test] fn t17_api_boundary() {
+  let p=crate::parser::parse(&crate::lexer::lex("1",0).unwrap()).unwrap();
+  let r=eval_module_traced_with_args_and_limits(&p,&[],EvalLimits{max_steps:Some(2),..Default::default()});
+  assert!(r.result.is_ok());
+ }
+}
+
+#[cfg(test)]
+mod t17_boundaries {
+ use super::*;
+ use std::sync::{Arc,atomic::{AtomicBool,Ordering}};
+ use std::time::{Instant,Duration};
+ fn run(text:&str,l:EvalLimits)->TracedRun {on_eval_stack(move || {
+  let p=crate::parser::parse(&crate::lexer::lex(text,0).unwrap()).unwrap();
+  eval_module_traced_on_thread_with_args_and_limits(&p,&[],l)
+ })}
+ fn budget(n:u64)->EvalLimits{EvalLimits{max_steps:Some(n),..Default::default()}}
+ fn reason(r:TracedRun,want:crate::error::ExecutionLimitReason){assert!(matches!(*r.result.unwrap_err(),LzError::ExecutionLimit{reason,..} if reason==want));}
+ #[test] fn exact_steps_and_no_final_poll(){
+  use crate::error::ExecutionLimitReason::StepBudget;
+  for _ in 0..3 {reason(run("1",budget(0)),StepBudget);reason(run("1",budget(1)),StepBudget);
+   assert!(run("1",budget(2)).result.is_ok());assert!(run("let x=1\nx",budget(4)).result.is_ok());
+   reason(run("let x=1\nx",budget(3)),StepBudget);assert!(run("1",budget(u64::MAX)).result.is_ok());}
+ }
+ #[test] fn empty_has_no_poll_and_cancel_priority(){
+  let token=Arc::new(AtomicBool::new(true));let l=EvalLimits{max_steps:Some(0),deadline:Some(Instant::now()),cancel:Some(token.clone())};
+  assert!(run("",l.clone()).result.is_ok());reason(run("1",l.clone()),crate::error::ExecutionLimitReason::Cancelled);
+  reason(run("1",l),crate::error::ExecutionLimitReason::Cancelled);
+  assert!(token.load(Ordering::Acquire));assert!(run("1",Default::default()).result.is_ok());
+ }
+ #[test] fn deadline_priority_and_future(){
+  reason(run("1",EvalLimits{deadline:Some(Instant::now()),..budget(0)}),crate::error::ExecutionLimitReason::Deadline);
+  assert!(run("1",EvalLimits{deadline:Some(Instant::now()+Duration::from_secs(60)),..budget(2)}).result.is_ok());
+ }
+ #[test] fn loops_recursion_hof_and_nested_attempt_stop(){
+  for text in ["while true {}","fn f(){f()}\nf()","map((x)=>x+1,range(100))","attempt(()=>attempt(()=>{while true {}}))","while true {attempt(()=>1/0)}"] {
+   reason(run(text,budget(40)),crate::error::ExecutionLimitReason::StepBudget);
+  }
+ }
+ #[test] fn cancellation_between_nodes_and_late_flag(){
+  let token=Arc::new(AtomicBool::new(false));let mut i=Interp::new();i.limits.cancel=Some(token.clone());
+  i.poll(Span::new(1,1)).unwrap();token.store(true,Ordering::Release);
+  assert!(matches!(*i.poll(Span::new(1,1)).unwrap_err(),LzError::ExecutionLimit{reason:crate::error::ExecutionLimitReason::Cancelled,..}));
+  let r=run("1",Default::default());token.store(true,Ordering::Release);assert!(r.result.is_ok());
+ }
+ #[test] fn graph_budget_and_fault_source(){on_eval_stack(||{
+  let g=super::t16_c_tests::graph(&["import m from \"./m.lfz\"\nm.f()","fn f(){while true {}}\nexport f"]);
+  let r=eval_graph_traced_on_thread_with_args_and_limits(&g,&[],budget(40)).unwrap();
+  assert_eq!(r.error_source().unwrap().display_path,"m1.lfz");reason(r,crate::error::ExecutionLimitReason::StepBudget);
+ });}
+ #[test] fn cross_thread_cancel_after_session_has_executed_and_run_isolation(){
+  // 在真实LFZ首语句完成后握手；取消者是另一OS线程，不依赖sleep。
+  let token=Arc::new(AtomicBool::new(false));
+  let (started_tx,started_rx)=std::sync::mpsc::sync_channel(0);
+  let (cancelled_tx,cancelled_rx)=std::sync::mpsc::sync_channel(0);
+  let writer=token.clone();
+  let host=std::thread::spawn(move || {started_rx.recv().unwrap();writer.store(true,Ordering::Release);cancelled_tx.send(()).unwrap();});
+  on_eval_stack(move || {
+   let p=crate::parser::parse(&crate::lexer::lex("var x=1\nwhile true {x+=1}",0).unwrap()).unwrap();
+   let mut i=Interp::new();i.limits=EvalLimits{cancel:Some(token),..budget(100)};
+   let scope=Scope{env:i.globals.clone(),captured:Rc::new(vec![]),self_val:None};
+   assert!(i.exec_stmt(&p.stmts[0],&scope).is_ok());
+   assert_eq!(i.globals.borrow().get_local(0).unwrap().as_int(),Some(1));
+   started_tx.send(()).unwrap();cancelled_rx.recv().unwrap();
+   let e=match i.exec_stmt(&p.stmts[1],&scope){Err(e)=>e,Ok(_)=>panic!("cancel must stop next statement")};
+   assert!(matches!(*e,LzError::ExecutionLimit{reason:crate::error::ExecutionLimitReason::Cancelled,span} if span==p.stmts[1].span));
+  });
+  host.join().unwrap();
+  assert!(run("1",EvalLimits{cancel:Some(Arc::new(AtomicBool::new(false))),..Default::default()}).result.is_ok());
+ }
+ #[test] fn all_seven_hofs_propagate_callback_limits_through_attempt(){
+  for name in crate::builtins::HOF_NAMES {
+   let args=if *name=="reduce" {"(a,x)=>{while true {}},0,[1]"} else {"(x)=>{while true {}},[1]"};
+   let text=format!("attempt(()=>{name}({args}))");
+   let r=run(&text,budget(50));
+   assert!(r.frames.len()>=3,"{name}: callback frame must survive");
+   reason(r,crate::error::ExecutionLimitReason::StepBudget);
+  }
+ }
+ #[test] fn diamond_counts_shared_dependency_once_and_has_one_session_budget(){on_eval_stack(||{
+  use crate::source::ModuleId;
+  let mut g=super::t16_c_tests::graph(&[
+   "import left from \"./left.lfz\"\nimport right from \"./right.lfz\"\n1",
+   "import leaf from \"./leaf.lfz\"\nexport leaf",
+   "import leaf from \"./leaf.lfz\"\nexport leaf",
+   "let x=1\nexport x"]);
+  g.units[0].imports[1].target=ModuleId(2);
+  g.units[1].imports[0].target=ModuleId(3);g.units[2].imports[0].target=ModuleId(3);
+  assert!(eval_graph_traced_on_thread_with_args_and_limits(&g,&[],budget(11)).unwrap().result.is_ok());
+  let r=eval_graph_traced_on_thread_with_args_and_limits(&g,&[],budget(10)).unwrap();
+  assert_eq!(r.error_source().unwrap().display_path,"m0.lfz");
+  reason(r,crate::error::ExecutionLimitReason::StepBudget);
+ });}
+ #[test] fn template_default_limit_preserves_definition_source_and_frame(){on_eval_stack(||{
+  let g=super::t16_c_tests::graph(&[
+   "import lib from \"./lib.lfz\"\nlet P=lib.P\nattempt(()=>P{})",
+   "struct P{x:if true {while true {}}}\nexport P"]);
+  let r=eval_graph_traced_on_thread_with_args_and_limits(&g,&[],budget(50)).unwrap();
+  assert_eq!(r.error_source().unwrap().display_path,"m1.lfz");
+  let last=r.frames.len()-1;
+  assert_eq!(r.frame_source(last).unwrap().display_path,"m1.lfz");
+  assert!(r.func_names[r.frames[last].func_id as usize].as_ref().unwrap().contains("<defaults>"));
+  assert_eq!(r.result.as_ref().unwrap_err().span().unwrap().line,1);
+  reason(r,crate::error::ExecutionLimitReason::StepBudget);
+ });}
+
 }

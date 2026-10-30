@@ -1,0 +1,20 @@
+# T17 运行时库实现回执
+
+2026-10-30，runtime-dev。按三spec §22/T17-design实现，仅修改evaluator生产源码及新增unit，error.rs由core交付。库阶段交接，非CLI最终验收，不宣称性能通过。
+
+EvalLimits按值消费，三项Default None；新增module大栈、module当前线程、graph当前线程三个with_args_and_limits入口。旧入口委托Default，保留旧模块声明preflight与graph完整校验优先级。每个exec_stmt/eval_expr入口依cancel Acquire→绝对Instant deadline→remaining检查，成功减一步；只在失败时note_error_span，不改成功trace定位。整会话一个Interp，跨模块/回调/默认值共享余量；attempt白名单不包含ExecutionLimit，预算不入快照，沿C清理active/globals及保留故障来源。
+
+真实缺API红：Temp/T17-runtime/red.txt，E0422/E0425。实现后首API绿1/1。新增边界7/7通过，含重复0/1/2与四步阈值、u64::MAX、空程序、token共享与默认隔离、两种优先级、过去/未来deadline、while/递归/map/嵌套attempt及连续业务失败、节点间置位与返回后置位、跨模块真实故障来源。节点间置位采用私有Interp可控poll，不把它冒称真实并发调度见证；其余HOF/diamond/模板终止和实际并发取消待独立扩验。
+
+新增测试首次误用Span::default导致E0599，修成现有Span::new后通过；失败日志保留。完整cargo test --release --lib默认459PASS/8FAIL，8个既有modules测试均canonicalize PermissionDenied；同一harness已交parent提权复核。证据目录含红、首绿、测试作者编译失败、修正绿及全量默认日志，manifest给出源码和harness SHA。没有删改旧断言。
+
+调用：CLI在既有on_eval_stack内传graph,args,EvalLimits到eval_graph_traced_on_thread_with_args_and_limits；单源码入口用eval_module_traced_on_thread_with_args_and_limits。timeout在前端成功后用checked_add建立deadline；graph不跨Send闭包捕获，沿C真实来源渲染。库原GraphExecutionError仍外层Err，ExecutionLimit在TracedRun.result内。
+
+停止编译与源码修改，交tooling唯一完整release。未改CLI/core/value/spec/dist/profile或Git；最终CLI hash与全套回归由后续owner补齐。native内部不新增poll、不会硬中断IO，末次native完成且无后续节点可成功；R304仍OPEN。
+
+最终仅去除PS写入的BOM/末尾额外空白后evaluator SHA015C88239E77E733594A7B0AE24EF8092786F1F8D269C30BDDEB162745B89EA3，未再编译；harness对应清理前语义相同源码，tooling需重建最终候选。git diff --check通过。
+
+## 补测交接（2026-10-30）
+parent已对此前同harness提权467/467通过。本轮仅evaluator新增4项unit，未执行cargo：真实OS线程收到首条LFZ语句完成信号后Release置token、主求值线程等待确认后下一语句Cancelled并验证独立run；7HOF均在attempt包裹的实际回调内耗尽预算且保留callback帧；diamond共享依赖仅执行一次的精确总11步/10步终止；导出模板default循环终止的真实definition来源及defaults诊断帧。同步测试是确定性会话节点间握手，不声称任意OS调度时刻。未修改生产逻辑或其他owner源码。
+
+当前evaluator SHA A673CCA7CF009BA19AC9897737AA6F75DB2DC24941EF31112FE6728C5B2E551D，git diff --check通过。4项新增测试尚未编译/运行，由tooling唯一最终完整release验证；此前467成绩不代表新增4项已通过。停止源码修改及编译。

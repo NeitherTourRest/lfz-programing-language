@@ -39,8 +39,8 @@ const DEFAULT_ROOT: &str = "tests";
 const MANIFEST_NAME: &str = "cases.json";
 /// 自动发现时**跳过**的目录名：`tests/fixtures/**` 不得被自动发现（T-R2 / T-R4）。
 const EXCLUDED_DIR: &str = "fixtures";
-/// 12 个错误类名（§8.1），用于校验清单 `expect.error`。
-const ERROR_CLASSES: [&str; 12] = [
+/// 13 个错误类名（§8.1），用于校验清单 `expect.error`。
+const ERROR_CLASSES: [&str; 13] = [
     "CosmosAnswerError",
     "SyntaxError",
     "NameError",
@@ -53,6 +53,7 @@ const ERROR_CLASSES: [&str; 12] = [
     "IOError",
     "AssertionError",
     "RecursionError",
+    "ExecutionLimitError",
 ];
 
 /// 一个待运行用例。
@@ -696,3 +697,5 @@ mod t16c_host_tests {
         assert!(matches!(judge(&located,None),Verdict::Error));
     }
 }
+
+#[cfg(test)] mod t17_registration_tests { use super::*; #[test] fn execution_limit_registration_preserves_existing_classes(){ assert_eq!(ERROR_CLASSES.len(),13);assert!(ERROR_CLASSES.contains(&"ExecutionLimitError"));for name in ["CosmosAnswerError","SyntaxError","NameError","TypeError","IndexError","FieldError","ZeroDivisionError","OverflowError","ValueError","IOError","AssertionError","RecursionError"]{assert!(ERROR_CLASSES.contains(&name));} } }

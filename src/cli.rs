@@ -92,6 +92,8 @@ LFZ 解释器
     非 .lfz 文件     豁免 #42 前导（如 .txt / 无扩展名），按普通源加载执行。
 
 选项:
+  --max-steps N        限制求值节点步数（非负十进制u64，仅运行命令）
+  --timeout-ms N       求值协作截止时间（不含前端，不硬中断阻塞IO）
   --json               以机器可读 JSON 输出（stdout 只写 JSON；程序输出与人类可读诊断转 stderr）
                        源码和 -- 后脚本参数以外的位置可用，以下写法等价：
                          lfz --json <file>       lfz <file> --json
@@ -162,8 +164,17 @@ enum Command {
 ///
 /// `--json` 仅在选项位置生效；CODE 与 `--` 后的脚本参数不参与选项解析。
 pub fn execute(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32 {
-    let (rest, script_args, json) = split_options(args);
-    match parse_command(&rest, script_args) {
+    let (rest, script_args, json, limits) = match scan_options(args) { Ok(v)=>v,Err(msg)=>return usage_error(&msg,err) };
+    if limits.is_set() && rest.first().is_some_and(|s| matches!(s.as_str(),"check"|"test"|"--help"|"-h"|"--version"|"-V")) { return usage_error("执行限额选项只适用于运行命令",err); }
+    let parsed=parse_command(&rest,script_args);
+    if limits.is_set() {
+        match parsed {
+            Ok(command) if is_execution(&command) => return run_limited(command,limits,json,out,err),
+            Ok(_) => return usage_error("执行限额选项只适用于运行命令",err),
+            Err(msg) => return usage_error(&msg,err),
+        }
+    }
+    match parsed {
         Ok(Command::Help) => {
             let _ = write!(out, "{HELP}");
             EXIT_OK
@@ -192,29 +203,82 @@ pub fn execute(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32
 }
 
 /// 仅摘除选项区域的 `--json`，保护源码与脚本参数的原始字符串。
-fn split_options(args: &[String]) -> (Vec<String>, Option<Vec<String>>, bool) {
-    let mut rest = Vec::new();
-    let mut json = false;
-    let mut i = 0;
-    while i < args.len() {
-        let a = &args[i];
-        if a == "--json" {
-            json = true;
-            i += 1;
-        } else if a == "--" && execution_ready(&rest) {
-            return (rest, Some(args[i + 1..].to_vec()), json);
-        } else {
-            let code_operand = a == "-e"
-                && (rest.is_empty() || (rest.len() == 1 && (rest[0] == "run" || rest[0] == "check")));
-            rest.push(a.clone());
-            i += 1;
-            if code_operand && i < args.len() {
-                rest.push(args[i].clone());
-                i += 1;
-            }
+#[derive(Clone, Copy, Debug, Default)]
+struct CliLimits { max_steps:Option<u64>, timeout_ms:Option<u64> }
+impl CliLimits {
+    fn is_set(self)->bool {self.max_steps.is_some()||self.timeout_ms.is_some()}
+    fn evaluation(self)->Result<evaluator::EvalLimits,String>{
+        let deadline=match self.timeout_ms {
+            Some(n)=>Some(std::time::Instant::now().checked_add(std::time::Duration::from_millis(n)).ok_or_else(||"选项 '--timeout-ms' 超出当前平台可表示的时间范围".to_string())?),
+            None=>None,
+        };
+        Ok(evaluator::EvalLimits{max_steps:self.max_steps,deadline,cancel:None})
+    }
+}
+fn usage_error(message:&str,err:&mut dyn Write)->i32{
+    let _=writeln!(err,"lfz: {message}");
+    let _=writeln!(err,"用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）");
+    EXIT_ERROR
+}
+fn is_execution(c:&Command)->bool {matches!(c,Command::Run{..}|Command::Script{..}|Command::RunArgs{..}|Command::ScriptArgs{..}|Command::Eval{..}|Command::Stdin{..})}
+fn scan_options(args:&[String])->Result<(Vec<String>,Option<Vec<String>>,bool,CliLimits),String>{
+    let mut rest=Vec::new();let mut json=false;let mut limits=CliLimits::default();let mut i=0;
+    while i<args.len(){
+        let a=&args[i];
+        if a=="--json" {json=true;i+=1;}
+        else if a=="--" && execution_ready(&rest){return Ok((rest,Some(args[i+1..].to_vec()),json,limits));}
+        else if a=="--max-steps"||a=="--timeout-ms" {
+            let slot=if a=="--max-steps"{&mut limits.max_steps}else{&mut limits.timeout_ms};
+            if slot.is_some(){return Err(format!("选项 '{a}' 不能重复"));}
+            let value=args.get(i+1).filter(|s|s.as_str()!="--").ok_or_else(||format!("选项 '{a}' 需要一个非负十进制 u64 参数"))?;
+            if value.is_empty()||!value.bytes().all(|b|b.is_ascii_digit()){return Err(format!("选项 '{a}' 的值必须是非负十进制 u64"));}
+            *slot=Some(value.parse::<u64>().map_err(|_|format!("选项 '{a}' 的值必须是非负十进制 u64"))?);i+=2;
+        }else if a.starts_with("--max-steps=")||a.starts_with("--timeout-ms="){let flag=if a.starts_with("--max-steps="){"--max-steps"}else{"--timeout-ms"};return Err(format!("选项 '{flag}' 不支持等号写法，请使用 '{flag} N'"));}
+        else{
+            let code=a=="-e"&&(rest.is_empty()||(rest.len()==1&&(rest[0]=="run"||rest[0]=="check")));
+            rest.push(a.clone());i+=1;
+            if code&&i<args.len(){rest.push(args[i].clone());i+=1;}
         }
     }
-    (rest, None, json)
+    Ok((rest,None,json,limits))
+}
+#[cfg(test)]
+fn split_options(args:&[String])->(Vec<String>,Option<Vec<String>>,bool){let(a,b,c,_)=scan_options(args).expect("旧parse测试无非法限额");(a,b,c)}
+
+/// 新限额仅执行路径；默认unlimited保留原流水线和runner入口。
+fn run_limited(command:Command,limits:CliLimits,json:bool,out:&mut dyn Write,err:&mut dyn Write)->i32{
+    let (input,args,bare)=match command{
+        Command::Run{path}=>(CheckInput::File(path),vec![],false),Command::Script{path}=>(CheckInput::File(path),vec![],true),
+        Command::RunArgs{path,args}=>(CheckInput::File(path),args,false),Command::ScriptArgs{path,args}=>(CheckInput::File(path),args,true),
+        Command::Eval{code,args}=>(CheckInput::Code(code),args,false),Command::Stdin{args}=>(CheckInput::Stdin,args,false),_=>unreachable!(),
+    };
+    let path=match &input{CheckInput::File(p)=>p.as_str(),CheckInput::Code(_)=>"<command>",CheckInput::Stdin=>"<stdin>"};
+    lfz::builtins::set_stdout_to_stderr(json);
+    let cwd=std::env::current_dir();
+    let result=evaluator::on_eval_stack(||->Result<CaseEval,String>{
+        let loaded=match &input {
+            CheckInput::File(p) if bare&&!is_lfz_path(p)=>Err(Box::new(LzError::Io{msg:format!("只支持 .lfz 脚本文件：'{p}'"),span:None})),
+            CheckInput::File(p)=>loader::load_file_counted(p),CheckInput::Code(s)=>loader::load_source_counted(s),
+            CheckInput::Stdin=>{let mut text=String::new();match std::io::stdin().read_to_string(&mut text){Ok(_)=>loader::load_source_counted(&text),Err(_)=>Err(Box::new(LzError::Io{msg:"无法读取标准输入".into(),span:None}))}}
+        };
+        let failure=|e:Box<LzError>,loaded|CaseEval::Failed{err:*e,loaded,traced:None};
+        let counted=match loaded{Ok(c)=>c,Err(e)=>return Ok(failure(e,None))};let loaded=counted.loaded;
+        let tokens=match lexer::lex(&loaded.text,loaded.line_base){Ok(t)=>t,Err(e)=>return Ok(failure(e,Some(loaded)))};
+        let program=match parser::parse(&tokens){Ok(p)=>p,Err(e)=>return Ok(failure(e,Some(loaded)))};
+        if lfz::modules::module_declaration_span(&program).is_some(){
+            let cwd=match cwd{Ok(p)=>p,Err(e)=>return Ok(CaseEval::HostFailure(e.to_string()))};
+            let identity=if matches!(input,CheckInput::File(_)){std::fs::canonicalize(path).ok()}else{None};
+            let base_dir=if matches!(input,CheckInput::File(_)){let p=identity.clone().unwrap_or_else(||cwd.join(path));p.parent().unwrap_or(&cwd).to_path_buf()}else{cwd};
+            let graph=match lfz::modules::build_graph(lfz::modules::ParsedEntry{program,loaded,display_path:path.into(),identity,base_dir,raw_bytes:counted.raw_bytes}){
+                Ok(g)=>g,Err(g)=>{let source=g.sources.get(g.failure.source_id).expect("图失败来源");return Ok(CaseEval::Located{path:source.display_path.clone(),inner:Box::new(failure(g.failure.error,source.loaded.clone()))});}
+            };
+            let evaluated=evaluator::eval_graph_traced_on_thread_with_args_and_limits(&graph,&args,limits.evaluation()?);
+            return Ok(match evaluated{Ok(r)=>graph_run_result(r),Err(e)=>CaseEval::HostFailure(e.to_string())});
+        }
+        let traced=evaluator::eval_module_traced_on_thread_with_args_and_limits(&program,&args,limits.evaluation()?);
+        if traced.result.is_ok(){Ok(CaseEval::Passed)}else{let e=(**traced.result.as_ref().unwrap_err()).clone();Ok(CaseEval::Failed{err:e,loaded:Some(loaded),traced:Some(traced)})}
+    });
+    match result{Ok(eval)=>report_eval(path,&eval,json,out,err),Err(message)=>usage_error(&message,err)}
 }
 
 fn execution_ready(args: &[String]) -> bool {

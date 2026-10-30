@@ -1,8 +1,8 @@
-//! 错误模型 `LfzError`（12 变体 + 1 基类）+ 子消息枚举 + 结果别名 `R<T>` + traceback 帧。
+//! 错误模型 `LfzError`（13 变体 + 1 基类）+ 子消息枚举 + 结果别名 `R<T>` + traceback 帧。
 //!
 //! 单一事实源（本模块**只读消费**，不得偏离）：
 //! - `docs/spec/interface-contract.md` §8.1（类名 ↔ 变体映射）、§10.3（`TraceFrame`）、
-//!   §10.4（`LfzError` 12 变体与 `class_name` / `message` / `span`）、§10.8（`R<T>` / `#[cold]`）。
+//!   §10.4（`LfzError` 旧12变体）、§22.1（第13类与映射）、§10.8（`R<T>` / `#[cold]`）。
 //! - `docs/spec/semantics.md` §8.1（各错误类**触发条件**与**中文消息细分表**）、§8.2（Traceback 头规则）。
 //!
 //! 设计口径：
@@ -257,7 +257,15 @@ impl ValueMsg {
 // 主错误枚举
 // ===========================================================================
 
-/// LFZ 错误（**12 个具体变体 + 1 个基类概念**；基类 `LfzError` **不直接抛出**）。
+/// 执行终止原因（`interface-contract.md` §22.1）；不属于可恢复业务错误。
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ExecutionLimitReason {
+    StepBudget,
+    Cancelled,
+    Deadline,
+}
+
+/// LFZ 错误（**13 个具体变体 + 1 个基类概念**；基类 `LfzError` **不直接抛出**）。
 ///
 /// 变体 ↔ 类名映射见 `interface-contract.md` §8.1 / `semantics.md` §8.1。
 #[derive(Clone, PartialEq, Eq, Debug)]
@@ -286,6 +294,8 @@ pub enum LzError {
     Assert { msg: String, span: Span },
     /// 运行期：求值帧 / 深结构处理超限（默认 10000 层）。
     Recursion { depth: u32, limit: u32, span: Span },
+    /// 运行期：执行预算耗尽、宿主取消或协作截止时间已到（§22.1）。
+    ExecutionLimit { reason: ExecutionLimitReason, span: Span },
 }
 
 impl LzError {
@@ -307,6 +317,7 @@ impl LzError {
             LzError::Io { .. } => "IOError",
             LzError::Assert { .. } => "AssertionError",
             LzError::Recursion { .. } => "RecursionError",
+            LzError::ExecutionLimit { .. } => "ExecutionLimitError",
         }
     }
 
@@ -335,6 +346,11 @@ impl LzError {
             LzError::Io { msg, .. } => msg.clone(),
             LzError::Assert { msg, .. } => msg.clone(),
             LzError::Recursion { .. } => "递归深度超限（超过 10000 层）".to_string(),
+            LzError::ExecutionLimit { reason, .. } => match reason {
+                ExecutionLimitReason::StepBudget => "执行步数预算已耗尽".to_string(),
+                ExecutionLimitReason::Cancelled => "执行已取消".to_string(),
+                ExecutionLimitReason::Deadline => "执行时间上限已到".to_string(),
+            },
         }
     }
 
@@ -352,7 +368,8 @@ impl LzError {
             | LzError::Overflow { span, .. }
             | LzError::Value { span, .. }
             | LzError::Assert { span, .. }
-            | LzError::Recursion { span, .. } => Some(*span),
+            | LzError::Recursion { span, .. }
+            | LzError::ExecutionLimit { span, .. } => Some(*span),
             LzError::Io { span, .. } => *span,
         }
     }
@@ -479,6 +496,13 @@ pub fn recursion(depth: u32, limit: u32, span: Span) -> Box<LzError> {
     Box::new(LzError::Recursion { depth, limit, span })
 }
 
+/// `ExecutionLimitError`（位置为发生终止的当前节点，§22.1）。
+#[cold]
+#[inline(never)]
+pub fn execution_limit(reason: ExecutionLimitReason, span: Span) -> Box<LzError> {
+    Box::new(LzError::ExecutionLimit { reason, span })
+}
+
 // ===========================================================================
 // 测试
 // ===========================================================================
@@ -487,7 +511,7 @@ pub fn recursion(depth: u32, limit: u32, span: Span) -> Box<LzError> {
 mod tests {
     use super::*;
 
-    /// 12 个具体错误类的样本（每类恰好 1 个，顺序与 `semantics.md` §8.1 表一致）。
+    /// 13 个具体错误类的样本（旧12项顺序不改，§22.1 的第13类追加）。
     fn samples() -> Vec<LzError> {
         vec![
             LzError::CosmosAnswer { span: Span::START },
@@ -541,11 +565,15 @@ mod tests {
                 limit: 10000,
                 span: Span::new(11, 1),
             },
+            LzError::ExecutionLimit {
+                reason: ExecutionLimitReason::StepBudget,
+                span: Span::new(12, 1),
+            },
         ]
     }
 
     #[test]
-    fn class_name_all_twelve_match_spec_exactly() {
+    fn class_name_all_thirteen_match_spec_exactly() {
         let got: Vec<&str> = samples().iter().map(LzError::class_name).collect();
         assert_eq!(
             got,
@@ -562,21 +590,22 @@ mod tests {
                 "IOError",
                 "AssertionError",
                 "RecursionError",
+                "ExecutionLimitError",
             ],
             "class_name() 必须与 interface-contract.md §8.1 逐字一致"
         );
     }
 
     #[test]
-    fn exactly_twelve_concrete_classes_and_base_never_thrown() {
+    fn exactly_thirteen_concrete_classes_and_base_never_thrown() {
         let names: Vec<&str> = samples().iter().map(LzError::class_name).collect();
-        // 数量：恰好 12 个具体类。
-        assert_eq!(names.len(), 12, "必须恰好 12 个具体错误类");
-        // 12 个类名互不相同。
+        // 数量：§22.1 新增后恰好 13 个具体类。
+        assert_eq!(names.len(), 13, "必须恰好 13 个具体错误类");
+        // 13 个类名互不相同。
         let mut uniq = names.clone();
         uniq.sort_unstable();
         uniq.dedup();
-        assert_eq!(uniq.len(), 12, "12 个类名必须互不相同");
+        assert_eq!(uniq.len(), 13, "13 个类名必须互不相同");
         // 基类 LfzError 不直接抛出：无任何变体返回 "LfzError"。
         assert!(
             !names.contains(&"LfzError"),
@@ -809,7 +838,7 @@ mod tests {
     }
 
     /// v1.1 补钉（`syntax.md` §3.8 / `interface-contract.md` §10.8）：`NestingTooDeep`
-    /// 消息逐字符锁定，且**仍归 `SyntaxError` 类**（`class_name()` 映射不改，类总数仍 12）。
+    /// 消息逐字符锁定，且**仍归 `SyntaxError` 类**（该变体的 `class_name()` 映射不改）。
     #[test]
     fn nesting_too_deep_message_is_the_spec_text() {
         assert_chars_eq(
@@ -840,7 +869,7 @@ mod tests {
     }
 
     /// v1.1 补钉（`syntax.md` §3.9 / `interface-contract.md` §10.8）：`ExprTooDeep`
-    /// 消息逐字符锁定，且**仍归 `SyntaxError` 类**（`class_name()` 映射不改，类总数仍 12）。
+    /// 消息逐字符锁定，且**仍归 `SyntaxError` 类**（该变体的 `class_name()` 映射不改）。
     #[test]
     fn expr_too_deep_message_is_the_spec_text() {
         assert_chars_eq(
@@ -1252,6 +1281,49 @@ mod tests {
             boxed(LzError::CosmosAnswer { span: Span::START }).class_name(),
             "CosmosAnswerError"
         );
+    }
+
+    fn assert_execution_limit(reason: ExecutionLimitReason, text: &str) {
+        let span = Span::new(37, 19);
+        let error = LzError::ExecutionLimit { reason, span };
+        assert_eq!(error.class_name(), "ExecutionLimitError");
+        assert_chars_eq(&error.message(), text);
+        assert_eq!(error.span(), Some(span));
+        assert_eq!(error.to_string(), format!("ExecutionLimitError: {text}"));
+        let boxed = execution_limit(reason, span);
+        assert_eq!(*boxed, error);
+        assert_eq!(boxed.class_name(), "ExecutionLimitError");
+        assert_eq!(boxed.span(), Some(span));
+        assert_chars_eq(&boxed.message(), text);
+        assert_eq!(boxed.to_string(), format!("ExecutionLimitError: {text}"));
+    }
+
+    #[test]
+    fn execution_limit_step_budget_matches_contract() {
+        assert_execution_limit(ExecutionLimitReason::StepBudget, "执行步数预算已耗尽");
+    }
+
+    #[test]
+    fn execution_limit_cancelled_matches_contract() {
+        assert_execution_limit(ExecutionLimitReason::Cancelled, "执行已取消");
+    }
+
+    #[test]
+    fn execution_limit_deadline_matches_contract() {
+        assert_execution_limit(ExecutionLimitReason::Deadline, "执行时间上限已到");
+    }
+
+    #[test]
+    fn execution_limit_reason_has_required_value_traits() {
+        fn requires_traits<T: Clone + Copy + fmt::Debug + PartialEq + Eq>() {}
+        requires_traits::<ExecutionLimitReason>();
+        let reasons = [ExecutionLimitReason::StepBudget, ExecutionLimitReason::Cancelled,
+                       ExecutionLimitReason::Deadline];
+        for (i, reason) in reasons.iter().enumerate() {
+            for (j, other) in reasons.iter().enumerate() {
+                assert_eq!(reason == other, i == j);
+            }
+        }
     }
 
     #[test]

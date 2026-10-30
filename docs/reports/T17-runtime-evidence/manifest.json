@@ -1,0 +1,11 @@
+{
+  "files": {
+    "src/evaluator.rs": "015c88239e77e733594a7b0ae24ef8092786f1f8d269c30bddeb162745b89ea3",
+    "src/error.rs": "df90ae9d02bca29cc26167b81171cd1a822d79d48b6f490098e848ee49c4e310",
+    "target/release/deps/lfz-63397fd2d9985014.exe": "dec65ddac3f7254ab87b8ae9fa2ab79eb40598b0850171ec2cd9430e59860f77"
+  },
+  "runtime_new_tests": 7,
+  "default_pass": 459,
+  "default_permission_fail": 8,
+  "full_cli_verified": false
+}

@@ -1,0 +1,20 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `release` profile [optimized] target(s) in 42.82s
+     Running unittests src\lib.rs (target\release\deps\lfz-63397fd2d9985014.exe)
+
+running 7 tests
+test evaluator::t17_boundaries::cancellation_between_nodes_and_late_flag ... ok
+test evaluator::t17_tests::t17_api_boundary ... ok
+test evaluator::t17_boundaries::deadline_priority_and_future ... ok
+test evaluator::t17_boundaries::graph_budget_and_fault_source ... ok
+test evaluator::t17_boundaries::empty_has_no_poll_and_cancel_priority ... ok
+test evaluator::t17_boundaries::loops_recursion_hof_and_nested_attempt_stop ... ok
+test evaluator::t17_boundaries::exact_steps_and_no_final_poll ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 460 filtered out; finished in 0.00s
+

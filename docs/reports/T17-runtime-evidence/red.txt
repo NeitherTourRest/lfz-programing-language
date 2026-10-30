@@ -1,0 +1,33 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+error[E0422]: cannot find struct, variant or union type `EvalLimits` in this scope
+    --> src\evaluator.rs:4475:56
+     |
+4475 |   let r=eval_module_traced_with_args_and_limits(&p,&[],EvalLimits{max_steps:Some(2),..Default::default()});
+     |                                                        ^^^^^^^^^^ not found in this scope
+
+warning: unused import: `super::*`
+    --> src\evaluator.rs:4472:6
+     |
+4472 |  use super::*;
+     |      ^^^^^^^^
+     |
+     = note: `#[warn(unused_imports)]` on by default
+
+error[E0425]: cannot find function `eval_module_traced_with_args_and_limits` in this scope
+    --> src\evaluator.rs:4475:9
+     |
+ 323 | pub fn eval_module_traced_with_args(program: &Program, args: &[String]) -> TracedRun {
+     | ------------------------------------------------------------------------------------ similarly named function `eval_module_traced_with_args` defined here
+...
+4475 |   let r=eval_module_traced_with_args_and_limits(&p,&[],EvalLimits{max_steps:Some(2),..Default::default()});
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: a function with a similar name exists: `eval_module_traced_with_args`
+
+Some errors have detailed explanations: E0422, E0425.
+For more information about an error, try `rustc --explain E0422`.
+warning: `lfz` (lib test) generated 1 warning
+error: could not compile `lfz` (lib test) due to 2 previous errors; 1 warning emitted
