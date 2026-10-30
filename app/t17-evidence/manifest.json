@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-30",
+  "binary_sha256": "1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45",
+  "binary_bytes": 943104,
+  "execution": "default sandbox denied canonicalize; approved elevated run same bytes 40/40",
+  "files": [
+    {
+      "path": "app/verify_jsonbatch_budgets.py",
+      "bytes": 6257,
+      "sha256": "014d85cb24f1e0529b4bb7f0596340b21fec6eb5ff501c7ae30386e451843724"
+    },
+    {
+      "path": "app/T17-BUDGETS.md",
+      "bytes": 5423,
+      "sha256": "4e6ae4bfab08d4407e727261b9b5b37a582198db1874d6734bb80e41e008290b"
+    },
+    {
+      "path": "app/t17-evidence/default-permission-failure.json",
+      "bytes": 2175,
+      "sha256": "dbecace086b0f894dba45acc21e6106b9c4b536b01f4d541474807e65e16479c"
+    },
+    {
+      "path": "app/t17-evidence/results.json",
+      "bytes": 35557,
+      "sha256": "f066e2c6557995f8e0d70a3ddbf9ebbbddfc04efad17c495145da9185b57e45f"
+    }
+  ]
+}

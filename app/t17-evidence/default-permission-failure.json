@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-30",
+  "binary_sha256": "1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45",
+  "binary_bytes": 943104,
+  "source_hashes": {
+    "app\\jsonbatch_modules\\batch.lfz": "6afaa5a157d4375c2c7388331c933c76746d0c728196c1d6b487c5b3f830d406",
+    "app\\jsonbatch_modules\\common.lfz": "11e6f5bf1649dc3ba227d4e6e1b8b0ffb667d1828e8ef6301ae4f38721fc7cfd",
+    "app\\jsonbatch_modules\\main.lfz": "f8d5f441abe308ee9c1c97c6645601882fcf139acf8ee9b7352a0306d9f5a15f",
+    "app\\jsonbatch_modules\\record.lfz": "176fbdfcfab9aa590bdcb0627d644ed1b7b5359b45a1af61f5da6cf2e5f24d1e"
+  },
+  "status": "failed",
+  "rows": [
+    {
+      "name": "unlimited",
+      "arguments": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonbatch_modules\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-app\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-app\\output.json"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonbatch_modules\\common.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonbatch_modules\\main.lfz:2:1）\n",
+      "passed": false
+    }
+  ],
+  "error": "AssertionError({'name': 'unlimited', 'arguments': ['run', 'D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\main.lfz', '--', 'D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-app\\\\input.jsonl', 'D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-app\\\\output.json'], 'exit': 2, 'stdout': '', 'stderr': 'IOError: 无法读取模块：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz（导入于 D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\main.lfz:2:1）\\n', 'passed': False})",
+  "total": 1,
+  "passed": 0
+}
