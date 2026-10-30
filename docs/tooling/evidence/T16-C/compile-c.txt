@@ -1,0 +1,23 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+warning: function `pass` is never used
+  --> tests\cli_t16c.rs:13:4
+   |
+13 | fn pass(r:Output){assert_eq!(r.status.code(),Some(0),"{:?}",r);assert_eq!(r.stdout,b"{\"ok\":true,\"mode\":\"check\",\"executed\":false}\...
+   |    ^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: function `error` is never used
+  --> tests\cli_t16c.rs:14:4
+   |
+14 | fn error(r:Output,class:&str)->String {assert_eq!(r.status.code(),Some(2),"{:?}",r);assert!(r.stderr.is_empty());let s=String::from_utf8(...
+   |    ^^^^^
+
+warning: `lfz` (test "cli_t16c") generated 2 warnings
+    Finished `release` profile [optimized] target(s) in 5.09s
+  Executable tests\cli_t16c.rs (target\release\deps\cli_t16c-24a3e9d865ee9e42.exe)

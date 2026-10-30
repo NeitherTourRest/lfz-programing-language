@@ -1,0 +1,297 @@
+{
+  "schema": "LFZ-T12-app-check-v1",
+  "date": "2026-10-25",
+  "lfz": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+  "lfz_sha256": "cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006",
+  "app_sha256": "3663a59f9563a7c7ab339c5b7389542eae107e94451aa6def86505604dbf89be",
+  "passed": 37,
+  "checks": [
+    {
+      "name": "fixture",
+      "pass": true,
+      "exit": 0,
+      "stdout": "{\"input\":3,\"output\":2,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T12\\\\jsonflow-t60ex5h9\\\\fixture\\\\output.json\"}\n",
+      "stderr": "",
+      "output_sha256": "2eead8e3587d6149c2307a7a222d3ad3535766d92bec90b27a162c9245930a75"
+    },
+    {
+      "name": "empty",
+      "pass": true,
+      "exit": 0,
+      "stdout": "{\"input\":0,\"output\":0,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T12\\\\jsonflow-t60ex5h9\\\\empty\\\\output.json\"}\n",
+      "stderr": "",
+      "output_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "name": "no_match",
+      "pass": true,
+      "exit": 0,
+      "stdout": "{\"input\":1,\"output\":0,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T12\\\\jsonflow-t60ex5h9\\\\no_match\\\\output.json\"}\n",
+      "stderr": "",
+      "output_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "name": "select_all",
+      "pass": true,
+      "exit": 0,
+      "stdout": "{\"input\":3,\"output\":3,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T12\\\\jsonflow-t60ex5h9\\\\select_all\\\\output.json\"}\n",
+      "stderr": "",
+      "output_sha256": "7330189b4bbfd1c07e0d1fd8ded23c1f2fd751d8ca2cb3cf03c92ef16c3e9a1e"
+    },
+    {
+      "name": "unicode_key",
+      "pass": true,
+      "exit": 0,
+      "stdout": "{\"input\":2,\"output\":1,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T12\\\\jsonflow-t60ex5h9\\\\unicode_key\\\\output.json\"}\n",
+      "stderr": "",
+      "output_sha256": "3da5684fb6177a74197a8cfec4afff6881da8b91f1f5652f2b99efd62e9a145b"
+    },
+    {
+      "name": "numeric_equality",
+      "pass": true,
+      "exit": 0,
+      "stdout": "{\"input\":4,\"output\":2,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T12\\\\jsonflow-t60ex5h9\\\\numeric_equality\\\\output.json\"}\n",
+      "stderr": "",
+      "output_sha256": "75fdb45274fe3df63bcb390861c0aea3970231c2594cffe0122f77da3fb04046"
+    },
+    {
+      "name": "null_equality",
+      "pass": true,
+      "exit": 0,
+      "stdout": "{\"input\":2,\"output\":1,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T12\\\\jsonflow-t60ex5h9\\\\null_equality\\\\output.json\"}\n",
+      "stderr": "",
+      "output_sha256": "a31bfae364426d43583015ae6cc19c48c8fb8995a97e65b7eff027351cf3de17"
+    },
+    {
+      "name": "nested_projection",
+      "pass": true,
+      "exit": 0,
+      "stdout": "{\"input\":1,\"output\":1,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T12\\\\jsonflow-t60ex5h9\\\\nested_projection\\\\output.json\"}\n",
+      "stderr": "",
+      "output_sha256": "b8403ed8445f92b4ff14e6355d0fa51cda262d38eee4607f12fb24a614570653"
+    },
+    {
+      "name": "machine_channels",
+      "pass": true,
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "{\"input\":3,\"output\":2,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T12\\\\jsonflow-t60ex5h9\\\\machine_channels\\\\output.json\"}\n",
+      "output_sha256": "2eead8e3587d6149c2307a7a222d3ad3535766d92bec90b27a162c9245930a75"
+    },
+    {
+      "name": "unknown_config",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 27, in main\n        checkKeys(config, [\"where\", \"select\"], \"配置\")\n        ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 10, in checkKeys\n            require(contains(key, allowed), \"${label} 含未知字段 ${key}\")\n            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: 配置 含未知字段 extra\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "missing_config_field",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 28, in main\n        require(has(\"where\", config) && has(\"select\", config), \"配置必须含 where 和 select\")\n        ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: 配置必须含 where 和 select\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "config_scalar",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 26, in main\n        require(type(config) == \"struct\", \"配置必须是 object\")\n        ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: 配置必须是 object\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "bad_select_type",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 30, in main\n        require(type(fields) == \"array\", \"select 必须是 array\")\n        ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: select 必须是 array\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "empty_select",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 31, in main\n        require(len(fields) > 0, \"select 至少包含一个字段\")\n        ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: select 至少包含一个字段\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "duplicate_select",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 36, in main\n            require(!has(field, seen), \"select 字段不能重复: ${field}\")\n            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: select 字段不能重复: id\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "nonstring_select",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 34, in main\n            require(type(field) == \"string\", \"select 字段必须是 string\")\n            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: select 字段必须是 string\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "empty_select_field",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 35, in main\n            require(len(field) > 0, \"select 字段不能为空\")\n            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: select 字段不能为空\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "where_scalar",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 41, in main\n            require(type(condition) == \"struct\", \"where 必须是 object 或 null\")\n            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: where 必须是 object 或 null\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "unknown_where",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 42, in main\n            checkKeys(condition, [\"field\", \"equals\"], \"where\")\n            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 10, in checkKeys\n            require(contains(key, allowed), \"${label} 含未知字段 ${key}\")\n            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: where 含未知字段 extra\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "missing_equals",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 43, in main\n            require(has(\"field\", condition) && has(\"equals\", condition), \"where 必须含 field 和 equals\")\n            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: where 必须含 field 和 equals\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "nonscalar_equals",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 47, in main\n            require(valueType != \"array\" && valueType != \"struct\", \"where.equals 必须是 JSON 标量\")\n            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: where.equals 必须是 JSON 标量\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "bad_where_field",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 44, in main\n            require(type(condition.field) == \"string\", \"where.field 必须是 string\")\n            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: where.field 必须是 string\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "empty_where_field",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 45, in main\n            require(len(condition.field) > 0, \"where.field 不能为空\")\n            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: where.field 不能为空\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "input_scalar",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 50, in main\n        require(type(records) == \"array\", \"输入必须是记录 array\")\n        ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: 输入必须是记录 array\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "record_scalar",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 54, in main\n            require(type(record) == \"struct\", \"记录 ${index} 必须是 object\")\n            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: 记录 0 必须是 object\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "missing_selected",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 56, in main\n                require(has(field, record), \"记录 ${index} 缺少 select 字段 ${field}\")\n                ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: 记录 0 缺少 select 字段 title\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "missing_where",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 59, in main\n                require(has(condition.field, record), \"记录 ${index} 缺少 where 字段 ${condition.field}\")\n                ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: 记录 0 缺少 where 字段 status\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "bad_unmatched_record",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 56, in main\n                require(has(field, record), \"记录 ${index} 缺少 select 字段 ${field}\")\n                ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: 记录 0 缺少 select 字段 title\n",
+      "output_sha256": "a71d896b36da723dfef3703504d3739b3946bbb8fd376ff9f30f888aee1ecb42"
+    },
+    {
+      "name": "bad_config_json",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 25, in main\n        let config = readFile(configPath) |> jsonParse()\n                     ^\nValueError: JSON 解析失败（字节偏移 1）：不是合法的 JSON\n"
+    },
+    {
+      "name": "duplicate_config_json",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 25, in main\n        let config = readFile(configPath) |> jsonParse()\n                     ^\nValueError: JSON 解析失败（字节偏移 14）：对象键重复\n"
+    },
+    {
+      "name": "bad_input_json",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 49, in main\n        let records = readFile(inputPath) |> jsonParse()\n                      ^\nValueError: JSON 解析失败（字节偏移 1）：不是合法的 JSON\n"
+    },
+    {
+      "name": "missing_config_path",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 25, in main\n        let config = readFile(configPath) |> jsonParse()\n                     ^\nIOError: 无法读取：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T12\\jsonflow-t60ex5h9\\missing.json\n"
+    },
+    {
+      "name": "empty_path",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 23, in main\n        for path in args { require(len(trim(path)) > 0, \"路径不能为空\") }\n                           ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: 路径不能为空\n"
+    },
+    {
+      "name": "missing_argument",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 19, in main\n        require(len(args) == 3, \"用法: jsonflow CONFIG INPUT OUTPUT\")\n        ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: 用法: jsonflow CONFIG INPUT OUTPUT\n"
+    },
+    {
+      "name": "extra_argument",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 19, in main\n        require(len(args) == 3, \"用法: jsonflow CONFIG INPUT OUTPUT\")\n        ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: 用法: jsonflow CONFIG INPUT OUTPUT\n"
+    },
+    {
+      "name": "output_is_input",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 24, in main\n        require(outputPath != inputPath && outputPath != configPath, \"输出路径不能与输入或配置路径字面相同\")\n        ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: 输出路径不能与输入或配置路径字面相同\n"
+    },
+    {
+      "name": "output_is_config",
+      "pass": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 73, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 24, in main\n        require(outputPath != inputPath && outputPath != configPath, \"输出路径不能与输入或配置路径字面相同\")\n        ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonflow.lfz\", line 6, in require\n        if !ok { fail(\"jsonflow: ${message}\") }\n                 ^\nAssertionError: jsonflow: 输出路径不能与输入或配置路径字面相同\n"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+error[E0616]: field `origins` of struct `TracedRun` is private
+   --> src\cli.rs:517:15
+    |
+517 |     if traced.origins.is_none() || (0..traced.frames.len()).any(|i| traced.frame_source(i).is_none()) { return CaseEval::HostFailure("来源元数据缺   ...
+    |               ^^^^^^^ private field
+
+For more information about this error, try `rustc --explain E0616`.
+error: could not compile `lfz` (bin "lfz" test) due to 1 previous error

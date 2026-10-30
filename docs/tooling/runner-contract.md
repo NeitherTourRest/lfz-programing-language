@@ -245,3 +245,11 @@ runner **不改变 cwd**，所以测试正文中的 `Temp/...` 相对进程启�
 失败由GraphFailure.failure.source_id定位SourceMap，用该来源display_path和可选Loaded构造原CaseEval诊断。依赖错误不得画入口文本；没有Loaded的来源不伪造文本。check机器协议仍ok/mode/executed前三键及原错误字段顺序，模块IO无span时line/col null和空traceback。B阶段run/旧eval的模块执行预检由runtime负责，在所有副作用前拒绝；B不宣称支持模块初始化。
 
 新增tests/cli_t16b.rs验证非执行菱形图、CODE/stdin相对基准、依赖真实文件与语法文本、缺失/非法UTF8、静态错误及循环、旧export标识符、legacy大根不套图限额及run零副作用拒绝。测试进程10秒有界超时，所有fixture在项目Temp/T16-B-tooling；不改既有测试。
+
+## 14. T16-C 模块图执行与跨文件诊断
+
+按三spec §21，run文件/-e/stdin使用counted根加载，只lex/parse一次；无模块根保持旧eval入口，有模块根build_graph后在同一大栈调用eval_graph_traced_on_thread_with_args并析构图。根图错误用Located前端结果保留依赖真实路径和Loaded；运行期使用TracedRun.error_source定位最深真实文件与文本，frame_source(index)定位各帧。人类首10尾30折叠传原始帧下标，JSON保留全量，旧origins=None路径保持原字节。check继续只构图不初始化。
+
+GraphExecutionError是宿主异常，不伪造LFZ错误类，run写stderr“lfz: 模块执行上下文无效：{detail}”并exit2、stdout空。程序可捕获错误仍遵循T15 Result协议，未额外添加file字段。模块初始化和命名空间语义由runtime实现，CLI不重读或克隆整图。
+
+B阶段tests/cli_t16b.rs最后一条“模块执行尚未启用”过渡断言经team-lead明确授权改为C真实运行成功与文件副作用断言，其余全部保留；旧library eval_module模块preflight guard仍原样。新增tests/cli_t16c.rs覆盖三run入口与定义模块globals、依赖初始化错误且入口无副作用、运行图前端来源错误、51函数帧跨文件人类折叠/JSON全量、attempt恢复后的新入口错误来源。所有fixture在项目Temp，进程超时有界。最终计数/哈希和权限边界以T16-C-tooling报告为准。

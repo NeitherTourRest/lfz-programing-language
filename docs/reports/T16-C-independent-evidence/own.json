@@ -1,0 +1,224 @@
+{
+  "date": "2026-10-30",
+  "hash": "cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006",
+  "passed": 15,
+  "source_hashes_unchanged": true,
+  "rows": [
+    {
+      "name": "diamond",
+      "command": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\diamond\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "same\n",
+      "stderr": "",
+      "sources": {
+        "leaf.lfz": "var n=0\nlet data=[1]\nfn bump(){n+=1\nn}\nexport data,bump",
+        "l.lfz": "import x from \"./leaf.lfz\"\nexport x",
+        "r.lfz": "import x from \"./leaf.lfz\"\nexport x",
+        "main.lfz": "import l from \"./l.lfz\"\nimport r from \"./r.lfz\"\nassert(l.x.bump()==1)\nassert(r.x.bump()==2)\nl.x.data[0]=7\nassert(r.x.data[0]==7)\nprint(\"same\")"
+      }
+    },
+    {
+      "name": "home",
+      "command": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\home\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "40\n",
+      "stderr": "",
+      "sources": {
+        "lib.lfz": "var x=7\nfn get()=>x\nfn escape()=>()=>x\nexport x,get,escape",
+        "main.lfz": "import m from \"./lib.lfz\"\nvar x=99\nm.x=40\nassert(m.get()==7)\nassert(m.escape()()==7)\nprint(m.x)"
+      }
+    },
+    {
+      "name": "template",
+      "command": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\template\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "defaults\n",
+      "stderr": "",
+      "sources": {
+        "lib.lfz": "var n=4\nfn tick(){n+=1\nn}\nstruct P{x:tick(),data:[0]}\nfn count()=>n\nexport P,count",
+        "main.lfz": "import m from \"./lib.lfz\"\nlet P=m.P\nvar n=100\nlet a=P{x:n}\nlet b=P{}\nassert(a.x==100 && b.x==6 && m.count()==6)\na.data[0]=9\nassert(b.data[0]==0)\nprint(\"defaults\")"
+      }
+    },
+    {
+      "name": "local_template",
+      "command": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\local_template\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "cell\n",
+      "stderr": "",
+      "sources": {
+        "lib.lfz": "fn make(){var seed=4\nstruct P{x:seed}\nseed=8\nP}\nexport make",
+        "main.lfz": "import m from \"./lib.lfz\"\nlet P=m.make()\nvar seed=99\nassert(P{}.x==8)\nprint(\"cell\")"
+      }
+    },
+    {
+      "name": "attempt_home",
+      "command": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\attempt_home\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "100\n",
+      "stderr": "",
+      "sources": {
+        "lib.lfz": "let x=7\nfn bad()=>1/0\nfn get()=>x\nexport bad,get",
+        "main.lfz": "import m from \"./lib.lfz\"\nvar x=100\nlet r=attempt(m.bad)\nassert(!r.ok && r.error[\"class\"]==\"ZeroDivisionError\")\nassert(m.get()==7)\nprint(x)"
+      }
+    },
+    {
+      "name": "after_catch",
+      "command": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\after_catch\\main.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'unknown_after'\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\after_catch\\\\main.lfz\",\"line\":4,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\after_catch\\\\main.lfz\",\"line\":4,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "sources": {
+        "lib.lfz": "fn bad()=>1/0\nexport bad",
+        "main.lfz": "import m from \"./lib.lfz\"\nlet r=attempt(m.bad)\nunknown_after"
+      }
+    },
+    {
+      "name": "default_source",
+      "command": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\default_source\\main.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\default_source\\\\lib.lfz\",\"line\":2,\"col\":12,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\default_source\\\\main.lfz\",\"line\":4,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\default_source\\\\lib.lfz\",\"line\":2,\"func\":\"P::<defaults>\"}]}\n",
+      "stderr": "",
+      "sources": {
+        "lib.lfz": "struct P{x:1/0}\nexport P",
+        "main.lfz": "import m from \"./lib.lfz\"\nlet P=m.P\nP{}"
+      }
+    },
+    {
+      "name": "override_source",
+      "command": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\override_source\\main.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\override_source\\\\main.lfz\",\"line\":4,\"col\":5,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\override_source\\\\main.lfz\",\"line\":4,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "sources": {
+        "lib.lfz": "struct P{x:8}\nexport P",
+        "main.lfz": "import m from \"./lib.lfz\"\nlet P=m.P\nP{x:1/0}"
+      }
+    },
+    {
+      "name": "argv_eval",
+      "command": [
+        "run",
+        "-e",
+        "import m from \"./lib.lfz\"\nassert(m.get()==[\"中\",\"\"])\nprint(\"args\")",
+        "--",
+        "中",
+        ""
+      ],
+      "exit": 0,
+      "stdout": "args\n",
+      "stderr": "",
+      "sources": {
+        "lib.lfz": "fn get()=>argv()\nexport get",
+        "main.lfz": "import m from \"./lib.lfz\"\nassert(m.get()==[\"中\",\"\"])\nprint(\"args\")"
+      }
+    },
+    {
+      "name": "argv_stdin",
+      "command": [
+        "run",
+        "-",
+        "--",
+        "中",
+        ""
+      ],
+      "exit": 0,
+      "stdout": "args\n",
+      "stderr": "",
+      "sources": {
+        "lib.lfz": "fn get()=>argv()\nexport get",
+        "main.lfz": "import m from \"./lib.lfz\"\nassert(m.get()==[\"中\",\"\"])\nprint(\"args\")"
+      }
+    },
+    {
+      "name": "session_fresh",
+      "command": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\session_fresh\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "sources": {
+        "lib.lfz": "var n=0\nfn bump(){n+=1\nn}\nexport bump",
+        "main.lfz": "import m from \"./lib.lfz\"\nprint(m.bump())"
+      }
+    },
+    {
+      "name": "session_fresh",
+      "command": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\session_fresh\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "sources": {
+        "lib.lfz": "var n=0\nfn bump(){n+=1\nn}\nexport bump",
+        "main.lfz": "import m from \"./lib.lfz\"\nprint(m.bump())"
+      }
+    },
+    {
+      "name": "init_failure",
+      "command": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\init_failure\\main.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"AssertionError\",\"message\":\"init\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\init_failure\\\\lib.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\init_failure\\\\lib.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "sources": {
+        "lib.lfz": "fail(\"init\")\nlet x=1\nexport x",
+        "main.lfz": "import m from \"./lib.lfz\"\nprint(\"entry-ran\")"
+      }
+    },
+    {
+      "name": "folded",
+      "command": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\main.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"col\":22,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\main.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-verifier\\\\own\\\\folded\\\\lib.lfz\",\"line\":2,\"func\":\"dive\"}]}\n",
+      "stderr": "",
+      "sources": {
+        "lib.lfz": "fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\nexport dive",
+        "main.lfz": "import m from \"./lib.lfz\"\nm.dive(45)"
+      }
+    },
+    {
+      "name": "folded_human",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\main.lfz\", line 3, in <module>\n    m.dive(45)\n    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  ... 省略 7 帧 ...\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                                    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-verifier\\own\\folded\\lib.lfz\", line 2, in dive\n    fn dive(n)=>if n==0 {1/0} else {dive(n-1)}\n                         ^\nZeroDivisionError: 除以零\n"
+    }
+  ]
+}

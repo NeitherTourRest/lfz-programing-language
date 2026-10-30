@@ -1,0 +1,27 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `release` profile [optimized] target(s) in 11.34s
+     Running unittests src\main.rs (target\release\deps\lfz-243aeb8f5c3370f1.exe)
+
+running 1 test
+test test_runner::t16c_host_tests::host_failure_is_not_a_passing_case_even_without_lfz_error_class ... FAILED
+
+failures:
+
+---- test_runner::t16c_host_tests::host_failure_is_not_a_passing_case_even_without_lfz_error_class stdout ----
+
+thread 'test_runner::t16c_host_tests::host_failure_is_not_a_passing_case_even_without_lfz_error_class' panicked at src\test_runner.rs:686:9:
+assertion failed: matches!(judge(&result,None),Verdict::Error)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    test_runner::t16c_host_tests::host_failure_is_not_a_passing_case_even_without_lfz_error_class
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 48 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--bin lfz`

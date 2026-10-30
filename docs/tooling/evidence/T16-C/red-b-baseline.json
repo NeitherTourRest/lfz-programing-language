@@ -1,0 +1,9 @@
+{
+  "purpose": "B baseline lacks C execution; recorded after C CLI implementation, not mislabelled as test-first",
+  "binary_sha256": "8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480",
+  "expected_exit": 0,
+  "expected_stdout": "7\n",
+  "actual_exit": 2,
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-tooling\\red\\root.lfz\", line 2, in <module>\n    import d from \"./dep.lfz\"\n    ^\nSyntaxError: 模块执行尚未启用\n"
+}

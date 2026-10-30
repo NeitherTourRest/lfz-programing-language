@@ -1,0 +1,10 @@
+
+running 5 tests
+test initialization_error_owns_dependency_and_skips_entry ... ok
+test attempt_restores_source_before_later_root_failure ... ok
+test frontend_graph_error_on_run_uses_dependency ... ok
+test folded_human_and_full_json_keep_frame_sources ... ok
+test graph_run_three_sources_and_home_globals ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+

@@ -1,0 +1,18 @@
+use std::io::Write;
+use std::path::PathBuf;
+use std::process::{Command,Output,Stdio};
+use std::sync::atomic::{AtomicU64,Ordering};
+const BIN:&str=env!("CARGO_BIN_EXE_lfz");
+static NEXT:AtomicU64=AtomicU64::new(0);
+struct Work(PathBuf);
+impl Work {
+ fn new()->Self {let p=PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("Temp/T16-B-tooling/tests").join(format!("{}-{}",std::process::id(),NEXT.fetch_add(1,Ordering::Relaxed)));std::fs::create_dir_all(&p).unwrap();Self(p)}
+ fn file(&self,name:&str,body:&str)->String {let p=self.0.join(name);std::fs::write(&p,format!("#42\n{body}")).unwrap();p.to_str().unwrap().into()}
+ fn run(&self,args:&[&str],stdin:&[u8])->Output {let mut c=Command::new(BIN).args(args).current_dir(&self.0).stdin(Stdio::piped()).stdout(Stdio::piped()).stderr(Stdio::piped()).spawn().unwrap();if let Some(mut p)=c.stdin.take(){let _=p.write_all(stdin);}let end=std::time::Instant::now()+std::time::Duration::from_secs(10);while c.try_wait().unwrap().is_none(){if std::time::Instant::now()>=end{let _=c.kill();let _=c.wait();panic!("模块check进程超时");}std::thread::sleep(std::time::Duration::from_millis(5));}c.wait_with_output().unwrap()}
+}
+
+#[test] fn graph_run_three_sources_and_home_globals(){let w=Work::new();w.file("dep.lfz","let x=7\nfn f()=>x\nexport f\n");let s="import d from \"./dep.lfz\"\nlet x=99\nprint(d.f())\n";let p=w.file("root.lfz",s);for(args,input)in[(vec!["run",p.as_str()],b"".as_slice()),(vec!["-e",s],b"".as_slice()),(vec!["-"],s.as_bytes())]{let r=w.run(&args,input);assert_eq!(r.status.code(),Some(0),"{:?}",r);assert_eq!(r.stdout,b"7\n");assert!(r.stderr.is_empty());}}
+#[test] fn initialization_error_owns_dependency_and_skips_entry(){let w=Work::new();w.file("dep.lfz","1/0\n");let p=w.file("root.lfz","import d from \"./dep.lfz\"\nwriteFile(\"sentinel\",\"bad\")\n");let r=w.run(&["run",&p,"--json"],b"");assert_eq!(r.status.code(),Some(2));assert!(r.stderr.is_empty());let s=String::from_utf8(r.stdout).unwrap();assert!(s.contains("dep.lfz"));assert!(!s.contains("root.lfz"));assert!(!w.0.join("sentinel").exists());}
+#[test] fn frontend_graph_error_on_run_uses_dependency(){let w=Work::new();w.file("dep.lfz","let broken =\n");let p=w.file("root.lfz","import d from \"./dep.lfz\"\nprint(1)\n");let r=w.run(&["run",&p,"--json"],b"");assert_eq!(r.status.code(),Some(2));assert!(r.stderr.is_empty());let s=String::from_utf8(r.stdout).unwrap();assert!(s.contains("SyntaxError"));assert!(s.contains("dep.lfz"));assert!(!s.contains("root.lfz"));}
+#[test] fn folded_human_and_full_json_keep_frame_sources(){let w=Work::new();w.file("dep.lfz","fn f(n) { if n==0 { 1/0 } else { f(n-1) } }\nexport f\n");let p=w.file("root.lfz","import d from \"./dep.lfz\"\nd.f(50)\n");let r=w.run(&["run",&p],b"");assert_eq!(r.status.code(),Some(2));let s=String::from_utf8(r.stderr).unwrap();assert!(s.contains("省略"));assert!(s.contains("dep.lfz"));assert!(s.contains("root.lfz"));let r=w.run(&["run",&p,"--json"],b"");assert_eq!(r.status.code(),Some(2));assert!(r.stderr.is_empty());let s=String::from_utf8(r.stdout).unwrap();assert!(!s.contains("省略"));assert_eq!(s.matches("\"func\":\"f\"").count(),51);assert_eq!(s.matches("dep.lfz").count(),52);}
+#[test] fn attempt_restores_source_before_later_root_failure(){let w=Work::new();w.file("dep.lfz","fn bad()=>1/0\nexport bad\n");let p=w.file("root.lfz","import d from \"./dep.lfz\"\nlet r=attempt(()=>d.bad())\n1/0\n");let r=w.run(&["run",&p,"--json"],b"");assert_eq!(r.status.code(),Some(2));let s=String::from_utf8(r.stdout).unwrap();assert!(s.contains("root.lfz"));assert!(!s.contains("dep.lfz"));assert_eq!(s.matches("\"func\":").count(),1);}
