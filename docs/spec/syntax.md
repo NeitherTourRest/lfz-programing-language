@@ -1019,3 +1019,6 @@ lfz [--json] check [--json] - [--json]
 
 ## 21. T16-C 模块执行入口（2026-10-30 冻结）
 不增加B之外的语法；import/export实际初始化由graph入口执行，旧eval仍拒绝模块Program。导出模板不支持lib.Point{}新形态，使用let P=lib.Point再P{}。模块默认值定义上下文与legacy默认值调用scope区别、来源/资源诊断帧及精确API见interface-contract §21。check仍只构图不执行；B独立通过后才实施C。
+
+## 22. T17 宿主执行限额（2026-10-30 冻结）
+不新增LFZ语法、关键字、builtin或AST。CLI执行入口新增--max-steps N/--timeout-ms N；CODE及--后argv原样保护，check/test/help/version拒限额。精确扫描顺序、u64规则/usage消息/宿主API及时间窗口见interface-contract §22。正例：lfz --max-steps 10 -e "1"；反例：lfz check --max-steps 10 file.lfz。旧无选项入口默认unlimited。Ctrl-C尚无新跨平台处理。

@@ -476,3 +476,6 @@ check对静态相对.lfz依赖按书写序迭代DFS构图，身份canonical去�
 
 ## 21. T16-C 初始化、home与恢复（2026-10-30 冻结）
 单session消费完整已检查快照，依赖后序串行单次初始化、独立globals、显式namespace，导出标量快照/容器共享且无live binding。函数按定义模块globals执行，self/捕获cell规则保持，成功/Err均恢复调用者active/globals但故障trace/source保留。graph模板默认值用定义module+captured/self，每实例重新求值，显式覆盖用caller；legacy模板None保持原caller scope与原trace。默认值独立诊断帧受递归限制且不吞旧Flow。attempt同步来源/active恢复，Result三/五/三字段不增file、不回滚用户状态或函数ID。CLI真实逐帧文件定位，图宿主错误结构化拒绝不作业务失败。精确顺序、API、owner和兼容见interface-contract §21；R304仍OPEN。
+
+## 22. T17 单调执行预算与终止（2026-10-30 冻结）
+新增第13真实错误ExecutionLimitError：StepBudget“执行步数预算已耗尽”、Cancelled“执行已取消”、Deadline“执行时间上限已到”；旧12类及T15 Result键不改。每实际stmt/expr入口在该节点副作用前poll，cancel→deadline→steps，预算N允许N次节点进入；空程序无poll。模块/闭包/高阶回调/模板默认共享一个会话余量，attempt不恢复余量、不吞终止；真实source与active清理沿C。旧入口默认unlimited，资源终止前副作用不回滚。deadline/token只在节点边界协作观测，native/阻塞IO与前端不承诺硬中断，末个原生调用后无节点可成功。精确API/CLI/错误消息/验收见interface-contract §22。默认分支效率须测最终hash，R304仍OPEN。

@@ -1,9 +1,24 @@
 # LFZ 需求矩阵（唯一需求事实源 · v1.1 增量对齐版）
 
 > 最后更新: 2026-10-30 by requirements-analyst
-> 版本: **v8（T16-B仅静态图通过，C未验收；R-304开放，非正式发布）**
+> 版本: **v9（T16-C模块执行/诊断通过，T17未验收；R-304开放，非正式发布）**
 > 本文件是**唯一需求事实源**，唯一写者 requirements-analyst，他人只读。
 > 来源: `task-info.md`（课程作业原始要求）+ 用户指令 + 已定案 ADR（见 `DECISIONS.md`）。
+
+## T16-C/D 增量需求（2026-10-30，模块执行及诊断通过）
+
+本节按三spec §21及T16-C-design收口，冻结产物SHA256 `cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006`、902656B、73内置/12错误类。`T16-C-independent-verification.md`与证据确认同9个release harness599、公开29、四模块app33、自编15、旧attempt13/check117/CLI91含178、旧apps37+11/jsonbatch38/JSON140全部PASS；人指南11/AI18最终实跑通过，默认权限失败记录保留，同冻结字节许可复核未绕过canonical身份。
+
+**当前CLI run已执行经完整图验证的模块；下方B的run unsupported/初始化前拒绝仅是8ea375过渡版本历史，不是当前CLI限制。** 旧无图eval_module入口仍按§20 guard拒模块Program，新图执行入口必须经合法图；check仍不初始化。以下通过不代表所有未来模块能力、效率或§22执行预算通过。T17 §22仅规范冻结/后继实现准备，尚未验收；计划第13类ExecutionLimitError不能记作本C产物已支持，当前12类仍有效。R304继续OPEN，无C性能窗，不正式tag/发布，旧v2及失败证据不变。
+
+| R-ID | 需求 | 来源 | 验证方式（可命令复现） | 状态 | 交付物 | 评分项 |
+|------|------|------|------------------------|------|--------|--------|
+| R-134 | 单session按图后序独立globals初始化，共享canonical模块只一次、不同session不复用缓存；namespace标量快照/引用共享，UserFn home globals及模板定义默认值上下文正确，argv统一，attempt完整恢复来源及caller而不回滚副作用 | 三spec §21.1–21.5 | 项目工具链`cargo test --release`599全过；对冻结C字节运行`D:/app/ANACONDA/python.exe -B tests/t16c_cli_run.py --binary target/release/lfz.exe --expected-sha cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006 --output Temp/T16-C/req-public-new.json`29/29；独立own.json15验证菱形、两次session、同名caller不串、逃逸闭包、namespace字段不回写私有标量、默认值定义处/显式覆盖caller及恢复后的真实故障来源。仅本地已验证图，无远程/动态import/循环live binding | 通过 | evaluator.rs/value.rs（runtime-dev）、§21（language-architect）、公开与独立模块见证（test-engineer/verifier） | 1、2 |
+| R-210 | CLI file/-e/stdin run启用图执行，check仍仅图检查；跨文件human/JSON逐帧真实来源及原下标折叠，宿主坏图/Origins/HostFailure受控exit2且runner失败闭合，不伪装LFZ成功或attempt结果 | 三spec §21.6–21.7；R209后继 | 上述599与29/15、旧13/117/91含178/apps/JSON回归全PASS；独立45层递归JSON47帧全保留、human40个File记录且最深真实lib；默认值失败定位定义文件、caller显式覆盖错误定位入口。实际599内host_failure_is_not_a_passing_case_even_without_lfz_error_class覆盖HostFailure及Located wrapper；源码路径核对runner为Verdict::Error，旧origins=None输出保持。B的旧CLI模块拒绝断言经批准迁移，旧eval guard仍验证 | 通过 | CLI/test_runner（tooling-dev）、origins运行时与独立报告/证据 | 1、2 |
+| R-409 | 人/AI指南同步真实本地模块工作流，明确check与run、namespace快照、home函数、模板默认/覆盖、跨文件CLI诊断与attempt不含file、宿主API迁移及非沙箱边界 | §21；R408延伸 | T16-C-guide-evidence.md命令聚焦11/11、T16-C-skill-evidence.md命令18/18均绑定cdedc9；默认权限失败与许可同产物复核保留。指南不得将Result三/五/三字段扩成含file或声称RustAPI零迁移；UserFn.home_module/StructDef.default_context及旧helper None引用规范，不把示例实跑冒称新盲测或RustAPI独立编译验收 | 通过 | 人指南（docs-writer）、skill四文件/AI入口（ai-dx-engineer）及实跑证据 | 4 |
+| R-506 | 四文件模块化JSONL应用实际复用模块导出，混合坏行继续处理，保留文件/参数错误边界；不以小应用替代既有≥200行sortviz交付 | app/T16-JSONBATCH-MODULES.md；§21 | `D:/app/ANACONDA/python.exe -B app/verify_jsonbatch_modules.py --lfz target/release/lfz.exe --expected-sha cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006 --output Temp/T16-C/req-app-new.json`33/33；独立app33.json同hash33/33，Python oracle核对四模块正常/坏行结果，既有jsonbatch38/jsonflow37/sortviz11仍通过 | 通过 | app/jsonbatch_modules/及verify_jsonbatch_modules.py（app-dev）、独立app33证据 | 5 |
+
+复跑须恢复该C冻结源码/字节和对应工具链、使用不存在的项目Temp输出路径，并按环境权限控制执行；后继T17工作树/新错误类不能冒充本节599测试时点。
 
 ## T16-B 增量需求（2026-10-30，仅静态模块图通过）
 
