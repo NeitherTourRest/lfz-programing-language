@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-30",
+  "binary_sha256": "1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45",
+  "binary_bytes": 943104,
+  "guide_hashes": {
+    "docs\\guide\\README.md": "c133d196d5418dfbf5ffba322da5245b01f3f644775d27b167810f395c1f7303",
+    "docs\\guide\\reference.md": "5109ff45aabf9366f7cdc1185123813bc5697b2aea03f9436eb017b1c1e71009",
+    "docs\\guide\\tutorial.md": "b9a15478a89fd3e0d8d7e91eb8f78c29f5e1dda984614d92c0d38e56587bf96e",
+    "docs\\guide\\testing.md": "cba211c60f50ad1c1c953c8312cca64cb5ebc494b3eb8985d671d451db4a7161",
+    "docs\\guide\\errors.md": "b4da46c4116fb9b3f5046569386c0ab11ccec36a42ad78dce5255b43680591b5",
+    "docs\\guide\\execution-limits.md": "127a0f957ca613c3d376e363037a600b49a951e042fe5dbbb7d1a1427e1a19c3"
+  },
+  "scope": "affected guide CLI examples; Rust API is normative documentation only; no host token/real-time guarantee tested",
+  "files": {
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "default-partial.json": {
+      "bytes": 12946,
+      "sha256": "b2b90293f97cbb23a2e72ff8cca53156f469b8fddd3432b86796d16fef494f9d"
+    },
+    "default-stderr.txt": {
+      "bytes": 1709,
+      "sha256": "8a0f5f8acc9f44ed284a77f3bf9002548605ab0ea9cdb458ecc8cbaf0bb01b5b"
+    },
+    "runs.json": {
+      "bytes": 13698,
+      "sha256": "1d1a1f40b2edeac0ed08e2107f937f0873a11ba60c04999b97fa757d38f3dd6c"
+    },
+    "verify.py": {
+      "bytes": 5502,
+      "sha256": "175e739991fd38bc3ae6f8f0abda4f052d7a32856355697075f927d3dcf25cc5"
+    }
+  }
+}

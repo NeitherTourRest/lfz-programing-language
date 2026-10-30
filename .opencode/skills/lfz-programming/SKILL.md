@@ -1,6 +1,6 @@
 ---
 name: lfz-programming
-description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也用于回答 LFZ 语法/语义问题。给出 #42 首行铁律、语法速查、12 个错误类清单、LFZ 特有的常见陷阱与可运行示例；在本仓库用 `cargo run --quiet -- run <file.lfz>` 运行。
+description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也用于回答 LFZ 语法/语义问题。给出 #42 首行铁律、语法速查、13 个错误类清单、LFZ 特有的常见陷阱与可运行示例；在本仓库用 `cargo run --quiet -- run <file.lfz>` 运行。
 ---
 
 # LFZ 编程指南（AI 专用）
@@ -99,7 +99,7 @@ print("Hello, LFZ!")
 
 ---
 
-## 2. 错误类清单（12 个具体类 + 基类）
+## 2. 错误类清单（13 个具体类 + 基类）
 
 > 用户可见输出**只有类名 + 中文消息**，**不存在任何编号错误码**（不要写、也不要期待形如「字母-数字」的内置错误编号）。
 > `check` 失败**不抛错**（见 §5）。
@@ -119,6 +119,7 @@ print("Hello, LFZ!")
 | `IOError` | `input()` 遇 EOF；不可读文件 | `输入结束（EOF）`；`无法读取：{path}` | 运行 |
 | `AssertionError` | **仅** `assert(cond,msg)` 失败 或 `fail(msg)` | `断言失败：{msg}`；`{msg}`（`fail`） | 运行 |
 | `RecursionError` | 求值帧深度 > 10000，或深结构处理超限 | `递归深度超限（超过 10000 层）` | 运行 |
+| `ExecutionLimitError` | 求值步数耗尽、取消token或deadline | `执行步数预算已耗尽` / `执行已取消` / `执行时间上限已到` | 运行（T17） |
 
 **实测消息样本**（`--json` → 退出码均为 `2`）：
 
@@ -881,3 +882,28 @@ print(jsonStringify({answer: lib.add(2), args: argv(), shared: lib.shared}))
 - Rust嵌入：旧eval_module*只保留无模块行为，带模块Program仍guard拒绝。构建ModuleGraph，在on_eval_stack内调用eval_graph_traced_on_thread_with_args(&graph,&args)，parse/build/eval/drop均同大栈；不能重读图文件或克隆所有Program。外层GraphExecutionError::InvalidGraph/Origins是宿主不变量错误（CLI stdout空/stderr宿主异常/exit2），内层TracedRun.result才是LFZ错误，不被attempt吞宿主错。UserFn手写literal按§19补home_module；StructDef按§21补default_context，旧struct_def/struct_template helper保持None，graph使用TemplateContext与struct_template_in_context。ModuleId与SourceId不可互换，无Loaded不能借其它文件画下划线。
 
 完整人类示例见docs/guide/modules.md；本AI新增作者实跑见docs/reports/T16-C-skill-evidence.md。R304仍OPEN，无C性能成绩，不声明正式发布；不改写旧v2成绩与输入。
+
+
+## 6.5 T17：Agent先检查，再带执行限额运行
+
+三spec §22为唯一精确契约。内置仍73，新增第13个错误类ExecutionLimitError（旧12类消息与触发保持）。先`lfz check --json job.lfz`，通过后才运行`lfz --max-steps 200 --timeout-ms 1000 run job.lfz`，最后核业务结果及已发生副作用。检查成功只代表前端/模块图通过；不要给check传执行限额。
+
+```lfz
+#42
+let total = sum([1, 2, 3])
+print(total)
+```
+
+`--max-steps N`、`--timeout-ms N`仅支持独立两token，每项至多一次；N为非空ASCII数字且可表示为u64，允许0/前导0。拒绝符号/空白/小数/下划线/溢出；**等号写法全部拒绝**（含空值），精确usage消息为`选项 '--max-steps' 不支持等号写法，请使用 '--max-steps N'`，另flag同形。等号族扫描到立即报usage，不能由--help/--version忽略。选项可在执行来源前后，与--json组合；语法错误/图验证优先于求值限额。check/test/--help/--version不接受执行限额。使用既有`--help`/`--version`，不新增裸help/version命令或改变同名文件行为。
+
+CODE紧邻-e的一个原始token不再解析为选项，即使恰为--max-steps=1、--timeout-ms或--json；源码中的双负号按旧LFZ语法/求值，不自动成为CLI usage。完整执行来源后的--进入argv保护，之后任何同名flag/等号/空串都原样传入脚本；没有分隔符不得多传脚本参数。
+
+步骤是每次进入exec_stmt和eval_expr各一步，不是源行数/循环次数/CPU指令或每native元素。N允许N次节点进入，下一节点才报耗尽：源码`1`需2步；`let x=1`换行`x`需4步。零语句程序即使步数0或timeout0也成功，不额外poll。空for的循环控制不虚构每轮节点，不能因它迭代多就承诺小预算可终止。每poll优先取消token→deadline→余量0；都未触发才减余量。poll发生于当前节点自身求值副作用之前，已完成父/兄弟节点的副作用不回滚。
+
+资源错误消息固定：步数“执行步数预算已耗尽”、取消“执行已取消”、时间“执行时间上限已到”。CLI运行exit2，--json仍原唯一错误对象、真实line/col/file/traceback，不新增预算统计键；程序输出仍按原机器模式走stderr。**attempt不能捕获ExecutionLimitError，业务恢复不补步、不重置token或延长deadline。**模块初始化、函数、7高阶回调、闭包/方法/graph模板默认值共用session预算，缓存模块不重复初始化。跨模块fault定位真实当前来源，不用caller文件替代；旧attempt三/五/三字段仍无file。
+
+时间上限是协作式求值窗口：CLI在前端（含完整图）成功后、eval前建立Instant deadline；不包含源码加载/解析/静态图/输出渲染。只在stmt/expr边界检查，大range、JSON、排序、format、input/readFile等native可能持续阻塞；若末次native完成后没有下一节点，可能成功返回，即使期间已到期或收到取消。不是硬实时超时、CPU/内存/文件沙箱，也不会强杀解释线程。
+
+取消是**Rust库API**的Arc<AtomicBool> token，host用store(true,Release)，poll load(Acquire)，Interp不reset；不是CLI Ctrl-C新功能。Ctrl-C仍OS默认，不保证结构化Cancelled。EvalLimits{max_steps,deadline,cancel}按值传新*_with_args_and_limits入口；每调用余量独立，Clone只共享token身份，明确复用已取消token则下一节点均取消。旧入口Default unlimited；坏graph仍先返回宿主GraphExecutionError。禁止LFZ Value/Env跨线程共享。精确三个入口签名及大栈职责见interface-contract §22.2，不擅自发明wrapper。
+
+T17作者聚焦实跑见docs/reports/T17-skill-evidence.md。无新增Agent盲测，不改旧v2；R304OPEN，未做本轮性能验收，不宣传unlimited零成本或正式发布。

@@ -116,3 +116,7 @@ CODE外不能传--或脚本参数；检查通过后才按任务授权运行，�
 ## T16-C本地模块补充（2026-10-30）
 
 模块任务按SKILL.md §6.4先检查完整根图再执行；每文件#42，静态相对import/显式export、独立home globals、session缓存与namespace快照/共享边界。模板、跨源诊断、attempt无file和RustAPI迁移均引用三spec §19–21。作者新增实跑见docs/reports/T16-C-skill-evidence.md，不覆盖旧v2成绩，不宣称性能或正式发布。
+
+## T17执行限额补充（2026-10-30）
+
+Agent工作流：先check前端/模块图，再按任务配置--max-steps N与--timeout-ms N运行。只支持两token，等号族拒绝；CODE及--后argv保护。详情SKILL.md §6.5及三spec§22。当前13错误类、73内置，ExecutionLimitError不被attempt吞掉，业务恢复不补预算。截止时间/native阻塞边界是协作式；库取消token不等于CLI Ctrl-C处理。作者新增例证见docs/reports/T17-skill-evidence.md，旧v2不改，R304OPEN。

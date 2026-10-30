@@ -729,3 +729,7 @@ if ($LASTEXITCODE -eq 0) { ./dist/lfz.exe run job.lfz -- '输入' }
 ## T16-C 本地模块
 
 多文件应用使用[模块教程](modules.md)的calc/worker/main示例，先check完整依赖图，再run触发初始化；相对路径基于导入者，所有模块argv属于同一脚本输入。
+
+## T17 执行限额
+
+Agent执行生成的job.lfz时，先check，再run时显式设置预算。check本身不能带限额；不要把步数当循环次数或把timeout当native/IO硬中断。可复制命令及2/4步示例见[执行限额教程](execution-limits.md)。

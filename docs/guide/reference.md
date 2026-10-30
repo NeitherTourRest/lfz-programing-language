@@ -401,3 +401,7 @@ CODE原样保护，即使等于`--json`、`--`、`--help`或空字符串也按�
 ## T16-C 本地模块
 
 模块接口不新增内置：`import lib from "./lib.lfz"`与`export x, f`仅直接顶层；先import再其它语句。namespace快照/共享、函数home globals、graph模板与legacy默认值区别、RustAPI迁移详见[模块教程](modules.md)，规范三spec §20–21。
+
+## T17 执行限额
+
+新增执行CLI两token限额与EvalLimits三个owned入口，不新增内置或LFZ文法。73内置不变，错误类扩为13；旧12类及JSON键保持。精确usage/CODE与argv保护见[执行限额](execution-limits.md)，以三spec §22为准。

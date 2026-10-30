@@ -210,3 +210,7 @@ check不接收脚本参数，CODE外的 `--`（即使空尾）会报参数错误
 ## T16-C 本地模块
 
 本地相对import/export、先check完整依赖图再执行及三文件例子见[模块教程](modules.md)。C候选按单session初始化和home globals执行；最终实跑证据另列，不能用旧B二进制声称模块运行完成。
+
+## T17 执行限额
+
+Agent脚本可先check再用--max-steps N/--timeout-ms N运行，默认unlimited；第13类ExecutionLimitError不会被attempt吞掉。语法、零边界、协作式时间与host取消规则见[执行限额指南](execution-limits.md)。

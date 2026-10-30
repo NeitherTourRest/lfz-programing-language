@@ -374,3 +374,7 @@ SyntaxError、CosmosAnswerError、RecursionError和容量溢出OverflowError不�
 ## T16-C 本地模块
 
 模块图循环/缺导出绑定等在任何初始化前报错，依赖运行错误则带真实来源停止session；读取未导出namespace字段是读取点FieldError。attempt仍不带file，而未捕获CLI错误逐帧文件定位；宿主GraphExecutionError不伪造LFZ错误。详见[模块错误边界](modules.md)。
+
+## T17 执行限额
+
+T17新增ExecutionLimitError（第13类）：执行步数预算已耗尽/执行已取消/执行时间上限已到。原12类字段/行为不变。attempt不能捕获或恢复资源终止，模块与闭包共享限额，真实fault来源沿C；CLI仍exit2和原错误JSON。协作边界与Ctrl-C不作承诺见[限额边界](execution-limits.md)。
