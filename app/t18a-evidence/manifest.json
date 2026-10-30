@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-30",
+  "binary_sha256": "4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86",
+  "fixture_sha256": "51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee",
+  "files": [
+    {
+      "path": "app/toolplan.lfz",
+      "bytes": 1879,
+      "sha256": "b06a9bc3c00dc0822b7a88f5477a9365144a7883b2f783c918f1944cb13a0d65"
+    },
+    {
+      "path": "app/verify_toolplan.py",
+      "bytes": 6650,
+      "sha256": "ff90a2028c7efd4e8bc11e681c9f6cff6760d371a66e1530b894ed2d47ca33ac"
+    },
+    {
+      "path": "app/T18-A-TOOLPLAN.md",
+      "bytes": 4811,
+      "sha256": "578ad42dd0c7237852762f3909545f203d5223e8627acc8789ebd0b4837ee794"
+    },
+    {
+      "path": "app/t18a-evidence/first-results.json",
+      "bytes": 25090,
+      "sha256": "dac79c248aa829a06d8e4de4a2250f18babb861eee32b5de7b3677928388710b"
+    },
+    {
+      "path": "app/t18a-evidence/results.json",
+      "bytes": 25090,
+      "sha256": "dac79c248aa829a06d8e4de4a2250f18babb861eee32b5de7b3677928388710b"
+    }
+  ]
+}

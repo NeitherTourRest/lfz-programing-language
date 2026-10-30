@@ -1,0 +1,38 @@
+#42
+// Explicit local-tool plan. Child outputs are data, never terminal passthrough.
+fn require(ok, message) {
+    if !ok { fail("toolplan: ${message}") }
+}
+fn runJob(job) {
+    let result = attempt(() => exec(job.argv, job.timeoutMs, job.maxOutputBytes))
+    if !result.ok {
+        // A missing session capability is an application configuration failure.
+        if result.error.message == "子进程能力未启用" { fail("toolplan: 需要 --allow-process") }
+    }
+    ({ name: job.name, ok: result.ok, value: result.value, error: result.error })
+}
+fn main(args) {
+    require(len(args) == 2, "用法: toolplan CONFIG.json OUTPUT.json")
+    for path in args { require(len(trim(path)) > 0, "路径不能为空") }
+    require(args[0] != args[1], "配置与输出路径不能字面相同")
+    let jobs = jsonParse(readFile(args[0]))
+    require(type(jobs) == "array", "配置必须是任务array")
+    for job in jobs {
+        require(type(job) == "struct", "任务必须是object")
+        for key in ["name", "argv", "timeoutMs", "maxOutputBytes"] {
+            require(has(key, job), "任务缺少 ${key}")
+        }
+        require(type(job.name) == "string", "任务name必须是string")
+        require(type(job.argv) == "array", "任务argv必须是array")
+        require(type(job.timeoutMs) == "int", "任务timeoutMs必须是int")
+        require(type(job.maxOutputBytes) == "int", "任务maxOutputBytes必须是int")
+    }
+    let rows = map((job) => runJob(job), jobs)
+    let succeeded = len(filter((row) => row.ok, rows))
+    let report = { total: len(rows), succeeded: succeeded, failed: len(rows) - succeeded, rows: rows }
+    let encoded = jsonStringify(report) + "\n"
+    let summary = jsonStringify({ total: len(rows), succeeded: succeeded, failed: len(rows) - succeeded, path: args[1] })
+    writeFile(args[1], encoded)
+    print(summary)
+}
+main(argv())

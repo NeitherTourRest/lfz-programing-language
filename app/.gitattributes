@@ -4,3 +4,6 @@ fixtures/t15/mixed.jsonl -text
 verify_jsonbatch_modules.py -text
 verify_jsonbatch_budgets.py -text
 T17-BUDGETS.md -text
+toolplan.lfz -text
+verify_toolplan.py -text
+T18-A-TOOLPLAN.md -text
