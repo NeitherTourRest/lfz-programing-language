@@ -91,6 +91,7 @@ impl Value {
     /// 构造 `struct` **模板**。
     pub fn struct_def(name: impl Into<Rc<str>>) -> Self {
         Value::StructDef(Rc::new(StructDef {
+            default_context: None,
             name: name.into(),
             fields: Vec::new(),
             methods: Vec::new(),
@@ -107,10 +108,15 @@ impl Value {
         methods: Vec<(Rc<str>, Rc<Closure>)>,
     ) -> Self {
         Value::StructDef(Rc::new(StructDef {
+            default_context: None,
             name: name.into(),
             fields,
             methods,
         }))
+    }
+
+    pub fn struct_template_in_context(name: impl Into<Rc<str>>, fields: Vec<(Rc<str>, Expr)>, methods: Vec<(Rc<str>, Rc<Closure>)>, context: TemplateContext) -> Self {
+        Value::StructDef(Rc::new(StructDef { name:name.into(), fields, methods, default_context:Some(context) }))
     }
 
     // ----- 类型名（§10.7 `type`） -------------------------------------------
@@ -674,6 +680,7 @@ impl StructObj {
 /// （函数值；A5 数据面**不含**，但 `s.m` 仍可取到并调用，`self` 绑定）。
 #[derive(Clone, Debug)]
 pub struct StructDef {
+    pub default_context: Option<TemplateContext>,
     /// 模板名（`;;` 可见绑定，§3.6）。
     pub name: Rc<str>,
     /// `(字段名, 默认值表达式)`，按声明序（实例化时求值）。
@@ -687,6 +694,14 @@ pub struct StructDef {
 /// 携带 `mutable` 标志以支持**闭包内**判定 `let` 重绑定（`semantics.md` §4.5.2）：
 /// 捕获自显式 `let` → `false`，捕获自 `var` / 形参等 → `true`。
 pub type CapturedVar = (Rc<str>, Cell, bool);
+
+#[derive(Clone, Debug)]
+pub struct TemplateContext {
+ pub home_module: crate::source::ModuleId,
+ pub captured: Rc<Vec<CapturedVar>>,
+ pub self_val: Option<Value>,
+ pub defaults_func_id: u32,
+}
 
 /// 用户函数 / 闭包 / lambda 的**运行时载荷**（P3.7 求值器）。
 ///

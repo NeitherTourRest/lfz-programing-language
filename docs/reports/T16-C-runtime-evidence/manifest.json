@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-30",
+  "phase": "runtime library handoff; not final CLI binary acceptance",
+  "lib_tests": {
+    "passed": 456,
+    "failed": 0,
+    "ignored": 0,
+    "new_c_tests": 9,
+    "command": "target/release/deps/lfz-63397fd2d9985014.exe --test-threads=1",
+    "execution": "parent elevated same built harness after sandbox canonicalize PermissionDenied in 8 old module tests"
+  },
+  "harness": {
+    "bytes": 3014656,
+    "sha256": "2b7e947e60a4e57afd2fdbf7142cd360c75a333ae1e982d86ffe38db1436ce90"
+  },
+  "sources": {
+    "src/value.rs": {
+      "bytes": 48864,
+      "sha256": "63967cb79996c7fedfe7285378e58c2774825c73680a81e50c12a185bbe438a0"
+    },
+    "src/evaluator.rs": {
+      "bytes": 182825,
+      "sha256": "a5cf87f647d7c3840c6eb75cd625ce457173e9db592eff5107a781437caa4095"
+    }
+  },
+  "logs": {
+    "green-first.txt": {
+      "bytes": 2100,
+      "sha256": "4cbc13557b9a2d8bccff3f13c4d20bb7aa8367c928be5d54f0c15d5384f6a94b"
+    },
+    "green.txt": {
+      "bytes": 729,
+      "sha256": "997a38f49770c6f04fe0358b2213243e1311e5d43fdc3dd43b571aab47dd291e"
+    },
+    "lib-corrected.txt": {
+      "bytes": 33582,
+      "sha256": "b400e8d23321091273e0a6405af01cce96f2165bb1bc48fb32c8d3603e1ae9af"
+    },
+    "lib-elevated-parent.txt": {
+      "bytes": 30336,
+      "sha256": "c31988544aff8f21d0bf5c1d7c127b84d8bbfdc437a83e009876f6ed611830b0"
+    },
+    "lib.txt": {
+      "bytes": 1221,
+      "sha256": "661f6ebbeae48767dcf1b13f7b67e71e09240ac9867936ba704b3292ba653ec9"
+    },
+    "red.txt": {
+      "bytes": 1226,
+      "sha256": "7e7552e2922c5d8386946c3603c0b63b7eff014933753da81622964f029730f8"
+    },
+    "targeted-corrected.txt": {
+      "bytes": 1296,
+      "sha256": "c313275d3bfc8fcb63e4add7cb062eeb86fb9ce1ee3505c45a10c66c974f5fd2"
+    },
+    "targeted.txt": {
+      "bytes": 2246,
+      "sha256": "7afee4b1d87b1787860fbdee244cfbd6374f3ee652febaca59479612e857b09c"
+    }
+  },
+  "dist_modified": false,
+  "full_release_suite_run": false,
+  "performance_measured": false
+}

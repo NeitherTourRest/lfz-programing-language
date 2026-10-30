@@ -1,0 +1,39 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `release` profile [optimized] target(s) in 24.36s
+     Running unittests src\lib.rs (target\release\deps\lfz-63397fd2d9985014.exe)
+
+running 7 tests
+test evaluator::t16_c_tests::t16_c_invalid_graphs_are_rejected_before_initialization ... ok
+test evaluator::t16_c_tests::t16_c_alias_snapshot_self_and_argv_are_shared_per_session ... ok
+test evaluator::t16_c_tests::t16_c_initialization_failure_never_runs_entry ... ok
+test evaluator::t16_c_tests::t16_c_attempt_restores_module_source_and_keeps_escaped_function_id ... ok
+test evaluator::t16_c_tests::t16_c_defaults_use_home_and_capture_while_overrides_use_caller ... FAILED
+test evaluator::t16_c_tests::t16_c_error_and_default_frames_have_definition_source ... FAILED
+test evaluator::t16_c_tests::t16_c_module_globals_and_session_isolation ... ok
+
+failures:
+
+---- evaluator::t16_c_tests::t16_c_defaults_use_home_and_capture_while_overrides_use_caller stdout ----
+
+thread '<unnamed>' panicked at src\evaluator.rs:4392:129:
+called `Result::unwrap()` on an `Err` value: Syntax { msg: UnexpectedToken { expected: "':'", got: "'='" }, span: Span { line: 2, col: 12 } }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- evaluator::t16_c_tests::t16_c_error_and_default_frames_have_definition_source stdout ----
+
+thread '<unnamed>' panicked at src\evaluator.rs:4392:129:
+called `Result::unwrap()` on an `Err` value: Syntax { msg: UnexpectedToken { expected: "':'", got: "'='" }, span: Span { line: 1, col: 11 } }
+
+
+failures:
+    evaluator::t16_c_tests::t16_c_defaults_use_home_and_capture_while_overrides_use_caller
+    evaluator::t16_c_tests::t16_c_error_and_default_frames_have_definition_source
+
+test result: FAILED. 5 passed; 2 failed; 0 ignored; 0 measured; 447 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

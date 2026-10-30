@@ -1,0 +1,17 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+error[E0425]: cannot find function `eval_graph_traced_on_thread_with_args` in this scope
+    --> src\evaluator.rs:4304:34
+     |
+ 312 | pub fn eval_module_traced_on_thread_with_args(program: &Program, args: &[String]) -> TracedRun {
+     | ---------------------------------------------------------------------------------------------- similarly named function `eval_module_traced_on_thread_with_args` defined here
+...
+4304 |   for _ in 0..2 {on_eval_stack(||eval_graph_traced_on_thread_with_args(&g,&[])).unwrap().result.unwrap();}
+     |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: a function with a similar name exists: `eval_module_traced_on_thread_with_args`
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `lfz` (lib test) due to 1 previous error

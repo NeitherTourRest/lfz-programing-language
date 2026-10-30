@@ -172,6 +172,76 @@ impl TracedRun {
     }
 }
 
+#[derive(Debug)]
+pub enum GraphExecutionError { InvalidGraph { reason: String }, Origins(crate::source::SourceMetadataError) }
+impl std::fmt::Display for GraphExecutionError {
+ fn fmt(&self,f:&mut std::fmt::Formatter<'_>)->std::fmt::Result {match self{Self::InvalidGraph{reason}=>write!(f,"{reason}"),Self::Origins(e)=>write!(f,"来源元数据不一致：{e:?}")}}
+}
+impl std::error::Error for GraphExecutionError {}
+fn invalid_graph(reason:&str)->GraphExecutionError{GraphExecutionError::InvalidGraph{reason:reason.into()}}
+fn validate_execution_graph(g:&crate::modules::ModuleGraph)->Result<(),GraphExecutionError>{
+ use std::collections::HashSet;
+ let n=g.units.len();if n==0||g.entry.0 as usize>=n||g.initialization_order.len()!=n{return Err(invalid_graph("模块集合或初始化顺序无效"));}
+ let mut position=vec![usize::MAX;n];
+ for (p,id) in g.initialization_order.iter().enumerate(){let i=id.0 as usize;if i>=n||position[i]!=usize::MAX{return Err(invalid_graph("初始化顺序不是排列"));}position[i]=p;}
+ if g.initialization_order.last()!=Some(&g.entry){return Err(invalid_graph("入口必须最后初始化"));}
+ let mut sources=HashSet::new();
+ for (index,u) in g.units.iter().enumerate(){
+  if u.id.0 as usize!=index||!sources.insert(u.source_id)||g.sources.get(u.source_id).and_then(|s|s.loaded.as_ref()).is_none(){return Err(invalid_graph("模块身份或来源无效"));}
+  let mut bindings=HashSet::new();let mut imports=vec![];let mut exports=vec![];let mut other=false;
+  for s in &u.program.stmts {match &s.node{
+   StmtKind::ImportDecl(d)=>{if other{return Err(invalid_graph("导入顺序无效"));}imports.push((d,s.span));bindings.insert(d.alias.as_str());},
+   StmtKind::ExportDecl(d)=>{other=true;for name in &d.names{exports.push(name);}},
+   StmtKind::Decl{name,..}=>{other=true;bindings.insert(name.as_str());},
+   StmtKind::FnDecl(d)=>{other=true;bindings.insert(d.name.as_str());},
+   StmtKind::StructDecl(d)=>{other=true;bindings.insert(d.name.as_str());},_=>{other=true;}
+  }}
+  if imports.len()!=u.imports.len()||exports.len()!=u.exports.len(){return Err(invalid_graph("声明元数据数量不一致"));}
+  let mut aliases=HashSet::new();
+  for ((d,span),r) in imports.iter().zip(&u.imports){
+   let target=r.target.0 as usize;
+   if target>=n||position[target]>=position[index]||d.alias!=r.alias||d.alias_span!=r.alias_span||d.path_span!=r.path_span||*span!=r.span||!aliases.insert(d.alias.as_str()){return Err(invalid_graph("导入元数据无效"));}
+  }
+  for s in &u.program.stmts{let name=match &s.node{StmtKind::Decl{name,..}=>Some(name.as_str()),StmtKind::FnDecl(d)=>Some(d.name.as_str()),StmtKind::StructDecl(d)=>Some(d.name.as_str()),_=>None};if name.is_some_and(|n|aliases.contains(n)){return Err(invalid_graph("导入绑定冲突"));}}
+  let mut seen=HashSet::new();for (d,r) in exports.iter().zip(&u.exports){if d.name!=r.name||d.span!=r.span||!bindings.contains(d.name.as_str())||!seen.insert(d.name.as_str()){return Err(invalid_graph("导出元数据无效"));}}
+ }
+ Ok(())
+}
+#[derive(Clone,Copy,PartialEq)]
+enum ModuleState{Uninitialized,Initializing,Ready,Failed}
+struct ModuleInstance{env:Rc<RefCell<Env>>,namespace:Option<Value>,state:ModuleState,source:crate::source::SourceId}
+/// 调用者必须在大栈内持有并析构graph；不重新读取或解析。
+pub fn eval_graph_traced_on_thread_with_args(g:&crate::modules::ModuleGraph,args:&[String])->Result<TracedRun,GraphExecutionError>{
+ validate_execution_graph(g)?;
+ let mut i=Interp::new();i.script_args=args.iter().map(|s|Value::string(s.clone())).collect();
+ i.modules=Some(g.units.iter().map(|u|ModuleInstance{env:Env::root(),namespace:None,state:ModuleState::Uninitialized,source:u.source_id}).collect());
+ let mut result=Ok(Value::Nil);
+ for id in &g.initialization_order{
+  let unit=&g.units[id.0 as usize];
+  i.active_module=*id;i.globals=Rc::clone(&i.modules.as_ref().unwrap()[id.0 as usize].env);
+  i.modules.as_mut().unwrap()[id.0 as usize].state=ModuleState::Initializing;
+  for import in &unit.imports{
+   let target=&i.modules.as_ref().unwrap()[import.target.0 as usize];
+   if target.state!=ModuleState::Ready{return Err(invalid_graph("依赖尚未初始化"));}
+   let ns=target.namespace.as_ref().ok_or_else(||invalid_graph("缺少模块命名空间"))?.clone();
+   i.globals.borrow_mut().define_named(&import.alias,ns,false);
+  }
+  let scope=Scope{env:Rc::clone(&i.globals),captured:Rc::new(vec![]),self_val:None};
+  let at=unit.program.stmts.first().map_or(unit.program.span,|s|s.span);
+  i.trace.push(TraceFrame{func_id:MODULE_FUNC_ID,span:at});i.trace_sources.push(unit.source_id);
+  result=i.exec_stmts(&unit.program.stmts,&scope).map(|f|match f{Flow::Value(v)|Flow::Return(v)=>v,_=>Value::Nil});
+  if result.is_err(){i.modules.as_mut().unwrap()[id.0 as usize].state=ModuleState::Failed;break;}
+  let mut entries=vec![];
+  for export in &unit.exports{let value={let env=i.globals.borrow();env.local_index(&export.name).and_then(|n|env.get_local(n))}.ok_or_else(||invalid_graph("导出绑定在初始化后缺失"))?;entries.push((export.name.clone(),value));}
+  let m=&mut i.modules.as_mut().unwrap()[id.0 as usize];m.namespace=Some(Value::object(entries));m.state=ModuleState::Ready;
+  i.trace.pop();i.trace_sources.pop();
+ }
+ let error_source=if result.is_err(){i.fault_source.or_else(||i.trace_sources.last().copied())}else{None};
+ let mut out=TracedRun{result,frames:i.trace,func_names:i.func_names,origins:None};
+ out.attach_origins(Rc::clone(&g.sources),i.trace_sources,error_source).map_err(GraphExecutionError::Origins)?;
+ Ok(out)
+}
+
 /// 渲染 `;;` 的可见变量（**纯函数**，便于单测；§3.6）。
 ///
 /// - `entries` 须**已按 §3.6 排序**（作用域内→外、同层 slot 升序、遮蔽去重）；
@@ -424,6 +494,9 @@ enum AssignOutcome {
 
 /// 树遍历解释器：模块全局环境 + 单调递增的 `func_id` 分配器 + traceback 帧栈。
 struct Interp {
+    modules: Option<Vec<ModuleInstance>>,
+    trace_sources: Vec<crate::source::SourceId>,
+    fault_source: Option<crate::source::SourceId>,
     active_module: crate::source::ModuleId,
     /// 模块顶层作用域（globals）；所有函数调用帧直接挂在它之下。
     globals: Rc<RefCell<Env>>,
@@ -446,6 +519,7 @@ impl Interp {
         Self {
             script_args: Vec::new(),
             argv_function: Value::function(argv_closure),
+            modules: None, trace_sources: vec![], fault_source: None,
             active_module: crate::source::ModuleId::ENTRY,
             globals: Env::root(),
             next_func_id: 1,
@@ -465,6 +539,7 @@ impl Interp {
     /// 错误最深处的 `span` 即「引发错误的最小 AST 节点」；错误沿调用链冒泡时该 `span` 不变，
     /// 故重复覆盖到同一值是无害的（`call_user` 出错时不弹帧，当前帧恒为最内层帧）。
     fn note_error_span(&mut self, e: &LzError) {
+        if self.modules.is_some() && self.fault_source.is_none() { self.fault_source = self.trace_sources.last().copied(); }
         if let Some(span) = e.span() {
             if let Some(top) = self.trace.last_mut() {
                 top.span = span;
@@ -738,9 +813,9 @@ impl Interp {
                 }
                 Ok(Flow::Value(Value::Nil))
             }
-            StmtKind::ImportDecl(_) | StmtKind::ExportDecl(_) => Err(Box::new(LzError::Syntax {
+            StmtKind::ImportDecl(_) | StmtKind::ExportDecl(_) => if self.modules.is_some() { Ok(Flow::Value(Value::Nil)) } else { Err(Box::new(LzError::Syntax {
                 msg: crate::error::SyntaxMsg::ModuleExecutionUnavailable, span: stmt.span,
-            })),
+            })) },
             StmtKind::Expr(e) => self.eval_expr(e, scope),
         }
     }
@@ -854,7 +929,11 @@ impl Interp {
                 }
             }
         }
-        let def = Value::struct_template(sd.name.as_str(), fields, methods);
+        let def = if self.modules.is_some() {
+            let dummy=self.make_closure(Some(&format!("{}::<defaults>",sd.name)),vec![],Body::Block(Block{span:Span::START,stmts:vec![]}),scope);
+            let Value::Func(cl)=dummy else {unreachable!()};let u=cl.user.as_ref().unwrap();
+            Value::struct_template_in_context(sd.name.as_str(),fields,methods,crate::value::TemplateContext{home_module:u.home_module,captured:Rc::clone(&u.captured),self_val:u.self_val.clone(),defaults_func_id:u.func_id})
+        } else { Value::struct_template(sd.name.as_str(), fields, methods) };
         let idx = scope.env.borrow().local_index(&sd.name);
         if let Some(i) = idx {
             scope.env.borrow_mut().set_local(i, def);
@@ -1190,13 +1269,32 @@ impl Interp {
                 other => return Err(bad_operands("{}", other.type_name(), "struct 模板", span)),
             };
             // 模板字段默认值：按声明序**重新求值**（可变默认每实例各一份，§4.5.8）。
-            for (fname, expr) in &def.fields {
-                let v = match self.eval_expr(expr, scope)? {
-                    Flow::Value(v) => v,
-                    f => return Ok(f),
-                };
-                obj.set(fname, v);
-            }
+            let context=def.default_context.as_ref().filter(|_|!def.fields.is_empty());
+            let saved=(self.active_module,Rc::clone(&self.globals));
+            let defaults_scope;
+            let use_scope=if let Some(c)=context {
+                if self.depth>=RECURSION_LIMIT{return Err(recursion(self.depth+1,RECURSION_LIMIT,span));}
+                if let Some(top)=self.trace.last_mut(){top.span=span;}
+                self.depth+=1;self.active_module=c.home_module;
+                self.globals=Rc::clone(&self.modules.as_ref().unwrap()[c.home_module.0 as usize].env);
+                defaults_scope=Scope{env:Rc::clone(&self.globals),captured:Rc::clone(&c.captured),self_val:c.self_val.clone()};
+                self.trace.push(TraceFrame{func_id:c.defaults_func_id,span:def.fields[0].1.span});
+                self.trace_sources.push(self.modules.as_ref().unwrap()[c.home_module.0 as usize].source);
+                &defaults_scope
+            } else {scope};
+            let outcome=(|| -> R<Flow> {
+                for (fname,expr) in &def.fields {
+                    if context.is_some(){if let Some(top)=self.trace.last_mut(){top.span=expr.span;}}
+                    let v=match self.eval_expr(expr,use_scope)?{Flow::Value(v)=>v,f=>return Ok(f)};
+                    obj.set(fname,v);
+                }
+                Ok(Flow::Value(Value::Nil))
+            })();
+            if context.is_some(){self.active_module=saved.0;self.globals=saved.1;}
+            match outcome {Err(e)=>return Err(e),Ok(f)=>{
+                if context.is_some(){self.trace.pop();self.trace_sources.pop();self.depth-=1;}
+                if !matches!(f,Flow::Value(_)){return Ok(f);}
+            }}
             // 方法随实例可用（函数值字段；A5 数据面不含）。
             for (mname, cl) in &def.methods {
                 obj.set(mname, Value::Func(Rc::clone(cl)));
@@ -1385,6 +1483,8 @@ impl Interp {
                 return Err(type_error(TypeMsg::ArgCount { name: cl.name.as_deref().unwrap_or("<fn>").into(), n: user.params.len(), m: 0 }, span));
             }
         }
+        let saved_sources=self.trace_sources.clone(); let saved_fault=self.fault_source;
+        let saved_module=self.active_module;let saved_globals=Rc::clone(&self.globals);
         let saved_trace = self.trace.clone();
         let saved_depth = self.depth;
         let result = match self.call_value(&args[0], &[], span) {
@@ -1411,6 +1511,8 @@ impl Interp {
             }
             Err(error) => return Err(error), // 原样保留故障帧，不吞终止类错误。
         };
+        self.trace_sources=saved_sources;self.fault_source=saved_fault;
+        self.active_module=saved_module;self.globals=saved_globals;
         self.trace = saved_trace;
         self.depth = saved_depth;
         Ok(result)
@@ -1462,6 +1564,8 @@ impl Interp {
             return Err(recursion(self.depth + 1, RECURSION_LIMIT, span));
         }
         self.depth += 1;
+        let caller_module=self.active_module;let caller_globals=Rc::clone(&self.globals);
+        if let Some(modules)=&self.modules { self.active_module=user.home_module;self.globals=Rc::clone(&modules[user.home_module.0 as usize].env); }
         // 调用帧直接挂在 globals 之下；自由局部经捕获 cell 解析（§4.5.3）。
         let frame = Env::child_after(&self.globals);
         for (p, a) in user.params.iter().zip(argv.into_iter()) {
@@ -1481,19 +1585,13 @@ impl Interp {
             func_id: user.func_id,
             span: body_first_span(&user.body),
         });
-        let outcome = match &user.body {
-            // 函数体块直接在帧作用域执行（参数与体局部同帧）。
-            Body::Block(b) => match self.exec_stmts(&b.stmts, &scope)? {
-                Flow::Value(v) => Ok(v),
-                Flow::Return(v) => Ok(v),
-                Flow::Break | Flow::Continue => Ok(Value::Nil), // parser 已拒绝；防御
-            },
-            Body::Expr(e) => match self.eval_expr(e, &scope)? {
-                Flow::Value(v) => Ok(v),
-                Flow::Return(v) => Ok(v),
-                Flow::Break | Flow::Continue => Ok(Value::Nil),
-            },
+        if let Some(modules)=&self.modules { self.trace_sources.push(modules[self.active_module.0 as usize].source); }
+        let body_result = match &user.body { Body::Block(b)=>self.exec_stmts(&b.stmts,&scope),Body::Expr(e)=>self.eval_expr(e,&scope) };
+        self.active_module=caller_module;self.globals=caller_globals;
+        let outcome = match body_result {
+            Ok(Flow::Value(v))|Ok(Flow::Return(v))=>Ok(v),Ok(_)=>Ok(Value::Nil),Err(e)=>return Err(e),
         };
+        if self.modules.is_some(){ self.trace_sources.pop(); }
         // 仅**成功**返回时弹帧 / 退深度；出错时经 `?` 提前返回，帧栈保留供 traceback（§8.2）。
         self.trace.pop();
         self.depth -= 1;
@@ -4281,4 +4379,90 @@ mod t16_b_execution_guard_tests {
         let p = parse("let export = 2\nexport + 1");
         assert_eq!(eval_module(&p).unwrap().to_string(), "3");
     }
+}
+
+#[cfg(test)]
+mod t16_c_tests {
+ use super::*;
+ use crate::modules::*;
+ use crate::source::*;
+ fn graph(texts:&[&str]) -> ModuleGraph {
+  let mut sources=SourceMap::new();let mut units=vec![];
+  for (i,text) in texts.iter().enumerate(){
+   let loaded=crate::loader::load_source(text).unwrap();let p=crate::parser::parse(&crate::lexer::lex(&loaded.text,0).unwrap()).unwrap();
+   let sid=sources.insert(SourceRecord{identity:None,display_path:format!("m{i}.lfz"),loaded:Some(loaded)}).unwrap();
+   let imports=p.stmts.iter().filter_map(|s|if let StmtKind::ImportDecl(d)=&s.node{Some(ResolvedImport{alias:d.alias.clone(),alias_span:d.alias_span,path_span:d.path_span,target:ModuleId(1),span:s.span})}else{None}).collect();
+   let exports=p.stmts.iter().flat_map(|s|if let StmtKind::ExportDecl(d)=&s.node{d.names.iter().map(|n|ExportBinding{name:n.name.clone(),span:n.span}).collect::<Vec<_>>()}else{vec![]}).collect();
+   units.push(ModuleUnit{id:ModuleId(i as u32),source_id:sid,program:p,imports,exports});
+  }
+  ModuleGraph{sources:Rc::new(sources),initialization_order:(0..texts.len()).rev().map(|i|ModuleId(i as u32)).collect(),entry:ModuleId::ENTRY,units}
+ }
+ #[test] fn t16_c_module_globals_and_session_isolation(){
+  for _ in 0..2 {on_eval_stack(|| { let g=graph(&["import lib from \"./lib.lfz\"\nlet n=100\nassert(lib.inc()==4)\nassert(lib.inc()==5)","var n=3\nfn inc(){n+=1\n n}\nexport inc"]);
+  eval_graph_traced_on_thread_with_args(&g,&[]).unwrap().result.unwrap(); });}
+ }
+
+ #[test] fn t16_c_defaults_use_home_and_capture_while_overrides_use_caller(){on_eval_stack(||{
+  let g=graph(&["import lib from \"./lib.lfz\"\nlet n=100\nlet P=lib.P\nassert(P{}.x==7)\nassert(P{x:n}.x==100)\nlet maker=lib.maker\nlet Q=maker(9)\nassert(Q{}.x==9)","let n=7\nstruct P {x:n}\nfn maker(v){struct Q{x:v}\n Q}\nexport P,maker"]);
+  eval_graph_traced_on_thread_with_args(&g,&[]).unwrap().result.unwrap();
+ });}
+ #[test] fn t16_c_attempt_restores_module_source_and_keeps_escaped_function_id(){on_eval_stack(||{
+  let g=graph(&["import lib from \"./lib.lfz\"\nlet n=90\nlet r=attempt(()=>lib.bad())\nassert(!r.ok)\nassert(n==90)\nassert(lib.saved[0]()==8)\nmissing_final","let n=8\nlet saved=[nil]\nfn bad(){saved[0]=()=>n\n 1/0}\nexport bad,saved"]);
+  let out=eval_graph_traced_on_thread_with_args(&g,&[]).unwrap();
+  assert_eq!(out.result.as_ref().unwrap_err().class_name(),"NameError");
+  assert_eq!(out.frames.len(),1);assert_eq!(out.error_source().unwrap().display_path,"m0.lfz");
+ });}
+ #[test] fn t16_c_error_and_default_frames_have_definition_source(){on_eval_stack(||{
+  for (root,dep,expected) in [
+   ("import lib from \"./lib.lfz\"\nlib.bad()","fn bad()=>1/0\nexport bad","bad"),
+   ("import lib from \"./lib.lfz\"\nlet P=lib.P\nP{}","struct P{x:1/0}\nexport P","P::<defaults>")
+  ]{
+   let g=graph(&[root,dep]);let out=eval_graph_traced_on_thread_with_args(&g,&[]).unwrap();
+   assert_eq!(out.result.as_ref().unwrap_err().class_name(),"ZeroDivisionError");
+   assert_eq!(out.error_source().unwrap().display_path,"m1.lfz");
+   assert_eq!(out.frame_source(0).unwrap().display_path,"m0.lfz");
+   assert_eq!(out.frame_source(1).unwrap().display_path,"m1.lfz");
+   assert_eq!(out.frame_name(&out.frames[1]).as_ref(),expected);
+  }
+ });}
+ #[test] fn t16_c_alias_snapshot_self_and_argv_are_shared_per_session(){on_eval_stack(||{
+  let g=graph(&["import lib from \"./lib.lfz\"\nlet same=lib\nassert(lib.a==1)\nassert(lib.inc()==2)\nassert(lib.a==1)\nsame.a=50\nassert(lib.a==50)\nassert(lib.arg()[0]==\"x\")\nassert(lib.method()==50)","var a=1\nfn inc(){a+=1\n a}\nfn arg()=>argv()\nfn method()=>self.a\nexport a,inc,arg,method"]);
+  eval_graph_traced_on_thread_with_args(&g,&["x".into()]).unwrap().result.unwrap();
+ });}
+ #[test] fn t16_c_invalid_graphs_are_rejected_before_initialization(){on_eval_stack(||{
+  for mutation in 0..7{
+   let mut g=graph(&["import lib from \"./lib.lfz\"\nmissing_root","missing_dep\nexport missing_dep"]);
+   match mutation{
+    0=>g.entry=ModuleId(99),1=>g.units[1].id=ModuleId(0),2=>g.units[1].source_id=g.units[0].source_id,
+    3=>g.initialization_order=vec![ModuleId(0),ModuleId(1)],4=>g.units[0].imports[0].alias="changed".into(),
+    5=>g.units[1].exports[0].name="changed".into(),_=>g.units[0].imports[0].target=ModuleId(99)
+   }
+   assert!(matches!(eval_graph_traced_on_thread_with_args(&g,&[]),Err(GraphExecutionError::InvalidGraph{..})));
+  }
+ });}
+ #[test] fn t16_c_initialization_failure_never_runs_entry(){on_eval_stack(||{
+  let g=graph(&["import lib from \"./lib.lfz\"\nfail(\"entry must not execute\")","missing_dependency"]);
+  let out=eval_graph_traced_on_thread_with_args(&g,&[]).unwrap();
+  assert_eq!(out.result.as_ref().unwrap_err().class_name(),"NameError");
+  assert_eq!(out.frames.len(),1);assert_eq!(out.error_source().unwrap().display_path,"m1.lfz");
+ });}
+
+ #[test] fn t16_c_defaults_resource_check_precedes_home_switch(){on_eval_stack(||{
+  let g=graph(&["struct P{x:1}\nP"]);
+  let value=eval_graph_traced_on_thread_with_args(&g,&[]).unwrap().result.unwrap();
+  let mut i=Interp::new();i.globals.borrow_mut().define_named("P",value,false);
+  i.modules=Some(vec![ModuleInstance{env:Rc::clone(&i.globals),namespace:None,state:ModuleState::Ready,source:SourceId(0)}]);
+  let scope=Scope{env:Rc::clone(&i.globals),captured:Rc::new(vec![]),self_val:None};
+  let p=crate::parser::parse(&crate::lexer::lex("P{}",0).unwrap()).unwrap();
+  let StmtKind::Expr(expr)=&p.stmts[0].node else{panic!("expression")};
+  let saved=TraceFrame{func_id:0,span:Span::new(11,7)};
+  i.trace.push(saved);i.trace_sources.push(SourceId(0));i.depth=RECURSION_LIMIT;
+  let error=match i.eval_expr(expr,&scope){Err(e)=>e,Ok(_)=>panic!("expected resource error")};assert_eq!(error.class_name(),"RecursionError");
+  assert_eq!(i.depth,RECURSION_LIMIT);assert_eq!(i.trace.len(),1);assert_eq!(i.trace_sources,vec![SourceId(0)]);
+  assert_eq!(i.active_module,ModuleId::ENTRY);
+ });}
+ #[test] fn t16_c_default_return_propagates_to_enclosing_function(){on_eval_stack(||{
+  let g=graph(&["fn build(){struct P{x:if true {return 7}}\n P{}\n 99}\nassert(build()==7)"]);
+  eval_graph_traced_on_thread_with_args(&g,&[]).unwrap().result.unwrap();
+ });}
 }

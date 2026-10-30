@@ -109,6 +109,10 @@ pub fn run(args: &[String], json: bool, out: &mut dyn Write, err: &mut dyn Write
     let mut docs: Vec<Json> = Vec::with_capacity(cases.len());
     for case in &cases {
         let eval = cli::eval_case(&case.path);
+        if let Some(detail) = eval.host_failure() {
+            let _=writeln!(err, "lfz: 模块执行上下文无效：{detail}");
+            return cli::EXIT_ERROR;
+        }
         match judge(&eval, case.expect.as_deref()) {
             Verdict::Pass => {
                 passed += 1;
@@ -182,6 +186,7 @@ fn case_json(case: &Case, verdict: &str, eval: Option<&CaseEval>) -> Json {
 
 /// 判定单用例（契约见模块头表）。
 fn judge(eval: &CaseEval, expect: Option<&str>) -> Verdict {
+    if eval.host_failure().is_some() { return Verdict::Error; }
     let class = eval.error_class();
     match expect {
         // 负例（T-R2）：类名一致 → 通过；未报错或类名不符 → 失败。
@@ -673,5 +678,21 @@ mod tests {
         assert_eq!(code, cli::EXIT_ERROR);
         assert!(out.is_empty(), "环境错误时 stdout 应为空：out={out}");
         assert!(err.contains("未发现任何测试用例"), "err={err}");
+    }
+}
+
+#[cfg(test)]
+mod t16c_host_tests {
+    use super::*;
+    #[test]
+    fn host_failure_is_not_a_passing_case_even_without_lfz_error_class() {
+        let result=CaseEval::HostFailure("synthetic bad graph".to_string());
+        assert_eq!(result.error_class(),None);
+        assert!(matches!(judge(&result,None),Verdict::Error));
+        assert!(matches!(judge(&result,Some("SyntaxError")),Verdict::Error));
+        assert_eq!(result.host_failure(),Some("synthetic bad graph"));
+        let located=CaseEval::Located { path:"dependency.lfz".into(), inner:Box::new(result) };
+        assert_eq!(located.host_failure(),Some("synthetic bad graph"));
+        assert!(matches!(judge(&located,None),Verdict::Error));
     }
 }

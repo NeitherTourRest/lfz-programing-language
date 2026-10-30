@@ -291,6 +291,8 @@ fn parse_check_input(args: &[String]) -> Result<CheckInput, String> {
 pub(crate) enum CaseEval {
     /// run/test完成加载到求值；CLI check仅完成加载到语法，不表示运行成功。
     Passed,
+    HostFailure(String),
+    Located { path: String, inner: Box<CaseEval> },
     /// 某阶段抛 `LfzError`。
     Failed {
         /// 该错误（已从 `Box` 解出）。
@@ -303,10 +305,16 @@ pub(crate) enum CaseEval {
 }
 
 impl CaseEval {
+    pub(crate) fn host_failure(&self) -> Option<&str> {
+        match self { Self::HostFailure(detail) => Some(detail), Self::Located { inner, .. } => inner.host_failure(), _ => None }
+    }
+
     /// 错误的**类名**（`Passed` → `None`）。
     #[must_use]
     pub(crate) fn error_class(&self) -> Option<&'static str> {
         match self {
+            CaseEval::HostFailure(_) => None,
+            CaseEval::Located { inner, .. } => inner.error_class(),
             CaseEval::Passed => None,
             CaseEval::Failed { err, .. } => Some(err.class_name()),
         }
@@ -316,6 +324,8 @@ impl CaseEval {
     #[must_use]
     pub(crate) fn error(&self) -> Option<&LzError> {
         match self {
+            CaseEval::HostFailure(_) => None,
+            CaseEval::Located { inner, .. } => inner.error(),
             CaseEval::Passed => None,
             CaseEval::Failed { err, .. } => Some(err),
         }
@@ -325,9 +335,12 @@ impl CaseEval {
     #[must_use]
     pub(crate) fn render(&self, path: &str) -> Option<String> {
         match self {
+            CaseEval::HostFailure(detail) => Some(format!("lfz: 模块执行上下文无效：{detail}\n")),
+            CaseEval::Located { path, inner } => inner.render(path),
             CaseEval::Passed => None,
             CaseEval::Failed { err, loaded, traced } => {
-                Some(render_error(path, loaded.as_ref(), err, traced.as_ref()))
+                let origin = traced.as_ref().and_then(|r| r.error_source());
+                Some(render_error(origin.map_or(path, |s| s.display_path.as_str()), origin.map_or(loaded.as_ref(), |s| s.loaded.as_ref()), err, traced.as_ref()))
             }
         }
     }
@@ -355,9 +368,11 @@ pub(crate) fn error_json(path: &str, eval: &CaseEval) -> Json {
 /// - `line` / `col` 取 [`LzError::span`]；`Io` 无 span 时输出 `null`；
 /// - `traceback` 为**自最外层到最内层**的完整帧表（**不折叠**，§8.4）。
 pub(crate) fn push_error_fields(fields: &mut Vec<(String, Json)>, path: &str, eval: &CaseEval) {
+    if let CaseEval::Located { path, inner } = eval { push_error_fields(fields, path, inner); return; }
     let CaseEval::Failed { err, traced, .. } = eval else {
         return;
     };
+    let path = traced.as_ref().and_then(|r| r.error_source()).map_or(path, |s| s.display_path.as_str());
     fields.push(("error".to_string(), Json::Str(err.class_name().to_string())));
     fields.push(("message".to_string(), Json::Str(err.message())));
     fields.push(("file".to_string(), Json::Str(path.to_string())));
@@ -394,9 +409,10 @@ pub(crate) fn traceback_json(
         Some(run) => Json::Arr(
             run.frames
                 .iter()
-                .map(|frame| {
+                .enumerate()
+                .map(|(index, frame)| {
                     Json::Obj(vec![
-                        ("file".to_string(), Json::Str(path.to_string())),
+                        ("file".to_string(), Json::Str(run.frame_source(index).map_or(path, |s| s.display_path.as_str()).to_string())),
                         ("line".to_string(), Json::Int(i64::from(frame.span.line))),
                         (
                             "func".to_string(),
@@ -431,11 +447,11 @@ pub(crate) fn eval_case(path: &str) -> CaseEval {
 
 /// [`eval_case`] 的流水线体（在 [`evaluator::on_eval_stack`] 的大栈线程上运行）。
 fn eval_file_with_args(path: &str, args: &[String]) -> CaseEval {
-    evaluator::on_eval_stack(|| eval_loaded_on_stack(loader::load_file(path), args))
+    evaluator::on_eval_stack(|| eval_loaded_on_stack(loader::load_file_counted(path), args, path, true, std::env::current_dir()))
 }
 
 /// 文件、代码和stdin共用已加载源码流水线；调用者须位于大栈。
-fn eval_loaded_on_stack(loaded: lfz::error::R<Loaded>, args: &[String]) -> CaseEval {
+fn eval_loaded_on_stack(loaded: lfz::error::R<loader::CountedLoaded>, args: &[String], path: &str, file_input: bool, cwd: std::io::Result<std::path::PathBuf>) -> CaseEval {
     let loaded = match loaded {
         Ok(l) => l,
         Err(e) => {
@@ -446,6 +462,8 @@ fn eval_loaded_on_stack(loaded: lfz::error::R<Loaded>, args: &[String]) -> CaseE
             }
         }
     };
+    let raw_bytes = loaded.raw_bytes;
+    let loaded = loaded.loaded;
     // 词法期。
     let tokens = match lexer::lex(&loaded.text, loaded.line_base) {
         Ok(t) => t,
@@ -470,7 +488,19 @@ fn eval_loaded_on_stack(loaded: lfz::error::R<Loaded>, args: &[String]) -> CaseE
     };
     // 运行期：用 `eval_module_traced` 取帧栈（§10.3 / D-008 影响段）；
     // 已在流水线大栈线程上，故用**当前线程**求值体（§10.9 R-S2 同栈），不再嵌套开线程。
-    let traced = evaluator::eval_module_traced_on_thread_with_args(&program, args);
+    let traced = if lfz::modules::module_declaration_span(&program).is_some() {
+        let cwd = match cwd { Ok(p) => p, Err(e) => return CaseEval::HostFailure(e.to_string()) };
+        let identity = if file_input { std::fs::canonicalize(path).ok() } else { None };
+        let base_dir = if file_input { let absolute = identity.clone().unwrap_or_else(|| cwd.join(path)); absolute.parent().unwrap_or(&cwd).to_path_buf() } else { cwd };
+        let graph = match lfz::modules::build_graph(lfz::modules::ParsedEntry { program, loaded, display_path:path.to_string(), identity, base_dir, raw_bytes }) {
+            Ok(g) => g,
+            Err(g) => { let source=g.sources.get(g.failure.source_id).expect("图失败来源"); return CaseEval::Located { path:source.display_path.clone(), inner:Box::new(CaseEval::Failed { err:*g.failure.error, loaded:source.loaded.clone(), traced:None }) }; }
+        };
+        match evaluator::eval_graph_traced_on_thread_with_args(&graph,args) {
+            Ok(run) => return graph_run_result(run),
+            Err(error) => return CaseEval::HostFailure(error.to_string()),
+        }
+    } else { evaluator::eval_module_traced_on_thread_with_args(&program,args) };
     if traced.result.is_ok() {
         return CaseEval::Passed;
     }
@@ -481,6 +511,15 @@ fn eval_loaded_on_stack(loaded: lfz::error::R<Loaded>, args: &[String]) -> CaseE
         loaded: Some(loaded),
         traced: Some(traced),
     }
+}
+
+fn graph_run_result(traced: TracedRun) -> CaseEval {
+    if (0..traced.frames.len()).any(|i| traced.frame_source(i).is_none()) { return CaseEval::HostFailure("来源元数据缺失".to_string()); }
+    if traced.result.is_ok() { return CaseEval::Passed; }
+    let Some(origin) = traced.error_source() else { return CaseEval::HostFailure("来源元数据缺失".to_string()); };
+    let loaded=origin.loaded.clone();
+    let err=(**traced.result.as_ref().unwrap_err()).clone();
+    CaseEval::Failed { err, loaded, traced:Some(traced) }
 }
 
 /// 只做前端检查。输入加载、解析和深AST析构全部留在大栈线程内。
@@ -586,18 +625,19 @@ fn run_file_with_args(path: &str, args: &[String], json: bool, out: &mut dyn Wri
 fn run_source(code: Option<&str>, args: &[String], json: bool, out: &mut dyn Write, err: &mut dyn Write) -> i32 {
     lfz::builtins::set_stdout_to_stderr(json);
     let path = if code.is_some() { "<command>" } else { "<stdin>" };
+    let cwd = std::env::current_dir();
     let eval = evaluator::on_eval_stack(|| {
         let loaded = match code {
-            Some(text) => loader::load_source(text),
+            Some(text) => loader::load_source_counted(text),
             None => {
                 let mut text = String::new();
                 match std::io::stdin().read_to_string(&mut text) {
-                    Ok(_) => loader::load_source(&text),
+                    Ok(_) => loader::load_source_counted(&text),
                     Err(_) => Err(Box::new(LzError::Io { msg: "无法读取标准输入".to_string(), span: None })),
                 }
             }
         };
-        eval_loaded_on_stack(loaded, args)
+        eval_loaded_on_stack(loaded, args, path, false, cwd)
     });
     report_eval(path, &eval, json, out, err)
 }
@@ -648,6 +688,7 @@ fn report_eval(
     out: &mut dyn Write,
     err: &mut dyn Write,
 ) -> i32 {
+    if let Some(detail) = eval.host_failure() { let _=writeln!(err,"lfz: 模块执行上下文无效：{detail}"); return EXIT_ERROR; }
     if json {
         let passed = matches!(eval, CaseEval::Passed);
         let doc = if passed {
@@ -724,20 +765,20 @@ fn push_frames(out: &mut String, path: &str, run: &TracedRun, source: Option<&Lo
     let frames = &run.frames;
     let total = frames.len();
     if total <= TRACEBACK_FOLD_THRESHOLD {
-        for frame in frames {
-            push_trace_frame(out, path, frame, run, source);
+        for (index, frame) in frames.iter().enumerate() {
+            push_trace_frame(out, path, frame, run, source, index);
         }
         return;
     }
-    for frame in &frames[..TRACEBACK_HEAD] {
-        push_trace_frame(out, path, frame, run, source);
+    for (index, frame) in frames[..TRACEBACK_HEAD].iter().enumerate() {
+        push_trace_frame(out, path, frame, run, source, index);
     }
     // 省略行（逐字符，§8.2）：2 空格 + `... 省略 {N} 帧 ...`，`N = T − 40`（十进制）。
     out.push_str("  ... 省略 ");
     out.push_str(&(total - TRACEBACK_FOLD_THRESHOLD).to_string());
     out.push_str(" 帧 ...\n");
-    for frame in &frames[total - TRACEBACK_TAIL..] {
-        push_trace_frame(out, path, frame, run, source);
+    for (offset, frame) in frames[total - TRACEBACK_TAIL..].iter().enumerate() {
+        push_trace_frame(out, path, frame, run, source, total - TRACEBACK_TAIL + offset);
     }
 }
 
@@ -748,9 +789,11 @@ fn push_trace_frame(
     frame: &TraceFrame,
     run: &TracedRun,
     source: Option<&Loaded>,
+    index: usize,
 ) {
     let name = run.frame_name(frame);
-    push_frame(out, path, frame.span, Some(name.as_ref()), source);
+    let origin=run.frame_source(index);
+    push_frame(out, origin.map_or(path, |s| s.display_path.as_str()), frame.span, Some(name.as_ref()), origin.map_or(source, |s| s.loaded.as_ref()));
 }
 
 /// 追加一个「帧」（§8.2 通用三行格式；源码行 / 插入符仅在可取到源码行时输出）。
