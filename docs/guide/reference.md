@@ -397,3 +397,7 @@ CODE原样保护，即使等于`--json`、`--`、`--help`或空字符串也按�
 仅argv保持既有一等内置函数值；attempt自己和普通内置仍不能独立取值。请用闭包包装 `attempt(() => readFile(path))`，不能写 `attempt(readFile)`。管道 `f |> attempt` 等价于attempt(f)。名称可被用户绑定遮蔽。lambda要返回空struct后取字段时写 `() => ({}).missing`，避免把{}解析成函数块。
 
 可恢复和传播规则见[错误指南](errors.md)与[完整教程](error-recovery.md)。规范为syntax/semantics/interface-contract §18，内置总数73包含特殊Interp入口attempt；不改变普通/HOF ABI。
+
+## T16-C 本地模块
+
+模块接口不新增内置：`import lib from "./lib.lfz"`与`export x, f`仅直接顶层；先import再其它语句。namespace快照/共享、函数home globals、graph模板与legacy默认值区别、RustAPI迁移详见[模块教程](modules.md)，规范三spec §20–21。

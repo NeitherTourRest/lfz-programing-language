@@ -725,3 +725,7 @@ if ($LASTEXITCODE -eq 0) { ./dist/lfz.exe run job.lfz -- '输入' }
 ## T15补充：坏记录不会中断整批
 
 把可能失败的操作延迟到零参数闭包里：`let result = attempt(() => jsonParse(text))`。不能把已执行的 `jsonParse(text)`直接作为参数，否则错误发生在进入恢复边界前。随后按result.ok分支，成功读value，失败读error；完整可运行程序见[错误恢复教程](error-recovery.md)。CLI check只解析这段代码，不检查函数参数数量或错误捕获范围，仍要实际执行测试。
+
+## T16-C 本地模块
+
+多文件应用使用[模块教程](modules.md)的calc/worker/main示例，先check完整依赖图，再run触发初始化；相对路径基于导入者，所有模块argv属于同一脚本输入。

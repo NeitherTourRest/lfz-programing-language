@@ -1,0 +1,152 @@
+{
+  "date": "2026-10-30",
+  "timestamp_utc": "2026-10-30T00:14:00.784783+00:00",
+  "binary": "target\\release\\lfz.exe",
+  "sha256": "cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006",
+  "bytes": 902656,
+  "guides": {
+    "docs\\guide\\README.md": "f5aa1536463425245b942ba422119045d6a1a869182b0006ba77af94eae24563",
+    "docs\\guide\\reference.md": "4daa814f6f0b2465f1de959604be0680b4345c1adde08fbb8419c527f89c86d7",
+    "docs\\guide\\tutorial.md": "448f48b3cced4126eb8292526dd78e993fc72c7649571ec706b168c64b44dc7f",
+    "docs\\guide\\errors.md": "34b06a385c061daef8235034c21f31835f725c9ec0a09385ba36570e4d9e1866",
+    "docs\\guide\\testing.md": "2b8cbf6ace7cf021ac33889fd86314443a6cfc5d4b9f4cf2b6412ccb2d3cce48",
+    "docs\\guide\\modules.md": "2410e71269ec8953acbf7e3bf5a109854798b20b7a6da74059fc2ee089a2552e"
+  },
+  "passed": 11,
+  "total": 11,
+  "rows": [
+    {
+      "name": "tutorial_check",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-docs\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "tutorial_run_0",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-docs\\main.lfz",
+        "--",
+        "中文"
+      ],
+      "exit": 0,
+      "stdout": "{\"answer\":43,\"args\":[\"中文\"]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "tutorial_run_1",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-docs\\main.lfz",
+        "--",
+        "中文"
+      ],
+      "exit": 0,
+      "stdout": "{\"answer\":43,\"args\":[\"中文\"]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "namespace_home_argv",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-docs\\aliases.lfz",
+        "--",
+        "x",
+        "中文"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "template_context",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-docs\\templates.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "diamond_check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-docs\\diamond.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "diamond_run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-docs\\diamond.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "missing_export",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-docs\\missing-export.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"导出名没有顶层声明：missing\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-docs\\\\missing-export.lfz\",\"line\":2,\"col\":8,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-docs\\\\missing-export.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "cycle",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-docs\\a.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"模块循环依赖：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-docs\\\\a.lfz → \\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-docs\\\\b.lfz → D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-docs\\\\a.lfz\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-docs\\\\b.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-docs\\\\b.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "cross_file_fault",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-docs\\failed.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-docs\\\\fail.lfz\",\"line\":2,\"col\":11,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-docs\\\\failed.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-docs\\\\fail.lfz\",\"line\":2,\"func\":\"bad\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "attempt_cross_module",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-docs\\recover.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    }
+  ],
+  "marker_hex": "78"
+}

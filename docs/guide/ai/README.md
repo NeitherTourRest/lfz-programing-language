@@ -3,7 +3,7 @@
 > 本页同步自项目内 [LFZ 编程 skill](../../../.opencode/skills/lfz-programming/SKILL.md)，版本1.4.0；维护者 ai-dx-engineer。T12历史示例见 [原证据](../../reports/T12-skill-evidence.md)；新增check工作流见 [T14实跑证据](../../reports/T14-skill-evidence.md)。
 
 > 读者：**未接触过 LFZ 的编程 Agent**。目标：只凭本文件写出**正确、可运行**的 LFZ 程序。
-> 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（含 T12 §16 / T14 §17 / T15 §18）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
+> 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（含 T12 §16 / T14 §17 / T15 §18 / T16 §19–21）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
 > 使用纪律：**只允许使用本文件列出的语法**。不要用 Python / C / JS 的规则去猜 LFZ——LFZ 在若干处刻意不同（见 §4）。
 > **版本对齐（2026-10-29，候选）**：项目内 `dist/lfz.exe` / `target/release/lfz.exe` 为 **1.4.0，73 个内置**（54+15+3+1），支持 argv、JSON、`-e`、stdin源码及非执行`check`。T12 示例实跑证据见 `docs/reports/T12-skill-evidence.md`；项目外 PATH 中的旧解释器不保证具备这些能力。
 
@@ -793,7 +793,7 @@ print(sum_even([1, 2, 3, 4, 5]))
 
 ## 10. 权威来源
 
-- 语法：`docs/spec/syntax.md`｜语义：`docs/spec/semantics.md`｜接口/错误/内置表：`docs/spec/interface-contract.md`（含 T12 §16 / T14 §17 / T15 §18）。
+- 语法：`docs/spec/syntax.md`｜语义：`docs/spec/semantics.md`｜接口/错误/内置表：`docs/spec/interface-contract.md`（含 T12 §16 / T14 §17 / T15 §18 / T16 §19–21）。
 - runner/CLI 契约：`docs/tooling/runner-contract.md`。
 - 本指南的实测验证记录：同目录 `VERIFICATION.md`（§8 为 T11-③ 的 D1–D7 修订实测证据）。
 - 本 skill 包的**安装与使用**：同目录 `README.md`（三种安装方式 + 运行前提 + 不做什么）。
@@ -835,3 +835,46 @@ print(jsonStringify({values: values, errors: errors}))
 **没有事务回滚**：容器/全局/cell写入、文件写入、print/eprint、随机状态和闭包分配均保留。check(false)只是警告和false，attempt仍成功；assert/fail在边界内是失败值。成功value可含函数或环，不能承诺整个Result一定能jsonStringify。结构化业务失败可以让run退出0，必须自行检查每条ok，不能以进程exit0代表所有记录成功。
 
 实用完整应用见`app/jsonbatch.lfz`；当前readFile整文件驻内存，不是流式读取。新作者实跑见`docs/reports/T15-skill-evidence.md`，不覆盖旧v2冻结成绩。R304仍OPEN，无T15性能测窗，不声明提速或正式发布。
+
+
+## 6.4 T16-C：本地模块的Agent工作流
+
+事实源三spec §19–21及T16-C-design；C候选支持本地模块执行，73内置不增加。先为每个.lfz保留#42首行，写静态import/export，先check整个根模块图（不初始化、不执行IO），通过后才run并核业务输出。check成功不保证依赖初始化或入口求值成功。不要把多个文件文本拼接成共享globals。
+
+同目录`counter.lfz`：
+
+```lfz
+#42
+var base = 40
+let shared = [1]
+fn add(x) => base + x
+fn bump() { base += 1
+ base }
+export base, shared, add, bump
+```
+
+同目录`main.lfz`：
+
+```lfz
+#42
+import lib from "./counter.lfz"
+var base = 900
+assert(lib.add(2) == 42)
+assert(lib.bump() == 41)
+assert(lib.base == 40)
+lib.shared[0] = 7
+print(jsonStringify({answer: lib.add(2), args: argv(), shared: lib.shared}))
+```
+
+执行`lfz check --json main.lfz`，应只得到`{"ok":true,"mode":"check","executed":false}`；再`lfz run main.lfz -- '中文'`，业务输出为`{"answer":43,"args":["中文"],"shared":[7]}`。先检查后执行两步都须保留证据。
+
+- 语法仅`import alias from "./relative.lfz"`、`export a, b`，都是直接顶层声明。所有import须在其它语句之前，export也算其它语句；导出只限本模块直接顶层绑定。无动态/远程import、包搜索、from-import或live循环绑定。
+- 路径相对导入者文件目录；-e/stdin根以开始捕获cwd为基址。必须无插值相对.lfz路径（可含..）；不补扩展名、不接受绝对/网络路径。不把symlink/..解析当权限沙箱。依赖按canonical身份去重，每次执行独立缓存；同模块多alias/菱形只初始化一次，按导入书写序依赖后序串行执行。
+- 模块全局独立。导出函数在定义模块home globals中执行，调用者同名变量不污染它；捕获局部cell和self保持原规则。namespace是普通struct，标量为初始化完成时快照，容器/函数共享原引用拓扑。改namespace标量字段不回写原模块绑定；多alias共享namespace对象。keys/JSON沿A5过滤函数，不是完整函数导出反射。
+- 所有模块使用同次argv输入快照，argv()每次仍新数组。跨执行不复用初始化缓存。初始化失败立即停止，尚未运行入口内attempt无法捕获依赖初始化错误，无隐式重试。
+- 跨模块未捕获错误的CLI human/JSON使用真实定义文件及逐帧来源，参数/arity错误属于调用者。不要拼路径到func名。attempt仍是既有三/五/三字段且无file，只有各帧行列，不能由它声称完整文件定位；恢复还原module/source上下文但不回滚用户副作用、实例或函数ID。
+- 导出模板先`let P = lib.Point`再`P{}`，不支持`lib.Point{}`。graph模板默认表达式在定义globals/captured cells/self上下文、按字段序每次重新求值，可变默认每实例独立；全部默认先完成，显式覆盖才在caller Scope按书写序求值。错误可见`Point::<defaults>`及真实定义文件。无模块legacy模板保留原caller默认值规则，不新增默认帧。
+- check完整图在初始化前拒绝循环、别名/绑定冲突、缺导出、坏路径/前导/UTF8/语法；读取未导出namespace字段是运行时FieldError。图上限1024节点/含根128层/单文件2MiB/总原始16MiB，根admission例外与精确顺序以§20为准；不宣称OS资源隔离。
+- Rust嵌入：旧eval_module*只保留无模块行为，带模块Program仍guard拒绝。构建ModuleGraph，在on_eval_stack内调用eval_graph_traced_on_thread_with_args(&graph,&args)，parse/build/eval/drop均同大栈；不能重读图文件或克隆所有Program。外层GraphExecutionError::InvalidGraph/Origins是宿主不变量错误（CLI stdout空/stderr宿主异常/exit2），内层TracedRun.result才是LFZ错误，不被attempt吞宿主错。UserFn手写literal按§19补home_module；StructDef按§21补default_context，旧struct_def/struct_template helper保持None，graph使用TemplateContext与struct_template_in_context。ModuleId与SourceId不可互换，无Loaded不能借其它文件画下划线。
+
+完整人类示例见docs/guide/modules.md；本AI新增作者实跑见docs/reports/T16-C-skill-evidence.md。R304仍OPEN，无C性能成绩，不声明正式发布；不改写旧v2成绩与输入。

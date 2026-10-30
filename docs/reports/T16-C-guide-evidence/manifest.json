@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-30",
+  "binary_sha256": "cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006",
+  "binary_bytes": 902656,
+  "guide_hashes": {
+    "docs\\guide\\README.md": "f5aa1536463425245b942ba422119045d6a1a869182b0006ba77af94eae24563",
+    "docs\\guide\\reference.md": "4daa814f6f0b2465f1de959604be0680b4345c1adde08fbb8419c527f89c86d7",
+    "docs\\guide\\tutorial.md": "448f48b3cced4126eb8292526dd78e993fc72c7649571ec706b168c64b44dc7f",
+    "docs\\guide\\errors.md": "34b06a385c061daef8235034c21f31835f725c9ec0a09385ba36570e4d9e1866",
+    "docs\\guide\\testing.md": "2b8cbf6ace7cf021ac33889fd86314443a6cfc5d4b9f4cf2b6412ccb2d3cce48",
+    "docs\\guide\\modules.md": "2410e71269ec8953acbf7e3bf5a109854798b20b7a6da74059fc2ee089a2552e"
+  },
+  "files": {
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "default-failure.json": {
+      "bytes": 904,
+      "sha256": "77792edebdc006752d1b0a1279cf1f67a0de0f441e5b951e0f66b661be6a7ea6"
+    },
+    "default-stderr.txt": {
+      "bytes": 2013,
+      "sha256": "54bf7904847c34f108dd9a3531ad27f86985a35aeb6a8f543110bfff98b1d93f"
+    },
+    "initial-elevated-runs.json": {
+      "bytes": 6011,
+      "sha256": "39a50516ec4d2bc308ea102b60c1a980cd20ef1796ad9a09d89e8c123a7b2815"
+    },
+    "runs.json": {
+      "bytes": 6011,
+      "sha256": "6924c393ff835cc5ee6bf957eb1fc4fbc6243b084e0b7132c666c4b061d73686"
+    },
+    "verify.py": {
+      "bytes": 5740,
+      "sha256": "0a7ae179f3fb4e9fc727b4a91f099467132844cc2755bd2d04de2c24e8b03280"
+    }
+  }
+}

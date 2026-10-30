@@ -370,3 +370,7 @@ attempt回调内部的NameError、TypeError、IndexError、FieldError、ZeroDivi
 SyntaxError、CosmosAnswerError、RecursionError和容量溢出OverflowError不捕获；宿主panic、abort、分配失败不是业务结果。IOError仍是原OS IO错误类别，不能据此区分所有底层资源故障。未来预算/取消也不能作为普通业务失败吞掉。
 
 恢复的是求值深度与完整调用trace/span；失败记录保存清理前完整调用者链，不虚构attempt帧。后续错误不应带有旧失败帧。全局/闭包cell、容器、文件写入、输出、随机状态及已经创建的闭包都不回滚：attempt不是事务，也不是沙箱。外层参数校验错误可以由更外层attempt捕获，但本次尚未进入回调的调用不会自行变成Result。
+
+## T16-C 本地模块
+
+模块图循环/缺导出绑定等在任何初始化前报错，依赖运行错误则带真实来源停止session；读取未导出namespace字段是读取点FieldError。attempt仍不带file，而未捕获CLI错误逐帧文件定位；宿主GraphExecutionError不伪造LFZ错误。详见[模块错误边界](modules.md)。

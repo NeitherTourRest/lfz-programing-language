@@ -112,3 +112,7 @@ CODE外不能传--或脚本参数；检查通过后才按任务授权运行，�
 ## T15模板补充
 
 需逐条恢复业务错误时用attempt(() => ...)，严格按指南§6.3检查ok及error["class"]。先check再run，捕获失败不回滚IO/容器副作用；资源终止不可吞。成功Result含函数/环时不能保证可JSON编码。提交时说明哪些记录成功、哪些失败，而非只报告exit0。
+
+## T16-C本地模块补充（2026-10-30）
+
+模块任务按SKILL.md §6.4先检查完整根图再执行；每文件#42，静态相对import/显式export、独立home globals、session缓存与namespace快照/共享边界。模板、跨源诊断、attempt无file和RustAPI迁移均引用三spec §19–21。作者新增实跑见docs/reports/T16-C-skill-evidence.md，不覆盖旧v2成绩，不宣称性能或正式发布。

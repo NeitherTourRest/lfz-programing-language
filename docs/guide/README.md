@@ -206,3 +206,7 @@ check不接收脚本参数，CODE外的 `--`（即使空尾）会报参数错误
 ## T15：把可恢复错误变成结果
 
 当前为73内置候选，新增 `attempt(f)`，不新增try/catch文法。常用写法 `attempt(() => jsonParse(text))`；先用 `lfz check` 检查语法，再运行脚本。检查通过不保证回调可成功运行。[错误恢复教程](error-recovery.md)演示混合好坏JSON批处理，精确语义以[规范§18](../spec/semantics.md)为准。R304仍OPEN，不由新增功能推断性能提升。
+
+## T16-C 本地模块
+
+本地相对import/export、先check完整依赖图再执行及三文件例子见[模块教程](modules.md)。C候选按单session初始化和home globals执行；最终实跑证据另列，不能用旧B二进制声称模块运行完成。

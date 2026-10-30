@@ -1,0 +1,9 @@
+Failed to find real location of D:\app\ANACONDA\python.exe
+Traceback (most recent call last):
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\T16-C-guide-evidence\verify.py", line 22, in <module>
+    run('tutorial_check',['check','--json',main],'{"ok":true,"mode":"check","executed":false}\n')
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\docs\reports\T16-C-guide-evidence\verify.py", line 16, in run
+    row={'name':name,'args':args,'exit':p.returncode,'stdout':p.stdout.decode('utf8'),'stderr':p.stderr.decode('utf8')};rows.append(row);out.parent.mkdir(parents=True,exist_ok=True);out.with_suffix('.partial.json').write_text(json.dumps({'binary_sha256':o.expected_sha256,'rows':rows},ensure_ascii=False,indent=2)+'\n',encoding='utf8');assert p.returncode==code,row
+                                                                                                                                                                                                                                                                                                                                                       ^^^^^^^^^^^^^^^^^^
+AssertionError: {'name': 'tutorial_check', 'args': ['check', '--json', 'D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-docs\\main.lfz'], 'exit': 2, 'stdout': '{"ok":false,"mode":"check","executed":false,"error":"IOError","message":"�޷���ȡģ�飺D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-docs\\\\./calc.lfz�������� D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-docs\\\\main.lfz:2:1��","file":"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-docs\\\\./calc.lfz","line":null,"col":null,"traceback":[]}\n', 'stderr': ''}

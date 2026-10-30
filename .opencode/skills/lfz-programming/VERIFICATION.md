@@ -495,3 +495,7 @@ print(len("hello"))      // 5                   else if n >= 80 { "B" }
 ## T15受控业务错误恢复（2026-10-29）
 
 当前73内置，新增attempt(f)；契约三spec§18，使用规则和坏JSON继续示例见SKILL.md §6.3。作者聚焦新增示例与关键兼容实际记录见docs/reports/T15-skill-evidence.md；不重跑/改写旧v2或历史T12/T14成绩，R304仍OPEN。
+
+## T16-C本地模块补充（2026-10-30）
+
+模块任务按SKILL.md §6.4先检查完整根图再执行；每文件#42，静态相对import/显式export、独立home globals、session缓存与namespace快照/共享边界。模板、跨源诊断、attempt无file和RustAPI迁移均引用三spec §19–21。作者新增实跑见docs/reports/T16-C-skill-evidence.md，不覆盖旧v2成绩，不宣称性能或正式发布。

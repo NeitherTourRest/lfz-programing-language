@@ -1,0 +1,231 @@
+{
+  "date": "2026-10-30",
+  "timestamp_utc": "2026-10-30T00:13:39.284693+00:00",
+  "binary": "target\\release\\lfz.exe",
+  "binary_sha256": "cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006",
+  "document_hashes": {
+    ".opencode/skills/lfz-programming/SKILL.md": "c9be42a221a016d0b89f5913866e817fc3518d08cb5248170b04d08e33259489",
+    ".opencode/skills/lfz-programming/README.md": "d5862170711794aca25bc2dc6bc4bfa1a92eb622d715a2619c169acee183ca1d",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "3babb11998f3efd53caa382bf772137489d76fcb4b3aee9d3c61e8533643fb4a",
+    ".opencode/skills/lfz-programming/prompt-template.md": "abb8be5508775bc44584a8c723b50e12a8ed11010447118bc6e26d391e9fd6e2",
+    "docs/guide/ai/README.md": "7b1d3be3b268d2f32167ece0bdeb15ae8dd4fb1ec622b2a7e2e2aca0b62ad686"
+  },
+  "checks_total": 18,
+  "checks_passed": 1,
+  "rows": [
+    {
+      "name": "extracted_check_0",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\main.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"IOError\",\"message\":\"无法读取模块：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\./counter.lfz（导入于 D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\main.lfz:2:1）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\./counter.lfz\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+      "stderr": "",
+      "passed": false
+    },
+    {
+      "name": "extracted_run_0_0",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\main.lfz",
+        "--",
+        "中文"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\./counter.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\main.lfz:2:1）\n",
+      "passed": false
+    },
+    {
+      "name": "extracted_run_0_1",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\main.lfz",
+        "--",
+        "中文"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\./counter.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\main.lfz:2:1）\n",
+      "passed": false
+    },
+    {
+      "name": "extracted_check_1",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\main.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"IOError\",\"message\":\"无法读取模块：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\./counter.lfz（导入于 D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\main.lfz:2:1）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\./counter.lfz\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+      "stderr": "",
+      "passed": false
+    },
+    {
+      "name": "extracted_run_1_0",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\main.lfz",
+        "--",
+        "中文"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\./counter.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\main.lfz:2:1）\n",
+      "passed": false
+    },
+    {
+      "name": "extracted_run_1_1",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\main.lfz",
+        "--",
+        "中文"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\./counter.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\main.lfz:2:1）\n",
+      "passed": false
+    },
+    {
+      "name": "aliases_home_shared_argv",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\aliases.lfz",
+        "--",
+        "x",
+        "中文"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\./home.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\aliases.lfz:2:1）\n",
+      "passed": false
+    },
+    {
+      "name": "template_definition_defaults_and_caller_override",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\templates.lfz"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\./model.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\templates.lfz:2:1）\n",
+      "passed": false
+    },
+    {
+      "name": "diamond_check_no_init",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\diamond.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"IOError\",\"message\":\"无法读取模块：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\./left.lfz（导入于 D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\diamond.lfz:2:1）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\./left.lfz\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+      "stderr": "",
+      "passed": false
+    },
+    {
+      "name": "diamond_run_once",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\diamond.lfz"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\./left.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\diamond.lfz:2:1）\n",
+      "passed": false
+    },
+    {
+      "name": "new_session_reinitializes",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\diamond.lfz"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\./left.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\diamond.lfz:2:1）\n",
+      "passed": false
+    },
+    {
+      "name": "cross_file_cli_diagnostic",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\fault.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"无法读取模块：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\./badlib.lfz（导入于 D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\fault.lfz:2:1）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\./badlib.lfz\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+      "stderr": "",
+      "passed": false
+    },
+    {
+      "name": "attempt_no_file_and_context_restore",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\recover.lfz"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\./badlib.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\recover.lfz:2:1）\n",
+      "passed": false
+    },
+    {
+      "name": "code_root_cwd",
+      "args": [
+        "-e",
+        "import lib from \"./counter.lfz\"\nassert(lib.add(2)==42)"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\./counter.lfz（导入于 <command>:1:1）\n",
+      "passed": false
+    },
+    {
+      "name": "stdin_root_cwd",
+      "args": [
+        "-"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\./counter.lfz（导入于 <stdin>:1:1）\n",
+      "passed": false
+    },
+    {
+      "name": "cycle_before_init",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\cycle.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"IOError\",\"message\":\"无法读取模块：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\./cycle.lfz（导入于 D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\cycle.lfz:2:1）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\./cycle.lfz\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+      "stderr": "",
+      "passed": false
+    },
+    {
+      "name": "unexported_runtime_field",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T16-C-ai\\missing.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"无法读取模块：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\./counter.lfz（导入于 D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\missing.lfz:2:1）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T16-C-ai\\\\./counter.lfz\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+      "stderr": "",
+      "passed": false
+    },
+    {
+      "name": "legacy_compatibility",
+      "args": [
+        "-e",
+        "assert(sum([1,2,3])==6)\nassert(attempt(()=>7).value==7)"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    }
+  ]
+}
