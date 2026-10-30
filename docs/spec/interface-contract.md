@@ -793,6 +793,11 @@ flag为完整--max-steps或--timeout-ms。单项遇到即报缺值/非法/重复
 timeout=0且有节点时首poll Deadline；空程序成功。步数+时间+token均启用时按22.3，CLI不提供token开关。Ctrl-C沿OS默认，无跨平台handler/第三方依赖/结构化Cancelled承诺；后续须单独平台ADR。
 资源错误exit2，--json仍唯一原形错误对象，class ExecutionLimitError、message固定、line/col/traceback真实；--json下程序输出仍stderr。成功exit0。host GraphExecutionError沿C stderr协议，不伪装LFZ终止或业务成功。
 
+新增flag族等号边界：仅在未受CODE/argv保护的选项区域，token以--max-steps=或--timeout-ms=开头（含等号后为空/任意文本）时，扫描到即usage拒绝，精确消息“选项 '{flag}' 不支持等号写法，请使用 '{flag} N'”。flag是不含等号的完整名称；此错误按token出现顺序，先于最终命令适用性检查；不把等号形式当一次合法赋值或进入重复检查。因而--help --max-steps=1和--version --timeout-ms=1均exit2，不能被旧help/version忽略额外token放行。其它旧help/version额外token规则保持；不扩大匹配到--max-stepsX等其它名称。CODE恰为该文本或完整来源后--的同名argv仍原样保护。
+
+命令拼写裁定（2026-10-30）：本节“help/version”仅指既有合法--help/-h与--version/-V；“check/test”指既有check/test子命令。不新增裸help/version命令别名，也不把它们列入非执行命令。裸help或version继续按既有文件路径/扩展规则处理，附合法限额时亦如此；可读取的同名路径不得因本节变成帮助命令或被“不适用于运行命令”拒绝。不存在/不合扩展名的路径仍走旧IOError，不应把此结果误判为漏拒帮助命令。--help --max-steps 1与--version --timeout-ms 1须报限额不适用；--help --max-steps=1等号形式按前述扫描规则立即报等号usage。其它旧help额外token规则不改。
+计步范围再次明确：for语句本身及迭代来源表达式等实际进入的节点仍计步；未执行的空循环体不虚构节点，每次迭代的Rust控制逻辑不额外计步。大量迭代但没有新增stmt/expr入口不能据此承诺小预算终止。CODE中的双负号按既有lexer/parser/求值规则处理，不因与CLI选项相似而新增语法错误；check只检查语法/模块，不动态查名。上述均为既有节点与CODE保护规则的澄清，不改计步范围或新增语法。
+
 ### 22.6 Owner与可复验门禁
 - architect：三spec §22、T17-design.md、ADR与本人记录。
 - core：唯一src/error.rs新增reason/variant/helper和三个reason的class/message/span/Display单元验证，机械更新13类注册；不写evaluator/CLI。

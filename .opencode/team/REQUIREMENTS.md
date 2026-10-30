@@ -1,9 +1,24 @@
 # LFZ 需求矩阵（唯一需求事实源 · v1.1 增量对齐版）
 
 > 最后更新: 2026-10-30 by requirements-analyst
-> 版本: **v9（T16-C模块执行/诊断通过，T17未验收；R-304开放，非正式发布）**
+> 版本: **v10（T17限额最终功能通过，T18仅规划；R-304开放，非正式发布）**
 > 本文件是**唯一需求事实源**，唯一写者 requirements-analyst，他人只读。
 > 来源: `task-info.md`（课程作业原始要求）+ 用户指令 + 已定案 ADR（见 `DECISIONS.md`）。
+
+## T17 增量需求（2026-10-30，执行限额最终功能通过）
+
+依据三spec §22及T17-design，当前冻结SHA256 `1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45`、943104B、73内置，**新增第13类ExecutionLimitError**，下方旧12类是各历史时点，原12类触发/消息保持。`T17-independent-verification.md`最后“裁定后最终独立PASS”确认624harness、公开134、预算应用40、自编14、旧attempt13/check117/CLI91含178、旧apps37+11/jsonbatch38/JSON140/C公开29与四模块app33通过；人指南32/AI38作者实跑与11份文档SHA经独立审计，未冒称独立复跑全部作者例子。
+
+早期公开110/121及118/122、新oracle修正与CONCERNS完整保留。空for不虚构节点、CODE双负号保持旧语义；帮助合法拼写--help/-h及--version/-V，裸help/version仍文件路径。最终纠正仅新oracle与契约歧义，没有改产品追绿或篡改旧计数。R304继续进行中/OPEN，无T17性能窗，不打正式标签；T18仅规划/提案未实现，不把外部进程/HTTP/强制终止纳入当前通过。
+
+| R-ID | 需求 | 来源 | 验证方式（可命令复现） | 状态 | 交付物 | 评分项 |
+|------|------|------|------------------------|------|--------|--------|
+| R-135 | 宿主可配置单次执行单调步数、协作取消及绝对Instant截止；节点poll依cancel→deadline→budget优先级。新ExecutionLimitError三固定reason/消息/真实位置，不可被attempt捕获或恢复预算；模块初始化/函数/default共享session资源且旧默认不限额 | 三spec §22.1–22.4 | 项目工具链`cargo test --release`624/624；独立own.json14验证单表达式0/1/2及let4步、空程序零poll、deadline优先预算、多层attempt穿透、普通失败不补步、菱形11成功/10失败、默认来源和后继session。已执行host单元验证首语句后mpsc握手跨线程Release取消/下一stmt Acquire观察、七HOF穿透、模板真实来源；不宣称新增外部宿主API程序验收。native内部无poll，末native后无节点可成功，空for迭代不伪造步，不是硬实时/CPU或权限沙箱 | 通过 | error.rs（core-dev）、evaluator.rs与单元（runtime-dev）、T17独立报告/证据 | 1、2 |
+| R-211 | 执行CLI严格--max-steps N与--timeout-ms N；保护CODE/--后argv，拒绝非法/重复/等号/缺值/非执行命令，usage先于IO；check/test/合法帮助版本拒限额，裸help/version旧路径行为保持。资源错误exit2并沿旧单JSON和真实模块trace协议 | 三spec §22.5–22.6 | 对冻结T17字节执行`D:/app/ANACONDA/python.exe -B tests/t17_cli_limits.py --binary target/release/lfz.exe --expected-sha 1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45 --output Temp/T17/req-public-new.json`134/134；N仅ASCII十进制u64、允许0/前导0，CODE/argv原样，重复/等号精确usage无副作用；timeout前端后建立且非硬超时。独立134/40最终复验及旧全回归通过，不将旧CONCERNS或历史121/122冒充当前总数 | 通过 | cli.rs/cli_t17.rs（tooling-dev）、公开134（test-engineer）、独立public134证据 | 1、2 |
+| R-410 | 人/AI指南实跑资源受限Agent工作流，区分宿主token与CLI、节点步数与native工作、协作deadline与硬实时、默认unlimited和T15不可捕获；明确同模块session共享及副作用不回滚 | §22；R409延伸 | T17-guide-evidence.md聚焦32/32、T17-skill-evidence.md38/38绑定1946ab9；独立guide-audit.json核六人指南/五AI文档11个SHA与作者manifest一致。默认权限失败保全，同字节许可复核不改canonical规则；不把作者示例审计算独立重跑，不声称新盲测/性能门禁通过或强杀线程支持 | 通过 | 人指南（docs-writer）、skill/AI入口（ai-dx-engineer）与独立文档指纹审计 | 4 |
+| R-507 | JSONL模块化应用演示预算耗尽、共享预算及已完成副作用保留，系统终止不被attempt当坏数据吞掉；旧无预算应用和课程≥200行sortviz保持 | app/T17-BUDGETS.md；§22 | 按T17-BUDGETS.md和verify_jsonbatch_budgets.py接口对冻结1946ab9执行40/40；独立app40-final.json40/40，回调预算28在真实record模块终止，已完成SIDE不回滚，不能伪造正常混批成功。旧C四模块33、jsonbatch38/jsonflow37/sortviz11仍通过，首次独立相对路径oracle失败保全不当作产品缺陷 | 通过 | app/verify_jsonbatch_budgets.py、T17-BUDGETS.md（app-dev）、独立app40证据 | 5 |
+
+复跑需恢复冻结T17产物与工具链、使用尚不存在的项目内Temp输出；后继T18新源码不能冒充本节测量/功能时点。限额功能通过不是效率门禁或资源隔离证明。
 
 ## T16-C/D 增量需求（2026-10-30，模块执行及诊断通过）
 

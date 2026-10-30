@@ -1022,3 +1022,7 @@ lfz [--json] check [--json] - [--json]
 
 ## 22. T17 宿主执行限额（2026-10-30 冻结）
 不新增LFZ语法、关键字、builtin或AST。CLI执行入口新增--max-steps N/--timeout-ms N；CODE及--后argv原样保护，check/test/help/version拒限额。精确扫描顺序、u64规则/usage消息/宿主API及时间窗口见interface-contract §22。正例：lfz --max-steps 10 -e "1"；反例：lfz check --max-steps 10 file.lfz。旧无选项入口默认unlimited。Ctrl-C尚无新跨平台处理。
+
+§22等号边界补钉：选项区--max-steps=任意文本/--timeout-ms=任意文本（含空值）一律usage拒绝，help/version也不能忽略；CODE及argv保护、其它旧help token规则保持。精确消息见interface-contract §22.5。
+
+§22命令拼写裁定：help/version为--help/-h、--version/-V的简写称谓，不新增裸help/version别名；裸词继续按文件规则。CODE双负号仍按旧文法，check不动态查名。见interface-contract §22.5。

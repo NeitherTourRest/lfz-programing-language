@@ -479,3 +479,7 @@ check对静态相对.lfz依赖按书写序迭代DFS构图，身份canonical去�
 
 ## 22. T17 单调执行预算与终止（2026-10-30 冻结）
 新增第13真实错误ExecutionLimitError：StepBudget“执行步数预算已耗尽”、Cancelled“执行已取消”、Deadline“执行时间上限已到”；旧12类及T15 Result键不改。每实际stmt/expr入口在该节点副作用前poll，cancel→deadline→steps，预算N允许N次节点进入；空程序无poll。模块/闭包/高阶回调/模板默认共享一个会话余量，attempt不恢复余量、不吞终止；真实source与active清理沿C。旧入口默认unlimited，资源终止前副作用不回滚。deadline/token只在节点边界协作观测，native/阻塞IO与前端不承诺硬中断，末个原生调用后无节点可成功。精确API/CLI/错误消息/验收见interface-contract §22。默认分支效率须测最终hash，R304仍OPEN。
+
+§22 CLI兼容补钉：仅两新flag的等号形式在选项区按扫描顺序立即usage拒绝，优先于非执行命令适用性判断；不改变其它旧help/version额外token行为，不把CODE/argv内同文识别为选项。详见interface-contract §22.5。
+
+§22计步澄清：空for只扣实际进入的语句/来源表达式节点，不为未执行body或Rust迭代控制虚构步数。help/version的不适用规则仅针对--help/-h与--version/-V，裸词仍为文件路径。精确边界见interface-contract §22.5；无计步范围变更。
