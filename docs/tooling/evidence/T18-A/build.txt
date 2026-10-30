@@ -1,0 +1,16 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+warning: variant `Unsupported` is never constructed
+ --> src\process_control.rs:7:89
+  |
+7 | #[derive(Debug)] pub(crate) enum ProcessFailure {Cancelled,Deadline,Timeout,OutputLimit,Unsupported,Io{operation:String,message:String}}
+  |                                  -------------- variant in this enum                    ^^^^^^^^^^^
+  |
+  = note: `ProcessFailure` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+  = note: `#[warn(dead_code)]` on by default
+
+warning: `lfz` (lib) generated 1 warning
+    Finished `release` profile [optimized] target(s) in 0.03s

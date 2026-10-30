@@ -1,0 +1,122 @@
+{
+  "date": "2026-10-30",
+  "status": "Windows author verification PASS; independent pending",
+  "binary": {
+    "path": "target/release/lfz.exe",
+    "bytes": 984064,
+    "sha256": "4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86"
+  },
+  "previous_candidate": "../T18-A/manifest.json; E5F57/646 preserved",
+  "tests": {
+    "total": 649,
+    "failed": 0,
+    "ignored": 0,
+    "permitted_harnesses": [
+      {
+        "name": "lfz-63397fd2d9985014.exe",
+        "exit": 0,
+        "passed": 487
+      },
+      {
+        "name": "lfz-243aeb8f5c3370f1.exe",
+        "exit": 0,
+        "passed": 53
+      },
+      {
+        "name": "cli-d19dbfa7dd3f9d73.exe",
+        "exit": 0,
+        "passed": 28
+      },
+      {
+        "name": "cli_t12-35b857587ead196a.exe",
+        "exit": 0,
+        "passed": 12
+      },
+      {
+        "name": "cli_t14-b528900585815e19.exe",
+        "exit": 0,
+        "passed": 12
+      },
+      {
+        "name": "cli_t16b-66b0b355c7f6f4d0.exe",
+        "exit": 0,
+        "passed": 7
+      },
+      {
+        "name": "cli_t16c-24a3e9d865ee9e42.exe",
+        "exit": 0,
+        "passed": 5
+      },
+      {
+        "name": "cli_t17-2cfc935946fdc938.exe",
+        "exit": 0,
+        "passed": 9
+      },
+      {
+        "name": "cli_t18a-2b1a6784d688e6c5.exe",
+        "exit": 0,
+        "passed": 6
+      },
+      {
+        "name": "test_runner-a9d3da191eeb2958.exe",
+        "exit": 0,
+        "passed": 15
+      },
+      {
+        "name": "unit-ae562ae83f03ad63.exe",
+        "exit": 0,
+        "passed": 15
+      }
+    ],
+    "outer_watchdog_seconds_per_harness": 90,
+    "watchdog_triggered": false
+  },
+  "source_hashes": {
+    "src/ast.rs": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076",
+    "src/builtins.rs": "b76cc9d99260cd6856a705007846133f861db6a6735d14c62a27ced4c8c88e8d",
+    "src/cli.rs": "c2d1c37ff64dcffb0322e1a6d32524d27b33aa4bfaa176ff5c5900393c0bc3b5",
+    "src/env.rs": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc",
+    "src/error.rs": "0ab3c6112bfd01aae0f52d1d9338c7950e10bbbca975a68a7013a61bf6c3dba6",
+    "src/evaluator.rs": "d801e6043abf229c763366a0771e5c14b83ba7cc9f0bd2b8c689ca1c54d36b99",
+    "src/json.rs": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f",
+    "src/json_codec.rs": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2",
+    "src/lexer.rs": "ebb952edbcd201210eb1f9c6ddebf58e2f3f998b260a11a51fe1c967848031f2",
+    "src/lib.rs": "06931e6d89372cb08244e71ce1e1236408b9acebfdf39287007f68c662f823a3",
+    "src/loader.rs": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f",
+    "src/main.rs": "247fc12340d2f6a26aa3fc5ada658cbfe72fb7ee7f85f107b05e6af27018c366",
+    "src/modules.rs": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895",
+    "src/parser.rs": "58c41ba85d930dc0ef465be2a9d3c0741cfe7052d6dd9df01a825aab73e7ff5f",
+    "src/process_control/fixture.rs": "0c09739e3327414281a5e89d5ad59dc5ec8356d1c6bbe9428dddcf9829f2b0a9",
+    "src/process_control/windows.rs": "540d14c697dcd84e2a9ba6a0f2415b24509335206617ad939c7318e0a8e76a09",
+    "src/process_control.rs": "e8cfcc7e54d7f2fb24f9d979d6f27d79bfcb20afaa7864326b7d49f13dab0442",
+    "src/source.rs": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468",
+    "src/span.rs": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2",
+    "src/test_runner.rs": "ab8a62821e0efa046dbbd43bb609a36c99a9d353ba5d3fb38ab3026c98723226",
+    "src/value.rs": "63967cb79996c7fedfe7285378e58c2774825c73680a81e50c12a185bbe438a0",
+    "Cargo.toml": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c",
+    "Cargo.lock": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4",
+    "tests/cli_t18a.rs": "faa29e2cc5e413b7a10da9c5302bb82b37ebceb395058ff7a1096810bd56d257"
+  },
+  "fixture_sha256": "51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee",
+  "evidence": {
+    ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
+    "build.txt": "d234616fed4713674ec3c6eade17d8741e4b35014ea71c9ca7536f4d492f7c8c",
+    "candidate-snapshot.zip": "3c8071fbe1d7b714730acd3d299fd3f241e128c1016cdca2b8612c5d785302bf",
+    "compile.txt": "dea954b9d0fd66a386cdc727c6483668cdf67505aa656dc6097d76e70cd4d550",
+    "seal.py": "ec37ca89f2f72c71bcf93812447212ebb4464904ea90b3834965314d681445ad",
+    "snapshot.json": "359c90983f04bbc820b8041163d69f23e61782dad79a72d94e9e1c3ff5c8cc6b",
+    "watch.py": "c623d660b81e83321d5f9e55b581721dacb13b77c6706b20d75e553d666d0076",
+    "watched-cli-d19dbfa7dd3f9d73.exe.txt": "ec2882c525218ca689289f1b4c3a04497ceacae97a44bb6db90df83515ae08b4",
+    "watched-cli_t12-35b857587ead196a.exe.txt": "c467e4896b1dfecc814e803d8f2eb9693979538935bc2ad2874b20a51b80c3b8",
+    "watched-cli_t14-b528900585815e19.exe.txt": "b10c8198e7b091ecb92f023b65abfe9f30884b111781dfe67b9115ece132a29f",
+    "watched-cli_t16b-66b0b355c7f6f4d0.exe.txt": "8241ff914ff9c2749ef68987a99b8da7e371fe932ad990c57abb82b791a4a65b",
+    "watched-cli_t16c-24a3e9d865ee9e42.exe.txt": "92efd401be0e989cae99cf444d3dd7f0d0c014a276cdad99e49768563d466413",
+    "watched-cli_t17-2cfc935946fdc938.exe.txt": "d29aebf260c3338a7116e8e784ae18078f4c7665236ab60079db4d36edd16136",
+    "watched-cli_t18a-2b1a6784d688e6c5.exe.txt": "44f00b8e175bbefc29357c64351f39ff8195f41fce554f2ff411e78bc895e4ca",
+    "watched-lfz-243aeb8f5c3370f1.exe.txt": "0fcadacd010deaa8da9a81347f84430ec0a4ad4d03fb8716caf6630e16932b82",
+    "watched-lfz-63397fd2d9985014.exe.txt": "2f54d94f83a21f5ced6a7bb9fc905d7666e7382f772269e54c864c8f9654185a",
+    "watched-summary.json": "d37de531dc00d38fd41cdca5647dbafe7a1cd9c87064a12e5bac16e8f37d066f",
+    "watched-test_runner-a9d3da191eeb2958.exe.txt": "bc88525a01c14790c9b09aeeec0aebf5b091bd999bc45e94f69e4650019cca3c",
+    "watched-unit-ae562ae83f03ad63.exe.txt": "1e2915472e766be2099b65a9ee9f55f2c5d32a0b3cdfc7a0ebaf9febca87a34c"
+  }
+}

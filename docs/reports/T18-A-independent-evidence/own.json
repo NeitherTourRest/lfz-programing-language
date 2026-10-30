@@ -1,0 +1,178 @@
+{
+  "total": 12,
+  "passed": 12,
+  "fixture_sha256": "51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee",
+  "rows": [
+    {
+      "name": "dual_0",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-tooling/fixture.exe\",\"dual\",\"7\"],1000,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程输出超过字节上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "dual_13",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-tooling/fixture.exe\",\"dual\",\"7\"],1000,13)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程输出超过字节上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "dual_14",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-tooling/fixture.exe\",\"dual\",\"7\"],1000,14)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "dual_large",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-process",
+        "-e",
+        "let p=exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-tooling/fixture.exe\",\"dual\",\"100000\"],1000,200000)\nassert(len(p.stdout)==100000 && len(p.stderr)==100000)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "tail_limit",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-tooling/fixture.exe\",\"dual\",\"100000\"],1000,199999)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程输出超过字节上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "utf8_reclaimed",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-tooling/fixture.exe\",\"invalid\"],1000,1)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程输出不是合法 UTF-8\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "nonzero",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-process",
+        "-e",
+        "assert(exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-tooling/fixture.exe\",\"exit\",\"-1\"],1000,0).exitCode==4294967295)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "local_catch",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-process",
+        "-e",
+        "let r=attempt(()=>exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-tooling/fixture.exe\",\"sleep\",\"500\"],10,0))\nassert(!r.ok && r.error.message==\"子进程执行时间上限已到\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "global_uncatch",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-process",
+        "-e",
+        "attempt(()=>exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-tooling/fixture.exe\",\"sleep\",\"1000\"],2000,0))",
+        "--timeout-ms",
+        "30"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"<command>\",\"line\":1,\"col\":13,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "argv_quoting",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-process",
+        "-e",
+        "let p=exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-tooling/fixture.exe\",\"echo\",\"\",\"x y\",\"雪\",\"a\\\\\",\"a\\\"b\"],1000,100)\nassert(p.stdout==\"0:\\n3:x y\\n3:雪\\n2:a\\\\\\n3:a\\\"b\\n\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "subsequent_session_disabled",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-tooling/fixture.exe\",\"mark\",\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-verifier/own/forbidden.txt\"],1000,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "descendant",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-process",
+        "-e",
+        "let p=exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-tooling/fixture.exe\",\"parent\",\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-verifier/own/desc.txt\"],3000,100)\nassert(p.exitCode==0)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true,
+      "descendant_pid": 47996,
+      "descendant_reaped": true
+    }
+  ]
+}

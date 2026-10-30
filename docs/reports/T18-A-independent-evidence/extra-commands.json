@@ -1,0 +1,32 @@
+[
+  {
+    "name": "public134",
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T17-CLI-1\", \"binary\": \"target\\\\release\\\\lfz.exe\", \"binary_sha256\": \"4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86\", \"bytes\": 984064, \"script_sha256\": \"2d3b015adbbb7d8b7365619b3614d5589c1617f8bb82065ad4a6da92f7280e8c\", \"red_only\": false, \"checks_total\": 134, \"checks_passed\": 134, \"timestamp_utc\": \"2026-10-30T10:50:17.617392+00:00\"}\r\n",
+    "stderr": ""
+  },
+  {
+    "name": "app40",
+    "exit": 0,
+    "stdout": "{\"date\": \"2026-10-30\", \"binary_sha256\": \"4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86\", \"binary_bytes\": 984064, \"status\": \"completed\", \"callback_budget_witness\": 28, \"total\": 40, \"passed\": 40}\r\n",
+    "stderr": ""
+  },
+  {
+    "name": "public29",
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T17-CLI-1\", \"binary\": \"target\\\\release\\\\lfz.exe\", \"binary_sha256\": \"4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86\", \"bytes\": 984064, \"checks_total\": 29, \"checks_passed\": 29, \"script_sha256\": \"7f08094ea8fb530e9cb1a58ded50d838f4b1720fd3db48d090e19ed9c247870e\", \"timestamp_utc\": \"2026-10-30T10:50:19.213346+00:00\"}\r\n",
+    "stderr": ""
+  },
+  {
+    "name": "app33",
+    "exit": 0,
+    "stdout": "{\"date\": \"2026-10-30\", \"binary_sha256\": \"4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86\", \"binary_bytes\": 984064, \"binary\": \"target\\\\release\\\\lfz.exe\", \"total\": 33, \"passed\": 33}\r\n",
+    "stderr": ""
+  },
+  {
+    "name": "public45",
+    "exit": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\r\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-A-independent-evidence\\public45.py\", line 105, in <module>\r\n    if __name__=='__main__':sys.exit(main())\r\n                                     ~~~~^^\r\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-A-independent-evidence\\public45.py\", line 74, in main\r\n    p=subprocess.Popen([str(exe),*args],stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=w,env=env)\r\n  File \"D:\\app\\ANACONDA\\Lib\\subprocess.py\", line 1039, in __init__\r\n    self._execute_child(args, executable, preexec_fn, close_fds,\r\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n                        pass_fds, cwd, env,\r\n                        ^^^^^^^^^^^^^^^^^^^\r\n    ...<5 lines>...\r\n                        gid, gids, uid, umask,\r\n                        ^^^^^^^^^^^^^^^^^^^^^^\r\n                        start_new_session, process_group)\r\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"D:\\app\\ANACONDA\\Lib\\subprocess.py\", line 1554, in _execute_child\r\n    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,\r\n                       ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\r\n                             # no special security\r\n                             ^^^^^^^^^^^^^^^^^^^^^\r\n    ...<4 lines>...\r\n                             cwd,\r\n                             ^^^^\r\n                             startupinfo)\r\n                             ^^^^^^^^^^^^\r\nValueError: embedded null character\r\n"
+  }
+]

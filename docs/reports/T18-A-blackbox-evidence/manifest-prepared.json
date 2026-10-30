@@ -1,0 +1,10 @@
+{
+  "phase": "preparation only, final T18-A candidate pending",
+  "cases_total": 45,
+  "script_sha256": "e280caa24dd8e6819fce14eb71abbf8f86396b81c16edd2a3eb6f807498be1db",
+  "evidence": {
+    "prepared.json": "ff0f31b0bc46902e34f8de01b21170ccada7c3ab31991b58a3b4fc48a15bf1b2",
+    "T17-red.json": "4ca9e63ee68f982e37393a72e47d695402fa4ae6adbfd7a8c739703be74a3407"
+  },
+  "note": "red fingerprint refers to original script; after red cleanup was narrowed to actual TimeoutExpired and final binary+fixture digest check added; no T18 execution"
+}

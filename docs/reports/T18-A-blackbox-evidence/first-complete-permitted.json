@@ -1,0 +1,857 @@
+{
+  "schema": "LFZ-T18A-CLI-1",
+  "binary_sha256": "4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86",
+  "fixture_sha256": "51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee",
+  "script_sha256": "eeef3ced3d038f1c428b205be961d2a42aec2b53541be8417210c79c831c9dd8",
+  "checks_total": 45,
+  "checks_passed": 45,
+  "red_only": false,
+  "rows": [
+    {
+      "name": "feature_red",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "let r=exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"exit\",\"0\"],1000,10000)\nassert(r.exitCode==0)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "default_disabled",
+      "args": [
+        "--json",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"mark\",\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/marker.txt\"],1000,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "no_spawn": true
+      },
+      "passed": true
+    },
+    {
+      "name": "arity",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([])"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 exec 期待 3 个参数，得到 1\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "argv_type",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec(1,100,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'exec' 不支持 int 与 array\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "element_type",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([1],100,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'exec' 不支持 int 与 string\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "empty",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([],100,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程 argv 不能为空\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "relative",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"relative.exe\"],100,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程程序必须是绝对可执行文件路径\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "noPATH",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"cmd.exe\"],100,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程程序必须是绝对可执行文件路径\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "bat",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"C:/test.bat\"],100,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程程序必须是绝对可执行文件路径\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "nul",
+      "args": [
+        "--json",
+        "--allow-process",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-public\\nul-case.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程参数不能包含 NUL\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-public\\\\nul-case.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-public\\\\nul-case.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "timeout_type",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\"],\"1\",0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'exec' 不支持 string 与 int\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "limit_type",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\"],1,\"0\")"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'exec' 不支持 string 与 int\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "timeout_range0",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\"],0,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程 timeoutMs 必须在 1..600000 范围内\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "timeout_range-1",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\"],-1,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程 timeoutMs 必须在 1..600000 范围内\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "timeout_range600001",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\"],600001,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程 timeoutMs 必须在 1..600000 范围内\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "output_range-1",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\"],1000,-1)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程 maxOutputBytes 必须在 0..16777216 范围内\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "output_range16777217",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\"],1000,16777217)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程 maxOutputBytes 必须在 0..16777216 范围内\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "exit_nonzero",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "let r=exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"exit\",\"7\"],1000,10000)\nassert(r.exitCode==7)\nassert(r.signal==nil)\nassert(r.stdout==\"\")\nassert(r.stderr==\"\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "stdin_EOF",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "let r=exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"stdin\"],1000,10000)\nassert(r.stdout==\"0\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "argv_unicode_empty",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "let r=exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"echo\",\"\",\"a b\",\"雪\"],1000,10000)\nassert(r.stdout==\"0:\\n3:a b\\n3:雪\\n\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "UTF8_exact",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "let r=exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"utf8\"],1000,10000)\nassert(r.stdout==\"﻿a\\r\\n\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_UTF8",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"invalid\"],1000,10000)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程输出不是合法 UTF-8\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "zero_output",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"exit\",\"0\"],1000,0)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "combined_0",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"dual\",\"3\"],1000,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程输出超过字节上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "combined_5",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"dual\",\"3\"],1000,5)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程输出超过字节上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "combined_6",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"dual\",\"3\"],1000,6)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "dual_large",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "let r=exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"dual\",\"70000\"],1000,140000)\nassert(len(r.stdout)==70000)\nassert(len(r.stderr)==70000)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "tail_overflow",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"dual\",\"70000\"],1000,139999)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程输出超过字节上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "local_timeout_attempt",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "let r=attempt(()=>exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"sleep\",\"500\"],10,10000))\nassert(!r.ok)\nassert(r.error.message==\"子进程执行时间上限已到\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "global_deadline_attempt",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "attempt(()=>exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"sleep\",\"1000\"],2000,10000))",
+        "--timeout-ms",
+        "50"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"<command>\",\"line\":1,\"col\":13,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "context_after_enabled",
+      "args": [
+        "--json",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"mark\",\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/marker.txt\"],1000,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "no_spawn": true
+      },
+      "passed": true
+    },
+    {
+      "name": "argv_protection",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "assert(argv()==[\"--allow-process\",\"--allow-process=1\"])",
+        "--",
+        "--allow-process",
+        "--allow-process=1"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "CODE_protection",
+      "args": [
+        "--json",
+        "-e",
+        "--allow-process"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'allow'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "duplicate",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "1",
+        "--allow-process"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-process' 不能重复\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_",
+      "args": [
+        "--json",
+        "-e",
+        "1",
+        "--allow-process="
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-process' 不接受值\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_1",
+      "args": [
+        "--json",
+        "-e",
+        "1",
+        "--allow-process=1"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-process' 不接受值\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_bad",
+      "args": [
+        "--json",
+        "-e",
+        "1",
+        "--allow-process=bad"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-process' 不接受值\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_check",
+      "args": [
+        "--json",
+        "--allow-process",
+        "check"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 子进程能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_test",
+      "args": [
+        "--json",
+        "--allow-process",
+        "test"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 子进程能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_--help",
+      "args": [
+        "--json",
+        "--allow-process",
+        "--help"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 子进程能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_-h",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-h"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 子进程能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_--version",
+      "args": [
+        "--json",
+        "--allow-process",
+        "--version"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 子进程能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_-V",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-V"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 子进程能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage": true
+      },
+      "passed": true
+    },
+    {
+      "name": "module_fault",
+      "args": [
+        "--json",
+        "--allow-process",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-public\\main.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程执行时间上限已到\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-public\\\\lib.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-public\\\\lib.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "source": true
+      },
+      "passed": true
+    },
+    {
+      "name": "descendant_pipe",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "let r=exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/owned/fixture.exe\",\"parent\",\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-public/descendant.pid\"],3000,10000)\nassert(r.exitCode==0)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "descendant": {
+        "pid": "44416",
+        "probe_stdout_hex": "494e464f3a204e6f207461736b73206172652072756e6e696e67207768696368206d6174636820746865207370656369666965642063726974657269612e0d0a"
+      },
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "descendant_reaped": true
+      },
+      "passed": true
+    }
+  ],
+  "timestamp_utc": "2026-10-30T10:52:44.392560+00:00"
+}

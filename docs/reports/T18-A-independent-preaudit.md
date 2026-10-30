@@ -1,0 +1,17 @@
+# T18-A 独立静态预审
+
+2026-10-30，verifier。仅阅读活动源与§23/T18-A-design，未运行、未编译、未改产品。修前作者646与E5F57/984576B仅为作者历史，不是最终独立通过。活动源指纹在T18-A-independent-evidence/preaudit-sources.json。
+
+Windows repr(C)结构按当前Win64字段顺序人工核查：Sa为SECURITY_ATTRIBUTES；Startup/StartupEx为STARTUPINFOW/EX；Pi为PROCESS_INFORMATION；Basic/Extended为Job基本/扩展限制；Accounting为Job基础计数。usize对应SIZE_T/ULONG_PTR，i64对应LARGE_INTEGER，Win32调用约定system。未做新平台编译或Win32 ABI运行验证；不宣称32位/Linux可用。
+
+生命周期主路径：Job先建并设置KILL_ON_JOB_CLOSE；pipe读端清inherit，attribute白名单仅NUL输入及两pipe写端；CreateProcess传明确application、CRT quoting、CREATE_SUSPENDED及EXTENDED_STARTUPINFO_PRESENT。Assign成功才Resume，无非纳管fallback。纳管前失败使用TerminateProcess/wait，纳管后使用TerminateJobObject并查询active==0及直系信号；退出后仍杀后代并drain两流EOF，不留detached reader。Attributes own存储在Vec<usize>，属性列表生命周期覆盖CreateProcess。
+
+数据路径：单owner Peek后最多8KiB ReadFile，无先wait再读；每轮两pipe轮换先后顺序，缓存长度合并不超过N，超量保留允许前缀并锁定OutputLimit，退出后仍检查尾部。两轮间sleep5ms，cleanup另有2秒确认期限；不是硬实时。poll顺序cancel/global deadline/local timeout在OS/drain错误之前，末次成功再poll。runtime先吸收独立diagnostics，再映射原主reason；attempt快照不含diagnostics。CLI成功但diag非空拒绝、错误JSON保持原结构，runner judge有独立门禁。
+
+已知未完成项：当前Handle Drop忽略CloseHandle返回，不能证明所有句柄回收成功；root/tooling正在补显式关闭诊断及注入。最终必须逐早退复查新close路径，特别挂起进程、父写端、thread/process/job、最后close触发的主reason与diag门禁。此处不修复或预先放行。
+
+另已报告root：当前process_tests::fixture()在lib harness内部会调用rustc构建fixture，若最终要求绝不编译与完整harness同时执行则矛盾。最终须由root明确授权既有harness内部fixture编译或owner提供冻结fixture复用策略；verifier不擅改测试或跳过。
+
+最终冻结后拟验收：递归src/Cargo/测试/fixture初末hash；同最终harness及旧T17/C/CLI/应用回归；公开45使用独立Temp副本；自行文件见证模块权限/后继会话禁用/argv边界/双流N与N+1尾部/UTF8/EOF/nonzero/局部timeout可catch与全局不可吞；审阅并同harness实际执行job/assign/pipe/read/wait/kill/close注入与host诊断门禁。真实后代PID确认退出，watchdog超时须按冻结fixture身份精确清理并记录，不碰其他进程；OS清理许可和最终hash后才启动。不得真实OOM/abort/网络/外装。
+
+本批仅Windows，不声称Linux已实现或实测；非Windows只读检查合法绝对路径到Unsupported。R304OPEN，无性能计时/正式发布背书。用户停止边界为T18-A交付后停止，不进入HTTP或后续。

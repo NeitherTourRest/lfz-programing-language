@@ -1,0 +1,14 @@
+
+running 9 tests
+test attempt_cannot_swallow_and_prior_side_effect_remains ... ok
+test timeout_duration_platform_overflow_is_usage_not_host_failure ... ok
+test graph_budget_failure_keeps_dependency_origin ... ok
+test zero_timeout_and_frontend_priority ... ok
+test code_and_argv_are_protected ... ok
+test positions_and_all_execution_sources ... ok
+test exact_step_boundaries_zero_and_max ... ok
+test non_execution_commands_reject_limits_before_loading ... ok
+test strict_values_duplicates_and_missing ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.51s
+

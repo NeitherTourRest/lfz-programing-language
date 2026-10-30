@@ -1,0 +1,4 @@
+2026-10-30 首完整许可调用：python -B tests/t18a_cli_process.py --binary target/release/lfz.exe --fixture Temp/T18-A-public/owned/fixture.exe --expected-sha 4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86 --fixture-sha 51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee --output docs/reports/T18-A-blackbox-evidence/final-first-permitted.json
+exit1，Python traceback main line74 subprocess.Popen -> _winapi.CreateProcess: ValueError: embedded null character。
+NUL用例将literal NUL直接放-e CODE，Windows宿主argv无法传此字符，尚未进入LFZ。此前已执行行没有从内存写出，不虚构其成绩；预定final-first-permitted.json未创建。原脚本script-first.txt保全。
+修正：仅此新用例改为UTF8文件源码，仍保literal NUL交给LFZ lexer，参数期望不变。未改产品。

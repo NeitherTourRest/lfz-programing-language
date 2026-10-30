@@ -1,0 +1,3818 @@
+{
+  "schema": "LFZ-T14-CHECK-BLACKBOX-1",
+  "date": "2026-10-29",
+  "timestamp_utc": "2026-10-30T10:50:02.158394+00:00",
+  "binary": "target\\release\\lfz.exe",
+  "binary_sha256": "4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86",
+  "binary_bytes": 984064,
+  "script_sha256": "44e1c5d9639b5306da9779994e0acb30f62f4943aebbc116de735e4a86a42106",
+  "smoke_only": false,
+  "total": 117,
+  "passed": 117,
+  "failed": 0,
+  "rows": [
+    {
+      "name": "new_check_smoke",
+      "args": [
+        "check",
+        "-e",
+        "print(\"must-not-print\")"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01814530009869486
+    },
+    {
+      "name": "sources_file",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\valid.lfz"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01633350003976375
+    },
+    {
+      "name": "sources_file_json",
+      "args": [
+        "--json",
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\valid.lfz"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01739719999022782
+    },
+    {
+      "name": "sources_inline",
+      "args": [
+        "check",
+        "-e",
+        "print(\"should-not-run\")\neprint(\"should-not-run\")\n;;\ninput(\"should-not-prompt\")\n"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015891300048679113
+    },
+    {
+      "name": "sources_inline_json",
+      "args": [
+        "--json",
+        "check",
+        "-e",
+        "print(\"should-not-run\")\neprint(\"should-not-run\")\n;;\ninput(\"should-not-prompt\")\n"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.014897999935783446
+    },
+    {
+      "name": "sources_stdin",
+      "args": [
+        "check",
+        "-"
+      ],
+      "stdin_hex": "7072696e74282273686f756c642d6e6f742d72756e22290a657072696e74282273686f756c642d6e6f742d72756e22290a3b3b0a696e707574282273686f756c642d6e6f742d70726f6d707422290a",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015181199996732175
+    },
+    {
+      "name": "sources_stdin_json",
+      "args": [
+        "--json",
+        "check",
+        "-"
+      ],
+      "stdin_hex": "7072696e74282273686f756c642d6e6f742d72756e22290a657072696e74282273686f756c642d6e6f742d72756e22290a3b3b0a696e707574282273686f756c642d6e6f742d70726f6d707422290a",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016171999974176288
+    },
+    {
+      "name": "code_protection_empty",
+      "args": [
+        "check",
+        "-e",
+        ""
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.0152902000118047
+    },
+    {
+      "name": "code_protection_empty_json",
+      "args": [
+        "check",
+        "-e",
+        "",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01570180000271648
+    },
+    {
+      "name": "code_protection_code_option",
+      "args": [
+        "check",
+        "-e",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.014756300020962954
+    },
+    {
+      "name": "code_protection_code_help",
+      "args": [
+        "check",
+        "-e",
+        "--help"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015320200007408857
+    },
+    {
+      "name": "code_protection_code_check",
+      "args": [
+        "check",
+        "-e",
+        "check"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015594500000588596
+    },
+    {
+      "name": "code_protection_unicode",
+      "args": [
+        "check",
+        "-e",
+        "print(\"中文🙂 --json --\")"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.014944000053219497
+    },
+    {
+      "name": "code_protection_json_before",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "unknownName"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015360499965026975
+    },
+    {
+      "name": "code_protection_json_after",
+      "args": [
+        "check",
+        "-e",
+        "unknownName",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015411400003358722
+    },
+    {
+      "name": "code_protection_json_repeat",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "unknownName",
+        "--json",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015912100090645254
+    },
+    {
+      "name": "code_option_json_outer",
+      "args": [
+        "--json",
+        "check",
+        "-e",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015742500079795718
+    },
+    {
+      "name": "code_dashdash_preserved",
+      "args": [
+        "check",
+        "-e",
+        "--",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": "<command>",
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 表达式，但得到 '文件末尾'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.014693500008434057
+    },
+    {
+      "name": "usage_0_False",
+      "args": [
+        "check"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 需要 FILE、-e CODE 或 -\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01543679996393621
+    },
+    {
+      "name": "usage_0_True",
+      "args": [
+        "--json",
+        "check"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 需要 FILE、-e CODE 或 -\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015489599900320172
+    },
+    {
+      "name": "usage_1_False",
+      "args": [
+        "check",
+        "-e"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check -e' 需要一个 CODE 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015431600040756166
+    },
+    {
+      "name": "usage_1_True",
+      "args": [
+        "--json",
+        "check",
+        "-e"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check -e' 需要一个 CODE 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015683699981309474
+    },
+    {
+      "name": "usage_2_False",
+      "args": [
+        "check",
+        "--help"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 未知选项 '--help'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015339500037953258
+    },
+    {
+      "name": "usage_2_True",
+      "args": [
+        "--json",
+        "check",
+        "--help"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 未知选项 '--help'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.017251500044949353
+    },
+    {
+      "name": "usage_3_False",
+      "args": [
+        "check",
+        "--unknown"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 未知选项 '--unknown'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016037299996241927
+    },
+    {
+      "name": "usage_3_True",
+      "args": [
+        "--json",
+        "check",
+        "--unknown"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 未知选项 '--unknown'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01518059999216348
+    },
+    {
+      "name": "usage_4_False",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\valid.lfz",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\valid.lfz"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01574810000602156
+    },
+    {
+      "name": "usage_4_True",
+      "args": [
+        "--json",
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\valid.lfz",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\valid.lfz"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.021720100077800453
+    },
+    {
+      "name": "usage_5_False",
+      "args": [
+        "check",
+        "-e",
+        "1",
+        "extra"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check -e' 只接受一个 CODE 参数，不接受脚本参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015235300059430301
+    },
+    {
+      "name": "usage_5_True",
+      "args": [
+        "--json",
+        "check",
+        "-e",
+        "1",
+        "extra"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check -e' 只接受一个 CODE 参数，不接受脚本参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.0159124000929296
+    },
+    {
+      "name": "usage_6_False",
+      "args": [
+        "check",
+        "--"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015021700062789023
+    },
+    {
+      "name": "usage_6_True",
+      "args": [
+        "--json",
+        "check",
+        "--"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01596119999885559
+    },
+    {
+      "name": "usage_7_False",
+      "args": [
+        "check",
+        "--",
+        "x"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.0157376000424847
+    },
+    {
+      "name": "usage_7_True",
+      "args": [
+        "--json",
+        "check",
+        "--",
+        "x"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01523819996509701
+    },
+    {
+      "name": "usage_8_False",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\valid.lfz",
+        "--"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01474789995700121
+    },
+    {
+      "name": "usage_8_True",
+      "args": [
+        "--json",
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\valid.lfz",
+        "--"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015730699989944696
+    },
+    {
+      "name": "usage_9_False",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\valid.lfz",
+        "--",
+        "arg"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01586019992828369
+    },
+    {
+      "name": "usage_9_True",
+      "args": [
+        "--json",
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\valid.lfz",
+        "--",
+        "arg"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.02412670000921935
+    },
+    {
+      "name": "usage_10_False",
+      "args": [
+        "check",
+        "-e",
+        "1",
+        "--"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check -e' 只接受一个 CODE 参数，不接受脚本参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.02083320007659495
+    },
+    {
+      "name": "usage_10_True",
+      "args": [
+        "--json",
+        "check",
+        "-e",
+        "1",
+        "--"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check -e' 只接受一个 CODE 参数，不接受脚本参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.0300275000045076
+    },
+    {
+      "name": "usage_11_False",
+      "args": [
+        "check",
+        "-e",
+        "1",
+        "--",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check -e' 只接受一个 CODE 参数，不接受脚本参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.018047599936835468
+    },
+    {
+      "name": "usage_11_True",
+      "args": [
+        "--json",
+        "check",
+        "-e",
+        "1",
+        "--",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check -e' 只接受一个 CODE 参数，不接受脚本参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015806599985808134
+    },
+    {
+      "name": "usage_12_False",
+      "args": [
+        "check",
+        "-",
+        "--"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016440400038845837
+    },
+    {
+      "name": "usage_12_True",
+      "args": [
+        "--json",
+        "check",
+        "-",
+        "--"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.017764999996870756
+    },
+    {
+      "name": "usage_13_False",
+      "args": [
+        "check",
+        "-",
+        "--",
+        "arg"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.017074299976229668
+    },
+    {
+      "name": "usage_13_True",
+      "args": [
+        "--json",
+        "check",
+        "-",
+        "--",
+        "arg"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "usage",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 'check' 只接受一个来源，不接受脚本参数或 CODE 外的 --\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "usage_text": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016258800053037703
+    },
+    {
+      "name": "non_static_0",
+      "args": [
+        "check",
+        "-e",
+        "unknownName"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01682830008212477
+    },
+    {
+      "name": "non_static_json_0",
+      "args": [
+        "check",
+        "-e",
+        "unknownName",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01796910003758967
+    },
+    {
+      "name": "non_static_1",
+      "args": [
+        "check",
+        "-e",
+        "1 + true"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016581599949859083
+    },
+    {
+      "name": "non_static_json_1",
+      "args": [
+        "check",
+        "-e",
+        "1 + true",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01656000001821667
+    },
+    {
+      "name": "non_static_2",
+      "args": [
+        "check",
+        "-e",
+        "print(1/0)"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016778400051407516
+    },
+    {
+      "name": "non_static_json_2",
+      "args": [
+        "check",
+        "-e",
+        "print(1/0)",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01715109997894615
+    },
+    {
+      "name": "non_static_3",
+      "args": [
+        "check",
+        "-e",
+        "assert(false)"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015129399951547384
+    },
+    {
+      "name": "non_static_json_3",
+      "args": [
+        "check",
+        "-e",
+        "assert(false)",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015948700020089746
+    },
+    {
+      "name": "non_static_4",
+      "args": [
+        "check",
+        "-e",
+        "check(false)"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015997700043953955
+    },
+    {
+      "name": "non_static_json_4",
+      "args": [
+        "check",
+        "-e",
+        "check(false)",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.014979399973526597
+    },
+    {
+      "name": "non_static_5",
+      "args": [
+        "check",
+        "-e",
+        "fn f(x)=>x\nf()"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015050199930556118
+    },
+    {
+      "name": "non_static_json_5",
+      "args": [
+        "check",
+        "-e",
+        "fn f(x)=>x\nf()",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015620799968019128
+    },
+    {
+      "name": "non_static_6",
+      "args": [
+        "check",
+        "-e",
+        "let x=1\nx=2"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.018647099961526692
+    },
+    {
+      "name": "non_static_json_6",
+      "args": [
+        "check",
+        "-e",
+        "let x=1\nx=2",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.017953000031411648
+    },
+    {
+      "name": "non_static_7",
+      "args": [
+        "check",
+        "-e",
+        "readFile(\"definitely-missing-t14\")"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.017118799965828657
+    },
+    {
+      "name": "non_static_json_7",
+      "args": [
+        "check",
+        "-e",
+        "readFile(\"definitely-missing-t14\")",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016710399999283254
+    },
+    {
+      "name": "non_static_8",
+      "args": [
+        "check",
+        "-e",
+        "while true {}"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016459599952213466
+    },
+    {
+      "name": "non_static_json_8",
+      "args": [
+        "check",
+        "-e",
+        "while true {}",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016488300054334104
+    },
+    {
+      "name": "non_static_9",
+      "args": [
+        "check",
+        "-e",
+        "fn forever()=>forever()\nforever()"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.018922600080259144
+    },
+    {
+      "name": "non_static_json_9",
+      "args": [
+        "check",
+        "-e",
+        "fn forever()=>forever()\nforever()",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.023352500051259995
+    },
+    {
+      "name": "non_static_10",
+      "args": [
+        "check",
+        "-e",
+        "jsonParse(\"invalid json\")"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.017015399993397295
+    },
+    {
+      "name": "non_static_json_10",
+      "args": [
+        "check",
+        "-e",
+        "jsonParse(\"invalid json\")",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01753330009523779
+    },
+    {
+      "name": "non_static_11",
+      "args": [
+        "check",
+        "-e",
+        "if 1 { print(\"type-error-if-executed\") }"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01969180000014603
+    },
+    {
+      "name": "non_static_json_11",
+      "args": [
+        "check",
+        "-e",
+        "if 1 { print(\"type-error-if-executed\") }",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.019999700016342103
+    },
+    {
+      "name": "loader_ok_header.LFZ",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\header.LFZ",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.019518199958838522
+    },
+    {
+      "name": "loader_ok_bom.lfz",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\bom.lfz",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.020288700005039573
+    },
+    {
+      "name": "loader_ok_carriage.lfz",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\carriage.lfz",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.019795600092038512
+    },
+    {
+      "name": "loader_ok_plain.txt",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\plain.txt",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.02275450003799051
+    },
+    {
+      "name": "loader_ok_no-extension",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\no-extension",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.023184399935416877
+    },
+    {
+      "name": "loader_ok_empty.txt",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\empty.txt",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.02709550003055483
+    },
+    {
+      "name": "loader_ok_empty-source.lfz",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\empty-source.lfz",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.0251814000075683
+    },
+    {
+      "name": "loader_error_no-header.lfz",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\no-header.lfz",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "CosmosAnswerError",
+        "file": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\no-header.lfz",
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"CosmosAnswerError\",\"message\":\"你忘记了宇宙的答案\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\no-header.lfz\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\no-header.lfz\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.024819200043566525
+    },
+    {
+      "name": "loader_error_header-space.lfz",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\header-space.lfz",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "CosmosAnswerError",
+        "file": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\header-space.lfz",
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"CosmosAnswerError\",\"message\":\"你忘记了宇宙的答案\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\header-space.lfz\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\header-space.lfz\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.030228100018575788
+    },
+    {
+      "name": "loader_error_header-blank.lfz",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\header-blank.lfz",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "CosmosAnswerError",
+        "file": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\header-blank.lfz",
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"CosmosAnswerError\",\"message\":\"你忘记了宇宙的答案\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\header-blank.lfz\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\header-blank.lfz\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.02618419995997101
+    },
+    {
+      "name": "loader_error_invalid-utf8.lfz",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\invalid-utf8.lfz",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\invalid-utf8.lfz",
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"文件不是合法的 UTF-8 编码（首个非法字节位于字节偏移 4）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\invalid-utf8.lfz\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\invalid-utf8.lfz\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.018575699999928474
+    },
+    {
+      "name": "missing_source",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\missing-source.lfz",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "IOError",
+        "file": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\missing-source.lfz",
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"IOError\",\"message\":\"无法读取：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\missing-source.lfz\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\missing-source.lfz\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "no_location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016834400012157857
+    },
+    {
+      "name": "stdin_invalid_utf8",
+      "args": [
+        "check",
+        "-",
+        "--json"
+      ],
+      "stdin_hex": "ff",
+      "expected": {
+        "mode": "json_error",
+        "error": "IOError",
+        "file": "<stdin>",
+        "line": null,
+        "col": null,
+        "message": "无法读取标准输入",
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"IOError\",\"message\":\"无法读取标准输入\",\"file\":\"<stdin>\",\"line\":null,\"col\":null,\"traceback\":[]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "error_message": true,
+        "no_location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015931200003251433
+    },
+    {
+      "name": "inline_location_1",
+      "args": [
+        "check",
+        "-e",
+        "let x =\n",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": "<command>",
+        "line": 1,
+        "col": 8,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"表达式未结束：行尾不能终止表达式；请用括号跨行\",\"file\":\"<command>\",\"line\":1,\"col\":8,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "error_line": true,
+        "error_col": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01845350000075996
+    },
+    {
+      "name": "inline_location_2",
+      "args": [
+        "check",
+        "-e",
+        "\nlet x =\n",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": "<command>",
+        "line": 2,
+        "col": 8,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"表达式未结束：行尾不能终止表达式；请用括号跨行\",\"file\":\"<command>\",\"line\":2,\"col\":8,\"traceback\":[{\"file\":\"<command>\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "error_line": true,
+        "error_col": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01853640004992485
+    },
+    {
+      "name": "file_location",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\location.lfz",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\location.lfz",
+        "line": 2,
+        "col": 8,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"表达式未结束：行尾不能终止表达式；请用括号跨行\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\location.lfz\",\"line\":2,\"col\":8,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\location.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "error_line": true,
+        "error_col": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016847699997015297
+    },
+    {
+      "name": "stdin_location",
+      "args": [
+        "check",
+        "-",
+        "--json"
+      ],
+      "stdin_hex": "6c65742078203d0a",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": "<stdin>",
+        "line": 1,
+        "col": 8,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"表达式未结束：行尾不能终止表达式；请用括号跨行\",\"file\":\"<stdin>\",\"line\":1,\"col\":8,\"traceback\":[{\"file\":\"<stdin>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "error_line": true,
+        "error_col": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.017357800039462745
+    },
+    {
+      "name": "syntax_error_0",
+      "args": [
+        "check",
+        "-e",
+        "return 1",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": "<command>",
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"'return' 只能出现在函数体内\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01670069992542267
+    },
+    {
+      "name": "syntax_error_1",
+      "args": [
+        "check",
+        "-e",
+        "break",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": "<command>",
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"'break' 只能出现在循环体内\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01689149998128414
+    },
+    {
+      "name": "syntax_error_2",
+      "args": [
+        "check",
+        "-e",
+        "continue",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": "<command>",
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"'continue' 只能出现在循环体内\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01731859997380525
+    },
+    {
+      "name": "syntax_error_3",
+      "args": [
+        "check",
+        "-e",
+        "fn f(){ let x = }",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": "<command>",
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 表达式，但得到 '}'\",\"file\":\"<command>\",\"line\":1,\"col\":17,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016864300007000566
+    },
+    {
+      "name": "syntax_error_4",
+      "args": [
+        "check",
+        "-e",
+        "if false { let x = }",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": "<command>",
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 表达式，但得到 '}'\",\"file\":\"<command>\",\"line\":1,\"col\":20,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01761310000438243
+    },
+    {
+      "name": "syntax_error_5",
+      "args": [
+        "check",
+        "-e",
+        "1 = 2",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": "<command>",
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"赋值左侧必须是变量、字段或下标\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015817999956198037
+    },
+    {
+      "name": "syntax_error_6",
+      "args": [
+        "check",
+        "-e",
+        "let x = @",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": "<command>",
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"非法字符 '@'\",\"file\":\"<command>\",\"line\":1,\"col\":9,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "error_file": true,
+        "location_trace": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015437599970027804
+    },
+    {
+      "name": "non_execution_0_file_False",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\guard-0.lfz"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015990300104022026
+    },
+    {
+      "name": "non_execution_0_file_True",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\guard-0.lfz",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01625480002257973
+    },
+    {
+      "name": "non_execution_0_inline_False",
+      "args": [
+        "check",
+        "-e",
+        "print(\"no-output\")\neprint(\"no-output\")\n;;\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\sentinel.bin\", \"overwritten\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\sentinel.bin\", \"appended\")\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\must-not-create.bin\", \"created\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\must-not-create.bin\", \"created\")\ninput(\"no-prompt\")\nwhile true {}"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015546599985100329
+    },
+    {
+      "name": "non_execution_0_inline_True",
+      "args": [
+        "check",
+        "-e",
+        "print(\"no-output\")\neprint(\"no-output\")\n;;\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\sentinel.bin\", \"overwritten\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\sentinel.bin\", \"appended\")\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\must-not-create.bin\", \"created\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\must-not-create.bin\", \"created\")\ninput(\"no-prompt\")\nwhile true {}",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015341500053182244
+    },
+    {
+      "name": "non_execution_0_stdin_False",
+      "args": [
+        "check",
+        "-"
+      ],
+      "stdin_hex": "7072696e7428226e6f2d6f757470757422290a657072696e7428226e6f2d6f757470757422290a3b3b0a777269746546696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c73656e74696e656c2e62696e222c20226f7665727772697474656e22290a617070656e6446696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c73656e74696e656c2e62696e222c2022617070656e64656422290a777269746546696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c6d7573742d6e6f742d6372656174652e62696e222c20226372656174656422290a617070656e6446696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c6d7573742d6e6f742d6372656174652e62696e222c20226372656174656422290a696e70757428226e6f2d70726f6d707422290a7768696c652074727565207b7d",
+      "expected": {
+        "mode": "success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "stdout_empty": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01602029998321086
+    },
+    {
+      "name": "non_execution_0_stdin_True",
+      "args": [
+        "check",
+        "-",
+        "--json"
+      ],
+      "stdin_hex": "7072696e7428226e6f2d6f757470757422290a657072696e7428226e6f2d6f757470757422290a3b3b0a777269746546696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c73656e74696e656c2e62696e222c20226f7665727772697474656e22290a617070656e6446696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c73656e74696e656c2e62696e222c2022617070656e64656422290a777269746546696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c6d7573742d6e6f742d6372656174652e62696e222c20226372656174656422290a617070656e6446696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c6d7573742d6e6f742d6372656174652e62696e222c20226372656174656422290a696e70757428226e6f2d70726f6d707422290a7768696c652074727565207b7d",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015458200010471046
+    },
+    {
+      "name": "non_execution_1_file_False",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\guard-1.lfz"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "error",
+        "error": "SyntaxError",
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\guard-1.lfz\", line 11\n    let broken =\n                ^\nSyntaxError: 这里期待 表达式，但得到 '文件末尾'\n",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "human_class": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016028699930757284
+    },
+    {
+      "name": "non_execution_1_file_True",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\guard-1.lfz",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 表达式，但得到 '文件末尾'\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\guard-1.lfz\",\"line\":11,\"col\":13,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\guard-1.lfz\",\"line\":11,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "location_trace": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015971000073477626
+    },
+    {
+      "name": "non_execution_1_inline_False",
+      "args": [
+        "check",
+        "-e",
+        "print(\"no-output\")\neprint(\"no-output\")\n;;\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\sentinel.bin\", \"overwritten\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\sentinel.bin\", \"appended\")\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\must-not-create.bin\", \"created\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\must-not-create.bin\", \"created\")\ninput(\"no-prompt\")\nwhile true {}\nlet broken ="
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "error",
+        "error": "SyntaxError",
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"<command>\", line 10\n    let broken =\n                ^\nSyntaxError: 这里期待 表达式，但得到 '文件末尾'\n",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "human_class": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01884190004784614
+    },
+    {
+      "name": "non_execution_1_inline_True",
+      "args": [
+        "check",
+        "-e",
+        "print(\"no-output\")\neprint(\"no-output\")\n;;\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\sentinel.bin\", \"overwritten\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\sentinel.bin\", \"appended\")\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\must-not-create.bin\", \"created\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\must-not-create.bin\", \"created\")\ninput(\"no-prompt\")\nwhile true {}\nlet broken =",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 表达式，但得到 '文件末尾'\",\"file\":\"<command>\",\"line\":10,\"col\":13,\"traceback\":[{\"file\":\"<command>\",\"line\":10,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "location_trace": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016829199972562492
+    },
+    {
+      "name": "non_execution_1_stdin_False",
+      "args": [
+        "check",
+        "-"
+      ],
+      "stdin_hex": "7072696e7428226e6f2d6f757470757422290a657072696e7428226e6f2d6f757470757422290a3b3b0a777269746546696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c73656e74696e656c2e62696e222c20226f7665727772697474656e22290a617070656e6446696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c73656e74696e656c2e62696e222c2022617070656e64656422290a777269746546696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c6d7573742d6e6f742d6372656174652e62696e222c20226372656174656422290a617070656e6446696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c6d7573742d6e6f742d6372656174652e62696e222c20226372656174656422290a696e70757428226e6f2d70726f6d707422290a7768696c652074727565207b7d0a6c65742062726f6b656e203d",
+      "expected": {
+        "mode": "error",
+        "error": "SyntaxError",
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"<stdin>\", line 10\n    let broken =\n                ^\nSyntaxError: 这里期待 表达式，但得到 '文件末尾'\n",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "human_class": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015441900002770126
+    },
+    {
+      "name": "non_execution_1_stdin_True",
+      "args": [
+        "check",
+        "-",
+        "--json"
+      ],
+      "stdin_hex": "7072696e7428226e6f2d6f757470757422290a657072696e7428226e6f2d6f757470757422290a3b3b0a777269746546696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c73656e74696e656c2e62696e222c20226f7665727772697474656e22290a617070656e6446696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c73656e74696e656c2e62696e222c2022617070656e64656422290a777269746546696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c6d7573742d6e6f742d6372656174652e62696e222c20226372656174656422290a617070656e6446696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c6d7573742d6e6f742d6372656174652e62696e222c20226372656174656422290a696e70757428226e6f2d70726f6d707422290a7768696c652074727565207b7d0a6c65742062726f6b656e203d",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 表达式，但得到 '文件末尾'\",\"file\":\"<stdin>\",\"line\":10,\"col\":13,\"traceback\":[{\"file\":\"<stdin>\",\"line\":10,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "location_trace": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016644799965433776
+    },
+    {
+      "name": "non_execution_2_file_False",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\guard-2.lfz"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "error",
+        "error": "SyntaxError",
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\guard-2.lfz\", line 11\n    @\n    ^\nSyntaxError: 非法字符 '@'\n",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "human_class": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015944499988108873
+    },
+    {
+      "name": "non_execution_2_file_True",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\guard-2.lfz",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"非法字符 '@'\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\guard-2.lfz\",\"line\":11,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\guard-2.lfz\",\"line\":11,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "location_trace": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01635409996379167
+    },
+    {
+      "name": "non_execution_2_inline_False",
+      "args": [
+        "check",
+        "-e",
+        "print(\"no-output\")\neprint(\"no-output\")\n;;\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\sentinel.bin\", \"overwritten\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\sentinel.bin\", \"appended\")\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\must-not-create.bin\", \"created\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\must-not-create.bin\", \"created\")\ninput(\"no-prompt\")\nwhile true {}\n@"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "error",
+        "error": "SyntaxError",
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"<command>\", line 10\n    @\n    ^\nSyntaxError: 非法字符 '@'\n",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "human_class": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016431399970315397
+    },
+    {
+      "name": "non_execution_2_inline_True",
+      "args": [
+        "check",
+        "-e",
+        "print(\"no-output\")\neprint(\"no-output\")\n;;\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\sentinel.bin\", \"overwritten\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\sentinel.bin\", \"appended\")\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\must-not-create.bin\", \"created\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T14-test\\\\must-not-create.bin\", \"created\")\ninput(\"no-prompt\")\nwhile true {}\n@",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"非法字符 '@'\",\"file\":\"<command>\",\"line\":10,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":10,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "location_trace": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015966699924319983
+    },
+    {
+      "name": "non_execution_2_stdin_False",
+      "args": [
+        "check",
+        "-"
+      ],
+      "stdin_hex": "7072696e7428226e6f2d6f757470757422290a657072696e7428226e6f2d6f757470757422290a3b3b0a777269746546696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c73656e74696e656c2e62696e222c20226f7665727772697474656e22290a617070656e6446696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c73656e74696e656c2e62696e222c2022617070656e64656422290a777269746546696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c6d7573742d6e6f742d6372656174652e62696e222c20226372656174656422290a617070656e6446696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c6d7573742d6e6f742d6372656174652e62696e222c20226372656174656422290a696e70757428226e6f2d70726f6d707422290a7768696c652074727565207b7d0a40",
+      "expected": {
+        "mode": "error",
+        "error": "SyntaxError",
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"<stdin>\", line 10\n    @\n    ^\nSyntaxError: 非法字符 '@'\n",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stdout_empty": true,
+        "human_class": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015781300025992095
+    },
+    {
+      "name": "non_execution_2_stdin_True",
+      "args": [
+        "check",
+        "-",
+        "--json"
+      ],
+      "stdin_hex": "7072696e7428226e6f2d6f757470757422290a657072696e7428226e6f2d6f757470757422290a3b3b0a777269746546696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c73656e74696e656c2e62696e222c20226f7665727772697474656e22290a617070656e6446696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c73656e74696e656c2e62696e222c2022617070656e64656422290a777269746546696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c6d7573742d6e6f742d6372656174652e62696e222c20226372656174656422290a617070656e6446696c652822443a5c5c5855455c5c3230323666616c6c5c5c50726f6772616d2044657369676e5c5c6c667a2d70726f6772616d696e67206c616e67756167652064657369676e5c5c54656d705c5c5431342d746573745c5c6d7573742d6e6f742d6372656174652e62696e222c20226372656174656422290a696e70757428226e6f2d70726f6d707422290a7768696c652074727565207b7d0a40",
+      "expected": {
+        "mode": "json_error",
+        "error": "SyntaxError",
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"非法字符 '@'\",\"file\":\"<stdin>\",\"line\":10,\"col\":1,\"traceback\":[{\"file\":\"<stdin>\",\"line\":10,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "guard_evidence": [
+        {
+          "path": "Temp\\T14-test\\sentinel.bin",
+          "before_hex": "006f726967696e616c0d0aff",
+          "after_hex": "006f726967696e616c0d0aff"
+        },
+        {
+          "path": "Temp\\T14-test\\must-not-create.bin",
+          "before_hex": null,
+          "after_hex": null
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "one_json_line": true,
+        "ordered_keys": true,
+        "check_markers": true,
+        "error_class": true,
+        "location_trace": true,
+        "unchanged_sentinel.bin": true,
+        "unchanged_must-not-create.bin": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.015562499989755452
+    },
+    {
+      "name": "old_inline_execution",
+      "args": [
+        "-e",
+        "check(true)\nprint(\"control\")"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "control",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": "control\n",
+        "exit": 0
+      },
+      "exit": 0,
+      "stdout": "control\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01631089998409152
+    },
+    {
+      "name": "old_run_json_unchanged",
+      "args": [
+        "-e",
+        "1",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "control",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": "{\"ok\":true}\n",
+        "exit": 0
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01543400005903095
+    },
+    {
+      "name": "old_run_named_check_file",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\check"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "control",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": "named-check\n",
+        "exit": 0
+      },
+      "exit": 0,
+      "stdout": "named-check\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.01800889999140054
+    },
+    {
+      "name": "check_named_check_file",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T14-test\\check",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "json_success",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": null
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stderr_empty": true,
+        "success_exact_bytes": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.016344200004823506
+    },
+    {
+      "name": "help_documents_check",
+      "args": [
+        "--help"
+      ],
+      "stdin_hex": "",
+      "expected": {
+        "mode": "control",
+        "error": null,
+        "file": null,
+        "line": null,
+        "col": null,
+        "message": null,
+        "stdout": null,
+        "exit": 0
+      },
+      "exit": 0,
+      "stdout": "LFZ 解释器\n\n用法:\n  lfz <file>           运行 LFZ 脚本（裸调用；等价 lfz run <file>）\n  lfz run <file>       运行 LFZ 脚本\n  lfz -e CODE [-- ARG...]  直接执行代码（也可 lfz run -e CODE）\n  lfz - [-- ARG...]       从标准输入读取源码到 EOF（也可 lfz run -）\n  lfz FILE.lfz -- ARG...  原样传入脚本参数，可用 argv() 读取\n  lfz check FILE       只检查文件语法，不执行 LFZ 程序\n  lfz check -e CODE    只检查直接代码；check - 从 stdin 检查源码\n  lfz test [路径...]   运行黑盒测试（默认发现 tests/**/*.lfz，排除 tests/fixtures）\n  lfz --help, -h       显示本帮助\n  lfz --version, -V    显示版本\n\n文件与前导（#42）:\n  裸调用 lfz <file> 等价 lfz run <file>，唯一差别是入口校验：\n    lfz <file>       要求 <file> 以 .lfz 结尾（大小写不敏感）；否则报错并退出码 2。\n    lfz run <file>   接受任意路径（不校验扩展名）。\n  是否要求 #42 前导按扩展名判定（§2.2.0）:\n    .lfz 文件        首行必须为 #42，否则 CosmosAnswerError（退出码 2）；\n    非 .lfz 文件     豁免 #42 前导（如 .txt / 无扩展名），按普通源加载执行。\n\n选项:\n  --allow-process      仅本次执行启用受控子进程；必须绝对exe路径，能力不是沙箱\n                       exec捕获输出作为返回值，不转发到解释器终端\n  --max-steps N        限制求值节点步数（非负十进制u64，仅运行命令）\n  --timeout-ms N       求值协作截止时间（不含前端，不硬中断阻塞IO）\n  --json               以机器可读 JSON 输出（stdout 只写 JSON；程序输出与人类可读诊断转 stderr）\n                       源码和 -- 后脚本参数以外的位置可用，以下写法等价：\n                         lfz --json <file>       lfz <file> --json\n                         lfz run --json <file>   lfz run <file> --json\n\n退出码:\n  0  成功（所有用例通过）\n  1  测试有用例失败（assert / fail 抛 AssertionError）\n  2  CLI 参数错误 / LFZ 语法或运行时错误 / 用例 error / 运行环境错误\n\n代码与参数:\n  -e CODE 的 CODE 原样作为源码，不要求 #42；- 源码入口读取 UTF-8 到 EOF。\n  脚本参数必须在 -- 后，argv() 不含程序名/脚本名。-- 后的 --json 是普通参数。\n  stdin 源码读取后 input() 将遇到 EOF；文件和 -e 模式可继续读取标准输入。\n  --json 只输出执行状态对象；需要业务 JSON 时正常模式 print(jsonStringify(value))。\n  check 通过语法检查不代表运行成功；不检查名称、类型或文件IO，不执行脚本。\n  check 不接受脚本参数或 CODE 外的 --；合法命令的 --json 标记 executed:false。\n  CLI 参数错误仍写 stderr 文本；check --help 不受支持，请使用 lfz --help。\n\n示例:\n  lfz -e 'print(1+2)'\n  lfz -e 'print(argv())' -- first second\n  lfz check --json examples/hello.lfz\n  lfz examples/hello.lfz\n  lfz run examples/hello.lfz\n  lfz --json examples/hello.lfz\n  lfz test\n  lfz test --json tests/smoke\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr_empty": true
+      },
+      "passed": true,
+      "elapsed_seconds": 0.0149671999970451
+    }
+  ]
+}

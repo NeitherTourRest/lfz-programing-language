@@ -1,0 +1,11 @@
+
+running 6 tests
+test capability_scan_usage_code_and_argv_protection ... ok
+test global_deadline_inside_exec_is_not_caught ... ok
+test default_disabled_and_explicit_session_enable ... ok
+test module_inherits_same_session_permission ... ok
+test timeout_output_limit_utf8_are_recoverable_values ... ok
+test captured_outputs_are_values_not_implicit_terminal_output ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.74s
+

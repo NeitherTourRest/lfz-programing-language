@@ -1,0 +1,10 @@
+{
+  "src/process_control.rs": "e8cfcc7e54d7f2fb24f9d979d6f27d79bfcb20afaa7864326b7d49f13dab0442",
+  "src/process_control/windows.rs": "6aac72cc3df3673887b9b1a98410f69a6b5ca688dadc9b723f804ea2da32b7d4",
+  "src/process_control/fixture.rs": "0c09739e3327414281a5e89d5ad59dc5ec8356d1c6bbe9428dddcf9829f2b0a9",
+  "src/evaluator.rs": "d801e6043abf229c763366a0771e5c14b83ba7cc9f0bd2b8c689ca1c54d36b99",
+  "src/cli.rs": "c2d1c37ff64dcffb0322e1a6d32524d27b33aa4bfaa176ff5c5900393c0bc3b5",
+  "src/test_runner.rs": "ab8a62821e0efa046dbbd43bb609a36c99a9d353ba5d3fb38ab3026c98723226",
+  "docs/reports/T18-A-design.md": "a4c15c130603b56969c3941d15077c472578e123ee2c001e02a0245ee00d867a",
+  "docs/spec/interface-contract.md": "05f20a83c5851574143894772cb9ef93ca65a605b06599a750f895d1bbda043d"
+}

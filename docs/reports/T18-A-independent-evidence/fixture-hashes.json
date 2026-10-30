@@ -1,0 +1,11 @@
+{
+  "public_fixture": {
+    "path": "Temp/T18-A-tooling/fixture.exe",
+    "sha256": "51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee"
+  },
+  "harness_fixture": {
+    "path": "Temp/T18-A-tooling/unit-fixture/fixture.exe",
+    "sha256": "056679f3036fe32347f6dc41cac196211767e1c35f0cfe45e623b5f3c485b199",
+    "reason": "Existing lib harness internally rebuilds fixture once; explicitly authorized by root; no product compilation"
+  }
+}

@@ -1,0 +1,20 @@
+
+running 15 tests
+test nesting_depth::limit_constant_is_1000 ... ok
+test ast_depth::ast_depth_limit_constant_is_10000 ... ok
+test nesting_depth::unary_prefix_1001_is_nesting_too_deep ... ok
+test nesting_depth::paren_1000_is_legal ... ok
+test nesting_depth::left_assoc_chains_are_not_counted ... ok
+test ast_depth::paren_grouping_is_transparent ... ok
+test nesting_depth::paren_1001_is_nesting_too_deep ... ok
+test ast_depth::add_chain_10000_terms_is_expr_too_deep ... ok
+test ast_depth::parse_nesting_1000_stays_legal_under_ast_limit ... ok
+test nesting_depth::struct_lit_1001_is_nesting_too_deep ... ok
+test nesting_depth::fn_block_1001_is_nesting_too_deep ... ok
+test nesting_depth::bracket_1001_is_nesting_too_deep ... ok
+test ast_depth::add_chain_9999_terms_is_legal ... ok
+test ast_depth::index_chain_9999_subscripts_is_expr_too_deep ... ok
+test ast_depth::index_chain_9998_subscripts_is_legal ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+

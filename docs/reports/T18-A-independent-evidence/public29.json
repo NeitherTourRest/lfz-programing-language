@@ -1,0 +1,725 @@
+{
+  "schema": "LFZ-T17-CLI-1",
+  "binary": "target\\release\\lfz.exe",
+  "binary_sha256": "4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86",
+  "bytes": 984064,
+  "checks_total": 29,
+  "checks_passed": 29,
+  "script_sha256": "7f08094ea8fb530e9cb1a58ded50d838f4b1720fd3db48d090e19ed9c247870e",
+  "rows": [
+    {
+      "name": "diamond_once",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\diamond_once\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\diamond_once",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "leaf\nleft\nright\nentry\n",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "fresh_process",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\fresh_process\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\fresh_process",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "leaf\nleft\nright\nentry\n",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "independent_globals",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\independent_globals\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\independent_globals",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "home_closure",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\home_closure\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\home_closure",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "namespace_snapshot_shared",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\namespace_snapshot_shared\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\namespace_snapshot_shared",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "self_methods",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\self_methods\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\self_methods",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "argv_snapshot",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\argv_snapshot\\main.lfz",
+        "--",
+        "",
+        "雪",
+        "--json"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\argv_snapshot",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "empty_namespace",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\empty_namespace\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\empty_namespace",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "template_definition_globals",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\template_definition_globals\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\template_definition_globals",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "template_local_cells",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\template_local_cells\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\template_local_cells",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "template_self",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\template_self\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\template_self",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "template_default_order",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\template_default_order\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\template_default_order",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "cross_error_json",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\cross_error_json\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\cross_error_json",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\cross_error_json\\\\lib.lfz\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\cross_error_json\\\\main.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\cross_error_json\\\\lib.lfz\",\"line\":3,\"func\":\"bad\"}]}\n",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "one_line": true,
+        "stderr": true,
+        "error": true,
+        "file": true,
+        "line": true,
+        "frame_files": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "cross_error_human",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\cross_error_human\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\cross_error_human",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\cross_error_human\\main.lfz\", line 3, in <module>\n    m.bad()\n    ^\n  File \"\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\cross_error_human\\lib.lfz\", line 3, in bad\n    1/0\n    ^\nZeroDivisionError: 除以零\n",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "contains_lib.lfz": true,
+        "contains_1/0": true,
+        "contains_ZeroDivisionError": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "attempt_home_restore",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\attempt_home_restore\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\attempt_home_restore",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "attempt_new_error_source",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\attempt_new_error_source\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\attempt_new_error_source",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\attempt_new_error_source\\\\main.lfz\",\"line\":4,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\attempt_new_error_source\\\\main.lfz\",\"line\":4,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "one_line": true,
+        "stderr": true,
+        "error": true,
+        "file": true,
+        "line": true,
+        "frame_files": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "caller_arity_source",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\caller_arity_source\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\caller_arity_source",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 bad 期待 0 个参数，得到 1\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\caller_arity_source\\\\main.lfz\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\caller_arity_source\\\\main.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "one_line": true,
+        "stderr": true,
+        "error": true,
+        "file": true,
+        "line": true,
+        "frame_files": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "default_error_source",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\default_error_source\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\default_error_source",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\default_error_source\\\\lib.lfz\",\"line\":2,\"col\":14,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\default_error_source\\\\main.lfz\",\"line\":4,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\default_error_source\\\\lib.lfz\",\"line\":2,\"func\":\"Bad::<defaults>\"}]}\n",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "one_line": true,
+        "stderr": true,
+        "error": true,
+        "file": true,
+        "line": true,
+        "frame_files": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "override_error_source",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\override_error_source\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\override_error_source",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\override_error_source\\\\main.lfz\",\"line\":4,\"col\":5,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\override_error_source\\\\main.lfz\",\"line\":4,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "one_line": true,
+        "stderr": true,
+        "error": true,
+        "file": true,
+        "line": true,
+        "frame_files": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "bad_graph_syntax",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\bad_graph_syntax\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\bad_graph_syntax",
+      "stdin_hex": "",
+      "before": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\bad_graph_syntax\\sentinel.txt": "4f524947494e414c"
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"表达式未结束：行尾不能终止表达式；请用括号跨行\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\bad_graph_syntax\\\\bad.lfz\",\"line\":2,\"col\":8,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\bad_graph_syntax\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "after": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\bad_graph_syntax\\sentinel.txt": "4f524947494e414c"
+      },
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "one_line": true,
+        "stderr": true,
+        "error": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "bad_graph_export",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\bad_graph_export\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\bad_graph_export",
+      "stdin_hex": "",
+      "before": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\bad_graph_export\\sentinel.txt": "4f524947494e414c"
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"导出名没有顶层声明：missing\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\bad_graph_export\\\\bad.lfz\",\"line\":2,\"col\":8,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\bad_graph_export\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "after": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\bad_graph_export\\sentinel.txt": "4f524947494e414c"
+      },
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "one_line": true,
+        "stderr": true,
+        "error": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "bad_graph_cycle",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\bad_graph_cycle\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\bad_graph_cycle",
+      "stdin_hex": "",
+      "before": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\bad_graph_cycle\\sentinel.txt": "4f524947494e414c"
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"模块循环依赖：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\bad_graph_cycle\\\\main.lfz → \\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\bad_graph_cycle\\\\bad.lfz → D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\bad_graph_cycle\\\\main.lfz\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\bad_graph_cycle\\\\bad.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\bad_graph_cycle\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "after": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\bad_graph_cycle\\sentinel.txt": "4f524947494e414c"
+      },
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "one_line": true,
+        "stderr": true,
+        "error": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "init_fail_stops",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\init_fail_stops\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\init_fail_stops",
+      "stdin_hex": "",
+      "before": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\init_fail_stops\\sentinel.txt": "4f524947494e414c"
+      },
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\init_fail_stops\\\\bad.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-A-verifier\\\\public\\\\init_fail_stops\\\\bad.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "after": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\init_fail_stops\\sentinel.txt": "4f524947494e414c"
+      },
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "one_line": true,
+        "stderr": true,
+        "error": true,
+        "file": true,
+        "line": true,
+        "frame_files": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "check_no_init_io",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\check_no_init_io\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\check_no_init_io",
+      "stdin_hex": "",
+      "before": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\check_no_init_io\\sentinel.txt": "4f524947494e414c"
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "after": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\check_no_init_io\\sentinel.txt": "4f524947494e414c"
+      },
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "one_line": true,
+        "stderr": true,
+        "check_flags": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "check_no_init_input",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\check_no_init_input\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\check_no_init_input",
+      "stdin_hex": "",
+      "before": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\check_no_init_input\\sentinel.txt": "4f524947494e414c"
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "after": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\check_no_init_input\\sentinel.txt": "4f524947494e414c"
+      },
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "one_line": true,
+        "stderr": true,
+        "check_flags": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "check_no_init_loop",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\check_no_init_loop\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\check_no_init_loop",
+      "stdin_hex": "",
+      "before": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\check_no_init_loop\\sentinel.txt": "4f524947494e414c"
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "after": {
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\check_no_init_loop\\sentinel.txt": "4f524947494e414c"
+      },
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "one_line": true,
+        "stderr": true,
+        "check_flags": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "source_eval",
+      "args": [
+        "run",
+        "-e",
+        "import m from \"./lib.lfz\"\nassert(m.n==7)"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\source_eval",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "source_stdin",
+      "args": [
+        "run",
+        "-"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\source_stdin",
+      "stdin_hex": "696d706f7274206d2066726f6d20222e2f6c69622e6c667a220a617373657274286d2e6e3d3d3729",
+      "before": {},
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "stdout": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    },
+    {
+      "name": "json_program_output",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\json_program_output\\main.lfz"
+      ],
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-verifier\\public\\json_program_output",
+      "stdin_hex": "",
+      "before": {},
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "DEP\nROOT\n",
+      "after": {},
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "one_line": true,
+        "stderr": true,
+        "sentinels": true
+      },
+      "passed": true
+    }
+  ],
+  "timestamp_utc": "2026-10-30T10:50:19.213346+00:00"
+}

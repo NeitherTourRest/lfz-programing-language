@@ -1,0 +1,30 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+warning: variant `Unsupported` is never constructed
+ --> src\process_control.rs:7:89
+  |
+7 | #[derive(Debug)] pub(crate) enum ProcessFailure {Cancelled,Deadline,Timeout,OutputLimit,Unsupported,Io{operation:String,message:String}}
+  |                                  -------------- variant in this enum                    ^^^^^^^^^^^
+  |
+  = note: `ProcessFailure` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+  = note: `#[warn(dead_code)]` on by default
+
+warning: `lfz` (lib test) generated 1 warning
+    Finished `release` profile [optimized] target(s) in 50.12s
+     Running unittests src\lib.rs (target\release\deps\lfz-63397fd2d9985014.exe)
+
+running 7 tests
+test process_control::windows::tests::crt_quoting ... ok
+test process_control::windows::process_tests::pre_cancel_and_deadline_priority ... ok
+test process_control::windows::process_tests::args_empty_space_unicode_slash_and_quote ... ok
+test process_control::windows::process_tests::injected_job_assign_pipe_read_wait_and_cleanup ... ok
+test process_control::windows::process_tests::descendant_holding_pipe_is_reaped_before_success ... ok
+test process_control::windows::process_tests::fair_dual_pipes_exact_budget_and_zero ... ok
+test process_control::windows::process_tests::raw_bytes_nonzero_exit_stdin_and_timeout ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 476 filtered out; finished in 1.01s
+

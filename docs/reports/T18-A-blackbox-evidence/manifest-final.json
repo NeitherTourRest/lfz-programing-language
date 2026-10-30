@@ -1,0 +1,58 @@
+{
+  "phase": "final public Windows45 PASS",
+  "binary": {
+    "path": "target/release/lfz.exe",
+    "bytes": 984064,
+    "sha256": "4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86"
+  },
+  "fixture": {
+    "path": "Temp\\T18-A-public\\owned\\fixture.exe",
+    "bytes": 262144,
+    "initial_sha256": "51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee",
+    "final_sha256": "51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee"
+  },
+  "binary_initial_sha256": "4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86",
+  "binary_final_sha256": "4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86",
+  "source_hashes": {
+    "src/ast.rs": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076",
+    "src/builtins.rs": "b76cc9d99260cd6856a705007846133f861db6a6735d14c62a27ced4c8c88e8d",
+    "src/cli.rs": "c2d1c37ff64dcffb0322e1a6d32524d27b33aa4bfaa176ff5c5900393c0bc3b5",
+    "src/env.rs": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc",
+    "src/error.rs": "0ab3c6112bfd01aae0f52d1d9338c7950e10bbbca975a68a7013a61bf6c3dba6",
+    "src/evaluator.rs": "d801e6043abf229c763366a0771e5c14b83ba7cc9f0bd2b8c689ca1c54d36b99",
+    "src/json.rs": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f",
+    "src/json_codec.rs": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2",
+    "src/lexer.rs": "ebb952edbcd201210eb1f9c6ddebf58e2f3f998b260a11a51fe1c967848031f2",
+    "src/lib.rs": "06931e6d89372cb08244e71ce1e1236408b9acebfdf39287007f68c662f823a3",
+    "src/loader.rs": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f",
+    "src/main.rs": "247fc12340d2f6a26aa3fc5ada658cbfe72fb7ee7f85f107b05e6af27018c366",
+    "src/modules.rs": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895",
+    "src/parser.rs": "58c41ba85d930dc0ef465be2a9d3c0741cfe7052d6dd9df01a825aab73e7ff5f",
+    "src/process_control/fixture.rs": "0c09739e3327414281a5e89d5ad59dc5ec8356d1c6bbe9428dddcf9829f2b0a9",
+    "src/process_control/windows.rs": "540d14c697dcd84e2a9ba6a0f2415b24509335206617ad939c7318e0a8e76a09",
+    "src/process_control.rs": "e8cfcc7e54d7f2fb24f9d979d6f27d79bfcb20afaa7864326b7d49f13dab0442",
+    "src/source.rs": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468",
+    "src/span.rs": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2",
+    "src/test_runner.rs": "ab8a62821e0efa046dbbd43bb609a36c99a9d353ba5d3fb38ab3026c98723226",
+    "src/value.rs": "63967cb79996c7fedfe7285378e58c2774825c73680a81e50c12a185bbe438a0",
+    "Cargo.toml": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c",
+    "Cargo.lock": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4",
+    "tests/cli_t18a.rs": "faa29e2cc5e413b7a10da9c5302bb82b37ebceb395058ff7a1096810bd56d257"
+  },
+  "source_check": "post-run source matches frozen tooling close manifest; no before-source snapshot claimed",
+  "script_sha256": "eeef3ced3d038f1c428b205be961d2a42aec2b53541be8417210c79c831c9dd8",
+  "checks_total": 45,
+  "checks_passed": 45,
+  "evidence": {
+    ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
+    "first-complete-permitted.json": "c3a9173ea208c7610349a59d8fa62a439a40bed883eddc2f6a91ae3b76710d94",
+    "first-script-error.txt": "2ca46a19ceff48cbdea53f1f6279379adcbc579206172e373f859bd2d1d394ca",
+    "identity.json": "e5fe4448b5463f3ee2e05911429770648ed3a9a63b8f391bfa7cdacb4448baec",
+    "manifest-prepared.json": "7f1c58356cef12c8c0fb1ad57c9af896ad0c0cab64e91317490dd574677c9f91",
+    "prepared.json": "ff0f31b0bc46902e34f8de01b21170ccada7c3ab31991b58a3b4fc48a15bf1b2",
+    "script-first.txt": "e280caa24dd8e6819fce14eb71abbf8f86396b81c16edd2a3eb6f807498be1db",
+    "T17-red.json": "4ca9e63ee68f982e37393a72e47d695402fa4ae6adbfd7a8c739703be74a3407",
+    "watchdog-preflight.json": "fd67d431d0ad5e7837009815af5cab2e9918411f122dce2d83b99067bbaa986f"
+  },
+  "notes": "first attempt aborted Python embedded NUL argv before LFZ NUL case; fixed new harness via source file, retained error and original script; no product changes; watchdog permission preflight PASS"
+}

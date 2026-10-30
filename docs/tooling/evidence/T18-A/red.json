@@ -1,0 +1,8 @@
+{
+  "binary_sha256": "1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45",
+  "expected_exit": 0,
+  "actual_exit": 2,
+  "stdout_hex": "",
+  "stderr_hex": "6c667a3a20e8a3b8e69687e4bbb6e8b083e794a8e58faae68ea5e58f97e4b880e4b8aa203c66696c653e20e58f82e695b00ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a",
+  "note": "fixed T17 binary lacks capability option; no external command was executed"
+}

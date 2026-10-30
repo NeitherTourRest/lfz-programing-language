@@ -1,0 +1,57 @@
+[
+  {
+    "name": "lfz-63397fd2d9985014.exe",
+    "exit": 0,
+    "passed": 487
+  },
+  {
+    "name": "lfz-243aeb8f5c3370f1.exe",
+    "exit": 0,
+    "passed": 53
+  },
+  {
+    "name": "cli-d19dbfa7dd3f9d73.exe",
+    "exit": 0,
+    "passed": 28
+  },
+  {
+    "name": "cli_t12-35b857587ead196a.exe",
+    "exit": 0,
+    "passed": 12
+  },
+  {
+    "name": "cli_t14-b528900585815e19.exe",
+    "exit": 0,
+    "passed": 12
+  },
+  {
+    "name": "cli_t16b-66b0b355c7f6f4d0.exe",
+    "exit": 0,
+    "passed": 7
+  },
+  {
+    "name": "cli_t16c-24a3e9d865ee9e42.exe",
+    "exit": 0,
+    "passed": 5
+  },
+  {
+    "name": "cli_t17-2cfc935946fdc938.exe",
+    "exit": 0,
+    "passed": 9
+  },
+  {
+    "name": "cli_t18a-2b1a6784d688e6c5.exe",
+    "exit": 0,
+    "passed": 6
+  },
+  {
+    "name": "test_runner-a9d3da191eeb2958.exe",
+    "exit": 0,
+    "passed": 15
+  },
+  {
+    "name": "unit-ae562ae83f03ad63.exe",
+    "exit": 0,
+    "passed": 15
+  }
+]

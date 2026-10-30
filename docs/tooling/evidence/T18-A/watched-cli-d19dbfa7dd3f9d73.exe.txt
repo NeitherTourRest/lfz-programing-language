@@ -1,0 +1,33 @@
+
+running 28 tests
+test hello_example_runs_and_prints ... ok
+test json_run_missing_file_io_error_shape ... ok
+test json_run_dump_before_error_redirects_to_stderr ... ok
+test missing_file_is_io_error_exit_2 ... ok
+test json_run_print_before_error_redirects_to_stderr ... ok
+test dump_without_json_still_writes_stdout ... ok
+test bare_missing_file_exits_2_with_friendly_message ... ok
+test bare_json_before_file_works ... ok
+test json_flag_accepted_after_file ... ok
+test json_run_dump_and_print_share_channel_in_order ... ok
+test json_run_runtime_error_matches_example2_traceback ... ok
+test json_run_success_is_ok_true_exit_0 ... ok
+test json_run_assert_failure_shape ... ok
+test bare_no_extension_rejected_exit_2 ... ok
+test bare_two_files_is_usage_error_exit_2 ... ok
+test json_run_missing_preamble_shape ... ok
+test bare_non_lfz_extension_rejected_exit_2 ... ok
+test bare_json_after_file_works ... ok
+test no_args_is_usage_error_exit_2 ... ok
+test json_run_syntax_error_shape ... ok
+test missing_preamble_exits_2_with_cosmos_answer ... ok
+test json_run_print_success_redirects_to_stderr ... ok
+test json_run_dump_success_redirects_to_stderr ... ok
+test run_subcommand_does_not_restrict_extension ... ok
+test runtime_error_exits_2_with_traceback ... ok
+test syntax_error_exits_2_with_position_and_no_traceback ... ok
+test help_and_version_exit_0 ... ok
+test bare_file_runs_like_run ... ok
+
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.51s
+
