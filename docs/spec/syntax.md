@@ -1026,3 +1026,8 @@ lfz [--json] check [--json] - [--json]
 §22等号边界补钉：选项区--max-steps=任意文本/--timeout-ms=任意文本（含空值）一律usage拒绝，help/version也不能忽略；CODE及argv保护、其它旧help token规则保持。精确消息见interface-contract §22.5。
 
 §22命令拼写裁定：help/version为--help/-h、--version/-V的简写称谓，不新增裸help/version别名；裸词继续按文件规则。CODE双负号仍按旧文法，check不动态查名。见interface-contract §22.5。
+
+## 23. T18-A 子进程（2026-10-30 冻结）
+不加文法；新增特殊内置exec(argv,timeoutMs,maxOutputBytes)，沿既有调用与遮蔽规则，74内置。CLI执行区--allow-process显式授权，默认禁用，CODE/argv保护沿T17。绝对exe无PATH/隐式shell，Windows首验、其它平台暂Unsupported；精确API/消息/后端见interface-contract §23。
+
+§22与T18-A混合选项适用性：非执行命令同时带能力与限额时，按选项区首次出现类别报对应既有文案；全部扫描错误仍先于最终适用性，CODE/argv和无新flag旧行为保持。精确例子见interface-contract §23.5。

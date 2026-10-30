@@ -1,9 +1,24 @@
 # LFZ 需求矩阵（唯一需求事实源 · v1.1 增量对齐版）
 
 > 最后更新: 2026-10-30 by requirements-analyst
-> 版本: **v10（T17限额最终功能通过，T18仅规划；R-304开放，非正式发布）**
+> 版本: **v11（T18-A Windows受控exec通过，本轮后停止；R-304开放，非正式发布）**
 > 本文件是**唯一需求事实源**，唯一写者 requirements-analyst，他人只读。
 > 来源: `task-info.md`（课程作业原始要求）+ 用户指令 + 已定案 ADR（见 `DECISIONS.md`）。
+
+## T18-A 增量需求（2026-10-30，Windows受控exec通过，本轮后停止）
+
+依据三spec §23及最终T18-A-independent-verification.md追加PASS。冻结SHA256 `4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86`、984064B、74内置/13错误类；最终同十一harness649、公开45、toolplan7、自编真实process12及旧全回归（T17公开134/app40、C29/app33、attempt13/check117/CLI91含178、旧apps37+11/jsonbatch38/JSON140）通过。人指南22/AI26作者结果已到；原失败、CONCERNS、新NUL/keys oracle错误、默认sandbox close探针C0000008、E5阶段及修复记录不抹。
+
+本批只声明Windows实测能力；Linux/macOS及其它平台返回Unsupported，**不是已支持**。controlled Job/绝对exe与能力开关不是权限隔离沙箱，也不承诺OS异常下绝对回收时界。R304仍进行中/OPEN，无本轮性能窗，不正式发布。按用户最新范围，仅完成本轮交付后停止，不实施HTTP/T18-B/T19等后继；下方“仅规划T18”是此前历史状态，不抹各时点证据。
+
+| R-ID | 需求 | 来源 | 验证方式（可命令复现） | 状态 | 交付物 | 评分项 |
+|------|------|------|------------------------|------|--------|--------|
+| R-136 | exec(argv,timeoutMs,maxOutputBytes)默认能力禁用；显式EvalContext权限仅当前session且模块共享，不随函数home或attempt泄漏。实参完整验证后绝对.exe按CRT argv保真，无PATH/隐式shell；返回stdout/stderr/exitCode/signal四键，非零退出正常值，严格UTF8 | §23.1/23.3；73→74内置 | `cargo test --release`同冻结649通过；按T18-A-blackbox.md接口对最终exe与固定fixture执行tests/t18a_cli_process.py公开45/45；独立own.py12/12验证空串/Unicode/空格/引号/反斜杠、u32无符号退出、禁用与后继会话隔离。旧入口capabilities默认false，无上下文builtins调用不能绕权；NUL真实源码由FILE入口验证，不把Popen拒NUL当LFZ产品结果 | 通过 | evaluator/builtin注册（runtime-dev）、process_control/Windows平台模块（tooling-dev）、error细分（core-dev）、公开与独立证据 | 1、2 |
+| R-212 | 双stream公平有界drain，raw合并=N成功/>N失败，不返回部分成功；局部timeout/output/UTF8是可恢复业务ValueError，全局cancel/deadline不可捕获且优先。Windows suspended→Job纳管→resume，成功/失败/超限均处理后代与reader；Close等清理诊断独立保存并使宿主成功门禁失败闭合 | §23.2–23.5 | 同649、公开45及独立真实process12全PASS，覆盖合并0/N/N+1和尾部超量、200KB双流、UTF8、局部timeout可attempt/全局终止穿透、后代PID经OpenProcess+Wait确认回收。实际同harness故障注入Job/Assign无用户副作用、pipe/read/wait/kill/close及资源主错误+诊断均执行；host_diagnostics非空不能仅凭result Ok宣称成功，CLI/runner无成功JSON、stderr诊断exit2。不是实际OS不可回收的绝对保障，不真实OOM/abort或任意系统清理 | 通过 | Windows后端/RAII与CLI/test_runner（tooling-dev）、context与诊断（runtime-dev）、T18-A独立649/45/12证据 | 1、2 |
+| R-411 | CLI仅运行入口--allow-process显式授权，重复/等号/非执行命令拒绝，混合限额按首次新选项类别裁定文案；CODE与--后argv保真。人/AI指南准确说明资源/权限/native协作与平台限制 | §23.5；R211/410后继 | 公开45及旧T17/C回归验证flag、usage优先级、默认禁用不spawn、权限不跨execute泄漏；T18-A-guide-evidence.md22/22、T18-A-skill-evidence.md26/26锁4093714，同期独立最终审文档指纹及证据。示例不冒称宿主RustAPI新编译见证、非Windows支持、强隔离沙箱或性能通过；旧失败保全，不以本作者计数替代649/45/app7 | 通过 | CLI（tooling-dev）、人指南（docs-writer）、skill/AI入口（ai-dx-engineer）、独立审计 | 1、2、4 |
+| R-508 | toolplan完整预校验计划后显式exec编排，结果确定性、可恢复错误不中断后继任务，全局终止穿透且保留已发生副作用；能力默认禁用、旧应用和≥200行sortviz交付保留 | app/T18-A-TOOLPLAN.md；§23 | 按app/verify_toolplan.py接口传--lfz/--expected-sha/--output对冻结4093714执行7/7；独立toolplan7.json7/7。两次九任务六成功/三恢复错误逐字节同、无授权零副作用、计划后项非法不执行前项、空计划成功、deadline真实exec行号且后继KEEP不写；旧模块app33/T17预算app40及其它旧app继续通过 | 通过 | app/toolplan.lfz/verify_toolplan.py/T18-A-TOOLPLAN.md（app-dev）、独立toolplan7证据 | 5 |
+
+复跑仅恢复冻结产物/对应固定fixture，并使用不存在的项目Temp输出；如需许可控制按已有环境证据执行，不改产品绕权限。当前通过仅功能与有界生命周期验收，不关闭效率门禁。
 
 ## T17 增量需求（2026-10-30，执行限额最终功能通过）
 

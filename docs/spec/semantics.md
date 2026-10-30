@@ -483,3 +483,8 @@ check对静态相对.lfz依赖按书写序迭代DFS构图，身份canonical去�
 §22 CLI兼容补钉：仅两新flag的等号形式在选项区按扫描顺序立即usage拒绝，优先于非执行命令适用性判断；不改变其它旧help/version额外token行为，不把CODE/argv内同文识别为选项。详见interface-contract §22.5。
 
 §22计步澄清：空for只扣实际进入的语句/来源表达式节点，不为未执行body或Rust迭代控制虚构步数。help/version的不适用规则仅针对--help/-h与--version/-V，裸词仍为文件路径。精确边界见interface-contract §22.5；无计步范围变更。
+
+## 23. T18-A 进程能力与终止（2026-10-30 冻结）
+exec三参四键，非零退出正常值、严格UTF8；局部timeout/合并输出超量ValueError可恢复，全局取消/deadline保持不可吞ExecutionLimitError。单次上下文能力默认禁用不泄漏，旧EvalLimits shape不变。纳管后才执行，双pipe有界公平drain/结束受控后代/kill-wait-reader回收，cleanup独立诊断不可伪成功。不是恶意沙箱/硬实时；Windows须实测，Linux未验返回Unsupported。完整契约及owner见interface-contract §23；R304OPEN。
+
+§22与T18-A混合选项适用性：非执行命令同时带能力与限额时，按选项区首次出现类别报对应既有文案；全部扫描错误仍先于最终适用性，CODE/argv和无新flag旧行为保持。精确例子见interface-contract §23.5。

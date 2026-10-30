@@ -83,3 +83,5 @@ timeout=0且有节点时首poll Deadline；空程序成功。步数+时间+token
 
 分批A先error+步数/token，B再deadline+CLI；可同冻结契约但源码在C独立PASS后串行。最小验收：上述2/4步精确阈值重复；0与u64::MAX不wrap；空while/for/递归/7HOF在小预算受控，不能用真实栈溢出abort作测例；普通attempt连续业务失败不补步、嵌套终止不吞；模块diamond仅执行一次、初始化总预算、依赖失败entry无后续副作用；graph函数/模板默认的终止定位真实文件及caller清理；已置token/执行中置位/独立与明确共享token；过去/未来deadline与同时事件优先；有限运行结束后不偷偷追加poll。
 库并发取消测试用受控worker与宽容watchdog，超时不能join无限卡死主测试或强杀解释线程；先小步数提供有限兜底，但断言reason必须Cancelled。deadline测试预过期确定性+有界到期见证，不断言毫秒级硬响应。CLI四类入口/任意选项顺序/CODE与argv保护/重复非法溢出/check-test-help拒绝/唯一JSON完整回归；旧默认无预算全套差分，graph坏元数据仍执行前拒绝。原19项性能在实际最终hash一次规定窗口比较，unlimited分支不能称零成本；R304保持OPEN，不自动改变原线。
+
+§22与T18-A混合选项适用性：非执行命令同时带能力与限额时，按选项区首次出现类别报对应既有文案；全部扫描错误仍先于最终适用性，CODE/argv和无新flag旧行为保持。精确例子见interface-contract §23.5。
