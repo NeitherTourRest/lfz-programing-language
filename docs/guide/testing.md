@@ -272,3 +272,7 @@ check只复用前端，不能替代执行测试。测试框架应分别记录「
 ## T17 执行限额
 
 限额测试应核单表达式2步、let后读4步、空程序0成功、共享模块预算与attempt不补步；CODE/argv保护及等号usage须精确。取消只在host token可验证，不把CLI Ctrl-C当结构化取消；native/IO不做毫秒级硬中断断言。实际最终字节证据见T17-guide报告，不复用修前620/F487结果。
+
+## T18-A 受控子进程
+
+子进程测试必须核exe和独占fixture hash，不重建内部测试fixture；验证默认禁用不启动、argv空串/Unicode/空格、非零exit、raw合并0/N/N+1、非法UTF8、local timeout与global终止、权限会话隔离。只对本轮最终字节实跑，不用旧构建或Windows结果冒称其它平台支持。见T18-A-guide报告。

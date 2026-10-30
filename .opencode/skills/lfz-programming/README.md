@@ -146,3 +146,7 @@ $LASTEXITCODE                          # 期望 0
 ## T17执行限额补充（2026-10-30）
 
 Agent工作流：先check前端/模块图，再按任务配置--max-steps N与--timeout-ms N运行。只支持两token，等号族拒绝；CODE及--后argv保护。详情SKILL.md §6.5及三spec§22。当前13错误类、73内置，ExecutionLimitError不被attempt吞掉，业务恢复不补预算。截止时间/native阻塞边界是协作式；库取消token不等于CLI Ctrl-C处理。作者新增例证见docs/reports/T17-skill-evidence.md，旧v2不改，R304OPEN。
+
+## T18-A工具执行补充（2026-10-30）
+
+当前74内置/13错误类，exec需显式--allow-process，先check不执行再按授权限额run。只接受绝对.exe/独立argv，不搜索PATH或隐式shell；非零exitCode仍成功值，严格UTF8及双流合并rawbyte额度，局部错误可恢复而全局资源终止不吞，cleanup宿主异常不保证单JSON。详见SKILL.md §6.6及三spec§23；仅Windows已验、非沙箱。作者记录T18-A-skill-evidence.md，旧v2不改，R304OPEN。本轮交付后停止，不进入HTTP。

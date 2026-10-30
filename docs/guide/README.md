@@ -19,7 +19,7 @@ LFZ（读作 "elf-zee"）是一门**动态类型、表达式导向**的通用脚
 - **无魔法**：条件必须是 `bool`；除了 `int → float` 加宽外无隐式转换；越界 / 缺字段 / 溢出 / 类型不符一律结构化报错。
 - **仪式感**：每个 `.lfz` 文件以第一行 `#42` 起手——"宇宙的答案"，缺失即报错。
 
-当前已实现 **73 个内置**，包括双参 range、字符串查找/补齐/子串、ord/chr、sin/cos/log/exp、contains、UTF-8 文件 IO，以及 `argv`、`jsonParse`、`jsonStringify`。签名和边界见参考 §5；相对文件路径基于进程当前工作目录。
+当前已实现 **74 个内置**，包括双参 range、字符串查找/补齐/子串、ord/chr、sin/cos/log/exp、contains、UTF-8 文件 IO，以及 `argv`、`jsonParse`、`jsonStringify`。签名和边界见参考 §5；相对文件路径基于进程当前工作目录。
 
 完整形式定义见 [`docs/spec/syntax.md`](../spec/syntax.md)；语义见 [`docs/spec/semantics.md`](../spec/semantics.md)。
 
@@ -214,3 +214,7 @@ check不接收脚本参数，CODE外的 `--`（即使空尾）会报参数错误
 ## T17 执行限额
 
 Agent脚本可先check再用--max-steps N/--timeout-ms N运行，默认unlimited；第13类ExecutionLimitError不会被attempt吞掉。语法、零边界、协作式时间与host取消规则见[执行限额指南](execution-limits.md)。
+
+## T18-A 受控子进程
+
+当前候选内置74，新增exec(argv,timeoutMs,maxOutputBytes)，默认禁用，需要run显式--allow-process；Windows已验，非WindowsUnsupported。先check再授权run，见[受控子进程](subprocess.md)。

@@ -1,0 +1,43 @@
+{
+  "binary_sha256": "4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86",
+  "fixture_sha256": "51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee",
+  "rows": [
+    {
+      "name": "tutorial_check",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-docs\\tool.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "tutorial_run",
+      "args": [
+        "--allow-process",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-docs\\tool.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-docs\\guide-fixture.exe"
+      ],
+      "exit": 0,
+      "stdout": "{\"exitCode\":0,\"signal\":null,\"stderr\":\"\",\"stdout\":\"0:\\n3:a b\\n3:雪\\n\"}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "four_keys_nonzero",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "let r=exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-docs/guide-fixture.exe\",\"exit\",\"7\"],1000,10000)\nassert(keys(r)==[\"stdout\",\"stderr\",\"exitCode\",\"signal\"])\nassert(r.exitCode==7 && r.signal==nil && r.stdout==\"\" && r.stderr==\"\")"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"AssertionError\",\"message\":\"断言失败\",\"file\":\"<command>\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": ""
+    }
+  ]
+}

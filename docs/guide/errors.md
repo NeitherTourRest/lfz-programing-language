@@ -378,3 +378,7 @@ SyntaxError、CosmosAnswerError、RecursionError和容量溢出OverflowError不�
 ## T17 执行限额
 
 T17新增ExecutionLimitError（第13类）：执行步数预算已耗尽/执行已取消/执行时间上限已到。原12类字段/行为不变。attempt不能捕获或恢复资源终止，模块与闭包共享限额，真实fault来源沿C；CLI仍exit2和原错误JSON。协作边界与Ctrl-C不作承诺见[限额边界](execution-limits.md)。
+
+## T18-A 受控子进程
+
+子进程局部timeout/输出超量/禁用/UTF8等为约定ValueError，可attempt；全局deadline/取消ExecutionLimitError不能吞。回收diagnostics可能使原result Ok的CLI变宿主完整性失败，stdout空/exit2；--json宿主例外详见[子进程边界](subprocess.md)。

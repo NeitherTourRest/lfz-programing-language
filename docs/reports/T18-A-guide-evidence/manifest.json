@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-30",
+  "binary_sha256": "4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86",
+  "binary_bytes": 984064,
+  "fixture": "Temp\\T18-A-docs\\guide-fixture.exe",
+  "fixture_sha256": "51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee",
+  "guides": {
+    "docs\\guide\\README.md": "d11a22229ce13f57045be26654c73d94282aabd9f1940971c37dc80be8d84cc6",
+    "docs\\guide\\reference.md": "626e35ab534e959ae9fa3f7e7d6090e7678f71c94130c30fedc8ad41a36bbd51",
+    "docs\\guide\\tutorial.md": "693d7fa2af678405baade5db74ee35d82bc2113db1be6b2f00789efee7c2b037",
+    "docs\\guide\\errors.md": "8a2892a4ed07399133ae52d6b9efe5e2cea25ce84d45287a7faaca268685637a",
+    "docs\\guide\\testing.md": "918806263808c74145192f21f0c48720279065d84e3a8933ca2fb79b23803e2a",
+    "docs\\guide\\subprocess.md": "28d5666077b3259a02b6bef45a8c2d3a0318e0895d1ad5f64a098af2ba13382b"
+  },
+  "files": {
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "first-oracle-failure.json": {
+      "bytes": 1741,
+      "sha256": "79e0a0108bc67617aa7fae0d82e1a3bf497740032dbfd60d33b828fb9c099560"
+    },
+    "first-oracle-stderr.txt": {
+      "bytes": 1806,
+      "sha256": "8cfdb94c4e52d75655f6073557d710042d0297e193a633ee4b2dd8ac5290fea4"
+    },
+    "runs.json": {
+      "bytes": 10831,
+      "sha256": "b7615047dc94687bc0bd08111c7a731e04c3fdb3e53fc788768a950ac423284b"
+    },
+    "verify.py": {
+      "bytes": 5779,
+      "sha256": "7cb3527335e77817b4ffb6ffbd5b87f624bee600590b4a7e5347b72b6cbbd708"
+    }
+  }
+}

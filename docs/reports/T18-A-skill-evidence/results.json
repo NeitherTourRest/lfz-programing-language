@@ -1,0 +1,358 @@
+{
+  "date": "2026-10-30",
+  "timestamp_utc": "2026-10-30T11:23:47.616086+00:00",
+  "binary": "target\\release\\lfz.exe",
+  "binary_sha256": "4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86",
+  "fixture_sha256": "51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee",
+  "fixture_copy": "Temp\\T18-A-ai\\fixture.exe",
+  "document_hashes": {
+    ".opencode/skills/lfz-programming/SKILL.md": "bd08a600af4d76a3a0401af57d4336a3c29b9462683c1f42fc787bdb752864e2",
+    ".opencode/skills/lfz-programming/README.md": "bd6848ae68a7447dca9c45b9649eb5da019b738d5bbd0fd2227a1423ce805141",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "8a9a395a44d3765eda0a3b75a8500d5c5a8897e85bf08ab5aca567b37a57c5d7",
+    ".opencode/skills/lfz-programming/prompt-template.md": "3afaf0427f9a8ea58dd0b1ecd1d3fc817ddaf8915ab7d18d2bebc2248ae5c077",
+    "docs/guide/ai/README.md": "f90fae647f327e4ef356f6fa6906cfb9d80c56b441fb378f1f5ca73b13255c04"
+  },
+  "checks_total": 26,
+  "checks_passed": 26,
+  "rows": [
+    {
+      "name": "extracted_check_0",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-ai\\skill.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "extracted_run_0",
+      "args": [
+        "--allow-process",
+        "--max-steps",
+        "1000",
+        "--timeout-ms",
+        "10000",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-ai\\skill.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-ai\\fixture.exe"
+      ],
+      "exit": 0,
+      "stdout": "{\"exitCode\":0,\"signal\":null,\"stderr\":\"\",\"stdout\":\"3:a b\\n6:中文\\n\"}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "extracted_check_1",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-ai\\ai.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "extracted_run_1",
+      "args": [
+        "--allow-process",
+        "--max-steps",
+        "1000",
+        "--timeout-ms",
+        "10000",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-ai\\ai.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-A-ai\\fixture.exe"
+      ],
+      "exit": 0,
+      "stdout": "{\"exitCode\":0,\"signal\":null,\"stderr\":\"\",\"stdout\":\"3:a b\\n6:中文\\n\"}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "default_disabled",
+      "args": [
+        "--json",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-ai/fixture.exe\", \"echo\", \"\", \"a b\", \"中文🙂\"],5000,1024)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "enabled_argv",
+      "args": [
+        "--allow-process",
+        "-e",
+        "assert(exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-ai/fixture.exe\", \"echo\", \"\", \"a b\", \"中文🙂\"],5000,1024).stdout == \"0:\\n3:a b\\n10:中文🙂\\n\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "next_context_disabled",
+      "args": [
+        "--json",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-ai/fixture.exe\", \"echo\", \"\", \"a b\", \"中文🙂\"],5000,1024)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "nonzero_success",
+      "args": [
+        "--allow-process",
+        "-e",
+        "let r=exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-ai/fixture.exe\", \"exit\", \"7\"],5000,0)\nassert(r.exitCode==7 && r.signal==nil && r.stdout==\"\" && r.stderr==\"\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "stdin_eof",
+      "args": [
+        "--allow-process",
+        "-e",
+        "assert(exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-ai/fixture.exe\", \"stdin\"],5000,1).stdout==\"0\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "strict_preserved_bom_crlf",
+      "args": [
+        "--allow-process",
+        "-e",
+        "assert(exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-ai/fixture.exe\", \"utf8\"],5000,6).stdout==\"﻿a\\r\\n\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "combined_exact",
+      "args": [
+        "--allow-process",
+        "-e",
+        "let r=exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-ai/fixture.exe\", \"dual\", \"32\"],5000,64)\nassert(len(r.stdout)==32 && len(r.stderr)==32)"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "combined_over",
+      "args": [
+        "--allow-process",
+        "-e",
+        "let r=attempt(()=>exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-ai/fixture.exe\", \"dual\", \"32\"],5000,63))\nassert(!r.ok && r.error[\"class\"]==\"ValueError\")\nassert(r.error.message==\"子进程输出超过字节上限\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "invalid_utf8",
+      "args": [
+        "--allow-process",
+        "-e",
+        "let r=attempt(()=>exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-ai/fixture.exe\", \"invalid\"],5000,1))\nassert(!r.ok && r.error[\"class\"]==\"ValueError\")\nassert(r.error.message==\"子进程输出不是合法 UTF-8\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "local_timeout",
+      "args": [
+        "--allow-process",
+        "-e",
+        "let r=attempt(()=>exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-ai/fixture.exe\", \"sleep\", \"200\"],10,0))\nassert(!r.ok && r.error[\"class\"]==\"ValueError\")\nassert(r.error.message==\"子进程执行时间上限已到\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "global_deadline_not_caught",
+      "args": [
+        "--allow-process",
+        "--timeout-ms",
+        "10",
+        "--json",
+        "-e",
+        "attempt(()=>exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-ai/fixture.exe\", \"sleep\", \"200\"],1000,0))"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"<command>\",\"line\":1,\"col\":13,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "captured_output_single_status",
+      "args": [
+        "--allow-process",
+        "--json",
+        "-e",
+        "exec([\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T18-A-ai/fixture.exe\", \"echo\", \"captured\"],5000,1024)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "relative",
+      "args": [
+        "--json",
+        "-e",
+        "exec([\"tool.exe\"],1,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程程序必须是绝对可执行文件路径\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "batch",
+      "args": [
+        "--json",
+        "-e",
+        "exec([\"C:/tool.cmd\"],1,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程程序必须是绝对可执行文件路径\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "empty",
+      "args": [
+        "--json",
+        "-e",
+        "exec([],1,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"子进程 argv 不能为空\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "capability_equals",
+      "args": [
+        "--allow-process=1",
+        "--help"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-process' 不接受值\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "passed": true
+    },
+    {
+      "name": "duplicate",
+      "args": [
+        "--allow-process",
+        "--allow-process",
+        "-e",
+        ""
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-process' 不能重复\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "passed": true
+    },
+    {
+      "name": "mixed_first_capability",
+      "args": [
+        "check",
+        "--allow-process",
+        "--max-steps",
+        "1",
+        "-e",
+        "1"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 子进程能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "passed": true
+    },
+    {
+      "name": "mixed_first_limit",
+      "args": [
+        "check",
+        "--max-steps",
+        "1",
+        "--allow-process",
+        "-e",
+        "1"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 执行限额选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "passed": true
+    },
+    {
+      "name": "scanner_error_precedes_applicability",
+      "args": [
+        "check",
+        "--allow-process",
+        "--timeout-ms=1",
+        "-e",
+        "1"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 不支持等号写法，请使用 '--timeout-ms N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "passed": true
+    },
+    {
+      "name": "code_protected",
+      "args": [
+        "check",
+        "-e",
+        "--allow-process",
+        "--json"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "argv_protected",
+      "args": [
+        "-e",
+        "print(jsonStringify(argv()))",
+        "--",
+        "--allow-process",
+        "--allow-process=1"
+      ],
+      "exit": 0,
+      "stdout": "[\"--allow-process\",\"--allow-process=1\"]\n",
+      "stderr": "",
+      "passed": true
+    }
+  ]
+}

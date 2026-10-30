@@ -5,7 +5,7 @@
 > 读者：**未接触过 LFZ 的编程 Agent**。目标：只凭本文件写出**正确、可运行**的 LFZ 程序。
 > 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（含 T12 §16 / T14 §17 / T15 §18 / T16 §19–21）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
 > 使用纪律：**只允许使用本文件列出的语法**。不要用 Python / C / JS 的规则去猜 LFZ——LFZ 在若干处刻意不同（见 §4）。
-> **版本对齐（2026-10-29，候选）**：项目内 `dist/lfz.exe` / `target/release/lfz.exe` 为 **1.4.0，73 个内置**（54+15+3+1），支持 argv、JSON、`-e`、stdin源码及非执行`check`。T12 示例实跑证据见 `docs/reports/T12-skill-evidence.md`；项目外 PATH 中的旧解释器不保证具备这些能力。
+> **版本对齐（2026-10-29，候选）**：项目内 `dist/lfz.exe` / `target/release/lfz.exe` 为 **1.4.0，74 个内置**（54+15+3+1+1），支持 argv、JSON、`-e`、stdin源码及非执行`check`。T12 示例实跑证据见 `docs/reports/T12-skill-evidence.md`；项目外 PATH 中的旧解释器不保证具备这些能力。
 
 > 🚫 **硬纪律：不要凭记忆写 LFZ。** 本文件**没写的语法一律视为不存在**；拿不准就先查 §10 列出的 spec，或改用本文件已列出的等价写法。宁可用保守写法，也不要"猜一个大概像 Python 的写法"。
 
@@ -263,7 +263,7 @@ let q = 10 |> push(_, [1, 2])      // _ 占位：注入到该位 → push(10, [1
     - `let ys = push(9, xs)` —— **不**改 `xs`；`sort(xs)` 不改 `xs`。
     - 唯一原地改的是**赋值语法** `a[i] = v` / `s.k = v`。
 
-11. **73 个内置按 data-last 约定**（见 §6）；容器/字符串被操作对象恒为末参。
+11. **74 个内置按 data-last 约定**（见 §6）；容器/字符串被操作对象恒为末参。
 
 12. **`round` 是银行家舍入（四舍六入五成双）**：`round(2.5) == 2`、`round(3.5) == 4`。
 
@@ -413,7 +413,7 @@ print("continue")
 
 ---
 
-## 6. 内置函数 73 个（data-last）
+## 6. 内置函数 74 个（data-last）
 
 > **约定**：凡对容器 / 字符串操作者，**被操作对象恒为最后一个参数**；`xs |> f(...)` 把 `xs` 注入末参。**凡容器更新一律返回新值、不改原容器**（A1），除非用赋值语法 `a[i]=` / `s.k=`。参数类型/个数不符 → `TypeError`。
 
@@ -904,3 +904,33 @@ CODE紧邻-e的一个原始token不再解析为选项，即使恰为--max-steps=
 取消是**Rust库API**的Arc<AtomicBool> token，host用store(true,Release)，poll load(Acquire)，Interp不reset；不是CLI Ctrl-C新功能。Ctrl-C仍OS默认，不保证结构化Cancelled。EvalLimits{max_steps,deadline,cancel}按值传新*_with_args_and_limits入口；每调用余量独立，Clone只共享token身份，明确复用已取消token则下一节点均取消。旧入口Default unlimited；坏graph仍先返回宿主GraphExecutionError。禁止LFZ Value/Env跨线程共享。精确三个入口签名及大栈职责见interface-contract §22.2，不擅自发明wrapper。
 
 T17作者聚焦实跑见docs/reports/T17-skill-evidence.md。无新增Agent盲测，不改旧v2；R304OPEN，未做本轮性能验收，不宣传unlimited零成本或正式发布。
+
+
+## 6.6 T18-A：显式授权的工具执行（本轮到此停止）
+
+三spec §23与T18-A-design为事实源。新增exec后共74内置，仍13错误类；exec不是新一等函数值，使用命名调用或closure包装。仅Windows后端已实施/实测，其它平台受控Unsupported，不能宣传Linux/macOS可执行或权限沙箱；本轮不包含HTTP。
+
+Agent工作流：明确待执行工具及参数，先check确认脚本/模块图，再按任务授权加`--allow-process`和全局限额run；核业务返回值、子进程exitCode及已发生副作用。check不执行exec，也不隐式授权；能力默认禁用且仅当前session，模块共享同次权限，函数home不携带权限，后续执行不继承授权。
+
+```lfz
+#42
+let tool = argv()[0]
+let result = exec([tool, "echo", "a b", "中文"], 5000, 1024)
+print(jsonStringify(result))
+```
+
+将以上保存为job.lfz，先`lfz check --json job.lfz`，再`lfz --allow-process --max-steps 1000 --timeout-ms 10000 run job.lfz -- ABSOLUTE_FIXTURE_EXE`。示例echo模式是本项目测试fixture接口，不能假设任意工具都提供echo；真实任务换为明确工具协议，路径须替换为实际允许的绝对.exe。不得通过PATH猜测工具位置或擅自改成shell命令拼接。
+
+`exec(argv, timeoutMs, maxOutputBytes)`恰3参：argv非空string数组，全元素先验类型后逐索引验NUL和值；argv[0]必须非设备盘符绝对.exe或UNC.exe路径，拒相对/盘符相对/.bat/.cmd/设备路径，不搜索PATH、不隐式shell。用户显式选择绝对shell.exe仍可能运行shell，故本接口不声称阻止shell。Windows保证标准C运行时命令行解码约定，不声称内核有argv数组。其它空串/空格/Unicode参数原样传；stdin为null/EOF，继承host环境和cwd，没有env/cwd/stdin扩展、无隐式重试。
+
+timeoutMs为int 1..600000；maxOutputBytes为int 0..16777216，stdout+stderr**合并raw byte**计数，等于上限可成功，超过失败；不是字符数，不是每stream各一份额度。0用于无输出工具。成功返回新struct，字段序`stdout,stderr,exitCode,signal`；stdout/stderr是返回值，**不自动转发终端**。非零退出仍是普通成功值，需要Agent自己检查exitCode；Windows退出码u32扩为i64、signal=nil。每stream内序保留，不承诺两个流的跨流全序。严格UTF8，BOM/CRLF原样保留，不合法则整个ProcessUtf8 ValueError，不返回部分成功。
+
+参数校验完整发生于spawn前，并先于能力/平台/全局预检，禁用错误`ValueError: 子进程能力未启用`。局部timeout、输出超量、坏UTF8及路径/参数/禁用/Unsupported均沿§23 ValueError可用attempt包装；OS操作故障为IOError，消息前缀`子进程{operation}失败：`。全局取消/deadline是ExecutionLimitError，**attempt不能吞掉**，业务恢复不补步；exec原生等待不扣AST步，也不会仅因remaining=0自行StepBudget。exec有原生协作poll并在普通成功前末检，不能把T17其它native末次成功例外误套exec。
+
+同轮可观测优先级为取消→全局deadline→局部timeout→合并超量→读/进程OS错误→普通完成；首次确定主reason锁存。局部deadline从首次成功启动后建立、覆盖运行与输出drain；spawn及内核异常不保证硬实时中断。Windows Job/受控双pipe/回收后代是受控生命周期机制，不是恶意进程/权限逃逸隔离、CPU/内存沙箱。正常返回也不允许后台Job残留，但不能承诺OS不可中断场景下绝对回收时限。
+
+CLI `--allow-process`无值且不可重复；`--allow-process=任意文本`立即usage“选项 '--allow-process' 不接受值”。只用于执行来源，check/test/--help/-h/--version/-V拒绝。CODE紧邻-e及完整来源后-- argv仍原样保护。混合限额/能力选项：扫描错误按token序优先；扫描都成功、最终为非执行命令时，取选项区首次新类别的唯一文案（能力先为“子进程能力选项只适用于运行命令”，限额先为“执行限额选项只适用于运行命令”），忽略--json，CODE/argv不参与类别。不要新增裸help/version别名。
+
+正常--json仍唯一原状态/错误对象，子进程输出留返回值；**cleanup宿主异常有例外**：主错误存在则原错误JSON保留、独立回收诊断写stderr；result成功但host_diagnostics非空时CLI stdout空/stderr“lfz: 子进程资源回收失败”及诊断/exit2，即使--json也不能伪装成功JSON。attempt捕获IOError不能清除回收诊断。Rust宿主必须检查TracedRun.host_diagnostics()，不能只看result Ok；EvalContext包含limits与显式EvalCapabilities{subprocess}，所有旧API默认禁用，无global/thread_local泄漏，精确三个context入口见§23.3。
+
+作者聚焦实跑见docs/reports/T18-A-skill-evidence.md。旧v2输入/成绩不变；R304OPEN，未性能验收，不正式发布。本轮交付后停止，不进入HTTP等后续迭代。
