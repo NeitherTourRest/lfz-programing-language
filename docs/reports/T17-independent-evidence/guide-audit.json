@@ -1,0 +1,83 @@
+[
+  {
+    "name": "guide",
+    "manifest_sha256": "9b72222b1dacd13a330c8794c2bd16540e6509b1da05e224036090584eaf0574",
+    "document_hashes": [
+      {
+        "path": "docs\\guide\\README.md",
+        "passed": true
+      },
+      {
+        "path": "docs\\guide\\reference.md",
+        "passed": true
+      },
+      {
+        "path": "docs\\guide\\tutorial.md",
+        "passed": true
+      },
+      {
+        "path": "docs\\guide\\testing.md",
+        "passed": true
+      },
+      {
+        "path": "docs\\guide\\errors.md",
+        "passed": true
+      },
+      {
+        "path": "docs\\guide\\execution-limits.md",
+        "passed": true
+      }
+    ],
+    "result_summary": {
+      "date": "2026-10-30",
+      "timestamp_utc": "2026-10-30T05:41:24.248323+00:00",
+      "binary": "target\\release\\lfz.exe",
+      "sha256": "1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45",
+      "bytes": 943104,
+      "passed": 32,
+      "total": 32,
+      "scope": "affected guide CLI examples; Rust API is normative documentation only; no host token/real-time guarantee tested"
+    }
+  },
+  {
+    "name": "ai",
+    "manifest_sha256": "b463076c3097e8c1157cb28ca90b6036ece75b5750e97a1f9801dce5bbd0a029",
+    "document_hashes": [
+      {
+        "path": ".opencode/skills/lfz-programming/SKILL.md",
+        "passed": true
+      },
+      {
+        "path": ".opencode/skills/lfz-programming/README.md",
+        "passed": true
+      },
+      {
+        "path": ".opencode/skills/lfz-programming/VERIFICATION.md",
+        "passed": true
+      },
+      {
+        "path": ".opencode/skills/lfz-programming/prompt-template.md",
+        "passed": true
+      },
+      {
+        "path": "docs/guide/ai/README.md",
+        "passed": true
+      }
+    ],
+    "result_summary": {
+      "date": "2026-10-30",
+      "timestamp_utc": "2026-10-30T05:42:47.402289+00:00",
+      "binary": "target\\release\\lfz.exe",
+      "binary_sha256": "1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45",
+      "document_hashes": {
+        ".opencode/skills/lfz-programming/SKILL.md": "d7edc858505310a9c46ecd56a458b7ddb242b067881a56505304c0d7929579bd",
+        ".opencode/skills/lfz-programming/README.md": "d55145f2bdeef01d5a72c861719a88dc93e0e36510e8860ffef3386ed0a62b76",
+        ".opencode/skills/lfz-programming/VERIFICATION.md": "48d6c9d2362f52838a7845c8546146064dc758cc29e215be6dd96287fccf2d84",
+        ".opencode/skills/lfz-programming/prompt-template.md": "fbae201c61e10f2bfa7ee867c47649e430294a6b2b40705b124ecca7b32a3f45",
+        "docs/guide/ai/README.md": "6d9dac07839cd7626a049459287c6bb7b05c295ed757b4c9e7eaa32a79f248ff"
+      },
+      "checks_total": 38,
+      "checks_passed": 38
+    }
+  }
+]

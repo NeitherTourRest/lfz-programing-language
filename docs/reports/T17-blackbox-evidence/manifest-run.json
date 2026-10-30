@@ -1,0 +1,46 @@
+{
+  "binary": {
+    "path": "target/release/lfz.exe",
+    "bytes": 943104,
+    "sha256": "1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45"
+  },
+  "source_hashes": {
+    "src/ast.rs": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076",
+    "src/builtins.rs": "0b69680b4b0029c0b4eb2ddd3ba86ecf22fa82cdab25cbec4d3a832e43a0c151",
+    "src/cli.rs": "e34c6bd209f9b10fa1e0eca6725034fc54473c1f3557634d81b4ebe1065b5004",
+    "src/env.rs": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc",
+    "src/error.rs": "df90ae9d02bca29cc26167b81171cd1a822d79d48b6f490098e848ee49c4e310",
+    "src/evaluator.rs": "a673cca7cf009ba19ac9897737aa6f75db2dc24941ef31112fe6728c5b2e551d",
+    "src/json.rs": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f",
+    "src/json_codec.rs": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2",
+    "src/lexer.rs": "ebb952edbcd201210eb1f9c6ddebf58e2f3f998b260a11a51fe1c967848031f2",
+    "src/lib.rs": "e5ecee22f8aa8e357b2d932d5bb0c74044a76f63a4ee2eb476e900dc68f254ce",
+    "src/loader.rs": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f",
+    "src/main.rs": "247fc12340d2f6a26aa3fc5ada658cbfe72fb7ee7f85f107b05e6af27018c366",
+    "src/modules.rs": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895",
+    "src/parser.rs": "58c41ba85d930dc0ef465be2a9d3c0741cfe7052d6dd9df01a825aab73e7ff5f",
+    "src/source.rs": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468",
+    "src/span.rs": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2",
+    "src/test_runner.rs": "d2d1aa7705c9fa700dcaf1ff4085f5c1cd05d8976f8ebe0cdc166dc51ecca2a3",
+    "src/value.rs": "63967cb79996c7fedfe7285378e58c2774825c73680a81e50c12a185bbe438a0",
+    "Cargo.toml": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c",
+    "Cargo.lock": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4",
+    "tests/cli_t17.rs": "141cb54376124b4317723824972ee21ac8c10fdb2ef9a68ef967ba076fcf25f5"
+  },
+  "source_check": "post-run matches tooling frozen final-manifest",
+  "evidence": {
+    ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
+    "C-feature-red.json": "7ca15afba8cc5db420f47bbe9d0d58c9900dde528ede56ca4b36746b8016bf1e",
+    "final-first-default.json": "081ef1b826830f9bcb3810c86cb3e692c9fce2e1b83d74bd653b3bf042519802",
+    "final-first-permitted.json": "b230395362598e4da7fa31d00a85a3af29e9b810f56399eb69e56419006bd83f",
+    "manifest-v3-equals.json": "03c15f7b158c76caeb6d65777d50790dd44062d26ffecfe1282bdcc90236b522",
+    "manifest.json": "a4595d93c5e6283039868a81124e2a28f31e2b035eabf750f1fb25abfae5b86c",
+    "oracle-corrected-permitted.json": "c564622ccb6d5f08d3c2b9a14e943734f006a77e8c5fe244e3eb82a4d3d3bbf6",
+    "prepared-v2.json": "4b6e3b3fe70365980b788300415429b13d011d3aaa8e27cba0137e769fd156eb",
+    "prepared-v3-equals.json": "a2fd82250550b978cd25bda17da554f7c323a978961090b3dfbe8a51d6f93a37",
+    "prepared.json": "8c005d5c4ec5b72ba4328e307b99d5e0fb78944509a120f7c66e0af40a7ff734",
+    "script-first.txt": "dd7828b7abd787d80ab1176c94ca85b7bf974919de8629f43d27c43afc0a2783"
+  },
+  "script_sha256": "0aa9e895d31cc3a8a6cc76f67e8a142d64728389dcb9125fe726d5ff6dc69c04",
+  "state": "corrected122:118PASS/4pending help/version command spelling; firstdefault105/121 and permitted110/121 retained"
+}

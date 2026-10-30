@@ -1,0 +1,369 @@
+{
+  "binary_sha256": "1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45",
+  "total": 14,
+  "passed": 14,
+  "rows": [
+    {
+      "name": "exact_0",
+      "args": [
+        "--max-steps",
+        "0",
+        "-e",
+        "1"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": false,
+        "error": "ExecutionLimitError",
+        "message": "执行步数预算已耗尽",
+        "file": "<command>",
+        "line": 1,
+        "col": 1,
+        "traceback": [
+          {
+            "file": "<command>",
+            "line": 1,
+            "func": "<module>"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "exact_1",
+      "args": [
+        "--max-steps",
+        "1",
+        "-e",
+        "1"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": false,
+        "error": "ExecutionLimitError",
+        "message": "执行步数预算已耗尽",
+        "file": "<command>",
+        "line": 1,
+        "col": 1,
+        "traceback": [
+          {
+            "file": "<command>",
+            "line": 1,
+            "func": "<module>"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "exact_2",
+      "args": [
+        "--max-steps",
+        "2",
+        "-e",
+        "1"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "no_final_poll",
+      "args": [
+        "--max-steps",
+        "4",
+        "-e",
+        "let x=1\nx"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "empty_no_poll",
+      "args": [
+        "--max-steps",
+        "0",
+        "--timeout-ms",
+        "0",
+        "-e",
+        ""
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "priority",
+      "args": [
+        "--max-steps",
+        "0",
+        "--timeout-ms",
+        "0",
+        "-e",
+        "1"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": false,
+        "error": "ExecutionLimitError",
+        "message": "执行时间上限已到",
+        "file": "<command>",
+        "line": 1,
+        "col": 1,
+        "traceback": [
+          {
+            "file": "<command>",
+            "line": 1,
+            "func": "<module>"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "nested_attempt",
+      "args": [
+        "--max-steps",
+        "35",
+        "-e",
+        "attempt(()=>attempt(()=>{while true {}}))"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":32,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": false,
+        "error": "ExecutionLimitError",
+        "message": "执行步数预算已耗尽",
+        "file": "<command>",
+        "line": 1,
+        "col": 32,
+        "traceback": [
+          {
+            "file": "<command>",
+            "line": 1,
+            "func": "<module>"
+          },
+          {
+            "file": "<command>",
+            "line": 1,
+            "func": "<fn>"
+          },
+          {
+            "file": "<command>",
+            "line": 1,
+            "func": "<fn>"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "recoverable_no_refund",
+      "args": [
+        "--max-steps",
+        "60",
+        "-e",
+        "while true {attempt(()=>1/0)}"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":21,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": false,
+        "error": "ExecutionLimitError",
+        "message": "执行步数预算已耗尽",
+        "file": "<command>",
+        "line": 1,
+        "col": 21,
+        "traceback": [
+          {
+            "file": "<command>",
+            "line": 1,
+            "func": "<module>"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "cooperative_deadline",
+      "args": [
+        "--timeout-ms",
+        "10",
+        "-e",
+        "while true {}"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"<command>\",\"line\":1,\"col\":7,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": false,
+        "error": "ExecutionLimitError",
+        "message": "执行时间上限已到",
+        "file": "<command>",
+        "line": 1,
+        "col": 7,
+        "traceback": [
+          {
+            "file": "<command>",
+            "line": 1,
+            "func": "<module>"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "diamond11",
+      "args": [
+        "--max-steps",
+        "11",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "diamond10",
+      "args": [
+        "--max-steps",
+        "10",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\main.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-verifier\\\\own\\\\main.lfz\",\"line\":4,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-verifier\\\\own\\\\main.lfz\",\"line\":4,\"func\":\"<module>\"}]}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": false,
+        "error": "ExecutionLimitError",
+        "message": "执行步数预算已耗尽",
+        "file": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\main.lfz",
+        "line": 4,
+        "col": 1,
+        "traceback": [
+          {
+            "file": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\main.lfz",
+            "line": 4,
+            "func": "<module>"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "default_source",
+      "args": [
+        "--max-steps",
+        "50",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\default.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-verifier\\\\own\\\\lib.lfz\",\"line\":2,\"col\":27,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-verifier\\\\own\\\\default.lfz\",\"line\":4,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-verifier\\\\own\\\\default.lfz\",\"line\":4,\"func\":\"<fn>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-verifier\\\\own\\\\lib.lfz\",\"line\":2,\"func\":\"P::<defaults>\"}]}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": false,
+        "error": "ExecutionLimitError",
+        "message": "执行步数预算已耗尽",
+        "file": "\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\lib.lfz",
+        "line": 2,
+        "col": 27,
+        "traceback": [
+          {
+            "file": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\default.lfz",
+            "line": 4,
+            "func": "<module>"
+          },
+          {
+            "file": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\default.lfz",
+            "line": 4,
+            "func": "<fn>"
+          },
+          {
+            "file": "\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\lib.lfz",
+            "line": 2,
+            "func": "P::<defaults>"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "function_source",
+      "args": [
+        "--max-steps",
+        "40",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\call.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-verifier\\\\own\\\\lib.lfz\",\"line\":2,\"col\":14,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-verifier\\\\own\\\\call.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-verifier\\\\own\\\\call.lfz\",\"line\":3,\"func\":\"<fn>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-verifier\\\\own\\\\lib.lfz\",\"line\":2,\"func\":\"f\"}]}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": false,
+        "error": "ExecutionLimitError",
+        "message": "执行步数预算已耗尽",
+        "file": "\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\lib.lfz",
+        "line": 2,
+        "col": 14,
+        "traceback": [
+          {
+            "file": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\call.lfz",
+            "line": 3,
+            "func": "<module>"
+          },
+          {
+            "file": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\call.lfz",
+            "line": 3,
+            "func": "<fn>"
+          },
+          {
+            "file": "\\\\?\\D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-verifier\\own\\lib.lfz",
+            "line": 2,
+            "func": "f"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "fresh_session",
+      "args": [
+        "--max-steps",
+        "2",
+        "-e",
+        "1"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr_hex": "",
+      "document": {
+        "ok": true
+      },
+      "passed": true
+    }
+  ]
+}

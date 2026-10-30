@@ -1,0 +1,29 @@
+{
+  "schema": "LFZ-T17-CLI-1",
+  "binary": "Temp\\T16-C-release\\lfz-C-cdedc9.exe",
+  "binary_sha256": "cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006",
+  "bytes": 902656,
+  "script_sha256": "8d4718fb5519e55c898fb7c144f6592d262b680724260398a0795ca80702dd89",
+  "red_only": true,
+  "checks_total": 1,
+  "checks_passed": 0,
+  "rows": [
+    {
+      "name": "feature_red",
+      "args": [
+        "--json",
+        "--max-steps",
+        "2",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 裸文件调用只接受一个 <file> 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "exception": "JSONDecodeError('Expecting value: line 1 column 1 (char 0)')",
+      "passed": false
+    }
+  ],
+  "timestamp_utc": "2026-10-30T04:54:45.211114+00:00"
+}

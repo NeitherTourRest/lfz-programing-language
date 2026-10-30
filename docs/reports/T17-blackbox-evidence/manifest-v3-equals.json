@@ -1,0 +1,7 @@
+{
+  "phase": "preparation-v3-equals only; no LFZ execution",
+  "cases_total": 121,
+  "script_sha256": "dd7828b7abd787d80ab1176c94ca85b7bf974919de8629f43d27c43afc0a2783",
+  "plan_sha256": "a2fd82250550b978cd25bda17da554f7c323a978961090b3dfbe8a51d6f93a37",
+  "change": "91 to121; replace loose equals refusal with precise message; add help/version, empty/arbitrary value, CODE, argv, nonfamily and valid-then-equals; original manifests and red retained"
+}

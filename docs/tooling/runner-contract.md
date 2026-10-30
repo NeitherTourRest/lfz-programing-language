@@ -253,3 +253,11 @@ runner **不改变 cwd**，所以测试正文中的 `Temp/...` 相对进程启�
 GraphExecutionError是宿主异常，不伪造LFZ错误类，run写stderr“lfz: 模块执行上下文无效：{detail}”并exit2、stdout空。程序可捕获错误仍遵循T15 Result协议，未额外添加file字段。模块初始化和命名空间语义由runtime实现，CLI不重读或克隆整图。
 
 B阶段tests/cli_t16b.rs最后一条“模块执行尚未启用”过渡断言经team-lead明确授权改为C真实运行成功与文件副作用断言，其余全部保留；旧library eval_module模块preflight guard仍原样。新增tests/cli_t16c.rs覆盖三run入口与定义模块globals、依赖初始化错误且入口无副作用、运行图前端来源错误、51函数帧跨文件人类折叠/JSON全量、attempt恢复后的新入口错误来源。所有fixture在项目Temp，进程超时有界。最终计数/哈希和权限边界以T16-C-tooling报告为准。
+
+## 15. T17 CLI执行预算与协作时间窗口
+
+仅run/裸file/-e/stdin执行命令支持--max-steps N及--timeout-ms N，各至多一次，N为非空ASCII十进制u64，0和前导0允许，符号/空白/分隔符/溢出拒绝。值错误先于非执行命令适用性；check/test/help/version不接受限额，旧无flag行为保持。两flag与--json可在来源前后任意选项区顺序，-e紧邻CODE及完整来源后--的argv均原样保护。等号族usage精确文案见三spec§22补钉，不扩flagX。
+
+CLI保留原Command及unlimited流水线；新run_limited使用原始CliLimits和Result<CaseEval,String>区分usage与LFZ错误。加载/lex/parse/静态图成功后才通过Instant::now().checked_add(Duration::from_millis(N))建立EvalLimits，失败输出精确usage，绝不当模块HostFailure。旧eval_case/runner默认unlimited。ExecutionLimitError注册为第13类，保留原12类；资源错误仍exit2及原JSON字段顺序/真实来源，程序输出--json时仍stderr。
+
+截止时间是节点poll协作窗口，不含前端，不保证阻塞IO/native内部硬中断，不安装Ctrl-C handler或新增依赖。新tests/cli_t17.rs与作者证据见T17-tooling报告；runtime四项补验与最终十release程序624结果不代表独立性能通过。全部Temp项目内，仅release复用target。

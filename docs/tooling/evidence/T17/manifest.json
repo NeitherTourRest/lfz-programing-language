@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-30",
+  "binary": {
+    "path": "target/release/lfz.exe",
+    "bytes": 942592,
+    "sha256": "f4876fc2850869a2d9d8e511eb7510c4ee59ccde2ea0896cd891220da06bf4c4"
+  },
+  "tests": {
+    "initial_default_cli": "6/8: non-execution applicability before missing check source fixed; graph canonicalization sandbox failure retained",
+    "final_permitted_counts": [
+      28,
+      12,
+      12,
+      7,
+      5,
+      9,
+      50,
+      467,
+      15,
+      15
+    ],
+    "final_permitted_total": 620,
+    "failed": 0,
+    "ignored": 0,
+    "final_compile_command": "cargo test --release --no-run",
+    "build_exit": 0
+  },
+  "source_hashes": {
+    "src/ast.rs": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076",
+    "src/builtins.rs": "0b69680b4b0029c0b4eb2ddd3ba86ecf22fa82cdab25cbec4d3a832e43a0c151",
+    "src/cli.rs": "b6ac12bf7581472a6c60c4c914d48714372a0c156456164670b480a351aa07e1",
+    "src/env.rs": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc",
+    "src/error.rs": "df90ae9d02bca29cc26167b81171cd1a822d79d48b6f490098e848ee49c4e310",
+    "src/evaluator.rs": "015c88239e77e733594a7b0ae24ef8092786f1f8d269c30bddeb162745b89ea3",
+    "src/json.rs": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f",
+    "src/json_codec.rs": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2",
+    "src/lexer.rs": "ebb952edbcd201210eb1f9c6ddebf58e2f3f998b260a11a51fe1c967848031f2",
+    "src/lib.rs": "e5ecee22f8aa8e357b2d932d5bb0c74044a76f63a4ee2eb476e900dc68f254ce",
+    "src/loader.rs": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f",
+    "src/main.rs": "247fc12340d2f6a26aa3fc5ada658cbfe72fb7ee7f85f107b05e6af27018c366",
+    "src/modules.rs": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895",
+    "src/parser.rs": "58c41ba85d930dc0ef465be2a9d3c0741cfe7052d6dd9df01a825aab73e7ff5f",
+    "src/source.rs": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468",
+    "src/span.rs": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2",
+    "src/test_runner.rs": "d2d1aa7705c9fa700dcaf1ff4085f5c1cd05d8976f8ebe0cdc166dc51ecca2a3",
+    "src/value.rs": "63967cb79996c7fedfe7285378e58c2774825c73680a81e50c12a185bbe438a0",
+    "Cargo.toml": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c",
+    "Cargo.lock": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4",
+    "tests/cli_t17.rs": "a34a515d9b51310fd05ac561c159b7ac99e96633e605096bdb98faec983130ba"
+  },
+  "evidence": {
+    ".gitattributes": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+    "build.txt": "c54468806df441fd0c4a6f688dc90a899a0eb2f8f1726cbe66eba8c60577ceba",
+    "compile.txt": "b4ae894e33987dc2c2fbaa4ca08ca755838ab09cc332392a7932ae711422c6b6",
+    "final-cli-d19dbfa7dd3f9d73.exe.txt": "4973ae7fc4865257592a95d3f791f5f734f9e575c343bb99b6cabf528caa1dba",
+    "final-cli_t12-35b857587ead196a.exe.txt": "352fb41f005c1afdfb4cf2a87abb78480f47657e1bc2542d4b9cad6f66cf770e",
+    "final-cli_t14-b528900585815e19.exe.txt": "85929c51c3f2191c5b40545709eac4683b6ff9482045eae5de10bd61c73bb077",
+    "final-cli_t16b-66b0b355c7f6f4d0.exe.txt": "4612ce62f80ee2e830152119a95d5cc5bf470863afa93a173c57264f737c69dd",
+    "final-cli_t16c-24a3e9d865ee9e42.exe.txt": "c24796d1cf872bc522095d659fdabacb798bca0d39bf4612bbeacab55b018eda",
+    "final-cli_t17-2cfc935946fdc938.exe.txt": "e99c72dc13a88ecffa33238bf05f47c0cc0105bf7ce52dc5b31251b0562ece8c",
+    "final-lfz-243aeb8f5c3370f1.exe.txt": "8583f87a2719adcfade9161a54d1e3936d2285c5341071fd86b66efb1f169e62",
+    "final-lfz-63397fd2d9985014.exe.txt": "37570e691768bd2f46e2379f0e2e84279a699249ca8fec301a11a834c47cb69c",
+    "final-test_runner-a9d3da191eeb2958.exe.txt": "0bb27a53cc3fb3180bb378484a7e2a3d19dba8a4bc01cec1f8a9ad3a441d2159",
+    "final-unit-ae562ae83f03ad63.exe.txt": "c67c319aecc6b4b93f7fc07c91b60b76ce6f97f5162573fcbd3825df01370748",
+    "first.txt": "94afa550e09581d9bb1770092702696d195ac0ece14e506d7c14d99705a5405c",
+    "red.json": "5cc65a3e3506f782c433351d80aedc41f6a18d56e57d4923e93578380850aede"
+  }
+}

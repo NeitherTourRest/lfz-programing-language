@@ -1,0 +1,2463 @@
+{
+  "schema": "LFZ-T17-CLI-1",
+  "binary": "target\\release\\lfz.exe",
+  "binary_sha256": "1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45",
+  "bytes": 943104,
+  "script_sha256": "dd7828b7abd787d80ab1176c94ca85b7bf974919de8629f43d27c43afc0a2783",
+  "red_only": false,
+  "checks_total": 121,
+  "checks_passed": 110,
+  "rows": [
+    {
+      "name": "feature_red",
+      "args": [
+        "--json",
+        "--max-steps",
+        "2",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "int_0_0",
+      "args": [
+        "--json",
+        "--max-steps",
+        "0",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "int_1_0",
+      "args": [
+        "--json",
+        "--max-steps",
+        "1",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "int_2_0",
+      "args": [
+        "--json",
+        "--max-steps",
+        "2",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "binding_3_0",
+      "args": [
+        "--json",
+        "--max-steps",
+        "3",
+        "-e",
+        "let x=1\nx"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "binding_4_0",
+      "args": [
+        "--json",
+        "--max-steps",
+        "4",
+        "-e",
+        "let x=1\nx"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "int_0_1",
+      "args": [
+        "--json",
+        "--max-steps",
+        "0",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "int_1_1",
+      "args": [
+        "--json",
+        "--max-steps",
+        "1",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "int_2_1",
+      "args": [
+        "--json",
+        "--max-steps",
+        "2",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "binding_3_1",
+      "args": [
+        "--json",
+        "--max-steps",
+        "3",
+        "-e",
+        "let x=1\nx"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "binding_4_1",
+      "args": [
+        "--json",
+        "--max-steps",
+        "4",
+        "-e",
+        "let x=1\nx"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "empty_zero",
+      "args": [
+        "--json",
+        "--max-steps",
+        "0",
+        "-e",
+        ""
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "max_u64",
+      "args": [
+        "--json",
+        "--max-steps",
+        "18446744073709551615",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "leading_zero",
+      "args": [
+        "--json",
+        "--max-steps",
+        "0002",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "empty_loop",
+      "args": [
+        "--json",
+        "--max-steps",
+        "25",
+        "-e",
+        "while true {}"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":7,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "for_loop",
+      "args": [
+        "--json",
+        "--max-steps",
+        "25",
+        "-e",
+        "for i in range(100) {}"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": false,
+        "keys": false,
+        "ok": false,
+        "streams": true,
+        "limit": false
+      },
+      "passed": false
+    },
+    {
+      "name": "recursion",
+      "args": [
+        "--json",
+        "--max-steps",
+        "80",
+        "-e",
+        "fn f()=>f()\nf()"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":9,\"traceback\":[{\"file\":\"<command>\",\"line\":2,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"f\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "attempt_nested",
+      "args": [
+        "--json",
+        "--max-steps",
+        "40",
+        "-e",
+        "attempt(()=>attempt(()=>{\nwhile true {}\n}))"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":2,\"col\":7,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"},{\"file\":\"<command>\",\"line\":2,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "attempt_no_refund",
+      "args": [
+        "--json",
+        "--max-steps",
+        "100",
+        "-e",
+        "while true {\nlet r=attempt(()=>1/0)\n}"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "hof_map",
+      "args": [
+        "--json",
+        "--max-steps",
+        "35",
+        "-e",
+        "map((x)=>x+1,range(100))"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":10,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "hof_filter",
+      "args": [
+        "--json",
+        "--max-steps",
+        "35",
+        "-e",
+        "filter((x)=>x>0,range(100))"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":13,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "hof_reduce",
+      "args": [
+        "--json",
+        "--max-steps",
+        "35",
+        "-e",
+        "reduce((a,x)=>a+x,0,range(100))"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":17,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "hof_sortBy",
+      "args": [
+        "--json",
+        "--max-steps",
+        "35",
+        "-e",
+        "sortBy((x)=>x,range(100))"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":13,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "hof_minBy",
+      "args": [
+        "--json",
+        "--max-steps",
+        "35",
+        "-e",
+        "minBy((x)=>x,range(100))"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":12,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "hof_maxBy",
+      "args": [
+        "--json",
+        "--max-steps",
+        "35",
+        "-e",
+        "maxBy((x)=>x,range(100))"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":12,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "hof_each",
+      "args": [
+        "--json",
+        "--max-steps",
+        "35",
+        "-e",
+        "each((x)=>x,range(100))"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":11,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--max-steps_''",
+      "args": [
+        "--json",
+        "--max-steps",
+        "",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--max-steps_'-1'",
+      "args": [
+        "--json",
+        "--max-steps",
+        "-1",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--max-steps_'+1'",
+      "args": [
+        "--json",
+        "--max-steps",
+        "+1",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--max-steps_' 1'",
+      "args": [
+        "--json",
+        "--max-steps",
+        " 1",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--max-steps_'1 '",
+      "args": [
+        "--json",
+        "--max-steps",
+        "1 ",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--max-steps_'1_0'",
+      "args": [
+        "--json",
+        "--max-steps",
+        "1_0",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--max-steps_'1.0'",
+      "args": [
+        "--json",
+        "--max-steps",
+        "1.0",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--max-steps_'１２'",
+      "args": [
+        "--json",
+        "--max-steps",
+        "１２",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--max-steps_'18446744073709551616'",
+      "args": [
+        "--json",
+        "--max-steps",
+        "18446744073709551616",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "missing_--max-steps[]",
+      "args": [
+        "-e",
+        "1",
+        "--max-steps"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 需要一个非负十进制 u64 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "missing_--max-steps['--']",
+      "args": [
+        "-e",
+        "1",
+        "--max-steps",
+        "--"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 需要一个非负十进制 u64 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "duplicate_--max-steps",
+      "args": [
+        "--max-steps",
+        "1",
+        "--max-steps",
+        "2",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 不能重复\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_check--max-steps",
+      "args": [
+        "check",
+        "--max-steps",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 执行限额选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_test--max-steps",
+      "args": [
+        "test",
+        "--max-steps",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 执行限额选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_help--max-steps",
+      "args": [
+        "help",
+        "--max-steps",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'help'\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": false
+      },
+      "passed": false
+    },
+    {
+      "name": "inapplicable_version--max-steps",
+      "args": [
+        "version",
+        "--max-steps",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'version'\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": false
+      },
+      "passed": false
+    },
+    {
+      "name": "inapplicable_--help--max-steps",
+      "args": [
+        "--help",
+        "--max-steps",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 执行限额选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_--version--max-steps",
+      "args": [
+        "--version",
+        "--max-steps",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 执行限额选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--max-steps_''_eval",
+      "args": [
+        "--max-steps=",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 不支持等号写法，请使用 '--max-steps N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--max-steps_''_--help",
+      "args": [
+        "--help",
+        "--max-steps="
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 不支持等号写法，请使用 '--max-steps N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--max-steps_''_--version",
+      "args": [
+        "--version",
+        "--max-steps="
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 不支持等号写法，请使用 '--max-steps N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--max-steps_'2'_eval",
+      "args": [
+        "--max-steps=2",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 不支持等号写法，请使用 '--max-steps N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--max-steps_'2'_--help",
+      "args": [
+        "--help",
+        "--max-steps=2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 不支持等号写法，请使用 '--max-steps N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--max-steps_'2'_--version",
+      "args": [
+        "--version",
+        "--max-steps=2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 不支持等号写法，请使用 '--max-steps N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--max-steps_'bad=text'_eval",
+      "args": [
+        "--max-steps=bad=text",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 不支持等号写法，请使用 '--max-steps N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--max-steps_'bad=text'_--help",
+      "args": [
+        "--help",
+        "--max-steps=bad=text"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 不支持等号写法，请使用 '--max-steps N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--max-steps_'bad=text'_--version",
+      "args": [
+        "--version",
+        "--max-steps=bad=text"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 不支持等号写法，请使用 '--max-steps N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_after_valid_--max-steps",
+      "args": [
+        "--max-steps",
+        "2",
+        "--max-steps=3",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 不支持等号写法，请使用 '--max-steps N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "nonfamily_--max-steps",
+      "args": [
+        "--max-stepsX=2",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 裸文件调用只接受一个 <file> 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true,
+        "not_new_family": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_CODE_--max-steps=",
+      "args": [
+        "--json",
+        "-e",
+        "--max-steps="
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"赋值左侧必须是变量、字段或下标\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_check_CODE_--max-steps=",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "--max-steps="
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"赋值左侧必须是变量、字段或下标\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_CODE_--max-steps=2",
+      "args": [
+        "--json",
+        "-e",
+        "--max-steps=2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"赋值左侧必须是变量、字段或下标\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_check_CODE_--max-steps=2",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "--max-steps=2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"赋值左侧必须是变量、字段或下标\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_argv_--max-steps",
+      "args": [
+        "--json",
+        "-e",
+        "assert(argv()==[\"--max-steps=bad\"])",
+        "--",
+        "--max-steps=bad"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--timeout-ms_''",
+      "args": [
+        "--json",
+        "--timeout-ms",
+        "",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--timeout-ms_'-1'",
+      "args": [
+        "--json",
+        "--timeout-ms",
+        "-1",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--timeout-ms_'+1'",
+      "args": [
+        "--json",
+        "--timeout-ms",
+        "+1",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--timeout-ms_' 1'",
+      "args": [
+        "--json",
+        "--timeout-ms",
+        " 1",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--timeout-ms_'1 '",
+      "args": [
+        "--json",
+        "--timeout-ms",
+        "1 ",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--timeout-ms_'1_0'",
+      "args": [
+        "--json",
+        "--timeout-ms",
+        "1_0",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--timeout-ms_'1.0'",
+      "args": [
+        "--json",
+        "--timeout-ms",
+        "1.0",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--timeout-ms_'１２'",
+      "args": [
+        "--json",
+        "--timeout-ms",
+        "１２",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_--timeout-ms_'18446744073709551616'",
+      "args": [
+        "--json",
+        "--timeout-ms",
+        "18446744073709551616",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "missing_--timeout-ms[]",
+      "args": [
+        "-e",
+        "1",
+        "--timeout-ms"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 需要一个非负十进制 u64 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "missing_--timeout-ms['--']",
+      "args": [
+        "-e",
+        "1",
+        "--timeout-ms",
+        "--"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 需要一个非负十进制 u64 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "duplicate_--timeout-ms",
+      "args": [
+        "--timeout-ms",
+        "1",
+        "--timeout-ms",
+        "2",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 不能重复\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_check--timeout-ms",
+      "args": [
+        "check",
+        "--timeout-ms",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 执行限额选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_test--timeout-ms",
+      "args": [
+        "test",
+        "--timeout-ms",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 执行限额选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_help--timeout-ms",
+      "args": [
+        "help",
+        "--timeout-ms",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'help'\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": false
+      },
+      "passed": false
+    },
+    {
+      "name": "inapplicable_version--timeout-ms",
+      "args": [
+        "version",
+        "--timeout-ms",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'version'\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": false
+      },
+      "passed": false
+    },
+    {
+      "name": "inapplicable_--help--timeout-ms",
+      "args": [
+        "--help",
+        "--timeout-ms",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 执行限额选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_--version--timeout-ms",
+      "args": [
+        "--version",
+        "--timeout-ms",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 执行限额选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--timeout-ms_''_eval",
+      "args": [
+        "--timeout-ms=",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 不支持等号写法，请使用 '--timeout-ms N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--timeout-ms_''_--help",
+      "args": [
+        "--help",
+        "--timeout-ms="
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 不支持等号写法，请使用 '--timeout-ms N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--timeout-ms_''_--version",
+      "args": [
+        "--version",
+        "--timeout-ms="
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 不支持等号写法，请使用 '--timeout-ms N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--timeout-ms_'2'_eval",
+      "args": [
+        "--timeout-ms=2",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 不支持等号写法，请使用 '--timeout-ms N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--timeout-ms_'2'_--help",
+      "args": [
+        "--help",
+        "--timeout-ms=2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 不支持等号写法，请使用 '--timeout-ms N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--timeout-ms_'2'_--version",
+      "args": [
+        "--version",
+        "--timeout-ms=2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 不支持等号写法，请使用 '--timeout-ms N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--timeout-ms_'bad=text'_eval",
+      "args": [
+        "--timeout-ms=bad=text",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 不支持等号写法，请使用 '--timeout-ms N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--timeout-ms_'bad=text'_--help",
+      "args": [
+        "--help",
+        "--timeout-ms=bad=text"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 不支持等号写法，请使用 '--timeout-ms N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_--timeout-ms_'bad=text'_--version",
+      "args": [
+        "--version",
+        "--timeout-ms=bad=text"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 不支持等号写法，请使用 '--timeout-ms N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_after_valid_--timeout-ms",
+      "args": [
+        "--timeout-ms",
+        "2",
+        "--timeout-ms=3",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--timeout-ms' 不支持等号写法，请使用 '--timeout-ms N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "nonfamily_--timeout-ms",
+      "args": [
+        "--timeout-msX=2",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 裸文件调用只接受一个 <file> 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true,
+        "not_new_family": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_CODE_--timeout-ms=",
+      "args": [
+        "--json",
+        "-e",
+        "--timeout-ms="
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"赋值左侧必须是变量、字段或下标\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_check_CODE_--timeout-ms=",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "--timeout-ms="
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"赋值左侧必须是变量、字段或下标\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_CODE_--timeout-ms=2",
+      "args": [
+        "--json",
+        "-e",
+        "--timeout-ms=2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"赋值左侧必须是变量、字段或下标\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_check_CODE_--timeout-ms=2",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "--timeout-ms=2"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"赋值左侧必须是变量、字段或下标\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_argv_--timeout-ms",
+      "args": [
+        "--json",
+        "-e",
+        "assert(argv()==[\"--timeout-ms=bad\"])",
+        "--",
+        "--timeout-ms=bad"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "left_to_right",
+      "args": [
+        "check",
+        "--max-steps",
+        "bad",
+        "--timeout-ms",
+        "bad"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 的值必须是非负十进制 u64\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "usage_stdout_empty": true,
+        "usage_message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "code_protection_--max-steps",
+      "args": [
+        "--json",
+        "--max-steps",
+        "100",
+        "-e",
+        "--max-steps"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'max'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": false
+      },
+      "passed": false
+    },
+    {
+      "name": "check_code_protection_--max-steps",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "--max-steps"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": false,
+        "keys": false,
+        "ok": false,
+        "streams": true,
+        "class": false
+      },
+      "passed": false
+    },
+    {
+      "name": "code_protection_--timeout-ms",
+      "args": [
+        "--json",
+        "--max-steps",
+        "100",
+        "-e",
+        "--timeout-ms"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'timeout'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": false
+      },
+      "passed": false
+    },
+    {
+      "name": "check_code_protection_--timeout-ms",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "--timeout-ms"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": false,
+        "keys": false,
+        "ok": false,
+        "streams": true,
+        "class": false
+      },
+      "passed": false
+    },
+    {
+      "name": "code_protection_--",
+      "args": [
+        "--json",
+        "--max-steps",
+        "100",
+        "-e",
+        "--"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 表达式，但得到 '文件末尾'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "check_code_protection_--",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "--"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"mode\":\"check\",\"executed\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 表达式，但得到 '文件末尾'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "code_protection_--json",
+      "args": [
+        "--json",
+        "--max-steps",
+        "100",
+        "-e",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'json'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": false
+      },
+      "passed": false
+    },
+    {
+      "name": "check_code_protection_--json",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "--json"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "checks": {
+        "exit": false,
+        "keys": false,
+        "ok": false,
+        "streams": true,
+        "class": false
+      },
+      "passed": false
+    },
+    {
+      "name": "order_before",
+      "args": [
+        "--max-steps",
+        "100",
+        "run",
+        "--timeout-ms",
+        "60000",
+        "--json",
+        "-e",
+        "assert(argv()==[\"--max-steps\",\"9\",\"--timeout-ms\",\"0\",\"\"])",
+        "--",
+        "--max-steps",
+        "9",
+        "--timeout-ms",
+        "0",
+        ""
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "order_after",
+      "args": [
+        "run",
+        "--json",
+        "-e",
+        "assert(argv()==[\"--max-steps\",\"9\",\"--timeout-ms\",\"0\",\"\"])",
+        "--timeout-ms",
+        "60000",
+        "--max-steps",
+        "100",
+        "--",
+        "--max-steps",
+        "9",
+        "--timeout-ms",
+        "0",
+        ""
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "entry_bare",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-public\\single.lfz",
+        "--max-steps",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "entry_run",
+      "args": [
+        "--json",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-public\\single.lfz",
+        "--max-steps",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "entry_stdin",
+      "args": [
+        "--json",
+        "-",
+        "--max-steps",
+        "2"
+      ],
+      "stdin_hex": "31",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "entry_run_stdin",
+      "args": [
+        "--json",
+        "run",
+        "-",
+        "--max-steps",
+        "2"
+      ],
+      "stdin_hex": "31",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "entry_run_eval",
+      "args": [
+        "--json",
+        "run",
+        "-e",
+        "1",
+        "--max-steps",
+        "2"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "deadline_zero",
+      "args": [
+        "--json",
+        "--timeout-ms",
+        "0",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "deadline_empty",
+      "args": [
+        "--json",
+        "--timeout-ms",
+        "0",
+        "-e",
+        ""
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "deadline_priority",
+      "args": [
+        "--json",
+        "--max-steps",
+        "0",
+        "--timeout-ms",
+        "0",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "deadline_future",
+      "args": [
+        "--json",
+        "--timeout-ms",
+        "60000",
+        "-e",
+        "1"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "deadline_eventual",
+      "args": [
+        "--json",
+        "--timeout-ms",
+        "10",
+        "-e",
+        "while true {}"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"<command>\",\"line\":1,\"col\":7,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true
+      },
+      "passed": true
+    },
+    {
+      "name": "syntax_before_budget",
+      "args": [
+        "--json",
+        "--max-steps",
+        "0",
+        "--timeout-ms",
+        "0",
+        "-e",
+        "let x ="
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"SyntaxError\",\"message\":\"这里期待 表达式，但得到 '文件末尾'\",\"file\":\"<command>\",\"line\":1,\"col\":8,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "graph_shared_4",
+      "args": [
+        "--json",
+        "--max-steps",
+        "4",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-public\\graph.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-public\\\\graph.lfz\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-public\\\\graph.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true,
+        "fault_file": true
+      },
+      "passed": true
+    },
+    {
+      "name": "graph_shared_5",
+      "args": [
+        "--json",
+        "--max-steps",
+        "5",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-public\\graph.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true
+      },
+      "passed": true
+    },
+    {
+      "name": "dependency_fault",
+      "args": [
+        "--json",
+        "--max-steps",
+        "1",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-public\\graph.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-public\\\\leaf.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-public\\\\leaf.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true,
+        "fault_file": true
+      },
+      "passed": true
+    },
+    {
+      "name": "function_fault",
+      "args": [
+        "--json",
+        "--max-steps",
+        "60",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-public\\function_fault.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-public\\\\func.lfz\",\"line\":3,\"col\":7,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-public\\\\function_fault.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-public\\\\func.lfz\",\"line\":3,\"func\":\"loop\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true,
+        "fault_file": true
+      },
+      "passed": true
+    },
+    {
+      "name": "default_fault",
+      "args": [
+        "--json",
+        "--max-steps",
+        "60",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T17-public\\default_fault.lfz"
+      ],
+      "stdin_hex": "",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-public\\\\func.lfz\",\"line\":3,\"col\":7,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-public\\\\default_fault.lfz\",\"line\":4,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-public\\\\func.lfz\",\"line\":5,\"func\":\"T::<defaults>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T17-public\\\\func.lfz\",\"line\":3,\"func\":\"loop\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "keys": true,
+        "ok": true,
+        "streams": true,
+        "limit": true,
+        "fault_file": true
+      },
+      "passed": true
+    }
+  ],
+  "timestamp_utc": "2026-10-30T05:36:12.253034+00:00"
+}

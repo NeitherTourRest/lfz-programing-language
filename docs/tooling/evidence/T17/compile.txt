@@ -1,0 +1,17 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+    Finished `release` profile [optimized] target(s) in 51.82s
+  Executable unittests src\lib.rs (target\release\deps\lfz-63397fd2d9985014.exe)
+  Executable unittests src\main.rs (target\release\deps\lfz-243aeb8f5c3370f1.exe)
+  Executable tests\cli.rs (target\release\deps\cli-d19dbfa7dd3f9d73.exe)
+  Executable tests\cli_t12.rs (target\release\deps\cli_t12-35b857587ead196a.exe)
+  Executable tests\cli_t14.rs (target\release\deps\cli_t14-b528900585815e19.exe)
+  Executable tests\cli_t16b.rs (target\release\deps\cli_t16b-66b0b355c7f6f4d0.exe)
+  Executable tests\cli_t16c.rs (target\release\deps\cli_t16c-24a3e9d865ee9e42.exe)
+  Executable tests\cli_t17.rs (target\release\deps\cli_t17-2cfc935946fdc938.exe)
+  Executable tests\test_runner.rs (target\release\deps\test_runner-a9d3da191eeb2958.exe)
+  Executable tests\unit\main.rs (target\release\deps\unit-ae562ae83f03ad63.exe)

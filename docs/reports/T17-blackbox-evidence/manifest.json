@@ -1,0 +1,10 @@
+{
+  "phase": "preparation only; T17 final binary pending",
+  "files": {
+    "C-feature-red.json": "7ca15afba8cc5db420f47bbe9d0d58c9900dde528ede56ca4b36746b8016bf1e",
+    "prepared-v2.json": "4b6e3b3fe70365980b788300415429b13d011d3aaa8e27cba0137e769fd156eb",
+    "prepared.json": "8c005d5c4ec5b72ba4328e307b99d5e0fb78944509a120f7c66e0af40a7ff734"
+  },
+  "script_sha256": "0c6eabb8709528c5fba3594500c610e3e91156bd1eb8efddf8dc73c71b21b3d9",
+  "note": "red script fingerprint is the actual earlier four-HOF preparation; final prepared-v2 adds three HOF cases; no T17 execution"
+}
