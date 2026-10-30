@@ -13,3 +13,9 @@ Python AST PASS。菱形共享计数、caller同名全局不串、两次执行ca
 
 ## 经验
 模块路径与IO路径基准不同；attempt记录仍无file；共享state.calls须等于总记录数。应用非流式、非原子，保持字面路径检测限制。
+
+## T17预算应用准备（2026-10-30）
+新增verify_jsonbatch_budgets.py/T17-BUDGETS.md及t17-evidence属性；AST/prepare-only通过，解释器0启动。正常结果等价、早期终止KEEP输出、已完成IO不回滚、跨模块attempt不吞系统终止均准备；等待最终hash实跑，旧app与oracle未改，不编译/Git。
+
+## T17最终实跑（2026-10-30）
+锁1946ab9/943104B，同字节许可提权40/40 PASS；callback预算28见证，0..28逐次保留，默认sandbox拒绝失败也保存。正常结果字节等价/早期KEEP/已完成SIDE不回滚/check拒预算均过。app/t17-evidence/results/manifest和T17-BUDGETS最终节齐，源码/旧app/旧oracle未改，不编译/Git。R304OPEN，无应用阻塞，交独立verifier。

@@ -2,20 +2,20 @@
 > 最后更新：2026-10-30 by release-manager
 
 ## 当前状态
-T16-C独立功能PASS候选快照/文档/提交准备完成，已先通知root可以GO T17源码。B已推main9d7e1aa，不重做B；C仍候选、R304OPEN、无本轮性能计时、不tag，本角色不Git。
+T17最终独立PASS候选已精确封存并第一时间通知root可GO下一阶段；文档/六组提交准备完成。本角色不Git、不编译、不改源/profile。R304OPEN，无本批性能窗，非正式发布、不打tag。
 
-## 精确保全
-- C target/dist902656B、SHA CDEDC9B980AA207B28BF895EF95CE76FDE18E47EF758C19C187B3F9C2DA08006。ZIP611909B、SHA8A6F9D0ACADB86FA56CA49BB7E0A82650F7FD00902348DBF46B4BFBE7B8A9532，24成员=18src+2Cargo+3测试+exe，全部回读及冻结前后指纹一致，无T17 spec混入。
-- docs/reports/T16-C-release-evidence/build.json/source-hashes.json/candidate-snapshot.zip；Temp/T16-C-release/lfz-C-cdedc9.exe另存精确exe，之后不改dist，不编译/改源码/profile。
-- 独立599harness/公开29/新应用33/自编15及旧13/117/91含178/旧app37+11/jsonbatch38/JSON140全PASS。人指南11/AI18分列作者实跑，README/checklist已引用实际独立报告。
+## 保全与事实
+- target/dist943104B SHA1946AB9CA5162D68F83A9D098424BD0BAFDF6FEADC6EA90527E0DB9E1DB12C45；ZIP629305B SHA3D9155399DFDA66A3B9B127A3CC11BF7954DE12354E59B52727C129C88683F83，23成员（18src+2Cargo+相对3639216变化2测试+exe），全回读和输入前后一致。Temp/T17-release/lfz-T17-1946ab.exe另存，之后不改dist。
+- T17-independent-verification.md最终追加PASS：624harness/公开134/预算应用40/自编14/旧全回归及C29/app33。人指南32/AI38为作者实跑，经独立SHA审计，不冒称独立重跑。首次121/122与CONCERNS全部保留，没有覆盖失败历史。
+- README/checklist明确步数/协作deadline/host token边界、默认unlimited、13类ExecutionLimitError不能attempt吞、副作用不回滚、native/阻塞IO内部不强制poll；不冒称资源或权限沙箱。
 
-## Git防混准备
-- prepare-checkpoint.py固定baseline9d7e1aa，所有18源码+cli_t16b/cli_t16c/t16c_cli_run三个测试均从固定SHA的C ZIP生成stagecopy/hash，仅相对B实际改动入组；T17活动src/新测试排除。
-- 24项snapshot记录=18src+3tests+3用户，用户原28/1/1块各匹配1，只Temp过滤副本不改工作树。6组清单已生成，root/角色最终记录齐后首次提交前刷新一次，提交过程中不再刷新。
-- T17路径仅三个显式规划白名单，§22仅已冻结未实现/未验收，不能作C预算能力；其它T17产物排除，C活跃后不再对当前源码做C hash证明。
+## Git准备
+- T17-release-evidence/prepare-checkpoint.py固定baseline3639216；源18+两测试只从固定SHA的T17 ZIP产stagecopy/hash，实际变化4src和2测试入组，所有未来活动源/测试排除。
+- 23份snapshot=18src+2tests+3用户；用户28/1/1三块过滤副本仅Temp，不改工作树。T18路径除三个显式规划白名单外排除，不能把后继实现当T17验收。
+- 六组清单当前162路径（生成时点），全部role/root最后落盘后主会话首次提交前刷新一次，开始提交后不重跑。普通路径按direct_stage_paths，源/测试/用户按staged_snapshot_paths做index，不宽泛add活动T18源码。
 
 ## 下一步
-主会话按snapshot index代执行C六组提交/推送，活动T17源继续未提交；不得误报只余用户3块。本角色已落记录并释放slot，未Git、不改dist/源码。
+主会话按六组快照提交/推送T17；活动后继源码继续未提交，不能误报只剩用户3块。没有收口准备阻塞，本角色已释放slot。
 
 ## 关键经验
 staged快照只排除用户初始28/1/1新增，工作树原文保留，禁止git add .或整文件stage混合记录。新skill/exe不冒用旧v2 manifest；旧9输入从原ZIP恢复，旧成绩不改算。性能门槛不能用局部收益抵消；候选保存与正式发布明确分开。

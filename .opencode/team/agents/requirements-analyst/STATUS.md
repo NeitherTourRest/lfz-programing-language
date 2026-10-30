@@ -2,16 +2,17 @@
 > 最后更新: 2026-10-30 by requirements-analyst
 
 ## 当前状态
-T16-C/D新增R134/210/409/506通过；当前CLI模块初始化/执行与跨文件诊断已验收，不再套B过渡unsupported限制，旧无图eval guard保留。T17§22仅冻结/后继实现，未验收；R304OPEN，无C计时，不正式tag/发布。
+T17新增R135/211/410/507通过：第13错误类ExecutionLimitError、单调预算/host取消/协作deadline、CLI严格flag、指南与预算应用均据§22及最终回执收口。T18仅规划未实现；R304OPEN，无T17性能窗，不tag/正式发布。
 
 ## 证据
-- C冻结cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006/902656B，73内置/12错误类，T16-C-independent-verification.md。
-- 独立599harness/公开29/app33/自编15/旧attempt13/check117/CLI91含178/apps37+11/jsonbatch38/JSON140全PASS；人指南11/AI18绑定同产物通过，默认沙箱失败保全且许可复核不绕身份。
-- 独立globals/session缓存/home闭包与模板默认、caller覆盖、attempt来源恢复、真实跨文件全trace/折叠及HostFailure fail-closed边界证据齐。
-- B的run不可用是历史过渡，C新图入口不代表旧无图eval可绕验证；RustAPI迁移明确，不声称零变化。旧A/B/T15/v2和全部失败证据按原hash保持。
+- 冻结1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45/943104B，73内置/13错误类。
+- T17-independent-verification.md最终PASS：624harness/公开134/预算app40/自编14/旧全回归含C29/app33，人32/AI38作者实跑及11份文档SHA独立审计。
+- 早期110/121、118/122、CONCERNS及新oracle修正保留；合法帮助旗标与裸help/version路径、空for无虚构poll、双负号CODE沿旧语义，未改产品追绿。
+- attempt不补步不吞系统终止、cancel→deadline→budget、module共享与来源、native/空程序协作边界明确。不宣称硬实时/CPU/内存/权限沙箱或强制线程终止。
+- 旧C/B/A/T15/T14及v2按各历史hash与计数保持，旧12类是历史时点不是当前封闭总数。
 
 ## 下一步
-交team-lead/release封C快照并连续推进T17；预算/取消/第13错误类只有独立实现验收后才能标通过，不能提前算本C事实。
+交team-lead封T17快照提交；T18外部过程/HTTP生命周期需单独契约实现与独立验收，不能提前通过。
 
 ## 阻塞/经验
-无需求侧阻塞。仅需求与证据映射，不编译、不跑产品、不Git、不修改他人产物。通过范围、版本过渡与未来规范必须分别写明。
+无需求侧阻塞。仅更新需求与本人记录，不编译、不跑产品、不Git。最终结论看报告追加最终节，保留原CONCERNS和失败时点，不用功能关闭R304。

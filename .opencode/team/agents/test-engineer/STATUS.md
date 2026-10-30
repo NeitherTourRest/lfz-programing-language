@@ -1,14 +1,11 @@
 # test-engineer — 工作状态
-> 更新：2026-10-30 08:10
+> 更新：2026-10-30 13:46
 
 ## 当前状态
-T16-C公开最终进程29/29 PASS，exit0，锁cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006/902656B。首次完整执行通过，未改断言或产品重跑。按parent许可普通文件权限运行，未用B/修前候选成绩代替C。
+T17公开最终134/134 PASS，exit0。锁1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45/943104B，同产物许可运行。最终脚本dd5f8fb1…d52ed0。验后源码hash全部匹配tooling final-manifest。
 
 ## 产出
-tests/t16c_cli_run.py；docs/reports/T16-C-blackbox.md；专属evidence/final-first.json、manifest.json与-text属性。binary每进程前后核hash，验后源码hash全部匹配tooling最终冻结manifest。29覆盖范围和边界见报告。
+tests/t17_cli_limits.py；docs/reports/T17-blackbox.md及专属evidence/final-adjudicated-permitted.json、manifest-final.json。早期105/121/110/121/118/122与两个旧脚本保全。新oracle错误按节点语义和架构help/version拼写裁定修正，未产品改动/编译。
 
 ## 下一步/边界
-供独立verifier消费。未编译、不改现有tests/官方manifest/产品/spec/dist/Git；官方178不叠加本29、不声称本角色重验。宿主伪图和默认资源合成边界属runtime unit；折叠trace与legacy/apps另列独立验收。R304OPEN，无性能结论。
-
-## 历史
-T16-B锁8ea375/859136B，公开38/38PASS；旧65a29缺功能红测保持。C准备AST PASS与prepare-only29/executed:false记录保留。
+供独立verifier/其余owner最终验收。官方178不叠公开134，未改旧tests/产品/spec/dist/Git；R304OPEN。宿主cancel/精确attempt余量及IO非硬超时限制见报告。C29/29/B38/38历史保持。

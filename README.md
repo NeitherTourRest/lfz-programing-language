@@ -6,7 +6,20 @@
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
-## 当前记录：T16-C 模块执行候选（2026-10-30）
+## 当前记录：T17 协作式执行限额候选（2026-10-30）
+
+T17提供可选`--max-steps N`与`--timeout-ms N`，默认不限额；Rust宿主另可注入取消token。步数按实际stmt/expr入口计，模块初始化、函数和回调共享会话余量；执行终止为新增第13类ExecutionLimitError，不能被attempt吞掉，既有副作用不回滚。
+
+当前快照943104B、SHA256 `1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45`，[精确源码/测试/exe归档](docs/reports/T17-release-evidence/build.json)已封存。[最终独立报告](docs/reports/T17-independent-verification.md)后续追加PASS：624 harness、最终公开134、预算应用40、自编14，以及旧全回归和C公开29/应用33通过。指南32/AI38为作者实跑，并经独立SHA审计，不冒称独立逐例重跑。首次121/122矩阵与CONCERNS、oracle订正及全部原始失败记录均保留，不重写历史结论。
+
+```powershell
+./dist/lfz.exe check --json job.lfz
+./dist/lfz.exe --max-steps 10000 --timeout-ms 1000 run job.lfz -- '输入'
+```
+
+限额只在求值节点边界协作检查，native计算或阻塞IO内部不强制中断；timeout不含读取/解析/构图，不是内存/权限沙箱、CPU配额或硬实时保障。check/test/help/version不接受限额，参数及CODE/argv保护规则见[限额指南](docs/guide/execution-limits.md)。R304仍OPEN，无本批性能计时，候选非正式发布、不打tag；后继T18活动实现不属于本冻结验收。以下C/B为历史指纹。
+
+## T16-C 历史模块执行候选（绑定cdedc9）
 
 C已实现模块初始化/执行、定义模块中的函数与闭包查名、跨文件错误来源及模块化应用，先完成B静态图检查再初始化依赖。当前C快照1.4.0、902656B、SHA256 `cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006`；[精确源码、测试和exe归档](docs/reports/T16-C-release-evidence/build.json)冻结24项，后继活动源码不能冒用为C验收输入。
 

@@ -77,3 +77,14 @@
 - 初次11成功后增强默认数组原地修改独立性，同字节最终11仍过；两个阶段记录保全。
 - 六指南哈希、脚本/结果/manifest齐备，RustAPI仅规范引用；未编译/改源/AI/dist/Git，R304OPEN。
 
+
+## [2026-10-30] T17人类指南准备
+- 五指南入口和execution-limits.md对齐§22及等号补钉，verify.py准备通过零解释器启动。
+- 最终hash待通知，不套620/F487；RustAPI只规范引用，R304OPEN。
+
+
+## [2026-10-30] T17人类指南最终实跑完成
+- 锁1946ab9c/943104B，默认31/32通过且模块canonicalize权限失败保留；同字节授权提权32/32通过。
+- 五指南入口+execution-limits.md、原始runs/manifest/验证器齐备；RustAPI只规范引用，无Ctrl-C/硬实时承诺。
+- 未编译/改产品/spec/AI/dist/Git，R304OPEN。
+

@@ -285,3 +285,9 @@
 - §21单session graph执行、home globals/来源栈/attempt恢复、TemplateContext默认值上下文与资源保护已在value/evaluator完成。9新增C unit。
 - 默认--lib448通过/8旧canonicalize权限失败保留；parent同一harness提权串行456/456通过，不改旧test。真实缺API红测与作者fixture/测试编译失误日志全留存。
 - 报告/manifest完成，源码冻结；不再编译，tooling唯一完整release和CLI整合，dist/profile/Git未改。R304OPEN，无正式发布声明。
+
+### [2026-10-30 13:00] T17库交接
+3limits入口和节点poll完成；红→7新增runtime绿，默认完整459/8旧权限失败保留，同harness交parent复核。报告及manifest落盘，停止源码编译，tooling接完整CLI。未作性能声明。
+
+### [2026-10-30] T17补测交接
+parent库467PASS；仅新增4unit覆盖线程同步取消、7HOF、diamond预算、模板default来源帧，未编译验证。evaluator A673CCA7…，diff check过，停止写源交tooling唯一最终release。

@@ -246,3 +246,30 @@ cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006/902656B：独�
 
 ## C封存完成，T17 GO（2026-10-30 08:25）
 release已精确保全C ZIP611909B/SHA8a6f9d0acadb86fa56ca49bb7e0a82650f7fd00902348dbf46b4bfbe7b8a9532，24成员=18src+2Cargo+3tests+exe，dist C及Temp精确exe留存。requirements R134/210/409/506通过。root已GO core仅error.rs第13类，runtime仅evaluator预算/取消/deadline与唯一lib编译（先等core停写）；tooling只读准备CLI，未GO源。C提交始终用ZIP源/3tests快照，不stage活动T17源码。原三用户块保护，R304OPEN；NEXT其余未实现不声称完成。
+
+### [2026-10-30 08:30] C实际Git回执与T17实施
+六组C快照已推main，ls-remote核3639216d59e0ec3e278e34d71421750d74f6b10f；21文件（18src+3tests）逐一对固定C ZIP归一换行核PASS，无活动T17源混入。提交后原用户3块28/1/1仍在，另error.rs为T17正常未提交改动。core已完成第13类/error helper/三reason4新unit并停写未编译，runtime已通知可唯一lib编译与实现；tooling只读准备CLI，test准备T17公开矩阵。C已交付候选无正式标签，R304OPEN。
+
+### [2026-10-30 12:51] 用量限制后恢复T17
+此前runtime/tooling/test三agent因账户用量限制失败，提示12:50恢复；最新心跳12:51已复用原agent重新下达继续任务，尚待实际运行回执。检查无cargo/rustc，源仅core已落error.rs，未凭错误类冒称执行控制实现；main仍3639216/C已验收。runtime唯一evaluator/--lib，tooling只读CLI准备，test新公开矩阵准备；D262782976B，原用户三块保留。R304OPEN，后续NEXT未完成，自动接续保持。
+
+### [2026-10-30 13:18] T17库467通过，CLI GO
+parent核DEC65DDA同harness提权467/467 PASS，Temp/T17-runtime/lib-parent-permitted.txt，默认459/8 canonicalize失败保全。runtime3limits入口/Default wrappers/节点poll/共享额度与attempt穿透已落并停源，tooling获GO唯一CLI及完整release编译，runner第13类注册机械同步授权。architect补新flag族等号形式在help后拒绝的小边界；公开91已备。真实并发token/全部HOF/diamond/模板资源终止仍列独立扩验缺口，不凭467声称全部通过。R304OPEN，C已推3639216，原用户块保护。
+
+### [2026-10-30 13:23] T17 CLI620修前通过，补齐最终验收边界
+CLI候选F4876FC2850869A2D9D8E511EB7510C4EE59CCDE2EA0896CD891220DA06BF4C4/942592B，十harness620/620；首次check限额适用性错误已修并保日志。architect新flag=族精确usage补钉已转tooling，故此hash仅修前非最终冻结。为一次最终编译，tooling暂不构建，runtime仅补真实并发token/7HOF/diamond/模板终止unit并停写后交tooling唯一完整release。test同步新矩阵精确文案，旧tests不改，公开91尚未实跑T17。D约185MiB，R304OPEN。
+
+### [2026-10-30 13:28] T17最终统一构建已GO
+四补充unit已落且runtime停写：真实mpsc同步别线程取消/7HOF/diamond11对10步/default fault source。tooling已获GO合等号文案唯一最终完整release编译，新测试尚待验收，不复用620。公开矩阵121准备完成，人指南与应用budget验收准备启动，均等最终hash后实跑。D193712128B；原用户块保护，R304OPEN。
+
+### [2026-10-30 13:33] T17最终624冻结并启动终验
+root核1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45/943104B；本次十harness624/624含471lib、并发token等四补测和精确等号文案，tooling停源/编译。独立verifier/公开121/预算应用已唤醒实际验收，指南等slot实跑；不使用F487620或旧467成绩代替新字节。所有失败保留，Temp项目内D169684992B，R304OPEN，不正式发布。
+
+### [2026-10-30 13:38] T17终验保留失败，契约歧义裁定中
+独立624/旧全回归/C29/app33/新14过，预算应用40/40过。公开首default105/121、许可110/121；新oracle七误差（双负号CODE合法、空for无每轮节点）保初版后修正，新矩阵118/122，剩四裸help/version拼写歧义。已交architect据旧CLI只有--help/--version裁定，倾向不新增裸命令且保同名文件行为；当前不放行T17不推候选，所有失败保全。人指南与AI按最终hash实跑接续，未改产品或复用旧成绩。R304OPEN。
+
+### [2026-10-30 13:43] T17帮助拼写歧义已裁定，原失败保全复验
+architect确认旧合法帮助拼写--help/-h、--version/-V，裸help/version仍文件路径；§22称谓最小补钉与ADR已落，不改产品新增别名。test已授权纠正仅新oracle且保原4失败为路径断言，增加合法帮助/真实同名文件保护后完整重跑；verifier复用冻结源窗口追加公开及预算app40复验，不重复无新变化的全旧harness。人指南32/32、AI38/38实跑通过，默认权限失败均保留。尚待公开与独立最终结论，不推未验候选，R304OPEN。
+
+## T17实际终验PASS并接续T18（2026-10-30 13:48）
+1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45/943104B：独立最终公开134/134、预算应用40/40，624harness/旧全回归/C29app33/自编14保持冻结源有效；人指南32/AI38作者实跑并独立审11文档SHA通过。早期110/121与118/122、CONCERNS及新oracle修正全部保留，无产品追绿改动。release封T17精确快照和分组，requirements收口；architect开始T18-A子进程契约提案，HTTP另子批，不先改源。R304OPEN无T17性能窗，不正式发布；原用户三块与旧v2/tag保持。

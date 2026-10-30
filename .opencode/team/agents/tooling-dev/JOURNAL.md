@@ -151,3 +151,23 @@
 - 完成：run三来源counted parse once/graph执行，真实跨文件错误与原index折叠诊断，check无初始化。HostFailure不伪造LFZ类且runner提前stderr2，合成红绿并含Located递归。
 - 证据：599同release harness提权全过，默认8canonicalize权限失败/修前598/编译误用private字段日志保全；最终902656B/hashcdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006。报告及原始manifest已落盘。
 - 下一步：独立验证/公开29/交付由team-lead，无实现阻塞。未动core/runtime/spec/profile/dist/Git，收工停止操作，R304不宣布关闭。
+
+## [2026-10-30 12:55] T17只读CLI准备收工
+- 来源：root账户限制恢复后的继续任务，先准备不抢runtime编译。
+- 完成：读取三spec§22/T17-design、实际scanner/run/check/graph/runner，形成T17-CLI-review.md最小方案与测试矩阵。
+- 风险：runner错误注册12→13机械扩；checked_add错误必须usage而非HostFailure；help额外等号简写需精确边界。
+- 下一步：runtime库稳定后另GO才实施CLI及新测试，成为唯一完整release编译者。
+- 范围：本轮未改源码/未编译/未启动新产品/未Git或dist，Temp项目内，无依赖安装。准备完成停止腾slot，R304仍OPEN。
+
+## [2026-10-30 13:23] T17 CLI阶段与最终编译交接等待
+- 来源：root GO唯一CLI实施/编译，runtime库467通过。
+- 完成：严格两flag scanner/前端后EvalLimits与checked_add usage、默认unlimited旧路径、13类runner注册、九组CLI新测试。
+- 证据：初次默认6/8中的适用性缺陷修复/身份沙箱失败保留；随后同十release harness提权620/620，F487942592B/build0，精确阶段快照与manifest保存。
+- 后续：root/architect精确补钉等号文案已仅改源/新断言未编译，root要求等runtime实际并发/HOF/diamond/模板补测试后合一次最终完整编译。当前620不是最新源最终成绩。
+- 边界：无runtime/core/spec/旧test/dist/Git修改，暂停编译腾slot等交接，R304保持OPEN。
+
+## [2026-10-30 13:30] T17最终完整编译与作者收工
+- 来源：root轻量GO合runtime四unit与等号文案最终编译。
+- 验证：交接evaluator a673cca7…前后相同，新十harness提权624/624（471+50+28+12+12+7+5+9+15+15），0失败忽略，build0；真实并发取消/7HOF/diamond/default用例通过。
+- 最终：943104B/hash1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45，源及日志final-manifest和final2记录保存。F487/620阶段保留不冒充最终。
+- 交接：root立即公开121和独立验收；本人停改源/编译/测试，未动dist/Git/profile/core/runtime/spec/旧tests，R304仍OPEN。

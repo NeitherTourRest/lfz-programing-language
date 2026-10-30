@@ -2,13 +2,13 @@
 > 最后更新：2026-10-30 by docs-writer
 
 ## 当前状态
-T16-C五人类指南入口、modules.md三文件教程及最终聚焦实跑已完成，11/11通过，已收工。
+T17五人类指南T17入口和execution-limits.md已完成最终聚焦实跑，32/32提权通过，已收工。
 
 ## 证据
-T16-C-guide-evidence.md及目录runs/manifest/verify.py/默认失败/初次提权结果。最终902656B SHAcdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006。默认canonicalize权限失败保留；同字节授权提权11/11，增强可变默认数组原地修改见证后11/11仍过。不是性能测量。
+943104B/SHA1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45；T17-guide-evidence.md与目录runs/manifest/verify.py。默认前31通过，末项模块canonicalize权限失败保原始partial/stderr；同字节授权提权32通过。未用620/F487。
 
-## 内容/边界
-相对import/export、check不初始化再run、namespace快照/共享、home globals、argv、循环/导出/跨文件定位、模板默认与RustAPI迁移明确。attempt Result仍无file。仅新增/受影响例子聚焦验证，RustAPI部分为spec引用非本角色编译证明。
+## 文档边界
+两token/默认unlimited/精确等号usage、CODE和argv、空程序0/2和4步、资源穿透attempt、模块真实faultfile。host取消无CLI Ctrl-C承诺，native/IO非硬打断，Rust三owned API仅规范引用未编译，不宣称token/毫秒级验收。
 
 ## 下一步
-主调度独立验收及统一提交。未写AI/spec/src/其他owner产物，不编译/改dist/Git；R304OPEN，不把C字节结果用于未来T17。
+主调度独立收口与提交；R304OPEN，不改产品/spec/AI/dist，不编译/Git。仅受影响示例，旧历史例子及错误键保持。

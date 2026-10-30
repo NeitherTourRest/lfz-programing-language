@@ -1277,3 +1277,9 @@ core指出旧声明无name_span；经team-lead裁定，import-import用后alias_
 落实team-lead 08:00独立ADR，三spec §22与T17-design.md冻结第13类ExecutionLimitError及三reason、EvalLimits和三个owned-limits traced入口；旧API默认unlimited。计步仅实际stmt/expr入口，cancel→deadline→steps；空程序无poll、末native后不追补检查、attempt不补余量/不吞终止。token Acquire/Release由host置位不reset，graph全部模块共享session；CLI数字/重复/选项顺序/CODE-argv保护/非执行拒绝及错误消息明确。CLI timeout从成功前端与图验证后开始，协作求值窗口非IO硬中断；Ctrl-C无新增handler或依赖。core唯一error.rs，runtime唯一evaluator，tooling唯一CLI/main；源码待C独立PASS，R304原线不动，未称功能/性能完成。
 
 T17 CLI计时边界精确说明：在静态build_graph完成、调用eval入口前建立deadline；eval内部宿主结构校验和Interp构建含于窗口，结构校验仍先于poll。无需新增public validation helper或重复验证整图。
+
+### [2026-10-30 13:10] [language-architect] T17两新flag等号形式与旧help兼容边界
+按team-lead轻量任务审T17-CLI-review，认可单次扫描保护CODE/argv、先限额校验后命令适用性方案。三spec §22和T17-design仅补钉--max-steps=/--timeout-ms=两族在选项区立即usage拒绝，含help/version与空等号值；精确消息“不支持等号写法，请使用”已冻，不扩其它旧help token规则/文法。未改源码/编译，产品验收另行。
+
+### [2026-10-30 14:10] [language-architect] T17帮助命令拼写与节点oracle裁定
+依据旧CLI parse_command只识别--help/-h、--version/-V，裁定§22 help/version均指该既有合法拼写；裸help/version仍是路径，不新增别名、不阻止同名文件，合法限额不把它变成非执行命令。公开4条裸词预期“不适用”属于新oracle误用，保留初版失败与后续纠正证据，不改产品迎合。另CODE双负号沿旧文法/查名规则，check非动态查名；空for仅实际进入节点计步，不为Rust迭代加步。三spec/设计最小澄清，不改计步范围/源码/测试。

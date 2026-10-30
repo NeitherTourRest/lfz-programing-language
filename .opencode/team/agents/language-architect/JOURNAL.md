@@ -305,3 +305,23 @@
 - 证据：git diff --check -- docs/spec docs/reports/T17-design.md exit0，仅换行提示。未改源码/测试/Git、不编译。
 - 下一步：parent按C独立验收给源码GO；T17功能/最终性能另验，R304OPEN。
 - 阻塞：无架构阻塞。
+
+## [2026-10-30 13:10] T17 CLI等号边界最小补钉
+- 来源：team-lead轻量任务，仅读本人STATUS与T17-CLI-review。
+- 完成：三spec/设计补两新flag等号形式含help/version拒绝及精确消息；ADR追加，不改其它旧help行为。
+- 证据：git diff --check文档通过；未源改/编译/测试/Git。
+- 下一步：交tooling接入与独立验收；无阻塞，R304OPEN。
+
+## [2026-10-30 14:10] T17 help/version拼写裁定
+- 来源：team-lead轻量歧义裁定任务。
+- 完成：读自身状态/§22.5/parse_command；三spec及设计明确合法拼写--help/-h、--version/-V，裸词按路径；ADR记录4oracle误用与历史保留。
+- 澄清：CODE双负号旧规则、空for实际节点计步，不变更范围。
+- 证据：文档diff --check通过；不源改/测试/编译/Git。
+- 下一步：交root修正oracle并保留失败；无阻塞，R304OPEN。
+
+## [2026-10-30] T18-A子进程精确提案
+- 来源：team-lead安排T17后继，读NEXT/实际Invoke与limits后设计。
+- 产出：T18-subprocess-design.md，exec三参/四键、禁用上下文、局部业务与全局终止、平台回收、UTF8/退出码/owner/fixture。
+- 待裁决：平台原生FFI或依赖；绝对路径策略；cleanup诊断carrier。重大平台取舍已先报root，不直接冻spec。
+- 证据：文档diff检查通过；一手Rust/Microsoft链接已记录。未源改/编译/Git。
+- 下一步：root批准后冻结§23；R304OPEN。

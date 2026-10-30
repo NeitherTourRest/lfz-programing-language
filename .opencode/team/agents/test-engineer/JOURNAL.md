@@ -191,3 +191,28 @@
 - 产出：docs/reports/T16-C-blackbox-evidence/final-first.json、manifest.json、-text属性及T16-C-blackbox.md更新。
 - 边界：未编译/改产品/旧测试/Git；官方178单列，R304OPEN；无性能结论。
 - 下一步：独立verifier继续实际复验，无本角色阻塞。
+
+## [2026-10-30 12:55] T17公开准备与C缺功能红
+- 来源：team-lead账户限制后恢复任务，读§22/T17-design与启动协议。
+- 完成：新公开脚本91例准备，AST PASS，prepare-only exit0/executed:false；C固定cdedc9红0/1/exit1保留。
+- 产出：tests/t17_cli_limits.py、docs/reports/T17-blackbox.md及专属evidence/manifest。
+- 下一步：待最终T17 SHA后运行；无编译/产品/旧测试/Git操作。R304OPEN。
+
+## [2026-10-30 13:25] T17等号准备补钉
+- 来源：team-lead轻量启动，读自己STATUS与§22最新补充。
+- 完成：未验新矩阵91→121，等号family精确消息/空值任意值/help version/CODE argv/非family边界；AST PASS，prepare-only121/executed:false/exit0。
+- 产出：脚本、报告、prepared-v3-equals和独立manifest-v3；旧88/91计划及C红不改。
+- 下一步：等最终T17 hash实跑；未编译/产品/旧测试/Git操作。
+
+## [2026-10-30 13:37] T17最终公开首跑及oracle修正
+- 来源：team-lead最终1946ab9c GO，轻量启动。
+- 完成：default105/121、同产物许可110/121，5图canonicalize环境失败消失。7新oracle误差（双负号源码合法，空for无每轮节点）保原修正；新增有body for后122，许可118/122。
+- 产出：所有原始结果/script-first/manifest-run，验后source哈希匹配tooling冻结；报告与自身记忆。
+- 待裁决：4裸help/version+两flags按文件IOError而非非执行usage，已报root；未删改失败或冒称全绿。
+- 边界：未编译/改产品/旧tests/Git，R304OPEN。
+
+## [2026-10-30 13:46] T17架构裁定后最终134通过
+- 来源：team-lead批准按§22明确help/version真实拼写修新oracle。
+- 完成：保4裸路径IOError，补合法短长选项拒限额、同名真实文件run的steps/deadline；同1946ab9c/943104B完整许可134/134 PASS/exit0。
+- 产出：final-adjudicated-permitted.json、manifest-final及报告；验后source逐项匹配tooling最终manifest。早期失败/原脚本不覆盖。
+- 下一步：独立及各owner实际验收；未编译/改产品/旧tests/Git，R304OPEN。

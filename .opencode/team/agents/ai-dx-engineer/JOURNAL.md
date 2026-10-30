@@ -90,3 +90,8 @@
 - run_examples.py锁cdedc9/902656B，同exe提权18/18 exit0；默认沙箱1/18权限失败保留。
 - docs/reports/T16-C-skill-evidence.md及manifest原始证据齐，无新Agent盲测/旧v2更改/编译/Git/产品修改。R304OPEN，无C性能声明。
 - 下一步：team-lead独立验收/提交，无阻塞。
+
+## [2026-10-30] T17 AI限额指南与38例完成
+- 四skill/AI入口§6.5与13错误类同步，先check再限额run、两token严格usage及协作终止边界。
+- 同1946ab/943104B提权38/38 exit0，默认37/38模块canonicalize权限失败保留，manifest记录五文档与原始输出。
+- 未编译/Git/改源/人指南/旧v2；R304OPEN，非性能或正式发布。下一步team-lead收口，无阻塞。

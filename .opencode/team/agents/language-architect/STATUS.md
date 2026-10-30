@@ -2,17 +2,17 @@
 > 最后更新：2026-10-30 by language-architect
 
 ## 当前状态
-T17已按team-lead 08:00独立ADR冻结三spec §22及T17-design.md（12016B初写，计时边界精确修订后以现值为准）。第13类ExecutionLimitError与StepBudget/Cancelled/Deadline正式契约；源码仍须C独立PASS后GO。本角色未改源码/测试、未编译/Git。
+T18-A仅提案docs/reports/T18-subprocess-design.md已落，未冻spec、未实现。已审NEXT、实际Invoke/BuiltinFn、EvalLimits与三limits API，核一手Rust Child/Windows Job文档。T17独立PASS由parent报告，本角色无产品实测。
 
-## 精确接口
-core唯一error.rs：ExecutionLimitReason和LzError::ExecutionLimit{reason,span}、execution_limit helper；旧12类保留，穷尽match/注册机械扩13。
-runtime唯一evaluator.rs：EvalLimits{max_steps:Option<u64>,deadline:Option<Instant>,cancel:Option<Arc<AtomicBool>>}，三个owned limits入口为module traced args、on_thread module args、on_thread graph args的_and_limits后缀；旧API默认Default不限额。
-每实际stmt/expr入口poll cancel→deadline→steps；错误点span/source需经过note_error_span，不能?漏fault。成功poll不改旧trace位置；预算N允许N节点，无计数wrap。
-跨module/默认字段/HOF同session；attempt快照不含预算/token/deadline，不吞终止。空程序无poll，末原生调用后无节点不追补poll；不承诺阻塞IO硬中断。
-CLI --max-steps/--timeout-ms严格u64/重复拒绝/CODE及argv保护/非执行拒绝。timeout静态build_graph完成后eval调用前建立，内部host结构校验开销含窗口；校验错误仍优先poll。不加公开validation helper和Ctrl-C依赖。
+## 推荐待裁决
+exec(argv,timeoutMs,maxOutputBytes)三参，四键stdout/stderr/exitCode/signal；绝对可执行路径，无隐式shell/PATH，严格UTF8，非零exit正常值。
+EvalContext{limits,capabilities}及三_and_context入口，旧EvalLimits shape/旧API保持禁用。CLI --allow-process仅本执行会话。局部timeout/超量ValueError可attempt，全局cancel/deadline ExecutionLimit不可吞，native等待不额外扣步。
+重要平台决策已先报root：纯std双阻塞reader+kill直接子进程不能保证后代持pipe回收；推荐Windows挂起启动/Job+可取消pipe、Linux进程组+非阻塞pipe的小范围原生FFI零crate。不是敌对沙箱；未实测平台不声称支持。
+cleanup失败建议TracedRun私有host_diagnostics及只读accessor，系统终止reason不被可catch错误覆盖；此迁移待root批准。
+owner建议runtime evaluator/特殊调用，tooling平台后端与CLI，core错误细分；最终内部边界待平台决定。
 
 ## 证据/限制
-读取实际C graph API、stmt/expr包裹、attempt及runtime状态。T17-design.md与三spec文档diff检查exit0，仅LF→CRLF提示；本次无产品测试或功能验收声明。C库456/456由parent实测，CLI实施中；B已推9d7e1aa，R304OPEN，无正式发布。
+提案11893B初写，附cleanup推荐后按现文件实值；文档diff检查通过。未源码/测试/编译/Git；D119MiB不做大任务。HTTP独立B；R304OPEN。
 
 ## 下一步
-收team-lead/core/runtime接口审查；C独立过后按owner分A资源类+步数/token、Bdeadline/CLI实施与独立验收。T18由parent继续派发，不自行调度；所有临时文件项目内，D低空间不做大任务。
+root裁决平台/接口/cleanup载荷后再冻§23，不能据本提案先改源。无用户补充需求，按已授权全自动交parent调度。

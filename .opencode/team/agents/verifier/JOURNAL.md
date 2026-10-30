@@ -248,3 +248,9 @@
 - 锁cdedc9/902656B：同9harness599、公开29、app33、旧13/117/91含178/37+11/38/140全通过；自编真实模块15见证通过，源初末一致。
 - home/cell/默认与覆盖来源/attempt/session/初始化失败/47帧JSON及human40折叠/host fail-closed已核。作者误索引空数组及canonical前缀比较初版保留，非产品缺陷。
 - 报告/证据manifest及自身状态落盘，无产品修改/编译/Git/计时，R304OPEN不正式发布；T17须另验。已结束所有执行，core旧预算fixture我无后续依赖。
+
+### [2026-10-30 13:40] T17独立验收待裁定
+最终1946ab/943104B，同624/旧全回归/C29/app33/自编14均PASS；公开121为110/121，已保留11失败并报告root，待7疑oracle与4help/version契约差异裁定，不放行。源初末冻结，无编译源改Git；证据docs/reports/T17-independent-evidence/manifest.json，报告T17-independent-verification.md。全部测试结束，R304OPEN。
+
+### [2026-10-30 13:48] T17裁定后独立最终PASS
+同1946ab/943104B，最终新公开134/134与预算应用40/40独立实际全过；旧624及全回归成绩源冻结有效。11旧公开失败按architect裁定为新oracle误判，原失败和CONCERNS历史保留；指南32/AI38仅只读审计。无编译产品改Git，R304OPEN。

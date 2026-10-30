@@ -38,3 +38,12 @@
 - 最终C cdedc9/902656B核hash，默认sandbox模块读取拒绝IOError保留；同字节许可提权33/33通过exit0，无产品绕过。
 - app/t16-evidence/results/manifest、说明最终节及自身STATUS落盘；旧应用/旧oracle未改，不编译不Git。
 - 下一步：verifier独立复跑，R304仍OPEN；无应用阻塞。
+
+## [2026-10-30] T17预算应用验证准备
+- 按§22新增专属验证器及实用命令/协作deadline与副作用边界说明，旧应用和oracle不改。
+- AST与prepare-only通过，尚未最终产物实跑，无解释器启动/编译/Git；等待root最终hash。
+
+## [2026-10-30] T17应用预算作者验收
+- 最终1946ab9/943104B核hash；默认canonicalize权限拒绝保留，同产物许可提权40/40 PASS，exit0。
+- callback内部预算28，0..28完整保留；正常等价/早期KEEP/完成IO不回滚覆盖。结果/manifest/最终说明齐，旧app及oracle不改，不编译/Git。
+- 下一步：独立验证；R304仍OPEN，无应用阻塞。
