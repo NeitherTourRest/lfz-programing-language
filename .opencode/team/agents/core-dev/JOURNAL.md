@@ -199,3 +199,9 @@
 - 证据：编译成功、沙箱4/10仅canonicalize Os5；同harness提权1/1与10/10；实际byte两新增后最终12/12通过。
 - 保存：T16-B-core.md/证据manifest及全部失败日志；18MiB大夹具先hash后只清已核实Temp文件。
 - 下一步：tooling唯一编译全量、独立验收，停止core编译；R304OPEN无正式发布。
+
+### [2026-10-30] T17-A 轻量只读准备
+读取本人 STATUS、error.rs 与 interface-contract/semantics/syntax §22；确认仅 error.rs 新增第13错误类及精确三 reason 单测，旧12类断言保留。遵守 C 快照门禁，未改产品/未编译；等待 root 后续 GO。
+
+### [2026-10-30] T17-A error.rs实施完成
+C快照后root GO；仅error.rs新增reason/variant/helper及映射，机械精确13类注册与4新unit，原12行为断言保留。只读diff核对与SHA DF90AE9D02BCA29CC26167B81171CD1A822D79D48B6F490098E848EE49C4E310。未编译，停止源码写入并交root/runtime唯一lib验证。

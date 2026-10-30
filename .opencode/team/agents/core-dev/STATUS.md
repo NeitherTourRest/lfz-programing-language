@@ -2,16 +2,13 @@
 > 最后更新：2026-10-30 by core-dev
 
 ## 当前状态
-T16-B core按§20实现完成，12新unit全部通过；停止编译，tooling接续唯一全量构建。
+T17-A error.rs按§22.1实现完成，已停止源码写入；依任务书未编译，runtime接唯一lib编译。C快照ZIP SHA8a6f9d0acadb86fa56ca49bb7e0a82650f7fd00902348dbf46b4bfbe7b8a9532后收到GO。
 
 ## 产出
-src/ast.rs/error.rs/loader.rs/parser.rs/modules.rs/lib.rs；T16-B-core.md及原字节证据/manifest。AST模块声明、顶层上下文、静态图迭代DFS、canonical缓存、来源与有界读取/预算齐备。B不运行模块，C后继执行。
+src/error.rs新增ExecutionLimitReason三reason及指定五traits、LzError::ExecutionLimit{reason,span}、cold/inline(never) execution_limit helper；class/message/span/Display映射到第13真实类。样本与精确计数机械12→13，旧12项原顺序/消息行为断言完整保留。
 
-## 证据
-旧dist check import红测exit2。首次release编译成功但sandbox测试4/10，6项helper canonicalize Os5；相同harness提权单1/1和完整10/10通过，未改产品绕过。增加真实byte边界后release no-run成功，最终提权12/12通过/435 filtered。失败/控制/最终全部保留。
+## 验证证据与限制
+只读git diff核对产品改动范围；Get-FileHash -Algorithm SHA256 src/error.rs = DF90AE9D02BCA29CC26167B81171CD1A822D79D48B6F490098E848EE49C4E310。新增4unit：三个reason各自逐字符message/class/span/Display/helper验证，非默认Span(37,19)；另required traits与reason互异性。尚未运行，不声称编译/测试通过。R/Span/TraceFrame均不变。
 
 ## 下一步/阻塞
-无core阻塞。tooling集成CLI并独立验收；若canonicalize仍受沙箱限制，应如实使用已授权非沙箱验证，不改变身份契约。不编译、不Git、不调度。
-
-## 经验
-旧Span/Loaded/TraceFrame/LzError/Program形状不改，来源外层。判定字节超限仅按限读观测数据，不推测未读实际长度。约18MiB大夹具先保SHA再按核实Temp路径清理，D低空间只release。
+runtime同步消费新增variant并唯一lib编译及error::tests；如编译发现本文件问题请root唤醒修复。无产品设计疑问。不改runtime/CLI/黑盒/spec，不Git不调度。R304仍OPEN。

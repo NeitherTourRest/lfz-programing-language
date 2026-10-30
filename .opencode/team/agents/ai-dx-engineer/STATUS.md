@@ -1,17 +1,16 @@
 # ai-dx-engineer — 工作状态
-> 最后更新：2026-10-29 by ai-dx-engineer
+> 最后更新：2026-10-30 by ai-dx-engineer
 
 ## 当前状态
-T15四skill及AI入口同步完成，作者新示例与最小兼容25/25通过。新增attempt，当前73内置，事实源三spec §18。可交team-lead独立验收/提交收口。
+T16-C AI四skill+入口已同步，作者同冻结产物模块示例18/18通过，释放slot。事实源§19–21与modules.md，新增§6.4，多文件先check图再run。
 
 ## 产出与证据
-- .opencode/skills/lfz-programming/{SKILL,README,VERIFICATION,prompt-template}.md及docs/guide/ai/README.md。
-- docs/reports/T15-skill-evidence.md及目录脚本/results/manifest/.gitattributes。
-- 实跑命令见报告，exit0，25/25；锁target/release782848B/hash1a5a3d1c650440929bb599961763573def8b56d33811a8f266688246ac63dd6c，测前后五文档hash一致。
+- 四skill文件及docs/guide/ai/README.md；T16-C-skill-evidence.md和同目录脚本/results/default-results/manifest/.gitattributes。
+- target/release902656B，SHAcdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006。
+- 默认沙箱1/18（模块canonicalize权限失败17）保留；同exe提权完整18/18，exit0，五文档前后hash一致。
 
-## 关键边界
-Result固定ok/value/error；error字段class需["class"]，无file且trace协议不同CLI。成功nil仍ok=true。资源/递归终止不捕，外层校验在边界外，副作用/函数ID不回滚；不泛化builtin一等值，argv例外。先check再run不保证运行成功。
-R304OPEN，无T15性能窗/正式发布，不声称新Agent盲测，不改旧v2。未编译/Git/改dist/源码/人类指南，Temp全部项目内。
+## 边界
+明确home globals/session缓存/namespace标量快照与共享、argv、真实CLI跨源、attempt原协议无file、模板graph定义默认与legacy caller差异、RustAPI迁移。Rust嵌入API文字引用未新编译见证，不能以18例替代独立验收。未改旧v2、人类指南、源、dist或Git，未编译；Temp项目内，R304OPEN，无C性能或正式发布承诺。
 
 ## 下一步
-由team-lead统一独立验收/发布；本角色完成并释放slot。
+team-lead统一独立验收/提交；本角色无阻塞。

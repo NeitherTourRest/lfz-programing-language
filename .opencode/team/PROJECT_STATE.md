@@ -1,3 +1,18 @@
+
+## C封存完成，T17 GO（2026-10-30 08:25）
+release已精确保全C ZIP611909B/SHA8a6f9d0acadb86fa56ca49bb7e0a82650f7fd00902348dbf46b4bfbe7b8a9532，24成员=18src+2Cargo+3tests+exe，dist C及Temp精确exe留存。requirements R134/210/409/506通过。root已GO core仅error.rs第13类，runtime仅evaluator预算/取消/deadline与唯一lib编译（先等core停写）；tooling只读准备CLI，未GO源。C提交始终用ZIP源/3tests快照，不stage活动T17源码。原三用户块保护，R304OPEN；NEXT其余未实现不声称完成。
+
+## T16-C/D实际终验通过（2026-10-30 08:20）
+cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006/902656B：独立599harness、公开29、四模块app33、自编15、旧13/117/91含178/apps37+11/jsonbatch38/JSON140全部PASS，源初末冻结；人指南11/AI18通过且默认权限失败保全。release_manager_t12封C精确ZIP和交付分组，requirements同步；core只读准备§22，快照回执后GO error.rs再runtime，不先污染C源。确认无活跃测试/编译后清Temp/T16-B-core/tests进程数字目录可重建夹具171308422B，自由85630976→261632000B，receipt保Temp/T16-C-runtime/fixture-cleanup.json，docs原证据不动。R304OPEN，无C计时不tag。
+
+## C最终源码冻结并启动验收（2026-10-30 08:10）
+root实核target/release/lfz.exe902656B/SHAcdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006；tooling已停操作，最终同九harness599/599=456+49+28+12+12+7+5+15+15。HostFailure合成红0/1→修复绿1/1含Located递归，修前671919/598及沙箱失败保留。已复用verifier独立全回归/跨模块见证、test公开29、app四文件33分别实跑；人类指南准备好排队、AI随后。没有编译并发，D约105MiB，T17源码仍等C独立PASS。R304OPEN，尚无C计时不正式发布。
+
+## 当前执行检查点（2026-10-30 08:05）
+C修前CLI候选67191932b53e34f4057b87a556c1eb6d9687bd8510868f2d6baf671fe3fa6216/902144B，同九release harness598/598通过；默认沙箱8权限失败日志保留。末检发现CaseEval HostFailure error_class None可能被test_runner误判PASS，已授权tooling依其runner所有权最小fail-closed修复+合成单测，继续唯一release编译；尚未最终冻结/独立通过。公开29进程已备，app三文件与人指南准备，待最终hash实跑。T17三spec§22与T17-design已冻，第13类执行限额ADR批准，源码待C独立PASS；不套旧性能，R304OPEN。B已推9d7e1aa，原用户三块保护。
+
+## T16-B快照已推送 / C库通过（2026-10-30 07:55）
+B五组提交0830f4d/9226957/23f86ff/c64cb81/9d7e1aa已推main，ls-remote实际核对9d7e1aae3358b970b6d6c9b2a3655ea919a68c1e。源码和B CLI test取固定SHA ZIP，未stage活动C源；原用户三块28/1/1保留。C同已构建lib提权456/456通过，Temp/T16-C-runtime/lib-elevated-parent.txt；默认8项canonicalize权限失败保全，不改产品绕过。runtime已收口停源码/编译，tooling唯一C CLI实施与完整release；test准备新C进程矩阵，architect继续T17精确设计。C最终exe及独立验收尚未完成，R304OPEN，不tag，heartbeat lfz持续。
 ## 当前执行检查点（2026-10-30）
 B独立已PASS：584harness/公开38/额外18进程及旧13/117/91含178/apps/140，源8ea375/859136B。B精确ZIP21成员（18src+2Cargo+exe）582683B/SHA DB4AE08E66DD43D7A90C9DDD33706B170EE36C014114840922431C36292556CA，Temp保B exe。已GO runtime_dev_t16按§21改value/evaluator实现C，唯一--lib编译，tooling暂只准备。release_manager_t12准备B索引快照提交：所有src从ZIP，cli_t16b.rs也已要求快照；禁止add活动C源或未来C tests。C尚未验收，B checkpoint可按快照保存，C工作树保留继续。核心/parser/graph生产接口不准C owner擅改，任何疑问先汇报。R304OPEN，不tag；heartbeat lf z实际id=lfz继续。
 

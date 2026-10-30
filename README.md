@@ -6,7 +6,15 @@
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
-## 当前记录：T16-B 非执行模块图检查候选（2026-10-30）
+## 当前记录：T16-C 模块执行候选（2026-10-30）
+
+C已实现模块初始化/执行、定义模块中的函数与闭包查名、跨文件错误来源及模块化应用，先完成B静态图检查再初始化依赖。当前C快照1.4.0、902656B、SHA256 `cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006`；[精确源码、测试和exe归档](docs/reports/T16-C-release-evidence/build.json)冻结24项，后继活动源码不能冒用为C验收输入。
+
+[最终独立报告](docs/reports/T16-C-independent-verification.md)：599 release harness、公开29、四文件JSONL应用33、自编真实模块15、旧attempt13/check117/CLI91含178/app37+11/jsonbatch38/JSON140全部PASS；人类指南11/AI示例18为分列作者实跑，不虚增独立数。模块缓存仅在本次session内，共享依赖只初始化一次；模块函数和逃逸闭包在定义模块查名，失败来源与trace使用真实文件。CLI check仍只做图检查，不运行初始化。
+
+模块写法与边界见[模块指南](docs/guide/modules.md)、[应用](app/T16-JSONBATCH-MODULES.md)及spec §21。T17 §22仅冻结后继设计，本C没有预算执行功能或资源隔离承诺。R304OPEN，无本轮性能计时、非正式发布，不打tag；不拿B/C功能通过代替效率门槛。以下B/A为历史指纹记录。
+
+## T16-B 历史非执行模块图检查候选（绑定8ea375）
 
 B提供import/export声明解析与静态依赖图检查，**仅graph check，不初始化或执行模块**。C执行层§21是后继设计，不属于B已验收能力；后续活动源码可能进入C，实现版本须按独立指纹区分。
 

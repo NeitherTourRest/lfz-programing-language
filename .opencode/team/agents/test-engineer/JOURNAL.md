@@ -177,3 +177,17 @@
 - 新脚本38/38首次完整通过，锁8ea375dc…/859136B；旧65a29模块check缺失红测0/1保留。
 - 三来源/图/真实来源/非执行哨兵/旧export/run先拒绝/bytes/depth边界实证；REPORT/coverage仅追加，旧用例/manifest不改，官方178不叠加。
 - 未编译/改产品/Git，源码对照tooling冻结指纹通过，R304OPEN。
+
+## [2026-10-30 08:00] T16-C公开进程准备
+- 来源：team-lead启动任务；读取全局/看板/自己的记忆与runtime/tooling状态，§21及C设计/库报告。
+- 完成：新增t16c_cli_run.py，29个有界独立进程用例；AST PASS，prepare-only exit0/cases_total29/executed:false。fixtures仅Temp/T16-C-test。
+- 产出：tests/t16c_cli_run.py、docs/reports/T16-C-blackbox.md、Temp/T16-C-test/prepared.json。
+- 下一步：等最终C CLI SHA后实跑；不使用B成绩称C绿。
+- 阻塞：最终C CLI尚待tooling唯一编译；未编译、不改旧tests/产品/spec/dist/Git。
+
+## [2026-10-30 08:10] T16-C最终公开29验收
+- 来源：team-lead最终GO，cdedc9b9/902656B，tooling已停编译。
+- 完成：核SHA，按明确许可普通文件权限运行t16c_cli_run.py完整29，首轮29/29 PASS/exit0；binary逐进程核对，验后source hashes匹配tooling最终manifest。
+- 产出：docs/reports/T16-C-blackbox-evidence/final-first.json、manifest.json、-text属性及T16-C-blackbox.md更新。
+- 边界：未编译/改产品/旧测试/Git；官方178单列，R304OPEN；无性能结论。
+- 下一步：独立verifier继续实际复验，无本角色阻塞。

@@ -1269,3 +1269,11 @@ core指出旧声明无name_span；经team-lead裁定，import-import用后alias_
 
 ### [2026-10-30] [language-architect] T16-C 单session执行与定义上下文定案
 经team-lead批准，新增graph宿主Result入口、执行前结构验证；单Interp session/缓存与home globals切换，故障source独立保存，attempt恢复新元数据但Result不增键。graph模板Some定义上下文及独立来源/递归诊断帧，legacy None保旧caller默认语义；host异常不伪装LFZ业务错误。§21冻结，B独立过后才GO源码。
+
+### [2026-10-30 08:00] [team-lead] T17资源终止独立错误类与计步方向批准
+依据用户全自动实现NEXT-ITERATIONS的授权，批准T17-resource-error-proposal所荐第13个真实错误类ExecutionLimitError，原因StepBudget/Cancelled/Deadline；不得复用普通业务错误伪装终止。architect据实际C接口定案准确variant与Limits API，core是error.rs唯一写者，runtime仅消费冻结接口。仅精确机械更新错误类注册元数据期望，既有行为断言不删减。
+批准每次exec_stmt/eval_expr入口当前节点定位后、任何节点副作用前计1步，poll顺序cancel→deadline→steps；模块共享会话额度，attempt不得恢复额度或吞终止。旧入口默认unlimited；graph前端预算与求值预算分开。库取消token与协作deadline先实施，CLI步数/时间选项精确解析；Ctrl-C接入单独平台方案审查，不为CLI取消擅加依赖或项目外安装。阻塞原生IO非硬打断，T18按专用子进程/HTTP生命周期补齐；不将这些边界误报为完整沙箱或硬实时保证。T17规格可在C执行生产源码冻结后形成，源码实施待C独立验收。R304原线保持，最终产物实际测量。
+### [2026-10-30 08:15] [language-architect] T17精确执行限额契约冻结
+落实team-lead 08:00独立ADR，三spec §22与T17-design.md冻结第13类ExecutionLimitError及三reason、EvalLimits和三个owned-limits traced入口；旧API默认unlimited。计步仅实际stmt/expr入口，cancel→deadline→steps；空程序无poll、末native后不追补检查、attempt不补余量/不吞终止。token Acquire/Release由host置位不reset，graph全部模块共享session；CLI数字/重复/选项顺序/CODE-argv保护/非执行拒绝及错误消息明确。CLI timeout从成功前端与图验证后开始，协作求值窗口非IO硬中断；Ctrl-C无新增handler或依赖。core唯一error.rs，runtime唯一evaluator，tooling唯一CLI/main；源码待C独立PASS，R304原线不动，未称功能/性能完成。
+
+T17 CLI计时边界精确说明：在静态build_graph完成、调用eval入口前建立deadline；eval内部宿主结构校验和Interp构建含于窗口，结构校验仍先于poll。无需新增public validation helper或重复验证整图。

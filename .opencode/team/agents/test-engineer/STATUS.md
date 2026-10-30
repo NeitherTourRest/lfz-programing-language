@@ -1,14 +1,14 @@
 # test-engineer — 工作状态
-> 更新：2026-10-30
+> 更新：2026-10-30 08:10
 
 ## 当前状态
-T16-B公开进程验收完成：锁target 8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480/859136B，38/38 PASS，exit0。旧65a29模块check0/1真实红测保留。B仅图check，不声称模块执行。
+T16-C公开最终进程29/29 PASS，exit0，锁cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006/902656B。首次完整执行通过，未改断言或产品重跑。按parent许可普通文件权限运行，未用B/修前候选成绩代替C。
 
 ## 产出
-新增tests/t16b_cli_check.py及专属-text属性；REPORT/coverage追加；docs/reports/T16-B-blackbox.md及原始证据/manifest。fixtures全部项目Temp生成，不改原LFZ/Rust/manifest。当前源码与tooling构建manifest逐一匹配；binary每进程核hash。
+tests/t16c_cli_run.py；docs/reports/T16-C-blackbox.md；专属evidence/final-first.json、manifest.json与-text属性。binary每进程前后核hash，验后源码hash全部匹配tooling最终冻结manifest。29覆盖范围和边界见报告。
 
-## 边界/下一步
-未编译、改产品/dist/spec、Git或调度。独立verifier复验及旧178官方runner回归交team-lead安排；节点/总bytes边界由core unit覆盖未虚计本38，symlink待独立适用性验证。R304OPEN。
+## 下一步/边界
+供独立verifier消费。未编译、不改现有tests/官方manifest/产品/spec/dist/Git；官方178不叠加本29、不声称本角色重验。宿主伪图和默认资源合成边界属runtime unit；折叠trace与legacy/apps另列独立验收。R304OPEN，无性能结论。
 
 ## 历史
-T15官方178/公开13、T14公开117；旧报告和失败结果保持。
+T16-B锁8ea375/859136B，公开38/38PASS；旧65a29缺功能红测保持。C准备AST PASS与prepare-only29/executed:false记录保留。

@@ -145,3 +145,9 @@
 - 验证：默认新CLI2/7和全cargo lib439+8失败均因canonicalize沙箱权限，原记录保留；按授权同release harness提权7/7及八程序584/584全过，无改产品/测试或重编译。build exit0，最终859136B/hash8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480。
 - 下一步：独立验收、交付复制、C模块初始化由team-lead接续。
 - 阻塞：无CLI实现阻塞；未改core/runtime/spec/旧tests/profile/dist/Git，不宣称模块运行或性能R304完成。收工后停止操作。
+
+## [2026-10-30 08:03] T16-C CLI收工
+- 来源：team-lead§21实施/明确B断言迁移及runner宿主异常修复授权。
+- 完成：run三来源counted parse once/graph执行，真实跨文件错误与原index折叠诊断，check无初始化。HostFailure不伪造LFZ类且runner提前stderr2，合成红绿并含Located递归。
+- 证据：599同release harness提权全过，默认8canonicalize权限失败/修前598/编译误用private字段日志保全；最终902656B/hashcdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006。报告及原始manifest已落盘。
+- 下一步：独立验证/公开29/交付由team-lead，无实现阻塞。未动core/runtime/spec/profile/dist/Git，收工停止操作，R304不宣布关闭。

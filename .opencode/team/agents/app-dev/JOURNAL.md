@@ -27,3 +27,14 @@
 - 变更：仅app新增T15产物与自身记录，旧sortviz/jsonflow不动，不Git。
 - 下一步：verifier独立验收；整文件/非原子/路径别名限制已公开；R304仍OPEN。
 - 阻塞：无。
+
+## [2026-10-30] T16四模块应用准备
+- 来源：team-lead按§21派发实际三文件以上模块应用。
+- 完成：common/record/batch/main及33进程Python oracle、说明；AST PASS，未实跑修前C、不编译。
+- 下一步：最终hash后实跑、manifest/证据；旧应用和旧oracle不改，不Git。
+- 阻塞：待最终candidate，无应用实现阻塞。
+
+## [2026-10-30] T16四模块应用作者最终验证
+- 最终C cdedc9/902656B核hash，默认sandbox模块读取拒绝IOError保留；同字节许可提权33/33通过exit0，无产品绕过。
+- app/t16-evidence/results/manifest、说明最终节及自身STATUS落盘；旧应用/旧oracle未改，不编译不Git。
+- 下一步：verifier独立复跑，R304仍OPEN；无应用阻塞。

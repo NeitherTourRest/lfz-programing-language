@@ -280,3 +280,8 @@
 - 按轻量任务仅读自身STATUS和实际evaluator guard/3unit、spec§20.8；确认Interp前完整root预检、精准首次span、单MODULE帧及两个AST防御分支均落盘。
 - git diff --check src/evaluator.rs通过；未编译、未改代码。core唯一release --lib统一验证，尚不宣称通过；若编译问题再由team-lead唤醒修复。
 - 本人收工腾slot给tooling，不Git不调度。
+
+## [2026-10-30] T16-C库阶段完成交接
+- §21单session graph执行、home globals/来源栈/attempt恢复、TemplateContext默认值上下文与资源保护已在value/evaluator完成。9新增C unit。
+- 默认--lib448通过/8旧canonicalize权限失败保留；parent同一harness提权串行456/456通过，不改旧test。真实缺API红测与作者fixture/测试编译失误日志全留存。
+- 报告/manifest完成，源码冻结；不再编译，tooling唯一完整release和CLI整合，dist/profile/Git未改。R304OPEN，无正式发布声明。

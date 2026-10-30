@@ -917,3 +917,10 @@
 - 决策：不Git、不编译、不改dist/profile，不核当前C源作B hash证明；活动C源码/新测试/非规划报告不进B，C文档仅规划，不叫C验收。
 - 下一步：主会话执行最后prepare按5组snapshot index提交与推送B；原3用户块28/1/1保留，C活动改动继续未提交，不误报仅剩用户块。
 - 阻塞：无最终B交付准备阻塞，R304OPEN无计时不tag。
+## [2026-10-30] C独立PASS候选冻结与T17前交付准备
+- 来源：team-lead要求先冻精确C源码/测试/最终exe即放行T17，随后完成文档与分组，不编译不Git。
+- 完成：24成员C ZIP611909B/SHA8A6F9D0ACADB86FA56CA49BB7E0A82650F7FD00902348DBF46B4BFBE7B8A9532，18src+2Cargo+3C测试+902656B/cdedc9 exe全回读及冻结前后指纹一致；Temp另存exe，dist已更新C后不再改。
+- 产出：T16-C-release-evidence、README/checklist实际独立599/29/33/15及旧回归PASS、人11/AI18，六组清单及24snapshot记录。baseline9d7e1aa，源码/3测试只从ZIP暂存，T17非规划产物排除，三用户块28/1/1严格保护。
+- 决策：T17§22仅规划未实现在C验收中，R304OPEN，无计时不tag；B不重做，不核活动T17源作C证明，主会话代Git并保活动T17未提交。
+- 下一步：root/角色最后记录齐后第一次提交前刷新清单，按六组snapshot index提交/推送；本角色释放slot。
+- 阻塞：无候选快照/文档准备阻塞。

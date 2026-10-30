@@ -225,3 +225,24 @@
 - C§21已冻，GO runtime唯一value/evaluator实现/--lib编译；B提交必须冻结ZIP src和B测试快照，禁止误stage活动C代码，release已受命。
 
 - B已独立PASS并精确封存，release索引防混脚本齐；requirements B收口待回执。C session首个API绿并继续多场景单元验证，无C完成/性能通过声明。
+
+## T16-B快照已推送 / C库通过（2026-10-30 07:55）
+B五组提交0830f4d/9226957/23f86ff/c64cb81/9d7e1aa已推main，ls-remote实际核对9d7e1aae3358b970b6d6c9b2a3655ea919a68c1e。源码和B CLI test取固定SHA ZIP，未stage活动C源；原用户三块28/1/1保留。C同已构建lib提权456/456通过，Temp/T16-C-runtime/lib-elevated-parent.txt；默认8项canonicalize权限失败保全，不改产品绕过。runtime已收口停源码/编译，tooling唯一C CLI实施与完整release；test准备新C进程矩阵，architect继续T17精确设计。C最终exe及独立验收尚未完成，R304OPEN，不tag，heartbeat lfz持续。
+
+### [2026-10-30 08:00] 心跳接续
+复读启动文件并核Git/agent/磁盘（约175MiB）。B已提交18源码逐一对固定ZIP归一换行核验PASS，证据Temp/T16-B-release/committed-source-verification.json，未混入C。tooling C首编译成功，check六组保留，run过渡断言限定迁移；默认权限失败保全，等待新增C进程及完整release，同期test准备公开矩阵。批准T17资源错误独立ADR并交architect冻结，C尚未独立验收不启动T17源码。唯一编译仍tooling，所有测试日志项目内，R304OPEN。
+
+## 当前执行检查点（2026-10-30 08:05）
+C修前CLI候选67191932b53e34f4057b87a556c1eb6d9687bd8510868f2d6baf671fe3fa6216/902144B，同九release harness598/598通过；默认沙箱8权限失败日志保留。末检发现CaseEval HostFailure error_class None可能被test_runner误判PASS，已授权tooling依其runner所有权最小fail-closed修复+合成单测，继续唯一release编译；尚未最终冻结/独立通过。公开29进程已备，app三文件与人指南准备，待最终hash实跑。T17三spec§22与T17-design已冻，第13类执行限额ADR批准，源码待C独立PASS；不套旧性能，R304OPEN。B已推9d7e1aa，原用户三块保护。
+
+## C最终源码冻结并启动验收（2026-10-30 08:10）
+root实核target/release/lfz.exe902656B/SHAcdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006；tooling已停操作，最终同九harness599/599=456+49+28+12+12+7+5+15+15。HostFailure合成红0/1→修复绿1/1含Located递归，修前671919/598及沙箱失败保留。已复用verifier独立全回归/跨模块见证、test公开29、app四文件33分别实跑；人类指南准备好排队、AI随后。没有编译并发，D约105MiB，T17源码仍等C独立PASS。R304OPEN，尚无C计时不正式发布。
+
+### [2026-10-30 08:15] C公开/应用通过，指南实跑接续
+公开29首次完整29/29 PASS（T16-C-blackbox-evidence/final-first.json），四模块应用同产物33/33（app/t16-evidence/results.json），默认权限失败保留。已复用人指南和AI工程师按最终cdedc9/902656B实跑，独立verifier继续无编译复验。磁盘约82MiB，核发现Temp/T16-B-core/tests约171MiB可重建测试fixture，但最近被使用，已要求verifier全harness结束确认后才清，当前未删。T17已冻未开源，需独立通过并先快照C再实施。
+
+## T16-C/D实际终验通过（2026-10-30 08:20）
+cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006/902656B：独立599harness、公开29、四模块app33、自编15、旧13/117/91含178/apps37+11/jsonbatch38/JSON140全部PASS，源初末冻结；人指南11/AI18通过且默认权限失败保全。release_manager_t12封C精确ZIP和交付分组，requirements同步；core只读准备§22，快照回执后GO error.rs再runtime，不先污染C源。确认无活跃测试/编译后清Temp/T16-B-core/tests进程数字目录可重建夹具171308422B，自由85630976→261632000B，receipt保Temp/T16-C-runtime/fixture-cleanup.json，docs原证据不动。R304OPEN，无C计时不tag。
+
+## C封存完成，T17 GO（2026-10-30 08:25）
+release已精确保全C ZIP611909B/SHA8a6f9d0acadb86fa56ca49bb7e0a82650f7fd00902348dbf46b4bfbe7b8a9532，24成员=18src+2Cargo+3tests+exe，dist C及Temp精确exe留存。requirements R134/210/409/506通过。root已GO core仅error.rs第13类，runtime仅evaluator预算/取消/deadline与唯一lib编译（先等core停写）；tooling只读准备CLI，未GO源。C提交始终用ZIP源/3tests快照，不stage活动T17源码。原三用户块保护，R304OPEN；NEXT其余未实现不声称完成。

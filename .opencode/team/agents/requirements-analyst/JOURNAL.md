@@ -86,3 +86,8 @@
 - 新增R132/133/209并通过，绑定8ea375…/859136B，独立584/38/18与旧回归全PASS。
 - 仅静态声明/完整图check和run/eval副作用前拒绝，整个T16执行未完成；C仅冻结且在实现，不提前验收。有限链接/legacy大root/有界已读字节与canonical权限控制边界明确。
 - R304OPEN，无B性能窗/正式tag；仅REQUIREMENTS及本人记录，无产品测试、编译或Git写入。
+
+## [2026-10-30] T16-C/D需求收口
+- R134/210/409/506通过，冻结cdedc9…/902656B，599/29/33/15及旧回归独立PASS，人11/AI18作者示例齐。
+- 明确B CLI unsupported历史过渡已被C取代，旧无图eval guard保持；宿主fail-closed、真实来源/折叠及API迁移边界同步。T17仅冻结/未验收，第13类不冒充C事实。
+- R304OPEN，无C计时不tag。仅REQUIREMENTS与本人记录，无编译/产品执行/Git。

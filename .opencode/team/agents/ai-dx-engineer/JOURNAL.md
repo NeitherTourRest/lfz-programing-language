@@ -84,3 +84,9 @@
 - 命令：run_examples.py --binary target/release/lfz.exe --output docs/reports/T15-skill-evidence/results.json，exit0，25/25，1a5a…/782848B。
 - 边界：非新Agent盲测，旧v2未改；不编译/不Git/不改源或人类指南；R304OPEN，无性能承诺。
 - 下一步：team-lead独立验收/提交，无阻塞。
+
+## [2026-10-30] T16-C AI模块指南及实跑完成
+- 四skill+AI入口§6.4同步，静态图check不初始化再run，模块home/快照共享/argv/模板与API迁移边界明确。
+- run_examples.py锁cdedc9/902656B，同exe提权18/18 exit0；默认沙箱1/18权限失败保留。
+- docs/reports/T16-C-skill-evidence.md及manifest原始证据齐，无新Agent盲测/旧v2更改/编译/Git/产品修改。R304OPEN，无C性能声明。
+- 下一步：team-lead独立验收/提交，无阻塞。

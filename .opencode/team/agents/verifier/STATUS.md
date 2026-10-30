@@ -2,17 +2,18 @@
 > 最后更新：2026-10-30 by verifier
 
 ## 当前状态
-T16-B静态模块图/非初始化check/run执行前拒绝及legacy兼容独立PASS。B不提供模块运行，C须另验；R304OPEN、无性能计时，不批准正式发布。
+T16-C最终模块执行与诊断独立PASS。候选cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006/902656B；源码/Cargo在全部新旧执行期间冻结。R304OPEN，无性能计时；§22/T17尚未实现验收。
 
 ## 实证
-- target859136B，SHA8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480；源/Cargo初末在18独立图见证阶段一致。
-- 同冻结产物提权实际8harness584，公开B过程38，旧attempt13/check117/CLI91内178、app37+11/jsonbatch38/JSON140全部通过，无编译。
-- 自编18图见证：file/-e/stdin菱形无初始化、文件NUL/CRLF哨兵不变/新文件不存在；子文件真实错误路径/行号、循环、静态首错、IO无span空trace、run late-export零副作用；legacy export及>2MiB旧root通过；实际依赖2MiB/2MiB+1、深128/129受控边界。
-- 验证脚本初始日志提取只发现1harness，在启动前报错；改列8个已保留同产物名称。独立let误修改例改var，原脚本均保留，非产品缺陷。
-- docs/reports/T16-B-independent-verification.md及evidence manifest完整。
+- 同九个release harness599提权实际全过，无编译；canonicalize默认权限限制与作者失败记录保留。
+- 公开29/四文件app33独立复跑；旧attempt13/check117/CLI91内官方178、app37+11/jsonbatch38/JSON140均通过。
+- 自编15进程真实模块：diamond共享计数/容器、home/cell/默认与caller覆盖来源、attempt恢复与后继错误帧清洁、session隔离、argv三来源、初始化失败；47帧JSON与human折叠40文件记录通过。
+- host failure直接与Located wrapper fail-closed路径审阅，实际runner合成测试已在599中执行；旧eval guard与资源安全合成边界保持，不真实abort/OOM。
+- own-initial.py保留空默认数组误索引作者例；own-path-initial.py保留canonical Windows前缀比较误判，均只修oracle后15通过，产品无修改。
+- docs/reports/T16-C-independent-verification.md及证据manifest/原始脚本齐。
 
-## 权限与限制
-默认沙箱canonicalize AccessDenied的作者失败/许可控制仍保留，独立用安全提权同字节，不修改产品绕过路径身份。无真实OOM/abort、无模块初始化/缓存执行/home globals运行结论。旧A/T15报告与冻结输入不改。
+## 交接
+全部执行/扫描/编译已结束；主调度可后继T17 GO但新源码需新验收。Temp/T16-B-core/tests由modules::tests生成，我无后续依赖；root确认无其他活跃harness后可清旧子目录保磁盘，不删docs原证据。
 
-## 下一步
-主调度可收口B并实施C；后继源码/二进制不冒充本8ea375窗口。已停止执行/扫描/编译，无Git或实现修复。所有Temp项目内。
+## 纪律
+只验证不修复，不改规范/源/旧测试/报告，不Git/外写，不扩性能声明。

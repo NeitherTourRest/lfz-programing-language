@@ -297,3 +297,11 @@
 - 证据：文档diff --check exit0，所有精确签名/owner/错误与兼容字段检查；无源码/测试/构建/Git变更。
 - 下一步：runtime/tooling按冻结契约接入并独立验收；T17新增ExecutionLimitError仍需独立ADR，不伪装现Recursion/Overflow。
 - 阻塞：无设计阻塞，R304OPEN，规范不代表实现或正式发布。
+
+## [2026-10-30 08:15] T17第13类终止错误及预算契约冻结
+- 来源：team-lead启动与08:00独立ADR批准，要求审C实码后冻结。
+- 完成：读T17双草案/NEXT/C evaluator-error-CLI；三spec追加§22，新T17-design.md；精确limits入口、节点计步/故障来源、attempt单调预算、module/token/deadline、CLI顺序和计时边界、owner与可实测验收。
+- 决策：无节点不poll，末native后无节点可成功；CLI静态图后eval前计时，含内部host校验不另加API；Ctrl-C仍需平台ADR。
+- 证据：git diff --check -- docs/spec docs/reports/T17-design.md exit0，仅换行提示。未改源码/测试/Git、不编译。
+- 下一步：parent按C独立验收给源码GO；T17功能/最终性能另验，R304OPEN。
+- 阻塞：无架构阻塞。

@@ -2,17 +2,16 @@
 > 最后更新: 2026-10-30 by requirements-analyst
 
 ## 当前状态
-新增R132/133/209按三spec§20–20.10通过。仅B静态声明/完整依赖图check与run/eval执行前零副作用拒绝，整个T16模块执行尚未完成；C§21契约冻结/实现中，未验收不得通过。R304OPEN，无B性能窗，不tag/不正式发布。
+T16-C/D新增R134/210/409/506通过；当前CLI模块初始化/执行与跨文件诊断已验收，不再套B过渡unsupported限制，旧无图eval guard保留。T17§22仅冻结/后继实现，未验收；R304OPEN，无C计时，不正式tag/发布。
 
 ## 证据
-- B冻结8ea375dcd08098ef61d040a57a7b1ad28a28c2fdc25a5ca4921a75b728944480/859136B，T16-B-independent-verification.md及证据目录。
-- 同产物许可控制584release/公开38/独立18，以及旧attempt13/check117/CLI91含178/apps37+11/jsonbatch38/JSON140通过。无新产品执行或计时由本人进行。
-- legacy无模块>2MiB行为保持，有限导出/别名链接非完整静态类型分析；§20.10只按实际已读字节判超限，禁止为判断文件尾再突破预算。
-- 默认sandbox canonicalize AccessDenied/作者失败证据保留，同产物许可运行通过不代表环境限制消失；未改产品绕过身份。
-- 旧A公开UserFn迁移、旧shape/CLI/T15字段和所有历史v2证据保持各自时点。
+- C冻结cdedc9b980aa207b28bf895ef95ce76fde18e47ef758c19c187b3f9c2da08006/902656B，73内置/12错误类，T16-C-independent-verification.md。
+- 独立599harness/公开29/app33/自编15/旧attempt13/check117/CLI91含178/apps37+11/jsonbatch38/JSON140全PASS；人指南11/AI18绑定同产物通过，默认沙箱失败保全且许可复核不绕身份。
+- 独立globals/session缓存/home闭包与模板默认、caller覆盖、attempt来源恢复、真实跨文件全trace/折叠及HostFailure fail-closed边界证据齐。
+- B的run不可用是历史过渡，C新图入口不代表旧无图eval可绕验证；RustAPI迁移明确，不声称零变化。旧A/B/T15/v2和全部失败证据按原hash保持。
 
 ## 下一步
-交team-lead B候选快照提交；C/D各自实现和独立验收后再新增通过结论。
+交team-lead/release封C快照并连续推进T17；预算/取消/第13错误类只有独立实现验收后才能标通过，不能提前算本C事实。
 
 ## 阻塞/经验
-无需求侧阻塞；不编译/产品测试/Git，仅需求与本人记录。历史验收绑定冻结hash，不能用后继C工作树冒充B。
+无需求侧阻塞。仅需求与证据映射，不编译、不跑产品、不Git、不修改他人产物。通过范围、版本过渡与未来规范必须分别写明。
