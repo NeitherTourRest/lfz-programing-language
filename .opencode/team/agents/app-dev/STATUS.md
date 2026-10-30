@@ -19,3 +19,6 @@ Python AST PASS。菱形共享计数、caller同名全局不串、两次执行ca
 
 ## T17最终实跑（2026-10-30）
 锁1946ab9/943104B，同字节许可提权40/40 PASS；callback预算28见证，0..28逐次保留，默认sandbox拒绝失败也保存。正常结果字节等价/早期KEEP/已完成SIDE不回滚/check拒预算均过。app/t17-evidence/results/manifest和T17-BUDGETS最终节齐，源码/旧app/旧oracle未改，不编译/Git。R304OPEN，无应用阻塞，交独立verifier。
+
+## T18-A工具编排应用完成（2026-10-30）
+新增toolplan.lfz/verify_toolplan.py/T18-A-TOOLPLAN.md/t18a-evidence。锁4093714/984064B、独占fixture51b83f…27bee；默认sandbox实际7/7通过，两份7项报告保留，最终加强deadline必须在exec匿名闭包行7。9任务6成功3局部失败、结果字节确定；禁用/能力不泄漏/global deadline/全体验证无副作用/空计划均过。旧应用未改，无编译Git，R304OPEN。仅本轮交付后停止，不进入HTTP/T19/T20。

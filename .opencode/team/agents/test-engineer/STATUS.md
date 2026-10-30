@@ -1,11 +1,14 @@
 # test-engineer — 工作状态
-> 更新：2026-10-30 13:46
+> 更新：2026-10-30 18:53
 
 ## 当前状态
-T17公开最终134/134 PASS，exit0。锁1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45/943104B，同产物许可运行。最终脚本dd5f8fb1…d52ed0。验后源码hash全部匹配tooling final-manifest。
+T18-A公开Windows最终45/45 PASS、exit0，产品4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86/984064B。独占fixture51b83f05初末不变，避免tooling/独立重建race。watchdog普通OS权限预检PASS，正常后代PID44416已reaped。
 
 ## 产出
-tests/t17_cli_limits.py；docs/reports/T17-blackbox.md及专属evidence/final-adjudicated-permitted.json、manifest-final.json。早期105/121/110/121/118/122与两个旧脚本保全。新oracle错误按节点语义和架构help/version拼写裁定修正，未产品改动/编译。
+tests/t18a_cli_process.py；docs/reports/T18-A-blackbox.md；专属evidence/first-complete-permitted.json、manifest-final、watchdog预检/identity、首脚本/首NUL错误。首Python NUL argv错误保留，修新harness用文件源码，不改产品。验后source逐项匹配tooling最终close manifest。
 
 ## 下一步/边界
-供独立verifier/其余owner最终验收。官方178不叠公开134，未改旧tests/产品/spec/dist/Git；R304OPEN。宿主cancel/精确attempt余量及IO非硬超时限制见报告。C29/29/B38/38历史保持。
+供root与独立verifier收口；公开45与649另计。无编译/产品/旧tests/spec/dist/Git操作。R304OPEN，无性能结论。遵守仅T18-A本轮交付后停止，不推进HTTP/T19/T20。
+
+## 历史
+T17公开134/134、C29/29、B38/38与原失败/修订证据保全。

@@ -1,4 +1,34 @@
 
+## T18-A功能终验PASS，进入最后交付后停止（2026-10-30 19:49）
+最终4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86/984064B：独立649harness/公开45/toolplan7/自编真实process12及旧全回归（T17公开134app40、C29app33、13/117/91含178/apps37+11/jsonbatch38/JSON140）全部过。人指南22/AI26作者实跑过，独立最后仅审11文档SHA与证据；原NUL/keys新oracle失败、默认sandbox关闭探针C0000008、E5阶段及关闭修复日志全部保留。release准备递归src精确ZIP/dist/最终分组，requirements同步。完成已授权推送与收工后删除lfz自动接续，停止，不HTTP/T19/T20。Windows已验，其他平台Unsupported；R304OPEN无本轮性能窗不tag，不声称全部规划完成。
+
+### [2026-10-30 19:19] T18公开45/应用7通过，最后独立与指南
+4093714/984064B公开45/45、toolplan应用7/7作者已过，NUL新oracle启动错误首脚本完整保留后修文件源码传入，未产品改动。独立649/旧全回归/自编进程12主验过，已复用独立仅补最终公开45+toolplan7，不重复已有效旧harness。人/AI指南已启动最终示例实跑，均独占fixture核hash；无产品编译。默认sandbox close已闭句柄探针exit0xC0000008日志保留，同649正常OS许可全过，不改旧测试绕过。D128688128B，R304OPEN，仅本轮T18-A交付后删除自动接续。
+
+### [2026-10-30 18:49] T18关闭诊断修后649通过，终验启动
+root核最终4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86/984064B；十一harness649/649，显式close单owner逆序诊断与非Windows路径校验已入新源。tooling停止。独立真实验收/公开45/工具编排应用启动；明确授权独立原harness内部编译仅项目Rust测试fixture，不允许产品构建，fixture当前51b83f…27bee，公开/app独占复制防重建race。真实OS进程watchdog先许可，失败保全。D152801280B，人/AI指南待slot；Linux未实测不支持，本轮T18-A交付后停止，R304OPEN。
+
+### [2026-10-30 18:19] T18作者646通过，补关闭诊断后终验
+Windows候选E5F57AA823AD7738FC136EE39B585D7C1DB288FF9F28253F3CFA8016F8B34682/984576B作者十一harness646/646，真实Job/双pipe/后代回收/活动取消/故障注入通过且无遗留。该候选作为修前保全：tooling须补CloseHandle自身失败的显式诊断/注入（Drop只兜底），runtime最小修非Windows合法绝对路径校验以到Unsupported，均不扩大Linux执行支持。tooling等runtime停源后唯一重编译新hash，公开45仍待终验。architect组合flags首次类别文案已确认；verifier静态预审FFI/回收路径启动，不改源。递归src清单避免漏windows/fixture。D178540544B，R304OPEN，本轮后停止。
+
+### [2026-10-30 17:48] T18源接口齐，统一构建接续
+core十ValueMsg/runtime上下文exec与diagnostics已落并明确停源，均尚未编译；tooling Windows owned后端+CLI首版及本地Rust fixture已备。已GO tooling唯一完整release/真实fixture验收，批准既有runner最小diagnostics门禁与合成测试。组合能力/限额非执行消息按首次flag种类建议交architect补钉。公开黑盒test准备启动，不使用未验源码冒称完成。当前D233598976B，停止边界仍仅T18-A交付后停。R304OPEN。
+
+### [2026-10-30] 用户重置用量，恢复本轮
+用户明确已重置用量，已立即复用core/runtime/tooling恢复T18-A原任务，不再等17:51。最新范围仅T18-A验收交付后停止，禁止HTTP及后续。当前无活跃编译；确认T17 verifier全部结束后仅清Temp/T16-B-core/tests数字进程目录可重建fixture113965622B，原docs证据保留，receipt Temp/T18-A-lead/fixture-cleanup.json，自由235806720B。三owner分工/唯一tooling编译与等源齐保持，后端可靠回收及权限门禁不缩水。R304OPEN。
+
+## 用户最新停止边界（2026-10-30）
+用户明确：结束完这一次迭代就停止。当前迭代固定为T18-A受控子进程调用，完成实现/功能与独立验收/应用指南/候选交付及已授权推送后停止，并删除lfz自动接续。不得进入T18-B HTTP、T19、T20或其它新迭代，旧NEXT全计划连续推进指令被此边界替代。R304如仍OPEN如实披露，不为停止本轮冒称性能或全部规划完成，不正式tag。已通过工具更新原lfz自动化提示，保留30分钟频率和ACTIVE以完成本轮后自动停用。
+
+### [2026-10-30 16:50] T18用量限制检查点
+T18-A三实施agent在首次GO后均因账户用量限制失败，工具提示17:51可再试；当前clock UTC08:50即本地16:50，尚未到恢复时间。复读启动文件/Git/进程后确认无cargo/rustc，工作树仍仅§23设计/团队记账及原用户块，没有任何T18生产源落盘，不宣称实现进行中。恢复后复用core/runtime/tooling原任务和单写者分工，不重复调度新agent；tooling仍唯一编译且等其他源齐。T17 main123230f和冻结943104B/1946ab9不变。D119365632B。主调度复核§23纳管前挂起/继承白名单/双流公平限额/后代pipe回收/host诊断门禁与验收项，尚无产品实测。R304OPEN，自动接续保留。
+
+## T18-A契约冻结并GO实施（2026-10-30 13:58）
+§23/T18-A-design已冻，T17快照和推送123230f有效。core仅error.rs十ValueMsg无第14类；runtime仅evaluator/所属builtins上下文与特殊exec/诊断；tooling唯一owned backend/Windows平台/CLI/main/lib注册。三方获GO单写者并行落盘，但唯一cargo为tooling且等core/runtime停源才整编。Windows Job纳管后resume、有界双流公平读取/可靠回收、无裸spawn fallback；Linux本批明确Unsupported。默认禁用显式本会话能力，局部错误可attempt、全局终止不可吞，cleanup HostFailure门禁已定。D120426496B，Temp项目内，可靠性缺口不能弱化测试，R304OPEN，HTTP后续独立子批。
+
+### [2026-10-30 13:53] T17推送回执 / T18-A方向批准
+T17 ZIP629305B/SHA3d9155399dfda66a3b9b127a3cc11bf7954de12354e59b52727c129c88683f83已精确保全；六组已推main并ls-remote核123230f8529718b338acd6c22947c1438f05ac1a，提交后只原用户三块28/1/1未提交。批准T18-A默认禁用exec三参与绝对exe/no-shell，独立EvalContext保T17 shape，局部timeout/超量可恢复、全局资源不吞。Windows可靠Job/pipe原生FFI零crate先实测，Linux未实测不声称支持；cleanup宿主诊断门禁沿C原则不造伪业务错。architect正冻结§23与精确owner契约，源尚未GO。R304OPEN，无本轮性能窗不tag。
+
 ## T17实际终验PASS并接续T18（2026-10-30 13:48）
 1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45/943104B：独立最终公开134/134、预算应用40/40，624harness/旧全回归/C29app33/自编14保持冻结源有效；人指南32/AI38作者实跑并独立审11文档SHA通过。早期110/121与118/122、CONCERNS及新oracle修正全部保留，无产品追绿改动。release封T17精确快照和分组，requirements收口；architect开始T18-A子进程契约提案，HTTP另子批，不先改源。R304OPEN无T17性能窗，不正式发布；原用户三块与旧v2/tag保持。
 

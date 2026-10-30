@@ -47,3 +47,9 @@
 - 最终1946ab9/943104B核hash；默认canonicalize权限拒绝保留，同产物许可提权40/40 PASS，exit0。
 - callback内部预算28，0..28完整保留；正常等价/早期KEEP/完成IO不回滚覆盖。结果/manifest/最终说明齐，旧app及oracle不改，不编译/Git。
 - 下一步：独立验证；R304仍OPEN，无应用阻塞。
+
+## [2026-10-30] T18-A工具编排作者验收
+- 新toolplan配置驱动绝对exe argv，attempt局部失败继续、全局资源终止穿透；本地fixture独占复制核hash。
+- 最终4093714/984064B默认sandbox7/7 PASS；首份全绿后增加deadline真实exec行/帧断言，最终7/7再过，两个结果和manifest完整保留。
+- 禁用不spawn/能力隔离/9任务argv及退出码/三局部错误继续/全局deadline/全体验证/空计划覆盖；无编译Git/旧app修改。
+- 交独立verifier与发布收口，R304OPEN，用户边界本轮后停止，无应用阻塞。

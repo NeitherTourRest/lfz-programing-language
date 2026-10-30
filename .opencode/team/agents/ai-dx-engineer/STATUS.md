@@ -2,15 +2,16 @@
 > 最后更新：2026-10-30 by ai-dx-engineer
 
 ## 当前状态
-T17 AI四skill与入口同步完成，新增§6.5执行限额工作流和第13个ExecutionLimitError，内置仍73。作者38/38通过，可交team-lead最终验收/提交。
+T18-A四skill/AI入口§6.6同步完成，74内置/13错误类，作者26/26通过，释放slot。本轮交付后停止，不HTTP。
 
-## 证据
-- docs/reports/T17-skill-evidence.md及目录run_examples.py/results/default-results/manifest/.gitattributes。
-- target/release943104B，SHA1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45。
-- 默认沙箱37/38仅模块canonicalize权限失败；同产物提权38/38 exit0，五文档测前后hash一致。
+## 产出与证据
+- docs/reports/T18-A-skill-evidence.md及目录run_examples.py/results/manifest/.gitattributes。
+- 最终target4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86/984064B。
+- 独占fixture复制Temp/T18-A-ai/fixture.exe，SHA51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee。
+- 正常OS权限一次26/26 exit0，五文档前后hash一致；未编译，未新造默认sandbox失败。
 
 ## 边界
-严格两token/等号拒绝，CODEargv保护，既有--help/--version不扩裸别名；协作deadline/native阻塞边界、库token非CtrlC、attempt不可吞终止/不补预算、模块共享真实faultfile均明确。RustAPI描述仅引用契约，未编译新的Rust见证。无旧v2/人类指南/源/规范/dist修改，无编译/Git，Temp项目内。R304OPEN无性能或正式发布承诺。
+先check不执行再显式allow限额run；绝对exe/noPATH/非隐式shell、默认禁用/会话隔离、rawbyte合并上限/严格UTF8/非零exit成功、attempt局部可恢复与全局资源不吞、cleanup宿主JSON例外、Windows已验其它Unsupported明确。故障注入/并发token/Rust API为契约引用，作者不冒称新编译验证。无旧v2/人类指南/源/spec/dist/Git修改，Temp项目内。R304OPEN无性能/正式发布承诺。
 
 ## 下一步
-team-lead统一独立验收与提交，本角色完成释放slot，无阻塞。
+team-lead统一独立验收与本轮提交后停止；本角色完成无阻塞。

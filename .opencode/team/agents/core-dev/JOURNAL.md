@@ -205,3 +205,6 @@
 
 ### [2026-10-30] T17-A error.rs实施完成
 C快照后root GO；仅error.rs新增reason/variant/helper及映射，机械精确13类注册与4新unit，原12行为断言保留。只读diff核对与SHA DF90AE9D02BCA29CC26167B81171CD1A822D79D48B6F490098E848EE49C4E310。未编译，停止源码写入并交root/runtime唯一lib验证。
+
+### [2026-10-30] T18-A core消息层停源交接
+完整启动读取state/board/本人和关联STATUS/角色/§23/T18-A-design；按root GO仅error.rs十无字段ValueMsg固定消息及十case严格unit。旧断言不改，不新增错误类。git diff --check exit0，SHA 0AB3C6112BFD01AAE0F52D1D9338C7950E10BBBCA975A68A7013A61BF6C3DBA6。未编译，已停源发root，统一验证由tooling负责；当前T18-A交付后停，不进入HTTP。

@@ -1283,3 +1283,11 @@ T17 CLI计时边界精确说明：在静态build_graph完成、调用eval入口�
 
 ### [2026-10-30 14:10] [language-architect] T17帮助命令拼写与节点oracle裁定
 依据旧CLI parse_command只识别--help/-h、--version/-V，裁定§22 help/version均指该既有合法拼写；裸help/version仍是路径，不新增别名、不阻止同名文件，合法限额不把它变成非执行命令。公开4条裸词预期“不适用”属于新oracle误用，保留初版失败与后续纠正证据，不改产品迎合。另CODE双负号沿旧文法/查名规则，check非动态查名；空for仅实际进入节点计步，不为Rust迭代加步。三spec/设计最小澄清，不改计步范围/源码/测试。
+
+### [2026-10-30] [language-architect] T18-A受控子进程§23冻结
+落实team-lead全部四点批准及cleanup载荷批准：exec三参四键/绝对exe、EvalContext新入口保旧API、局部ValueError与全局资源边界、Windows挂起纳管Job+pipe回收原生FFI零crate、Linux未经实测暂Unsupported。冻结owned后端API/owner/逐variant消息/CLI与diag成功门禁；非空cleanup诊断不被attempt清空，原系统reason固定，CLI无新增JSON键。尚未实现/测试，不称跨平台或性能完成，R304OPEN。
+
+按team-lead随即裁决精确化cleanup门禁：result Ok且diagnostics非空是C式HostFailure，stdout空/stderr/exit2，属于JSON宿主异常例外，不伪造LFZ IOError。result Err资源错误原形JSON仍保留并附stderr诊断。
+
+### [2026-10-30] [language-architect] T18-A混合CLI选项适用性顺序
+落实root裁决：非执行命令的能力/限额文案按选项区首次出现类别选定，--json不参与；扫描错误按token序先返回，CODE/argv保护和旧无新flag行为不变。三spec/设计最小一致补钉，无产品/计步/文法变化。本轮按用户新要求T18-A结束后停止，不推进HTTP。

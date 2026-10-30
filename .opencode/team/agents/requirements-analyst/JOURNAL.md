@@ -96,3 +96,8 @@
 - R135/211/410/507通过，1946ab9…/943104B，624/134/app40/自编14及旧回归，人32/AI38与11SHA审计。
 - 13类、严格flag、协作取消/截止与单调预算及attempt/模块边界同步；旧121/122与CONCERNS/作者oracle失败不改，T18仅规划。
 - R304OPEN无性能窗不tag，仅REQUIREMENTS及本人记录，无编译/产品/Git。
+
+## [2026-10-30] T18-A最后一轮需求收口
+- R136/212/411/508通过，4093714…/984064B，649/45/toolplan7/process12/旧回归及人22/AI26证据齐。
+- Windows实测、非WindowsUnsupported；context默认禁用/argv/输出预算/局部资源/全局终止/Job后代/Close诊断门禁准确限定。原失败与CONCERNS不抹，R304OPEN无性能窗不tag。
+- 仅本轮交付后停止、不HTTP/后继；仅REQUIREMENTS与本人记录，无编译/产品/Git。

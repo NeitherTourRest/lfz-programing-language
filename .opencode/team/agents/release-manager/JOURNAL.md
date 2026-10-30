@@ -931,3 +931,10 @@
 - 决策：无计时、R304OPEN、不tag；cooperative限额不冒称硬实时/权限内存沙箱。六组snapshot脚本baseline3639216，源/2测试取ZIP，原用户28/1/1过滤，未来T18非规划产物排除。
 - 下一步：root/role最后落盘后主会话首次提交前刷新再代Git；活动后继源码保持未提交。本角色无Git/编译/产品源/profile更改。
 - 阻塞：无候选交付准备阻塞。
+## [2026-10-30] T18-A最后一轮交付候选保全与停止准备
+- 来源：team-lead转用户明确要求本轮完成后停止，不开展后继设计/源码；最终独立PASS后准备最后分组推送。
+- 完成：递归21src+2Cargo+2测试+984064B/4093714 exe共26项ZIP660476B，SHA C37E323CFEA252EC416F85A8052E627C7771E43A6CEE0762E853DADD73C08B38，全回读及前后输入一致，dist复制最终字节后不再改。
+- 产出：T18-A-release-evidence、README/checklist实际649/45/toolplan7/自编12/旧全回归含T17/C通过，人22/AI26作者证据；六组冻结源/测试与3用户过滤快照，baseline123230f，旧v2/Cargo不动。
+- 决策：Windows已验、非Windows Unsupported；默认沙箱C0000008、E5 Close修正、NUL oracle及全部失败历史保留。R304OPEN，无计时不tag，功能结束而其余计划未实施，不进入HTTP/后继。
+- 下一步：root最后更新角色/状态后首次提交前刷新清单，代六组Git推送并删除automation停止；本角色未Git/编译/产品修改，不提前虚报已push或已删除自动化。
+- 阻塞：无交付准备阻塞，效率未通过限制正式发布。

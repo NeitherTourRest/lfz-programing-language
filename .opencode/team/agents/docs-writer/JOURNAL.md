@@ -88,3 +88,9 @@
 - 五指南入口+execution-limits.md、原始runs/manifest/验证器齐备；RustAPI只规范引用，无Ctrl-C/硬实时承诺。
 - 未编译/改产品/spec/AI/dist/Git，R304OPEN。
 
+
+## [2026-10-30] T18-A人类指南完成
+- 五指南入口+subprocess.md对齐§23，锁4093714/984064B，独占51b83f fixture默认22/22实跑通过。
+- 首次keys排序oracle错误保完整记录，仅修新验证器；教程提取check/run、raw/权限/timeout/usage边界均实证。
+- R304OPEN，不编译/Git/写AI/spec/产品；本轮交付后停止不HTTP。
+

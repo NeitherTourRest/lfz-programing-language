@@ -291,3 +291,9 @@
 
 ### [2026-10-30] T17补测交接
 parent库467PASS；仅新增4unit覆盖线程同步取消、7HOF、diamond预算、模板default来源帧，未编译验证。evaluator A673CCA7…，diff check过，停止写源交tooling唯一最终release。
+
+### [2026-10-30] T18-A源码交接
+三context/exec/host diagnostics与74注册落盘，4新unit未编译，diff check过；停止写源交tooling唯一编译。无真实进程成功声明。
+
+### [2026-10-30] T18平台校验修正
+仅evaluator复用backend路径规则，1新无spawn测试，非Windows合法绝对路径不再误报Executable；未编译/未Linux实测，停写交tooling。

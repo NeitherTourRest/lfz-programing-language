@@ -254,3 +254,15 @@
 
 ### [2026-10-30 13:48] T17裁定后独立最终PASS
 同1946ab/943104B，最终新公开134/134与预算应用40/40独立实际全过；旧624及全回归成绩源冻结有效。11旧公开失败按architect裁定为新oracle误判，原失败和CONCERNS历史保留；指南32/AI38仅只读审计。无编译产品改Git，R304OPEN。
+
+### [2026-10-30 18:25] T18-A静态预审完成
+已读启动文件与§23/Windows owned backend，人工核FFI/白名单/挂起纳管/双流公平限额/清理与主reason诊断门禁；已知CloseHandle显式诊断待owner。报root现harness内部fixture rustc与最终禁编译约束需协调。报告T18-A-independent-preaudit.md及preaudit-sources.json。无运行编译/源改Git；等待最终hash/GO，Linux不支持，R304OPEN。
+
+### [2026-10-30 18:40] T18-A独立主验收完成，公开oracle待修
+最终409371/984064B，同649/旧全回归/T17 134app40/C29app33/自编12全PASS，源初末冻结；正常OS许可运行，默认C0000008保留，harness内部fixture构建获root明确授权。公开45NUL为Python argv启动错误已报root/test，待仅新oracle修正完整复验，不最终放行。独立报告和manifest及STATUS齐，无产品编译改源Git。
+
+### [2026-10-30 19:20] T18-A最后独立复验PASS
+同4093714/984064B，最终新公开45/45与toolplan7/7独立实际通过；前649与旧全回归源冻结有效。NUL初始oracle错误及默认环境失败全部保留；source/exe/外fixture初末一致。报告和manifest收口，全部测试结束，无编译产品修改Git，R304OPEN，T18-A后停止。
+
+### [2026-10-30 19:24] T18-A指南证据只读收工
+人22/AI26作者证据逐行、11文档SHA、manifest原始文件SHA与产品/独占fixture匹配。仅审计非独立重跑，边界准确，旧oracle失败仍保留。已追加独立报告/manifest及STATUS，结束全部工作，不后继迭代；R304OPEN。

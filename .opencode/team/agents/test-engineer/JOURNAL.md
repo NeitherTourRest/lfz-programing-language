@@ -216,3 +216,16 @@
 - 完成：保4裸路径IOError，补合法短长选项拒限额、同名真实文件run的steps/deadline；同1946ab9c/943104B完整许可134/134 PASS/exit0。
 - 产出：final-adjudicated-permitted.json、manifest-final及报告；验后source逐项匹配tooling最终manifest。早期失败/原脚本不覆盖。
 - 下一步：独立及各owner实际验收；未编译/改产品/旧tests/Git，R304OPEN。
+
+## [2026-10-30 17:53] T18-A公开准备
+- 来源：team-lead启动，读全局/看板/自身与tooling状态、§23/T18-A-design。
+- 完成：新脚本45例，AST PASS/prepare-only exit0/executed:false；冻结T17缺flag红0/1原始保全。Rust fixture契约读tooling Temp源，不用系统shelloracle。
+- 产出：t18a_cli_process.py、T18-A-blackbox.md与专属evidence；所有Temp项目内。
+- 限制：实际外watchdog回收需普通OS进程权限；原JSON解析失败误触cleanup已修并留日志，未运行任何T18 fixture场景。Job等注入归tooling白盒，R304OPEN。
+- 下一步：等最终产品+fixture hash许可实跑。本轮交付后停止，无HTTP后续。
+
+## [2026-10-30 18:53] T18-A最终公开45通过
+- 来源：root冻结4093714b/984064B及fixture51b83f05，先独占复制再许可实跑。
+- 完成：watchdog权限预检PASS；首harness NUL argv被CreateProcess拒绝保全，修文件源码传literal NUL；首个完整可完成运行45/45 PASS/exit0。正常后代PID44416返回后无存活匹配。
+- 产出：报告、first-complete-permitted.json、manifest-final及所有首错/旧脚本/身份/预检记录，源码验后匹配tooling close manifest。
+- 边界：不编译/改产品旧tests/Git；R304OPEN，只本轮T18-A交付后停止。

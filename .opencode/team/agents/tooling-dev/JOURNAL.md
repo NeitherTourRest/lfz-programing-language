@@ -171,3 +171,13 @@
 - 验证：交接evaluator a673cca7…前后相同，新十harness提权624/624（471+50+28+12+12+7+5+9+15+15），0失败忽略，build0；真实并发取消/7HOF/diamond/default用例通过。
 - 最终：943104B/hash1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45，源及日志final-manifest和final2记录保存。F487/620阶段保留不冒充最终。
 - 交接：root立即公开121和独立验收；本人停改源/编译/测试，未动dist/Git/profile/core/runtime/spec/旧tests，R304仍OPEN。
+
+## [2026-10-30 17:58] T18-A backend/CLI作者收工
+- 来源：用户重置用量后root恢复原任务，限当前T18-A交付后停止。
+- 完成：owned Windows Job挂起纳管/继承白名单/公平有界drain/kill-wait及后代回收；能力context与cleanup诊断CLI/runner门禁。无裸spawn fallback，无reader线程。
+- 验证：646十一release harness全过，90s外watchdog未触发；真实本地fixture包含后代持pipe/双流/UTF8/非零/EOF/timeout/真实native取消及故障注入。首watchdog缺RUSTUP_HOME环境失败保留，补env重跑同产物。
+- 候选：984576B/hashe5f57aa823ad7738fc136ee39b585d7c1db288ff9f28253f3cfa8016f8b34682；递归src/Cargo/测试manifest、精确源码exe-fixture ZIP与原始日志已存。
+- 下一步：root处理Linux路径校验/组合消息回执和独立验证；源码/执行停止，任何修订需新hash。未动runtime/core/spec/dist/Git，R304OPEN。
+
+### [2026-10-30 18:26] T18-A关闭诊断补丁收口
+run独占Handles注册表显式早关/逆序最终关，Drop仅兜底，CloseHandle失败诊断及真实关闭注入，2unit覆盖正常/启动/Assign/pipe失败及真实取消主因。runtime平台修复1unit同编，release no-run/build0，十一harness649/649，新984064B/SHA4093714B2DC61BB72DBC4F43DB67A798A9BCAF152AD33A11D4D7457D1F7D9C86。docs/tooling/evidence/T18-A-close/递归manifest+ZIP，旧E5/646全部保留。源码静默交root，仅本轮，不HTTP/Git/dist。

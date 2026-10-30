@@ -1,0 +1,152 @@
+{
+  "date": "2026-10-30",
+  "baseline": "123230f",
+  "scope": "T18-A recursive src/Cargo/changed tests/exe exact; no later iteration authorized",
+  "zip": "candidate-snapshot.zip",
+  "zip_bytes": 660476,
+  "zip_sha256": "c37e323cfea252ec416f85a8052e627c7771e43a6cee0762e853dadd73c08b38",
+  "member_count": 26,
+  "source_count": 21,
+  "members": [
+    {
+      "path": "src/ast.rs",
+      "bytes": 39079,
+      "sha256": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076"
+    },
+    {
+      "path": "src/builtins.rs",
+      "bytes": 114826,
+      "sha256": "b76cc9d99260cd6856a705007846133f861db6a6735d14c62a27ced4c8c88e8d"
+    },
+    {
+      "path": "src/cli.rs",
+      "bytes": 64119,
+      "sha256": "c2d1c37ff64dcffb0322e1a6d32524d27b33aa4bfaa176ff5c5900393c0bc3b5"
+    },
+    {
+      "path": "src/env.rs",
+      "bytes": 22303,
+      "sha256": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc"
+    },
+    {
+      "path": "src/error.rs",
+      "bytes": 54003,
+      "sha256": "0ab3c6112bfd01aae0f52d1d9338c7950e10bbbca975a68a7013a61bf6c3dba6"
+    },
+    {
+      "path": "src/evaluator.rs",
+      "bytes": 204213,
+      "sha256": "d801e6043abf229c763366a0771e5c14b83ba7cc9f0bd2b8c689ca1c54d36b99"
+    },
+    {
+      "path": "src/json.rs",
+      "bytes": 16503,
+      "sha256": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f"
+    },
+    {
+      "path": "src/json_codec.rs",
+      "bytes": 17226,
+      "sha256": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2"
+    },
+    {
+      "path": "src/lexer.rs",
+      "bytes": 45149,
+      "sha256": "ebb952edbcd201210eb1f9c6ddebf58e2f3f998b260a11a51fe1c967848031f2"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 942,
+      "sha256": "06931e6d89372cb08244e71ce1e1236408b9acebfdf39287007f68c662f823a3"
+    },
+    {
+      "path": "src/loader.rs",
+      "bytes": 16480,
+      "sha256": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f"
+    },
+    {
+      "path": "src/main.rs",
+      "bytes": 808,
+      "sha256": "247fc12340d2f6a26aa3fc5ada658cbfe72fb7ee7f85f107b05e6af27018c366"
+    },
+    {
+      "path": "src/modules.rs",
+      "bytes": 17533,
+      "sha256": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895"
+    },
+    {
+      "path": "src/parser.rs",
+      "bytes": 228661,
+      "sha256": "58c41ba85d930dc0ef465be2a9d3c0741cfe7052d6dd9df01a825aab73e7ff5f"
+    },
+    {
+      "path": "src/process_control/fixture.rs",
+      "bytes": 1803,
+      "sha256": "0c09739e3327414281a5e89d5ad59dc5ec8356d1c6bbe9428dddcf9829f2b0a9"
+    },
+    {
+      "path": "src/process_control/windows.rs",
+      "bytes": 21560,
+      "sha256": "540d14c697dcd84e2a9ba6a0f2415b24509335206617ad939c7318e0a8e76a09"
+    },
+    {
+      "path": "src/process_control.rs",
+      "bytes": 2006,
+      "sha256": "e8cfcc7e54d7f2fb24f9d979d6f27d79bfcb20afaa7864326b7d49f13dab0442"
+    },
+    {
+      "path": "src/source.rs",
+      "bytes": 5420,
+      "sha256": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468"
+    },
+    {
+      "path": "src/span.rs",
+      "bytes": 2305,
+      "sha256": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2"
+    },
+    {
+      "path": "src/test_runner.rs",
+      "bytes": 28030,
+      "sha256": "ab8a62821e0efa046dbbd43bb609a36c99a9d353ba5d3fb38ab3026c98723226"
+    },
+    {
+      "path": "src/value.rs",
+      "bytes": 48864,
+      "sha256": "63967cb79996c7fedfe7285378e58c2774825c73680a81e50c12a185bbe438a0"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 795,
+      "sha256": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c"
+    },
+    {
+      "path": "Cargo.lock",
+      "bytes": 147,
+      "sha256": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4"
+    },
+    {
+      "path": "tests/cli_t18a.rs",
+      "bytes": 5401,
+      "sha256": "faa29e2cc5e413b7a10da9c5302bb82b37ebceb395058ff7a1096810bd56d257"
+    },
+    {
+      "path": "tests/t18a_cli_process.py",
+      "bytes": 8993,
+      "sha256": "eeef3ced3d038f1c428b205be961d2a42aec2b53541be8417210c79c831c9dd8"
+    },
+    {
+      "path": "dist/lfz.exe",
+      "bytes": 984064,
+      "sha256": "4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86"
+    }
+  ],
+  "changed_tests": [
+    "tests/cli_t18a.rs",
+    "tests/t18a_cli_process.py"
+  ],
+  "binary_bytes": 984064,
+  "binary_sha256": "4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86",
+  "temp_binary": "Temp/T18-A-release/lfz-T18-A-409371.exe",
+  "verification": "all members reread exact and inputs byte-identical after freeze",
+  "acceptance": "final independent PASS649/45/7/12 and full compatibility; guide22/AI26 author PASS",
+  "limits": "Windows verified; non-Windows Unsupported; R304OPEN/no performance timing/no tag; stop after task; no compile/Git/profile change"
+}

@@ -1,15 +1,14 @@
 # tooling-dev — 工作状态
-> 最后更新：2026-10-30 13:30 by tooling-dev
+> 最后更新：2026-10-30 18:26 by tooling-dev
 
 ## 当前状态
-T17 CLI及最终完整release作者验收已收工冻结。停止源码修改、编译与测试，交root公开121/独立验收；未覆盖dist或Git。
+T18-A关闭诊断补丁完成，新649/649作者验收PASS，源码/编译已停止，交root独立验收。仅本轮交付后停止，不HTTP/后续，不覆盖dist/Git。
 
-## 最终证据
-- 两flag严格单次scanner、CODE/argv保护、非执行拒绝、精确等号族usage；旧Command和unlimited流水线保持。
-- 新run_limited Result<CaseEval,String>，前端/静态图成功后checked_add建EvalLimits；旧eval_case/runner默认unlimited，第13类runner注册原12保留。
-- 合runtime四unit后最终完整no-run编译；十个本次新release harness提权624/624=471lib+50bin+28cli+12T12+12T14+7B+5C+9T17+15runner+15unit，0failed/ignored。新增实际跨线程取消/7HOF/diamond11对10/default faultsource全通过。
-- 最终target/release/lfz.exe943104B，SHA1946AB9CA5162D68F83A9D098424BD0BAFDF6FEADC6EA90527E0DB9E1DB12C45，build exit0；evaluator仍交接a673cca7cf009ba19ac9897737aa6f75db2dc24941ef31112fe6728c5b2e551d。
-- docs/tooling/evidence/T17/final-manifest.json绑定当前源/Cargo/newCLI测试及final2原始日志；F487/620/first默认6/8及精确快照保留不覆盖。docs/reports/T17-tooling.md末节为最终结果，runner-contract§15已同步。
+## 产出与证据
+- run独占Handles注册表，必要早关显式close，所有Result路径最终显式逆序close_all，Drop仅异常兜底；消耗槽后单次CloseHandle不doubleclose。关闭失败加入owned diagnostics，正常不能假成功，已有Err/Cancelled主因保持。
+- 新2unit覆盖真实关闭确认、正常/启动失败/Assign挂起拒绝/pipe失败诊断、真实marker握手活动取消仍保主因；注入仍真实close，无故意泄漏。原生Job/白名单/双流有界/后代回收/权限session/JSON/runner门禁原实现保留。
+- runtime修非Windows绝对路径后进入Unsupported，新1unit同编。唯一cargo test --release --no-run/build0，十一harness649/649=487+53+28+12+12+7+5+9+6+15+15，0失败忽略，watchdog未触发。
+- 新984064B/hash4093714B2DC61BB72DBC4F43DB67A798A9BCAF152AD33A11D4D7457D1F7D9C86。证据docs/tooling/evidence/T18-A-close/含递归manifest/精确ZIP/日志；docs/reports/T18-A-tooling.md追加收口。E5F57/646阶段ZIP及日志原样保全。
 
-## 边界/下一步
-作者624不代替独立验收或R304性能门禁。root接续公开121、独立、交付复制。只改CLI/授权runner/新增测试与本人文档，未改runtime/core/spec/旧tests/profile/dist/Git。Temp项目内、release复用，无Ctrl-C依赖或硬中断native承诺。
+## 待协调
+root接独立/公开/指南验收，任何后续源码改动必须新编/hash。Windows结果不代表Linux支持；非Windows仅Unsupported，未实测。Unsupported dead_code/环境警告保留。R304OPEN，不正式tag，无其他阻塞。

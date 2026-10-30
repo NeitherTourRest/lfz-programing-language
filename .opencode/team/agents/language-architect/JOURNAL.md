@@ -325,3 +325,15 @@
 - 待裁决：平台原生FFI或依赖；绝对路径策略；cleanup诊断carrier。重大平台取舍已先报root，不直接冻spec。
 - 证据：文档diff检查通过；一手Rust/Microsoft链接已记录。未源改/编译/Git。
 - 下一步：root批准后冻结§23；R304OPEN。
+
+## [2026-10-30] T18-A §23冻结
+- 来源：root批准提案四点及cleanup载荷/HostFailure最终裁决。
+- 完成：三spec及T18-A-design.md，精确10个ValueMsg、context三入口、ProcessReport边界、Windows先验/Linux禁用、CLI/diag门禁/owner/fixture。
+- cleanup：result Ok但diag非空stdout空/stderr/exit2，资源result Err保JSON，绝不伪业务错误或覆盖reason。
+- 证据：文档diff --check通过；未源改/编译/Git。下一步交root给GO；R304OPEN。
+
+## [2026-10-30] T18-A混合CLI类别顺序补钉
+- 来源：root批准首次类别裁决，轻量启动。
+- 完成：三spec/两设计及ADR最小补钉；扫描错误优先、CODE/argv和旧行为保持。
+- 证据：文档diff检查通过；不源改/编译/Git。
+- 下一步：交root验收；遵用户最新T18-A后停止，不HTTP。

@@ -8,7 +8,17 @@
 
 > **2026-10-24 本轮补充核对（T11-12/13/14/16）**：8 项交付物位置保持齐备。当前 69 内置、494 Rust 测试（388+48+28+15+15）、130 黑盒；语言 witness 74/74，V01 干净 CWD 130/130 已独立闭环，详见 `T11-v11-reverification.md`。本地执行 `scripts/build-release.ps1` exit 0，`dist/lfz.exe` 766464 B、`lfz 1.0.1`，hello 冒烟输出 `Hello, LFZ!`；发布版 `dist/lfz.exe test --json` total/passed=130、failed/errored=0、exit 0。SHA256=`149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，原文见 `T11-v11-release-evidence/`。构建有本机 rustup canonicalize 提示，不声称零 warning。`dist/` 被忽略，仅本地刷新、不强制入库；版本仍 1.0.1，既有 8 个 tag 不变，本轮不打 v1.3.0。同题 8 盲测缺原题材料未重跑，历史 2/8 不变。下文 2026-09-27 原始计数、缺陷和历史标签信息保留其当时语境；当前状态以本补充及本轮独立报告为准。
 > **2026-10-24 v2 正式首轮补充核对**：新增[正式独立验收报告](agent-benchmark-v2/v2-20261024-r01/REVIEW.md)与[认证结果](agent-benchmark-v2/v2-20261024-r01/certified-results.json)，run-id `v2-20261024-r01`：8/8 整题、131/131 功能用例，8 份源码约束与协议审查均 PASS；学生共 9 次 LFZ 自调，各题首次自调均 exit 0（8/8），仅为自选测试辅指标。模型为会话日志确认的 `gpt-6.1-sol / medium`；隔离范围为分题无历史派发、指令约束及已记录工具审计，未声称 OS 隔离。新八题是独立 v2 基线，不以历史 2/8 计算提升。[原始字节 ZIP](agent-benchmark-v2/v2-20261024-r01/raw-inputs-submissions.zip)及其[哈希清单](agent-benchmark-v2/v2-20261024-r01/raw-archive.json)提供 Git 行尾归一化之外的原文留存。当前解释器仍为 Cargo 1.0.1 / 69 内置 / 494 Rust 测试 / 130 正式黑盒；dist 766464 B、SHA256 `149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，本轮不重编译或改 Cargo，保持冻结 pin。`v1.3.0` 交付里程碑包含已验收的 v1.1 实现、测试/指南及 v2 正式首轮认证与原始证据；Git 附注标签为发布凭据，不等同于解释器 1.0.1 的版本变更。上方“本轮不打 v1.3.0”仅描述前一批发布时点。
-## 2026-10-30 T17执行限额候选（最终独立PASS）
+## 2026-10-30 T18-A最终候选及本轮停止
+
+最终984064B/SHA4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86，递归21src（含process_control/windows.rs与fixture.rs）+2Cargo+2测试+exe共26项精确ZIP660476B/SHA c37e323cfea252ec416f85a8052e627c7771e43a6cee0762e853dadd73c08b38，全部回读且冻结前后字节一致。T18-A-release-evidence保全清单。
+
+最终独立报告T18-A-independent-verification.md追加PASS：649harness/公开45/toolplan7/自编process12/旧全回归含T17公开134app40及C29app33；人指南22/AI26为作者证据。74内置、13错误类，exec默认禁用且显式授权session；Windows已验、非Windows Unsupported。Job清理/输出/局部timeout/global deadline边界见指南，不宣传权限或内存沙箱、硬实时或所有OS故障均绝对可回收。
+
+所有默认沙箱C0000008、权限限制、E5 Close阶段修正和NUL oracle首次失败原文保留，不用最终PASS覆盖过程。R304OPEN，无性能窗口，不tag，非正式发布；本轮功能结束后停止，不进入HTTP或任何后继设计/源码，其余计划未实施。root代执行最后分组提交/推送及停止自动化，实际回执前不声称已完成这些动作。
+
+基线123230f，原用户28/1/1三块仅Temp过滤stagecopy，工作树保留；源码与两测试按最终ZIP暂存，不编译/改源/profile，本角色不Git。
+
+## 2026-10-30 T17历史执行限额候选（最终独立PASS）
 
 T17快照943104B/SHA1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45，精确ZIP629305B/SHA3d9155399dfda66a3b9b127a3cc11bf7954de12354e59b52727c129c88683f83，23成员=18源码+2Cargo+2改动测试+exe，全部回读及前后字节一致；T17-release-evidence保存清单，后继T18不得混入T17验收或提交。
 

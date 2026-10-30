@@ -2,17 +2,16 @@
 > 最后更新: 2026-10-30 by requirements-analyst
 
 ## 当前状态
-T17新增R135/211/410/507通过：第13错误类ExecutionLimitError、单调预算/host取消/协作deadline、CLI严格flag、指南与预算应用均据§22及最终回执收口。T18仅规划未实现；R304OPEN，无T17性能窗，不tag/正式发布。
+T18-A新增R136/212/411/508通过，仅Windows受控exec/context/有界输出/局部资源错误/全局终止/Job后代与Close诊断门禁、CLI/指南/toolplan。其他平台Unsupported非已支持。仅本轮交付后停止，不HTTP或新迭代；R304OPEN，无性能窗不tag/正式发布。
 
 ## 证据
-- 冻结1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45/943104B，73内置/13错误类。
-- T17-independent-verification.md最终PASS：624harness/公开134/预算app40/自编14/旧全回归含C29/app33，人32/AI38作者实跑及11份文档SHA独立审计。
-- 早期110/121、118/122、CONCERNS及新oracle修正保留；合法帮助旗标与裸help/version路径、空for无虚构poll、双负号CODE沿旧语义，未改产品追绿。
-- attempt不补步不吞系统终止、cancel→deadline→budget、module共享与来源、native/空程序协作边界明确。不宣称硬实时/CPU/内存/权限沙箱或强制线程终止。
-- 旧C/B/A/T15/T14及v2按各历史hash与计数保持，旧12类是历史时点不是当前封闭总数。
+- 最终4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86/984064B，74内置/13错误类。
+- T18-A-independent-verification.md最终追加PASS：649harness/公开45/toolplan7/真实process12及旧全回归含T17/C；人指南22/AI26作者证据齐，独立最终文档审计以报告为准。
+- 默认权限关闭探针C0000008、E5及close修复、CONCERNS/NUL/keys新oracle失败保全，未重写旧计数。Job和故障注入是有界实测，非OS异常绝对保障或权限沙箱。
+- Context默认禁用、模块共享/跨会话隔离，局部timeout可恢复/全局资源不可吞，host_diagnostics不能被attempt抹掉，CLI/runner成功门禁失败闭合。
 
 ## 下一步
-交team-lead封T17快照提交；T18外部过程/HTTP生命周期需单独契约实现与独立验收，不能提前通过。
+交root/release完成本轮候选提交及收工后停止；不扩大到HTTP/T19/T20。旧v2/标签及原用户块保护由root继续维持。
 
 ## 阻塞/经验
-无需求侧阻塞。仅更新需求与本人记录，不编译、不跑产品、不Git。最终结论看报告追加最终节，保留原CONCERNS和失败时点，不用功能关闭R304。
+无需求侧阻塞；仅需求及本人记录，不编译、不运行产品、不Git。Windows通过不能外推Linux/macOS；新oracle启动前错误不得伪称产品失败，原证据仍保留。

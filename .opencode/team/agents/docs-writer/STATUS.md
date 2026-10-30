@@ -2,13 +2,13 @@
 > 最后更新：2026-10-30 by docs-writer
 
 ## 当前状态
-T17五人类指南T17入口和execution-limits.md已完成最终聚焦实跑，32/32提权通过，已收工。
+T18-A五人类指南+subprocess.md已完成，同最终4093714/984064B默认实跑22/22通过，已收工。
 
 ## 证据
-943104B/SHA1946ab9ca5162d68f83a9d098424bd0bafdf6feadc6ea90527e0db9e1db12c45；T17-guide-evidence.md与目录runs/manifest/verify.py。默认前31通过，末项模块canonicalize权限失败保原始partial/stderr；同字节授权提权32通过。未用620/F487。
+T18-A-guide-evidence.md与目录verify.py/runs/manifest/首次oracle失败；独占Temp/T18-A-docs/guide-fixture.exe SHA51b83f…27bee，与指定原件测前后均一致。提取教程check→授权run，22项具体见证与六指南hash保全。
 
-## 文档边界
-两token/默认unlimited/精确等号usage、CODE和argv、空程序0/2和4步、资源穿透attempt、模块真实faultfile。host取消无CLI Ctrl-C承诺，native/IO非硬打断，Rust三owned API仅规范引用未编译，不宣称token/毫秒级验收。
+## 边界
+首次keys排序作者oracle错误仅修验证器，完整失败保留，不改产品。文档明确74内置、exec三参四键、CRT/noimplicit shell、default-disabled session权限、raw/UTF8/exit、本地timeout可恢复与全局不可吞、回收诊断宿主例外。RustAPI为规范引用，非恶意沙箱、非WindowsUnsupported，R304OPEN。
 
 ## 下一步
-主调度独立收口与提交；R304OPEN，不改产品/spec/AI/dist，不编译/Git。仅受影响示例，旧历史例子及错误键保持。
+主调度统一交付后停止，不HTTP/新迭代。无AI/spec/产品/dist修改，不编译/Git，仅小fixture复制和项目Temp。

@@ -2,20 +2,21 @@
 > 最后更新：2026-10-30 by release-manager
 
 ## 当前状态
-T17最终独立PASS候选已精确封存并第一时间通知root可GO下一阶段；文档/六组提交准备完成。本角色不Git、不编译、不改源/profile。R304OPEN，无本批性能窗，非正式发布、不打tag。
+T18-A最后一轮候选功能独立PASS，精确归档/README/交付清单/六组提交准备完成。用户要求本轮后停止，无后继设计或源码；本角色不Git、不编译、不改源/profile。R304OPEN，无性能窗口、不tag，不宣称正式发布。
 
-## 保全与事实
-- target/dist943104B SHA1946AB9CA5162D68F83A9D098424BD0BAFDF6FEADC6EA90527E0DB9E1DB12C45；ZIP629305B SHA3D9155399DFDA66A3B9B127A3CC11BF7954DE12354E59B52727C129C88683F83，23成员（18src+2Cargo+相对3639216变化2测试+exe），全回读和输入前后一致。Temp/T17-release/lfz-T17-1946ab.exe另存，之后不改dist。
-- T17-independent-verification.md最终追加PASS：624harness/公开134/预算应用40/自编14/旧全回归及C29/app33。人指南32/AI38为作者实跑，经独立SHA审计，不冒称独立重跑。首次121/122与CONCERNS全部保留，没有覆盖失败历史。
-- README/checklist明确步数/协作deadline/host token边界、默认unlimited、13类ExecutionLimitError不能attempt吞、副作用不回滚、native/阻塞IO内部不强制poll；不冒称资源或权限沙箱。
+## 最终保全
+- target/dist984064B、SHA4093714B2DC61BB72DBC4F43DB67A798A9BCAF152AD33A11D4D7457D1F7D9C86。ZIP660476B、SHA C37E323CFEA252EC416F85A8052E627C7771E43A6CEE0762E853DADD73C08B38，26项=递归21src+2Cargo+2测试+exe，含process_control/windows.rs与fixture.rs，全回读及冻结前后输入一致。
+- T18-A-release-evidence/build/source-hashes/ZIP；Temp/T18-A-release/lfz-T18-A-409371.exe另存。dist复制后不再更动，不额外target或重编译。
+- T18-A-independent-verification最终追加PASS：649 harness/公开45/toolplan7/自编12/旧全回归含T17 134app40、C29app33。人指南22/AI26分别作者证据，Windows已验，非Windows Unsupported。
+- 默认受限环境C0000008/权限失败、E5 Close修正、NUL新oracle首次失败及全部原始证据保持；README/checklist区分最终功能PASS与未通过效率、未实施其余计划。
 
-## Git准备
-- T17-release-evidence/prepare-checkpoint.py固定baseline3639216；源18+两测试只从固定SHA的T17 ZIP产stagecopy/hash，实际变化4src和2测试入组，所有未来活动源/测试排除。
-- 23份snapshot=18src+2tests+3用户；用户28/1/1三块过滤副本仅Temp，不改工作树。T18路径除三个显式规划白名单外排除，不能把后继实现当T17验收。
-- 六组清单当前162路径（生成时点），全部role/root最后落盘后主会话首次提交前刷新一次，开始提交后不重跑。普通路径按direct_stage_paths，源/测试/用户按staged_snapshot_paths做index，不宽泛add活动T18源码。
+## Git准备及停止边界
+- prepare-checkpoint.py baseline123230f，21源码/2测试仅从固定SHA ZIP产stagecopy/hash，原3用户块28/1/1各唯一过滤副本仅Temp，工作树原文不动。26份snapshot记录。
+- 六组当前182路径（生成时点），root/所有角色最终记录齐后首次提交前再刷新，开始提交后不重跑；不宽泛stage，旧v2/Cargo/profile不动。
+- 规划白名单为空，不纳后继T19/T18-B产物；本轮后不进入HTTP等新迭代。root代最后提交/推送并删除automation停止，实际回执未出现前不写已经推送/删除。
 
 ## 下一步
-主会话按六组快照提交/推送T17；活动后继源码继续未提交，不能误报只剩用户3块。没有收口准备阻塞，本角色已释放slot。
+本角色材料已齐供root完成最终Git与停止动作，无交付准备阻塞。功能结束不等于R304通过，后续计划未实施；完成本轮停止。
 
 ## 关键经验
 staged快照只排除用户初始28/1/1新增，工作树原文保留，禁止git add .或整文件stage混合记录。新skill/exe不冒用旧v2 manifest；旧9输入从原ZIP恢复，旧成绩不改算。性能门槛不能用局部收益抵消；候选保存与正式发布明确分开。

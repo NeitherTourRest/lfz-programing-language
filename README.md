@@ -6,7 +6,17 @@
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
-## 当前记录：T17 协作式执行限额候选（2026-10-30）
+## 本轮结束：T18-A Windows受控子进程候选（2026-10-30）
+
+当前1.4.0候选、74内置/13错误类，新增`exec(argv, timeoutMs, maxOutputBytes)`，默认禁用，仅显式`--allow-process`启用本session能力。只接受显式绝对.exe，不搜索PATH或隐式拼shell；用户仍可显式选择shell，不视为安全沙箱。Windows后端已验收，非Windows受控Unsupported，不声称跨平台已实现。
+
+最终快照984064B、SHA256 `4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86`，[递归源码/测试/exe归档](docs/reports/T18-A-release-evidence/build.json)冻结26成员，包含Windows后端及fixture源码。[最终独立验收](docs/reports/T18-A-independent-verification.md)追加PASS：649 harness、公开45、toolplan7、自编真实进程12、旧全部回归（含T17公开134/预算app40、C公开29/app33）通过；人指南22/AI26为分列作者实跑。
+
+详见[子进程指南](docs/guide/subprocess.md)及[工具计划应用](app/T18-A-TOOLPLAN.md)。输出按两流合并原始字节限额、严格UTF8，局部timeout可被attempt恢复，全局deadline/取消仍穿透；Windows Job与显式清理不等于权限隔离或硬实时保障。执行继承host环境/cwd、stdin为EOF，不提供任意env/cwd/stdin配置。真实资源关闭错误诊断不会伪装为成功。
+
+默认受限环境的C0000008/权限失败、E5阶段Close修正、NUL新oracle首次失败及全部原始证据均保留，不改写为一次通过。R304仍OPEN，无本轮性能计时，候选非正式发布、不打tag。**按用户要求本轮到此停止，不启动HTTP或其它后继设计/源码；其余计划未实施。** 最终提交/推送与停止自动化由主会话确认实际回执。以下T17/C为历史指纹记录。
+
+## T17 历史协作式执行限额候选（绑定1946ab）
 
 T17提供可选`--max-steps N`与`--timeout-ms N`，默认不限额；Rust宿主另可注入取消token。步数按实际stmt/expr入口计，模块初始化、函数和回调共享会话余量；执行终止为新增第13类ExecutionLimitError，不能被attempt吞掉，既有副作用不回滚。
 

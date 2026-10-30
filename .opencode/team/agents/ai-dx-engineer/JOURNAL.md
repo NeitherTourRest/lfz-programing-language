@@ -95,3 +95,9 @@
 - 四skill/AI入口§6.5与13错误类同步，先check再限额run、两token严格usage及协作终止边界。
 - 同1946ab/943104B提权38/38 exit0，默认37/38模块canonicalize权限失败保留，manifest记录五文档与原始输出。
 - 未编译/Git/改源/人指南/旧v2；R304OPEN，非性能或正式发布。下一步team-lead收口，无阻塞。
+
+## [2026-10-30] T18-A AI子进程指南及26例完成
+- 四skill/AI入口§6.6与74内置同步，显式能力/绝对argv/额度/错误恢复/cleanup与平台边界清晰。
+- 同4093714/984064B、独占51b83f fixture正常OS权限一次26/26 exit0；五文档前后hash一致，原始参数输出与manifest保全。
+- 未编译/Git/改源/人指南/旧v2；R304OPEN，无性能或正式发布声明。本轮交付后停止，不HTTP。
+- 下一步team-lead收口，无阻塞。
