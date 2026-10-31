@@ -1,0 +1,657 @@
+{
+  "date": "2026-10-31",
+  "binary_sha256": "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+  "binary_bytes": 1029120,
+  "source_sha256": "77187a030c515d08dfd948091c918c91f63a347161361f6e281f5da244b45fdc",
+  "network_scope": "http://127.0.0.1:50272",
+  "status": "completed",
+  "rows": [
+    {
+      "name": "disabled",
+      "arguments": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\httpplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\report.json"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"AssertionError\",\"message\":\"httpplan: 需要 --allow-http\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":9,\"col\":51,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":39,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":31,\"func\":\"main\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":31,\"func\":\"<fn>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":9,\"func\":\"runJob\"}]}\n",
+      "stderr": "",
+      "output_hex": "4b454550",
+      "passed": true
+    },
+    {
+      "name": "process_capability_does_not_grant_http",
+      "arguments": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--allow-process",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\httpplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\report.json"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"AssertionError\",\"message\":\"httpplan: 需要 --allow-http\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":9,\"col\":51,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":39,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":31,\"func\":\"main\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":31,\"func\":\"<fn>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":9,\"func\":\"runJob\"}]}\n",
+      "stderr": "",
+      "output_hex": "4b454550",
+      "passed": true
+    },
+    {
+      "name": "batch_first",
+      "arguments": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--allow-http",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\httpplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\report.json"
+      ],
+      "exit": 0,
+      "stdout": "{\"failed\":3,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-app\\\\report.json\",\"succeeded\":5,\"total\":8}\n",
+      "stderr": "",
+      "output_hex": "7b226661696c6564223a332c22726f7773223a5b7b226572726f72223a6e756c6c2c226e616d65223a226f6b222c226f6b223a747275652c2276616c7565223a7b22626f6479223a227265616479222c2268656164657273223a5b5b22636f6e74656e742d6c656e677468222c2235225d5d2c22737461747573223a3230307d7d2c7b226572726f72223a6e756c6c2c226e616d65223a22706f7374222c226f6b223a747275652c2276616c7565223a7b22626f6479223a227b5c226d6574686f645c223a5c22504f53545c222c5c22706174685c223a5c222f6563686f2f2545342542382541443f713d6f6e6525323074776f5c222c5c22626f64795c223a5c22e695b0e68daef09f99825c222c5c227461675c223a5c2264656d6f5c227d222c2268656164657273223a5b5b22636f6e74656e742d6c656e677468222c223837225d2c5b22782d7265706c79222c226f6e65225d2c5b22782d7265706c79222c2274776f225d5d2c22737461747573223a3230307d7d2c7b226572726f72223a6e756c6c2c226e616d65223a22343034222c226f6b223a747275652c2276616c7565223a7b22626f6479223a226d697373696e67222c2268656164657273223a5b5b22636f6e74656e742d6c656e677468222c2237225d5d2c22737461747573223a3430347d7d2c7b226572726f72223a6e756c6c2c226e616d65223a22333032222c226f6b223a747275652c2276616c7565223a7b22626f6479223a227265646972656374222c2268656164657273223a5b5b22636f6e74656e742d6c656e677468222c2238225d2c5b226c6f636174696f6e222c222f746172676574225d5d2c22737461747573223a3330327d7d2c7b226572726f72223a7b22636c617373223a2256616c75654572726f72222c22636f6c223a33322c226c696e65223a372c226d657373616765223a224854545020e5938de5ba9420626f647920e4b88de698afe59088e6b395205554462d38222c2274726163656261636b223a5b7b22636f6c223a312c2266756e63223a223c6d6f64756c653e222c226c696e65223a33397d2c7b22636f6c223a31362c2266756e63223a226d61696e222c226c696e65223a33317d2c7b22636f6c223a32392c2266756e63223a223c666e3e222c226c696e65223a33317d2c7b22636f6c223a31382c2266756e63223a2272756e4a6f62222c226c696e65223a377d2c7b22636f6c223a33322c2266756e63223a223c666e3e222c226c696e65223a377d5d7d2c226e616d65223a22757466385f6572726f72222c226f6b223a66616c73652c2276616c7565223a6e756c6c7d2c7b226572726f72223a7b22636c617373223a2256616c75654572726f72222c22636f6c223a33322c226c696e65223a372c226d657373616765223a224854545020e8afb7e6b182e697b6e997b4e4b88ae99990e5b7b2e588b0222c2274726163656261636b223a5b7b22636f6c223a312c2266756e63223a223c6d6f64756c653e222c226c696e65223a33397d2c7b22636f6c223a31362c2266756e63223a226d61696e222c226c696e65223a33317d2c7b22636f6c223a32392c2266756e63223a223c666e3e222c226c696e65223a33317d2c7b22636f6c223a31382c2266756e63223a2272756e4a6f62222c226c696e65223a377d2c7b22636f6c223a33322c2266756e63223a223c666e3e222c226c696e65223a377d5d7d2c226e616d65223a2274696d656f7574222c226f6b223a66616c73652c2276616c7565223a6e756c6c7d2c7b226572726f72223a7b22636c617373223a2256616c75654572726f72222c22636f6c223a33322c226c696e65223a372c226d657373616765223a224854545020e5938de5ba94e8b685e8bf87e5ad97e88a82e4b88ae99990222c2274726163656261636b223a5b7b22636f6c223a312c2266756e63223a223c6d6f64756c653e222c226c696e65223a33397d2c7b22636f6c223a31362c2266756e63223a226d61696e222c226c696e65223a33317d2c7b22636f6c223a32392c2266756e63223a223c666e3e222c226c696e65223a33317d2c7b22636f6c223a31382c2266756e63223a2272756e4a6f62222c226c696e65223a377d2c7b22636f6c223a33322c2266756e63223a223c666e3e222c226c696e65223a377d5d7d2c226e616d65223a226c696d6974222c226f6b223a66616c73652c2276616c7565223a6e756c6c7d2c7b226572726f72223a6e756c6c2c226e616d65223a226166746572222c226f6b223a747275652c2276616c7565223a7b22626f6479223a227265616479222c2268656164657273223a5b5b22636f6e74656e742d6c656e677468222c2235225d5d2c22737461747573223a3230307d7d5d2c22737563636565646564223a352c22746f74616c223a387d0a",
+      "passed": true,
+      "report": {
+        "failed": 3,
+        "rows": [
+          {
+            "error": null,
+            "name": "ok",
+            "ok": true,
+            "value": {
+              "body": "ready",
+              "headers": [
+                [
+                  "content-length",
+                  "5"
+                ]
+              ],
+              "status": 200
+            }
+          },
+          {
+            "error": null,
+            "name": "post",
+            "ok": true,
+            "value": {
+              "body": "{\"method\":\"POST\",\"path\":\"/echo/%E4%B8%AD?q=one%20two\",\"body\":\"数据🙂\",\"tag\":\"demo\"}",
+              "headers": [
+                [
+                  "content-length",
+                  "87"
+                ],
+                [
+                  "x-reply",
+                  "one"
+                ],
+                [
+                  "x-reply",
+                  "two"
+                ]
+              ],
+              "status": 200
+            }
+          },
+          {
+            "error": null,
+            "name": "404",
+            "ok": true,
+            "value": {
+              "body": "missing",
+              "headers": [
+                [
+                  "content-length",
+                  "7"
+                ]
+              ],
+              "status": 404
+            }
+          },
+          {
+            "error": null,
+            "name": "302",
+            "ok": true,
+            "value": {
+              "body": "redirect",
+              "headers": [
+                [
+                  "content-length",
+                  "8"
+                ],
+                [
+                  "location",
+                  "/target"
+                ]
+              ],
+              "status": 302
+            }
+          },
+          {
+            "error": {
+              "class": "ValueError",
+              "col": 32,
+              "line": 7,
+              "message": "HTTP 响应 body 不是合法 UTF-8",
+              "traceback": [
+                {
+                  "col": 1,
+                  "func": "<module>",
+                  "line": 39
+                },
+                {
+                  "col": 16,
+                  "func": "main",
+                  "line": 31
+                },
+                {
+                  "col": 29,
+                  "func": "<fn>",
+                  "line": 31
+                },
+                {
+                  "col": 18,
+                  "func": "runJob",
+                  "line": 7
+                },
+                {
+                  "col": 32,
+                  "func": "<fn>",
+                  "line": 7
+                }
+              ]
+            },
+            "name": "utf8_error",
+            "ok": false,
+            "value": null
+          },
+          {
+            "error": {
+              "class": "ValueError",
+              "col": 32,
+              "line": 7,
+              "message": "HTTP 请求时间上限已到",
+              "traceback": [
+                {
+                  "col": 1,
+                  "func": "<module>",
+                  "line": 39
+                },
+                {
+                  "col": 16,
+                  "func": "main",
+                  "line": 31
+                },
+                {
+                  "col": 29,
+                  "func": "<fn>",
+                  "line": 31
+                },
+                {
+                  "col": 18,
+                  "func": "runJob",
+                  "line": 7
+                },
+                {
+                  "col": 32,
+                  "func": "<fn>",
+                  "line": 7
+                }
+              ]
+            },
+            "name": "timeout",
+            "ok": false,
+            "value": null
+          },
+          {
+            "error": {
+              "class": "ValueError",
+              "col": 32,
+              "line": 7,
+              "message": "HTTP 响应超过字节上限",
+              "traceback": [
+                {
+                  "col": 1,
+                  "func": "<module>",
+                  "line": 39
+                },
+                {
+                  "col": 16,
+                  "func": "main",
+                  "line": 31
+                },
+                {
+                  "col": 29,
+                  "func": "<fn>",
+                  "line": 31
+                },
+                {
+                  "col": 18,
+                  "func": "runJob",
+                  "line": 7
+                },
+                {
+                  "col": 32,
+                  "func": "<fn>",
+                  "line": 7
+                }
+              ]
+            },
+            "name": "limit",
+            "ok": false,
+            "value": null
+          },
+          {
+            "error": null,
+            "name": "after",
+            "ok": true,
+            "value": {
+              "body": "ready",
+              "headers": [
+                [
+                  "content-length",
+                  "5"
+                ]
+              ],
+              "status": 200
+            }
+          }
+        ],
+        "succeeded": 5,
+        "total": 8
+      }
+    },
+    {
+      "name": "batch_repeat",
+      "arguments": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--allow-http",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\httpplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\report.json"
+      ],
+      "exit": 0,
+      "stdout": "{\"failed\":3,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-app\\\\report.json\",\"succeeded\":5,\"total\":8}\n",
+      "stderr": "",
+      "output_hex": "7b226661696c6564223a332c22726f7773223a5b7b226572726f72223a6e756c6c2c226e616d65223a226f6b222c226f6b223a747275652c2276616c7565223a7b22626f6479223a227265616479222c2268656164657273223a5b5b22636f6e74656e742d6c656e677468222c2235225d5d2c22737461747573223a3230307d7d2c7b226572726f72223a6e756c6c2c226e616d65223a22706f7374222c226f6b223a747275652c2276616c7565223a7b22626f6479223a227b5c226d6574686f645c223a5c22504f53545c222c5c22706174685c223a5c222f6563686f2f2545342542382541443f713d6f6e6525323074776f5c222c5c22626f64795c223a5c22e695b0e68daef09f99825c222c5c227461675c223a5c2264656d6f5c227d222c2268656164657273223a5b5b22636f6e74656e742d6c656e677468222c223837225d2c5b22782d7265706c79222c226f6e65225d2c5b22782d7265706c79222c2274776f225d5d2c22737461747573223a3230307d7d2c7b226572726f72223a6e756c6c2c226e616d65223a22343034222c226f6b223a747275652c2276616c7565223a7b22626f6479223a226d697373696e67222c2268656164657273223a5b5b22636f6e74656e742d6c656e677468222c2237225d5d2c22737461747573223a3430347d7d2c7b226572726f72223a6e756c6c2c226e616d65223a22333032222c226f6b223a747275652c2276616c7565223a7b22626f6479223a227265646972656374222c2268656164657273223a5b5b22636f6e74656e742d6c656e677468222c2238225d2c5b226c6f636174696f6e222c222f746172676574225d5d2c22737461747573223a3330327d7d2c7b226572726f72223a7b22636c617373223a2256616c75654572726f72222c22636f6c223a33322c226c696e65223a372c226d657373616765223a224854545020e5938de5ba9420626f647920e4b88de698afe59088e6b395205554462d38222c2274726163656261636b223a5b7b22636f6c223a312c2266756e63223a223c6d6f64756c653e222c226c696e65223a33397d2c7b22636f6c223a31362c2266756e63223a226d61696e222c226c696e65223a33317d2c7b22636f6c223a32392c2266756e63223a223c666e3e222c226c696e65223a33317d2c7b22636f6c223a31382c2266756e63223a2272756e4a6f62222c226c696e65223a377d2c7b22636f6c223a33322c2266756e63223a223c666e3e222c226c696e65223a377d5d7d2c226e616d65223a22757466385f6572726f72222c226f6b223a66616c73652c2276616c7565223a6e756c6c7d2c7b226572726f72223a7b22636c617373223a2256616c75654572726f72222c22636f6c223a33322c226c696e65223a372c226d657373616765223a224854545020e8afb7e6b182e697b6e997b4e4b88ae99990e5b7b2e588b0222c2274726163656261636b223a5b7b22636f6c223a312c2266756e63223a223c6d6f64756c653e222c226c696e65223a33397d2c7b22636f6c223a31362c2266756e63223a226d61696e222c226c696e65223a33317d2c7b22636f6c223a32392c2266756e63223a223c666e3e222c226c696e65223a33317d2c7b22636f6c223a31382c2266756e63223a2272756e4a6f62222c226c696e65223a377d2c7b22636f6c223a33322c2266756e63223a223c666e3e222c226c696e65223a377d5d7d2c226e616d65223a2274696d656f7574222c226f6b223a66616c73652c2276616c7565223a6e756c6c7d2c7b226572726f72223a7b22636c617373223a2256616c75654572726f72222c22636f6c223a33322c226c696e65223a372c226d657373616765223a224854545020e5938de5ba94e8b685e8bf87e5ad97e88a82e4b88ae99990222c2274726163656261636b223a5b7b22636f6c223a312c2266756e63223a223c6d6f64756c653e222c226c696e65223a33397d2c7b22636f6c223a31362c2266756e63223a226d61696e222c226c696e65223a33317d2c7b22636f6c223a32392c2266756e63223a223c666e3e222c226c696e65223a33317d2c7b22636f6c223a31382c2266756e63223a2272756e4a6f62222c226c696e65223a377d2c7b22636f6c223a33322c2266756e63223a223c666e3e222c226c696e65223a377d5d7d2c226e616d65223a226c696d6974222c226f6b223a66616c73652c2276616c7565223a6e756c6c7d2c7b226572726f72223a6e756c6c2c226e616d65223a226166746572222c226f6b223a747275652c2276616c7565223a7b22626f6479223a227265616479222c2268656164657273223a5b5b22636f6e74656e742d6c656e677468222c2235225d5d2c22737461747573223a3230307d7d5d2c22737563636565646564223a352c22746f74616c223a387d0a",
+      "passed": true,
+      "report": {
+        "failed": 3,
+        "rows": [
+          {
+            "error": null,
+            "name": "ok",
+            "ok": true,
+            "value": {
+              "body": "ready",
+              "headers": [
+                [
+                  "content-length",
+                  "5"
+                ]
+              ],
+              "status": 200
+            }
+          },
+          {
+            "error": null,
+            "name": "post",
+            "ok": true,
+            "value": {
+              "body": "{\"method\":\"POST\",\"path\":\"/echo/%E4%B8%AD?q=one%20two\",\"body\":\"数据🙂\",\"tag\":\"demo\"}",
+              "headers": [
+                [
+                  "content-length",
+                  "87"
+                ],
+                [
+                  "x-reply",
+                  "one"
+                ],
+                [
+                  "x-reply",
+                  "two"
+                ]
+              ],
+              "status": 200
+            }
+          },
+          {
+            "error": null,
+            "name": "404",
+            "ok": true,
+            "value": {
+              "body": "missing",
+              "headers": [
+                [
+                  "content-length",
+                  "7"
+                ]
+              ],
+              "status": 404
+            }
+          },
+          {
+            "error": null,
+            "name": "302",
+            "ok": true,
+            "value": {
+              "body": "redirect",
+              "headers": [
+                [
+                  "content-length",
+                  "8"
+                ],
+                [
+                  "location",
+                  "/target"
+                ]
+              ],
+              "status": 302
+            }
+          },
+          {
+            "error": {
+              "class": "ValueError",
+              "col": 32,
+              "line": 7,
+              "message": "HTTP 响应 body 不是合法 UTF-8",
+              "traceback": [
+                {
+                  "col": 1,
+                  "func": "<module>",
+                  "line": 39
+                },
+                {
+                  "col": 16,
+                  "func": "main",
+                  "line": 31
+                },
+                {
+                  "col": 29,
+                  "func": "<fn>",
+                  "line": 31
+                },
+                {
+                  "col": 18,
+                  "func": "runJob",
+                  "line": 7
+                },
+                {
+                  "col": 32,
+                  "func": "<fn>",
+                  "line": 7
+                }
+              ]
+            },
+            "name": "utf8_error",
+            "ok": false,
+            "value": null
+          },
+          {
+            "error": {
+              "class": "ValueError",
+              "col": 32,
+              "line": 7,
+              "message": "HTTP 请求时间上限已到",
+              "traceback": [
+                {
+                  "col": 1,
+                  "func": "<module>",
+                  "line": 39
+                },
+                {
+                  "col": 16,
+                  "func": "main",
+                  "line": 31
+                },
+                {
+                  "col": 29,
+                  "func": "<fn>",
+                  "line": 31
+                },
+                {
+                  "col": 18,
+                  "func": "runJob",
+                  "line": 7
+                },
+                {
+                  "col": 32,
+                  "func": "<fn>",
+                  "line": 7
+                }
+              ]
+            },
+            "name": "timeout",
+            "ok": false,
+            "value": null
+          },
+          {
+            "error": {
+              "class": "ValueError",
+              "col": 32,
+              "line": 7,
+              "message": "HTTP 响应超过字节上限",
+              "traceback": [
+                {
+                  "col": 1,
+                  "func": "<module>",
+                  "line": 39
+                },
+                {
+                  "col": 16,
+                  "func": "main",
+                  "line": 31
+                },
+                {
+                  "col": 29,
+                  "func": "<fn>",
+                  "line": 31
+                },
+                {
+                  "col": 18,
+                  "func": "runJob",
+                  "line": 7
+                },
+                {
+                  "col": 32,
+                  "func": "<fn>",
+                  "line": 7
+                }
+              ]
+            },
+            "name": "limit",
+            "ok": false,
+            "value": null
+          },
+          {
+            "error": null,
+            "name": "after",
+            "ok": true,
+            "value": {
+              "body": "ready",
+              "headers": [
+                [
+                  "content-length",
+                  "5"
+                ]
+              ],
+              "status": 200
+            }
+          }
+        ],
+        "succeeded": 5,
+        "total": 8
+      }
+    },
+    {
+      "name": "global_deadline_not_caught",
+      "arguments": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--allow-http",
+        "--timeout-ms",
+        "40",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\httpplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\report.json"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":7,\"col\":32,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":39,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":31,\"func\":\"main\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":31,\"func\":\"<fn>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":7,\"func\":\"runJob\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":7,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "output_hex": "4b454550",
+      "passed": true
+    },
+    {
+      "name": "prevalidate_before_network",
+      "arguments": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--allow-http",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\httpplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\report.json"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"AssertionError\",\"message\":\"httpplan: 任务缺少 method\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":4,\"col\":14,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":39,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":22,\"func\":\"main\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\httpplan.lfz\",\"line\":4,\"func\":\"require\"}]}\n",
+      "stderr": "",
+      "output_hex": "4b454550",
+      "passed": true
+    },
+    {
+      "name": "empty_plan",
+      "arguments": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--allow-http",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\httpplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-app\\report.json"
+      ],
+      "exit": 0,
+      "stdout": "{\"failed\":0,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-app\\\\report.json\",\"succeeded\":0,\"total\":0}\n",
+      "stderr": "",
+      "output_hex": "7b226661696c6564223a302c22726f7773223a5b5d2c22737563636565646564223a302c22746f74616c223a307d0a",
+      "passed": true
+    }
+  ],
+  "server_requests": [
+    {
+      "method": "GET",
+      "path": "/ok",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "POST",
+      "path": "/echo/%E4%B8%AD?q=one%20two",
+      "body_hex": "e695b0e68daef09f9982",
+      "tag": "demo"
+    },
+    {
+      "method": "GET",
+      "path": "/missing",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "GET",
+      "path": "/redirect",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "GET",
+      "path": "/bad",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "GET",
+      "path": "/slow",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "GET",
+      "path": "/large",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "GET",
+      "path": "/after",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "GET",
+      "path": "/ok",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "POST",
+      "path": "/echo/%E4%B8%AD?q=one%20two",
+      "body_hex": "e695b0e68daef09f9982",
+      "tag": "demo"
+    },
+    {
+      "method": "GET",
+      "path": "/missing",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "GET",
+      "path": "/redirect",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "GET",
+      "path": "/bad",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "GET",
+      "path": "/slow",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "GET",
+      "path": "/large",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "GET",
+      "path": "/after",
+      "body_hex": "",
+      "tag": null
+    },
+    {
+      "method": "GET",
+      "path": "/slow",
+      "body_hex": "",
+      "tag": null
+    }
+  ],
+  "total": 7,
+  "passed": 7,
+  "server_shutdown_complete": true
+}

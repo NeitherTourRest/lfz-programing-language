@@ -7,3 +7,6 @@ T17-BUDGETS.md -text
 toolplan.lfz -text
 verify_toolplan.py -text
 T18-A-TOOLPLAN.md -text
+httpplan.lfz -text
+verify_httpplan.py -text
+T18-B-HTTPPLAN.md -text

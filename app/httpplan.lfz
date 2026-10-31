@@ -1,0 +1,39 @@
+#42
+// Explicit HTTP task plan; response statuses, including 4xx, are ordinary values.
+fn require(ok, message) {
+    if !ok { fail("httpplan: ${message}") }
+}
+fn runJob(job) {
+    let result = attempt(() => httpRequest(job.method, job.url, job.headers, job.body, job.timeoutMs, job.maxResponseBytes))
+    if !result.ok {
+        if result.error.message == "HTTP 能力未启用" { fail("httpplan: 需要 --allow-http") }
+    }
+    ({ name: job.name, ok: result.ok, value: result.value, error: result.error })
+}
+fn main(args) {
+    require(len(args) == 2, "用法: httpplan CONFIG.json OUTPUT.json")
+    for path in args { require(len(trim(path)) > 0, "路径不能为空") }
+    require(args[0] != args[1], "配置与输出路径不能字面相同")
+    let jobs = jsonParse(readFile(args[0]))
+    require(type(jobs) == "array", "配置必须是任务array")
+    for job in jobs {
+        require(type(job) == "struct", "任务必须是object")
+        for key in ["name", "method", "url", "headers", "body", "timeoutMs", "maxResponseBytes"] {
+            require(has(key, job), "任务缺少 ${key}")
+        }
+        for key in ["name", "method", "url", "body"] {
+            require(type(job[key]) == "string", "任务 ${key} 必须是string")
+        }
+        require(type(job.headers) == "array", "任务headers必须是pair array")
+        require(type(job.timeoutMs) == "int", "任务timeoutMs必须是int")
+        require(type(job.maxResponseBytes) == "int", "任务maxResponseBytes必须是int")
+    }
+    let rows = map((job) => runJob(job), jobs)
+    let succeeded = len(filter((row) => row.ok, rows))
+    let report = { total: len(rows), succeeded: succeeded, failed: len(rows) - succeeded, rows: rows }
+    let encoded = jsonStringify(report) + "\n"
+    let summary = jsonStringify({ total: len(rows), succeeded: succeeded, failed: len(rows) - succeeded, path: args[1] })
+    writeFile(args[1], encoded)
+    print(summary)
+}
+main(argv())

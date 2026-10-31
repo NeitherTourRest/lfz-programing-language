@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-31",
+  "binary_sha256": "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+  "binary_bytes": 1029120,
+  "files": [
+    {
+      "path": "app/httpplan.lfz",
+      "bytes": 1954,
+      "sha256": "77187a030c515d08dfd948091c918c91f63a347161361f6e281f5da244b45fdc"
+    },
+    {
+      "path": "app/verify_httpplan.py",
+      "bytes": 8559,
+      "sha256": "24b54b51c1d49a90b441dfb12e1d0ae7e27ef8b616202a085a418d3f178af596"
+    },
+    {
+      "path": "app/T18-B-HTTPPLAN.md",
+      "bytes": 6557,
+      "sha256": "e56332c2c1a25ce201a87c96197401a1001489ee63d71ac8cd3a6c991202499c"
+    },
+    {
+      "path": "app/t18b-evidence/default-permission-failure.json",
+      "bytes": 9672,
+      "sha256": "c095a327e01452a0886284c8b32dbbbcd48e03ccf5956060facd2085ae72b160"
+    },
+    {
+      "path": "app/t18b-evidence/results.json",
+      "bytes": 27948,
+      "sha256": "2cb300a8aae301dcb3e475415d6bed24209b7399faff22cb8037e7d73b68119e"
+    }
+  ]
+}
