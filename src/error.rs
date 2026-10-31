@@ -211,7 +211,7 @@ impl OverflowMsg {
     }
 }
 
-/// `ValueError` 子消息 —— 既有值/JSON消息及契约 §23.2 的十项子进程消息。
+/// `ValueError` 子消息 —— 既有值/JSON消息、§23.2 子进程与 §24.3 HTTP 消息。
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum ValueMsg {
     /// `无法把 {src} 转换为 {dst}（'{text}'）`
@@ -251,6 +251,28 @@ pub enum ValueMsg {
     ProcessOutputLimit,
     /// `子进程输出不是合法 UTF-8`（§23.2）。
     ProcessUtf8,
+    /// `HTTP 能力未启用`（§24.3）。
+    HttpDisabled,
+    /// `HTTP method 不受支持`（§24.3）。
+    HttpMethod,
+    /// `HTTP URL 非法或超出长度上限`（§24.3）。
+    HttpUrl,
+    /// `HTTP headers 非法或超出上限`（§24.3）。
+    HttpHeaders,
+    /// `HTTP body 非法或超出上限`（§24.3）。
+    HttpBody,
+    /// `HTTP timeoutMs 必须在 1..600000 范围内`（§24.3）。
+    HttpTimeoutRange,
+    /// `HTTP maxResponseBytes 必须在 0..16777216 范围内`（§24.3）。
+    HttpResponseRange,
+    /// `当前平台不支持受控 HTTP`（§24.3）。
+    HttpUnsupported,
+    /// `HTTP 请求时间上限已到`（§24.3）。
+    HttpTimeout,
+    /// `HTTP 响应超过字节上限`（§24.3）。
+    HttpResponseLimit,
+    /// `HTTP 响应 body 不是合法 UTF-8`（§24.3）。
+    HttpUtf8,
 }
 
 impl ValueMsg {
@@ -279,6 +301,17 @@ impl ValueMsg {
             ValueMsg::ProcessTimeout => "子进程执行时间上限已到".to_string(),
             ValueMsg::ProcessOutputLimit => "子进程输出超过字节上限".to_string(),
             ValueMsg::ProcessUtf8 => "子进程输出不是合法 UTF-8".to_string(),
+            ValueMsg::HttpDisabled => "HTTP 能力未启用".to_string(),
+            ValueMsg::HttpMethod => "HTTP method 不受支持".to_string(),
+            ValueMsg::HttpUrl => "HTTP URL 非法或超出长度上限".to_string(),
+            ValueMsg::HttpHeaders => "HTTP headers 非法或超出上限".to_string(),
+            ValueMsg::HttpBody => "HTTP body 非法或超出上限".to_string(),
+            ValueMsg::HttpTimeoutRange => "HTTP timeoutMs 必须在 1..600000 范围内".to_string(),
+            ValueMsg::HttpResponseRange => "HTTP maxResponseBytes 必须在 0..16777216 范围内".to_string(),
+            ValueMsg::HttpUnsupported => "当前平台不支持受控 HTTP".to_string(),
+            ValueMsg::HttpTimeout => "HTTP 请求时间上限已到".to_string(),
+            ValueMsg::HttpResponseLimit => "HTTP 响应超过字节上限".to_string(),
+            ValueMsg::HttpUtf8 => "HTTP 响应 body 不是合法 UTF-8".to_string(),
         }
     }
 }
@@ -1107,6 +1140,40 @@ mod tests {
         for (msg, expected) in cases {
             assert_chars_eq(&msg.message(), expected);
             let span = Span::new(41, 23);
+            let error = LzError::Value { msg: msg.clone(), span };
+            assert_eq!(error.class_name(), "ValueError");
+            assert_chars_eq(&error.message(), expected);
+            assert_eq!(error.span(), Some(span));
+            assert_eq!(error.to_string(), format!("ValueError: {expected}"));
+            let boxed = value(msg, span);
+            assert_eq!(*boxed, error);
+            assert_eq!(boxed.class_name(), "ValueError");
+            assert_eq!(boxed.span(), Some(span));
+            assert_chars_eq(&boxed.message(), expected);
+            assert_eq!(boxed.to_string(), format!("ValueError: {expected}"));
+        }
+    }
+
+    /// §24.3：HTTP 细分保持 ValueError，精确消息及非默认位置不丢失。
+    #[test]
+    fn http_value_messages_match_contract() {
+        let cases = [
+            (ValueMsg::HttpDisabled, "HTTP 能力未启用"),
+            (ValueMsg::HttpMethod, "HTTP method 不受支持"),
+            (ValueMsg::HttpUrl, "HTTP URL 非法或超出长度上限"),
+            (ValueMsg::HttpHeaders, "HTTP headers 非法或超出上限"),
+            (ValueMsg::HttpBody, "HTTP body 非法或超出上限"),
+            (ValueMsg::HttpTimeoutRange, "HTTP timeoutMs 必须在 1..600000 范围内"),
+            (ValueMsg::HttpResponseRange, "HTTP maxResponseBytes 必须在 0..16777216 范围内"),
+            (ValueMsg::HttpUnsupported, "当前平台不支持受控 HTTP"),
+            (ValueMsg::HttpTimeout, "HTTP 请求时间上限已到"),
+            (ValueMsg::HttpResponseLimit, "HTTP 响应超过字节上限"),
+            (ValueMsg::HttpUtf8, "HTTP 响应 body 不是合法 UTF-8"),
+        ];
+        assert_eq!(cases.len(), 11);
+        for (msg, expected) in cases {
+            assert_chars_eq(&msg.message(), expected);
+            let span = Span::new(43, 29);
             let error = LzError::Value { msg: msg.clone(), span };
             assert_eq!(error.class_name(), "ValueError");
             assert_chars_eq(&error.message(), expected);

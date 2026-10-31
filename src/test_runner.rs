@@ -110,9 +110,9 @@ pub fn run(args: &[String], json: bool, out: &mut dyn Write, err: &mut dyn Write
     let mut docs: Vec<Json> = Vec::with_capacity(cases.len());
     for case in &cases {
         let eval = cli::eval_case(&case.path);
-        if !eval.cleanup_diagnostics().is_empty(){
-            if eval.passed(){let _=writeln!(err,"lfz: 子进程资源回收失败");cli::write_cleanup_diagnostics(err,eval.cleanup_diagnostics());return cli::EXIT_ERROR;}
-            cli::write_cleanup_diagnostics(err,eval.cleanup_diagnostics());
+        if eval.has_diagnostics(){
+            if eval.passed(){let _=writeln!(err,"{}",eval.cleanup_title());eval.write_diagnostics(err);return cli::EXIT_ERROR;}
+            eval.write_diagnostics(err);
         }
         if let Some(detail) = eval.host_failure() {
             let _=writeln!(err, "lfz: 模块执行上下文无效：{detail}");
@@ -191,7 +191,7 @@ fn case_json(case: &Case, verdict: &str, eval: Option<&CaseEval>) -> Json {
 
 /// 判定单用例（契约见模块头表）。
 fn judge(eval: &CaseEval, expect: Option<&str>) -> Verdict {
-    if eval.host_failure().is_some() || !eval.cleanup_diagnostics().is_empty() { return Verdict::Error; }
+    if eval.host_failure().is_some() || eval.has_diagnostics() { return Verdict::Error; }
     let class = eval.error_class();
     match expect {
         // 负例（T-R2）：类名一致 → 通过；未报错或类名不符 → 失败。
@@ -705,3 +705,5 @@ mod t16c_host_tests {
 #[cfg(test)] mod t17_registration_tests { use super::*; #[test] fn execution_limit_registration_preserves_existing_classes(){ assert_eq!(ERROR_CLASSES.len(),13);assert!(ERROR_CLASSES.contains(&"ExecutionLimitError"));for name in ["CosmosAnswerError","SyntaxError","NameError","TypeError","IndexError","FieldError","ZeroDivisionError","OverflowError","ValueError","IOError","AssertionError","RecursionError"]{assert!(ERROR_CLASSES.contains(&name));} } }
 
 #[cfg(test)]mod t18_runner_cleanup_tests{use super::*;#[test]fn diagnostic_success_is_never_a_passing_case(){let e=CaseEval::WithDiagnostics{inner:Box::new(CaseEval::Passed),diagnostics:vec!["fault injection".into()]};assert!(matches!(judge(&e,None),Verdict::Error));assert!(matches!(judge(&e,Some("IOError")),Verdict::Error));}}
+
+#[cfg(test)]mod t18b_runner_tests{use super::*;#[test]fn http_and_mixed_diagnostics_never_pass(){let http=CaseEval::HttpDiagnostics{inner:Box::new(CaseEval::Passed),diagnostics:vec!["HTTP fault".into()]};assert!(matches!(judge(&http,None),Verdict::Error));assert_eq!(http.cleanup_title(),"lfz: HTTP 资源回收失败");let mixed=CaseEval::WithDiagnostics{inner:Box::new(http),diagnostics:vec!["process fault".into()]};assert_eq!(mixed.cleanup_title(),"lfz: 子进程资源回收失败");let mut out=vec![];mixed.write_diagnostics(&mut out);assert_eq!(String::from_utf8(out).unwrap(),"lfz: 子进程回收诊断：process fault\nlfz: HTTP 回收诊断：HTTP fault\n");assert!(matches!(judge(&mixed,None),Verdict::Error));}}

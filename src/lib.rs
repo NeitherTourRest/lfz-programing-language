@@ -20,3 +20,5 @@ pub mod source; // T16-A 来源身份与定位元数据（不加载模块）。
 pub mod modules; // T16-B 静态模块图，不求值。
 
 pub(crate) mod process_control; // T18-A owned受控后端
+
+pub(crate) mod http_control;

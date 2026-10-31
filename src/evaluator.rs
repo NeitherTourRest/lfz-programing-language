@@ -111,6 +111,7 @@ struct RunOrigins {
 pub struct TracedRun {
     origins: Option<RunOrigins>,
     host_diagnostics: Vec<String>,
+    http_diagnostics: Vec<String>,
     /// 求值结果（最后一条语句的值；出错则为 `Err`）。
     pub result: R<Value>,
     /// 帧栈，**最外层 → 最内层**（§10.3）：首帧恒为模块帧 `<module>`，末帧为出错点所在帧。
@@ -121,6 +122,7 @@ pub struct TracedRun {
 
 impl TracedRun {
     pub fn host_diagnostics(&self)->&[String]{&self.host_diagnostics}
+    pub fn http_diagnostics(&self)->&[String]{&self.http_diagnostics}
     /// 按§19完整校验后原子替换来源sidecar；旧求值入口不自动附加。
     pub fn attach_origins(
         &mut self,
@@ -220,7 +222,7 @@ pub struct EvalLimits {
  pub cancel: Option<std::sync::Arc<std::sync::atomic::AtomicBool>>,
 }
 #[derive(Clone,Debug,Default)]
-pub struct EvalCapabilities { pub subprocess:bool }
+pub struct EvalCapabilities { pub subprocess:bool, pub http:bool }
 #[derive(Clone,Debug,Default)]
 pub struct EvalContext { pub limits:EvalLimits, pub capabilities:EvalCapabilities }
 pub fn eval_graph_traced_on_thread_with_args(g:&crate::modules::ModuleGraph,args:&[String])->Result<TracedRun,GraphExecutionError>{
@@ -255,9 +257,39 @@ pub fn eval_graph_traced_on_thread_with_args_and_context(g:&crate::modules::Modu
   i.trace.pop();i.trace_sources.pop();
  }
  let error_source=if result.is_err(){i.fault_source.or_else(||i.trace_sources.last().copied())}else{None};
- let mut out=TracedRun{result,frames:i.trace,func_names:i.func_names,host_diagnostics:i.host_diagnostics,origins:None};
+ let mut out=TracedRun{result,frames:i.trace,func_names:i.func_names,http_diagnostics:i.http_diagnostics,host_diagnostics:i.host_diagnostics,origins:None};
  out.attach_origins(Rc::clone(&g.sources),i.trace_sources,error_source).map_err(GraphExecutionError::Origins)?;
  Ok(out)
+}
+
+fn validate_http(args:&[Value],span:Span)->R<crate::http_control::HttpRequest>{
+ use crate::error::ValueMsg as V;
+ use crate::http_control::{valid_method,valid_url,valid_headers,HttpRequest};
+ if args.len()!=6{return Err(type_error(TypeMsg::ArgCount{name:"httpRequest".into(),n:6,m:args.len()},span));}
+ let bad=|v:&Value,rt:&str|type_error(TypeMsg::BadOperands{op:"httpRequest".into(),lt:v.type_name().into(),rt:rt.into()},span);
+ let invalid=|v|crate::error::value(v,span);
+ let method=args[0].as_str().ok_or_else(||bad(&args[0],"string"))?;
+ let url=args[1].as_str().ok_or_else(||bad(&args[1],"string"))?;
+ let h=args[2].as_array().ok_or_else(||bad(&args[2],"array"))?;
+ let body=args[3].as_str().ok_or_else(||bad(&args[3],"string"))?;
+ let timeout=args[4].as_int().ok_or_else(||bad(&args[4],"int"))?;
+ let max=args[5].as_int().ok_or_else(||bad(&args[5],"int"))?;
+ let mut headers=vec![];
+ for pair in h.borrow().iter(){
+  let p=pair.as_array().ok_or_else(||bad(pair,"array"))?;let p=p.borrow();
+  if p.len()!=2{return Err(invalid(V::HttpHeaders));}
+  let k=p[0].as_str().ok_or_else(||bad(&p[0],"string"))?;
+  let v=p[1].as_str().ok_or_else(||bad(&p[1],"string"))?;
+  headers.push((k.to_string(),v.to_string()));
+ }
+ if !valid_method(method){return Err(invalid(V::HttpMethod));}
+ if !valid_url(url){return Err(invalid(V::HttpUrl));}
+ if !valid_headers(&headers){return Err(invalid(V::HttpHeaders));}
+ if body.len()>16777216||(matches!(method,"GET"|"HEAD")&&!body.is_empty()){return Err(invalid(V::HttpBody));}
+ if !(1..=600000).contains(&timeout){return Err(invalid(V::HttpTimeoutRange));}
+ if !(0..=16777216).contains(&max){return Err(invalid(V::HttpResponseRange));}
+ for (_,v) in &mut headers{*v=v.trim_matches([' ','\t']).to_string();}
+ Ok(HttpRequest{method:method.to_string(),url:url.to_string(),headers,body:body.as_bytes().to_vec(),timeout_ms:timeout as u64,max_response_bytes:max as usize})
 }
 
 fn validate_exec(args:&[Value],span:Span)->R<crate::process_control::ProcessRequest>{
@@ -437,7 +469,7 @@ pub fn eval_module_traced_on_thread_with_args_and_context(program:&Program,args:
     // B过渡：扫描整个根Program，在任何LFZ语句及副作用之前拒绝模块执行。
     if let Some(first_decl_span) = crate::modules::module_declaration_span(program) {
         return TracedRun {
-            host_diagnostics: vec![], origins: None,
+            http_diagnostics: vec![],host_diagnostics: vec![], origins: None,
             result: Err(Box::new(LzError::Syntax {
                 msg: crate::error::SyntaxMsg::ModuleExecutionUnavailable, span: first_decl_span,
             })),
@@ -466,7 +498,7 @@ pub fn eval_module_traced_on_thread_with_args_and_context(program:&Program,args:
         Err(e) => Err(e),
     };
     TracedRun {
-        host_diagnostics: std::mem::take(&mut interp.host_diagnostics), origins: None,
+        http_diagnostics: std::mem::take(&mut interp.http_diagnostics),host_diagnostics: std::mem::take(&mut interp.host_diagnostics), origins: None,
         result,
         frames: std::mem::take(&mut interp.trace),
         func_names: std::mem::take(&mut interp.func_names),
@@ -546,6 +578,7 @@ enum AssignOutcome {
 struct Interp {
     capabilities: EvalCapabilities,
     host_diagnostics: Vec<String>,
+    http_diagnostics: Vec<String>,
     limits: EvalLimits,
     modules: Option<Vec<ModuleInstance>>,
     trace_sources: Vec<crate::source::SourceId>,
@@ -570,7 +603,7 @@ impl Interp {
         let mut argv_closure = Closure::named("argv", Rc::new(ScopeChain::empty()));
         argv_closure.builtin = Some("argv");
         Self {
-            capabilities: EvalCapabilities::default(), host_diagnostics:vec![],
+            capabilities: EvalCapabilities::default(), http_diagnostics:vec![],host_diagnostics:vec![],
             limits: EvalLimits::default(),
             script_args: Vec::new(),
             argv_function: Value::function(argv_closure),
@@ -1411,6 +1444,10 @@ impl Interp {
                     };
                     return self.call_func(self.argv_function.clone(), args, span, None, piped);
                 }
+                if name == "httpRequest" {
+                    let argv=match self.eval_args(args,scope)?{Step::Done(v)=>v,Step::Flow(f)=>return Ok(f)};
+                    return Ok(Flow::Value(self.http_request(&argv,span)?));
+                }
                 if name == "exec" {
                     let argv=match self.eval_args(args,scope)?{Step::Done(v)=>v,Step::Flow(f)=>return Ok(f)};
                     return Ok(Flow::Value(self.exec_process(&argv,span)?));
@@ -1542,6 +1579,28 @@ impl Interp {
     }
 
     /// §18：仅此边界恢复调用状态；用户副作用及函数ID表不回滚。
+    fn http_request(&mut self,args:&[Value],span:Span)->R<Value>{
+        use crate::http_control::*;
+        let request=validate_http(args,span)?;
+        if !self.capabilities.http{return Err(crate::error::value(crate::error::ValueMsg::HttpDisabled,span));}
+        let report=run(request,HttpControl{deadline:self.limits.deadline,cancel:self.limits.cancel.clone()});
+        self.consume_http_report(report,span)
+    }
+    fn consume_http_report(&mut self,report:crate::http_control::HttpReport,span:Span)->R<Value>{
+        use crate::http_control::HttpFailure as F;
+        use crate::error::{ValueMsg as V,ExecutionLimitReason as E};
+        self.http_diagnostics.extend(report.diagnostics);
+        let response=report.result.map_err(|f|match f {
+            F::Cancelled=>crate::error::execution_limit(E::Cancelled,span),F::Deadline=>crate::error::execution_limit(E::Deadline,span),
+            F::Timeout=>crate::error::value(V::HttpTimeout,span),F::ResponseLimit=>crate::error::value(V::HttpResponseLimit,span),
+            F::Unsupported=>crate::error::value(V::HttpUnsupported,span),
+            F::Io{operation,message}=>Box::new(LzError::Io{msg:format!("HTTP {operation}失败：{message}"),span:Some(span)})
+        })?;
+        let body=String::from_utf8(response.body).map_err(|_|crate::error::value(V::HttpUtf8,span))?;
+        let headers=response.headers.into_iter().map(|(k,v)|Value::array(vec![Value::string(k),Value::string(v)])).collect();
+        Ok(Value::object(vec![("status".into(),Value::Int(response.status as i64)),("headers".into(),Value::array(headers)),("body".into(),Value::string(body))]))
+    }
+
     fn exec_process(&mut self,args:&[Value],span:Span)->R<Value>{
         use crate::process_control::*;
         let request=validate_exec(args,span)?;
@@ -4725,5 +4784,54 @@ mod t18_runtime_tests {
   assert!(i.exec_stmts(&p.stmts,&scope).is_ok());assert_eq!(i.host_diagnostics,vec!["injected cleanup"]);
   assert!(!EvalContext::default().capabilities.subprocess);
   assert!(eval_module_traced_on_thread(&p).host_diagnostics().is_empty());
+ });}
+}
+
+#[cfg(test)]
+mod t18b_runtime_tests {
+ use super::*;
+ use crate::http_control::*;
+ fn args()->Vec<Value>{vec![Value::string("GET"),Value::string("http://127.0.0.1/"),Value::array(vec![]),Value::string(""),Value::Int(100),Value::Int(1000)]}
+ #[test] fn validation_order_and_shared_helpers_without_network(){
+  let mut a=args();assert!(validate_http(&a,Span::START).is_ok());
+  a[0]=Value::string("invalid");a[5]=Value::Nil;
+  assert_eq!(validate_http(&a,Span::START).unwrap_err().class_name(),"TypeError");
+  a=args();a[0]=Value::string("invalid");a[2]=Value::array(vec![Value::array(vec![Value::Int(1),Value::string("x")])]);
+  assert_eq!(validate_http(&a,Span::START).unwrap_err().class_name(),"TypeError");
+  a=args();a[0]=Value::string("get");a[1]=Value::string("invalid");
+  assert_eq!(validate_http(&a,Span::START).unwrap_err().message(),"HTTP method 不受支持");
+  a=args();a[2]=Value::array(vec![Value::array(vec![Value::string("Host"),Value::string("x")])]);
+  assert_eq!(validate_http(&a,Span::START).unwrap_err().message(),"HTTP headers 非法或超出上限");
+  a=args();a[3]=Value::string("x");assert_eq!(validate_http(&a,Span::START).unwrap_err().message(),"HTTP body 非法或超出上限");
+  a=args();a[2]=Value::array(vec![Value::array(vec![Value::string("X-Test"),Value::string(" \tx\t ")])]);
+  assert_eq!(validate_http(&a,Span::START).unwrap().headers,vec![("X-Test".into(),"x".into())]);
+ }
+ #[test] fn disabled_and_context_capabilities_are_independent(){
+  for subprocess in [false,true]{
+   let mut i=Interp::new();i.capabilities=EvalCapabilities{subprocess,http:false};
+   assert_eq!(i.http_request(&args(),Span::START).unwrap_err().message(),"HTTP 能力未启用");
+  }
+  assert!(!EvalContext::default().capabilities.http);
+  assert_eq!(builtins::call("httpRequest",&args(),Span::START).unwrap_err().message(),"HTTP 能力未启用");
+ }
+ #[test] fn non_success_http_status_is_value_duplicate_headers_and_strict_utf8(){
+  let mut i=Interp::new();
+  let value=i.consume_http_report(HttpReport{result:Ok(HttpResponse{status:404,headers:vec![("set-cookie".into(),"a".into()),("set-cookie".into(),"b".into())],body:b"not found".to_vec()}),diagnostics:vec![]},Span::START).unwrap();
+  let object=value.as_struct().unwrap().borrow();
+  assert_eq!(object.raw_fields().iter().map(|(k,_)|k.as_str()).collect::<Vec<_>>(),vec!["status","headers","body"]);
+  assert_eq!(object.get("status").unwrap().as_int(),Some(404));
+  assert_eq!(object.get("headers").unwrap().as_array().unwrap().borrow().len(),2);
+  let e=i.consume_http_report(HttpReport{result:Ok(HttpResponse{status:200,headers:vec![],body:vec![255]}),diagnostics:vec![]},Span::START).unwrap_err();
+  assert_eq!(e.message(),"HTTP 响应 body 不是合法 UTF-8");assert!(Interp::attempt_recoverable(&e));
+ }
+ #[test] fn http_diagnostics_survive_attempt_and_global_terminal_reports(){on_eval_stack(||{
+  let mut i=Interp::new();i.host_diagnostics.push("process".into());
+  let e=i.consume_http_report(HttpReport{result:Err(HttpFailure::Io{operation:"关闭".into(),message:"injected".into()}),diagnostics:vec!["http cleanup".into()]},Span::START).unwrap_err();
+  assert!(Interp::attempt_recoverable(&e));assert_eq!(e.span(),Some(Span::START));
+  let p=crate::parser::parse(&crate::lexer::lex("attempt(()=>1/0)",0).unwrap()).unwrap();
+  let scope=Scope{env:i.globals.clone(),captured:Rc::new(vec![]),self_val:None};assert!(i.exec_stmts(&p.stmts,&scope).is_ok());
+  assert_eq!(i.host_diagnostics,vec!["process"]);assert_eq!(i.http_diagnostics,vec!["http cleanup"]);
+  for f in [HttpFailure::Cancelled,HttpFailure::Deadline]{let e=i.consume_http_report(HttpReport{result:Err(f),diagnostics:vec![]},Span::START).unwrap_err();assert_eq!(e.class_name(),"ExecutionLimitError");assert!(!Interp::attempt_recoverable(&e));}
+  assert!(eval_module_traced_on_thread(&p).http_diagnostics().is_empty());
  });}
 }

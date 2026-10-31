@@ -92,6 +92,7 @@ LFZ 解释器
     非 .lfz 文件     豁免 #42 前导（如 .txt / 无扩展名），按普通源加载执行。
 
 选项:
+  --allow-http         仅本次执行启用直连HTTP/HTTPS，返回响应值；能力不是沙箱
   --allow-process      仅本次执行启用受控子进程；必须绝对exe路径，能力不是沙箱
                        exec捕获输出作为返回值，不转发到解释器终端
   --max-steps N        限制求值节点步数（非负十进制u64，仅运行命令）
@@ -206,11 +207,11 @@ pub fn execute(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32
 
 /// 仅摘除选项区域的 `--json`，保护源码与脚本参数的原始字符串。
 #[derive(Clone, Copy, Debug, Default)]
-struct CliLimits { max_steps:Option<u64>, timeout_ms:Option<u64>, allow_process:bool, first_capability:Option<bool> }
+struct CliLimits { max_steps:Option<u64>, timeout_ms:Option<u64>, allow_process:bool, allow_http:bool, first_capability:Option<u8> }
 impl CliLimits {
-    fn is_set(self)->bool {self.max_steps.is_some()||self.timeout_ms.is_some()||self.allow_process}
-    fn applicability(self)-> &'static str { if self.first_capability==Some(true){"子进程能力选项只适用于运行命令"}else{"执行限额选项只适用于运行命令"} }
-    fn context(self)->Result<evaluator::EvalContext,String>{Ok(evaluator::EvalContext{limits:self.evaluation()?,capabilities:evaluator::EvalCapabilities{subprocess:self.allow_process}})}
+    fn is_set(self)->bool {self.max_steps.is_some()||self.timeout_ms.is_some()||self.allow_process||self.allow_http}
+    fn applicability(self)-> &'static str { if self.first_capability==Some(2){"HTTP 能力选项只适用于运行命令"}else if self.first_capability==Some(1){"子进程能力选项只适用于运行命令"}else{"执行限额选项只适用于运行命令"} }
+    fn context(self)->Result<evaluator::EvalContext,String>{Ok(evaluator::EvalContext{limits:self.evaluation()?,capabilities:evaluator::EvalCapabilities{subprocess:self.allow_process,http:self.allow_http}})}
     fn evaluation(self)->Result<evaluator::EvalLimits,String>{
         let deadline=match self.timeout_ms {
             Some(n)=>Some(std::time::Instant::now().checked_add(std::time::Duration::from_millis(n)).ok_or_else(||"选项 '--timeout-ms' 超出当前平台可表示的时间范围".to_string())?),
@@ -231,10 +232,12 @@ fn scan_options(args:&[String])->Result<(Vec<String>,Option<Vec<String>>,bool,Cl
         let a=&args[i];
         if a=="--json" {json=true;i+=1;}
         else if a=="--" && execution_ready(&rest){return Ok((rest,Some(args[i+1..].to_vec()),json,limits));}
-        else if a=="--allow-process" {if limits.allow_process{return Err("选项 '--allow-process' 不能重复".into());}limits.allow_process=true;limits.first_capability.get_or_insert(true);i+=1;}
+        else if a=="--allow-http" {if limits.allow_http{return Err("选项 '--allow-http' 不能重复".into());}limits.allow_http=true;limits.first_capability.get_or_insert(2);i+=1;}
+        else if a.starts_with("--allow-http="){return Err("选项 '--allow-http' 不接受值".into());}
+        else if a=="--allow-process" {if limits.allow_process{return Err("选项 '--allow-process' 不能重复".into());}limits.allow_process=true;limits.first_capability.get_or_insert(1);i+=1;}
         else if a.starts_with("--allow-process="){return Err("选项 '--allow-process' 不接受值".into());}
         else if a=="--max-steps"||a=="--timeout-ms" {
-            limits.first_capability.get_or_insert(false);
+            limits.first_capability.get_or_insert(0);
             let slot=if a=="--max-steps"{&mut limits.max_steps}else{&mut limits.timeout_ms};
             if slot.is_some(){return Err(format!("选项 '{a}' 不能重复"));}
             let value=args.get(i+1).filter(|s|s.as_str()!="--").ok_or_else(||format!("选项 '{a}' 需要一个非负十进制 u64 参数"))?;
@@ -364,6 +367,7 @@ pub(crate) enum CaseEval {
     Passed,
     HostFailure(String),
     WithDiagnostics { inner:Box<CaseEval>, diagnostics:Vec<String> },
+    HttpDiagnostics { inner:Box<CaseEval>, diagnostics:Vec<String> },
     Located { path: String, inner: Box<CaseEval> },
     /// 某阶段抛 `LfzError`。
     Failed {
@@ -377,11 +381,15 @@ pub(crate) enum CaseEval {
 }
 
 impl CaseEval {
-    pub(crate) fn passed(&self)->bool{match self{Self::Passed=>true,Self::Located{inner,..}|Self::WithDiagnostics{inner,..}=>inner.passed(),_=>false}}
-    pub(crate) fn cleanup_diagnostics(&self)->&[String]{match self{Self::WithDiagnostics{diagnostics,..}=>diagnostics,Self::Located{inner,..}=>inner.cleanup_diagnostics(),_=>&[]}}
+    pub(crate) fn http_diagnostics(&self)->&[String]{match self{Self::HttpDiagnostics{diagnostics,..}=>diagnostics,Self::Located{inner,..}|Self::WithDiagnostics{inner,..}=>inner.http_diagnostics(),_=>&[]}}
+    pub(crate) fn has_diagnostics(&self)->bool{!self.cleanup_diagnostics().is_empty()||!self.http_diagnostics().is_empty()}
+    pub(crate) fn cleanup_title(&self)->&'static str{if self.cleanup_diagnostics().is_empty(){"lfz: HTTP 资源回收失败"}else{"lfz: 子进程资源回收失败"}}
+    pub(crate) fn write_diagnostics(&self,err:&mut dyn Write){write_cleanup_diagnostics(err,self.cleanup_diagnostics());for line in self.http_diagnostics(){let _=writeln!(err,"lfz: HTTP 回收诊断：{line}");}}
+    pub(crate) fn passed(&self)->bool{match self{Self::Passed=>true,Self::Located{inner,..}|Self::WithDiagnostics{inner,..}|Self::HttpDiagnostics{inner,..}=>inner.passed(),_=>false}}
+    pub(crate) fn cleanup_diagnostics(&self)->&[String]{match self{Self::WithDiagnostics{diagnostics,..}=>diagnostics,Self::Located{inner,..}|Self::HttpDiagnostics{inner,..}=>inner.cleanup_diagnostics(),_=>&[]}}
 
     pub(crate) fn host_failure(&self) -> Option<&str> {
-        match self { Self::HostFailure(detail) => Some(detail), Self::Located { inner, .. }|Self::WithDiagnostics{inner,..} => inner.host_failure(), _ => None }
+        match self { Self::HostFailure(detail) => Some(detail), Self::Located { inner, .. }|Self::WithDiagnostics{inner,..}|Self::HttpDiagnostics{inner,..} => inner.host_failure(), _ => None }
     }
 
     /// 错误的**类名**（`Passed` → `None`）。
@@ -389,7 +397,7 @@ impl CaseEval {
     pub(crate) fn error_class(&self) -> Option<&'static str> {
         match self {
             CaseEval::HostFailure(_) => None,
-            CaseEval::Located { inner, .. }|CaseEval::WithDiagnostics{inner,..} => inner.error_class(),
+            CaseEval::Located { inner, .. }|CaseEval::WithDiagnostics{inner,..}|CaseEval::HttpDiagnostics{inner,..} => inner.error_class(),
             CaseEval::Passed => None,
             CaseEval::Failed { err, .. } => Some(err.class_name()),
         }
@@ -400,7 +408,7 @@ impl CaseEval {
     pub(crate) fn error(&self) -> Option<&LzError> {
         match self {
             CaseEval::HostFailure(_) => None,
-            CaseEval::Located { inner, .. }|CaseEval::WithDiagnostics{inner,..} => inner.error(),
+            CaseEval::Located { inner, .. }|CaseEval::WithDiagnostics{inner,..}|CaseEval::HttpDiagnostics{inner,..} => inner.error(),
             CaseEval::Passed => None,
             CaseEval::Failed { err, .. } => Some(err),
         }
@@ -412,7 +420,7 @@ impl CaseEval {
         match self {
             CaseEval::HostFailure(detail) => Some(format!("lfz: 模块执行上下文无效：{detail}\n")),
             CaseEval::Located { path, inner } => inner.render(path),
-            CaseEval::WithDiagnostics{inner,..}=>inner.render(path),
+            CaseEval::WithDiagnostics{inner,..}|CaseEval::HttpDiagnostics{inner,..}=>inner.render(path),
             CaseEval::Passed => None,
             CaseEval::Failed { err, loaded, traced } => {
                 let origin = traced.as_ref().and_then(|r| r.error_source());
@@ -444,7 +452,7 @@ pub(crate) fn error_json(path: &str, eval: &CaseEval) -> Json {
 /// - `line` / `col` 取 [`LzError::span`]；`Io` 无 span 时输出 `null`；
 /// - `traceback` 为**自最外层到最内层**的完整帧表（**不折叠**，§8.4）。
 pub(crate) fn push_error_fields(fields: &mut Vec<(String, Json)>, path: &str, eval: &CaseEval) {
-    if let CaseEval::WithDiagnostics{inner,..}=eval{push_error_fields(fields,path,inner);return;}
+    if let CaseEval::WithDiagnostics{inner,..}|CaseEval::HttpDiagnostics{inner,..}=eval{push_error_fields(fields,path,inner);return;}
     if let CaseEval::Located { path, inner } = eval { push_error_fields(fields, path, inner); return; }
     let CaseEval::Failed { err, traced, .. } = eval else {
         return;
@@ -582,7 +590,7 @@ fn eval_loaded_on_stack(loaded: lfz::error::R<loader::CountedLoaded>, args: &[St
 }
 
 fn graph_run_result(traced: TracedRun) -> CaseEval {
-    let diagnostics=traced.host_diagnostics().to_vec();
+    let diagnostics=traced.host_diagnostics().to_vec();let http=traced.http_diagnostics().to_vec();
     let inner=(||{
     if (0..traced.frames.len()).any(|i| traced.frame_source(i).is_none()) { return CaseEval::HostFailure("来源元数据缺失".to_string()); }
     if traced.result.is_ok() { return CaseEval::Passed; }
@@ -591,14 +599,15 @@ fn graph_run_result(traced: TracedRun) -> CaseEval {
     let err=(**traced.result.as_ref().unwrap_err()).clone();
     CaseEval::Failed { err, loaded, traced:Some(traced) }
 })();
-    with_diagnostics(inner,diagnostics)
+    with_http_diagnostics(with_diagnostics(inner,diagnostics),http)
 }
 
+fn with_http_diagnostics(inner:CaseEval,diagnostics:Vec<String>)->CaseEval{if diagnostics.is_empty(){inner}else{CaseEval::HttpDiagnostics{inner:Box::new(inner),diagnostics}}}
 fn with_diagnostics(inner:CaseEval,diagnostics:Vec<String>)->CaseEval{if diagnostics.is_empty(){inner}else{CaseEval::WithDiagnostics{inner:Box::new(inner),diagnostics}}}
 fn legacy_run_result(traced:TracedRun,loaded:Loaded)->CaseEval{
- let diagnostics=traced.host_diagnostics().to_vec();
+ let diagnostics=traced.host_diagnostics().to_vec();let http=traced.http_diagnostics().to_vec();
  let inner=if traced.result.is_ok(){CaseEval::Passed}else{let err=(**traced.result.as_ref().unwrap_err()).clone();CaseEval::Failed{err,loaded:Some(loaded),traced:Some(traced)}};
- with_diagnostics(inner,diagnostics)
+ with_http_diagnostics(with_diagnostics(inner,diagnostics),http)
 }
 
 /// 只做前端检查。输入加载、解析和深AST析构全部留在大栈线程内。
@@ -769,9 +778,8 @@ fn report_eval(
     out: &mut dyn Write,
     err: &mut dyn Write,
 ) -> i32 {
-    let diagnostics=eval.cleanup_diagnostics();
-    if eval.passed() && !diagnostics.is_empty(){let _=writeln!(err,"lfz: 子进程资源回收失败");write_cleanup_diagnostics(err,diagnostics);return EXIT_ERROR;}
-    write_cleanup_diagnostics(err,diagnostics);
+    if eval.passed() && eval.has_diagnostics(){let _=writeln!(err,"{}",eval.cleanup_title());eval.write_diagnostics(err);return EXIT_ERROR;}
+    eval.write_diagnostics(err);
     if let Some(detail) = eval.host_failure() { let _=writeln!(err,"lfz: 模块执行上下文无效：{detail}"); return EXIT_ERROR; }
     if json {
         let passed = eval.passed();
@@ -1329,4 +1337,8 @@ mod tests {
  use super::*;
  #[test]fn caught_cleanup_diagnostic_blocks_success_including_json(){for json in [false,true]{let e=with_diagnostics(CaseEval::Passed,vec!["injected cleanup".into()]);let(mut out,mut err)=(vec![],vec![]);assert_eq!(report_eval("x",&e,json,&mut out,&mut err),2);assert!(out.is_empty());assert_eq!(String::from_utf8(err).unwrap(),"lfz: 子进程资源回收失败\nlfz: 子进程回收诊断：injected cleanup\n");}}
  #[test]fn resource_failure_keeps_json_and_cleanup_diagnostic_separate(){let e=with_diagnostics(CaseEval::Failed{err:LzError::ExecutionLimit{reason:lfz::error::ExecutionLimitReason::Cancelled,span:Span::START},loaded:None,traced:None},vec!["cleanup witness".into()]);let(mut out,mut err)=(vec![],vec![]);assert_eq!(report_eval("x",&e,true,&mut out,&mut err),2);let out=String::from_utf8(out).unwrap();assert!(out.contains("ExecutionLimitError"));assert!(!out.contains("cleanup"));assert_eq!(String::from_utf8(err).unwrap(),"lfz: 子进程回收诊断：cleanup witness\n");}
+}
+#[cfg(test)]mod t18b_cli_gate_tests{use super::*;
+#[test]fn http_and_combined_success_fail_closed_both_formats(){for json in [true,false]{for combined in [true,false]{let mut e=with_http_diagnostics(CaseEval::Passed,vec!["http fault".into()]);if combined{e=with_diagnostics(e,vec!["process fault".into()]);}let(mut out,mut err)=(vec![],vec![]);assert_eq!(report_eval("x",&e,json,&mut out,&mut err),2);assert!(out.is_empty());let expected=if combined{"lfz: 子进程资源回收失败\nlfz: 子进程回收诊断：process fault\nlfz: HTTP 回收诊断：http fault\n"}else{"lfz: HTTP 资源回收失败\nlfz: HTTP 回收诊断：http fault\n"};assert_eq!(String::from_utf8(err).unwrap(),expected);}}}
+#[test]fn global_error_json_preserved_with_two_lists(){let e=with_diagnostics(with_http_diagnostics(CaseEval::Failed{err:LzError::ExecutionLimit{reason:lfz::error::ExecutionLimitReason::Cancelled,span:Span::START},loaded:None,traced:None},vec!["http fault".into()]),vec!["process fault".into()]);let(mut out,mut err)=(vec![],vec![]);assert_eq!(report_eval("x",&e,true,&mut out,&mut err),2);let out=String::from_utf8(out).unwrap();assert!(out.contains("ExecutionLimitError"));assert_eq!(out.lines().count(),1);assert!(!out.contains("fault"));assert_eq!(String::from_utf8(err).unwrap(),"lfz: 子进程回收诊断：process fault\nlfz: HTTP 回收诊断：http fault\n");}
 }
