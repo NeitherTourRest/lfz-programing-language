@@ -1,4 +1,6 @@
 
+## T18-B交付完成并收口（2026-10-31）
+用户本波HTTP迭代完成。六组已推送main，git ls-remote实核67101cad563cd934235b1a4be98a36ea3eb2571e；23src+2tests逐一对冻结ZIP归一换行一致。最终dist/target1029120B/SHA18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916，独立667harness/HTTP49/HTTPplan7/自编11/全部旧回归通过；人指南21/AI25作者结果和11文档证据独立审计通过。所有旧失败/预审normal竞态证据缺口及补40真实race/默认12029均保全。Windows已验，非WindowsUnsupported，系统自签拒绝不等于可信TLS成功；R304OPEN无新性能窗，不正式发布或tag，未实施T19/T20。原用户三块28/1/1继续未提交；自动化此前已删除且本波未恢复。本波已收口，不开展新功能，仅此回执Git记账。
 ## T18-B功能与指南完成，最后候选交付（2026-10-31）
 最终18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916/1029120B独立667/HTTP公开49/HTTPplan7/自编11及全部旧回归通过。人指南21/AI25同hash作者实跑通过，默认WinHTTP12029权限失败原样保全，loopback服务关闭确认；AI五文档SHA前后一致。release正递归精确ZIP/dist/README与分组准备，requirements补最后指南条目；用户仅这一波B候选交付后收口，不恢复automation/不T19。系统自签TLS拒绝非可信TLS成功，非WindowsUnsupported，R304OPEN无本轮性能窗不tag。原用户三块28/1/1保护，全部失败历史保留。
 ## T18-B最终独立功能验收PASS（2026-10-31）

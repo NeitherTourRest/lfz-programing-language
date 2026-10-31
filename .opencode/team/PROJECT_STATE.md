@@ -1,4 +1,6 @@
 
+## T18-B交付完成并收口（2026-10-31）
+用户本波HTTP迭代完成。六组已推送main，git ls-remote实核67101cad563cd934235b1a4be98a36ea3eb2571e；23src+2tests逐一对冻结ZIP归一换行一致。最终dist/target1029120B/SHA18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916，独立667harness/HTTP49/HTTPplan7/自编11/全部旧回归通过；人指南21/AI25作者结果和11文档证据独立审计通过。所有旧失败/预审normal竞态证据缺口及补40真实race/默认12029均保全。Windows已验，非WindowsUnsupported，系统自签拒绝不等于可信TLS成功；R304OPEN无新性能窗，不正式发布或tag，未实施T19/T20。原用户三块28/1/1继续未提交；自动化此前已删除且本波未恢复。本波已收口，不开展新功能，仅此回执Git记账。
 ### [2026-10-31] 用户继续后恢复最终交付
 用户明确继续，已复核AI25与需求R137/213/412/509最终记录均已在用量中断前落盘，未重跑有效测试。release恢复精确归档：ZIP691881B/SHA1333cfcf3990e7b92aab05adb6746bc48a1a7d44524ca1915c07feb9b65cb8fa，28项递归23src+2Cargo+2tests+1029120B/18d328 exe；dist最终一致，无临时TLS私钥/证书入归档。独立最后仅只读审指南21/AI25的11文档SHA及证据，随后六组Git交付收口。不恢复automation，不T19；R304OPEN无本轮性能窗不tag，原用户三块保护。
 ## T18-B功能与指南完成，最后候选交付（2026-10-31）
