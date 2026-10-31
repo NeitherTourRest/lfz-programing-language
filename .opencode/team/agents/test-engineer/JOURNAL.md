@@ -229,3 +229,21 @@
 - 完成：watchdog权限预检PASS；首harness NUL argv被CreateProcess拒绝保全，修文件源码传literal NUL；首个完整可完成运行45/45 PASS/exit0。正常后代PID44416返回后无存活匹配。
 - 产出：报告、first-complete-permitted.json、manifest-final及所有首错/旧脚本/身份/预检记录，源码验后匹配tooling close manifest。
 - 边界：不编译/改产品旧tests/Git；R304OPEN，只本轮T18-A交付后停止。
+
+## [2026-10-31] T18-B只读规划
+- 来源：root启动只读准备，随后确认§24正式冻结并要求报告收工腾slot。
+- 完成：读启动/NEXT/§23/reviews/§24冻结契约；编写专属loopback公开验收计划，明确实际API头文本计数、取消/诊断白盒分界、TLS未验可信成功。
+- 产出：docs/reports/T18-B-blackbox-plan.md；未新脚本/编译/产品/旧测试/Git/网络请求。
+- 下一步：等root唤醒及tooling fixture与真实头计数见证；仅本轮HTTP交付后收口，不T19。
+
+## [2026-10-31] T18-B新公开脚本准备47
+- 来源：root按§24 GO测试脚本，产品仍实施中，无最终hash。
+- 完成：stdlib raw socket本地fixture、计数、慢头慢体滴流、POST重复头/UTF8/权限strictCLI等47准备；AST PASS、prepare-only exit0/executed:false。无listener或LFZ新功能实跑。
+- 产出：tests/t18b_cli_http.py、专属报告/证据。旧缺flag红仅引用tooling，不伪称自己运行。exactN独立API头文本见证注入口pending。
+- 下一步：最终hash后补足范围/许可实跑；不编译/产品/旧测试/Git，不T19。
+
+## [2026-10-31] T18-B最终公开49通过
+- 来源：root GO最终18d328d9/1029120B及真实API头见证。
+- 完成：核产品/见证SHA，绑定同wire补route/body元数据；许可首次完整49/49 PASS/exit0/server_errors空，finally worker回收，无重复运行/产品修复/改oracle。
+- 产出：final-first-permitted.json、原/bound witness、manifest-final及报告；验后source匹配tooling冻结，TLS作者证据仅引用归属。
+- 边界：无编译/产品/旧测试/Git/公网/信任修改，R304OPEN，仅本轮HTTP收口不T19。

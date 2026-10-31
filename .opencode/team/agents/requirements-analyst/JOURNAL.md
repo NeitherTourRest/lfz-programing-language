@@ -101,3 +101,8 @@
 - R136/212/411/508通过，4093714…/984064B，649/45/toolplan7/process12/旧回归及人22/AI26证据齐。
 - Windows实测、非WindowsUnsupported；context默认禁用/argv/输出预算/局部资源/全局终止/Job后代/Close诊断门禁准确限定。原失败与CONCERNS不抹，R304OPEN无性能窗不tag。
 - 仅本轮交付后停止、不HTTP/后继；仅REQUIREMENTS与本人记录，无编译/产品/Git。
+
+## [2026-10-31] T18-B需求最终收口
+- R137/213/412/509通过，冻结18d328…/1029120B；667/公开49/httpplan7/独立HTTP11及旧回归全PASS，人21/AI25作者成绩齐。
+- Windows实测/其它Unsupported、TLS自签拒绝非可信TLS成功、API头文本非wire、literal迁移、默认禁用/资源终止/40Barrier关闭与双诊断门禁准确限定。原失败保留。
+- R304OPEN无新性能窗不tag；仅本轮B交付，不T19/automation。只REQUIREMENTS与本人记录，无产品/编译/网络/Git。

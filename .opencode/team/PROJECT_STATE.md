@@ -1,4 +1,20 @@
 
+### [2026-10-31] 用户继续后恢复最终交付
+用户明确继续，已复核AI25与需求R137/213/412/509最终记录均已在用量中断前落盘，未重跑有效测试。release恢复精确归档：ZIP691881B/SHA1333cfcf3990e7b92aab05adb6746bc48a1a7d44524ca1915c07feb9b65cb8fa，28项递归23src+2Cargo+2tests+1029120B/18d328 exe；dist最终一致，无临时TLS私钥/证书入归档。独立最后仅只读审指南21/AI25的11文档SHA及证据，随后六组Git交付收口。不恢复automation，不T19；R304OPEN无本轮性能窗不tag，原用户三块保护。
+## T18-B功能与指南完成，最后候选交付（2026-10-31）
+最终18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916/1029120B独立667/HTTP公开49/HTTPplan7/自编11及全部旧回归通过。人指南21/AI25同hash作者实跑通过，默认WinHTTP12029权限失败原样保全，loopback服务关闭确认；AI五文档SHA前后一致。release正递归精确ZIP/dist/README与分组准备，requirements补最后指南条目；用户仅这一波B候选交付后收口，不恢复automation/不T19。系统自签TLS拒绝非可信TLS成功，非WindowsUnsupported，R304OPEN无本轮性能窗不tag。原用户三块28/1/1保护，全部失败历史保留。
+## T18-B最终独立功能验收PASS（2026-10-31）
+18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916/1029120B：独立667harness、全部旧回归、HTTP公开49、HTTPplan7、自编HTTP11均通过；真实40Barrier取消/完成竞态及closing/active断言实际执行。无产品修改、源初末冻结；TLS仅系统自签拒绝证据审计/未可信TLS成功/无公网。requirements正收口，人/AI指南最终实跑中；完成后release候选归档与既有授权Git交付，原用户3块保护。R304OPEN无新性能窗，不正式tag；仅本轮B完成收口，不自动化/T19。
+### [2026-10-31] T18-B公开49首轮通过，HTTPplan7通过
+公开最终49/49首完整运行通过，source/产品初末hash匹配18d328d9/1029120B，原生API头文本59+body2的N61成功/N60超限已按外部见证验证，无择阈值或oracle改动。HTTPplan作者正常OS许可7/7，默认WinHTTP12029无server请求失败保全，产品/oracle未改；独立已通知继续真实复验。人指南最终实跑GO，AI等slot；源冻结不编译。R304OPEN，Windows已验范围/非WindowsUnsupported及未可信TLS成功仍需准确披露。仅本轮B完成收口，不自动化/T19。
+### [2026-10-31] T18-B首最终候选667与TLS拒绝，公开/独立验收GO
+root实核target1029120B/SHA18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916。tooling最终12harness667/667、HTTP7生命周期（含真实40Barrier竞态）/自签TLS WinHTTP12175拒绝且appbytes0通过，源停写/编译停止；manifest递归src，ZIP691535B/21a1aa42…1416a，无私钥。公开49已GO使用实际API头59+body2=N61见证，不猜wire；独立已GO全部新旧实际验收，内部Rust测试fixture编译明确允许而产品禁止重编。HTTP应用与人指南准备已完成待最终实跑，AI准备中。仍非正式发布，R304OPEN，不恢复自动化/不T19。
+### [2026-10-31] T18-B初编译与真实生命周期闸门
+core十一Http ValueMsg、runtime HTTP/context/双sidecar均停源，tooling唯一初次完整release编译成功；真实WinHTTP生命周期首闸门4/4过，20次完成/closing、marker后并发cancel与T17deadline、慢headers/body/drip总timeout、API头精确N/N-1及重复头404均实跑，外watchdog未触发。仍需大矩阵/故障注入/最终新exe hash/公开与独立验收。新公开47已准备，exactN另等实际API证据未虚称通过；人指南先prepare-only。仅清已结束A的可重建模块fixture95039731B，receipt Temp/T18-B-lead/fixture-cleanup.json，自由218796032B；原docs证据保留。未恢复自动化，不进入T19，R304OPEN。
+## T18-B契约冻结并开始实施（2026-10-31）
+三spec§24/T18-B-contract已冻结：六参httpRequest/三字段响应、独立http能力与literal迁移、WinHTTP async协作截止与安全closing、头API文本UTF8+body合并限额、双诊断门禁。core仅error.rs十一Http ValueMsg与严格单测已GO，tooling仅http_control/platform+CLI/main/lib已GO；runtime待空slot复用，严禁tooling在core/runtime源未齐前整编，唯一cargo=tooling。公开工程师仅读准备后先收工腾slot；确切N测试需实际RAW_HEADERS_CRLF API文本证据，不能猜wire。所有原测试/用户修改保持，不联网公网/外装，不恢复automation或后继T19。R304OPEN。
+## 用户授权下一波：T18-B HTTP（2026-10-30）
+用户新指令继续下一波迭代，恢复项目工作，范围限定下一轮T18-B HTTP请求/响应/超时/大小上限/独立显式能力，完成实现/实际应用/指南/独立验收/候选交付后收口，不自动跳T19/T20。已删除lfz自动化不重新创建。基线main740fd32371584da1d5afc9b12d262a434b1c87f8，T18-A最终4093714/984064B验收有效。architect先契约提案，tooling/runtime仅只读可行性与ABI review；未GO产品源/编译，不扩外部权限/不公网验收。D121630720B，临时项目Temp；原用户3块28/1/1和旧测试/v2/tags保护。R304OPEN，不能沿旧字节性能结果。
 ## T18-A交付完成并停止（2026-10-30 21:49）
 功能候选六组已推送main，git ls-remote实核946f04131e7fde7bc18c89d0944c167e14f3260c。此前首次push因自动审批账户用量不足未执行，恢复时间21:20后于21:48正常重试成功，未绕过审批。最终dist/target984064B/SHA4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86；独立649/公开45/app7/新process12及旧回归通过，人22/AI26与独立证据审计通过，全部失败历史保全。lfz自动接续已通过工具删除并返回deleteStatus=deleted。按用户要求本轮结束，停止全部开发/调度，不进入HTTP/T19/T20；Windows已验，非WindowsUnsupported。R304仍OPEN，未正式发布或打新tag，其他计划未完成如实披露。原用户三块28/1/1保持未提交。此后仅本回执Git记账，不新功能。
 

@@ -181,3 +181,9 @@
 
 ### [2026-10-30 18:26] T18-A关闭诊断补丁收口
 run独占Handles注册表显式早关/逆序最终关，Drop仅兜底，CloseHandle失败诊断及真实关闭注入，2unit覆盖正常/启动/Assign/pipe失败及真实取消主因。runtime平台修复1unit同编，release no-run/build0，十一harness649/649，新984064B/SHA4093714B2DC61BB72DBC4F43DB67A798A9BCAF152AD33A11D4D7457D1F7D9C86。docs/tooling/evidence/T18-A-close/递归manifest+ZIP，旧E5/646全部保留。源码静默交root，仅本轮，不HTTP/Git/dist。
+
+### [2026-10-30 23:56] T18-B只读backend review
+已读启动文件与现context/backend，查Microsoft官方文档，报告docs/reports/T18-B-backend-review.md。同步分阶段timeout非总时界；异步close后仍callback须HANDLE_CLOSING，有限清理缺口及Job helper备选明确报root。context shape兼容/能力策略待架构，不改产品不编译、不公网/Git。完成腾slot。
+
+### [2026-10-31 00:15] T18-B作者实现收口
+owned HTTP backend/CLI/runner双诊断门禁，先红再首4/最终7生命周期，40真实Barrier取消完成race及20normal，TLS自签拒绝12175/appbytes0，API头原件publicN61。唯一release全12harness667/667/build0，新1029120B/SHA18D328D9E48780F8E6AE638F9AD24F53186D94F2207CA24DA8928CBBBA0D0916。永久递归manifest+ZIP，失败/阶段日志保全；源静默交root公开独立，不dist/Git/automation/T19。

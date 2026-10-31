@@ -266,3 +266,12 @@
 
 ### [2026-10-30 19:24] T18-A指南证据只读收工
 人22/AI26作者证据逐行、11文档SHA、manifest原始文件SHA与产品/独占fixture匹配。仅审计非独立重跑，边界准确，旧oracle失败仍保留。已追加独立报告/manifest及STATUS，结束全部工作，不后继迭代；R304OPEN。
+
+### [2026-10-31] T18-B静态预审完成
+读§24与HTTP后端，核回调info拷贝/context和body读buffer至closing+active退出寿命、URLheader与API文本限额、主reason与双sidecar。当前未见确定产品缺陷；已报root当前20轮normal命名race实际无cancel，不能称竞态已验。报告preaudit与hash齐，无运行编译网络/Git，等待最终hash真实验收GO，可腾slot。R304OPEN。
+
+### [2026-10-31] T18-B最终独立功能PASS
+18d328/1029120B，同667与全部旧回归/A/T17/C/应用通过，新HTTP49/httpplan7/独立请求11全过；40Barrier真实cancel-completion及closing断言已同harness实跑，预审缺口补齐。TLS仅原字节审计自签12175/appbytes0，不称可信成功。第一次未绑定header witness错误保留。源初末冻结，报告manifest收工；无产品编译改源Git/公网，全部服务结束，R304OPEN，本轮后收口。
+
+### [2026-10-31] T18-B最终指南审计并停止
+人21/AI25逐行及11文档/证据SHA/产品/服务器关闭核对通过，默认12029失败原证据保留。仅只读未产品重跑，TLS可信成功未虚称，报告manifest记录已收工，停止全部工作，无Git编译或后继迭代，R304OPEN。

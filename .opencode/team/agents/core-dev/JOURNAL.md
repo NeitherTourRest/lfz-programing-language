@@ -208,3 +208,6 @@ C快照后root GO；仅error.rs新增reason/variant/helper及映射，机械精�
 
 ### [2026-10-30] T18-A core消息层停源交接
 完整启动读取state/board/本人和关联STATUS/角色/§23/T18-A-design；按root GO仅error.rs十无字段ValueMsg固定消息及十case严格unit。旧断言不改，不新增错误类。git diff --check exit0，SHA 0AB3C6112BFD01AAE0F52D1D9338C7950E10BBBCA975A68A7013A61BF6C3DBA6。未编译，已停源发root，统一验证由tooling负责；当前T18-A交付后停，不进入HTTP。
+
+### [2026-10-31] T18-B core消息层停源交接
+完整启动读取state/board/自己及关联STATUS/§24/T18-B-contract。仅error.rs新增11无字段Http ValueMsg及精确message，十一case严格unit先落；无第14类，旧断言/Process消息保留。diff --check exit0；SHA 590BD6925871176C75C32C24E74F4DB9F6475FE41CC50F7F30185D891FAF804B。依root未编译，已停源交统一release；只当前HTTP不T19/automation。

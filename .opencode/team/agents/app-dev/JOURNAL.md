@@ -53,3 +53,13 @@
 - 最终4093714/984064B默认sandbox7/7 PASS；首份全绿后增加deadline真实exec行/帧断言，最终7/7再过，两个结果和manifest完整保留。
 - 禁用不spawn/能力隔离/9任务argv及退出码/三局部错误继续/全局deadline/全体验证/空计划覆盖；无编译Git/旧app修改。
 - 交独立verifier与发布收口，R304OPEN，用户边界本轮后停止，无应用阻塞。
+
+## [2026-10-31] T18-B HTTP应用准备
+- 任务：root限定B交付，新增JSON任务批处理与stdlib loopback独立oracle，旧app不改。
+- 产出：httpplan/verify_httpplan/T18-B说明及属性；AST/prepare-only PASS，0解释器/无server启动。
+- 下一步：最终hash后实跑7项，完整保留失败与回收证据；不公网/外装/系统信任改动/编译/Git，R304OPEN。
+
+## [2026-10-31] T18-B HTTPplan最终作者验收
+- 轻量启动读STATUS，核冻结18d328d9/1029120B；默认2/3失败保留（WinHTTP12029、零请求），正常OS许可同字节7/7通过。
+- 请求显式参数/重复头/404与302正常/三局部失败继续/真实回调全局deadline不可吞/KEEP/前置验证/空计划及server完整关闭均有证据。
+- 归档default-permission-failure/results/manifest，更新开发说明；无应用oracle修复、产品/旧app/编译/Git修改。交root及独立verifier，R304OPEN，本轮B后停止。

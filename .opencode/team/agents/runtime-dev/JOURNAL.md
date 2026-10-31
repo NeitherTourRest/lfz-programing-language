@@ -297,3 +297,9 @@ parent库467PASS；仅新增4unit覆盖线程同步取消、7HOF、diamond预算
 
 ### [2026-10-30] T18平台校验修正
 仅evaluator复用backend路径规则，1新无spawn测试，非Windows合法绝对路径不再误报Executable；未编译/未Linux实测，停写交tooling。
+
+### [2026-10-30] T18-B只读接口评审
+审§23/EvalContext/diagnostics/builtins/value容器；给出旧shape保留新HTTPcontext、重复头/文本UTF8/多层大小上限/全局终止与独立诊断门禁建议。仅专属报告与自身记忆，无源改/编译/网络。
+
+### [2026-10-31] T18-B运行时源码交接
+六参httpRequest/shared helpers/默认禁用http能力/严格UTF8/独立diagnostics及75注册落盘，4新unit未编译，停止写源交tooling唯一release。报告与静态缺符号记录保全，无真实网络或通过声明。

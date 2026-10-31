@@ -101,3 +101,13 @@
 - 同4093714/984064B、独占51b83f fixture正常OS权限一次26/26 exit0；五文档前后hash一致，原始参数输出与manifest保全。
 - 未编译/Git/改源/人指南/旧v2；R304OPEN，无性能或正式发布声明。本轮交付后停止，不HTTP。
 - 下一步team-lead收口，无阻塞。
+
+## [2026-10-31] T18-B HTTP AI准备完成
+- 五AI文档§6.7与loopback验证器准备；prepare-only exit0，仅提取两示例，解释器/网络0启动，无最终hash或成绩。
+- 专属准备报告/prepare.json保全文档与脚本hash；不使用A字节冒称HTTP过，无旧v2/人指南/源/spec/Git/编译变动。
+- 等root最终hash后轻量唤醒实跑，R304OPEN，不恢复自动化或自动T19。
+
+## [2026-10-31] T18-B AI最终25例完成
+- 绑定18d328/1029120B同冻结产物，默认17/25触网12029失败保留，正常OS网络许可同脚本25/25 exit0；五文档SHA前后相同，服务关闭回执true。
+- 报告/manifest/原脚本/准备阶段报告齐；POST echo一次与不跳转由访问日志复核。
+- 无公网/TLS信任改动/源/spec/人指南/Git/编译/旧v2改变；不冒称作者覆盖TLS/精确API N/race注入/token，R304OPEN，B收口不自动T19。

@@ -94,3 +94,15 @@
 - 首次keys排序oracle错误保完整记录，仅修新验证器；教程提取check/run、raw/权限/timeout/usage边界均实证。
 - R304OPEN，不编译/Git/写AI/spec/产品；本轮交付后停止不HTTP。
 
+
+## [2026-10-31] T18-B人类HTTP指南准备
+- 五指南入口/http.md及提取示例验证器对齐§24，prepare-only成功，解释器与server均0启动。
+- 最终hash待通知，不套旧产物；精确N不猜wire/TLS不公网不改信任库，Rustliteral与双诊断规范引用。
+- R304OPEN，HTTP本轮后停止，不产品/spec/AI/编译/Git。
+
+
+## [2026-10-31] T18-B人类指南最终完成
+- 锁18d328d9/1029120B：默认GET12029保失败，正常OS许可21/21通过，server关闭记录true。
+- 六指南哈希/提取教程/loopback请求及原始输出/manifest齐；Python keepalive关闭reset工具输出如实披露，无择次重跑抹除。
+- 无产品/spec/AI/编译/Git/公网，R304OPEN，HTTP本轮交付后停止。
+

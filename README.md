@@ -1,12 +1,22 @@
 # LFZ 语言与解释器 — 程序设计课程作业
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-> 最后更新: 2026-10-30 by release-manager
+> 最后更新: 2026-10-31 by release-manager
 > 仓库地址: https://github.com/NeitherTourRest/lfz-programing-language
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
-## 本轮结束：T18-A Windows受控子进程候选（2026-10-30）
+## 本轮收口：T18-B Windows HTTP候选（2026-10-31）
+
+当前1.4.0候选、75内置/13错误类，新增`httpRequest(method,url,headers,body,timeoutMs,maxResponseBytes)`，默认禁用，仅本次run的`--allow-http`显式授权；与子进程权限独立。Windows WinHTTP后端已验，非Windows受控Unsupported。HTTP状态404/500是正常响应，调用者检查status；不自动重定向、代理、cookie回发、认证或应用重试。
+
+最终产物1029120B，SHA256 `18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916`；[递归源码/测试/exe归档](docs/reports/T18-B-release-evidence/build.json)冻结28成员。[最终独立报告](docs/reports/T18-B-independent-verification.md)：667 harness、HTTP公开49、httpplan7、独立请求11以及全部旧回归通过；人指南21/AI25分别为作者实跑，不虚增独立计数。首4normal及补充40真实race、失败和修复过程均保留证据。
+
+响应限额是**完整WinHTTP API头文本UTF8字节+body原始字节**，不是wire/TLS/chunk framing限额；两者及有界scratch也不是进程总内存上限。严格UTF8响应、全局取消/deadline穿透attempt、局部timeout可恢复，清理有诊断门禁。系统默认证书验证不关闭；本地自签拒绝只有审计证据，**未验证可信TLS成功**，不声称公网HTTPS已验。详见[HTTP指南](docs/guide/http.md)与[应用](app/T18-B-HTTPPLAN.md)。
+
+默认AI17/25中的8项WinHTTP12029、同字节正常OS许可25/25、TLS首config失败、首normal/race及其它历史原始材料均保留，不改写为一次通过；临时TLS私钥不入源码/发布归档。R304OPEN，无本批性能窗口，候选非正式发布、不打tag。仅完成用户授权B收口，不进入T19，不重建已删除自动化；其余计划未实施。以下A/T17是历史指纹记录。
+
+## T18-A 历史Windows受控子进程候选（绑定409371）
 
 当前1.4.0候选、74内置/13错误类，新增`exec(argv, timeoutMs, maxOutputBytes)`，默认禁用，仅显式`--allow-process`启用本session能力。只接受显式绝对.exe，不搜索PATH或隐式拼shell；用户仍可显式选择shell，不视为安全沙箱。Windows后端已验收，非Windows受控Unsupported，不声称跨平台已实现。
 

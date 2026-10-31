@@ -1,14 +1,14 @@
 # docs-writer — 工作状态
-> 最后更新：2026-10-30 by docs-writer
+> 最后更新：2026-10-31 by docs-writer
 
 ## 当前状态
-T18-A五人类指南+subprocess.md已完成，同最终4093714/984064B默认实跑22/22通过，已收工。
+T18-B人类五指南HTTP入口+http.md及最终聚焦实跑完成，21/21正常OS许可通过，已收工。
 
 ## 证据
-T18-A-guide-evidence.md与目录verify.py/runs/manifest/首次oracle失败；独占Temp/T18-A-docs/guide-fixture.exe SHA51b83f…27bee，与指定原件测前后均一致。提取教程check→授权run，22项具体见证与六指南hash保全。
+1029120B/SHA18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916。T18-B-guide-evidence.md及verify/runs/manifest/server-shutdown；默认check通过GET12029失败原始partial/stderr保留，同字节许可21通过，关闭证据true。部分Python keepalive关闭ConnectionResetError工具输出如实披露，未改oracle或产品绕过。
 
-## 边界
-首次keys排序作者oracle错误仅修验证器，完整失败保留，不改产品。文档明确74内置、exec三参四键、CRT/noimplicit shell、default-disabled session权限、raw/UTF8/exit、本地timeout可恢复与全局不可吞、回收诊断宿主例外。RustAPI为规范引用，非恶意沙箱、非WindowsUnsupported，R304OPEN。
+## 内容/边界
+75内置、六参三键、独立allow-http、重复pairs/4xx/strictUTF8、请求限额与非wire maxResponse、无自动redirect/auth/cookie/proxy/retry、local vs global、async安全closing、双diagnostics、Rustliteral http字段迁移明确。无公网/TLS信任修改，可信TLS/精确N/host token/故障注入不由本指南冒称。
 
 ## 下一步
-主调度统一交付后停止，不HTTP/新迭代。无AI/spec/产品/dist修改，不编译/Git，仅小fixture复制和项目Temp。
+主调度统一候选交付后停止，不T19/自动化；R304OPEN，不产品/spec/AI/dist/Git，不编译。

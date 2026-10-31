@@ -1,4 +1,12 @@
 
+## T18-B功能与指南完成，最后候选交付（2026-10-31）
+最终18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916/1029120B独立667/HTTP公开49/HTTPplan7/自编11及全部旧回归通过。人指南21/AI25同hash作者实跑通过，默认WinHTTP12029权限失败原样保全，loopback服务关闭确认；AI五文档SHA前后一致。release正递归精确ZIP/dist/README与分组准备，requirements补最后指南条目；用户仅这一波B候选交付后收口，不恢复automation/不T19。系统自签TLS拒绝非可信TLS成功，非WindowsUnsupported，R304OPEN无本轮性能窗不tag。原用户三块28/1/1保护，全部失败历史保留。
+## T18-B最终独立功能验收PASS（2026-10-31）
+18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916/1029120B：独立667harness、全部旧回归、HTTP公开49、HTTPplan7、自编HTTP11均通过；真实40Barrier取消/完成竞态及closing/active断言实际执行。无产品修改、源初末冻结；TLS仅系统自签拒绝证据审计/未可信TLS成功/无公网。requirements正收口，人/AI指南最终实跑中；完成后release候选归档与既有授权Git交付，原用户3块保护。R304OPEN无新性能窗，不正式tag；仅本轮B完成收口，不自动化/T19。
+## T18-B契约冻结并开始实施（2026-10-31）
+三spec§24/T18-B-contract已冻结：六参httpRequest/三字段响应、独立http能力与literal迁移、WinHTTP async协作截止与安全closing、头API文本UTF8+body合并限额、双诊断门禁。core仅error.rs十一Http ValueMsg与严格单测已GO，tooling仅http_control/platform+CLI/main/lib已GO；runtime待空slot复用，严禁tooling在core/runtime源未齐前整编，唯一cargo=tooling。公开工程师仅读准备后先收工腾slot；确切N测试需实际RAW_HEADERS_CRLF API文本证据，不能猜wire。所有原测试/用户修改保持，不联网公网/外装，不恢复automation或后继T19。R304OPEN。
+## 用户授权下一波：T18-B HTTP（2026-10-30）
+用户新指令继续下一波迭代，恢复项目工作，范围限定下一轮T18-B HTTP请求/响应/超时/大小上限/独立显式能力，完成实现/实际应用/指南/独立验收/候选交付后收口，不自动跳T19/T20。已删除lfz自动化不重新创建。基线main740fd32371584da1d5afc9b12d262a434b1c87f8，T18-A最终4093714/984064B验收有效。architect先契约提案，tooling/runtime仅只读可行性与ABI review；未GO产品源/编译，不扩外部权限/不公网验收。D121630720B，临时项目Temp；原用户3块28/1/1和旧测试/v2/tags保护。R304OPEN，不能沿旧字节性能结果。
 ## T18-A交付完成并停止（2026-10-30 21:49）
 功能候选六组已推送main，git ls-remote实核946f04131e7fde7bc18c89d0944c167e14f3260c。此前首次push因自动审批账户用量不足未执行，恢复时间21:20后于21:48正常重试成功，未绕过审批。最终dist/target984064B/SHA4093714b2dc61bb72dbc4f43db67a798a9bcaf152ad33a11d4d7457d1f7d9c86；独立649/公开45/app7/新process12及旧回归通过，人22/AI26与独立证据审计通过，全部失败历史保全。lfz自动接续已通过工具删除并返回deleteStatus=deleted。按用户要求本轮结束，停止全部开发/调度，不进入HTTP/T19/T20；Windows已验，非WindowsUnsupported。R304仍OPEN，未正式发布或打新tag，其他计划未完成如实披露。原用户三块28/1/1保持未提交。此后仅本回执Git记账，不新功能。
 ## T18-A最终功能验收通过：649/公开45/app7/独立process12/旧回归、人22/AI26。最后交付与Git收口后删除自动接续并停止，不后继。

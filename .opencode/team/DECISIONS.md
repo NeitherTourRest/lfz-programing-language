@@ -1291,3 +1291,6 @@ T17 CLI计时边界精确说明：在静态build_graph完成、调用eval入口�
 
 ### [2026-10-30] [language-architect] T18-A混合CLI选项适用性顺序
 落实root裁决：非执行命令的能力/限额文案按选项区首次出现类别选定，--json不参与；扫描错误按token序先返回，CODE/argv保护和旧无新flag行为不变。三spec/设计最小一致补钉，无产品/计步/文法变化。本轮按用户新要求T18-A结束后停止，不推进HTTP。
+
+### [2026-10-30] [language-architect] T18-B HTTP契约冻结与Rust构造迁移
+落实root批准及runtime/tool review：六参httpRequest、三字段响应、独立http能力默认false，EvalCapabilities新增pub http明确Rust literal机械迁移而非宣称源兼容，保旧函数/EvalLimits。WinHTTP async零crate/windows先验、其他Unsupported；协作deadline后安全等closing/最后callback，OS异常cleanup非硬时界。头API文本UTF8+body raw非wire口径及各上限冻§24，TLS不insecure。新增独立HTTP sidecar保旧子进程文案，双列表都阻宿主成功且先process后HTTP。仅本轮，无后继/自动化；未源改/测试，R304OPEN。

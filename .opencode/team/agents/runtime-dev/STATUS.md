@@ -1,8 +1,6 @@
 # runtime-dev 状态
-2026-10-30 T18-A运行时源码阶段完成并停止写源/编译。
+2026-10-31 T18-B源码已交接，停止写源/编译。
 
-evaluator三context API、exec校验/映射/严格UTF8、默认能力禁用、diagnostics私有sidecar/accessor及attempt保留；builtins74特殊注册/通用禁用。新增4unit尚未编译，tooling唯一统一release。报告docs/reports/T18-A-runtime.md。生产与测试不得宣称验收。
+§24实现evaluator httpRequest六参校验/共享helper/独立http能力/owned后端消费/严格UTF8三键；私有http_diagnostics/accessor和跨attempt保留；builtins75注册及无上下文禁用。4新增unit未编译，tooling唯一统一release。报告docs/reports/T18-B-runtime.md。evaluator42F1BA0D…/builtins8CD12A2F…，diff check过。
 
-backend/process_control由tooling拥有，待owner齐源编译及真实fixture/独立验证。未改error/value/spec/CLI/backend/dist/Git。仅T18-A交付后停止，不HTTP；R304OPEN。
-
-最新：平台校验复用backend executable_valid，非Windows允许绝对路径后再Unsupported；增1不spawn unit，旧夹具按平台选有效路径。仅evaluator，SHA D801E604…；停写未编译，tooling统一重建。无Linux实测声明。
+待tooling补CLI literal与双sidecar门禁、完成后端统一编译/真实loopback/独立验收。未改其他owner文件/无网络/Git。仅本轮B收口，不T19不automation；R304OPEN。

@@ -337,3 +337,15 @@
 - 完成：三spec/两设计及ADR最小补钉；扫描错误优先、CODE/argv和旧行为保持。
 - 证据：文档diff检查通过；不源改/编译/Git。
 - 下一步：交root验收；遵用户最新T18-A后停止，不HTTP。
+
+## [2026-10-30] T18-B HTTP提案与取消生命周期收敛
+- 来源：root新授权仅HTTP本轮，完整启动。
+- 完成：T18-B-design六参/headers/响应/上下文/非wire限额/TLS/错误/WinHTTP async/review closing安全边界。root已批准API和限额方向，仍等实现者review后冻。
+- 证据：文档diff检查通过，引用Microsoft一手资料；无源/编译/Git。
+- 下一步：合定生命周期再§24；不T19或自动化。
+
+## [2026-10-30] T18-B §24正式冻结
+- 来源：root批准API/限额/closing/迁移/双sidecar，读runtime review。
+- 完成：三spec/T18-B-contract.md11024B，精确owned ABI/校验/11ValueMsg/CLI/owner；ADR追加。
+- 证据：文档diff检查exit0，未源改/编译/Git。
+- 下一步：root立即按§24 GO实现；仅本轮后收口，R304OPEN。

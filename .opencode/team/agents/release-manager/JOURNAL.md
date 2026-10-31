@@ -938,3 +938,11 @@
 - 决策：Windows已验、非Windows Unsupported；默认沙箱C0000008、E5 Close修正、NUL oracle及全部失败历史保留。R304OPEN，无计时不tag，功能结束而其余计划未实施，不进入HTTP/后继。
 - 下一步：root最后更新角色/状态后首次提交前刷新清单，代六组Git推送并删除automation停止；本角色未Git/编译/产品修改，不提前虚报已push或已删除自动化。
 - 阻塞：无交付准备阻塞，效率未通过限制正式发布。
+## [2026-10-31] T18-B用量中断恢复后的最终HTTP交付准备
+- 来源：team-lead用户继续恢复B最后收口，仅当前一波，不T19/automation。
+- 完成：target/dist1029120B/18d328；28项ZIP691881B/SHA1333CFCF3990E7B92AAB05ADB6746BC48A1A7D44524CA1915C07FEB9B65CB8FA，递归src/Cargo/两测试/exe全回读及前后输入一致，Temp另存；不编译/改产品/profile/Git。
+- 产出：README/checklist独立667/HTTP49/app7/独立11/旧全回归、人21/AI25；六组正确HTTP语义commit messages，baseline740fd32371584da1d5afc9b12d262a434b1c87f8，原用户28/1/1只Temp过滤副本。
+- 审计：新增项目文本私钥header0命中；首扫描把公开tls-cert.pem也当不应存在的证书文件而断言失败，核BEGIN CERTIFICATE并按私钥边界订正，公开证书保留，临时私钥不归档。此为发布检查条件订正非产品改动。
+- 决策：全部失败/default12029/首4normal与补40race/TLS首config保留；API头文本+body非wire限额，Windows已验非Windows Unsupported，TLS仅自签拒绝审计无可信成功。R304OPEN，无性能窗不tag。
+- 下一步：root最后记录后只在首次提交前刷新清单，再代六组Git推送；本角色不虚报已push。本轮B结束不T19、不恢复自动化，其余计划未实施。
+- 阻塞：无交付准备阻塞，性能仍开放限制正式发布。
