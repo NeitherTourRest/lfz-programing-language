@@ -1,0 +1,125 @@
+[
+  {
+    "name": "public134",
+    "args": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\public134.py",
+      "--binary",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\public134.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T17-CLI-1\", \"binary\": \"target\\\\release\\\\lfz.exe\", \"binary_sha256\": \"18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916\", \"bytes\": 1029120, \"script_sha256\": \"62d525a54f7912709f7ec35c3a7155160987cdeb29336d5d9ad54d139387b998\", \"red_only\": false, \"checks_total\": 134, \"checks_passed\": 134, \"timestamp_utc\": \"2026-10-30T16:20:13.997051+00:00\"}\r\n",
+    "stderr": ""
+  },
+  {
+    "name": "app40",
+    "args": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\app40.py",
+      "--lfz",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\app40.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"date\": \"2026-10-30\", \"binary_sha256\": \"18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916\", \"binary_bytes\": 1029120, \"status\": \"completed\", \"callback_budget_witness\": 28, \"total\": 40, \"passed\": 40}\r\n",
+    "stderr": ""
+  },
+  {
+    "name": "public29",
+    "args": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\public.py",
+      "--binary",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\public29.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T17-CLI-1\", \"binary\": \"target\\\\release\\\\lfz.exe\", \"binary_sha256\": \"18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916\", \"bytes\": 1029120, \"checks_total\": 29, \"checks_passed\": 29, \"script_sha256\": \"d658371dfd51e264f8853cfd765fc966905531ebe9242726541fb20b60978ae1\", \"timestamp_utc\": \"2026-10-30T16:20:15.969495+00:00\"}\r\n",
+    "stderr": ""
+  },
+  {
+    "name": "app33",
+    "args": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\app.py",
+      "--lfz",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\app33.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"date\": \"2026-10-30\", \"binary_sha256\": \"18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916\", \"binary_bytes\": 1029120, \"binary\": \"target\\\\release\\\\lfz.exe\", \"total\": 33, \"passed\": 33}\r\n",
+    "stderr": ""
+  },
+  {
+    "name": "toolplan7",
+    "args": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\toolplan7.py",
+      "--lfz",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\toolplan7.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"date\": \"2026-10-30\", \"binary_sha256\": \"18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916\", \"fixture_sha256\": \"51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee\", \"source_sha256\": \"b06a9bc3c00dc0822b7a88f5477a9365144a7883b2f783c918f1944cb13a0d65\", \"status\": \"completed\", \"total\": 7, \"passed\": 7}\r\n",
+    "stderr": ""
+  },
+  {
+    "name": "httpplan7",
+    "args": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\httpplan7.py",
+      "--lfz",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\httpplan7.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"date\": \"2026-10-31\", \"binary_sha256\": \"18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916\", \"binary_bytes\": 1029120, \"source_sha256\": \"77187a030c515d08dfd948091c918c91f63a347161361f6e281f5da244b45fdc\", \"network_scope\": \"http://127.0.0.1:50300\", \"status\": \"completed\", \"total\": 7, \"passed\": 7, \"server_shutdown_complete\": true}\r\n",
+    "stderr": ""
+  },
+  {
+    "name": "public45",
+    "args": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\public45-final.py",
+      "--binary",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\docs\\reports\\T18-B-independent-evidence\\public45.json",
+      "--fixture",
+      "Temp/T18-A-tooling/fixture.exe",
+      "--fixture-sha",
+      "51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee"
+    ],
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T18A-CLI-1\", \"binary_sha256\": \"18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916\", \"fixture_sha256\": \"51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee\", \"script_sha256\": \"4f711d90fc3cb2140acc2a98db22e92581fc767266420f98fe5415740e8516e3\", \"checks_total\": 45, \"checks_passed\": 45, \"red_only\": false, \"timestamp_utc\": \"2026-10-30T16:20:20.801277+00:00\"}\r\n",
+    "stderr": ""
+  }
+]

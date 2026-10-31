@@ -1,0 +1,12 @@
+
+running 7 tests
+test run_executes_module_after_c_activation ... ok
+test graph_diamond_check_never_initializes_dependencies ... ok
+test code_and_stdin_use_captured_cwd ... ok
+test dependency_syntax_uses_own_path_and_source ... ok
+test missing_and_invalid_dependency_diagnostics_are_not_root_text ... ok
+test legacy_large_root_has_no_graph_budget ... ok
+test exports_conflicts_cycles_and_legacy_identifiers ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+

@@ -1,0 +1,12 @@
+{
+  "raw_headers_crlf": "HTTP/1.1 200 Test\r\nConnection: close\r\nContent-Length: 2\r\n\r\n",
+  "fixture_wire_sha256": "685f7bfbaa0613d701d83e0ffe7b42567be633933ee26cefdb17df29866ca221",
+  "header_utf8_bytes": 59,
+  "body_bytes": 2,
+  "N": 61,
+  "native_utf16_bytes_excluding_NUL": 118,
+  "route": "/",
+  "body_hex": "6f6b",
+  "source_witness_sha256": "08bf660de17c469a9e20b44d8044cf03ce461eece83b2c871935a78074166750",
+  "annotation": "route/body identity supplied by public fixture matching wire SHA; API text/count unchanged"
+}

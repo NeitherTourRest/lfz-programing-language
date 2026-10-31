@@ -1,0 +1,8 @@
+{
+  "raw_headers_crlf": "HTTP/1.1 200 Test\r\nConnection: close\r\nContent-Length: 2\r\n\r\n",
+  "fixture_wire_sha256": "685f7bfbaa0613d701d83e0ffe7b42567be633933ee26cefdb17df29866ca221",
+  "header_utf8_bytes": 59,
+  "body_bytes": 2,
+  "N": 61,
+  "native_utf16_bytes_excluding_NUL": 118
+}

@@ -1,0 +1,137 @@
+"""Public T17 process acceptance. Preparation never invokes LFZ; red is C-only."""
+import argparse, datetime, hashlib, json, os, subprocess, sys
+from pathlib import Path
+ROOT = Path.cwd()
+STEP = '执行步数预算已耗尽'
+DEADLINE = '执行时间上限已到'
+
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+
+def main():
+    ap=argparse.ArgumentParser()
+    ap.add_argument('--binary', type=Path, required=True)
+    ap.add_argument('--expected-sha', required=True)
+    ap.add_argument('--output', type=Path, required=True)
+    ap.add_argument('--prepare-only', action='store_true')
+    ap.add_argument('--red-only', action='store_true')
+    a=ap.parse_args(); exe=a.binary.resolve(); out=a.output.resolve()
+    assert exe.is_relative_to(ROOT) and out.is_relative_to(ROOT) and not out.exists()
+    w=ROOT/'Temp/T18-B-verifier/public134'; w.mkdir(parents=True,exist_ok=True)
+    out.parent.mkdir(parents=True,exist_ok=True)
+    env=os.environ.copy(); env.update(TEMP=str(w),TMP=str(w),PYTHONDONTWRITEBYTECODE='1')
+    cases=[]
+    def add(name,args,code=0,message=None,usage=None,cls=None,data=b'',where=None,output='',forbidden=None):
+        cases.append(dict(name=name,args=args,code=code,message=message,usage=usage,cls=cls,data=data,where=where,output=output,forbidden=forbidden))
+    def ev(name,src,n=None,message=None,**kw):
+        flags=[] if n is None else ['--max-steps',str(n)]
+        add(name,['--json',*flags,'-e',src],code=2 if message else 0,message=message,**kw)
+    ev('feature_red','1',2)
+    for repeat in range(2):
+        for n in (0,1,2):ev('int_'+str(n)+'_'+str(repeat),'1',n,STEP if n<2 else None)
+        for n in (3,4):ev('binding_'+str(n)+'_'+str(repeat),'let x=1\nx',n,STEP if n<4 else None)
+    ev('empty_zero','',0)
+    ev('max_u64','1',18446744073709551615)
+    ev('leading_zero','1','0002')
+    ev('empty_loop','while true {}',25,STEP)
+    ev('for_empty_has_no_body_nodes','for i in range(100) {}',25)
+    ev('for_loop','for i in range(100) { i }',25,STEP)
+    ev('recursion','fn f()=>f()\nf()',80,STEP)
+    ev('attempt_nested','attempt(()=>attempt(()=>{\nwhile true {}\n}))',40,STEP)
+    ev('attempt_no_refund','while true {\nlet r=attempt(()=>1/0)\n}',100,STEP)
+    for name,expr in [('map','map((x)=>x+1,range(100))'),('filter','filter((x)=>x>0,range(100))'),
+                      ('reduce','reduce((a,x)=>a+x,0,range(100))'),('sortBy','sortBy((x)=>x,range(100))'),
+                      ('minBy','minBy((x)=>x,range(100))'),('maxBy','maxBy((x)=>x,range(100))'),('each','each((x)=>x,range(100))')]:
+        ev('hof_'+name,expr,35,STEP)
+    for flag in ('--max-steps','--timeout-ms'):
+        for val in ('','-1','+1',' 1','1 ','1_0','1.0','１２','18446744073709551616'):
+            add('invalid_'+flag+'_'+repr(val),['--json',flag,val,'-e','1'],2,usage="选项 '"+flag+"' 的值必须是非负十进制 u64")
+        for tail in ([],['--']):
+            add('missing_'+flag+str(tail),['-e','1',flag,*tail],2,usage="选项 '"+flag+"' 需要一个非负十进制 u64 参数")
+        add('duplicate_'+flag,[flag,'1',flag,'2','-e','1'],2,usage="选项 '"+flag+"' 不能重复")
+        for cmd in ('check','test','--help','--version','-h','-V'):
+            add('inapplicable_'+cmd+flag,[cmd,flag,'2'],2,usage='执行限额选项只适用于运行命令')
+        for name in ('help','version'):
+            add('bare_path_'+name+flag,['--json',name,flag,'2'],2,cls='IOError')
+        equal_message="选项 '"+flag+"' 不支持等号写法，请使用 '"+flag+" N'"
+        for value in ('','2','bad=text'):
+            for cmd in ('eval','--help','--version'):
+                args=[flag+'='+value,'-e','1'] if cmd=='eval' else [cmd,flag+'='+value]
+                add('equals_'+flag+'_'+repr(value)+'_'+cmd,args,2,usage=equal_message)
+        add('equals_after_valid_'+flag,[flag,'2',flag+'=3','-e','1'],2,usage=equal_message)
+        add('nonfamily_'+flag,[flag+'X=2','-e','1'],2,usage='',forbidden='不支持等号写法')
+        for value in ('','2'):
+            token=flag+'='+value
+            add('equals_CODE_'+token,['--json','-e',token],2,cls='SyntaxError')
+            add('equals_check_CODE_'+token,['check','--json','-e',token],2,cls='SyntaxError')
+        token=flag+'=bad'
+        add('equals_argv_'+flag,['--json','-e','assert(argv()==['+json.dumps(token)+'])','--',token])
+    add('left_to_right',['check','--max-steps','bad','--timeout-ms','bad'],2,usage="选项 '--max-steps' 的值必须是非负十进制 u64")
+    for code in ('--max-steps','--timeout-ms','--','--json'):
+        add('code_protection_'+code,['--json','--max-steps','100','-e',code],2,cls='SyntaxError' if code=='--' else 'NameError')
+        add('check_code_protection_'+code,['check','--json','-e',code],2 if code=='--' else 0,cls='SyntaxError' if code=='--' else None)
+    src='assert(argv()==["--max-steps","9","--timeout-ms","0",""])'
+    tail=['--','--max-steps','9','--timeout-ms','0','']
+    add('order_before',['--max-steps','100','run','--timeout-ms','60000','--json','-e',src,*tail])
+    add('order_after',['run','--json','-e',src,'--timeout-ms','60000','--max-steps','100',*tail])
+    p=w/'single.lfz';p.write_text('#42\n1\n',encoding='utf8')
+    # Explicit run accepts non-.lfz files; bare invocation keeps its extension rule.
+    for name in ('help','version'):
+        (w/name).write_text('1\n',encoding='utf8')
+        for flag,value,msg in [('--max-steps','0',STEP),('--max-steps','2',None),
+                               ('--timeout-ms','0',DEADLINE),('--timeout-ms','60000',None)]:
+            add('real_named_file_'+name+flag+value,['--json','run',name,flag,value],2 if msg else 0,msg)
+    for name,args,data in [('bare',[str(p)],b''),('run',['run',str(p)],b''),('stdin',['-'],b'1'),('run_stdin',['run','-'],b'1'),('run_eval',['run','-e','1'],b'')]:
+        add('entry_'+name,['--json',*args,'--max-steps','2'],data=data)
+    add('deadline_zero',['--json','--timeout-ms','0','-e','1'],2,DEADLINE)
+    add('deadline_empty',['--json','--timeout-ms','0','-e',''])
+    add('deadline_priority',['--json','--max-steps','0','--timeout-ms','0','-e','1'],2,DEADLINE)
+    add('deadline_future',['--json','--timeout-ms','60000','-e','1'])
+    add('deadline_eventual',['--json','--timeout-ms','10','-e','while true {}'],2,DEADLINE)
+    add('syntax_before_budget',['--json','--max-steps','0','--timeout-ms','0','-e','let x ='],2,cls='SyntaxError')
+    # Leaf expr=2, entry import=1, entry expr=2: exactly five steps.
+    leaf=w/'leaf.lfz';leaf.write_text('#42\n1\n',encoding='utf8')
+    graph=w/'graph.lfz';graph.write_text('#42\nimport m from "./leaf.lfz"\n1\n',encoding='utf8')
+    for n in (4,5):add('graph_shared_'+str(n),['--json','--max-steps',str(n),str(graph)],2 if n<5 else 0,STEP if n<5 else None,where=graph if n<5 else None)
+    leaf.write_text('#42\n1\n',encoding='utf8')
+    add('dependency_fault',['--json','--max-steps','1',str(graph)],2,STEP,where=leaf)
+    lib=w/'func.lfz';lib.write_text('#42\nfn loop(){\nwhile true {}\n}\nstruct T{x:loop()}\nexport loop,T\n',encoding='utf8')
+    for name,body in [('function_fault','m.loop()'),('default_fault','let T=m.T\nT{}')]:
+        f=w/(name+'.lfz');f.write_text('#42\nimport m from "./func.lfz"\n'+body+'\n',encoding='utf8')
+        add(name,['--json','--max-steps','60',str(f)],2,STEP,where=lib)
+    selected=cases[:1] if a.red_only else cases
+    if a.prepare_only:
+        result={'schema':'LFZ-T17-PREPARED-1','cases_total':len(cases),'case_names':[c['name'] for c in cases],'executed':False}
+    else:
+        digest=sha(exe);assert digest==a.expected_sha.lower()
+        rows=[]
+        for c in selected:
+            assert sha(exe)==digest
+            row={'name':c['name'],'args':c['args'],'stdin_hex':c['data'].hex()}; checks={}
+            try:
+                r=subprocess.run([str(exe),*c['args']],input=c['data'],capture_output=True,cwd=w,env=env,timeout=4)
+                so,se=r.stdout.decode('utf8'),r.stderr.decode('utf8');row.update(exit=r.returncode,stdout=so,stderr=se)
+                checks['exit']=r.returncode==c['code']
+                if c['usage'] is not None:
+                    checks['usage_stdout_empty']=so==''
+                    checks['usage_message']=(se.splitlines()[0]=='lfz: '+c['usage']) if c['usage'] else bool(se)
+                    if c['forbidden']:checks['not_new_family']=c['forbidden'] not in se
+                else:
+                    obj=json.loads(so);checkmode=c['args'][0]=='check'
+                    keys=['ok']+(['mode','executed'] if checkmode else [])+(['error','message','file','line','col','traceback'] if c['code'] else [])
+                    checks['keys']=list(obj)==keys;checks['ok']=obj.get('ok')==(c['code']==0)
+                    checks['streams']=so.count('\n')==1 and se==c['output']
+                    if c['message']:checks['limit']=obj.get('error')=='ExecutionLimitError' and obj.get('message')==c['message']
+                    if c['cls']:checks['class']=obj.get('error')==c['cls']
+                    if c['where']:
+                        got=os.path.normcase(os.path.normpath(obj.get('file','').removeprefix('\\\\?\\')))
+                        checks['fault_file']=got==os.path.normcase(str(c['where']))
+                row.update(checks=checks,passed=all(checks.values()))
+            except (subprocess.TimeoutExpired,UnicodeError,ValueError) as e:row.update(exception=repr(e),passed=False)
+            rows.append(row)
+        assert sha(exe)==digest
+        result={'schema':'LFZ-T17-CLI-1','binary':str(exe.relative_to(ROOT)),'binary_sha256':digest,'bytes':exe.stat().st_size,'script_sha256':sha(Path(__file__)),'red_only':a.red_only,'checks_total':len(rows),'checks_passed':sum(r['passed'] for r in rows),'rows':rows}
+    result['timestamp_utc']=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf8',newline='\n')
+    print(json.dumps({k:v for k,v in result.items() if k not in ('rows','case_names')},ensure_ascii=False))
+    return 0 if a.prepare_only or result['checks_total']==result['checks_passed'] else 1
+if __name__=='__main__':sys.exit(main())

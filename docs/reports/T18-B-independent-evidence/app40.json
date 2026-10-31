@@ -1,0 +1,598 @@
+{
+  "date": "2026-10-30",
+  "binary_sha256": "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+  "binary_bytes": 1029120,
+  "source_hashes": {
+    "app\\jsonbatch_modules\\batch.lfz": "6afaa5a157d4375c2c7388331c933c76746d0c728196c1d6b487c5b3f830d406",
+    "app\\jsonbatch_modules\\common.lfz": "11e6f5bf1649dc3ba227d4e6e1b8b0ffb667d1828e8ef6301ae4f38721fc7cfd",
+    "app\\jsonbatch_modules\\main.lfz": "f8d5f441abe308ee9c1c97c6645601882fcf139acf8ee9b7352a0306d9f5a15f",
+    "app\\jsonbatch_modules\\record.lfz": "176fbdfcfab9aa590bdcb0627d644ed1b7b5359b45a1af61f5da6cf2e5f24d1e"
+  },
+  "status": "completed",
+  "rows": [
+    {
+      "name": "unlimited",
+      "arguments": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonbatch_modules\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\output.json"
+      ],
+      "exit": 0,
+      "stdout": "{\"failed\":1,\"passed\":2,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\output.json\",\"total\":3}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "enough_steps",
+      "arguments": [
+        "run",
+        "--max-steps",
+        "100000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonbatch_modules\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\output.json"
+      ],
+      "exit": 0,
+      "stdout": "{\"failed\":1,\"passed\":2,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\output.json\",\"total\":3}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "enough_time",
+      "arguments": [
+        "run",
+        "--timeout-ms",
+        "60000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonbatch_modules\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\output.json"
+      ],
+      "exit": 0,
+      "stdout": "{\"failed\":1,\"passed\":2,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\output.json\",\"total\":3}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "both",
+      "arguments": [
+        "run",
+        "--max-steps",
+        "100000",
+        "--timeout-ms",
+        "60000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonbatch_modules\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\output.json"
+      ],
+      "exit": 0,
+      "stdout": "{\"failed\":1,\"passed\":2,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\output.json\",\"total\":3}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "zero_steps",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "0",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonbatch_modules\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\output.json"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "one_step",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "1",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonbatch_modules\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\output.json"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":2,\"col\":13,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "zero_timeout",
+      "arguments": [
+        "run",
+        "--json",
+        "--timeout-ms",
+        "0",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonbatch_modules\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\output.json"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "both_zero",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "0",
+        "--timeout-ms",
+        "0",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonbatch_modules\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\output.json"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "completed_io_not_rolled_back",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "100",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\side-effect-probe.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\side-effect.txt"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\side-effect-probe.lfz\",\"line\":4,\"col\":7,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\side-effect-probe.lfz\",\"line\":4,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_unlimited",
+      "arguments": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"AssertionError\",\"message\":\"AFTER_ATTEMPT\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":4,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":4,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_0",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "0",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_1",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "1",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":2,\"col\":13,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_2",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "2",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_3",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "3",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":3,\"col\":13,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_4",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "4",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":3,\"col\":22,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_5",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "5",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":4,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":4,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_6",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "6",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":7,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":7,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_7",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "7",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":11,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":11,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_8",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "8",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_9",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "9",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_10",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "10",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":8,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":8,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_11",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "11",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_12",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "12",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_13",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "13",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"col\":14,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_14",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "14",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"col\":14,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_15",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "15",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"col\":31,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_16",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "16",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"col\":38,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_17",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "17",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":4,\"col\":5,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":4,\"func\":\"parseLine\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_18",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "18",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":4,\"col\":5,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":4,\"func\":\"parseLine\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_19",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "19",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":4,\"col\":5,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":4,\"func\":\"parseLine\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_20",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "20",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":8,\"col\":5,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":4,\"func\":\"parseLine\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":8,\"func\":\"mark\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_21",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "21",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":8,\"col\":20,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":4,\"func\":\"parseLine\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":8,\"func\":\"mark\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_22",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "22",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":9,\"col\":5,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":4,\"func\":\"parseLine\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":9,\"func\":\"mark\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_23",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "23",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":9,\"col\":5,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":4,\"func\":\"parseLine\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":9,\"func\":\"mark\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_24",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "24",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":9,\"col\":5,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":4,\"func\":\"parseLine\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\common.lfz\",\"line\":9,\"func\":\"mark\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_25",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "25",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":5,\"col\":5,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":5,\"func\":\"parseLine\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_26",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "26",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":5,\"col\":18,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":5,\"func\":\"parseLine\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_27",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "27",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":5,\"col\":26,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":5,\"func\":\"parseLine\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "probe_budget_28",
+      "arguments": [
+        "run",
+        "--json",
+        "--max-steps",
+        "28",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\app40\\attempt-budget-probe.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":5,\"col\":32,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\app40\\\\attempt-budget-probe.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":5,\"func\":\"parseLine\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\jsonbatch_modules\\\\record.lfz\",\"line\":5,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "check_budget_rejected",
+      "arguments": [
+        "check",
+        "--max-steps",
+        "10",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonbatch_modules\\main.lfz"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 执行限额选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "passed": true
+    }
+  ],
+  "callback_budget_witness": 28,
+  "total": 40,
+  "passed": 40
+}

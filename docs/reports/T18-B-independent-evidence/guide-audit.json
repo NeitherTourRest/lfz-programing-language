@@ -1,0 +1,45 @@
+{
+  "binary_sha256": "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+  "document_count": 11,
+  "records": [
+    {
+      "name": "human",
+      "scope": "read-only author evidence audit; no product rerun",
+      "documents": {
+        "docs\\guide\\README.md": true,
+        "docs\\guide\\reference.md": true,
+        "docs\\guide\\tutorial.md": true,
+        "docs\\guide\\testing.md": true,
+        "docs\\guide\\errors.md": true,
+        "docs\\guide\\http.md": true
+      },
+      "manifest_sha256": "dbec746e8f55db9379e049ddaacc4ffb39995af615a51b7f0e0892039e4a042a",
+      "result_sha256": "d06f59be9023af8ad0322786d8cd42955238ae5b32da6112fc31f95416914af9",
+      "total": 21,
+      "passed": 21,
+      "server_closed": true,
+      "default_failure_sha256": "c009b486f56c6e62d558178abd8bbbe62891c7dd6f29eeac1f085aff32e7f34a",
+      "default_visits": [],
+      "default_checks_passed": null
+    },
+    {
+      "name": "ai",
+      "scope": "read-only author evidence audit; no product rerun",
+      "documents": {
+        ".opencode/skills/lfz-programming/SKILL.md": true,
+        ".opencode/skills/lfz-programming/README.md": true,
+        ".opencode/skills/lfz-programming/VERIFICATION.md": true,
+        ".opencode/skills/lfz-programming/prompt-template.md": true,
+        "docs/guide/ai/README.md": true
+      },
+      "manifest_sha256": "b88c8171130440997829a371cbb34bad78d13f856e08a4a6987c2f814a9225cc",
+      "result_sha256": "ba48571a1206094721b90a6c07d9dcc92ba89cf0c1cdad5769d285f8bfd8a089",
+      "total": 25,
+      "passed": 25,
+      "server_closed": true,
+      "default_failure_sha256": "43822b1580700dbd7750e24de62171690d9170540a73f388718858c055438609",
+      "default_visits": [],
+      "default_checks_passed": 17
+    }
+  ]
+}

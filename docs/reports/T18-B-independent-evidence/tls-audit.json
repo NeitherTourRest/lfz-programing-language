@@ -1,0 +1,16 @@
+{
+  "scope": "read-only audit, not independent TLS rerun",
+  "source_sha256": "b2214f0808585decc7e4fb0577643252c5bf2c8163b8746a323727d921b21981",
+  "result": {
+    "command": "lfz --allow-http -e <local self-signed HTTPS> --json",
+    "exit": 2,
+    "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"HTTP 异步请求失败：WinHTTP error 12175\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+    "stderr": "",
+    "server_events": [
+      "accepted",
+      "server-side TLS handshake complete; not client trust proof",
+      "application_bytes=0"
+    ],
+    "trusted_tls_success_tested": false
+  }
+}

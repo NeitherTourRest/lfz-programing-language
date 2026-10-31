@@ -1,0 +1,4 @@
+native_u16_bytes_excluding_NUL=164
+header_utf8_bytes=82
+body_bytes=3
+N=85

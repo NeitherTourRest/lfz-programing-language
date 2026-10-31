@@ -1,0 +1,1453 @@
+{
+  "schema": "LFZ-T18B-CLI-1",
+  "binary_sha256": "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+  "script_sha256": "744bbd9ffe46ecc96ef11ec039b8e0f5fc94cce1bce0c853e896564ce0b18831",
+  "checks_total": 49,
+  "checks_passed": 49,
+  "rows": [
+    {
+      "name": "feature_red",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"GET\",\"http://127.0.0.1:59617/\",[],\"\",1000,10000)\nassert(r.status==200)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f20485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786529.2616117
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "status_404",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"GET\",\"http://127.0.0.1:59617/404\",[],\"\",1000,10000)\nassert(r.status==404)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/404",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f34303420485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786529.359348
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "status_500",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"GET\",\"http://127.0.0.1:59617/500\",[],\"\",1000,10000)\nassert(r.status==500)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/500",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f35303020485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786529.457079
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "POST_UTF8",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"POST\",\"http://127.0.0.1:59617/echo\",[],\"雪\",1000,10000)\nassert(r.body==\"雪\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/echo",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Content-Length",
+              " 3"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "e99baa",
+          "head_hex": "504f5354202f6563686f20485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a436f6e74656e742d4c656e6774683a20330d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786529.5563365
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "query_percent",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"GET\",\"http://127.0.0.1:59617/%E9%9B%AA?q=1\",[],\"\",1000,10000)\nassert(r.body==\"ok\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/%E9%9B%AA?q=1",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f2545392539422541413f713d3120485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786529.6561554
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "duplicate_headers",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"GET\",\"http://127.0.0.1:59617/duplicate\",[],\"\",1000,10000)\nassert(filter((p)=>p[0]==\"x-dup\",r.headers)==[[\"x-dup\",\"one\"],[\"x-dup\",\"two\"]])\nassert(len(filter((p)=>p[0]==\"set-cookie\",r.headers))==2)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/duplicate",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f6475706c696361746520485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786529.7555049
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "empty",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "assert(httpRequest(\"GET\",\"http://127.0.0.1:59617/empty\",[],\"\",1000,10000).body==\"\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/empty",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f656d70747920485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786529.8545835
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "HEAD",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "assert(httpRequest(\"HEAD\",\"http://127.0.0.1:59617/\",[],\"\",1000,10000).body==\"\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "HEAD",
+          "path": "/",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "48454144202f20485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786529.9524227
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "BOM_CRLF",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "assert(httpRequest(\"GET\",\"http://127.0.0.1:59617/utf8\",[],\"\",1000,10000).body==\"﻿a\\r\\n\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/utf8",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f7574663820485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786530.0505715
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_UTF8",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617/invalid\",[],\"\",1000,10000)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 响应 body 不是合法 UTF-8\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/invalid",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f696e76616c696420485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786530.1533179
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "redirect_no_follow",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "assert(httpRequest(\"GET\",\"http://127.0.0.1:59617/redirect\",[],\"\",1000,10000).status==302)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/redirect",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f726564697265637420485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786530.2533821
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "zero_cap",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617/\",[],\"\",1000,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 响应超过字节上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f20485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786530.3517102
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "local_slowheaders",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=attempt(()=>httpRequest(\"GET\",\"http://127.0.0.1:59617/slowheaders\",[],\"\",50,10000))\nassert(!r.ok)\nassert(r.error.message==\"HTTP 请求时间上限已到\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/slowheaders",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f736c6f776865616465727320485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786530.4533963
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "local_slowbody",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=attempt(()=>httpRequest(\"GET\",\"http://127.0.0.1:59617/slowbody\",[],\"\",50,10000))\nassert(!r.ok)\nassert(r.error.message==\"HTTP 请求时间上限已到\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/slowbody",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f736c6f77626f647920485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786530.8943161
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "local_drip",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=attempt(()=>httpRequest(\"GET\",\"http://127.0.0.1:59617/drip\",[],\"\",50,10000))\nassert(!r.ok)\nassert(r.error.message==\"HTTP 请求时间上限已到\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/drip",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f6472697020485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786531.329642
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "global_deadline",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "attempt(()=>httpRequest(\"GET\",\"http://127.0.0.1:59617/slowbody\",[],\"\",1000,10000))",
+        "--timeout-ms",
+        "50"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"<command>\",\"line\":1,\"col\":13,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/slowbody",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f736c6f77626f647920485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786531.4729723
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "arity",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest()"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 httpRequest 期待 6 个参数，得到 0\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "outer_type",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(1,\"\",[],\"\",1,1)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'httpRequest' 不支持 int 与 string\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "pair_shape",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617\",[[\"x\"]],\"\",1,1)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP headers 非法或超出上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "method_get",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"get\",\"http://127.0.0.1:59617/\",[],\"\",1000,10000)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP method 不受支持\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "method_TRACE",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"TRACE\",\"http://127.0.0.1:59617/\",[],\"\",1000,10000)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP method 不受支持\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_url_ftp://127.0.0.1/",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"ftp://127.0.0.1/\",[],\"\",100,100)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP URL 非法或超出长度上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_url_http://u:p@127.0.0.1/",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://u:p@127.0.0.1/\",[],\"\",100,100)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP URL 非法或超出长度上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_url_http://127.0.0.1/#bad",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1/#bad\",[],\"\",100,100)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP URL 非法或超出长度上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_url_http://127.0.0.1/%zz",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1/%zz\",[],\"\",100,100)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP URL 非法或超出长度上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_url_http://127.0.0.1:0/",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:0/\",[],\"\",100,100)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP URL 非法或超出长度上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "reserved_Host",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617/\",[[\"Host\",\"x\"]],\"\",1000,10000)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP headers 非法或超出上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "reserved_Content-Length",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617/\",[[\"Content-Length\",\"x\"]],\"\",1000,10000)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP headers 非法或超出上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "reserved_Accept-Encoding",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617/\",[[\"Accept-Encoding\",\"x\"]],\"\",1000,10000)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP headers 非法或超出上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "GET_body",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617/\",[],\"x\",1000,10000)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP body 非法或超出上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "timeout_range",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617/\",[],\"\",0,10000)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP timeoutMs 必须在 1..600000 范围内\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "cap_range",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617/\",[],\"\",1000,-1)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP maxResponseBytes 必须在 0..16777216 范围内\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "default_disabled",
+      "args": [
+        "--json",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617/\",[],\"\",1000,10000)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "process_does_not_grant_http",
+      "args": [
+        "--json",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617/\",[],\"\",1000,10000)",
+        "--allow-process"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "later_session_disabled",
+      "args": [
+        "--json",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617/\",[],\"\",1000,10000)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "duplicate_flag",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "1",
+        "--allow-http"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-http' 不能重复\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "usage": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_",
+      "args": [
+        "--json",
+        "-e",
+        "1",
+        "--allow-http="
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-http' 不接受值\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "usage": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "equals_1",
+      "args": [
+        "--json",
+        "-e",
+        "1",
+        "--allow-http=1"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-http' 不接受值\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "usage": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_check",
+      "args": [
+        "--json",
+        "--allow-http",
+        "check"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: HTTP 能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "usage": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_test",
+      "args": [
+        "--json",
+        "--allow-http",
+        "test"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: HTTP 能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "usage": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_--help",
+      "args": [
+        "--json",
+        "--allow-http",
+        "--help"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: HTTP 能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "usage": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_-h",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-h"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: HTTP 能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "usage": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_--version",
+      "args": [
+        "--json",
+        "--allow-http",
+        "--version"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: HTTP 能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "usage": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "inapplicable_-V",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-V"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: HTTP 能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "usage": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "CODE_flag",
+      "args": [
+        "--json",
+        "-e",
+        "--allow-http"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'allow'\",\"file\":\"<command>\",\"line\":1,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "argv_flag",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "assert(argv()==[\"--allow-http\",\"--allow-http=1\"])",
+        "--",
+        "--allow-http",
+        "--allow-http=1"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "module_source",
+      "args": [
+        "--json",
+        "--allow-http",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-public\\entry.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 请求时间上限已到\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-public\\\\fault.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-public\\\\fault.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/slowbody",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f736c6f77626f647920485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786534.3545288
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "source": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "exact_N",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617/\",[],\"\",1000,61)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f20485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786534.7970783
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "request_count": true
+      },
+      "passed": true
+    },
+    {
+      "name": "over_N_minus_one",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:59617/\",[],\"\",1000,60)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 响应超过字节上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:59617"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f20485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3539363137",
+          "time": 786534.8974341
+        }
+      ],
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true,
+        "request_count": true
+      },
+      "passed": true
+    }
+  ],
+  "pending": [
+    "TLS self-signed rejection fixture",
+    "host cancel/callback diagnostics require unit/independent tests"
+  ],
+  "timestamp_utc": "2026-10-30T16:18:00.403010+00:00",
+  "server_errors": [],
+  "header_witness_sha256": "a47fd2588b8ad0684199637d71d97352ee419e0f3fbdad67655c0ad8523e4e9d"
+}

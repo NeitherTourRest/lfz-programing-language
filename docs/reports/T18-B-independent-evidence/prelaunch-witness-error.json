@@ -1,0 +1,6 @@
+{
+  "error": "KeyError: route",
+  "reason": "Verifier initially passed unbound native witness to public script; no product launched. Correct bound metadata witness then complete49 PASS.",
+  "initial": "docs/tooling/evidence/T18-B/public-header-witness.json",
+  "correct": "docs/reports/T18-B-blackbox-evidence/public-header-witness-bound.json"
+}

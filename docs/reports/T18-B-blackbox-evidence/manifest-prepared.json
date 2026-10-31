@@ -1,0 +1,9 @@
+{
+  "phase": "prepare only no HTTP product execution",
+  "script_sha256": "744bbd9ffe46ecc96ef11ec039b8e0f5fc94cce1bce0c853e896564ce0b18831",
+  "files": {
+    "prepared.json": "704ea4d2122d489bb0f9281da17ff6268373d3555411411428a03a0997b519ae",
+    "tooling-red-reference.json": "8cf306032637db9263ea471d2932ced3973dd04e808e233051e6f092441404fb"
+  },
+  "note": "tooling red is cited existing evidence, not run by test-engineer; prepared plan predates witness identity-check addition only"
+}

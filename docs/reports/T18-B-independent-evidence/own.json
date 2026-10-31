@@ -1,0 +1,417 @@
+{
+  "total": 11,
+  "passed": 11,
+  "fixture_reuse": "public49 bounded loopback; independent request/oracle script",
+  "rows": [
+    {
+      "name": "404_value",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"GET\",\"http://127.0.0.1:50127/404\",[],\"\",500,4096)\nassert(r.status==404 && r.body==\"ok\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/404",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:50127"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f34303420485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3530313237",
+          "time": 786748.5922326
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "duplicates",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"GET\",\"http://127.0.0.1:50129/duplicate\",[],\"\",500,4096)\nassert(len(filter((x)=>x[0]==\"x-dup\",r.headers))==2)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/duplicate",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:50129"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f6475706c696361746520485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3530313239",
+          "time": 786748.6272355
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "redirect_not_followed",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-http",
+        "-e",
+        "assert(httpRequest(\"GET\",\"http://127.0.0.1:50131/redirect\",[],\"\",500,4096).status==302)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/redirect",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:50131"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f726564697265637420485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3530313331",
+          "time": 786748.66393
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "cookie_no_session_pool",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:50133/cookie\",[],\"\",500,4096)\nhttpRequest(\"GET\",\"http://127.0.0.1:50133/\",[],\"\",500,4096)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/cookie",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:50133"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f636f6f6b696520485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3530313333",
+          "time": 786748.698937
+        },
+        {
+          "method": "GET",
+          "path": "/",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:50133"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f20485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3530313333",
+          "time": 786748.7003109
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "POST_no_retry_direct_proxy",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"POST\",\"http://127.0.0.1:50136/echo?x=%E9%9B%AA\",[],\"雪\",500,4096)\nassert(r.body==\"雪\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/echo?x=%E9%9B%AA",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Content-Length",
+              " 3"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:50136"
+            ]
+          ],
+          "body_hex": "e99baa",
+          "head_hex": "504f5354202f6563686f3f783d25453925394225414120485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a436f6e74656e742d4c656e6774683a20330d0a486f73743a203132372e302e302e313a3530313336",
+          "time": 786748.7358013
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "exact_API_N61",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:50138/\",[],\"\",500,61)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:50138"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f20485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3530313338",
+          "time": 786748.7703947
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "API_N60",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:50140/\",[],\"\",500,60)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 响应超过字节上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:50140"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f20485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3530313430",
+          "time": 786748.8048884
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "local_attempt",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=attempt(()=>httpRequest(\"GET\",\"http://127.0.0.1:50142/slowbody\",[],\"\",30,4096))\nassert(!r.ok && r.error.message==\"HTTP 请求时间上限已到\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/slowbody",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:50142"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f736c6f77626f647920485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3530313432",
+          "time": 786748.8392485
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "drip_total_deadline",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-http",
+        "--timeout-ms",
+        "50",
+        "-e",
+        "attempt(()=>httpRequest(\"GET\",\"http://127.0.0.1:50144/drip\",[],\"\",2000,4096))"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"<command>\",\"line\":1,\"col\":13,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/drip",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:50144"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f6472697020485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3530313434",
+          "time": 786748.8927029
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "module_fault_source",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "--allow-http",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\own\\main.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 请求时间上限已到\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\own\\\\lib.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\own\\\\lib.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/slowheaders",
+          "headers": [
+            [
+              "Connection",
+              " Keep-Alive"
+            ],
+            [
+              "User-Agent",
+              " LFZ/1.4"
+            ],
+            [
+              "Host",
+              " 127.0.0.1:50146"
+            ]
+          ],
+          "body_hex": "",
+          "head_hex": "474554202f736c6f776865616465727320485454502f312e310d0a436f6e6e656374696f6e3a204b6565702d416c6976650d0a557365722d4167656e743a204c465a2f312e340d0a486f73743a203132372e302e302e313a3530313436",
+          "time": 786748.9748493
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "separate_process_disabled",
+      "args": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "--json",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:50150/\",[],\"\",500,4096)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "requests": [],
+      "passed": true
+    }
+  ]
+}

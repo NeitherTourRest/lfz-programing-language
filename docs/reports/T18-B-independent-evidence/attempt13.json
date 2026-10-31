@@ -1,0 +1,104 @@
+{
+  "date": "2026-10-30T16:19:38.880074+00:00",
+  "binary": "target\\release\\lfz.exe",
+  "binary_sha256": "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+  "total": 13,
+  "passed": 13,
+  "rows": [
+    {
+      "name": "exact_result",
+      "source": "print(jsonStringify(attempt(() => nil)))",
+      "exit": 0,
+      "stdout": "{\"error\":null,\"ok\":true,\"value\":null}\n",
+      "stderr": ""
+    },
+    {
+      "name": "caught_named_trace",
+      "source": "fn inner() => 1 / 0\nfn middle() => inner()\nlet r = attempt(() => middle())\nprint(jsonStringify(r))",
+      "exit": 0,
+      "stdout": "{\"error\":{\"class\":\"ZeroDivisionError\",\"col\":15,\"line\":1,\"message\":\"除以零\",\"traceback\":[{\"col\":9,\"func\":\"<module>\",\"line\":3},{\"col\":23,\"func\":\"<fn>\",\"line\":3},{\"col\":16,\"func\":\"middle\",\"line\":2},{\"col\":15,\"func\":\"inner\",\"line\":1}]},\"ok\":false,\"value\":null}\n",
+      "stderr": ""
+    },
+    {
+      "name": "late_uncaught_trace",
+      "source": "fn oldbad() => 1 / 0\nlet r = attempt(() => oldbad())\nfn fresh() => missing_t15_trace\nfresh()",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 4, in <module>\n    fresh()\n    ^\n  File \"<command>\", line 3, in fresh\n    fn fresh() => missing_t15_trace\n                  ^\nNameError: 未定义的名字 'missing_t15_trace'\n"
+    },
+    {
+      "name": "io_not_rolled_back",
+      "source": "let r = attempt(() => { writeFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T15-test\\\\io-existing.txt\", \"after\")\nappendFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T15-test\\\\io-existing.txt\", \"!\")\nwriteFile(\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T15-test\\\\io-created.txt\", \"new\")\nfail(\"io\") })\nprint(jsonStringify(r.ok))",
+      "exit": 0,
+      "stdout": "false\n",
+      "stderr": ""
+    },
+    {
+      "name": "output_not_rolled_back",
+      "source": "let r = attempt(() => { eprint(\"kept\")\n fail(\"output\") })\nprint(r.ok)",
+      "exit": 0,
+      "stdout": "false\n",
+      "stderr": "kept\n"
+    },
+    {
+      "name": "check_false_is_success",
+      "source": "let r = attempt(() => check(false))\nprint(jsonStringify(r))",
+      "exit": 0,
+      "stdout": "{\"error\":null,\"ok\":true,\"value\":false}\n",
+      "stderr": "check 失败\n"
+    },
+    {
+      "name": "check_intrinsic_compatible",
+      "source": "check(true)",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "boundary_attempt()",
+      "source": "attempt()",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 1, in <module>\n    attempt()\n    ^\nTypeError: 函数 attempt 期待 1 个参数，得到 0\n"
+    },
+    {
+      "name": "boundary_attempt(() => 1, () => 2)",
+      "source": "attempt(() => 1, () => 2)",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 1, in <module>\n    attempt(() => 1, () => 2)\n    ^\nTypeError: 函数 attempt 期待 1 个参数，得到 2\n"
+    },
+    {
+      "name": "boundary_attempt(1)",
+      "source": "attempt(1)",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 1, in <module>\n    attempt(1)\n    ^\nTypeError: 不可调用：int 不是函数\n"
+    },
+    {
+      "name": "boundary_attempt((x)=>x)",
+      "source": "attempt((x)=>x)",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 1, in <module>\n    attempt((x)=>x)\n    ^\nTypeError: 函数 <fn> 期待 1 个参数，得到 0\n"
+    },
+    {
+      "name": "boundary_attempt(1/0)",
+      "source": "attempt(1/0)",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 1, in <module>\n    attempt(1/0)\n            ^\nZeroDivisionError: 除以零\n"
+    },
+    {
+      "name": "boundary_attempt(() => range(9223372036854775807))",
+      "source": "attempt(() => range(9223372036854775807))",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<command>\", line 1, in <module>\n    attempt(() => range(9223372036854775807))\n    ^\n  File \"<command>\", line 1, in <fn>\n    attempt(() => range(9223372036854775807))\n                  ^\nOverflowError: 容量溢出：所需容量超出可分配上限\n"
+    }
+  ],
+  "io_witness": {
+    "existing_after_hex": "616674657221",
+    "created_after_hex": "6e6577"
+  }
+}

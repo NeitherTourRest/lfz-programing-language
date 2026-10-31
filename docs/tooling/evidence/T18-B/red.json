@@ -1,0 +1,7 @@
+{
+  "meaning": "old product lacks HTTP permission flag; no network action",
+  "output": "lfz: 裸文件调用只接受一个 <file> 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）",
+  "expectedExit": 0,
+  "actualExit": 2,
+  "command": "lfz --allow-http -e 1"
+}

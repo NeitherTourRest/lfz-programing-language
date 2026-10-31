@@ -1,0 +1,9 @@
+{
+  "src/http_control.rs": "3a2373b1422d1e845dfc188b53b2e7036af3725d22c156650ab1a6c34f09a4a2",
+  "src/http_control/windows.rs": "0a525c7476dbf9d086b2f58e37cf18c31f02d3856766fe1ad4abe5e13e2c4a78",
+  "src/evaluator.rs": "42f1ba0d4e22a9cd9d0c705436b65fa797aab65e2a0c1faf3aa5d5c9eac4b8ad",
+  "src/cli.rs": "0fba82cf0c962d04382067cdf8d52c40f17a7d59cc640f42fdff1cb71c1b7fe4",
+  "src/test_runner.rs": "a314790d88d4296e2cb953c7b1a565f83e4f3f2f6bec543216fe70c024f2400c",
+  "docs/reports/T18-B-contract.md": "134811c9771cac9c5cd92dcf2ad9cf568034feb179240dd089769e95263788e2",
+  "docs/spec/interface-contract.md": "ef48f2068855a559b5edbadf42bea84281b2ecc4cc0ea4a1f223f00de5ef0f04"
+}

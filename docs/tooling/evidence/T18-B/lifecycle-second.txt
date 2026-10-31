@@ -1,0 +1,12 @@
+
+running 7 tests
+test http_control::windows::tests::cancellation_completion_races_repeat_without_callbacks_left ... ok
+test http_control::windows::tests::close_diagnostics_never_hide_success_or_global_reason ... ok
+test http_control::windows::tests::live_cancel_and_global_deadline ... ok
+test http_control::windows::tests::public_exact_n_native_witness ... ok
+test http_control::windows::tests::raw_headers_exact_n_duplicate_status_and_utf16_evidence ... ok
+test http_control::windows::tests::synchronized_real_cancellation_vs_response_completion ... ok
+test http_control::windows::tests::total_timeout_slow_headers_body_and_drip ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 492 filtered out; finished in 0.68s
+

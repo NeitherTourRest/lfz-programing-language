@@ -1,0 +1,508 @@
+{
+  "date": "2026-10-30",
+  "binary_sha256": "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+  "fixture_sha256": "51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee",
+  "source_sha256": "b06a9bc3c00dc0822b7a88f5477a9365144a7883b2f783c918f1944cb13a0d65",
+  "status": "completed",
+  "rows": [
+    {
+      "name": "disabled_no_spawn",
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\toolplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\report.json"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"AssertionError\",\"message\":\"toolplan: 需要 --allow-process\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":10,\"col\":49,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":38,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":30,\"func\":\"main\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":30,\"func\":\"<fn>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":10,\"func\":\"runJob\"}]}\n",
+      "stderr": "",
+      "output_hex": "4b454550",
+      "passed": true
+    },
+    {
+      "name": "orchestration_first",
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--allow-process",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\toolplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\report.json"
+      ],
+      "exit": 0,
+      "stdout": "{\"failed\":3,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\toolplan\\\\report.json\",\"succeeded\":6,\"total\":9}\n",
+      "stderr": "",
+      "output_hex": "7b226661696c6564223a332c22726f7773223a5b7b226572726f72223a6e756c6c2c226e616d65223a2261726773222c226f6b223a747275652c2276616c7565223a7b2265786974436f6465223a302c227369676e616c223a6e756c6c2c22737464657272223a22222c227374646f7574223a22303a5c6e333a6120625c6e31303ae4b8ade69687f09f99825c6e373a5c2271756f74655c225c6e353a7461696c5c5c5c6e227d7d2c7b226572726f72223a6e756c6c2c226e616d65223a226e6f6e7a65726f222c226f6b223a747275652c2276616c7565223a7b2265786974436f6465223a372c227369676e616c223a6e756c6c2c22737464657272223a22222c227374646f7574223a22227d7d2c7b226572726f72223a6e756c6c2c226e616d65223a226475616c222c226f6b223a747275652c2276616c7565223a7b2265786974436f6465223a302c227369676e616c223a6e756c6c2c22737464657272223a2278787878222c227374646f7574223a2278787878227d7d2c7b226572726f72223a7b22636c617373223a2256616c75654572726f72222c22636f6c223a33322c226c696e65223a372c226d657373616765223a22e5ad90e8bf9be7a88be8be93e587bae8b685e8bf87e5ad97e88a82e4b88ae99990222c2274726163656261636b223a5b7b22636f6c223a312c2266756e63223a223c6d6f64756c653e222c226c696e65223a33387d2c7b22636f6c223a31362c2266756e63223a226d61696e222c226c696e65223a33307d2c7b22636f6c223a32392c2266756e63223a223c666e3e222c226c696e65223a33307d2c7b22636f6c223a31382c2266756e63223a2272756e4a6f62222c226c696e65223a377d2c7b22636f6c223a33322c2266756e63223a223c666e3e222c226c696e65223a377d5d7d2c226e616d65223a22746f6f5f6d756368222c226f6b223a66616c73652c2276616c7565223a6e756c6c7d2c7b226572726f72223a7b22636c617373223a2256616c75654572726f72222c22636f6c223a33322c226c696e65223a372c226d657373616765223a22e5ad90e8bf9be7a88be689a7e8a18ce697b6e997b4e4b88ae99990e5b7b2e588b0222c2274726163656261636b223a5b7b22636f6c223a312c2266756e63223a223c6d6f64756c653e222c226c696e65223a33387d2c7b22636f6c223a31362c2266756e63223a226d61696e222c226c696e65223a33307d2c7b22636f6c223a32392c2266756e63223a223c666e3e222c226c696e65223a33307d2c7b22636f6c223a31382c2266756e63223a2272756e4a6f62222c226c696e65223a377d2c7b22636f6c223a33322c2266756e63223a223c666e3e222c226c696e65223a377d5d7d2c226e616d65223a226c6f63616c5f74696d656f7574222c226f6b223a66616c73652c2276616c7565223a6e756c6c7d2c7b226572726f72223a7b22636c617373223a2256616c75654572726f72222c22636f6c223a33322c226c696e65223a372c226d657373616765223a22e5ad90e8bf9be7a88be8be93e587bae4b88de698afe59088e6b395205554462d38222c2274726163656261636b223a5b7b22636f6c223a312c2266756e63223a223c6d6f64756c653e222c226c696e65223a33387d2c7b22636f6c223a31362c2266756e63223a226d61696e222c226c696e65223a33307d2c7b22636f6c223a32392c2266756e63223a223c666e3e222c226c696e65223a33307d2c7b22636f6c223a31382c2266756e63223a2272756e4a6f62222c226c696e65223a377d2c7b22636f6c223a33322c2266756e63223a223c666e3e222c226c696e65223a377d5d7d2c226e616d65223a22696e76616c69645f75746638222c226f6b223a66616c73652c2276616c7565223a6e756c6c7d2c7b226572726f72223a6e756c6c2c226e616d65223a22656f66222c226f6b223a747275652c2276616c7565223a7b2265786974436f6465223a302c227369676e616c223a6e756c6c2c22737464657272223a22222c227374646f7574223a2230227d7d2c7b226572726f72223a6e756c6c2c226e616d65223a226d61726b6572222c226f6b223a747275652c2276616c7565223a7b2265786974436f6465223a302c227369676e616c223a6e756c6c2c22737464657272223a22222c227374646f7574223a22227d7d2c7b226572726f72223a6e756c6c2c226e616d65223a2261667465725f6572726f7273222c226f6b223a747275652c2276616c7565223a7b2265786974436f6465223a302c227369676e616c223a6e756c6c2c22737464657272223a22222c227374646f7574223a22353a61667465725c6e227d7d5d2c22737563636565646564223a362c22746f74616c223a397d0a",
+      "passed": true,
+      "report": {
+        "failed": 3,
+        "rows": [
+          {
+            "error": null,
+            "name": "args",
+            "ok": true,
+            "value": {
+              "exitCode": 0,
+              "signal": null,
+              "stderr": "",
+              "stdout": "0:\n3:a b\n10:中文🙂\n7:\"quote\"\n5:tail\\\n"
+            }
+          },
+          {
+            "error": null,
+            "name": "nonzero",
+            "ok": true,
+            "value": {
+              "exitCode": 7,
+              "signal": null,
+              "stderr": "",
+              "stdout": ""
+            }
+          },
+          {
+            "error": null,
+            "name": "dual",
+            "ok": true,
+            "value": {
+              "exitCode": 0,
+              "signal": null,
+              "stderr": "xxxx",
+              "stdout": "xxxx"
+            }
+          },
+          {
+            "error": {
+              "class": "ValueError",
+              "col": 32,
+              "line": 7,
+              "message": "子进程输出超过字节上限",
+              "traceback": [
+                {
+                  "col": 1,
+                  "func": "<module>",
+                  "line": 38
+                },
+                {
+                  "col": 16,
+                  "func": "main",
+                  "line": 30
+                },
+                {
+                  "col": 29,
+                  "func": "<fn>",
+                  "line": 30
+                },
+                {
+                  "col": 18,
+                  "func": "runJob",
+                  "line": 7
+                },
+                {
+                  "col": 32,
+                  "func": "<fn>",
+                  "line": 7
+                }
+              ]
+            },
+            "name": "too_much",
+            "ok": false,
+            "value": null
+          },
+          {
+            "error": {
+              "class": "ValueError",
+              "col": 32,
+              "line": 7,
+              "message": "子进程执行时间上限已到",
+              "traceback": [
+                {
+                  "col": 1,
+                  "func": "<module>",
+                  "line": 38
+                },
+                {
+                  "col": 16,
+                  "func": "main",
+                  "line": 30
+                },
+                {
+                  "col": 29,
+                  "func": "<fn>",
+                  "line": 30
+                },
+                {
+                  "col": 18,
+                  "func": "runJob",
+                  "line": 7
+                },
+                {
+                  "col": 32,
+                  "func": "<fn>",
+                  "line": 7
+                }
+              ]
+            },
+            "name": "local_timeout",
+            "ok": false,
+            "value": null
+          },
+          {
+            "error": {
+              "class": "ValueError",
+              "col": 32,
+              "line": 7,
+              "message": "子进程输出不是合法 UTF-8",
+              "traceback": [
+                {
+                  "col": 1,
+                  "func": "<module>",
+                  "line": 38
+                },
+                {
+                  "col": 16,
+                  "func": "main",
+                  "line": 30
+                },
+                {
+                  "col": 29,
+                  "func": "<fn>",
+                  "line": 30
+                },
+                {
+                  "col": 18,
+                  "func": "runJob",
+                  "line": 7
+                },
+                {
+                  "col": 32,
+                  "func": "<fn>",
+                  "line": 7
+                }
+              ]
+            },
+            "name": "invalid_utf8",
+            "ok": false,
+            "value": null
+          },
+          {
+            "error": null,
+            "name": "eof",
+            "ok": true,
+            "value": {
+              "exitCode": 0,
+              "signal": null,
+              "stderr": "",
+              "stdout": "0"
+            }
+          },
+          {
+            "error": null,
+            "name": "marker",
+            "ok": true,
+            "value": {
+              "exitCode": 0,
+              "signal": null,
+              "stderr": "",
+              "stdout": ""
+            }
+          },
+          {
+            "error": null,
+            "name": "after_errors",
+            "ok": true,
+            "value": {
+              "exitCode": 0,
+              "signal": null,
+              "stderr": "",
+              "stdout": "5:after\n"
+            }
+          }
+        ],
+        "succeeded": 6,
+        "total": 9
+      }
+    },
+    {
+      "name": "orchestration_repeat",
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--allow-process",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\toolplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\report.json"
+      ],
+      "exit": 0,
+      "stdout": "{\"failed\":3,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\toolplan\\\\report.json\",\"succeeded\":6,\"total\":9}\n",
+      "stderr": "",
+      "output_hex": "7b226661696c6564223a332c22726f7773223a5b7b226572726f72223a6e756c6c2c226e616d65223a2261726773222c226f6b223a747275652c2276616c7565223a7b2265786974436f6465223a302c227369676e616c223a6e756c6c2c22737464657272223a22222c227374646f7574223a22303a5c6e333a6120625c6e31303ae4b8ade69687f09f99825c6e373a5c2271756f74655c225c6e353a7461696c5c5c5c6e227d7d2c7b226572726f72223a6e756c6c2c226e616d65223a226e6f6e7a65726f222c226f6b223a747275652c2276616c7565223a7b2265786974436f6465223a372c227369676e616c223a6e756c6c2c22737464657272223a22222c227374646f7574223a22227d7d2c7b226572726f72223a6e756c6c2c226e616d65223a226475616c222c226f6b223a747275652c2276616c7565223a7b2265786974436f6465223a302c227369676e616c223a6e756c6c2c22737464657272223a2278787878222c227374646f7574223a2278787878227d7d2c7b226572726f72223a7b22636c617373223a2256616c75654572726f72222c22636f6c223a33322c226c696e65223a372c226d657373616765223a22e5ad90e8bf9be7a88be8be93e587bae8b685e8bf87e5ad97e88a82e4b88ae99990222c2274726163656261636b223a5b7b22636f6c223a312c2266756e63223a223c6d6f64756c653e222c226c696e65223a33387d2c7b22636f6c223a31362c2266756e63223a226d61696e222c226c696e65223a33307d2c7b22636f6c223a32392c2266756e63223a223c666e3e222c226c696e65223a33307d2c7b22636f6c223a31382c2266756e63223a2272756e4a6f62222c226c696e65223a377d2c7b22636f6c223a33322c2266756e63223a223c666e3e222c226c696e65223a377d5d7d2c226e616d65223a22746f6f5f6d756368222c226f6b223a66616c73652c2276616c7565223a6e756c6c7d2c7b226572726f72223a7b22636c617373223a2256616c75654572726f72222c22636f6c223a33322c226c696e65223a372c226d657373616765223a22e5ad90e8bf9be7a88be689a7e8a18ce697b6e997b4e4b88ae99990e5b7b2e588b0222c2274726163656261636b223a5b7b22636f6c223a312c2266756e63223a223c6d6f64756c653e222c226c696e65223a33387d2c7b22636f6c223a31362c2266756e63223a226d61696e222c226c696e65223a33307d2c7b22636f6c223a32392c2266756e63223a223c666e3e222c226c696e65223a33307d2c7b22636f6c223a31382c2266756e63223a2272756e4a6f62222c226c696e65223a377d2c7b22636f6c223a33322c2266756e63223a223c666e3e222c226c696e65223a377d5d7d2c226e616d65223a226c6f63616c5f74696d656f7574222c226f6b223a66616c73652c2276616c7565223a6e756c6c7d2c7b226572726f72223a7b22636c617373223a2256616c75654572726f72222c22636f6c223a33322c226c696e65223a372c226d657373616765223a22e5ad90e8bf9be7a88be8be93e587bae4b88de698afe59088e6b395205554462d38222c2274726163656261636b223a5b7b22636f6c223a312c2266756e63223a223c6d6f64756c653e222c226c696e65223a33387d2c7b22636f6c223a31362c2266756e63223a226d61696e222c226c696e65223a33307d2c7b22636f6c223a32392c2266756e63223a223c666e3e222c226c696e65223a33307d2c7b22636f6c223a31382c2266756e63223a2272756e4a6f62222c226c696e65223a377d2c7b22636f6c223a33322c2266756e63223a223c666e3e222c226c696e65223a377d5d7d2c226e616d65223a22696e76616c69645f75746638222c226f6b223a66616c73652c2276616c7565223a6e756c6c7d2c7b226572726f72223a6e756c6c2c226e616d65223a22656f66222c226f6b223a747275652c2276616c7565223a7b2265786974436f6465223a302c227369676e616c223a6e756c6c2c22737464657272223a22222c227374646f7574223a2230227d7d2c7b226572726f72223a6e756c6c2c226e616d65223a226d61726b6572222c226f6b223a747275652c2276616c7565223a7b2265786974436f6465223a302c227369676e616c223a6e756c6c2c22737464657272223a22222c227374646f7574223a22227d7d2c7b226572726f72223a6e756c6c2c226e616d65223a2261667465725f6572726f7273222c226f6b223a747275652c2276616c7565223a7b2265786974436f6465223a302c227369676e616c223a6e756c6c2c22737464657272223a22222c227374646f7574223a22353a61667465725c6e227d7d5d2c22737563636565646564223a362c22746f74616c223a397d0a",
+      "passed": true,
+      "report": {
+        "failed": 3,
+        "rows": [
+          {
+            "error": null,
+            "name": "args",
+            "ok": true,
+            "value": {
+              "exitCode": 0,
+              "signal": null,
+              "stderr": "",
+              "stdout": "0:\n3:a b\n10:中文🙂\n7:\"quote\"\n5:tail\\\n"
+            }
+          },
+          {
+            "error": null,
+            "name": "nonzero",
+            "ok": true,
+            "value": {
+              "exitCode": 7,
+              "signal": null,
+              "stderr": "",
+              "stdout": ""
+            }
+          },
+          {
+            "error": null,
+            "name": "dual",
+            "ok": true,
+            "value": {
+              "exitCode": 0,
+              "signal": null,
+              "stderr": "xxxx",
+              "stdout": "xxxx"
+            }
+          },
+          {
+            "error": {
+              "class": "ValueError",
+              "col": 32,
+              "line": 7,
+              "message": "子进程输出超过字节上限",
+              "traceback": [
+                {
+                  "col": 1,
+                  "func": "<module>",
+                  "line": 38
+                },
+                {
+                  "col": 16,
+                  "func": "main",
+                  "line": 30
+                },
+                {
+                  "col": 29,
+                  "func": "<fn>",
+                  "line": 30
+                },
+                {
+                  "col": 18,
+                  "func": "runJob",
+                  "line": 7
+                },
+                {
+                  "col": 32,
+                  "func": "<fn>",
+                  "line": 7
+                }
+              ]
+            },
+            "name": "too_much",
+            "ok": false,
+            "value": null
+          },
+          {
+            "error": {
+              "class": "ValueError",
+              "col": 32,
+              "line": 7,
+              "message": "子进程执行时间上限已到",
+              "traceback": [
+                {
+                  "col": 1,
+                  "func": "<module>",
+                  "line": 38
+                },
+                {
+                  "col": 16,
+                  "func": "main",
+                  "line": 30
+                },
+                {
+                  "col": 29,
+                  "func": "<fn>",
+                  "line": 30
+                },
+                {
+                  "col": 18,
+                  "func": "runJob",
+                  "line": 7
+                },
+                {
+                  "col": 32,
+                  "func": "<fn>",
+                  "line": 7
+                }
+              ]
+            },
+            "name": "local_timeout",
+            "ok": false,
+            "value": null
+          },
+          {
+            "error": {
+              "class": "ValueError",
+              "col": 32,
+              "line": 7,
+              "message": "子进程输出不是合法 UTF-8",
+              "traceback": [
+                {
+                  "col": 1,
+                  "func": "<module>",
+                  "line": 38
+                },
+                {
+                  "col": 16,
+                  "func": "main",
+                  "line": 30
+                },
+                {
+                  "col": 29,
+                  "func": "<fn>",
+                  "line": 30
+                },
+                {
+                  "col": 18,
+                  "func": "runJob",
+                  "line": 7
+                },
+                {
+                  "col": 32,
+                  "func": "<fn>",
+                  "line": 7
+                }
+              ]
+            },
+            "name": "invalid_utf8",
+            "ok": false,
+            "value": null
+          },
+          {
+            "error": null,
+            "name": "eof",
+            "ok": true,
+            "value": {
+              "exitCode": 0,
+              "signal": null,
+              "stderr": "",
+              "stdout": "0"
+            }
+          },
+          {
+            "error": null,
+            "name": "marker",
+            "ok": true,
+            "value": {
+              "exitCode": 0,
+              "signal": null,
+              "stderr": "",
+              "stdout": ""
+            }
+          },
+          {
+            "error": null,
+            "name": "after_errors",
+            "ok": true,
+            "value": {
+              "exitCode": 0,
+              "signal": null,
+              "stderr": "",
+              "stdout": "5:after\n"
+            }
+          }
+        ],
+        "succeeded": 6,
+        "total": 9
+      }
+    },
+    {
+      "name": "enabled_does_not_leak",
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\toolplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\report.json"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"AssertionError\",\"message\":\"toolplan: 需要 --allow-process\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":10,\"col\":49,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":38,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":30,\"func\":\"main\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":30,\"func\":\"<fn>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":10,\"func\":\"runJob\"}]}\n",
+      "stderr": "",
+      "output_hex": "4b454550",
+      "passed": true
+    },
+    {
+      "name": "global_deadline_not_caught",
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--allow-process",
+        "--timeout-ms",
+        "40",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\toolplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\report.json"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":7,\"col\":32,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":38,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":30,\"func\":\"main\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":30,\"func\":\"<fn>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":7,\"func\":\"runJob\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":7,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "output_hex": "4b454550",
+      "passed": true
+    },
+    {
+      "name": "prevalidate_all_jobs",
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--allow-process",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\toolplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\report.json"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"AssertionError\",\"message\":\"toolplan: 任务缺少 argv\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":4,\"col\":14,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":38,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":23,\"func\":\"main\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\app\\\\toolplan.lfz\",\"line\":4,\"func\":\"require\"}]}\n",
+      "stderr": "",
+      "output_hex": "4b454550",
+      "passed": true
+    },
+    {
+      "name": "empty_plan",
+      "command": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--allow-process",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\toolplan.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\plan.json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-verifier\\toolplan\\report.json"
+      ],
+      "exit": 0,
+      "stdout": "{\"failed\":0,\"path\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T18-B-verifier\\\\toolplan\\\\report.json\",\"succeeded\":0,\"total\":0}\n",
+      "stderr": "",
+      "output_hex": "7b226661696c6564223a302c22726f7773223a5b5d2c22737563636565646564223a302c22746f74616c223a307d0a",
+      "passed": true
+    }
+  ],
+  "total": 7,
+  "passed": 7
+}

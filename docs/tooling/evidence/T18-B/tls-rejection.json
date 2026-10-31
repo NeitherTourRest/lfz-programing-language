@@ -1,0 +1,11 @@
+{
+  "command": "lfz --allow-http -e <local self-signed HTTPS> --json",
+  "exit": 2,
+  "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"HTTP 异步请求失败：WinHTTP error 12175\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+  "stderr": "",
+  "server_events": [
+    "accepted",
+    "unexpected TLS accepted"
+  ],
+  "trusted_tls_success_tested": false
+}
