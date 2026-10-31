@@ -1031,3 +1031,6 @@ lfz [--json] check [--json] - [--json]
 不加文法；新增特殊内置exec(argv,timeoutMs,maxOutputBytes)，沿既有调用与遮蔽规则，74内置。CLI执行区--allow-process显式授权，默认禁用，CODE/argv保护沿T17。绝对exe无PATH/隐式shell，Windows首验、其它平台暂Unsupported；精确API/消息/后端见interface-contract §23。
 
 §22与T18-A混合选项适用性：非执行命令同时带能力与限额时，按选项区首次出现类别报对应既有文案；全部扫描错误仍先于最终适用性，CODE/argv和无新flag旧行为保持。精确例子见interface-contract §23.5。
+
+## 24. T18-B HTTP（2026-10-30 冻结）
+不改文法，新增六参特殊内置httpRequest(method,url,headers,body,timeoutMs,maxResponseBytes)，75内置；headers二元array保重复、三字段响应。CLI独立--allow-http显式授权，默认禁用。精确校验/ASCII URL/头/CLI顺序见interface-contract §24；仅本轮交付后收口。

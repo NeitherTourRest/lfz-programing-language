@@ -488,3 +488,6 @@ check对静态相对.lfz依赖按书写序迭代DFS构图，身份canonical去�
 exec三参四键，非零退出正常值、严格UTF8；局部timeout/合并输出超量ValueError可恢复，全局取消/deadline保持不可吞ExecutionLimitError。单次上下文能力默认禁用不泄漏，旧EvalLimits shape不变。纳管后才执行，双pipe有界公平drain/结束受控后代/kill-wait-reader回收，cleanup独立诊断不可伪成功。不是恶意沙箱/硬实时；Windows须实测，Linux未验返回Unsupported。完整契约及owner见interface-contract §23；R304OPEN。
 
 §22与T18-A混合选项适用性：非执行命令同时带能力与限额时，按选项区首次出现类别报对应既有文案；全部扫描错误仍先于最终适用性，CODE/argv和无新flag旧行为保持。精确例子见interface-contract §23.5。
+
+## 24. T18-B HTTP能力与回收（2026-10-30 冻结）
+HTTP非2xx普通响应；严格UTF8 body，禁redirect/autoauth/cookie/proxy/PAC/应用重试/自动解压，TLS系统验证。限额合并API头文本UTF8（含statusline/末CRLF、无终止NUL）与body rawbytes，明确非wire。局部失败可attempt，全局资源不可吞；async取消安全等closing和callback退出，不承诺硬返回时界。独立http诊断sidecar保旧进程文案/双门禁；精确API、消息、owner和限额见interface-contract §24。

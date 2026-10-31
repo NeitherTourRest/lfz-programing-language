@@ -1,9 +1,24 @@
 # LFZ 需求矩阵（唯一需求事实源 · v1.1 增量对齐版）
 
-> 最后更新: 2026-10-30 by requirements-analyst
-> 版本: **v11（T18-A Windows受控exec通过，本轮后停止；R-304开放，非正式发布）**
+> 最后更新: 2026-10-31 by requirements-analyst
+> 版本: **v12（T18-B HTTP四项需求通过；R-304开放，非正式发布）**
 > 本文件是**唯一需求事实源**，唯一写者 requirements-analyst，他人只读。
 > 来源: `task-info.md`（课程作业原始要求）+ 用户指令 + 已定案 ADR（见 `DECISIONS.md`）。
+
+## T18-B 增量需求（2026-10-31，HTTP功能及指南通过）
+
+依据三spec §24/T18-B-contract，冻结SHA256 `18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916`、1029120B、75内置/13错误类。T18-B-independent-verification.md最终PASS：667harness、HTTP公开49、HTTPplan7、独立HTTP11及全部旧回归通过，40轮Barrier真实取消/完成竞态与closing/active断言实际执行。没有产品重编或网络由需求分析师执行。人指南21/21、AI25/25最终作者实跑锁同hash，五AI文档前后SHA一致、server_closed=true；默认AI17/25中8网络12029失败保留。R137/213/412/509四项通过；指南是作者成绩，独立功能667/49/应用7/新11，不冒称独立复跑人/AI全部示例。
+
+新增EvalCapabilities.http为Rust公开literal机械迁移，旧非context入口默认false；process能力不授HTTP，不宣称零宿主API变化。Windows实测，非WindowsUnsupported且无exec/curl降级；TLS只审计自签拒绝12175/appbytes0，未独立重跑TLS、不承诺可信TLS成功或公网HTTPS验收，无系统信任修改。R304仍OPEN、无新性能窗/正式tag；本轮B收口，不自动化、不T19。旧A/此前停止HTTP只是各历史授权时点，当前本轮新授权范围以本节为准。
+
+| R-ID | 需求 | 来源 | 验证方式（可命令复现） | 状态 | 交付物 | 评分项 |
+|------|------|------|------------------------|------|--------|--------|
+| R-137 | httpRequest六参、独立http能力默认禁用，完整类型/方法/URL/header/body/范围先验后触网；成功status/headers/body三键，重复header保留、4xx/5xx普通值，body严格UTF8。直连不自动cookie/auth/redirect/decompress，无应用隐式重试 | 三spec §24.1/24.2/24.4 | 同冻结`cargo test --release`667通过；按T18-B-blackbox.md执行tests/t18b_cli_http.py→49/49；独立own.py11验证404、重复头、302只一次、cookie不跨session、POST Unicode/query、无效环境proxy仍直连、后继运行默认禁用无连接。权限分域/跨模块共享与跨session隔离；不能以单次请求见证宣称OS从无TCP重传/PAC全配置穷举或服务端副作用恰一次 | 通过 | http_control/Windows平台（tooling-dev）、evaluator/builtin注册（runtime-dev）、错误细分（core-dev）、独立报告/公开证据 | 1、2 |
+| R-213 | 响应限额按完整RAW_HEADERS_CRLF API文本严格UTF16→UTF8计数加body raw bytes，非wire；有界native头/256项/8KiB scratch。局部timeout/响应超限可恢复、全局取消deadline不可吞；单owner关闭后等待HANDLE_CLOSING与active=0才释放context/buffer；双diagnostics宿主成功门禁失败闭合。CLI仅--allow-http显式授权、严格flag/类别优先与CODE/argv保护 | §24.2–24.5 | 独立667/公开49/自编11核原生头59+body2=N61成功/N60失败，绑定API文本/u16元数据SHA而非猜wire；慢头/慢体/drip总timeout与local可attempt/global穿透。真实40Barrier取消/完成竞态逐轮closing/active断言、close故障注入保系统reason、双sidecar CLI/runner拒假成功均已实际同harness执行。无detach/提前free、非Windows无fallback；OS异常closing延迟非硬返回时界保证 | 通过 | Windows async后端/CLI/runner（tooling-dev）、context/HTTP sidecar（runtime-dev）、独立667/49/11证据 | 1、2 |
+| R-412 | 人/AI指南实跑HTTP工作流，说明独立权限及literal迁移、六参/三返回、API文本非wire限额、状态码/重复头、局部恢复与全局终止、双sidecar完整性门禁和平台/TLS限制 | §24；R411后继 | 人指南最终21/21锁18d328，默认12029/handler关闭reset与服务shutdown/join证据保留；AI新例按T18-B-skill-evidence报告25/25完整实跑并绑定同hash，server_closed=true且五文档前后SHA相同，默认17/25网络失败保留。不得将自签拒绝说成可信TLS成功、作者例说独立重跑或性能通过，也不宣称非Windows已支持；按最终人21/AI25作者回执收口，非独立示例复跑 | 通过 | 人指南（docs-writer）、skill/AI入口（ai-dx-engineer）及本轮实跑manifest | 4 |
+| R-509 | HTTPplan预校验计划、确定性处理普通4xx及可恢复局部失败；全局deadline穿透attempt、不执行后继任务；默认无权限零连接与会话权限不泄漏，旧应用保持 | app/T18-B-HTTPPLAN.md；§24 | 按app/verify_httpplan.py接口对冻结18d328运行7/7，独立httpplan7.json7/7；同hash旧toolplan7/T17预算app40/C模块app33/jsonbatch38/jsonflow37/sortviz11回归通过。所有loopback服务器shutdown/join，不访问公网、不装包或修改信任库，不扩大本轮范围 | 通过 | app/httpplan.lfz/verify_httpplan.py/T18-B-HTTPPLAN.md（app-dev）、独立应用证据 | 5 |
+
+所有复跑须恢复封存字节和本轮loopback夹具、使用不存在的项目Temp输出；默认权限/准备脚本失败保留，同字节正常OS许可通过不等于环境限制消失。功能通过不能替代原19项效率验收。
 
 ## T18-A 增量需求（2026-10-30，Windows受控exec通过，本轮后停止）
 
