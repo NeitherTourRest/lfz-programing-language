@@ -1,0 +1,411 @@
+{
+  "date": "2026-10-31",
+  "timestamp_utc": "2026-10-30T16:25:23.526543+00:00",
+  "binary": "target\\release\\lfz.exe",
+  "binary_sha256": "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+  "document_hashes": {
+    ".opencode/skills/lfz-programming/SKILL.md": "f43a1884dc6dc8b0e425e82df38b0ca11f607e1c68f3cad77d0b57c8bc9853d9",
+    ".opencode/skills/lfz-programming/README.md": "5639255ae404350a44bc394ef83d191cef52be8149b8cbcc4a23aff71edeec56",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "e9aca6bffe38d94f7acabba4b32896175e7755123ef641b98134ece0c4cf34f6",
+    ".opencode/skills/lfz-programming/prompt-template.md": "bab8575b72eb45f0ccee762b0c25e2acf02d1bdc158dc7bcee63fd1b9858dd09",
+    "docs/guide/ai/README.md": "4207802be897038a10c6484a85fefc20b26c1cc5130052eb05149abc5bc43f2c"
+  },
+  "checks_total": 25,
+  "checks_passed": 25,
+  "rows": [
+    {
+      "name": "extracted_check_0",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-ai\\skill.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "extracted_batch_0",
+      "args": [
+        "--allow-http",
+        "--max-steps",
+        "1000",
+        "--timeout-ms",
+        "5000",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-ai\\skill.lfz",
+        "--",
+        "http://127.0.0.1:57651"
+      ],
+      "exit": 0,
+      "stdout": "[{\"body\":\"{\\\"message\\\":\\\"雪\\\",\\\"path\\\":\\\"/data\\\"}\",\"path\":\"/data\",\"status\":200},{\"body\":\"absent\",\"path\":\"/missing\",\"status\":404}]\n",
+      "stderr": "",
+      "new_connections": 2,
+      "passed": true
+    },
+    {
+      "name": "extracted_check_1",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-ai\\ai.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "extracted_batch_1",
+      "args": [
+        "--allow-http",
+        "--max-steps",
+        "1000",
+        "--timeout-ms",
+        "5000",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-ai\\ai.lfz",
+        "--",
+        "http://127.0.0.1:57651"
+      ],
+      "exit": 0,
+      "stdout": "[{\"body\":\"{\\\"message\\\":\\\"雪\\\",\\\"path\\\":\\\"/data\\\"}\",\"path\":\"/data\",\"status\":200},{\"body\":\"absent\",\"path\":\"/missing\",\"status\":404}]\n",
+      "stderr": "",
+      "new_connections": 2,
+      "passed": true
+    },
+    {
+      "name": "default_disabled",
+      "args": [
+        "--json",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:57651/data\",[],\"\",1000,16384)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "process_does_not_grant_http",
+      "args": [
+        "--allow-process",
+        "--json",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:57651/data\",[],\"\",1000,16384)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "enabled_three_fields",
+      "args": [
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"GET\",\"http://127.0.0.1:57651/data\",[],\"\",1000,16384)\nassert(len(keys(r))==3 && r.status==200 && type(r.headers)==\"array\")\nassert(jsonParse(r.body).message==\"雪\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "new_connections": 1,
+      "passed": true
+    },
+    {
+      "name": "new_session_disabled",
+      "args": [
+        "--json",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:57651/data\",[],\"\",1000,16384)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "repeated_headers",
+      "args": [
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"GET\",\"http://127.0.0.1:57651/headers\",[],\"\",1000,16384)\nlet hs=filter((p)=>p[0]==\"x-repeat\",r.headers)\nassert(hs==[[\"x-repeat\",\"one\"],[\"x-repeat\",\"two\"]])"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "new_connections": 1,
+      "passed": true
+    },
+    {
+      "name": "post_utf8_once",
+      "args": [
+        "--allow-http",
+        "-e",
+        "assert(httpRequest(\"POST\",\"http://127.0.0.1:57651/echo\",[],\"中文\",1000,16384).body==\"中文\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "new_connections": 1,
+      "passed": true
+    },
+    {
+      "name": "no_auto_redirect",
+      "args": [
+        "--allow-http",
+        "-e",
+        "assert(httpRequest(\"GET\",\"http://127.0.0.1:57651/redirect\",[],\"\",1000,16384).status==302)"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "new_connections": 1,
+      "passed": true
+    },
+    {
+      "name": "head_still_counts_headers",
+      "args": [
+        "--allow-http",
+        "--json",
+        "-e",
+        "httpRequest(\"HEAD\",\"http://127.0.0.1:57651/data\",[],\"\",1000,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 响应超过字节上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "new_connections": 1,
+      "passed": true
+    },
+    {
+      "name": "invalid_utf8",
+      "args": [
+        "--allow-http",
+        "-e",
+        "let r=attempt(()=>httpRequest(\"GET\",\"http://127.0.0.1:57651/invalid\",[],\"\",1000,16384))\nassert(!r.ok && r.error[\"class\"]==\"ValueError\" && r.error.message==\"HTTP 响应 body 不是合法 UTF-8\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "new_connections": 1,
+      "passed": true
+    },
+    {
+      "name": "local_timeout",
+      "args": [
+        "--allow-http",
+        "-e",
+        "let r=attempt(()=>httpRequest(\"GET\",\"http://127.0.0.1:57651/slow\",[],\"\",10,16384))\nassert(!r.ok && r.error[\"class\"]==\"ValueError\" && r.error.message==\"HTTP 请求时间上限已到\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "global_deadline_not_caught",
+      "args": [
+        "--allow-http",
+        "--timeout-ms",
+        "10",
+        "--json",
+        "-e",
+        "attempt(()=>httpRequest(\"GET\",\"http://127.0.0.1:57651/slow\",[],\"\",1000,16384))"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"<command>\",\"line\":1,\"col\":13,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "method_before_capability",
+      "args": [
+        "--json",
+        "-e",
+        "httpRequest(\"get\",\"http://127.0.0.1:57651/data\",[],\"\",1000,16384)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP method 不受支持\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "headers_before_capability",
+      "args": [
+        "--json",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:57651/data\",[[\"Host\", \"bad\"]],\"\",1000,16384)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP headers 非法或超出上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "equals_rejected",
+      "args": [
+        "--allow-http=1",
+        "--help"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-http' 不接受值\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "duplicate_rejected",
+      "args": [
+        "--allow-http",
+        "--allow-http",
+        "-e",
+        ""
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-http' 不能重复\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "check_rejects_http",
+      "args": [
+        "check",
+        "--allow-http",
+        "-e",
+        "1"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: HTTP 能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "mixed_first_http",
+      "args": [
+        "check",
+        "--allow-http",
+        "--allow-process",
+        "-e",
+        "1"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: HTTP 能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "mixed_first_process",
+      "args": [
+        "check",
+        "--allow-process",
+        "--allow-http",
+        "-e",
+        "1"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 子进程能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "scan_before_applicability",
+      "args": [
+        "check",
+        "--allow-http",
+        "--max-steps=1",
+        "-e",
+        "1"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--max-steps' 不支持等号写法，请使用 '--max-steps N'\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "code_protection",
+      "args": [
+        "check",
+        "--json",
+        "-e",
+        "--allow-http"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "new_connections": 0,
+      "passed": true
+    },
+    {
+      "name": "argv_protection",
+      "args": [
+        "-e",
+        "print(argv()[0])",
+        "--",
+        "--allow-http"
+      ],
+      "exit": 0,
+      "stdout": "--allow-http\n",
+      "stderr": "",
+      "new_connections": 0,
+      "passed": true
+    }
+  ],
+  "server_visits": [
+    {
+      "method": "GET",
+      "path": "/data"
+    },
+    {
+      "method": "GET",
+      "path": "/missing"
+    },
+    {
+      "method": "GET",
+      "path": "/data"
+    },
+    {
+      "method": "GET",
+      "path": "/missing"
+    },
+    {
+      "method": "GET",
+      "path": "/data"
+    },
+    {
+      "method": "GET",
+      "path": "/headers"
+    },
+    {
+      "method": "POST",
+      "path": "/echo"
+    },
+    {
+      "method": "GET",
+      "path": "/redirect"
+    },
+    {
+      "method": "HEAD",
+      "path": "/data"
+    },
+    {
+      "method": "GET",
+      "path": "/invalid"
+    }
+  ],
+  "server_closed": true
+}

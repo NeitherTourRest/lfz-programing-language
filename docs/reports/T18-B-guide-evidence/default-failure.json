@@ -1,0 +1,30 @@
+{
+  "binary_sha256": "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+  "rows": [
+    {
+      "name": "tutorial_check",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-docs\\fetch.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "tutorial_run",
+      "args": [
+        "--allow-http",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-docs\\fetch.lfz",
+        "--",
+        "http://127.0.0.1:57337/data"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-docs\\fetch.lfz\", line 2, in <module>\n    let response = httpRequest(\"GET\", argv()[0], [], \"\", 1000, 16384)\n                   ^\nIOError: HTTP 异步请求失败：WinHTTP error 12029\n"
+    }
+  ],
+  "hits": []
+}

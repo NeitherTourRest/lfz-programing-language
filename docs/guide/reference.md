@@ -220,7 +220,7 @@ print()                           // 空行
 
 ---
 
-## 5. 内置函数速查（74 个，全部 **data-last**）
+## 5. 内置函数速查（75 个，全部 **data-last**）
 
 > 出处：IC §10.7。约定：**被操作数据恒为最后一个参数**；`xs |> f(...)` 把 `xs` 注入末参。**除赋值语法外一律"返回新值、不改原容器"**（A1，SE §4.5.2）。参数类型/数量不符 → `TypeError`。
 
@@ -409,3 +409,7 @@ CODE原样保护，即使等于`--json`、`--`、`--help`或空字符串也按�
 ## T18-A 受控子进程
 
 exec恰三参，返回stdout/stderr/exitCode/signal，非零exit正常；绝对.exe/CRTargv/raw合并bytes及UTF8、局部timeout与全局终止区别见[子进程指南](subprocess.md)，精确规范§23。内置74，错误类仍13。
+
+## T18-B HTTP
+
+新增httpRequest(method,url,headers,body,timeoutMs,maxResponseBytes)：headers为重复pairs、4xx正常值、strictUTF8，限额按API头文本+body而非wire。精确契约§24与[HTTP参考](http.md)。

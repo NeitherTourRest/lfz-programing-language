@@ -8,7 +8,7 @@ description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也�
 > 读者：**未接触过 LFZ 的编程 Agent**。目标：只凭本文件写出**正确、可运行**的 LFZ 程序。
 > 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（含 T12 §16 / T14 §17 / T15 §18 / T16 §19–21）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
 > 使用纪律：**只允许使用本文件列出的语法**。不要用 Python / C / JS 的规则去猜 LFZ——LFZ 在若干处刻意不同（见 §4）。
-> **版本对齐（2026-10-29，候选）**：项目内 `dist/lfz.exe` / `target/release/lfz.exe` 为 **1.4.0，74 个内置**（54+15+3+1+1），支持 argv、JSON、`-e`、stdin源码及非执行`check`。T12 示例实跑证据见 `docs/reports/T12-skill-evidence.md`；项目外 PATH 中的旧解释器不保证具备这些能力。
+> **版本对齐（2026-10-29，候选）**：项目内 `dist/lfz.exe` / `target/release/lfz.exe` 为 **1.4.0，75 个内置**（54+15+3+1+1+1），支持 argv、JSON、`-e`、stdin源码及非执行`check`。T12 示例实跑证据见 `docs/reports/T12-skill-evidence.md`；项目外 PATH 中的旧解释器不保证具备这些能力。
 
 > 🚫 **硬纪律：不要凭记忆写 LFZ。** 本文件**没写的语法一律视为不存在**；拿不准就先查 §10 列出的 spec，或改用本文件已列出的等价写法。宁可用保守写法，也不要"猜一个大概像 Python 的写法"。
 
@@ -266,7 +266,7 @@ let q = 10 |> push(_, [1, 2])      // _ 占位：注入到该位 → push(10, [1
     - `let ys = push(9, xs)` —— **不**改 `xs`；`sort(xs)` 不改 `xs`。
     - 唯一原地改的是**赋值语法** `a[i] = v` / `s.k = v`。
 
-11. **74 个内置按 data-last 约定**（见 §6）；容器/字符串被操作对象恒为末参。
+11. **75 个内置按 data-last 约定**（见 §6）；容器/字符串被操作对象恒为末参。
 
 12. **`round` 是银行家舍入（四舍六入五成双）**：`round(2.5) == 2`、`round(3.5) == 4`。
 
@@ -416,7 +416,7 @@ print("continue")
 
 ---
 
-## 6. 内置函数 74 个（data-last）
+## 6. 内置函数 75 个（data-last）
 
 > **约定**：凡对容器 / 字符串操作者，**被操作对象恒为最后一个参数**；`xs |> f(...)` 把 `xs` 注入末参。**凡容器更新一律返回新值、不改原容器**（A1），除非用赋值语法 `a[i]=` / `s.k=`。参数类型/个数不符 → `TypeError`。
 
@@ -937,3 +937,41 @@ CLI `--allow-process`无值且不可重复；`--allow-process=任意文本`立�
 正常--json仍唯一原状态/错误对象，子进程输出留返回值；**cleanup宿主异常有例外**：主错误存在则原错误JSON保留、独立回收诊断写stderr；result成功但host_diagnostics非空时CLI stdout空/stderr“lfz: 子进程资源回收失败”及诊断/exit2，即使--json也不能伪装成功JSON。attempt捕获IOError不能清除回收诊断。Rust宿主必须检查TracedRun.host_diagnostics()，不能只看result Ok；EvalContext包含limits与显式EvalCapabilities{subprocess}，所有旧API默认禁用，无global/thread_local泄漏，精确三个context入口见§23.3。
 
 作者聚焦实跑见docs/reports/T18-A-skill-evidence.md。旧v2输入/成绩不变；R304OPEN，未性能验收，不正式发布。本轮交付后停止，不进入HTTP等后续迭代。
+
+
+## 6.7 T18-B：显式授权HTTP（最终候选）
+
+事实源三spec §24及T18-B-contract；75内置/13错误类。此节为本轮已授权HTTP工作流，覆盖A阶段“交付后停止不HTTP”的旧边界；B本轮交付后收口，不自动T19，不恢复自动化。不能以T18-A旧字节声称HTTP通过。先check图不执行，再对明确目标显式--allow-http并带限额run，核response.status和业务body，不只看进程exit0。
+
+```lfz
+#42
+let base = argv()[0]
+let paths = ["/data", "/missing"]
+var records = []
+for path in paths {
+ let r = attempt(() => httpRequest("GET", base + path, [], "", 1000, 16384))
+ if r.ok { records = push({path: path, status: r.value.status, body: r.value.body}, records) }
+ else { records = push({path: path, error: r.error}, records) }
+}
+print(jsonStringify(records))
+```
+
+保存fetch.lfz，先`lfz check --json fetch.lfz`，再`lfz --allow-http --max-steps 1000 --timeout-ms 5000 run fetch.lfz -- 'http://127.0.0.1:PORT'`。PORT来自自己启动的loopback服务，不是固定端口；本例/data返回UTF8 JSON，/missing返回404。仅默认不做真实公网调用；验证器使用本地临时port且完整shutdown。
+
+`httpRequest(method,url,headers,body,timeoutMs,maxResponseBytes)`六参，特殊非一等内置、可同名遮蔽。成功struct固定键序`status,headers,body`：404/500等HTTP状态也是正常值，不抛HTTP业务错；headers是[[lowercaseName,value],...]保重复/API观测序，不是字典，不合并Set-Cookie，不保证原wire大小写；body严格UTF8，保BOM/换行，不猜charset、不lossy、不自动jsonParse，不支持任意二进制。jsonStringify仍按自身规则排序键。
+
+完整参数校验发生在触网前，精确先后依§24.1。方法仅ASCII大写GET/HEAD/POST/PUT/PATCH/DELETE/OPTIONS；URL绝对http/https、最多16384 ASCII bytes，非ASCII路径先percent编码，拒userinfo/fragment/反斜线/空白/控制/NUL和非法百分号。headers最多256对、每对恰两个string，ASCII token名和可见ASCII/SP/HTAB值（提交去两端SP/HTAB），拒CR/LF/NUL和保留头Host/Content-Length/Transfer-Encoding/Connection/Proxy-Authorization/Proxy-Connection/Accept-Encoding/Upgrade；原请求头ASCII字节最多65536。body UTF8<=16MiB，GET/HEAD必须空；timeoutMs 1..600000、maxResponseBytes 0..16777216。不要把任意LFZ字符直接塞进URL/header。
+
+HTTP能力默认禁用，独立于--allow-process；只当前session有效，跨模块共享、不同执行不泄漏，不让attempt或函数home升级权限。check/test/--help/-h/--version/-V拒--allow-http，CODE/来源后-- argv保护保持。该flag无值、不可重复，等号形式立即usage。不新增裸help/version别名。混process/http/limits时扫描错误仍按token序优先；无扫描错误的非执行命令，选项区首次新类别决定唯一适用性文案。--json也不把usage文本变LFZ业务JSON。
+
+直连，无自动代理/PAC/WPAD、认证、cookie存储/回发、重定向、跨session池或应用重试。302只返回原Location，不访问新目标；Authorization/Cookie只能调用者显式提交。OS TCP重传不等于应用重试，不能承诺服务端副作用恰一次。HTTPS系统默认链/主机名/有效期验证，无insecure/客户端证书自动选择，不改信任库；本地自签拒绝不等于可信TLS成功，本指南不宣称公网HTTPS已验。
+
+**maxResponseBytes不是wire计数**：合并最终WinHTTP RAW_HEADERS_CRLF完整API文本严格UTF16→UTF8字节（statusline、全部CRLF/末空行、仅去一个终止UTF16 NUL）和平台read得到的原始content-coded body字节。不先lowercase/trim/重建文本计数，不含chunk/TLS framing，不自动解压。恰N允许、>N拒绝，HEAD/204仍计头、0一般连头都容不下。原生头缓冲含NUL最多65536bytes/返回头最多256项；固定8KiB body scratch，不按Content-Length无界预分配。返回pairs等额外有界分配不等于总进程内存额度；精确N测试必须有真实API头证据，不能猜Python wire数。
+
+局部超时/超量/坏UTF8/校验/禁用/Unsupported为约定ValueError，可attempt；DNS/connect/TLS/send/协议/OS错误为IOError。全局cancel/deadline仍ExecutionLimitError不可吞、不补预算；native等待不扣AST步，不因remaining0额外StepBudget。局部总deadline从backend入口（session创建前）开始，覆盖DNS至body完成，不逐read刷新；阶段SetTimeouts不是总截止。同轮观测优先cancel→globaldeadline→localtimeout→限额→OS/协议错→完成，首reason锁存。
+
+WinHTTP async协作取消不是硬返回时界：close request之后仍需HANDLE_CLOSING和最后callback退出，buffer/context安全存活再逆序释放连接/session。不能detach/提前free或声称任意OS网络异常有限时回收。正常返回前末检，是HTTP native本身的poll，不改变其它native规则。
+
+Rust EvalCapabilities新增pub http:bool，手写literal需补http:false或Default更新，现有context三入口和EvalLimits形状不变，旧非context API默认false。库还须检查独立host_diagnostics()和http_diagnostics()两sidecar；result Ok不等于完整成功。CLI主Err保原唯一JSON、诊断先子进程后HTTP写stderr；result Ok且任一诊断非空时stdout空/stderr宿主标题与诊断/exit2（--json宿主例外）。两列表同时非空用旧子进程标题；仅HTTP时标题“lfz: HTTP 资源回收失败”，HTTP每条前缀“lfz: HTTP 回收诊断：”。不让attempt清理sidecar或伪装成功。
+
+仅Windows先验，其它Unsupported，无curl/exec fallback，非沙箱。作者实跑绑定最终18d328候选，证据与实际计数见docs/reports/T18-B-skill-evidence.md；不以旧A产物代替。旧v2不重测/不改输入成绩；R304OPEN，不把功能通过当性能或正式发布。

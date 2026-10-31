@@ -1,0 +1,57 @@
+{
+  "server_stopped": true,
+  "port": 53482,
+  "hits": [
+    {
+      "path": "/data",
+      "method": "GET",
+      "body_hex": "",
+      "duplicates": null
+    },
+    {
+      "path": "/missing",
+      "method": "GET",
+      "body_hex": "",
+      "duplicates": null
+    },
+    {
+      "path": "/echo",
+      "method": "POST",
+      "body_hex": "e4b8ade69687",
+      "duplicates": null
+    },
+    {
+      "path": "/data",
+      "method": "GET",
+      "body_hex": "",
+      "duplicates": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "path": "/redirect",
+      "method": "GET",
+      "body_hex": "",
+      "duplicates": null
+    },
+    {
+      "path": "/invalid",
+      "method": "GET",
+      "body_hex": "",
+      "duplicates": null
+    },
+    {
+      "path": "/data",
+      "method": "HEAD",
+      "body_hex": "",
+      "duplicates": null
+    },
+    {
+      "path": "/slow",
+      "method": "GET",
+      "body_hex": "",
+      "duplicates": null
+    }
+  ]
+}

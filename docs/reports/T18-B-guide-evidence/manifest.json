@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-31",
+  "binary_sha256": "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+  "binary_bytes": 1029120,
+  "guide_hashes": {
+    "docs\\guide\\README.md": "0691eb1910c89d30d6ffe028e7a59cf0eda722625b81cc142e8a511bd1144e42",
+    "docs\\guide\\reference.md": "8550522de2c4bc1f55f34d03bd2208d0a67f5b9bd5f5ec8aa72282ca5d34b557",
+    "docs\\guide\\tutorial.md": "b41a2a87ce981b6fd94f11fb602396bc56e549f86dd810284f40597e2c32009f",
+    "docs\\guide\\testing.md": "63f806415c92f2d84ced3eeeb5d64ec630115200d4a868ba01f6bc2782939596",
+    "docs\\guide\\errors.md": "4afb099a844143744857af07eda00976e9720402ab31893016c9909dc62b8e69",
+    "docs\\guide\\http.md": "83f5aa91db47442bed080b50e6f1c301572366647a7d514a28dece25d5d939a8"
+  },
+  "scope": "stdlib loopback HTTP only; no exact-N wire assumption, trusted TLS success, host Rust API compilation or cleanup fault injection claimed",
+  "files": {
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "default-failure.json": {
+      "bytes": 1114,
+      "sha256": "c009b486f56c6e62d558178abd8bbbe62891c7dd6f29eeac1f085aff32e7f34a"
+    },
+    "default-stderr.txt": {
+      "bytes": 1981,
+      "sha256": "ab151da26fd5df73538ef18ab9cf4db4f05ee23abccb7f00c9e90662eff0551e"
+    },
+    "runs.json": {
+      "bytes": 10782,
+      "sha256": "d06f59be9023af8ad0322786d8cd42955238ae5b32da6112fc31f95416914af9"
+    },
+    "server-shutdown.json": {
+      "bytes": 1021,
+      "sha256": "d7209b4c40e876fbbfdaaedda4c0044135cd0b66afe8d7e39a87457b1df59813"
+    },
+    "verify.py": {
+      "bytes": 7368,
+      "sha256": "a1a18b978c99e4b2d19ba52431c554cd2d9127c2af4554341c321e6826e2f60b"
+    }
+  }
+}

@@ -737,3 +737,7 @@ Agent执行生成的job.lfz时，先check，再run时显式设置预算。check�
 ## T18-A 受控子进程
 
 用[子进程教程](subprocess.md)的tool.lfz先check，再run显式授权；示例使用独占复制核hash的本地fixture，真实工具须绝对.exe且argv分项，不拼shell。
+
+## T18-B HTTP
+
+[HTTP教程](http.md)给出fetch.lfz与本地loopback服务约定，先check再--allow-http run。端口由服务实际生成，响应body需显式jsonParse；不进行公网或信任库修改。

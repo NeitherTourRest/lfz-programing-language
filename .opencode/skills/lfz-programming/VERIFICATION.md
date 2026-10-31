@@ -507,3 +507,7 @@ Agent工作流：先check前端/模块图，再按任务配置--max-steps N与--
 ## T18-A工具执行补充（2026-10-30）
 
 当前74内置/13错误类，exec需显式--allow-process，先check不执行再按授权限额run。只接受绝对.exe/独立argv，不搜索PATH或隐式shell；非零exitCode仍成功值，严格UTF8及双流合并rawbyte额度，局部错误可恢复而全局资源终止不吞，cleanup宿主异常不保证单JSON。详见SKILL.md §6.6及三spec§23；仅Windows已验、非沙箱。作者记录T18-A-skill-evidence.md，旧v2不改，R304OPEN。本轮交付后停止，不进入HTTP。
+
+## T18-B HTTP补充（2026-10-31，最终候选）
+
+本轮新授权HTTP，交付后收口不T19/不恢复自动化。当前75内置/13错误类，按SKILL.md §6.7和三spec§24先check再显式--allow-http限额run；不以旧A二进制冒称HTTP通过。六参三键、独立能力、重复header/4xx正常、strictUTF8、API头文本UTF8+body非wire限额、无自动跳转/cookie/auth/proxy/retry、局部恢复/全局终止与双sidecar宿主例外清晰；Windows先验非沙箱。作者先prepare-only，最终锁定18d328候选后才实跑，证据报告列实际计数，不覆盖历史准备记录。

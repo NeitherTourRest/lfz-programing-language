@@ -1,0 +1,343 @@
+{
+  "date": "2026-10-31",
+  "timestamp_utc": "2026-10-30T16:23:57.015584+00:00",
+  "binary_sha256": "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+  "binary_bytes": 1029120,
+  "guides": {
+    "docs\\guide\\README.md": "0691eb1910c89d30d6ffe028e7a59cf0eda722625b81cc142e8a511bd1144e42",
+    "docs\\guide\\reference.md": "8550522de2c4bc1f55f34d03bd2208d0a67f5b9bd5f5ec8aa72282ca5d34b557",
+    "docs\\guide\\tutorial.md": "b41a2a87ce981b6fd94f11fb602396bc56e549f86dd810284f40597e2c32009f",
+    "docs\\guide\\testing.md": "63f806415c92f2d84ced3eeeb5d64ec630115200d4a868ba01f6bc2782939596",
+    "docs\\guide\\errors.md": "4afb099a844143744857af07eda00976e9720402ab31893016c9909dc62b8e69",
+    "docs\\guide\\http.md": "83f5aa91db47442bed080b50e6f1c301572366647a7d514a28dece25d5d939a8"
+  },
+  "passed": 21,
+  "total": 21,
+  "rows": [
+    {
+      "name": "tutorial_check",
+      "args": [
+        "check",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-docs\\fetch.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true,\"mode\":\"check\",\"executed\":false}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "tutorial_run",
+      "args": [
+        "--allow-http",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-docs\\fetch.lfz",
+        "--",
+        "http://127.0.0.1:53482/data"
+      ],
+      "exit": 0,
+      "stdout": "雪\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "default_disabled",
+      "args": [
+        "--json",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:53482/data\",[],\"\",1000,16384)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "process_not_http",
+      "args": [
+        "--json",
+        "--allow-process",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:53482/data\",[],\"\",1000,16384)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "headers_duplicate_response",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"GET\",\"http://127.0.0.1:53482/missing\",[],\"\",1000,16384)\nassert(r.status==404)\nassert(len(filter((p)=>p[0]==\"x-repeat\",r.headers))==2)\nassert(keys(r)==[\"body\",\"headers\",\"status\"])"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "explicit_post",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"POST\",\"http://127.0.0.1:53482/echo\",[],\"中文\",1000,16384)\nassert(r.body==\"中文\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "request_duplicate_pairs",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=httpRequest(\"GET\",\"http://127.0.0.1:53482/data\",[[\"X-Test\",\"a\"],[\"X-Test\",\"b\"]],\"\",1000,16384)\nassert(r.status==200)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "no_redirect",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "assert(httpRequest(\"GET\",\"http://127.0.0.1:53482/redirect\",[],\"\",1000,16384).status==302)"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "strict_utf8",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:53482/invalid\",[],\"\",1000,16384)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 响应 body 不是合法 UTF-8\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "headers_count_even_head",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"HEAD\",\"http://127.0.0.1:53482/data\",[],\"\",1000,0)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 响应超过字节上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "local_timeout_attempt",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "let r=attempt(()=>httpRequest(\"GET\",\"http://127.0.0.1:53482/slow\",[],\"\",10,16384))\nassert(!r.ok && r.error.message==\"HTTP 请求时间上限已到\")"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "global_deadline",
+      "args": [
+        "--json",
+        "--allow-http",
+        "--timeout-ms",
+        "30",
+        "-e",
+        "attempt(()=>httpRequest(\"GET\",\"http://127.0.0.1:53482/slow\",[],\"\",1000,16384))"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行时间上限已到\",\"file\":\"<command>\",\"line\":1,\"col\":13,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "bad_method_no_connection",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"get\",\"http://127.0.0.1:53482/data\",[],\"\",1000,16384)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP method 不受支持\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "reserved_header",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:53482/data\",[[\"Host\",\"bad\"]],\"\",1000,16384)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP headers 非法或超出上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "get_body",
+      "args": [
+        "--json",
+        "--allow-http",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:53482/data\",[],\"data\",1000,16384)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP body 非法或超出上限\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "next_session_disabled",
+      "args": [
+        "--json",
+        "-e",
+        "httpRequest(\"GET\",\"http://127.0.0.1:53482/data\",[],\"\",1000,16384)"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"HTTP 能力未启用\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "argv_protection",
+      "args": [
+        "-e",
+        "assert(argv()==[\"--allow-http\",\"--allow-http=1\"])",
+        "--",
+        "--allow-http",
+        "--allow-http=1"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "equals_",
+      "args": [
+        "--allow-http=",
+        "-e",
+        "1"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-http' 不接受值\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "passed": true
+    },
+    {
+      "name": "equals_1",
+      "args": [
+        "--allow-http=1",
+        "-e",
+        "1"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-http' 不接受值\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "passed": true
+    },
+    {
+      "name": "duplicate",
+      "args": [
+        "--allow-http",
+        "--allow-http",
+        "-e",
+        "1"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: 选项 '--allow-http' 不能重复\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "passed": true
+    },
+    {
+      "name": "check_reject",
+      "args": [
+        "check",
+        "--allow-http",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T18-B-docs\\fetch.lfz"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: HTTP 能力选项只适用于运行命令\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "passed": true
+    }
+  ],
+  "hits": [
+    {
+      "path": "/data",
+      "method": "GET",
+      "body_hex": "",
+      "duplicates": null
+    },
+    {
+      "path": "/missing",
+      "method": "GET",
+      "body_hex": "",
+      "duplicates": null
+    },
+    {
+      "path": "/echo",
+      "method": "POST",
+      "body_hex": "e4b8ade69687",
+      "duplicates": null
+    },
+    {
+      "path": "/data",
+      "method": "GET",
+      "body_hex": "",
+      "duplicates": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "path": "/redirect",
+      "method": "GET",
+      "body_hex": "",
+      "duplicates": null
+    },
+    {
+      "path": "/invalid",
+      "method": "GET",
+      "body_hex": "",
+      "duplicates": null
+    },
+    {
+      "path": "/data",
+      "method": "HEAD",
+      "body_hex": "",
+      "duplicates": null
+    },
+    {
+      "path": "/slow",
+      "method": "GET",
+      "body_hex": "",
+      "duplicates": null
+    }
+  ],
+  "server_stopped": true,
+  "scope": "stdlib loopback HTTP only; no exact-N wire assumption, trusted TLS success, host Rust API compilation or cleanup fault injection claimed"
+}

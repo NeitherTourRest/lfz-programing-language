@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-31",
+  "status": "prepare-only",
+  "interpreter_launches": 0,
+  "network_launches": 0,
+  "final_binary_hash": null,
+  "documents": {
+    ".opencode/skills/lfz-programming/SKILL.md": "de5680223ed20d8bee6d5a4c962a1deb14b830c29ab701bdd1f8dddef2f9d6e0",
+    ".opencode/skills/lfz-programming/README.md": "c8cb81ccac01bb99ce3a3777b68a3a8287d9794f5b274768f1986927efeb80d4",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "456b2af372c5f9981b509b591a343fcffd99d9d391bb4e90e503e605ce62f73e",
+    ".opencode/skills/lfz-programming/prompt-template.md": "23edb92b1aab7f5a70a03e2616aa067ef8211c497d91a304b28267d173a0705c",
+    "docs/guide/ai/README.md": "9918aaa1fbf57ae9c8eed63cc943f56397d7e479f59495eac17796a4bb5e485d"
+  },
+  "script_sha256": "a1d70664190384dbfc8e41ea57da51c8f83a5d4067a4c343144e689e8a9f66f5"
+}

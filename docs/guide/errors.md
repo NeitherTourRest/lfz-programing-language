@@ -382,3 +382,7 @@ T17新增ExecutionLimitError（第13类）：执行步数预算已耗尽/执行�
 ## T18-A 受控子进程
 
 子进程局部timeout/输出超量/禁用/UTF8等为约定ValueError，可attempt；全局deadline/取消ExecutionLimitError不能吞。回收diagnostics可能使原result Ok的CLI变宿主完整性失败，stdout空/exit2；--json宿主例外详见[子进程边界](subprocess.md)。
+
+## T18-B HTTP
+
+HTTP局部timeout/大小/UTF8等ValueError可attempt，全局取消/deadline不可吞；HTTP/子进程两个diagnostics均参与宿主完整性门禁，result Ok不充分。精确例外见[HTTP边界](http.md)。

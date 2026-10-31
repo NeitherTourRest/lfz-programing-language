@@ -276,3 +276,7 @@ check只复用前端，不能替代执行测试。测试框架应分别记录「
 ## T18-A 受控子进程
 
 子进程测试必须核exe和独占fixture hash，不重建内部测试fixture；验证默认禁用不启动、argv空串/Unicode/空格、非零exit、raw合并0/N/N+1、非法UTF8、local timeout与global终止、权限会话隔离。只对本轮最终字节实跑，不用旧构建或Windows结果冒称其它平台支持。见T18-A-guide报告。
+
+## T18-B HTTP
+
+HTTP只用stdlib本地loopback临时端口与有界shutdown/watchdog；默认禁用须无连接，保重复头、404/302不自动跳转、严格UTF8、慢响应timeout与全局终止。精确N需要平台RAW_HEADERS_CRLF实际文本证据，不以wire猜数。最终字节实跑见T18-B-guide报告。
