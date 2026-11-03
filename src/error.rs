@@ -211,7 +211,7 @@ impl OverflowMsg {
     }
 }
 
-/// `ValueError` 子消息 —— 既有值/JSON消息、§23.2 子进程与 §24.3 HTTP 消息。
+/// `ValueError` 子消息 —— 既有值/JSON消息及 §23.2/§24.3/§25.3 的子进程、HTTP、逐行消息。
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum ValueMsg {
     /// `无法把 {src} 转换为 {dst}（'{text}'）`
@@ -273,6 +273,16 @@ pub enum ValueMsg {
     HttpResponseLimit,
     /// `HTTP 响应 body 不是合法 UTF-8`（§24.3）。
     HttpUtf8,
+    /// `逐行读取 maxLineBytes 必须在 1..16777216 范围内`（§25.3）。
+    LineLimitRange,
+    /// `逐行读取路径不能包含 NUL`（§25.3）。
+    LinePathNul,
+    /// `第 {line} 行超过逐行字节上限 {limit}`（§25.3）。
+    LineTooLong { line: i64, limit: usize },
+    /// `第 {line} 行不是合法 UTF-8`（§25.3）。
+    LineUtf8 { line: i64 },
+    /// `逐行读取行号超出 i64 范围`（§25.3）。
+    LineNumberOverflow,
 }
 
 impl ValueMsg {
@@ -312,6 +322,11 @@ impl ValueMsg {
             ValueMsg::HttpTimeout => "HTTP 请求时间上限已到".to_string(),
             ValueMsg::HttpResponseLimit => "HTTP 响应超过字节上限".to_string(),
             ValueMsg::HttpUtf8 => "HTTP 响应 body 不是合法 UTF-8".to_string(),
+            ValueMsg::LineLimitRange => "逐行读取 maxLineBytes 必须在 1..16777216 范围内".to_string(),
+            ValueMsg::LinePathNul => "逐行读取路径不能包含 NUL".to_string(),
+            ValueMsg::LineTooLong { line, limit } => format!("第 {line} 行超过逐行字节上限 {limit}"),
+            ValueMsg::LineUtf8 { line } => format!("第 {line} 行不是合法 UTF-8"),
+            ValueMsg::LineNumberOverflow => "逐行读取行号超出 i64 范围".to_string(),
         }
     }
 }
@@ -1174,6 +1189,37 @@ mod tests {
         for (msg, expected) in cases {
             assert_chars_eq(&msg.message(), expected);
             let span = Span::new(43, 29);
+            let error = LzError::Value { msg: msg.clone(), span };
+            assert_eq!(error.class_name(), "ValueError");
+            assert_chars_eq(&error.message(), expected);
+            assert_eq!(error.span(), Some(span));
+            assert_eq!(error.to_string(), format!("ValueError: {expected}"));
+            let boxed = value(msg, span);
+            assert_eq!(*boxed, error);
+            assert_eq!(boxed.class_name(), "ValueError");
+            assert_eq!(boxed.span(), Some(span));
+            assert_chars_eq(&boxed.message(), expected);
+            assert_eq!(boxed.to_string(), format!("ValueError: {expected}"));
+        }
+    }
+
+    /// §25.3：固定消息与动态行号/字节上限均保持 ValueError。
+    #[test]
+    fn line_value_messages_match_contract() {
+        let cases = [
+            (ValueMsg::LineLimitRange, "逐行读取 maxLineBytes 必须在 1..16777216 范围内"),
+            (ValueMsg::LinePathNul, "逐行读取路径不能包含 NUL"),
+            (ValueMsg::LineNumberOverflow, "逐行读取行号超出 i64 范围"),
+            (ValueMsg::LineTooLong { line: 1, limit: 1 }, "第 1 行超过逐行字节上限 1"),
+            (ValueMsg::LineTooLong { line: 42, limit: 16777216 }, "第 42 行超过逐行字节上限 16777216"),
+            (ValueMsg::LineTooLong { line: i64::MAX, limit: 4096 }, "第 9223372036854775807 行超过逐行字节上限 4096"),
+            (ValueMsg::LineUtf8 { line: 1 }, "第 1 行不是合法 UTF-8"),
+            (ValueMsg::LineUtf8 { line: i64::MAX }, "第 9223372036854775807 行不是合法 UTF-8"),
+        ];
+        assert_eq!(cases.len(), 8);
+        for (msg, expected) in cases {
+            assert_chars_eq(&msg.message(), expected);
+            let span = Span::new(47, 31);
             let error = LzError::Value { msg: msg.clone(), span };
             assert_eq!(error.class_name(), "ValueError");
             assert_chars_eq(&error.message(), expected);

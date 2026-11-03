@@ -22,3 +22,5 @@ pub mod modules; // T16-B 静态模块图，不求值。
 pub(crate) mod process_control; // T18-A owned受控后端
 
 pub(crate) mod http_control;
+
+pub(crate) mod line_reader;

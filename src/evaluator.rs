@@ -1444,6 +1444,10 @@ impl Interp {
                     };
                     return self.call_func(self.argv_function.clone(), args, span, None, piped);
                 }
+                if name == "forEachLine" {
+                    let argv=match self.eval_args(args,scope)?{Step::Done(v)=>v,Step::Flow(f)=>return Ok(f)};
+                    return Ok(Flow::Value(self.for_each_line(&argv,span)?));
+                }
                 if name == "httpRequest" {
                     let argv=match self.eval_args(args,scope)?{Step::Done(v)=>v,Step::Flow(f)=>return Ok(f)};
                     return Ok(Flow::Value(self.http_request(&argv,span)?));
@@ -1579,6 +1583,57 @@ impl Interp {
     }
 
     /// §18：仅此边界恢复调用状态；用户副作用及函数ID表不回滚。
+    fn line_error(&mut self,error:crate::line_reader::LineReadError,path:&str,span:Span)->Box<LzError>{
+        use crate::line_reader::LineReadError as E;
+        use crate::error::{ValueMsg as V,ExecutionLimitReason as R};
+        let e=match error{
+            E::Cancelled=>crate::error::execution_limit(R::Cancelled,span),
+            E::Deadline=>crate::error::execution_limit(R::Deadline,span),
+            E::TooLong{line,limit}=>crate::error::value(V::LineTooLong{line,limit},span),
+            E::InvalidUtf8{line}=>crate::error::value(V::LineUtf8{line},span),
+            E::NumberOverflow=>crate::error::value(V::LineNumberOverflow,span),
+            E::NotRegular|E::Io{..}=>Box::new(LzError::Io{msg:format!("无法逐行读取：{path}"),span:Some(span)}),
+        };self.note_error_span(&e);e
+    }
+    fn line_native_poll(&mut self,span:Span)->R<()>{
+        use crate::error::ExecutionLimitReason as R;
+        let reason=if self.limits.cancel.as_ref().is_some_and(|c|c.load(std::sync::atomic::Ordering::Acquire)){Some(R::Cancelled)}
+            else if self.limits.deadline.is_some_and(|d|std::time::Instant::now()>=d){Some(R::Deadline)}else{None};
+        if let Some(reason)=reason{let e=crate::error::execution_limit(reason,span);self.note_error_span(&e);return Err(e);}Ok(())
+    }
+    fn for_each_line(&mut self,args:&[Value],span:Span)->R<Value>{
+        use crate::line_reader::{LineReader,LineControl};
+        if args.len()!=3{return Err(type_error(TypeMsg::ArgCount{name:"forEachLine".into(),n:3,m:args.len()},span));}
+        let bad=|v:&Value,rt:&str|type_error(TypeMsg::BadOperands{op:"forEachLine".into(),lt:v.type_name().into(),rt:rt.into()},span);
+        let cl=match &args[0]{Value::Func(cl)=>cl,_=>return Err(bad(&args[0],"function"))};
+        let max=args[1].as_int().ok_or_else(||bad(&args[1],"int"))?;
+        let path=args[2].as_str().ok_or_else(||bad(&args[2],"string"))?;
+        let count=if cl.builtin==Some("argv"){0}else if let Some(user)=&cl.user{user.params.len()}else{
+            return Err(type_error(TypeMsg::NotCallable{t:"function".into()},span));
+        };
+        if count!=2{return Err(type_error(TypeMsg::ArgCount{name:cl.name.as_deref().unwrap_or("<fn>").into(),n:count,m:2},span));}
+        if !(1..=16777216).contains(&max){return Err(crate::error::value(crate::error::ValueMsg::LineLimitRange,span));}
+        if path.contains('\0'){return Err(crate::error::value(crate::error::ValueMsg::LinePathNul,span));}
+        self.line_native_poll(span)?;
+        let control=LineControl{deadline:self.limits.deadline,cancel:self.limits.cancel.clone()};
+        let mut reader=LineReader::open(path,max as usize,&control).map_err(|e|self.line_error(e,path,span))?;
+        let outcome=(||->R<Value>{
+            let mut lines=0i64;let mut stopped=false;
+            loop{
+                let next=reader.next_line(&control).map_err(|e|self.line_error(e,path,span))?;
+                let Some(line)=next else{break;};
+                self.line_native_poll(span)?;
+                let result=self.call_value(&args[0],&[Value::string(line.text),Value::Int(line.number)],span)?;
+                self.line_native_poll(span)?;
+                lines=line.number;
+                match result{Value::Bool(true)=>{},Value::Bool(false)=>{stopped=true;break;},v=>return Err(bad(&v,"bool"))}
+            }
+            Ok(Value::object(vec![("lines".into(),Value::Int(lines)),("stopped".into(),Value::Bool(stopped))]))
+        })();
+        reader.finish();
+        outcome
+    }
+
     fn http_request(&mut self,args:&[Value],span:Span)->R<Value>{
         use crate::http_control::*;
         let request=validate_http(args,span)?;
@@ -4834,4 +4889,59 @@ mod t18b_runtime_tests {
   for f in [HttpFailure::Cancelled,HttpFailure::Deadline]{let e=i.consume_http_report(HttpReport{result:Err(f),diagnostics:vec![]},Span::START).unwrap_err();assert_eq!(e.class_name(),"ExecutionLimitError");assert!(!Interp::attempt_recoverable(&e));}
   assert!(eval_module_traced_on_thread(&p).http_diagnostics().is_empty());
  });}
+}
+
+#[cfg(test)]
+mod t19_runtime_tests {
+ use super::*;
+ use std::path::PathBuf;
+ use std::sync::atomic::{AtomicU64,Ordering};
+ static NEXT:AtomicU64=AtomicU64::new(0);
+ fn fixture(bytes:&[u8])->PathBuf{
+  let dir=std::env::current_dir().unwrap().join("Temp/T19-runtime/tests");std::fs::create_dir_all(&dir).unwrap();
+  let path=dir.join(format!("{}-{}.txt",std::process::id(),NEXT.fetch_add(1,Ordering::Relaxed)));std::fs::write(&path,bytes).unwrap();path
+ }
+ fn literal(path:&std::path::Path)->String{format!("{:?}",path.to_string_lossy().replace('\\',"/"))}
+ fn run(text:&str,limits:EvalLimits)->TracedRun{on_eval_stack(move||{
+  let p=crate::parser::parse(&crate::lexer::lex(text,0).unwrap()).unwrap();eval_module_traced_on_thread_with_args_and_limits(&p,&[],limits)
+ })}
+ fn released(path:&std::path::Path){
+  #[cfg(windows)]{use std::os::windows::fs::OpenOptionsExt;let file=std::fs::OpenOptions::new().read(true).share_mode(0).open(path).unwrap();drop(file);}
+  std::fs::remove_file(path).unwrap();
+ }
+ #[test] fn native_poll_does_not_charge_steps_and_contextless_is_rejected(){
+  let mut i=Interp::new();i.limits.max_steps=Some(0);i.line_native_poll(Span::START).unwrap();assert_eq!(i.limits.max_steps,Some(0));
+  let e=builtins::call("forEachLine",&[],Span::START).unwrap_err();assert_eq!(e.class_name(),"TypeError");assert!(e.message().contains("evaluator context"));
+ }
+ #[test] fn early_false_skips_bad_utf8_and_releases_in_living_host(){
+  let path=fixture(b"ok\n\xff\n");let text=format!("let r=forEachLine((s,n)=>false,2,{})\nassert(r.lines==1)\nassert(r.stopped)",literal(&path));
+  run(&text,Default::default()).result.unwrap();released(&path);
+ }
+ #[test] fn json_recovery_and_error_outcomes_release_before_host_returns(){
+  let path=fixture(b"bad\n1\n\n2\n");let text=format!("var good=0\nvar bad=0\nlet r=forEachLine((s,n)=>{{let r=attempt(()=>jsonParse(s))\nif r.ok {{good+=1}} else {{bad+=1}}\ntrue}},32,{})\nassert(good==2)\nassert(bad==2)\nassert(r.lines==4)\nassert(!r.stopped)",literal(&path));
+  run(&text,Default::default()).result.unwrap();released(&path);
+  for callback in ["(s,n)=>1","(s,n)=>1/0","(s,n)=>{while true {}}"]{
+   let path=fixture(b"x\n");let text=format!("forEachLine({callback},2,{})",literal(&path));
+   let r=run(&text,EvalLimits{max_steps:Some(50),..Default::default()});assert!(r.result.is_err());released(&path);
+  }
+ }
+ #[test] fn arity_is_checked_before_open_even_empty_missing_path(){
+  let p=fixture(b"");let text=format!("forEachLine(()=>true,1,{})",literal(&p));
+  assert_eq!(run(&text,Default::default()).result.unwrap_err().class_name(),"TypeError");released(&p);
+  let r=run("forEachLine(()=>true,1,\"missing-before-arity\")",Default::default());assert_eq!(r.result.unwrap_err().class_name(),"TypeError");
+ }
+ #[test] fn active_cross_thread_cancellation_releases_before_living_host_probe(){
+  use std::sync::{Arc,atomic::AtomicBool};use std::time::{Instant,Duration};
+  let path=fixture(b"x\n");let marker=fixture(b"");std::fs::remove_file(&marker).unwrap();
+  let token=Arc::new(AtomicBool::new(false));let writer=token.clone();let watch=marker.clone();
+  let cancel=std::thread::spawn(move||{let end=Instant::now()+Duration::from_secs(5);let mut observed=false;
+   while Instant::now()<end{if watch.exists(){observed=true;break;}std::thread::yield_now();}
+   writer.store(true,Ordering::Release);observed
+  });
+  let text=format!("forEachLine((s,n)=>{{writeFile({},\"ready\")\nwhile true {{}}\ntrue}},4,{})",literal(&marker),literal(&path));
+  let r=run(&text,EvalLimits{cancel:Some(token),deadline:Some(Instant::now()+Duration::from_secs(10)),..Default::default()});
+  assert!(cancel.join().unwrap(),"callback checkpoint must be observed");
+  assert!(matches!(*r.result.unwrap_err(),LzError::ExecutionLimit{reason:crate::error::ExecutionLimitReason::Cancelled,..}));
+  released(&path);released(&marker);
+ }
 }
