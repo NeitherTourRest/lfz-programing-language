@@ -386,3 +386,6 @@ T17新增ExecutionLimitError（第13类）：执行步数预算已耗尽/执行�
 ## T18-B HTTP
 
 HTTP局部timeout/大小/UTF8等ValueError可attempt，全局取消/deadline不可吞；HTTP/子进程两个diagnostics均参与宿主完整性门禁，result Ok不充分。精确例外见[HTTP边界](http.md)。
+## T19 有界逐行与JSONL
+
+新逐行接口超长/坏UTF8为ValueError，非普通文件或读失败为IOError；回调内attempt可跳坏JSON，不能跳过未交付的超长/坏UTF8行。全局ExecutionLimitError不可吞，既有副作用不回滚；旧readFile错误不变。见[恢复边界](line-processing.md#错误恢复与资源边界)。

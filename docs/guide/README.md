@@ -222,3 +222,6 @@ Agent脚本可先check再用--max-steps N/--timeout-ms N运行，默认unlimited
 ## T18-B HTTP
 
 HTTP使用独立--allow-http显式授权，六参httpRequest返回status/headers/body三字段，75内置。先check再run，见[HTTP指南](http.md)，不继承--allow-process权限。
+## T19 有界逐行与JSONL
+
+T19提供有界forEachLine(callback,maxLineBytes,path)，支持data-last管道与JSONL组合，76内置、13错误类。先check再run，见[逐行教程](line-processing.md)；新增示例已在最终候选实跑，旧readFile不变。

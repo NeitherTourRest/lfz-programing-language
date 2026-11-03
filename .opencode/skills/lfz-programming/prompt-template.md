@@ -128,3 +128,10 @@ Agent工作流：先check前端/模块图，再按任务配置--max-steps N与--
 ## T18-B HTTP补充（2026-10-31，最终候选）
 
 本轮新授权HTTP，交付后收口不T19/不恢复自动化。当前75内置/13错误类，按SKILL.md §6.7和三spec§24先check再显式--allow-http限额run；不以旧A二进制冒称HTTP通过。六参三键、独立能力、重复header/4xx正常、strictUTF8、API头文本UTF8+body非wire限额、无自动跳转/cookie/auth/proxy/retry、局部恢复/全局终止与双sidecar宿主例外清晰；Windows先验非沙箱。作者先prepare-only，最终锁定18d328候选后才实跑，证据报告列实际计数，不覆盖历史准备记录。
+
+
+## T19 逐行/JSONL准备（2026-11-04）
+本轮新授权覆盖旧T18-B“不T19”停止边界，仅T19交付后收口不T20/automation。76内置/13类，先读SKILL.md §6.8：forEachLine三参data-last、严格bool、lines/stopped，raw LF前含CR额度与UTF8/尾行规则。JSONL复用jsonParse+callback内attempt继续坏行；整流失败不能恢复offset，副作用不回滚。AST共享预算/native仅cancel-deadline、RAII统一释放但std Drop不报告close错误、普通文件TOCTOU/同步阻塞边界必须说明。旧readFile不变，无新权限/context/CLI。先非执行check，再带run限额，以--保护数据argv。完整程序与预期由§6.8提供，实际提取/小样由docs/reports/T19-skill-evidence/run_examples.py记录；此段保留准备阶段说明；最终5d2219已绑定实跑，实际次数与文档SHA见专属报告，仍不宣称性能/新盲测成绩。旧v2不动，R304OPEN。
+
+
+T19内存边界补充：reader只保有界当前行与8KiB缓冲，不代表任意callback或整个解释器总内存O(cap)。每行新建`attempt(() => jsonParse(line))`会创建UserFn，现func_names保留其诊断元数据，随行数增长。大文件应在循环外一次定义`let cell={text:""}`与`let parseCurrent=()=>jsonParse(cell.text)`，回调中更新`cell.text=line`再`attempt(parseCurrent)`；let字符串不可重绑定，struct字段可改。回调自身也在调用外仅创建一次；计数/固定输出批，别collect全文件或每行创建closure。此规避不改变产品funcID语义，不代替峰值内存实测。

@@ -1,0 +1,581 @@
+{
+  "mode": "final",
+  "timestamp_utc": "2026-11-03T17:31:50.668079+00:00",
+  "document_hashes_before": {
+    ".opencode/skills/lfz-programming/SKILL.md": "2572ffcb30b92668b9cd1297f02a922bb61fe8b9335bc910b67a0c23a6c1589f",
+    ".opencode/skills/lfz-programming/README.md": "3c6dc0f68b02ec0cc0e429abb4ee2381a7522d05055b8e77a325f083b07d710b",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "0fb0430bf57d7b3519317ce7e9d8ac08bb6caf7dda2016f0c190893004632d06",
+    ".opencode/skills/lfz-programming/prompt-template.md": "e5eb6c99072aa7d26684e641bb6ed56daa4d240a1135140b0d6fa2bf8f9ebcc0",
+    "docs/guide/ai/README.md": "7f065ff9faa565f660cfe1b8514b34207bc33f5151703f87f9dd1d3bc8a96cdd"
+  },
+  "prepared_cases": 22,
+  "fixture_hashes": {
+    "empty": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "crlf": "464c8c7baee96c964ae5d50b87cbc47ec4b8e8f836d6cb43d412da227eb15c9a",
+    "lf": "75a11da44c802486bc6f65640aa48a730f0f684c5c07a42ba3cd1735eb3fb070",
+    "tail": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
+    "bom": "34458efc6b3e8689be7b17dffa5c40d9c1b72807c93cd35c96f8a6e1b4484a7c",
+    "unicode": "fa717a4768de2a0256209be52fe7fd5c9d100983d5454023aca1fec35b92e731",
+    "nul": "3a100994c4e38751871e6e8eef9adad2b20177fdeaf650daacdcd74f4c9421e3",
+    "space": "e5ea5dba85e59da810c71e563d14c5c828d0536ca4dbd1f9a78e83006e1004b0",
+    "bad": "f6150b42387b4bca0b51c058594371c6cc9230b66935ce8b7f8b52fd14097955",
+    "over": "7c09d66ae74a92c004031d3e32ae99da7f4a8e2d2d0c4dee8b41088b4eb6054f",
+    "exactcr": "8e4621379786ef42a4fec155cd525c291dd7db3c1fde3478522f4f61c03fd1bd",
+    "cross": "172776d26ab3feef90d9600473abf0cc2a20b3685df79005e094b6d49c4a036c",
+    "input": "7f03e04f0c98767572024be0abe86ad0d1f027310ea74896312914f021faddb3"
+  },
+  "source_hashes": {
+    "extracted_0": "fb61c3e40a8065256a08d96dacdc554a704b4d9c5eed74b3a8573ca6f0f71c23",
+    "extracted_1": "fb61c3e40a8065256a08d96dacdc554a704b4d9c5eed74b3a8573ca6f0f71c23",
+    "empty": "68800b001a0b016248a9e00f999cf8184e985fd7bccd4e5ecbae2a036bba8a41",
+    "crlf": "34c4f1fb9559cda235b54c4f233dd608155977f5c759976dfb93bab39ee35e31",
+    "lf": "ba04451be2f7403d778a723519b241d702bf10e1949f52b1658bae88606b2454",
+    "tail": "a571e2ef9344d6f5caee254bdad3611e3dc9d3baaacad657ab530a56f6995a4b",
+    "bom": "c641379dacdd10fa510914ae239b4996d35a58800c4c01701b7fadd9ebbe24d9",
+    "unicode": "514475432c6332c383ee6c30358eef3f921c6a655a1f0af8bdb2a43667663df6",
+    "nul": "ee280bd3acf55ec4258b4883143f36bf36f63c4486b5b10c9f07d588b1cab37e",
+    "space": "84a52507759a75a239fc75e16ff335a59c1ef67e494a027c458c692fe6011377",
+    "cross": "1ba783e4cafd1089d96d18a9a6313200986dbdc405479944ce46fe4d3a365105",
+    "exactcr": "04f6ee8e743565f4ab4168cf433428e1284b7bcd9547a5587801f4fafc52edcd",
+    "cr_counted": "634d15466f32ef7e4ac3e7dada4f32235b2a8974516662bc44010beffb13dc3f",
+    "over": "72c827ed3668e521aee0c070ee6f62d83846a84ff547c37d0b9f17bb275509a3",
+    "utf8": "587e0fe9d7144f683aba6dff6a4e085d4c103c8b5531f3cde0a65692f29158f8",
+    "stop_bad": "a677958fe9ae3a30e8773e18f95f802f8b7838568727cc53ca425f7c96ce6d69",
+    "stop_over": "b83cf7cd6d0a3da76ea8937326af516ab1f6ca88e44948c68500edf3b3caabbe",
+    "nonbool": "986f776235a22dc14e1a50a1131834f0d004cacdf636445a0d9fb8be0e0ca6fd",
+    "arity_empty": "0228e85ca63684c07993adc792ce9e4f96483d25b14b2fec410abcdb184a59bc",
+    "range": "e046d221d3363f543c342067a811391dfd257ab4ef1c8d7b311e7aa14881d2fd",
+    "directory": "508bb38aa502098f0383cf9fd490fc585a55a4985c1dad812563c53304d10854",
+    "global_budget": "ebe525f698831039a8a58ad92d9adb51f7734b0d9214dabf36dee4ec34e945bf"
+  },
+  "runs": [
+    {
+      "name": "check_no_execution",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\check_only.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "extracted_0/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\extracted_0.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "extracted_0/run",
+      "args": [
+        "run",
+        "--max-steps",
+        "10000",
+        "--timeout-ms",
+        "2000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\extracted_0.lfz",
+        "--",
+        "Temp/T19-ai/input.jsonl"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":2,\"rejected\":2,\"result\":{\"lines\":4,\"stopped\":false},\"total\":3}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "extracted_1/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\extracted_1.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "extracted_1/run",
+      "args": [
+        "run",
+        "--max-steps",
+        "10000",
+        "--timeout-ms",
+        "2000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\extracted_1.lfz",
+        "--",
+        "Temp/T19-ai/input.jsonl"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":2,\"rejected\":2,\"result\":{\"lines\":4,\"stopped\":false},\"total\":3}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "empty/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\empty.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "empty/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\empty.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":0,\"stopped\":false},\"rows\":[]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "crlf/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\crlf.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "crlf/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\crlf.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":2,\"stopped\":false},\"rows\":[[\"a\",1],[\"b\\r\",2]]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "lf/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\lf.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "lf/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\lf.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":2,\"stopped\":false},\"rows\":[[\"\",1],[\"\",2]]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "tail/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\tail.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "tail/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\tail.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":1,\"stopped\":false},\"rows\":[[\"a\",1]]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "bom/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\bom.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "bom/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\bom.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":1,\"stopped\":false},\"rows\":[[\"﻿A\",1]]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "unicode/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\unicode.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "unicode/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\unicode.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":1,\"stopped\":false},\"rows\":[[\"雪\",1]]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "nul/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\nul.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "nul/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\nul.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":1,\"stopped\":false},\"rows\":[[\"a\\u0000b\",1]]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "space/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\space.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "space/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\space.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":2,\"stopped\":false},\"rows\":[[\"  \",1],[\"#42\",2]]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "cross/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\cross.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "cross/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\cross.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"lines\":1,\"stopped\":false}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "exactcr/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\exactcr.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "exactcr/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\exactcr.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"lines\":1,\"stopped\":false}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "cr_counted/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\cr_counted.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "cr_counted/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\cr_counted.lfz"
+      ],
+      "exit": 0,
+      "stdout": "0\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "over/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\over.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "over/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\over.lfz"
+      ],
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "utf8/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\utf8.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "utf8/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\utf8.lfz"
+      ],
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "stop_bad/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\stop_bad.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "stop_bad/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\stop_bad.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"lines\":1,\"stopped\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "stop_over/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\stop_over.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "stop_over/run",
+      "args": [
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\stop_over.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"lines\":1,\"stopped\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "nonbool/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\nonbool.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "nonbool/run",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\nonbool.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'forEachLine' 不支持 int 与 bool\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-ai\\\\nonbool.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-ai\\\\nonbool.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "arity_empty/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\arity_empty.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "arity_empty/run",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\arity_empty.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 <fn> 期待 1 个参数，得到 2\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-ai\\\\arity_empty.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-ai\\\\arity_empty.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "range/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\range.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "range/run",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\range.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"逐行读取 maxLineBytes 必须在 1..16777216 范围内\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-ai\\\\range.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-ai\\\\range.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "directory/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\directory.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "directory/run",
+      "args": [
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\directory.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"无法逐行读取：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-ai\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-ai\\\\directory.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-ai\\\\directory.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "global_budget/check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\global_budget.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "global_budget/run",
+      "args": [
+        "run",
+        "--max-steps",
+        "100",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-ai\\global_budget.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-ai\\\\global_budget.lfz\",\"line\":4,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-ai\\\\global_budget.lfz\",\"line\":2,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-ai\\\\global_budget.lfz\",\"line\":2,\"func\":\"<fn>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-ai\\\\global_budget.lfz\",\"line\":4,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    }
+  ],
+  "binary": "target\\release\\lfz.exe",
+  "binary_sha256": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5",
+  "binary_bytes": 1041920,
+  "check_marker_absent": true,
+  "document_hashes_after": {
+    ".opencode/skills/lfz-programming/SKILL.md": "2572ffcb30b92668b9cd1297f02a922bb61fe8b9335bc910b67a0c23a6c1589f",
+    ".opencode/skills/lfz-programming/README.md": "3c6dc0f68b02ec0cc0e429abb4ee2381a7522d05055b8e77a325f083b07d710b",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "0fb0430bf57d7b3519317ce7e9d8ac08bb6caf7dda2016f0c190893004632d06",
+    ".opencode/skills/lfz-programming/prompt-template.md": "e5eb6c99072aa7d26684e641bb6ed56daa4d240a1135140b0d6fa2bf8f9ebcc0",
+    "docs/guide/ai/README.md": "7f065ff9faa565f660cfe1b8514b34207bc33f5151703f87f9dd1d3bc8a96cdd"
+  },
+  "documents_unchanged": true,
+  "passed": 45,
+  "total": 45
+}

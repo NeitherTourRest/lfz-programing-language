@@ -1,0 +1,574 @@
+{
+  "binary": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+  "sha256": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5",
+  "bytes": 1041920,
+  "guide_hashes": {
+    "docs\\guide\\README.md": "a656b543ff2d0f5d949b704d9497ffd6b259602327a6334fc52748927f5c2929",
+    "docs\\guide\\reference.md": "979202b12f84b15107c7d2ee829767aaf5616e1ff78437f197c6494a3c048934",
+    "docs\\guide\\tutorial.md": "41042c91e467fdd7c53a920b5e76f26a2c217f74b99ae263188485b04d578712",
+    "docs\\guide\\errors.md": "30bfffc0eabd69f5f8354d3ccd7aee5f0ae0f06145b15775b0b23eab317f1c0d",
+    "docs\\guide\\testing.md": "cf47a7c1d665607f95dc8dd856f125d9a398237104475af6a54d168655c45def",
+    "docs\\guide\\line-processing.md": "cbf396e61b0d1dc0d68fbb636ffc380b127b49164439133499e7070c369318e3"
+  },
+  "runs": [
+    {
+      "name": "tutorial/check",
+      "argv": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-docs\\jsonl.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.04371919995173812,
+      "pass": true
+    },
+    {
+      "name": "tutorial/run",
+      "argv": [
+        "run",
+        "--max-steps",
+        "10000",
+        "--timeout-ms",
+        "2000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-docs\\jsonl.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":2,\"lines\":4,\"rejected\":2,\"sum\":3}\n",
+      "stderr": "",
+      "seconds": 0.04540989990346134,
+      "pass": true
+    },
+    {
+      "name": "empty/check",
+      "argv": [
+        "check",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},1,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\empty.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.036298400023952127,
+      "pass": true
+    },
+    {
+      "name": "empty/run",
+      "argv": [
+        "run",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},1,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\empty.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":0,\"stopped\":false},\"rows\":[]}\n",
+      "stderr": "",
+      "seconds": 0.0387624001596123,
+      "pass": true
+    },
+    {
+      "name": "basic/check",
+      "argv": [
+        "check",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},2,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\basic.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.03917360003106296,
+      "pass": true
+    },
+    {
+      "name": "basic/run",
+      "argv": [
+        "run",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},2,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\basic.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":2,\"stopped\":false},\"rows\":[[\"a\",1],[\"b\\r\",2]]}\n",
+      "stderr": "",
+      "seconds": 0.04299399978481233,
+      "pass": true
+    },
+    {
+      "name": "lf/check",
+      "argv": [
+        "check",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},1,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\lf.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.04162300005555153,
+      "pass": true
+    },
+    {
+      "name": "lf/run",
+      "argv": [
+        "run",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},1,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\lf.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":2,\"stopped\":false},\"rows\":[[\"\",1],[\"\",2]]}\n",
+      "stderr": "",
+      "seconds": 0.045057700015604496,
+      "pass": true
+    },
+    {
+      "name": "tail/check",
+      "argv": [
+        "check",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},1,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\tail.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.03492249990813434,
+      "pass": true
+    },
+    {
+      "name": "tail/run",
+      "argv": [
+        "run",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},1,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\tail.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":1,\"stopped\":false},\"rows\":[[\"a\",1]]}\n",
+      "stderr": "",
+      "seconds": 0.04186300002038479,
+      "pass": true
+    },
+    {
+      "name": "bom/check",
+      "argv": [
+        "check",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},4,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\bom.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.04583459999412298,
+      "pass": true
+    },
+    {
+      "name": "bom/run",
+      "argv": [
+        "run",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},4,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\bom.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":1,\"stopped\":false},\"rows\":[[\"﻿A\",1]]}\n",
+      "stderr": "",
+      "seconds": 0.04600730002857745,
+      "pass": true
+    },
+    {
+      "name": "unicode/check",
+      "argv": [
+        "check",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},3,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\unicode.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.04198509990237653,
+      "pass": true
+    },
+    {
+      "name": "unicode/run",
+      "argv": [
+        "run",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},3,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\unicode.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":1,\"stopped\":false},\"rows\":[[\"雪\",1]]}\n",
+      "stderr": "",
+      "seconds": 0.042545099975541234,
+      "pass": true
+    },
+    {
+      "name": "nul/check",
+      "argv": [
+        "check",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},3,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\nul.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.04954230017028749,
+      "pass": true
+    },
+    {
+      "name": "nul/run",
+      "argv": [
+        "run",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},3,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\nul.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":1,\"stopped\":false},\"rows\":[[\"a\\u0000b\",1]]}\n",
+      "stderr": "",
+      "seconds": 0.04699200019240379,
+      "pass": true
+    },
+    {
+      "name": "spaced/check",
+      "argv": [
+        "check",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},3,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\spaced.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.043853299925103784,
+      "pass": true
+    },
+    {
+      "name": "spaced/run",
+      "argv": [
+        "run",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},3,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\spaced.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":2,\"stopped\":false},\"rows\":[[\"  \",1],[\"#42\",2]]}\n",
+      "stderr": "",
+      "seconds": 0.04262840002775192,
+      "pass": true
+    },
+    {
+      "name": "cross8KiB/check",
+      "argv": [
+        "check",
+        "-e",
+        "var n=0\nlet r=forEachLine((s,i)=>{n=len(s)\nreturn true},8194,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\cross.data\")\n print(jsonStringify([n,r.lines]))"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.04163630004040897,
+      "pass": true
+    },
+    {
+      "name": "cross8KiB/run",
+      "argv": [
+        "run",
+        "-e",
+        "var n=0\nlet r=forEachLine((s,i)=>{n=len(s)\nreturn true},8194,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\cross.data\")\n print(jsonStringify([n,r.lines]))"
+      ],
+      "exit": 0,
+      "stdout": "[8192,1]\n",
+      "stderr": "",
+      "seconds": 0.048735199961811304,
+      "pass": true
+    },
+    {
+      "name": "exactCRLF/check",
+      "argv": [
+        "check",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},2,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\crlf.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.03468280006200075,
+      "pass": true
+    },
+    {
+      "name": "exactCRLF/run",
+      "argv": [
+        "run",
+        "-e",
+        "var rows=[]\n let r=forEachLine((s,n)=>{rows=push([s,n],rows)\n return true},2,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\crlf.data\")\n print(jsonStringify({rows:rows,result:r}))"
+      ],
+      "exit": 0,
+      "stdout": "{\"result\":{\"lines\":1,\"stopped\":false},\"rows\":[[\"a\",1]]}\n",
+      "stderr": "",
+      "seconds": 0.034021300030872226,
+      "pass": true
+    },
+    {
+      "name": "crlfNplus1/check",
+      "argv": [
+        "check",
+        "-e",
+        "forEachLine((s,n)=>true,1,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\crlf.data\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.04366089985705912,
+      "pass": true
+    },
+    {
+      "name": "crlfNplus1/run",
+      "argv": [
+        "run",
+        "--json",
+        "-e",
+        "forEachLine((s,n)=>true,1,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\crlf.data\")"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行超过逐行字节上限 1\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "seconds": 0.06513929995708168,
+      "pass": true
+    },
+    {
+      "name": "utf8ByteCap/check",
+      "argv": [
+        "check",
+        "-e",
+        "forEachLine((s,n)=>true,2,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\unicode.data\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.04122889996506274,
+      "pass": true
+    },
+    {
+      "name": "utf8ByteCap/run",
+      "argv": [
+        "run",
+        "--json",
+        "-e",
+        "forEachLine((s,n)=>true,2,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\unicode.data\")"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行超过逐行字节上限 2\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "seconds": 0.05471099982969463,
+      "pass": true
+    },
+    {
+      "name": "badUTF8/check",
+      "argv": [
+        "check",
+        "-e",
+        "forEachLine((s,n)=>true,32,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\bad.data\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.04533340013585985,
+      "pass": true
+    },
+    {
+      "name": "badUTF8/run",
+      "argv": [
+        "run",
+        "--json",
+        "-e",
+        "forEachLine((s,n)=>true,32,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\bad.data\")"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 2 行不是合法 UTF-8\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "seconds": 0.0396158997900784,
+      "pass": true
+    },
+    {
+      "name": "stopBefore/bad/check",
+      "argv": [
+        "check",
+        "-e",
+        "print(jsonStringify(forEachLine((s,n)=>false,4,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\bad.data\"))) "
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.059647400164976716,
+      "pass": true
+    },
+    {
+      "name": "stopBefore/bad/run",
+      "argv": [
+        "run",
+        "-e",
+        "print(jsonStringify(forEachLine((s,n)=>false,4,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\bad.data\"))) "
+      ],
+      "exit": 0,
+      "stdout": "{\"lines\":1,\"stopped\":true}\n",
+      "stderr": "",
+      "seconds": 0.03259279998019338,
+      "pass": true
+    },
+    {
+      "name": "stopBefore/over/check",
+      "argv": [
+        "check",
+        "-e",
+        "print(jsonStringify(forEachLine((s,n)=>false,4,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\over.data\"))) "
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.03954389994032681,
+      "pass": true
+    },
+    {
+      "name": "stopBefore/over/run",
+      "argv": [
+        "run",
+        "-e",
+        "print(jsonStringify(forEachLine((s,n)=>false,4,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\over.data\"))) "
+      ],
+      "exit": 0,
+      "stdout": "{\"lines\":1,\"stopped\":true}\n",
+      "stderr": "",
+      "seconds": 0.04182580020278692,
+      "pass": true
+    },
+    {
+      "name": "strictBool/check",
+      "argv": [
+        "check",
+        "-e",
+        "forEachLine((s,n)=>nil,32,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\tail.data\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.05770409991964698,
+      "pass": true
+    },
+    {
+      "name": "strictBool/run",
+      "argv": [
+        "run",
+        "--json",
+        "-e",
+        "forEachLine((s,n)=>nil,32,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\tail.data\")"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'forEachLine' 不支持 nil 与 bool\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "seconds": 0.034483599942177534,
+      "pass": true
+    },
+    {
+      "name": "emptyArity/check",
+      "argv": [
+        "check",
+        "-e",
+        "forEachLine((s)=>true,32,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\empty.data\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.03745319996960461,
+      "pass": true
+    },
+    {
+      "name": "emptyArity/run",
+      "argv": [
+        "run",
+        "--json",
+        "-e",
+        "forEachLine((s)=>true,32,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\empty.data\")"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 <fn> 期待 1 个参数，得到 2\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "seconds": 0.03760119993239641,
+      "pass": true
+    },
+    {
+      "name": "range/check",
+      "argv": [
+        "check",
+        "-e",
+        "forEachLine((s,n)=>true,0,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\empty.data\")"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.0400201000738889,
+      "pass": true
+    },
+    {
+      "name": "range/run",
+      "argv": [
+        "run",
+        "--json",
+        "-e",
+        "forEachLine((s,n)=>true,0,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\empty.data\")"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"逐行读取 maxLineBytes 必须在 1..16777216 范围内\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "seconds": 0.03824619995430112,
+      "pass": true
+    },
+    {
+      "name": "outerAttemptEffects/check",
+      "argv": [
+        "check",
+        "-e",
+        "var count=0\nlet r=attempt(()=>forEachLine((s,n)=>{count=count+1\nreturn true},4,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\over.data\"))\n print(jsonStringify([r.ok,r.error[\"class\"],count]))"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.03737100004218519,
+      "pass": true
+    },
+    {
+      "name": "outerAttemptEffects/run",
+      "argv": [
+        "run",
+        "-e",
+        "var count=0\nlet r=attempt(()=>forEachLine((s,n)=>{count=count+1\nreturn true},4,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\over.data\"))\n print(jsonStringify([r.ok,r.error[\"class\"],count]))"
+      ],
+      "exit": 0,
+      "stdout": "[false,\"ValueError\",1]\n",
+      "stderr": "",
+      "seconds": 0.03691359981894493,
+      "pass": true
+    },
+    {
+      "name": "budgetNotCaught/check",
+      "argv": [
+        "check",
+        "-e",
+        "attempt(()=>forEachLine((s,n)=>{while true {}\nreturn true},32,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\tail.data\"))"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.03696170006878674,
+      "pass": true
+    },
+    {
+      "name": "budgetNotCaught/run",
+      "argv": [
+        "run",
+        "--max-steps",
+        "100",
+        "--json",
+        "-e",
+        "attempt(()=>forEachLine((s,n)=>{while true {}\nreturn true},32,\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-docs\\\\tail.data\"))"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":1,\"col\":39,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "seconds": 0.03572889999486506,
+      "pass": true
+    }
+  ],
+  "passed": 42,
+  "complete": true
+}

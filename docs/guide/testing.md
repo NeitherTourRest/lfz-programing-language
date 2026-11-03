@@ -280,3 +280,6 @@ check只复用前端，不能替代执行测试。测试框架应分别记录「
 ## T18-B HTTP
 
 HTTP只用stdlib本地loopback临时端口与有界shutdown/watchdog；默认禁用须无连接，保重复头、404/302不自动跳转、严格UTF8、慢响应timeout与全局终止。精确N需要平台RAW_HEADERS_CRLF实际文本证据，不以wire猜数。最终字节实跑见T18-B-guide报告。
+## T19 有界逐行与JSONL
+
+逐行指南聚焦小样：空文件、CRLF/末CR/BOM/尾LF、raw字节N/N+1、UTF8/早停、JSON坏行继续、严格bool、全局限额。先提取prepare-only，再锁最终exe hash跑check→run；性能规模和真实关闭证据由对应owner验收，不能把rename/delete单独当关闭证明。见T19-guide-evidence。

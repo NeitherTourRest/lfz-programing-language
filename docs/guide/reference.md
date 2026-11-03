@@ -413,3 +413,6 @@ exec恰三参，返回stdout/stderr/exitCode/signal，非零exit正常；绝对.
 ## T18-B HTTP
 
 新增httpRequest(method,url,headers,body,timeoutMs,maxResponseBytes)：headers为重复pairs、4xx正常值、strictUTF8，限额按API头文本+body而非wire。精确契约§24与[HTTP参考](http.md)。
+## T19 有界逐行与JSONL
+
+forEachLine(callback,maxLineBytes,path)为特殊内置，回调恰2参返回严格bool；结果lines/stopped，cap为LF前raw字节含CR，1..16MiB。逐行/UTF8/共享预算及文件边界见[完整参考](line-processing.md)，规范三spec §25；共76内置、13错误类，无新CLI。

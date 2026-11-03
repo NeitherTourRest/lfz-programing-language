@@ -1,0 +1,66 @@
+{
+  "binary": {
+    "path": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+    "sha256": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5",
+    "bytes": 1041920
+  },
+  "processes": 42,
+  "files": {
+    "docs\\reports\\T19-guide-evidence\\.gitattributes": {
+      "bytes": 9,
+      "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+    },
+    "docs\\reports\\T19-guide-evidence\\first-failure.json": {
+      "bytes": 20957,
+      "sha256": "c7dd91d8ae427f8a1bcbc02383a92191cfebe25faf0b1ef3c180a0eb7c4d859f"
+    },
+    "docs\\reports\\T19-guide-evidence\\line-processing-first.md": {
+      "bytes": 6983,
+      "sha256": "fcf03a8eca278d5a4fa53d3fc521fb0e55ea7849c1efae8edd5b8bd56d66efcf"
+    },
+    "docs\\reports\\T19-guide-evidence\\runs.json": {
+      "bytes": 21504,
+      "sha256": "aef01128dddc2451027609a4a1d8b2eb81fb0ac0f6a3f2f16a11cf300157760e"
+    },
+    "docs\\reports\\T19-guide-evidence\\second-runs.json": {
+      "bytes": 21525,
+      "sha256": "1364e763917d3fe894ebc4877714a3981dc0afe6ba7b203ca53e1d02b4243798"
+    },
+    "docs\\reports\\T19-guide-evidence\\verify-first.py": {
+      "bytes": 6020,
+      "sha256": "2a36d24f0e43f9302190e815efa7b6639e20a89ff1ef319607d34ac01f2b827d"
+    },
+    "docs\\reports\\T19-guide-evidence\\verify.py": {
+      "bytes": 6021,
+      "sha256": "fa5a914f1ea63407d2eee3525103004bc08073acda5571f11e162dc1d0ed04fc"
+    },
+    "docs\\reports\\T19-guide-evidence.md": {
+      "bytes": 2949,
+      "sha256": "c52b056bfd13615f06d557c6f945137ff6f5507c6a1356b468f705a9a4d1106a"
+    },
+    "docs\\guide\\README.md": {
+      "bytes": 12834,
+      "sha256": "a656b543ff2d0f5d949b704d9497ffd6b259602327a6334fc52748927f5c2929"
+    },
+    "docs\\guide\\reference.md": {
+      "bytes": 30985,
+      "sha256": "979202b12f84b15107c7d2ee829767aaf5616e1ff78437f197c6494a3c048934"
+    },
+    "docs\\guide\\tutorial.md": {
+      "bytes": 25531,
+      "sha256": "41042c91e467fdd7c53a920b5e76f26a2c217f74b99ae263188485b04d578712"
+    },
+    "docs\\guide\\errors.md": {
+      "bytes": 24239,
+      "sha256": "30bfffc0eabd69f5f8354d3ccd7aee5f0ae0f06145b15775b0b23eab317f1c0d"
+    },
+    "docs\\guide\\testing.md": {
+      "bytes": 15749,
+      "sha256": "cf47a7c1d665607f95dc8dd856f125d9a398237104475af6a54d168655c45def"
+    },
+    "docs\\guide\\line-processing.md": {
+      "bytes": 7442,
+      "sha256": "cbf396e61b0d1dc0d68fbb636ffc380b127b49164439133499e7070c369318e3"
+    }
+  }
+}

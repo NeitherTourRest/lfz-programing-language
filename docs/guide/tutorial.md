@@ -741,3 +741,6 @@ Agent执行生成的job.lfz时，先check，再run时显式设置预算。check�
 ## T18-B HTTP
 
 [HTTP教程](http.md)给出fetch.lfz与本地loopback服务约定，先check再--allow-http run。端口由服务实际生成，响应body需显式jsonParse；不进行公网或信任库修改。
+## T19 有界逐行与JSONL
+
+通过[逐行JSONL教程](line-processing.md)用data-last管道逐条处理文件，callback里attempt区分坏JSON并继续；只存计数避免全量累积。先check再带限额run，新增代码已在最终候选核hash实跑。

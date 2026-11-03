@@ -1,0 +1,160 @@
+# lfz-programming — LFZ 语言的 AI 编程 Skill 包
+
+> 一个 **Skill**：让**从未接触过 LFZ** 的编程 Agent，只凭本包就能写出**正确、可运行**的 `.lfz` 程序。
+> 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（冻结 v1）。本包只做**速查 / 转述**，与 spec 冲突时**以 spec 为准**。
+
+---
+
+## 1. 它是什么 / 给谁用 / 何时加载
+
+| 项 | 说明 |
+|---|---|
+| **是什么** | 面向 **AI 编程 Agent** 的 LFZ 语言速查指南 + 提示模板 + 实测记录 + 安装说明（纯 Markdown，无运行时依赖） |
+| **给谁用** | 需要**写 / 改 / 调试 `.lfz` 程序**的任意 Agent（app-dev 是首位真实用户） |
+| **何时加载** | 任务涉及 `.lfz` 文件、LFZ 脚本、`lfz run`、`cargo run -- run`，或回答 LFZ 语法/语义问题时 |
+| **如何加载** | opencode 读取 `SKILL.md` 的 frontmatter（`name` / `description`），**自动匹配并在需要时载入** |
+
+**包内文件**
+
+| 文件 | 作用 |
+|---|---|
+| `SKILL.md` | **核心**：`#42` 铁律 + **Agent 工作流（6 步）** + 12 错误类 + 语法速查 + 24 陷阱 + **错误→修法对照表** + **§4.6 O(n) 构建性能红线** + 72 内置（含参数/JSON、双参 range、UTF-8 文件 IO） + 分级示例 L1–L5 + 自检清单 + 提示模板 |
+| `README.md` | 本文件 —— **安装与使用（最后一公里）** |
+| `prompt-template.md` | 复制即用的 prompt 骨架（新写 / 审查两类）+ 最小任务基线 |
+| `VERIFICATION.md` | **实测证据**：交付要求对照表（任务要求 + spec §11.1 五条）+ 4 个实跑程序（含输出与退出码） |
+
+---
+
+## 2. 安装方式（三选一）
+
+### 方式 ① 本项目（已就位，无需安装）
+
+本仓库已把 skill 放在 `.opencode/skills/lfz-programming/`；opencode **自动扫描**项目内的 `.opencode/skills/`。
+
+- **生效条件**：**重启 opencode**（或重开会话），让 skill 加载器重新扫描该目录。
+- **验证**：重启后让 Agent 执行"用 LFZ 写一个 hello world"，Agent 应能自动命中本 skill。
+
+### 方式 ② 全局安装（所有项目可用）
+
+把整个目录复制到用户级 skills 目录：
+
+```powershell
+# 目标目录（Windows）：%USERPROFILE%\.config\opencode\skills\lfz-programming
+$dest = "$env:USERPROFILE\.config\opencode\skills\lfz-programming"
+New-Item -ItemType Directory -Force -Path $dest | Out-Null
+Copy-Item -Recurse -Force ".\.opencode\skills\lfz-programming\*" $dest
+```
+
+- 其他平台路径：`~/.config/opencode/skills/lfz-programming/`。
+- 复制后**重启 opencode**；此后**任意项目**里涉及 `.lfz` 的任务都会命中本 skill。
+
+### 方式 ③ 其他 harness（如 DSH）
+
+本包是**纯文件**（Markdown），任何支持"文件系统 skill"的 harness 都能挂载。以 DSH 的 `dsh-skill-filesystem` 为例，指向本目录即可：
+
+```jsonc
+// 示意：把 skill 目录注册给 dsh-skill-filesystem（字段名以你的 harness 文档为准）
+{
+  "mcpServers": {
+    "dsh-skill-filesystem": {
+      "command": "<你的 dsh 可执行文件>",
+      "args": [
+        "--skill-dir",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\.opencode\\skills\\lfz-programming"
+      ]
+    }
+  }
+}
+```
+
+> 本 skill 只依赖**LFZ 解释器**来做"实跑验证"（见 §3），不依赖任何 opencode 专属插件，故可迁移。
+
+---
+
+## 3. 运行前提（重要）
+
+`SKILL.md` 的**第 4/5 步（先check再实跑）**要求能运行 LFZ。三种等价入口，任选其一：
+
+| 入口 | 命令 | 前提 |
+|---|---|---|
+| 仓库源码 | `cargo run --quiet -- run <file.lfz>` | 已装 Rust 工具链；**`cargo` 在 PATH** |
+| 发布二进制 | `lfz run <file.lfz>`（或 `.\dist\lfz.exe run <file.lfz>`） | `dist\lfz.exe` 在 PATH，或用其完整路径 |
+| 裸文件调用 | `lfz <file.lfz>`（等价 `lfz run <file.lfz>`） | 同上 |
+
+**`cargo` 的 PATH 坑（Windows）**：新开的 shell 常找不到 `cargo`，先执行：
+
+```powershell
+$env:Path += ";$env:USERPROFILE\.cargo\bin"
+```
+
+**当前入口（1.4.0）**：文件运行、`-e CODE`、`run -e CODE`、`-`/`run -` stdin 源码及 `test`；脚本参数放在 `--` 后，通过 `argv()` 读取。`-e`/stdin 不要求 #42，REPL仍未实现。项目内 `dist/lfz.exe` 为当前版，外部 PATH 安装不自动更新。
+**退出码（按语境区分）**：`0` 成功；**`lfz run`** 下 `assert`/`fail` 失败 → `2`；**`lfz test`** 下有用例失败 → `1`；CLI 参数错误 / 语法或运行时错误 → `2`。
+
+---
+
+## 4. 它不做什么（边界）
+
+- **不定义、不发明语法**：一切语法/语义以 `docs/spec/` 为准；本包与 spec 冲突时**以 spec 为准**。
+- **不替你改解释器**：若怀疑解释器行为与 spec 不符，报告维护者，**不要**按"另一门语言的直觉"改代码。
+- **不是人类教程**：面向人的手册在 `docs/guide/`（docs-writer 维护）；本包**只面向 AI**。
+- **不含编号错误码**：LFZ 只有**类名 + 中文消息**，禁止使用 / 期待形如 `E-xxx` 的旧错误码。
+
+---
+
+## 5. 30 秒自检（验证安装是否成功）
+
+```powershell
+$env:Path += ";$env:USERPROFILE\.cargo\bin"
+"#42`nprint(""Hello, LFZ!"")" | Set-Content -Encoding utf8 .\hello.lfz
+cargo run --quiet -- run .\hello.lfz   # 期望输出 Hello, LFZ!
+$LASTEXITCODE                          # 期望 0
+```
+
+（实测输出 `Hello, LFZ!`，退出码 `0`；`.lfz` 首行 `#42` 即使带 UTF-8 BOM 也合法。）
+
+---
+
+## 6. 证据与出处
+
+- **实测记录**（4 程序 + 19 类错误场景 + 头部边界）：[`VERIFICATION.md`](./VERIFICATION.md)。
+- **T11-③ D1–D7 修订实测**（字符串不可下标 / `range` 签名 / 循环 `let` / 退出码 / 对齐 / `len(string)` / 隐性语法 + O(n) 构建）：[`VERIFICATION.md`](./VERIFICATION.md) §8。
+- **交付要求对照**（任务要求第 4 条 + spec §11.1 五条硬性要求 → SKILL 落点）：[`VERIFICATION.md`](./VERIFICATION.md) §1。
+- **语法 / 语义 / 接口契约**（唯一事实源）：`docs/spec/`。
+
+## 7. 2026-10-24 特性同步（历史）
+
+当时已实现 69 内置（54+15）及 range 双参；SKILL §6.1 给出新增签名与 Unicode、复杂度、IEEE、文件 IO 边界。使用当前源码重建的 `target/release/lfz.exe`；版本号仍为 v1.0.1。D1–D7 保留，D2 旧单参限制由双参重载替代。新实跑证据见 `docs/reports/T11-v11-skill-evidence.md`。当时未开展新盲测；后续v2首轮为独立新基线，不与旧题成绩直接比较。
+
+## 8. 2026-10-25 T12（当前1.4.0）
+
+72内置与Agent工作流见SKILL §6.2：argv零参/一等别名/遮蔽/隔离，严格JSON/i64/Unicode/128容器/确定性排序，以及-e/stdin/--分界。业务JSON用普通模式print(jsonStringify(...))；CLI --json只回状态。实跑证据见docs/reports/T12-skill-evidence.md；这是作者示例回归，未宣称新的Agent盲测成绩。
+
+**历史冻结输入**：v2首轮的四份skill及旧exe等九项原字节已保存在docs/reports/agent-benchmark-v2/v2-20261024-r01/raw-inputs-submissions.zip。active skill/target二进制升级后，旧runner校验当前路径的manifest不匹配是预期；不要用--freeze覆写旧manifest来掩盖变化。复现旧基线须在项目Temp内独立还原当时九项路径和manifest；新版本测评另建版本化输入与manifest，旧成绩/学生提交不改。
+
+## T14：检查与执行分开
+
+使用1.4.0候选，先 `lfz check FILE`（或`check -e CODE`、`check -`），再按授权`lfz run FILE`。检查通过不保证运行成功。机器结果明确`mode:"check",executed:false`；usage错误即使--json仍stderr文本。CODE外--及check --help拒绝。文件前导、非执行/非静态分析与宿主IO边界见SKILL §0.6及三spec §17。源码check断言内置不变。新示例实跑见 `docs/reports/T14-skill-evidence.md`；旧T12/v2成绩不改写，R304仍开放，无整体提速或正式发布声明。
+
+## T15受控业务错误恢复（2026-10-29）
+
+当前73内置，新增attempt(f)；契约三spec§18，使用规则和坏JSON继续示例见SKILL.md §6.3。作者聚焦新增示例与关键兼容实际记录见docs/reports/T15-skill-evidence.md；不重跑/改写旧v2或历史T12/T14成绩，R304仍OPEN。
+
+## T16-C本地模块补充（2026-10-30）
+
+模块任务按SKILL.md §6.4先检查完整根图再执行；每文件#42，静态相对import/显式export、独立home globals、session缓存与namespace快照/共享边界。模板、跨源诊断、attempt无file和RustAPI迁移均引用三spec §19–21。作者新增实跑见docs/reports/T16-C-skill-evidence.md，不覆盖旧v2成绩，不宣称性能或正式发布。
+
+## T17执行限额补充（2026-10-30）
+
+Agent工作流：先check前端/模块图，再按任务配置--max-steps N与--timeout-ms N运行。只支持两token，等号族拒绝；CODE及--后argv保护。详情SKILL.md §6.5及三spec§22。当前13错误类、73内置，ExecutionLimitError不被attempt吞掉，业务恢复不补预算。截止时间/native阻塞边界是协作式；库取消token不等于CLI Ctrl-C处理。作者新增例证见docs/reports/T17-skill-evidence.md，旧v2不改，R304OPEN。
+
+## T18-A工具执行补充（2026-10-30）
+
+当前74内置/13错误类，exec需显式--allow-process，先check不执行再按授权限额run。只接受绝对.exe/独立argv，不搜索PATH或隐式shell；非零exitCode仍成功值，严格UTF8及双流合并rawbyte额度，局部错误可恢复而全局资源终止不吞，cleanup宿主异常不保证单JSON。详见SKILL.md §6.6及三spec§23；仅Windows已验、非沙箱。作者记录T18-A-skill-evidence.md，旧v2不改，R304OPEN。本轮交付后停止，不进入HTTP。
+
+## T18-B HTTP补充（2026-10-31，最终候选）
+
+本轮新授权HTTP，交付后收口不T19/不恢复自动化。当前75内置/13错误类，按SKILL.md §6.7和三spec§24先check再显式--allow-http限额run；不以旧A二进制冒称HTTP通过。六参三键、独立能力、重复header/4xx正常、strictUTF8、API头文本UTF8+body非wire限额、无自动跳转/cookie/auth/proxy/retry、局部恢复/全局终止与双sidecar宿主例外清晰；Windows先验非沙箱。作者先prepare-only，最终锁定18d328候选后才实跑，证据报告列实际计数，不覆盖历史准备记录。
+
+
+## T19 逐行/JSONL准备（2026-11-04）
+本轮新授权覆盖旧T18-B“不T19”停止边界，仅T19交付后收口不T20/automation。76内置/13类，先读SKILL.md §6.8：forEachLine三参data-last、严格bool、lines/stopped，raw LF前含CR额度与UTF8/尾行规则。JSONL复用jsonParse+callback内attempt继续坏行；整流失败不能恢复offset，副作用不回滚。AST共享预算/native仅cancel-deadline、RAII统一释放但std Drop不报告close错误、普通文件TOCTOU/同步阻塞边界必须说明。旧readFile不变，无新权限/context/CLI。先非执行check，再带run限额，以--保护数据argv。完整程序与预期由§6.8提供，实际提取/小样由docs/reports/T19-skill-evidence/run_examples.py记录；当前prepare-only，未启动LFZ、未绑定最终hash，不得宣称通过或性能/新盲测成绩。旧v2不动，R304OPEN。

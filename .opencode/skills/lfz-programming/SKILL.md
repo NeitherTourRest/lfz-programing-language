@@ -8,7 +8,7 @@ description: 编写、修改或调试 LFZ 语言（.lfz）程序时使用，也�
 > 读者：**未接触过 LFZ 的编程 Agent**。目标：只凭本文件写出**正确、可运行**的 LFZ 程序。
 > 事实源：`docs/spec/{syntax,semantics,interface-contract}.md`（含 T12 §16 / T14 §17 / T15 §18 / T16 §19–21）。本文件是**速查/转述**，不定义新语法；与 spec 冲突时以 spec 为准。
 > 使用纪律：**只允许使用本文件列出的语法**。不要用 Python / C / JS 的规则去猜 LFZ——LFZ 在若干处刻意不同（见 §4）。
-> **版本对齐（2026-10-29，候选）**：项目内 `dist/lfz.exe` / `target/release/lfz.exe` 为 **1.4.0，75 个内置**（54+15+3+1+1+1），支持 argv、JSON、`-e`、stdin源码及非执行`check`。T12 示例实跑证据见 `docs/reports/T12-skill-evidence.md`；项目外 PATH 中的旧解释器不保证具备这些能力。
+> **版本对齐（2026-11-04，T19准备）**：语言规范共 **76个内置、13类错误**，T19新增forEachLine最终候选5d2219/1041920B已冻结，作者聚焦实跑记录见专属报告；现有dist与旧证据仍按各轮实际hash，不据规范计数推断产物能力。支持argv、JSON、`-e`、stdin源码及非执行check；项目外PATH旧解释器不保证相同能力。T19状态见§6.8及docs/reports/T19-skill-evidence.md。
 
 > 🚫 **硬纪律：不要凭记忆写 LFZ。** 本文件**没写的语法一律视为不存在**；拿不准就先查 §10 列出的 spec，或改用本文件已列出的等价写法。宁可用保守写法，也不要"猜一个大概像 Python 的写法"。
 
@@ -266,7 +266,7 @@ let q = 10 |> push(_, [1, 2])      // _ 占位：注入到该位 → push(10, [1
     - `let ys = push(9, xs)` —— **不**改 `xs`；`sort(xs)` 不改 `xs`。
     - 唯一原地改的是**赋值语法** `a[i] = v` / `s.k = v`。
 
-11. **75 个内置按 data-last 约定**（见 §6）；容器/字符串被操作对象恒为末参。
+11. **76 个内置按 data-last 约定**（见 §6）；容器/字符串被操作对象恒为末参。
 
 12. **`round` 是银行家舍入（四舍六入五成双）**：`round(2.5) == 2`、`round(3.5) == 4`。
 
@@ -416,7 +416,7 @@ print("continue")
 
 ---
 
-## 6. 内置函数 75 个（data-last）
+## 6. 内置函数 76 个（data-last）
 
 > **约定**：凡对容器 / 字符串操作者，**被操作对象恒为最后一个参数**；`xs |> f(...)` 把 `xs` 注入末参。**凡容器更新一律返回新值、不改原容器**（A1），除非用赋值语法 `a[i]=` / `s.k=`。参数类型/个数不符 → `TypeError`。
 
@@ -975,3 +975,58 @@ WinHTTP async协作取消不是硬返回时界：close request之后仍需HANDLE
 Rust EvalCapabilities新增pub http:bool，手写literal需补http:false或Default更新，现有context三入口和EvalLimits形状不变，旧非context API默认false。库还须检查独立host_diagnostics()和http_diagnostics()两sidecar；result Ok不等于完整成功。CLI主Err保原唯一JSON、诊断先子进程后HTTP写stderr；result Ok且任一诊断非空时stdout空/stderr宿主标题与诊断/exit2（--json宿主例外）。两列表同时非空用旧子进程标题；仅HTTP时标题“lfz: HTTP 资源回收失败”，HTTP每条前缀“lfz: HTTP 回收诊断：”。不让attempt清理sidecar或伪装成功。
 
 仅Windows先验，其它Unsupported，无curl/exec fallback，非沙箱。作者实跑绑定最终18d328候选，证据与实际计数见docs/reports/T18-B-skill-evidence.md；不以旧A产物代替。旧v2不重测/不改输入成绩；R304OPEN，不把功能通过当性能或正式发布。
+
+
+## 6.8 T19：逐行文件与 JSONL（最终候选）
+
+事实源：三spec §25、docs/reports/T19-contract.md；76内置/13错误类。新增语义已冻结，最终二进制已冻结，以下示例绑定5d2219候选实跑，实际结果见专属报告。旧readFile全文件读取/编码/错误不变，无新CLI flag、能力或Rust context字段。本轮T19交付后停止，不自动T20/automation。历史T18-B的停止边界由本轮新授权覆盖；旧HTTP证据仍仅对应旧字节。
+
+先在项目根创建UTF8无BOM文件Temp/T19-ai/input.jsonl，内容四行：`{"n":1}`、`broken`、空行、`{"n":2}`。保存以下为Temp/T19-ai/jsonl.lfz：
+
+```lfz
+#42
+let args = argv()
+assert(len(args) == 1)
+var accepted = 0
+var rejected = 0
+var total = 0
+let cell = {text: ""}
+let parseCurrent = () => jsonParse(cell.text)
+let result = args[0] |> forEachLine((line, lineNo) => {
+    cell.text = line
+    let parsed = attempt(parseCurrent)
+    if parsed.ok {
+        accepted = accepted + 1
+        total = total + parsed.value.n
+    } else {
+        rejected = rejected + 1
+    }
+    return true
+}, 4096)
+assert(accepted == 2 && rejected == 2 && total == 3)
+assert(result.lines == 4 && !result.stopped)
+print(jsonStringify({accepted: accepted, rejected: rejected, total: total, result: result}))
+```
+
+先 `./target/release/lfz.exe check Temp/T19-ai/jsonl.lfz`，exit0后再 `./target/release/lfz.exe --max-steps 10000 --timeout-ms 2000 run Temp/T19-ai/jsonl.lfz -- Temp/T19-ai/input.jsonl`。check不执行读取/回调，也不保证名称/类型/业务数据正确。run的限额为可配置例子；无需--allow-process/http。本例只接受示例中的整数n对象；真实JSONL须自行检查schema，JSON语法成功不等于业务结构合法。这里只保留计数，不collect历史记录。
+
+`forEachLine(callback,maxLineBytes,path)`严格三参、data-last；callback是恰两参用户函数`(line:string,lineNo:int)`，返回严格bool，true继续/false早停，nil/0等报TypeError。特殊内置不可一等化，需传函数时用closure包装；同名绑定仍可遮蔽。成功struct字段插入序`lines:int,stopped:bool`，lines含false那次调用，只有false早停令stopped=true，EOF为false。空文件0/false仍完整校验参数和callback arity。jsonStringify按自己的键序输出，不用于证明插入序。
+
+实参先左到右求值，再数量→callback类型→cap类型→path类型→callback恰两参→cap范围→path NUL→资源预检→打开。cap为int 1..16777216；path为string、相对宿主cwd而非module目录，空串沿OS错误，NUL路径ValueError。argv builtin不是两参callback。普通文件读权限沿旧IO，不新增授权开关。
+
+LF唯一分隔、去LF；仅LF前的一个CR被剥离，EOF末CR和孤CR保留。空文件0行，`a`/`a\n`各1行，`\n`1空行，`\n\n`2空行；尾LF不多造末行。BOM/空白/NUL内容/注释样文本原样保留，无loader的#42规则。lineNo从1开始，含空行。
+
+cap计LF前raw bytes，含随后去掉的CR、不含LF；`a\r\n`要2，`a\n`要1，雪要3bytes。恰N允许，N+1失败，坏行不回调；拼好有界行后严格UTF8解码，合法跨8KiB字符可用，不lossy。false后不再解码/解析下一行，即使下一行坏UTF8或超长；允许固定buffer已预读后续bytes。
+
+超长/坏UTF8/cap范围/path NUL/行号溢出为ValueError，可外层attempt捕获整次失败；非普通文件及metadata/open/read失败为IOError，消息`无法逐行读取：{path}`。坏UTF8/超长尚未交付，callback无法恢复；外层attempt不能恢复offset继续，任何错误没有部分成功结果。已有计数/容器/IO副作用不回滚。JSONL只复用jsonParse，在callback内attempt捕获坏JSON继续；空行策略自定，不新增parser/隐式跳行。错误字段class必须`r.error["class"]`，attempt仍固定ok/value/error，error没有file字段。
+
+参数表达式和callback真实AST共享会话步数；native只poll取消Acquire→deadline，不按bytes/块/行扣步或检查remaining。global ExecutionLimitError不可attempt吞或补预算；false正常回调后仍检全局终止。宿主token取消不等于CLI Ctrl-C保证。同步metadata/open/read可能阻塞，协作检查不是硬返回时界。
+
+callback保captured/self/home globals/source/trace与模块共享预算；数据lineNo不冒充LFZ源码span/file，跨模块错误仍指真实LFZ文件。attempt恢复trace/source不恢复预算或副作用。只普通文件，pre/open后metadata检查允许普通文件symlink，不能消灭TOCTOU或保证沙箱；读中修改不是快照/事务/锁。
+
+EOF/false/回调错误/非bool/全局终止/读取解码失败统一finish/drop释放reader/File，外层attempt返回时已释放，无逃逸handle。std Drop不报告OS close错误，无新sidecar，不声称sync_all等于close。真实关闭证据由owner/verifier同进程排他重开/Drop spy提供，本作者不以进程退出或删文件代证。
+
+引擎空间O(当前最长行+固定8KiB)，按实际行有界分配，用户自行collect仍可O(文件)，嵌套调用各自缓冲。小样不证明峰值内存/吞吐或跨平台支持；规模测量另等perf窗口，R304OPEN。作者准备与最终hash证据见docs/reports/T19-skill-evidence.md；不改旧v2输入/成绩，不冒充新Agent盲测。
+
+
+T19内存边界补充：reader只保有界当前行与8KiB缓冲，不代表任意callback或整个解释器总内存O(cap)。每行新建`attempt(() => jsonParse(line))`会创建UserFn，现func_names保留其诊断元数据，随行数增长。大文件应在循环外一次定义`let cell={text:""}`与`let parseCurrent=()=>jsonParse(cell.text)`，回调中更新`cell.text=line`再`attempt(parseCurrent)`；let字符串不可重绑定，struct字段可改。回调自身也在调用外仅创建一次；计数/固定输出批，别collect全文件或每行创建closure。此规避不改变产品funcID语义，不代替峰值内存实测。
