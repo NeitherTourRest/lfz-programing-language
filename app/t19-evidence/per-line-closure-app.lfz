@@ -1,0 +1,33 @@
+#42
+fn require(ok, message) { if !ok { fail("jsonlstream: ${message}") } }
+fn main(args) {
+    require(len(args) == 5, "用法: INPUT OUTPUT.jsonl SUMMARY.json TAKE MAX_LINE_BYTES")
+    let input = args[0]
+    let output = args[1]
+    let summary = args[2]
+    require(len(trim(input)) > 0 && len(trim(output)) > 0 && len(trim(summary)) > 0, "路径不能为空")
+    require(input != output && input != summary && output != summary, "路径字面不能相同")
+    let take = jsonParse(args[3])
+    let cap = jsonParse(args[4])
+    require(type(take) == "int" && take >= 0, "TAKE须为非负整数，0表示全部")
+    require(type(cap) == "int" && cap >= 1 && cap <= 16777216, "行字节上限范围1..16777216")
+    let state = { total: 0, passed: 0, failed: 0, pending: [] }
+    writeFile(output, "")
+    let scan = forEachLine((line, lineNo) => {
+        let parsed = attempt(() => jsonParse(line))
+        let row = { line: lineNo, ok: parsed.ok, value: parsed.value, error: parsed.error }
+        state.total = state.total + 1
+        if parsed.ok { state.passed = state.passed + 1 } else { state.failed = state.failed + 1 }
+        state.pending = push(jsonStringify(row), state.pending)
+        if len(state.pending) == 256 {
+            appendFile(output, join("\n", state.pending) + "\n")
+            state.pending = []
+        }
+        take == 0 || state.total < take
+    }, cap, input)
+    if len(state.pending) > 0 { appendFile(output, join("\n", state.pending) + "\n") }
+    let result = { total: state.total, passed: state.passed, failed: state.failed, lines: scan.lines, stopped: scan.stopped }
+    writeFile(summary, jsonStringify(result) + "\n")
+    print(jsonStringify(result))
+}
+main(argv())

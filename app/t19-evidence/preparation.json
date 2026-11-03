@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-04",
+  "status": "prepared_not_executed",
+  "python_ast": "PASS",
+  "interpreter_processes": 0,
+  "files": [
+    {
+      "path": "app/jsonlstream.lfz",
+      "bytes": 1700,
+      "sha256": "8436f85053493afa5af98f918babf7f18ac1deaac6f92ec74cdeda509dd71a0b"
+    },
+    {
+      "path": "app/verify_jsonlstream.py",
+      "bytes": 4530,
+      "sha256": "99bfea6c9ceac8884719f9c3c56bd3633b2bb46be76274ab986b9adb471c14ca"
+    },
+    {
+      "path": "app/T19-JSONLSTREAM.md",
+      "bytes": 3620,
+      "sha256": "322c6eb5de5a5727bf21983da7dcca98c797a71c10d52796c9e2eec84e79cf53"
+    }
+  ]
+}

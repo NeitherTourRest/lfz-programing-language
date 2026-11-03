@@ -1,0 +1,50 @@
+{
+  "binary_sha256": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5",
+  "source_sha256": "08a90372ef74a5892a635c6840acd6f559734c84d5c7055461d98eefa90c0dab",
+  "rows": [
+    {
+      "name": "empty",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonlstream.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-app\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-app\\output.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-app\\summary.json",
+        "0",
+        "4096"
+      ],
+      "exit": 0,
+      "stdout": "{\"failed\":0,\"lines\":0,\"passed\":0,\"stopped\":false,\"total\":0}\n",
+      "stderr": "",
+      "output_hex": "",
+      "summary_hex": "7b226661696c6564223a302c226c696e6573223a302c22706173736564223a302c2273746f70706564223a66616c73652c22746f74616c223a307d0a",
+      "passed": true
+    },
+    {
+      "name": "mixed",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonlstream.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-app\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-app\\output.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-app\\summary.json",
+        "0",
+        "4096"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonlstream.lfz\", line 36, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonlstream.lfz\", line 18, in main\n        let scan = forEachLine((line, lineNo) => {\n                   ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonlstream.lfz\", line 19, in <fn>\n            currentLine = line\n            ^\nTypeError: 不能重新赋值 let 变量 'currentLine'；let 只锁重绑定，不锁内容\n",
+      "output_hex": "",
+      "summary_hex": "4b454550",
+      "passed": false
+    }
+  ],
+  "status": "failed",
+  "error": "AssertionError()",
+  "total": 2,
+  "passed": 1
+}

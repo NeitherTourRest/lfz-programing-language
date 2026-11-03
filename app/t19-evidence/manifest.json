@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-04",
+  "binary_sha256": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5",
+  "binary_bytes": 1041920,
+  "files": [
+    {
+      "path": "app/jsonlstream.lfz",
+      "bytes": 1830,
+      "sha256": "2e209be7fd74c2e0a53bbcf6bc651da78fbbbf6faf7930db2ff879a20ce8210e"
+    },
+    {
+      "path": "app/verify_jsonlstream.py",
+      "bytes": 4492,
+      "sha256": "6d54954e543c37393c70d5e8ab276bf85fdb34a3d00d3e092bfee7b79417ae0b"
+    },
+    {
+      "path": "app/T19-JSONLSTREAM.md",
+      "bytes": 5562,
+      "sha256": "88578bd7c622f0194712ba7b3fae6e0352dab9b423db9ed1fe5838960718a9d0"
+    },
+    {
+      "path": "app/t19-evidence/first-app.lfz",
+      "bytes": 1700,
+      "sha256": "8436f85053493afa5af98f918babf7f18ac1deaac6f92ec74cdeda509dd71a0b"
+    },
+    {
+      "path": "app/t19-evidence/first-oracle-failure.json",
+      "bytes": 1284,
+      "sha256": "db589e102b2f8896f47f341a5d3b9a5d3d84fe81d4f755027177baab1df2b2b7"
+    },
+    {
+      "path": "app/t19-evidence/first-verifier.py",
+      "bytes": 4530,
+      "sha256": "99bfea6c9ceac8884719f9c3c56bd3633b2bb46be76274ab986b9adb471c14ca"
+    },
+    {
+      "path": "app/t19-evidence/immutable-binding-app.lfz",
+      "bytes": 1810,
+      "sha256": "08a90372ef74a5892a635c6840acd6f559734c84d5c7055461d98eefa90c0dab"
+    },
+    {
+      "path": "app/t19-evidence/immutable-binding-failure.json",
+      "bytes": 2686,
+      "sha256": "3291cb345e917829a76a37c1a53d969e1c2d6c8437ba937753217d5e7d1bd2e6"
+    },
+    {
+      "path": "app/t19-evidence/per-line-closure-app.lfz",
+      "bytes": 1715,
+      "sha256": "c961269500fab436cf67150e82857484f069cbf4d2959de8ddbd50d07eca05ff"
+    },
+    {
+      "path": "app/t19-evidence/per-line-closure-results.json",
+      "bytes": 98098,
+      "sha256": "71bd7a5f90b77e1bcf5ff930518b20e0c3a48a5297a4944b40fda1ca506a4db5"
+    },
+    {
+      "path": "app/t19-evidence/preparation.json",
+      "bytes": 629,
+      "sha256": "4c6a4e4e2968c68dafd1366b803adf4c794fe2bc3a4a81eb32725545a3984ab3"
+    },
+    {
+      "path": "app/t19-evidence/results.json",
+      "bytes": 98098,
+      "sha256": "17f0b49af30c343dfe5cf22c14f820d50c5a6fdf9977640e7e5260e6c285871d"
+    }
+  ]
+}
