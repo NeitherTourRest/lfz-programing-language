@@ -1,4 +1,6 @@
 
+## T19交付完成并收口（2026-11-04）
+七组已推main，git ls-remote实核7d8afe965bd2ab809f61017e274b4f8001780e2d；24src+1本轮test逐一对冻结ZIP归一换行一致。最终dist/target1041920B/SHA5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5。独立684/全部旧回归/公开47/app14/自编8通过，人指南42进程/AI45与11文档证据审计通过。唯一规模窗42样本全部oracle通过，独立100MiB675779行结果核算一致，10/100/300MiB流式WS约6.5MiB，10MiB全读约34.9MiB；LFZ300MiB9.335709s比Python6.244406s慢约49.5%，R304仍OPEN不正式发布/tag。reader有界不保证任意callback总内存，正式应用/驱动固定closure与有界批；stdDrop关闭错误不回传、TOCTOU/阻塞边界与非Windows资源未实测如实披露。原用户三块28/1/1未提交、旧v2/全部失败证据保全。仅本轮T19完成收口，不进入T20，不创建自动化。此后仅本回执Git记账，无新功能。
 ## T19规模测量完成，最后交付（2026-11-04）
 唯一正式window01全部42/42通过（7预热+35正式），10/100/300MiB逐行LFZ中位0.345100/3.081447/9.335709秒，OS峰值工作集约6.5MiB稳定；10MiB全量readFile约34.9MiB。Python300MiB6.244406秒，LFZ慢约49.5%如实披露，不闭合R304。OS峰值负对照64MiB触碰释放后peak82317312/current15241216证明非瞬时RSS；独立已核42样本分组/median/peak与三输入bytes/SHA，并自写Python重算100MiB675779行（668812有效/6967坏行）及sum/checksum一致，无新性能窗/未启动LFZ。perf报告/111证据SHA已封，全部进程退出。人42/AI45+11文档SHA最后只读审计中，requirements与release收口。候选5d2219/1041920B源不变，原失败/driver初版/固定closure依据全部保留；有界结论限定当前callback策略，不推任意用户callback。仅T19后停，不T20/automation，不正式tag，原用户三块保护。
 ## T19最终独立功能PASS，等待规模测窗（2026-11-04）
