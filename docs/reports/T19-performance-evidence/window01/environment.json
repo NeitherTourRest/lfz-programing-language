@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-04",
+  "os": "Windows-11-10.0.26200-SP0",
+  "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "logical_processors": 24,
+  "memory_bytes": 16873545728,
+  "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]",
+  "binary_sha256": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5",
+  "environment_probe_failure": "PowerShell Get-CimInstance denied; null failed artifact retained; fallback environment+GlobalMemoryStatusEx",
+  "window": "one warm-cache window01, no concurrent tests/builds, no cache clearing"
+}

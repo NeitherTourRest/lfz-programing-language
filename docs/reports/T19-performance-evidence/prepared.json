@@ -1,0 +1,40 @@
+{
+  "status": "prepared_only",
+  "product_invocations": 0,
+  "network_requests": 0,
+  "measured": false,
+  "schema": 1,
+  "planned_mib": [
+    10,
+    100,
+    300
+  ],
+  "warmups": 1,
+  "formal_rounds": 5,
+  "smoke_generator": {
+    "path": "Temp\\T19-perf\\smoke.jsonl",
+    "bytes": 4174,
+    "rows": 37,
+    "sha256": "6989ddd78821e494f1cbd9c1edb2534c9e462c6bee78d51b4c3cd22e2bb922e9"
+  },
+  "independent_reparse_oracle": {
+    "rows": 37,
+    "valid": 36,
+    "bad": 1,
+    "sum_id": 666,
+    "sum_value": -35334,
+    "active": 12,
+    "weighted_mod": 17574,
+    "first_id": 1,
+    "last_id": 36,
+    "max_raw_line_bytes": 136,
+    "bytes": 4174,
+    "sha256": "6989ddd78821e494f1cbd9c1edb2534c9e462c6bee78d51b4c3cd22e2bb922e9"
+  },
+  "limits": {
+    "max_line_bytes": 4096,
+    "row_distribution": "i%97 invalid; valid id/value/active/payload/Unicode periodic",
+    "physical_separator": "LF"
+  },
+  "measurement": "Future fixed-hash Windows new-process PeakWorkingSetSize via OS API; no sampling labelled peak; no R304 claim"
+}

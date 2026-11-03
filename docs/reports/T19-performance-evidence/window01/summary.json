@@ -1,0 +1,113 @@
+{
+  "binary_sha": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5",
+  "measured": true,
+  "raw_samples": 42,
+  "summary": [
+    {
+      "mode": "stream",
+      "mib": 10,
+      "seconds_median": 0.3450997,
+      "seconds_min": 0.3334986,
+      "seconds_max": 0.3970433,
+      "peak_ws_bytes_all": [
+        6807552,
+        6807552,
+        6803456,
+        6799360,
+        6815744
+      ],
+      "mib_s_median": 28.97727697550723
+    },
+    {
+      "mode": "python",
+      "mib": 10,
+      "seconds_median": 0.2843881,
+      "seconds_min": 0.2653694,
+      "seconds_max": 0.3023986,
+      "peak_ws_bytes_all": [
+        15482880,
+        15450112,
+        15323136,
+        15323136,
+        15372288
+      ],
+      "mib_s_median": 35.16338971660366
+    },
+    {
+      "mode": "whole",
+      "mib": 10,
+      "seconds_median": 0.3766317,
+      "seconds_min": 0.3706036,
+      "seconds_max": 0.3783478,
+      "peak_ws_bytes_all": [
+        36556800,
+        36560896,
+        36560896,
+        36589568,
+        36593664
+      ],
+      "mib_s_median": 26.55126902771183
+    },
+    {
+      "mode": "stream",
+      "mib": 100,
+      "seconds_median": 3.0814467,
+      "seconds_min": 2.9200351,
+      "seconds_max": 3.4283307,
+      "peak_ws_bytes_all": [
+        6811648,
+        6828032,
+        6815744,
+        6815744,
+        6819840
+      ],
+      "mib_s_median": 32.45232836997111
+    },
+    {
+      "mode": "python",
+      "mib": 100,
+      "seconds_median": 2.0397118,
+      "seconds_min": 2.017833,
+      "seconds_max": 2.1193757,
+      "peak_ws_bytes_all": [
+        15605760,
+        15659008,
+        15568896,
+        15548416,
+        15712256
+      ],
+      "mib_s_median": 49.02659295443791
+    },
+    {
+      "mode": "stream",
+      "mib": 300,
+      "seconds_median": 9.3357087,
+      "seconds_min": 8.7756596,
+      "seconds_max": 9.58236,
+      "peak_ws_bytes_all": [
+        6815744,
+        6811648,
+        6815744,
+        6807552,
+        6811648
+      ],
+      "mib_s_median": 32.13468886553383
+    },
+    {
+      "mode": "python",
+      "mib": 300,
+      "seconds_median": 6.244406,
+      "seconds_min": 5.9042542,
+      "seconds_max": 6.719328,
+      "peak_ws_bytes_all": [
+        15638528,
+        15638528,
+        15810560,
+        15560704,
+        15556608
+      ],
+      "mib_s_median": 48.043015526818294
+    }
+  ],
+  "r304": "OPEN; not this protocol"
+}

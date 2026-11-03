@@ -1,0 +1,21 @@
+{
+  "command": [
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\benchmarks\\t19\\stream.lfz",
+    "--",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-perf\\smoke.jsonl",
+    "hold"
+  ],
+  "watchdog": false,
+  "pid": 32108,
+  "stdout_marker": "{\"active\":12,\"bad\":1,\"first_id\":1,\"last_id\":36,\"rows\":37,\"sum_id\":666,\"sum_value\":-35334,\"valid\":36,\"weighted_mod\":17574}\n",
+  "processing_wall_ns": 36821200,
+  "peak_working_set_bytes": 6770688,
+  "working_set_bytes_at_marker": 6770688,
+  "pagefile_bytes_at_marker": 1269760,
+  "stdout_tail": "",
+  "exit": 0,
+  "total_exit_wall_ns": 40989300,
+  "ok": true,
+  "stderr": ""
+}

@@ -1,0 +1,21 @@
+{
+  "command": [
+    "D:\\app\\ANACONDA\\python.exe",
+    "-B",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\benchmarks\\t19\\reference.py",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-perf\\window01\\data-100.jsonl",
+    "hold"
+  ],
+  "watchdog": false,
+  "pid": 9084,
+  "stdout_marker": "{\"rows\":675779,\"valid\":668812,\"bad\":6967,\"sum_id\":225984482614,\"sum_value\":-399120,\"active\":222937,\"weighted_mod\":717808803,\"first_id\":1,\"last_id\":675778}\r\n",
+  "processing_wall_ns": 2055258100,
+  "peak_working_set_bytes": 15568896,
+  "working_set_bytes_at_marker": 15568896,
+  "pagefile_bytes_at_marker": 7942144,
+  "stdout_tail": "",
+  "exit": 0,
+  "total_exit_wall_ns": 2061147100,
+  "ok": true,
+  "stderr": "Failed to find real location of D:\\app\\ANACONDA\\python.exe\n"
+}

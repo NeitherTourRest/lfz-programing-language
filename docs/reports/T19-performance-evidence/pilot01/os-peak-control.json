@@ -1,0 +1,20 @@
+{
+  "command": [
+    "D:\\app\\ANACONDA\\python.exe",
+    "-B",
+    "-c",
+    "import json,sys,gc;x=bytearray(64*1024*1024);x[::4096]=b\"a\"*len(x[::4096]);del x;gc.collect();print('{\"rows\": 0, \"valid\": 0, \"bad\": 0, \"sum_id\": 0, \"sum_value\": 0, \"active\": 0, \"weighted_mod\": 0, \"first_id\": 0, \"last_id\": 0}',flush=True);sys.stdin.readline()"
+  ],
+  "watchdog": false,
+  "pid": 45560,
+  "stdout_marker": "{\"rows\": 0, \"valid\": 0, \"bad\": 0, \"sum_id\": 0, \"sum_value\": 0, \"active\": 0, \"weighted_mod\": 0, \"first_id\": 0, \"last_id\": 0}\r\n",
+  "processing_wall_ns": 230908700,
+  "peak_working_set_bytes": 82317312,
+  "working_set_bytes_at_marker": 15241216,
+  "pagefile_bytes_at_marker": 7741440,
+  "stdout_tail": "",
+  "exit": 0,
+  "total_exit_wall_ns": 243239900,
+  "ok": true,
+  "stderr": "Failed to find real location of D:\\app\\ANACONDA\\python.exe\n"
+}

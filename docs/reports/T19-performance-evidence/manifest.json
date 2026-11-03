@@ -1,0 +1,567 @@
+{
+  "date": "2026-11-04",
+  "binary_sha": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5",
+  "samples": 42,
+  "passed": 42,
+  "formal": 35,
+  "warmup": 7,
+  "measured": true,
+  "r304": "OPEN",
+  "files": [
+    {
+      "path": "docs/reports/T19-performance-evidence/.gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/prepared.json",
+      "bytes": 1075,
+      "sha256": "4de175d5c2a21cbd634a8a35b507328825fd2dc16871596d931ff2809982f98e"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/runner-prepared.json",
+      "bytes": 752,
+      "sha256": "b3270ac055b30dc68dbf869db8997afe311d11a97fec249310eab59e04d981b1"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/stream-initial.txt",
+      "bytes": 656,
+      "sha256": "d4e557221f859ca74836477e51816c7c81d68d303c434bdff8a8209b53abfd6a"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/whole-initial.txt",
+      "bytes": 825,
+      "sha256": "df4db1e9dcdeae4f70f934411b95488cf6f7b837faa66e37669293a760d08cc6"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/pilot01/os-peak-control.json",
+      "bytes": 907,
+      "sha256": "bfba25f5bf3c80b691f5a8ef66211475b20e816f2634e2eaedfbc072a781993b"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/pilot01/os-peak-control.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/pilot01/stream-check.json",
+      "bytes": 51,
+      "sha256": "4c33c0df90498ee0677f795bb9fcaca7ff2f21d328ff58a7018945daa654630b"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/pilot01/stream.json",
+      "bytes": 819,
+      "sha256": "2c10318dd0911c014ecc646022870cb081fe98188ea4f2451a03beb972aba593"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/pilot01/stream.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/pilot01/whole-check.json",
+      "bytes": 51,
+      "sha256": "4c33c0df90498ee0677f795bb9fcaca7ff2f21d328ff58a7018945daa654630b"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/pilot01/whole.json",
+      "bytes": 818,
+      "sha256": "3264700ebb127d4d1dc7fe57b3a56d3a4f95b9e82eefab686de5645511067b90"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/pilot01/whole.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/all-samples.json",
+      "bytes": 43017,
+      "sha256": "cfa5c5469bd3ab4a72710e92c916678473418ee06bf3ca48f1d7db2d5868d402"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/data-10-manifest.json",
+      "bytes": 589,
+      "sha256": "b86dd41499d0f0f6bd52518b56ac2a92b6333eeadb57f778d8021a224cb6007c"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/data-100-manifest.json",
+      "bytes": 602,
+      "sha256": "dc36682e5b51a99edfacc01f0d238bf5d9275afcc682e9327a60a829644376bf"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/data-300-manifest.json",
+      "bytes": 608,
+      "sha256": "aa93ba90bc5a67235ba1bde99690a0431fb5a8acf3dd8c48690d820195ac0955"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/environment-cim-failed.json",
+      "bytes": 4,
+      "sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/environment.json",
+      "bytes": 624,
+      "sha256": "7efa2db960c7dc99d2ae44971739f1272022767cdfdf3a869ef7f7ce22fc958f"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/protocol.json",
+      "bytes": 752,
+      "sha256": "d28d132ba0b6af4458bbd8c884db7331fe9cc7268962e46c84117531ff802ed7"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-10-0.json",
+      "bytes": 864,
+      "sha256": "faa0cac1eb809e799256cf6c27ae4ff17419945f0c3211dcb420042a917e32c1"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-10-0.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-10-1.json",
+      "bytes": 864,
+      "sha256": "963241f493447bc1e3bf9c116a1c728a8ee21c251c1f6c5e7a0428866fb160dc"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-10-1.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-10-2.json",
+      "bytes": 864,
+      "sha256": "7749b30876601e15e4083583c07df5149bf70114fd3bf4de993af44478529485"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-10-2.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-10-3.json",
+      "bytes": 864,
+      "sha256": "d6d752984fabc55cd7ccb39c554c5f173755ab85a071834de6bae5b2aa40fc45"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-10-3.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-10-4.json",
+      "bytes": 863,
+      "sha256": "83ca42cf251845b2d8f3b73d7afc8eef7b6a63b09f88f792191ae6505a918e41"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-10-4.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-10-5.json",
+      "bytes": 863,
+      "sha256": "d4de2f74edd36e2b05d362d581c25260671831b3585fecf83b7ba8ab9448994a"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-10-5.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-100-0.json",
+      "bytes": 876,
+      "sha256": "9b76a35a4dc5fab38ddc40d11a90f6cc2eef928b5379e5b2c662d770a2141004"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-100-0.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-100-1.json",
+      "bytes": 876,
+      "sha256": "53ea3ab6d3372e826b165dcf47bf1acd6fec9f9c274a30ec263ccf2e857cfd47"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-100-1.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-100-2.json",
+      "bytes": 876,
+      "sha256": "dfc48686dd772fec8ff3377ca9e39511f40f896884f32b119171707d2158eb4d"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-100-2.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-100-3.json",
+      "bytes": 875,
+      "sha256": "066668bb75d971db471053e8ac8c9f176cdfbcd5d3910941791727c8ddf3f914"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-100-3.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-100-4.json",
+      "bytes": 876,
+      "sha256": "6eb7d97e0a04f1abbb9ed47a7f077ff6960f8f99728a230166ae09114d64e56c"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-100-4.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-100-5.json",
+      "bytes": 876,
+      "sha256": "131cf3ac6414dda6a31fee9cfa29f256cfb97686cac8ff08c8b8fdf57fc1de0b"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-100-5.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-300-0.json",
+      "bytes": 880,
+      "sha256": "268e7df3521034f72ed998f58b69d9aae8171faf8e3a6d1b4b77a45fd30bdf1e"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-300-0.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-300-1.json",
+      "bytes": 881,
+      "sha256": "7c4d217d4b20422e786197278b1e964fc5a0ce7ee233078af639b590b25f4ce7"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-300-1.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-300-2.json",
+      "bytes": 881,
+      "sha256": "8cae33f50146a0f68b5b58ffadbd6d315c5d7e21efefd8218c97f11b680d9708"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-300-2.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-300-3.json",
+      "bytes": 881,
+      "sha256": "39dd27b01eda8798e2584b0b1e8dafd6addf50255b56a945b8ca763c7669bc12"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-300-3.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-300-4.json",
+      "bytes": 881,
+      "sha256": "b7875160ff4403fd6517e216699af17ce2d33cb9148fb42c19fd4515ec41ef7e"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-300-4.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-300-5.json",
+      "bytes": 881,
+      "sha256": "6430d48e8851cc020d1b13b711117446044ad5e4324ae8a5e7bd90352a83ffc9"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/python-300-5.stderr",
+      "bytes": 59,
+      "sha256": "be4f62e28f1c9bfb720fca357a1f5f71349f2ff2dee4139c2a11bd4cb5586e82"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-10-0.json",
+      "bytes": 857,
+      "sha256": "eca6237ce098a050117416ca49ce3089d0d37727d8f48063e9a93194d811e625"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-10-0.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-10-1.json",
+      "bytes": 857,
+      "sha256": "ac311a756022a14b6d4366d77556feb2383371468ab2461dd159334d80ae6eff"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-10-1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-10-2.json",
+      "bytes": 857,
+      "sha256": "9a4d00d75b96169bdb324553ecb1aac0ee276cb0337cfc9ad96ed041ee325b3c"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-10-2.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-10-3.json",
+      "bytes": 857,
+      "sha256": "63a351a083924d407b0bb34c324a1ad59b90275eae80306e4e976b0306173292"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-10-3.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-10-4.json",
+      "bytes": 857,
+      "sha256": "df9599ec67d41c97b2b5fbc11f76bfb8d76c3b61970030a92d8c28840623ee1d"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-10-4.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-10-5.json",
+      "bytes": 857,
+      "sha256": "e3cd48dd7666f4cf06c1f94eec9f16464105d02c2f67de7cc622941f5cae4ec7"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-10-5.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-100-0.json",
+      "bytes": 869,
+      "sha256": "4045a046415f770fadeb5723e73b414f10b5a617763b89841ee60aade2248feb"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-100-0.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-100-1.json",
+      "bytes": 869,
+      "sha256": "8d5966159e8d8b01c128c4caa2e7d79a07b377601b5726e6cd5b2ee85f7db070"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-100-1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-100-2.json",
+      "bytes": 869,
+      "sha256": "6001a4da3c3cadab887bd3c61e018145d3f238cb4d02fbb452595bd371125c8d"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-100-2.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-100-3.json",
+      "bytes": 869,
+      "sha256": "a3f27f2953bebd0336f0ac7130904ebdfe10ebcd6e6be49bb1e20c6b1cdb3a7a"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-100-3.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-100-4.json",
+      "bytes": 869,
+      "sha256": "ff33c1ecc7996803f097e4929bbcd0cb129ac7ebcd9f61a02ae3c6f453c6b455"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-100-4.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-100-5.json",
+      "bytes": 869,
+      "sha256": "3bc7d1a7a862a7df5f39339efac7b5aa37bc5f0df3f98216cb67ed19288b0fed"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-100-5.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-300-0.json",
+      "bytes": 874,
+      "sha256": "21bb5cd7f123b58481b74cf49210e84b410d92fc2c30948662805abb9500926f"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-300-0.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-300-1.json",
+      "bytes": 873,
+      "sha256": "adb2301b38318a25d4fb46878c2804b08628765d6b5124bf29f44fc3cd909709"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-300-1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-300-2.json",
+      "bytes": 874,
+      "sha256": "80668fa56595286995ed78b74bc57c1203f6059484b8e2c249091cf7f809f8fa"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-300-2.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-300-3.json",
+      "bytes": 874,
+      "sha256": "d0c2fac95d86029974ee73e172243256d3cac25734997c00696c33edc714af3c"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-300-3.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-300-4.json",
+      "bytes": 874,
+      "sha256": "f7ace607b446fa130ce5bae556261c20fd44b2b937bd39c0f37faa95702922b1"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-300-4.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-300-5.json",
+      "bytes": 874,
+      "sha256": "b18c0ed08dd01e80761503c07c60d1e5c0ca4595a06b29c84c261d43c8ea78ae"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/stream-300-5.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/summary.json",
+      "bytes": 2521,
+      "sha256": "7d7c259bf4d8230844e11f8713f8f7d5b835f43d0548de25f196cdfa7fe48ae8"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/whole-10-0.json",
+      "bytes": 858,
+      "sha256": "548538d0a7fc62c4b93f9bd06f73af45a3e821b5259077655a85e63f5df040d3"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/whole-10-0.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/whole-10-1.json",
+      "bytes": 859,
+      "sha256": "835f98fea89b97fd6bae931d550a9c374f1c2b5b4db2b460930cd43b714c0713"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/whole-10-1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/whole-10-2.json",
+      "bytes": 859,
+      "sha256": "8781d2d4250445eba1a7ddd28a619117d95c205ff13e3406ff16a8e378a6d8dc"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/whole-10-2.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/whole-10-3.json",
+      "bytes": 858,
+      "sha256": "34dd6dd3f6fd008cdb6a41d5fcfeb2ea64f0d0aa7ad2569f688480f448db8c85"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/whole-10-3.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/whole-10-4.json",
+      "bytes": 859,
+      "sha256": "803adf6fb328a6a961f2ce982b62652cd64fe51db7a4a7b8b4db3c8b1c8c2b03"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/whole-10-4.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/whole-10-5.json",
+      "bytes": 859,
+      "sha256": "d26d050973bff6edba32a6cf7a454cd425c13d0fc60abdb4dae2437253c8f9ed"
+    },
+    {
+      "path": "docs/reports/T19-performance-evidence/window01/whole-10-5.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/reports/T19-performance.md",
+      "bytes": 4359,
+      "sha256": "71af3420b0c5ea457a71848a75559ce4c07c07556c033eec95621d2b55d2a56c"
+    },
+    {
+      "path": "benchmarks/t19/measure.py",
+      "bytes": 7109,
+      "sha256": "63488061f9a44044d66ac9f6e946c2ab03c4afd3bb959e6cfd6c3eb3ec943d21"
+    },
+    {
+      "path": "benchmarks/t19/prepare.py",
+      "bytes": 3031,
+      "sha256": "d26f7cfc63b7960fd8ac86991ed82c77671759b7d560b11d485144c8f529c543"
+    },
+    {
+      "path": "benchmarks/t19/reference.py",
+      "bytes": 740,
+      "sha256": "6bc7f7768b4fdc59e53cefbccef0102bff027299e6289b928b069586f2a4f8a8"
+    },
+    {
+      "path": "benchmarks/t19/stream.lfz",
+      "bytes": 756,
+      "sha256": "222029d8649b618e0431c418ada6741c105105d978e033e2783a17671b64a282"
+    },
+    {
+      "path": "benchmarks/t19/whole.lfz",
+      "bytes": 925,
+      "sha256": "8c3c6207f7bb06f50ed407c573de7807b74d13b2f2680adb7f6a6a82f7cccd00"
+    }
+  ]
+}

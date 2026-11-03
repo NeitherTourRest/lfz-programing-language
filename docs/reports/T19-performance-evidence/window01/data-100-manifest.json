@@ -1,0 +1,22 @@
+{
+  "generator": {
+    "path": "Temp\\T19-perf\\window01\\data-100.jsonl",
+    "bytes": 104857726,
+    "rows": 675779,
+    "sha256": "75ddb6254cea3df713ed4d00354bf49ea7de54655b001f2b9ae06985de977ecd"
+  },
+  "independent_oracle": {
+    "rows": 675779,
+    "valid": 668812,
+    "bad": 6967,
+    "sum_id": 225984482614,
+    "sum_value": -399120,
+    "active": 222937,
+    "weighted_mod": 717808803,
+    "first_id": 1,
+    "last_id": 675778,
+    "max_raw_line_bytes": 217,
+    "bytes": 104857726,
+    "sha256": "75ddb6254cea3df713ed4d00354bf49ea7de54655b001f2b9ae06985de977ecd"
+  }
+}

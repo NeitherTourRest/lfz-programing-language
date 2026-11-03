@@ -1,0 +1,20 @@
+{
+  "expected_sha": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5",
+  "sizes_mib": [
+    10,
+    100,
+    300
+  ],
+  "warmups": 1,
+  "formal_rounds": 5,
+  "peak": "Windows GetProcessMemoryInfo live handshake; physical working set OS peak",
+  "wall": "startup through parent-observed JSON marker; observer wait excluded; total exit separate",
+  "baseline": "whole/readFile only10MiB",
+  "product_invocations": 0,
+  "measured": false,
+  "drivers": {
+    "stream.lfz": "d4e557221f859ca74836477e51816c7c81d68d303c434bdff8a8209b53abfd6a",
+    "whole.lfz": "df4db1e9dcdeae4f70f934411b95488cf6f7b837faa66e37669293a760d08cc6",
+    "reference.py": "6bc7f7768b4fdc59e53cefbccef0102bff027299e6289b928b069586f2a4f8a8"
+  }
+}

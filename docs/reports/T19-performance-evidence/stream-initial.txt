@@ -1,0 +1,21 @@
+#42
+let s = {rows:0, valid:0, bad:0, sum_id:0, sum_value:0, active:0, weighted_mod:0, first_id:nil, last_id:nil}
+fn consume(line, lineNo) {
+    s.rows += 1
+    let r = attempt(() => jsonParse(line))
+    if r.ok {
+        let v = r.value
+        s.valid += 1
+        s.sum_id += v.id
+        s.sum_value += v.value
+        if v.active { s.active += 1 }
+        s.weighted_mod = (s.weighted_mod + (v.id+1)*(v.value+1001)) % 1000000007
+        if s.first_id == nil { s.first_id = v.id }
+        s.last_id = v.id
+    } else { s.bad += 1 }
+    true
+}
+let args = argv()
+forEachLine(consume,4096,args[0])
+print(jsonStringify(s))
+if args[1] == "hold" { input("") }
