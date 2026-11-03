@@ -1034,3 +1034,6 @@ lfz [--json] check [--json] - [--json]
 
 ## 24. T18-B HTTP（2026-10-30 冻结）
 不改文法，新增六参特殊内置httpRequest(method,url,headers,body,timeoutMs,maxResponseBytes)，75内置；headers二元array保重复、三字段响应。CLI独立--allow-http显式授权，默认禁用。精确校验/ASCII URL/头/CLI顺序见interface-contract §24；仅本轮交付后收口。
+
+## 25. T19 逐行调用（2026-11-03 冻结）
+不加文法/Value，新增forEachLine(callback,maxLineBytes,path)特殊内置，76名字；callback(line,lineNo)严格bool控制早停，返回lines/stopped。无新权限/CLI。字节/JSONL/错误/ABI见interface-contract §25。

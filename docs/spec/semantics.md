@@ -491,3 +491,6 @@ exec三参四键，非零退出正常值、严格UTF8；局部timeout/合并输�
 
 ## 24. T18-B HTTP能力与回收（2026-10-30 冻结）
 HTTP非2xx普通响应；严格UTF8 body，禁redirect/autoauth/cookie/proxy/PAC/应用重试/自动解压，TLS系统验证。限额合并API头文本UTF8（含statusline/末CRLF、无终止NUL）与body rawbytes，明确非wire。局部失败可attempt，全局资源不可吞；async取消安全等closing和callback退出，不承诺硬返回时界。独立http诊断sidecar保旧进程文案/双门禁；精确API、消息、owner和限额见interface-contract §24。
+
+## 25. T19 有界读取（2026-11-03 冻结）
+LF分行、CRLF去一CR、EOF孤CR/BOM保留；LF前rawbytes含CR计1..16MiB，8KiB有界块，坏UTF8/超长回调前ValueError，JSON坏行callback内attempt恢复。共享预算/home/source，native仅cancel/deadline协作poll；普通文件pre/open metadata不能消灭TOCTOU/阻塞。RAII统一关闭不报告std close错误，不加FFI/diagnostic；原readFile不变。精确契约及实测门禁见interface-contract §25。

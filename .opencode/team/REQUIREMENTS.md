@@ -1,9 +1,25 @@
 # LFZ 需求矩阵（唯一需求事实源 · v1.1 增量对齐版）
 
-> 最后更新: 2026-10-31 by requirements-analyst
-> 版本: **v12（T18-B HTTP四项需求通过；R-304开放，非正式发布）**
+> 最后更新: 2026-11-04 by requirements-analyst
+> 版本: **v13（T19逐行功能及限定规模通过；R-304开放，非正式发布）**
 > 本文件是**唯一需求事实源**，唯一写者 requirements-analyst，他人只读。
 > 来源: `task-info.md`（课程作业原始要求）+ 用户指令 + 已定案 ADR（见 `DECISIONS.md`）。
+
+## T19 增量需求（2026-11-04，逐行功能与限定规模测量通过）
+
+三spec §25/T19-contract，冻结候选SHA256 `5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5`、1041920B、76内置/13错误类。T19-independent-verification.md最终功能及规模审计PASS：684harness、全部旧回归、公开47/app14/自编8；人21场景42check-run与AI45作者实跑，独立核11文档SHA/manifest并非独立全量重跑例子。唯一规模window01的42样本、111文件manifest及100MiB独立流式oracle已审计，新增R305只验收本轮限定测量交付，**绝不关闭原R304（仍进行中/OPEN）**。无正式tag/发布，本轮交付收口，不T20/automation。
+
+原首次新unit515/1、新app协议/let重绑定、新指南换行oracle及原逐行造闭包driver全部保留；正式driver固定一次parseCurrent闭包/currentLine cell和常数累计，不虚构未实跑初稿内存失败。标准reader有界不等于任意用户回调总内存恒定；用户保留行/对象、逐行造UserFn使func_names保留metadata均可增长。关闭实测Windows，其它平台资源生命周期未实测不能外推。
+
+| R-ID | 需求 | 来源 | 验证方式（可命令复现） | 状态 | 交付物 | 评分项 |
+|------|------|------|------------------------|------|--------|--------|
+| R-138 | forEachLine(callback,maxLineBytes,path)严格三参/两参回调，data-last、可遮蔽但非一等；bool true继续/false早停，返回lines/stopped，lines包含false行。空文件也完整参数预检，普通文件读取沿既有IO边界 | 三spec §25.1–25.3 | 对冻结T19执行`cargo test --release`684全部过；按T19-blackbox.md运行tests/t19_cli_lines.py公开47/47、独立own8/8。空/多空行/末LF/孤CR/EOF末CR/BOM/NUL、UTF8跨8KiB、rawcap精确N/N+1（CR计入cap）、错arity空文件预检、false后坏行不再解码均验证。读取/UTF8/超长在坏行回调前失败，无部分成功，已发生副作用不回滚 | 通过 | error细分（core-dev）、evaluator/builtin76（runtime-dev）、line_reader（tooling-dev）、公开/独立见证 | 1、2 |
+| R-214 | reader固定8KiB缓冲与行Vec长度/cap不超cap，不collect整文件；所有结果统一finish/drop，callback按旧home/self/source/trace与共享AST预算执行，native仅全局cancel/deadline不扣步。恢复错误不重开流或回滚offset/副作用 | §25.2–25.5 | 同684/47/8实际执行；Windows同活host share_mode(0)排他重开、暖机后handle plateau和Drop spy覆盖EOF/false/非bool/业务error/global终止/read/UTF8/TooLong。普通JSON坏行可在callback中attempt恢复，整流坏UTF8/超长不能由未执行callback恢复；native全局终止不可吞、callback真实故障来源无残留。std Drop无OS close错误返回，不造close诊断；metadata/open TOCTOU与阻塞未消灭，不是文件权限/硬实时沙箱 | 通过 | RAII reader/关闭unit（tooling-dev）、回调/资源unit（runtime-dev）、独立资源证据 | 1、2 |
+| R-305 | 完成锁定实际分布/driver的10/100/300MiB逐行JSONL oracle、OS峰值与吞吐测量，保留全部唯一窗口样本及Python/whole对照；不外推任意callback恒内存、不以此替代原19门槛 | T19-performance-plan.md/§25；R304独立开放 | T19-performance.md及performance-evidence/唯一window01：七组各1预热+5正式共42（7warm/35formal）全oracle/exit/hash正确，独立scale-final-manifest-audit.json核111文件；scale-audit.py/json流式复核100MiB实际104857726B/SHA75ddb625…、675779行/668812有效/6967坏JSON及各累计一致。marker时进程存活用GetProcessMemoryInfo PeakWorkingSetSize，64MiB触碰释放负控验证非当前WS；三档stream约6.5MiB稳定，10MiB whole约34.9MiB；stream中位0.345100/3.081447/9.335709s，300MiB Python6.244406s更快。warm-cache/含启动解析与父marker观察调度、非heap/冷磁盘/硬件通用基准，R304仍OPEN | 通过 | benchmarks/t19、T19-performance.md及原始窗口/manifest（perf-engineer）、独立规模审计（verifier） | 3 |
+| R-413 | 人/AI指南实跑逐行/JSONL工作流，准确说明raw cap/终止符、坏行恢复与整流失败、全局资源、RAII及用户callback可额外分配；保留旧平台/TLS/资源限制与盲测成绩 | §25；R412后继 | T19-guide-evidence.md21场景42check-run与T19-skill-evidence.md45作者实跑绑定5d2219；独立guide-audit.json核六人类/五AI共11文档SHA及全部作者原结果。不冒称独立产品重跑，不将引擎O(最长行+8KiB)说任意脚本恒内存，不宣称std Drop能回报OS关闭失败或新可信TLS/非Windows实证 | 通过 | 人指南（docs-writer）、skill/AI入口（ai-dx-engineer）及独立只读审计 | 4 |
+| R-510 | JSONLstream固定解析闭包、一次parseCurrent与struct cell状态，用最多256批确定性写出，不把每行新建闭包的诊断metadata积累当恒定内存方案；坏JSON混批继续、全流失败及已发生IO不回滚边界明确 | app/T19-JSONLSTREAM.md；§25 | 按app/verify_jsonlstream.py接口对冻结5d2219运行14/14，独立最终app14同hash通过，保留原CLI--json协议/let重绑定作者失败。多批/空输入/坏JSON/IO/预算/终止及旧全部应用回归通过；该应用有限批缓存不是任意callback内存保证，不替代既有≥200行sortviz交付 | 通过 | app/jsonlstream.lfz/verify_jsonlstream.py/T19-JSONLSTREAM.md（app-dev）、独立app14证据 | 5 |
+
+复跑须用封存产物/正式固定driver/实际输入manifest及新项目Temp输出；性能重跑另需独占协调与新窗口，不覆盖window01或挑较快样本。任意后继字节不能冒充本节功能/规模时点。
 
 ## T18-B 增量需求（2026-10-31，HTTP功能及指南通过）
 
