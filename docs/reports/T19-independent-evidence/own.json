@@ -1,0 +1,82 @@
+{
+  "total": 8,
+  "passed": 8,
+  "rows": [
+    {
+      "name": "utf8_cross",
+      "src": "var seen=[]\nlet r=forEachLine((s,n)=>{seen=push(len(s),seen)\ntrue},8195,\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T19-verifier/own/utf8_cross.txt\")\nassert(seen==[8192] && r.lines==1)",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "bom_cr_eof",
+      "src": "var seen=[]\nlet r=forEachLine((s,n)=>{seen=push(s,seen)\ntrue},5,\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T19-verifier/own/bom_cr_eof.txt\")\nassert(seen==[\"﻿a\",\"b\\r\"] && !r.stopped)",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "false_poison",
+      "src": "var seen=[]\nlet r=forEachLine((s,n)=>false,2,\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T19-verifier/own/false_poison.txt\")\nassert(r.lines==1 && r.stopped)",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "json_attempts",
+      "src": "var seen=[]\nlet r=forEachLine((s,n)=>{seen=push(attempt(()=>jsonParse(s)).ok,seen)\ntrue},20,\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T19-verifier/own/json_attempts.txt\")\nassert(seen==[false,true,false,true] && r.lines==4)",
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "samePID_closed_eof",
+      "pid": 16444,
+      "alive_when_probed": true,
+      "probe": {
+        "ok": true,
+        "error": 0
+      },
+      "stdout": "{\"ok\":true}\n",
+      "passed": true
+    },
+    {
+      "name": "samePID_closed_utf8",
+      "pid": 20440,
+      "alive_when_probed": true,
+      "probe": {
+        "ok": true,
+        "error": 0
+      },
+      "stdout": "{\"ok\":true}\n",
+      "passed": true
+    },
+    {
+      "name": "samePID_closed_toolong",
+      "pid": 6220,
+      "alive_when_probed": true,
+      "probe": {
+        "ok": true,
+        "error": 0
+      },
+      "stdout": "{\"ok\":true}\n",
+      "passed": true
+    },
+    {
+      "name": "samePID_closed_outerattempt",
+      "pid": 27000,
+      "alive_when_probed": true,
+      "probe": {
+        "ok": true,
+        "error": 0
+      },
+      "stdout": "{\"ok\":true}\n",
+      "passed": true
+    }
+  ]
+}

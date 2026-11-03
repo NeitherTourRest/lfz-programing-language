@@ -1,0 +1,6 @@
+{
+  "output": "{\"ok\":true}",
+  "actualExit": 0,
+  "source": "forEachLine((line,n)=>false,1,\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T19-tooling/red-input.txt\")",
+  "expectedExit": 0
+}

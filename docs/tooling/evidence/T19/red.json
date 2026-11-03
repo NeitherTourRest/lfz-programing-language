@@ -1,0 +1,7 @@
+{
+  "command": "lfz -e forEachLine(callback,1,path) --json",
+  "output": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'forEachLine'\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}",
+  "meaning": "old builtin missing; no file read",
+  "actualExit": 2,
+  "expectedExit": 0
+}

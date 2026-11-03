@@ -1,0 +1,162 @@
+{
+  "date": "2026-11-04",
+  "status": "author full regression PASS; public/independent/scale pending",
+  "binary": {
+    "path": "target/release/lfz.exe",
+    "bytes": 1041920,
+    "sha256": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5"
+  },
+  "tests": {
+    "total": 684,
+    "failed": 0,
+    "ignored": 0,
+    "harnesses": [
+      {
+        "name": "lfz-63397fd2d9985014.exe",
+        "exit": 0,
+        "passed": 516
+      },
+      {
+        "name": "lfz-243aeb8f5c3370f1.exe",
+        "exit": 0,
+        "passed": 56
+      },
+      {
+        "name": "cli-d19dbfa7dd3f9d73.exe",
+        "exit": 0,
+        "passed": 28
+      },
+      {
+        "name": "cli_t12-35b857587ead196a.exe",
+        "exit": 0,
+        "passed": 12
+      },
+      {
+        "name": "cli_t14-b528900585815e19.exe",
+        "exit": 0,
+        "passed": 12
+      },
+      {
+        "name": "cli_t16b-66b0b355c7f6f4d0.exe",
+        "exit": 0,
+        "passed": 7
+      },
+      {
+        "name": "cli_t16c-24a3e9d865ee9e42.exe",
+        "exit": 0,
+        "passed": 5
+      },
+      {
+        "name": "cli_t17-2cfc935946fdc938.exe",
+        "exit": 0,
+        "passed": 9
+      },
+      {
+        "name": "cli_t18a-2b1a6784d688e6c5.exe",
+        "exit": 0,
+        "passed": 6
+      },
+      {
+        "name": "cli_t18b-4fb747188dc55a23.exe",
+        "exit": 0,
+        "passed": 3
+      },
+      {
+        "name": "test_runner-a9d3da191eeb2958.exe",
+        "exit": 0,
+        "passed": 15
+      },
+      {
+        "name": "unit-ae562ae83f03ad63.exe",
+        "exit": 0,
+        "passed": 15
+      }
+    ],
+    "watchdog_seconds_per_harness": 90,
+    "test_threads_per_harness": 1,
+    "first_reader": {
+      "passed": 7,
+      "log": "reader-first.txt"
+    },
+    "retained_failure": "first-final-failed-lib.txt: 515 passed/1 failed, author new test LFZ TwoStatements; fixed newline only in new test"
+  },
+  "source_hashes": {
+    "src/ast.rs": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076",
+    "src/builtins.rs": "e05d74d076cb33928e17a7a07944db15c789a9455da67a58f056c5ce93f97a6d",
+    "src/cli.rs": "75838a8d44354881423c7804e3367efe3216b0fd35e098df9c2f3e2c0b840a30",
+    "src/env.rs": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc",
+    "src/error.rs": "da2b11d12bf3ee69f8e57ac047cfe0477dbc94fc357fc3a45a313d18a910c621",
+    "src/evaluator.rs": "b0a8cee3f9c74cb29bc73326cd51ee8a1d5670f430f3a39aa71386b980dfed5e",
+    "src/http_control/windows.rs": "0a525c7476dbf9d086b2f58e37cf18c31f02d3856766fe1ad4abe5e13e2c4a78",
+    "src/http_control.rs": "3a2373b1422d1e845dfc188b53b2e7036af3725d22c156650ab1a6c34f09a4a2",
+    "src/json.rs": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f",
+    "src/json_codec.rs": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2",
+    "src/lexer.rs": "ebb952edbcd201210eb1f9c6ddebf58e2f3f998b260a11a51fe1c967848031f2",
+    "src/lib.rs": "171cc87701114aeae7b7f6db09035aec75a74710b6e08ca1bc3a07f25a45f95e",
+    "src/line_reader.rs": "7ab61997386a7e71b4fe90d62235500bce5cf20fe6a063619b70d3dbfa2a9b15",
+    "src/loader.rs": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f",
+    "src/main.rs": "247fc12340d2f6a26aa3fc5ada658cbfe72fb7ee7f85f107b05e6af27018c366",
+    "src/modules.rs": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895",
+    "src/parser.rs": "58c41ba85d930dc0ef465be2a9d3c0741cfe7052d6dd9df01a825aab73e7ff5f",
+    "src/process_control/fixture.rs": "0c09739e3327414281a5e89d5ad59dc5ec8356d1c6bbe9428dddcf9829f2b0a9",
+    "src/process_control/windows.rs": "540d14c697dcd84e2a9ba6a0f2415b24509335206617ad939c7318e0a8e76a09",
+    "src/process_control.rs": "e8cfcc7e54d7f2fb24f9d979d6f27d79bfcb20afaa7864326b7d49f13dab0442",
+    "src/source.rs": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468",
+    "src/span.rs": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2",
+    "src/test_runner.rs": "a314790d88d4296e2cb953c7b1a565f83e4f3f2f6bec543216fe70c024f2400c",
+    "src/value.rs": "63967cb79996c7fedfe7285378e58c2774825c73680a81e50c12a185bbe438a0",
+    "tests/cli.rs": "a507dc3674df02f8162d1bfd80c87a7dc2373559ab628168944d3621eaead23b",
+    "tests/cli_t12.rs": "c9e4edf50c1fd3a248ba3f5f2e7c44ac04188a51d828a92dd3ba44aa03cbc24a",
+    "tests/cli_t14.rs": "112d628fa2db83ce1a506338f20469fa99bc0dc06e916ce6787c442ee1ce2065",
+    "tests/cli_t16b.rs": "8a384d95e25e92337d0d749664481cb9e32cbb6b1d6839b4efc0c9c006635a3a",
+    "tests/cli_t16c.rs": "cc003077c212c407ccdd2c59e5c6c603a3f17a82cb7ff5a4ef8942529e9d953d",
+    "tests/cli_t17.rs": "141cb54376124b4317723824972ee21ac8c10fdb2ef9a68ef967ba076fcf25f5",
+    "tests/cli_t18a.rs": "faa29e2cc5e413b7a10da9c5302bb82b37ebceb395058ff7a1096810bd56d257",
+    "tests/cli_t18b.rs": "fa95063bd7b3dd7e1cbba0457368f7a3a8bd707aa8af5723d4d9189bf295b036",
+    "tests/test_runner.rs": "c07c297aab45f8b44b85df5caed8acd855c29735a3c9dcfd99aa2820c94ada4f",
+    "tests/unit/ast_depth.rs": "6a7dcd7a88e5d7d7d1e5b16d688db2f4b77da57b165c3fecdc7d7575c41a3ee5",
+    "tests/unit/main.rs": "9a651c048ee0f94820ec21b115ebae6f5cb99ad9dc5f5b57df462e1cf4f1fa78",
+    "tests/unit/nesting_depth.rs": "6ac0aa556ab1f9669f53435de863e8d1e96e2c0e5483e475a7d4043ac70428a1",
+    "Cargo.toml": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c",
+    "Cargo.lock": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4"
+  },
+  "evidence": {
+    ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
+    "build.txt": "29f3da9d1407ac80a0ba45f54e550b4612212cf889e90e541ef07bdedebc61c0",
+    "candidate-snapshot.zip": "d32996bedd4e883f93c47750f3eee004ca14d9b42329adde2680426889001475",
+    "compile-close-paths.txt": "ad80bd460262cf084ef605faf6d769e17d5d98e5a366466040700ca61a51cc8f",
+    "compile-final.txt": "50afdc1262de7b910b1e33886882715ef9e637ea91b938adcfde4d022d97e398",
+    "compile-spy-oracle-fixed.txt": "44b6bb28e82b027c032426b3f3cc72c3bf8240528ca5fb0afa8e2f8a2cbb87ca",
+    "compile.txt": "626ed7c0ef14776450ffb29f35784dfdc301683dc5d30e5ff3b25a62dcb91501",
+    "final-close-paths.txt": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
+    "first-final-failed-lib.txt": "ec7633b8e2a6292ddb7c8d6589ecc499a2ee42865333bff732063e31d0a6d330",
+    "first-final-failed-summary.json": "abdffde9cfd42ea3629a030f953366aa9665e622e7c624442922353428545c1f",
+    "green-valid-input.json": "9c13fe1803ddea12296fd622c2a53a3c45c906b6d8a9d3efa814580a9487d35a",
+    "injected.txt": "73cb3858a687a8494ca3323053016282f3dad39d42cf62ca4e79dda2aac7d9ac",
+    "outer-attempt.txt": "73cb3858a687a8494ca3323053016282f3dad39d42cf62ca4e79dda2aac7d9ac",
+    "reader-first.py": "e014a1529b8bbe31ac904340dbed7bc58aee9e459090876eb0c382ad33560c82",
+    "reader-first.txt": "6944f25ca038eef5ce216e51a72a7d9e9380f134c422b3bae6289c0c4e7a9682",
+    "red-input.txt": "73cb3858a687a8494ca3323053016282f3dad39d42cf62ca4e79dda2aac7d9ac",
+    "red-valid-input.json": "fee984a1fa127851ff5b39c707a72039baa5f6064434bbe1c8c6952506b5be1e",
+    "red.json": "62532762c48deeedaa5cf3afb2cc1b04417e5854dc70b1426ef50ce5cb00702c",
+    "seal.py": "d7502262b4638bfd2ccebc5af4c6e855b54ecc79e987eb6c9f9a78590dee6464",
+    "snapshot.json": "3e16c6ac1532672c5df74a925f9ecedd7421f7d3d7d889ca3ae487595b9b78d2",
+    "spy.py": "0e5e315ed4060cb662dbafd576d9cdc90f6b32e6bffa8e270a73a23aace387ff",
+    "spy.txt": "73cb3858a687a8494ca3323053016282f3dad39d42cf62ca4e79dda2aac7d9ac",
+    "watch-setup.py": "fc241a06dca9d2f8b1a3d9330bf910da0488b435b0c813a0c3c149772b92d25d",
+    "watch.py": "8647501b31ae49463021953c3d8e2c36d694cf10f32e4590df1b6aa5612ceb9e",
+    "watched-cli-d19dbfa7dd3f9d73.exe.txt": "86a978af31750a4064fea243c90403f108b074e05f1f7e245fb80d86e7c8455e",
+    "watched-cli_t12-35b857587ead196a.exe.txt": "c2f580b5fec87f0240813189ad1eefce895bab8207f71da85d00b031a6773c41",
+    "watched-cli_t14-b528900585815e19.exe.txt": "5227ed2d0222b169cb46036f54689d8f63b0bef2405e9a5a6363ef6c72c1b98c",
+    "watched-cli_t16b-66b0b355c7f6f4d0.exe.txt": "2c10f0afd20f9c3cc3ad0265f0fbd18e0b945d47627858ee72909e5447ee03f1",
+    "watched-cli_t16c-24a3e9d865ee9e42.exe.txt": "237c8c3c338403508ac9f9bc52be70f9bfb8211dc140486ee958e508625a837e",
+    "watched-cli_t17-2cfc935946fdc938.exe.txt": "6657106b8d3a0b8932341371316f45b6101f7ddf8d70c56a89232bb8c6a421c5",
+    "watched-cli_t18a-2b1a6784d688e6c5.exe.txt": "4b9f3774a99b5bc73c080726b759795ffb66ec65076a83af9004b65999c658da",
+    "watched-cli_t18b-4fb747188dc55a23.exe.txt": "cbb87d2ef78df82cc96ffbede0b61d50e31af2d633202372a56ee028753ef511",
+    "watched-lfz-243aeb8f5c3370f1.exe.txt": "1d608dcce8718be0278eaed5840de76c15719e18cc08806a9c3bc90bdf043b7f",
+    "watched-lfz-63397fd2d9985014.exe.txt": "1afe919f85228ee54a9634e6fcbb1849ad06f7fccc0f1d25b4ce00b60014d571",
+    "watched-summary.json": "d93fd35141f09f3556c9b34e84cad609c43c1ee177946c30777eee8d83fa95db",
+    "watched-test_runner-a9d3da191eeb2958.exe.txt": "e83afc49b1f838406ce5522aac83b8383a02c1db18b7d35f1e2494a7475d663f",
+    "watched-unit-ae562ae83f03ad63.exe.txt": "aca35c766bcd585b100c1e38ddac23d9b734831074fecf36c177fdbc33d722b3"
+  }
+}

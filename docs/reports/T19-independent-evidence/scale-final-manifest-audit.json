@@ -1,0 +1,13 @@
+{
+  "files_checked": 111,
+  "manifest_sha256": "6623cf29236f58f50fe2b421371c7bb817ce07ccafe872902b432f3140b96768",
+  "report_sha256": "71af3420b0c5ea457a71848a75559ce4c07c07556c033eec95621d2b55d2a56c",
+  "samples": 42,
+  "formal": 35,
+  "warmup": 7,
+  "driver_initial_sha256": {
+    "stream-initial.txt": "d4e557221f859ca74836477e51816c7c81d68d303c434bdff8a8209b53abfd6a",
+    "whole-initial.txt": "df4db1e9dcdeae4f70f934411b95488cf6f7b837faa66e37669293a760d08cc6"
+  },
+  "scope": "read-only final manifest and report audit; independent100MiB oracle in scale-audit.json; no product rerun"
+}

@@ -1,0 +1,9 @@
+{
+  "src/line_reader.rs": "a43817c79664c74d5fca2ab015d4945381c5edf2402d085743bc24752c5aa147",
+  "src/evaluator.rs": "b0a8cee3f9c74cb29bc73326cd51ee8a1d5670f430f3a39aa71386b980dfed5e",
+  "src/builtins.rs": "e05d74d076cb33928e17a7a07944db15c789a9455da67a58f056c5ce93f97a6d",
+  "src/error.rs": "da2b11d12bf3ee69f8e57ac047cfe0477dbc94fc357fc3a45a313d18a910c621",
+  "src/lib.rs": "171cc87701114aeae7b7f6db09035aec75a74710b6e08ca1bc3a07f25a45f95e",
+  "docs/reports/T19-contract.md": "059f31011cc7343f4428eb2075afdec08c5152fb31a8f72217361d1c31443d9a",
+  "docs/spec/interface-contract.md": "c224e3e44fa886dd9e2c2fe355eb75c9389eb282a946cd564ce94d4610c635e3"
+}

@@ -1,0 +1,9 @@
+{
+  "phase": "preparation47 only",
+  "script_sha256": "3be2a83e938345584127b65cae886b8bd1b01d2aea5e6e8623b7f9cea225f05d",
+  "files": {
+    "prepared.json": "aee486a12d317a7096fa081a11d9fc68e9563ba3287862457da39b909ababa75",
+    "T18B-red.json": "0e77fc068497c8c3fee1cc40498a023ebf875faa996c5a58a08e2cc22b01ad21"
+  },
+  "no_T19_product_execution": true
+}

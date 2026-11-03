@@ -1,0 +1,31 @@
+{
+  "binary_sha256": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5",
+  "source_sha256": "2e209be7fd74c2e0a53bbcf6bc651da78fbbbf6faf7930db2ff879a20ce8210e",
+  "rows": [
+    {
+      "name": "empty",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "run",
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonlstream.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-verifier\\stream14\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-verifier\\stream14\\output.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-verifier\\stream14\\summary.json",
+        "0",
+        "4096"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "{\"failed\":0,\"lines\":0,\"passed\":0,\"stopped\":false,\"total\":0}\n",
+      "output_hex": "",
+      "summary_hex": "7b226661696c6564223a302c226c696e6573223a302c22706173736564223a302c2273746f70706564223a66616c73652c22746f74616c223a307d0a",
+      "passed": false
+    }
+  ],
+  "status": "failed",
+  "error": "AssertionError()",
+  "total": 1,
+  "passed": 0
+}

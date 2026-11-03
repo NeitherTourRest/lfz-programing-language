@@ -1,0 +1,9 @@
+{
+  "actualExit": 2,
+  "expectedExit": 0,
+  "meaning": "valid local one-line file; old product lacks builtin; same source must succeed on new product",
+  "binary": "dist/lfz.exe",
+  "binarySha": "18D328D9E48780F8E6AE638F9AD24F53186D94F2207CA24DA8928CBBBA0D0916",
+  "source": "forEachLine((line,n)=>false,1,\"D:/XUE/2026fall/Program Design/lfz-programing language design/Temp/T19-tooling/red-input.txt\")",
+  "output": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'forEachLine'\",\"file\":\"<command>\",\"line\":1,\"col\":1,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"}]}"
+}

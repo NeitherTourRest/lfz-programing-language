@@ -1,0 +1,14 @@
+from pathlib import Path
+p=Path('src/line_reader.rs');s=p.read_text(encoding='utf-8-sig');s=s.replace('pub(crate) struct LineReader{','''#[cfg(test)]std::thread_local!{static FAULT:std::cell::Cell<Option<&'static str>>=const{std::cell::Cell::new(None)};static DROPS:std::cell::Cell<usize>=const{std::cell::Cell::new(0)};}
+fn injected(operation:&str)->Result<(),LineReadError>{#[cfg(test)]if FAULT.with(|f|f.get()==Some(operation)){return Err(LineReadError::Io{operation:operation.into(),message:"测试故障注入".into()});}let _=operation;Ok(())}
+pub(crate) struct LineReader{''')
+s=s.replace('poll(control)?;if !fs::metadata', 'poll(control)?;injected("metadata")?;if !fs::metadata').replace('poll(control)?;let file=File::open', 'poll(control)?;injected("open")?;let file=File::open').replace('if !file.metadata()', 'injected("handle_metadata")?;if !file.metadata()').replace('poll(control)?;let block=', 'poll(control)?;injected("read")?;let block=')
+s+='''
+#[cfg(test)]impl Drop for LineReader{fn drop(&mut self){DROPS.with(|n|n.set(n.get()+1));}}
+#[cfg(all(test,windows))]mod resource_spy_tests{use super::*;use std::os::windows::fs::OpenOptionsExt;
+fn exclusive(path:&str){drop(fs::OpenOptions::new().read(true).share_mode(0).open(path).unwrap());}
+#[test]fn injected_metadata_open_handle_metadata_read_release_real_file(){let path=std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("Temp/T19-tooling/injected.txt");fs::write(&path,b"x\\n").unwrap();let path=path.to_str().unwrap();for op in ["metadata","open","handle_metadata","read"]{let before=DROPS.with(|n|n.get());FAULT.with(|f|f.set(Some(op)));let result=(||{let mut r=LineReader::open(path,1,&LineControl{deadline:None,cancel:None})?;r.next_line(&LineControl{deadline:None,cancel:None})})();FAULT.with(|f|f.set(None));assert!(matches!(result,Err(LineReadError::Io{operation,message})if operation==op&&message=="测试故障注入"));assert_eq!(DROPS.with(|n|n.get())-before,usize::from(op=="read"));exclusive(path);}}
+#[test]fn evaluator_outcomes_drop_spy_before_return_in_same_host(){crate::evaluator::on_eval_stack(||{let path=std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("Temp/T19-tooling/spy.txt");for (callback,raw) in [("(l,n)=>true",&b"x\\n"[..]),("(l,n)=>false",&b"x\\n"[..]),("(l,n)=>1",&b"x\\n"[..]),("(l,n)=>1/0",&b"x\\n"[..]),("(l,n)=>true",&b"\\xff\\n"[..]),("(l,n)=>{while true {} true}",&b"x\\n"[..])]{fs::write(&path,raw).unwrap();let source=format!("forEachLine({callback},100,{:?})",path.to_str().unwrap().replace('\\\\',"/"));let program=crate::parser::parse(&crate::lexer::lex(&source,0).unwrap()).unwrap();let before=DROPS.with(|n|n.get());let traced=crate::evaluator::eval_module_traced_on_thread_with_args_and_limits(&program,&[],crate::evaluator::EvalLimits{max_steps:Some(1000),..Default::default()});assert_eq!(DROPS.with(|n|n.get())-before,1,"{callback}: {:?}",traced.result);exclusive(path.to_str().unwrap());}});}
+}
+'''
+p.write_text(s,encoding='utf-8')

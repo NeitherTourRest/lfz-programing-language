@@ -1,0 +1,27 @@
+{
+  "schema": "LFZ-T19-CLI-1",
+  "binary_sha256": "18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916",
+  "script_sha256": "3be2a83e938345584127b65cae886b8bd1b01d2aea5e6e8623b7f9cea225f05d",
+  "checks_total": 1,
+  "checks_passed": 0,
+  "rows": [
+    {
+      "name": "feature_red",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\feature_red.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'forEachLine'\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\feature_red.lfz\",\"line\":3,\"col\":7,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\feature_red.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": false,
+        "protocol": false,
+        "ok": false
+      },
+      "passed": false
+    }
+  ],
+  "scope": "small public fixtures; global terminal close requires same-host unit evidence, not process-exit reopen",
+  "timestamp_utc": "2026-11-03T13:56:50.198247+00:00"
+}

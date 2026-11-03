@@ -1,0 +1,904 @@
+{
+  "schema": "LFZ-T19-CLI-1",
+  "binary_sha256": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5",
+  "script_sha256": "3be2a83e938345584127b65cae886b8bd1b01d2aea5e6e8623b7f9cea225f05d",
+  "checks_total": 47,
+  "checks_passed": 47,
+  "rows": [
+    {
+      "name": "feature_red",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\feature_red.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "empty",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\empty.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "single",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\single.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "tailLF",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\tailLF.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "oneLF",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\oneLF.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "twoLF",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\twoLF.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "CRLF_EOFCR",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\CRLF_EOFCR.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "doubleCR",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\doubleCR.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "BOM",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\BOM.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "NUL",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\NUL.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "whitespace",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\whitespace.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "cross_UTF8",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\cross_UTF8.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "capN",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\capN.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "CR_capN",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\CR_capN.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "UTF8capN",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\UTF8capN.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "capPlus",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\capPlus.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行超过逐行字节上限 1\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\capPlus.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\capPlus.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "CRcapPlus",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\CRcapPlus.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行超过逐行字节上限 1\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\CRcapPlus.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\CRcapPlus.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "UTF8capPlus",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\UTF8capPlus.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行超过逐行字节上限 2\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\UTF8capPlus.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\UTF8capPlus.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "secondTooLong",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\secondTooLong.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 2 行超过逐行字节上限 3\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\secondTooLong.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\secondTooLong.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "badUTF8",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\badUTF8.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行不是合法 UTF-8\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\badUTF8.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\badUTF8.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "laterUTF8",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\laterUTF8.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 2 行不是合法 UTF-8\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\laterUTF8.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\laterUTF8.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "crossBadUTF8",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\crossBadUTF8.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行不是合法 UTF-8\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\crossBadUTF8.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\crossBadUTF8.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "earlyUTF8",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\earlyUTF8.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "earlyLong",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\earlyLong.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "arity",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\arity.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 forEachLine 期待 3 个参数，得到 0\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\arity.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\arity.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "cbType",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\cbType.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'forEachLine' 不支持 int 与 function\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\cbType.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\cbType.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "capType",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\capType.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'forEachLine' 不支持 string 与 int\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\capType.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\capType.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "pathType",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\pathType.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'forEachLine' 不支持 int 与 string\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\pathType.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\pathType.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "callbackArity",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\callbackArity.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 <fn> 期待 0 个参数，得到 2\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\callbackArity.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\callbackArity.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "argvArity",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\argvArity.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 argv 期待 0 个参数，得到 2\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\argvArity.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\argvArity.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "nonbool",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\nonbool.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'forEachLine' 不支持 int 与 bool\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\nonbool.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\nonbool.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "pathNUL",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\pathNUL.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"逐行读取路径不能包含 NUL\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\pathNUL.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\pathNUL.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "range0",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\range0.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"逐行读取 maxLineBytes 必须在 1..16777216 范围内\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\range0.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\range0.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "range-1",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\range-1.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"逐行读取 maxLineBytes 必须在 1..16777216 范围内\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\range-1.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\range-1.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "range16777217",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\range16777217.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"逐行读取 maxLineBytes 必须在 1..16777216 范围内\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\range16777217.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\range16777217.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "missing",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\missing.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"无法逐行读取：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\missing.data\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\missing.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\missing.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "directory",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\directory.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"无法逐行读取：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\directory.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\directory.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "JSONL_attempt",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\JSONL_attempt.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "steps_shared",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\steps_shared.lfz",
+        "--max-steps",
+        "100"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\steps_shared.lfz\",\"line\":3,\"col\":7,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\steps_shared.lfz\",\"line\":2,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\steps_shared.lfz\",\"line\":3,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "home",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\home.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "callback_source",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\callback_source.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\home\\\\lib.lfz\",\"line\":8,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\callback_source.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T19-public\\\\home\\\\lib.lfz\",\"line\":8,\"func\":\"bad\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "source": true
+      },
+      "passed": true
+    },
+    {
+      "name": "close_EOF",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\close_EOF.lfz",
+        "--timeout-ms",
+        "6000"
+      ],
+      "unheld_control": {
+        "ok": true,
+        "error": 0
+      },
+      "held_probe": {
+        "ok": false,
+        "error": 32
+      },
+      "after_probe": {
+        "ok": true,
+        "error": 0
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "held_negative": true,
+        "same_pid_alive": true,
+        "returned_closed": true,
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "close_false",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\close_false.lfz",
+        "--timeout-ms",
+        "6000"
+      ],
+      "unheld_control": {
+        "ok": true,
+        "error": 0
+      },
+      "held_probe": {
+        "ok": false,
+        "error": 32
+      },
+      "after_probe": {
+        "ok": true,
+        "error": 0
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "held_negative": true,
+        "same_pid_alive": true,
+        "returned_closed": true,
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "close_callbackError",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\close_callbackError.lfz",
+        "--timeout-ms",
+        "6000"
+      ],
+      "unheld_control": {
+        "ok": true,
+        "error": 0
+      },
+      "held_probe": {
+        "ok": false,
+        "error": 32
+      },
+      "after_probe": {
+        "ok": true,
+        "error": 0
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "held_negative": true,
+        "same_pid_alive": true,
+        "returned_closed": true,
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "close_nonbool",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\close_nonbool.lfz",
+        "--timeout-ms",
+        "6000"
+      ],
+      "unheld_control": {
+        "ok": true,
+        "error": 0
+      },
+      "held_probe": {
+        "ok": false,
+        "error": 32
+      },
+      "after_probe": {
+        "ok": true,
+        "error": 0
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "held_negative": true,
+        "same_pid_alive": true,
+        "returned_closed": true,
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "close_UTF8",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\close_UTF8.lfz",
+        "--timeout-ms",
+        "6000"
+      ],
+      "unheld_control": {
+        "ok": true,
+        "error": 0
+      },
+      "held_probe": {
+        "ok": false,
+        "error": 32
+      },
+      "after_probe": {
+        "ok": true,
+        "error": 0
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "held_negative": true,
+        "same_pid_alive": true,
+        "returned_closed": true,
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "close_tooLong",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T19-public\\close_tooLong.lfz",
+        "--timeout-ms",
+        "6000"
+      ],
+      "unheld_control": {
+        "ok": true,
+        "error": 0
+      },
+      "held_probe": {
+        "ok": false,
+        "error": 32
+      },
+      "after_probe": {
+        "ok": true,
+        "error": 0
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "held_negative": true,
+        "same_pid_alive": true,
+        "returned_closed": true,
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    }
+  ],
+  "scope": "small public fixtures; global terminal close requires same-host unit evidence, not process-exit reopen",
+  "timestamp_utc": "2026-11-03T17:25:20.954148+00:00"
+}

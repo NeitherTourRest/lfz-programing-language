@@ -1,0 +1,12 @@
+
+running 7 tests
+test line_reader::tests::callback_live_and_global_cancel_close_before_host_exit ... ok
+test line_reader::tests::early_finish_does_not_decode_tail_and_overflow_only_if_line_exists ... ok
+test line_reader::tests::lf_crlf_eof_bom_nul_and_empty ... ok
+test line_reader::tests::limits_count_raw_cr_and_utf8_crosses_blocks ... ok
+test line_reader::tests::live_file_negative_probe_then_finish_and_error_drop_release ... ok
+test line_reader::tests::request_regular_file_and_native_controls ... ok
+test line_reader::tests::warmed_reader_handle_count_plateaus ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 505 filtered out; finished in 3.81s
+

@@ -1,0 +1,27 @@
+{
+  "scope": "read-only author evidence audit; NOT independent rerun",
+  "human_processes": 42,
+  "human_scenarios": 21,
+  "ai_processes": 45,
+  "document_checks": {
+    "docs\\guide\\README.md": true,
+    "docs\\guide\\reference.md": true,
+    "docs\\guide\\tutorial.md": true,
+    "docs\\guide\\errors.md": true,
+    "docs\\guide\\testing.md": true,
+    "docs\\guide\\line-processing.md": true,
+    ".opencode/skills/lfz-programming/SKILL.md": true,
+    ".opencode/skills/lfz-programming/README.md": true,
+    ".opencode/skills/lfz-programming/VERIFICATION.md": true,
+    ".opencode/skills/lfz-programming/prompt-template.md": true,
+    "docs/guide/ai/README.md": true
+  },
+  "guide_manifest_sha256": "85f70fb07ff319e38bc0572994e50e8d8884e438824c0a4f8159e7d5d31e8a01",
+  "ai_manifest_sha256": "de7f68e00b60f9a49e30c9f697cfc6130a6e12f020601a0746a479d25e8e0e84",
+  "original_failures_preserved": [
+    "T19-guide-evidence/first-failure.json",
+    "T19-guide-evidence/verify-first.py",
+    "T19-guide-evidence/line-processing-first.md",
+    "T19-skill-evidence/prepare-snapshot"
+  ]
+}
