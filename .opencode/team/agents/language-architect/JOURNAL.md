@@ -349,3 +349,15 @@
 - 完成：三spec/T18-B-contract.md11024B，精确owned ABI/校验/11ValueMsg/CLI/owner；ADR追加。
 - 证据：文档diff检查exit0，未源改/编译/Git。
 - 下一步：root立即按§24 GO实现；仅本轮后收口，R304OPEN。
+
+## [2026-11-03] T19逐行/JSONL提案
+- 来源：root新授权仅本轮，完整启动。
+- 完成：T19-contract-proposal.md三参/有界逐行/JSONL attempt/byte边界/回调早停/关闭/预算/内存oracle。root批准主体及tool RAII边界。
+- 证据：文档diff检查过；未源改/编译/Git。
+- 下一步：合runtime review冻结§25；不T20/自动化，R304OPEN。
+
+## [2026-11-03] T19 §25正式冻结
+- 来源：root批准reader ABI/owner/RAII，合runtime/tool review。
+- 产出：三spec/T19-contract.md9931B，五ValueMsg、类型arity/bool检查序、有界reader/poll与关闭/规模门禁；ADR拒扩大平台close诊断。
+- 证据：diff --check exit0，未源改/编译/Git。
+- 下一步：rootGO core/runtime/tooling，仅本轮交付后收口，R304OPEN。

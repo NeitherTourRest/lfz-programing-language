@@ -1,14 +1,14 @@
 # test-engineer — 工作状态
-> 更新：2026-10-31 T18-B最终公开
+> 更新：2026-11-04 T19公开最终
 
 ## 当前状态
-T18-B公开Windows49/49 PASS、exit0，首次完整许可实跑，server_errors=[]。产品18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916/1029120B初末不变。script744bbd9f…18831。验后source逐项匹配tooling manifest。
+T19公开Windows47/47 PASS、exit0，首完整许可运行、首脚本3be2a83e未变。产品5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5/1041920B初末一致，验后source匹配tooling manifest。
 
 ## 产出
-tests/t18b_cli_http.py；T18-B-blackbox.md及专属evidence/final-first-permitted/manifest-final。API头原见证08bf66…，bound a47fd258…仅补route/body身份，59+2=N61成功/N60失败，wire SHA匹配不择阈值。所有loopback记录/计数与shutdown完成保全。
+tests/t19_cli_lines.py；T19-blackbox.md、专属evidence/final-first-permitted、script-first、manifest-final、process-cleanup-query。close6均活PID held错误32负控/调用返回后exclusive成功且仍alive；不是退出后重开。所有47已communicate，无异常。
 
 ## 下一步/边界
-供root/独立验收收口；TLS作者12175拒绝仅引用不计49、未称可信TLS成功；host cancel/callback/诊断白盒另列。无产品修改/编译/旧tests/Git，不公网/信任修改；R304OPEN。仅本轮HTTP后收口不T19，无自动化。
+已收工：只读CIM核引用独占Temp/T19-public命令行LFZ进程0，无server/background worker，不再重复跑，供root协调perf窗口。终止same-host/overflow/注入/16MiB/规模吞吐RSS另列，公开47不冒称全部条款或R304通过。未编译/产品旧tests/Git/网络。只T19收口不T20/automation。
 
 ## 历史
-A45/T17134/C29/B38公开及原失败证据保持。
+HTTP49/A45/T17134/C29/B38与全部原始失败保持。

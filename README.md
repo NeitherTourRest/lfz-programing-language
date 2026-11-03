@@ -1,12 +1,24 @@
 # LFZ 语言与解释器 — 程序设计课程作业
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-> 最后更新: 2026-10-31 by release-manager
+> 最后更新: 2026-11-04 by release-manager
 > 仓库地址: https://github.com/NeitherTourRest/lfz-programing-language
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
-## 本轮收口：T18-B Windows HTTP候选（2026-10-31）
+## 本轮收口：T19 有界逐行文件处理（2026-11-04）
+
+当前76内置/13错误类，新增`forEachLine(callback,maxLineBytes,path)`处理普通UTF8文件和JSONL，不把全文件读入字符串。回调以`line,lineNo`调用，固定解析闭包与可变text cell可避免逐行创建闭包带来的元数据增长；任意用户回调仍可能额外分配或积累结果。
+
+最终候选1041920B、SHA256 `5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5`，[精确归档](docs/reports/T19-release-evidence/build.json)包含递归24源码、Cargo、测试及exe。[独立报告](docs/reports/T19-independent-verification.md)功能PASS：684 harness、旧全部回归、公开47、jsonlstream14、自编8；人指南42次check/run、AI45为作者实跑，独立文档/规模审计结果以报告最终段为准。
+
+[唯一正式规模窗口](docs/reports/T19-performance.md)window01共42样本=7预热+35正式，全部输出与hash正确，没有失败择窗重跑。固定聚合驱动下10/100/300MiB流式峰值WS约6.5MiB，10MiB整文件基线约34.9MiB；300MiB LFZ中位9.335709s、Python6.244406s，LFZ约慢49.5%，**不能称吞吐领先或R304达标**。独立实际解析100MiB输入675779行并重算SHA与聚合oracle通过。warm-cache、OS峰值工作集与处理墙时口径见报告，不是物理磁盘速度或任意脚本恒定内存证明。
+
+[逐行指南](docs/guide/line-processing.md)说明UTF8/CRLF/BOM/EOF和提前停止、行字节上限、attempt/global终止；[应用](app/T19-JSONLSTREAM.md)示范坏记录继续处理。普通文件检查存在TOCTOU，读取可能阻塞，协作终止不能强制中断native读取；RAII释放执行关闭但无法报告OS close失败，不承诺事务/权限沙箱或硬实时。
+
+所有新oracle/driver初版、515-1故障与固定闭包改进、初始独立失败均保留。大input只在项目Temp，不进入Git或发布ZIP。R304仍OPEN，原门槛不改，候选非正式发布、不打tag。用户仅授权本轮交付后停止，不T20、不重建automation，其余计划未实施。以下HTTP等为历史指纹记录。
+
+## T18-B 历史Windows HTTP候选（绑定18d328）
 
 当前1.4.0候选、75内置/13错误类，新增`httpRequest(method,url,headers,body,timeoutMs,maxResponseBytes)`，默认禁用，仅本次run的`--allow-http`显式授权；与子进程权限独立。Windows WinHTTP后端已验，非Windows受控Unsupported。HTTP状态404/500是正常响应，调用者检查status；不自动重定向、代理、cookie回发、认证或应用重试。
 

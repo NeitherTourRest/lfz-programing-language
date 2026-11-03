@@ -1,22 +1,23 @@
 # release-manager — 工作状态
-> 最后更新：2026-10-31 by release-manager
+> 最后更新：2026-11-04 by release-manager
 
 ## 当前状态
-T18-B HTTP最终独立PASS交付准备完成，用户只授权本轮B收口，不T19，不重建已删除自动化。R304OPEN，无性能窗、不正式发布不tag。本角色未Git/编译/修改产品或profile，最终push待root实际回执。
+T19最终候选功能及单窗口规模审计PASS交付准备完成，仅本轮收口不T20/automation。R304仍OPEN，原19线未改，不tag、不正式发布。本角色不编译产品、不改源/profile、不Git，最后提交推送待root回执。
 
-## 精确归档
-- target/dist1029120B、SHA18D328D9E48780F8E6AE638F9AD24F53186D94F2207CA24DA8928CBBBA0D0916；递归23src含http_control/windows.rs及旧process模块，2Cargo+2本轮tests+exe共28成员ZIP691881B，SHA1333CFCF3990E7B92AAB05ADB6746BC48A1A7D44524CA1915C07FEB9B65CB8FA，全回读与冻结前后输入一致。
-- T18-B-release-evidence/build/source-hashes/candidate-snapshot.zip；Temp/T18-B-release/lfz-T18-B-18d328.exe另存，不再改dist。没有临时TLS私钥入ZIP。新增项目文本私钥header扫描0命中；docs/tooling/evidence/T18-B/tls-cert.pem是公开CERTIFICATE审计材料，不是私钥，保留。
+## 精确保全
+- target/dist1041920B、SHA5D2219F88DB8B3196CAC259941FC0A8A3B489EF03519BC7E20415F8EDF6388E5；28项ZIP701750B/SHA8C90CD23ECB72E51590FCD3C4CEDBAB7F7FB2F24D2D2D22EA41B2261A40383BB，递归24src+2Cargo+本轮测试+exe全回读与前后输入一致。
+- T19-release-evidence/build/source-hashes/ZIP，Temp/T19-release/lfz-T19-5d2219.exe另存；大输入不归档、不Git，dist复制后不再改。
 
-## 最终事实/边界
-- T18-B-independent-verification.md：667harness、旧全回归、HTTP49/app7/独立11全PASS；首4normal和补40真实race证据保留。人指南21/AI25分列作者成绩，AI默认17/25有8 WinHTTP12029、同脚本同hash正常OS许可25/25，server_closed=true，五文档SHA一致。
-- README/checklist准确75内置/13错误类、Windows已验而非Windows Unsupported、API完整头文本UTF8+body非wire限额、仅系统自签拒绝审计无可信TLS成功，不宣传网络/权限内存沙箱。
-- 所有失败、首normal/race和TLS首config错误、默认12029保留原文，没有因最终PASS改写历史。其余计划未实施，只B收口。
+## 结果与边界
+- 独立功能684/全部旧回归/公开47/app14/自编8 PASS；人指南42checkrun/AI45作者实跑，独立报告最后审计规模111文件SHA/bytes、所有42样本及100MiB实际675779行oracle/SHA通过。
+- 唯一window01=7warm+35formal，无失败重窗；固定驱动10/100/300MiB peak WS约6.5MiB，10MiBwhole34.9MiB；300MiB LFZ9.335709s/Python6.244406s，LFZ慢49.5%，不夸吞吐领先或R304通过。
+- 固定解析闭包/text cell避免逐行函数元数据增长，用户callback仍可分配/积累；普通文件TOCTOU和native阻塞、RAII关闭不能报告OSclose错误如实记录。oracle/driver初版、515-1故障及全部改进/失败证据保留。
 
-## Git准备/下一步
-- prepare-checkpoint.py baseline740fd32371584da1d5afc9b12d262a434b1c87f8，六组HTTP语义message，28snapshot=23src+2tests+3用户，源/测试只从固定ZIP生成stagecopy/hash。用户原28/1/1块各1，副本只Temp，禁止整文件add混合记录。
-- 六组当前190路径：6/11/104/8/28/33（含snapshot），root/所有角色最后落盘后首次提交前刷新一次，开始提交后不重跑。旧v2/Cargo/profile保持，后继T19/T18-C排除，无新增规划白名单。
-- root代最终提交/推送，本角色没有Git写入，不提前宣称已push；文档差异检查通过，材料齐可收口停止。
+## Git准备及停止
+- prepare-checkpoint.py baselinec2a3d3946ddd874cf9aeb87bbc33284fc3097a51，7组正确逐行/测量语义，perf单独第6组包含benchmarks/t19五文件（measure/prepare/reference/stream/whole）和performance全部原始证据，第7组收工。
+- 源24+测试1只从固定ZIP生成stagecopy/hash，3用户块28/1/1过滤副本只Temp且各1，28snapshot记录。当前311路径，root/所有角色最后落盘后首次提交前刷新，提交中不重跑，禁止宽泛add。
+- 已核perf五文件全部在第6组、清单无Temp路径/10MiB以上文件；README/checklist差异检查通过，旧v2/tags/Cargo及原性能门槛不动。
+- root代最后Git与推送，本角色未Git、不虚报已push；仅本轮后停止，不启动T20/自动化，其余计划未实施。
 
 ## 关键经验
 staged快照只排除用户初始28/1/1新增，工作树原文保留，禁止git add .或整文件stage混合记录。新skill/exe不冒用旧v2 manifest；旧9输入从原ZIP恢复，旧成绩不改算。性能门槛不能用局部收益抵消；候选保存与正式发布明确分开。

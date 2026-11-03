@@ -1,4 +1,12 @@
 
+## T19规模测量完成，最后交付（2026-11-04）
+唯一正式window01全部42/42通过（7预热+35正式），10/100/300MiB逐行LFZ中位0.345100/3.081447/9.335709秒，OS峰值工作集约6.5MiB稳定；10MiB全量readFile约34.9MiB。Python300MiB6.244406秒，LFZ慢约49.5%如实披露，不闭合R304。OS峰值负对照64MiB触碰释放后peak82317312/current15241216证明非瞬时RSS；独立已核42样本分组/median/peak与三输入bytes/SHA，并自写Python重算100MiB675779行（668812有效/6967坏行）及sum/checksum一致，无新性能窗/未启动LFZ。perf报告/111证据SHA已封，全部进程退出。人42/AI45+11文档SHA最后只读审计中，requirements与release收口。候选5d2219/1041920B源不变，原失败/driver初版/固定closure依据全部保留；有界结论限定当前callback策略，不推任意用户callback。仅T19后停，不T20/automation，不正式tag，原用户三块保护。
+## T19最终候选684冻结，功能终验启动（2026-11-04）
+root核target1041920B/SHA5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5；修自身新test换行后全12harness684/684通过，首次515/1原始日志保留，生产未追绿改动。tooling源编译静默，递归manifest/精确ZIP730243B(d32996…01475)齐。公开47已GO，独立684/新旧功能和同host关闭已GO；原harness内部测试fixture编译仍授权非产品构建，已知sandboxprobe不重复abort。app14、人指南21场景42check-run、AI22小样准备齐，待slot最终实跑；perf实际runner准备中，规模测窗必须最终hash+全部功能测试结束无并发，未GO大规模测量。76内置13类，RAII/平台/阻塞边界不夸大；R304OPEN，仅T19收口不T20/automation，原用户三块保护。
+## T19契约冻结，进入实现（2026-11-03）
+三spec§25/T19-contract.md9931B已冻结：forEachLine(callback,maxLineBytes,path)，严格bool早停，返回lines/stopped；8KiB有界读取，LF前rawbytes含CR限额1..16MiB，CRLF/末行/BOM准确，坏UTF8/超长行回调前失败，JSONL组合现jsonParse/attempt。reader纯std owned LineControl/ReadLine/LineReadError，tooling reader+lib、runtime evaluator/builtins76、core error五ValueMsg单写者。core已GO，runtime/tooling待slot再GO；唯一cargo仍tooling且等其他源齐。RAII所有路径finish/drop不伪称可回传OSclose错误，不新FFI/filediag；普通文件pre/handlemetadata不消灭TOCTOU/阻塞，native只poll全局cancel/deadline不扣AST。公开/perf准备，实际RSS与吞吐待最终hash及无并发条件；旧R304线不变，原用户三块保护。
+## 用户继续推进：T19逐行/JSONL（2026-11-03）
+恢复项目，范围为下一轮T19可释放资源的逐行读取/JSONL流水线，完成契约/实现/真实大规模oracle/内存吞吐测量/应用指南/独立验收/候选交付后收口，不自动跳T20，不重建automation。已核mainc2a3d3946ddd874cf9aeb87bbc33284fc3097a51，工作树仅原用户三块28/1/1；无cargo/rustc，D9516875776B。architect先设计，runtime/tooling只读可行性review；未GO产品源或编译。保旧readFile行为/所有测试/旧v2和标签，临时项目Temp，R304OPEN不沿旧字节性能结论。
 ## T18-B交付完成并收口（2026-10-31）
 用户本波HTTP迭代完成。六组已推送main，git ls-remote实核67101cad563cd934235b1a4be98a36ea3eb2571e；23src+2tests逐一对冻结ZIP归一换行一致。最终dist/target1029120B/SHA18d328d9e48780f8e6ae638f9ad24f53186d94f2207ca24da8928cbbba0d0916，独立667harness/HTTP49/HTTPplan7/自编11/全部旧回归通过；人指南21/AI25作者结果和11文档证据独立审计通过。所有旧失败/预审normal竞态证据缺口及补40真实race/默认12029均保全。Windows已验，非WindowsUnsupported，系统自签拒绝不等于可信TLS成功；R304OPEN无新性能窗，不正式发布或tag，未实施T19/T20。原用户三块28/1/1继续未提交；自动化此前已删除且本波未恢复。本波已收口，不开展新功能，仅此回执Git记账。
 ## T18-B功能与指南完成，最后候选交付（2026-10-31）

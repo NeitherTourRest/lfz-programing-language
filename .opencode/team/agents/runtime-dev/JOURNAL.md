@@ -303,3 +303,9 @@ parent库467PASS；仅新增4unit覆盖线程同步取消、7HOF、diamond预算
 
 ### [2026-10-31] T18-B运行时源码交接
 六参httpRequest/shared helpers/默认禁用http能力/严格UTF8/独立diagnostics及75注册落盘，4新unit未编译，停止写源交tooling唯一release。报告与静态缺符号记录保全，无真实网络或通过声明。
+
+### [2026-11-03] T19只读可行性review
+审NEXT/Invoke/evaluator预算与attempt/文件IO，交callback逐行有界读/文本边界/不扣步native poll/home来源/显式关闭诊断/跨平台与RSS门禁建议。仅专属报告与自身记忆，无产品源码或编译。
+
+### [2026-11-03] T19运行时源码交接
+forEachLine/76注册/预检/native-only poll/统一finish与5新unit落盘；存活host关闭与marker取消见证源码已备但未运行。停止写源/编译，交tooling唯一release。无OSclose错误或性能通过声明。

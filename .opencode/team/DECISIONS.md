@@ -1294,3 +1294,6 @@ T17 CLI计时边界精确说明：在静态build_graph完成、调用eval入口�
 
 ### [2026-10-30] [language-architect] T18-B HTTP契约冻结与Rust构造迁移
 落实root批准及runtime/tool review：六参httpRequest、三字段响应、独立http能力默认false，EvalCapabilities新增pub http明确Rust literal机械迁移而非宣称源兼容，保旧函数/EvalLimits。WinHTTP async零crate/windows先验、其他Unsupported；协作deadline后安全等closing/最后callback，OS异常cleanup非硬时界。头API文本UTF8+body raw非wire口径及各上限冻§24，TLS不insecure。新增独立HTTP sidecar保旧子进程文案，双列表都阻宿主成功且先process后HTTP。仅本轮，无后继/自动化；未源改/测试，R304OPEN。
+
+### [2026-11-03] [language-architect] T19有界逐行§25冻结
+按root批准与runtime/tool review合定forEachLine data-last/bool/两键、有界raw行口径及JSONL显式attempt。采用root建议纯std LineControl/reader错误ABI，reader=tooling、evaluator=runtime、error=core。不采用review中的eachLine改名/int返回或显式平台close/file诊断：root已批RAII统一释放/不报告close异常，避免新增FFI；scope/旧readFile不变。三spec及T19-contract已冻，未源实现/测量，R304OPEN，仅本轮交付后收口。

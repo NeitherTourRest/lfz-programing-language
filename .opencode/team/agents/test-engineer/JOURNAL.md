@@ -247,3 +247,21 @@
 - 完成：核产品/见证SHA，绑定同wire补route/body元数据；许可首次完整49/49 PASS/exit0/server_errors空，finally worker回收，无重复运行/产品修复/改oracle。
 - 产出：final-first-permitted.json、原/bound witness、manifest-final及报告；验后source匹配tooling冻结，TLS作者证据仅引用归属。
 - 边界：无编译/产品/旧测试/Git/公网/信任修改，R304OPEN，仅本轮HTTP收口不T19。
+
+## [2026-11-03] T19公开规划收工
+- 来源：root启动只读规划，随后确认§25/T19-contract9931B正式冻结，可收工腾slot。
+- 完成：完整读启动/NEXT/proposal/reviews/冻结契约，专属小fixture矩阵及Windows真实排他重开前后控制方案。
+- 产出：docs/reports/T19-blackbox-plan.md；无新脚本/实跑/编译/产品旧测试/Git修改。
+- 边界：终止路径同进程关闭需库host/Drop spy，不能以进程退出或rename删除冒证据；规模与原R304另列。仅T19交付后收口不T20。
+
+## [2026-11-03] T19公开47准备与旧版真实红
+- 来源：root GO按§25落新脚本，当前无最终T19产物。
+- 完成：新脚本47与小fixture，AST PASS/prepare-only exit0/executed:false；旧T18B18d328缺forEachLine真实0/1，LFZ NameError，未网络/产品编译。
+- 产出：tests/t19_cli_lines.py、专属T19-blackbox报告/证据/manifest。6关闭case用同PID前后exclusive probe，不以退出/rename删除当证据。
+- 下一步：等最终hash许可实跑，终止关闭及规模/perf另列；不T20/automation，R304OPEN。
+
+## [2026-11-04] T19公开最终47通过
+- 来源：root轻量GO最终5d2219f8/1041920B，作者684已停编译。
+- 完成：首脚本未变，许可完整47/47 PASS/exit0；6关闭case均活PID负控32、返回后exclusive成功且PID仍alive。源码验后匹配tooling manifest。
+- 产出：final-first-permitted、manifest-final、script-first、CIM清理查询0活进程及报告。
+- 收工：所有47 communicate无异常，未开server；无自己LFZ活进程，不重跑以协调perf。无产品/旧tests/编译/Git/网络；R304OPEN，仅T19不T20。

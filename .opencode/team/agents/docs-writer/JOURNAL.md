@@ -106,3 +106,17 @@
 - 六指南哈希/提取教程/loopback请求及原始输出/manifest齐；Python keepalive关闭reset工具输出如实披露，无择次重跑抹除。
 - 无产品/spec/AI/编译/Git/公网，R304OPEN，HTTP本轮交付后停止。
 
+
+## [2026-11-04] T19人指南prepare-only
+- 来源：root恢复T19正式契约任务。
+- 完成：先核盘无旧T19人指南后新增逐行教程、五入口与专属验证器；prepare-only exit0，12小样，executed:false。
+- 产出：docs/guide/line-processing.md、五指南、docs/reports/T19-guide-evidence.md及verify.py。
+- 下一步：等待最终hash实跑并保留失败；不编译/Git，不T20或自动化。
+- 阻塞：最终候选尚未冻结，未冒用旧B产品。
+
+## [2026-11-04] T19人指南最终实跑收工
+- 来源：root最终5d2219f8/1041920B轻量GO及func_names内存提醒。
+- 完成：21场景42进程通过，核六指南SHA；全部同步进程退出。固定currentLine/parseCurrent复用闭包，明确reader与任意callback内存差异。
+- 证据：T19-guide-evidence.md与runs/manifest；首轮第41check oracle缺换行保全first-failure/verify-first，只修验证器后第二轮和最终轮均42通过。
+- 下一步：供root/release收口，不T20/automation；不网络、规模、编译/Git或产品修改。
+- 阻塞：无。

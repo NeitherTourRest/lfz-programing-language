@@ -88,3 +88,15 @@
 - 产出：T13-performance.md 12715B；原19组三标签/9能力全表，包含map2k、小对象4失败、map8k/string2k环境不确定和string8k/JSON stringify4k等paired回归，不以消分配替代性能结论。
 - 下一步：独占已释放，verifier独立审计；不新增profile或择窗凑门槛。
 - 阻塞：整体效率R304未通过；测量任务完成。
+
+## [2026-11-03] T19测量准备收工
+- T19-performance-plan/benchmarks/t19/prepare.py与prepared证据落盘；prepare-only exit0，小样4174B/37行，独立重解析oracle一致，0 LFZ/0网络/无大文件。
+- 规划最终hash独占窗口、10/100/300MiB OS峰值和warm-cache5轮；尚无实测，R304OPEN。未改产品/旧测试/性能原线，不编译/Git，等待最终GO。
+
+## 2026-11-04 runner已准备，未测量
+benchmarks/t19/measure.py、stream.lfz、whole.lfz、reference.py已落。prepare-only实际exit0，product_invocations=0/measured=false，协议绑定候选5d2219f…/1041920B但尚未启动其check/run。每新进程打印恒定小JSON→input空prompt活进程握手→OS PeakWorkingSetSize→父释放input→wait；处理wall截至父收到JSON行，握手采集等待另列总exit时间；Python同任务无hash计时参考，各规模stream/Python交错，10MiB另whole基线，一预热五正式共42样本。每样本输出/峰值/时间/失败逐件落盘，any失败停止保全不择轮，候选hash初末锁定，输入生成/独立二次oracle窗外。
+当前只prepare-only/AST通过，LFZ新驱动和OS峰值API尚未实际验证；必须root另GO无并发后先小样驱动check/run+live峰值/握手，再生成10/100/300MiB。没有大档/产品启动/网络/编译/Git，不套684成绩当性能。R304OPEN。测量入口python -B benchmarks/t19/measure.py --run --binary target/release/lfz.exe --expected-sha FINAL --root Temp/T19-perf/window01；不要在其它验收进行时执行。
+## [2026-11-04] T19唯一规模窗口完成
+- ALL QUIET后修共享cell单闭包，初两驱动原文保全；小样与64MiB OS peak负对照过。
+- window01三档42/42通过，stream peak约6.5MiB不随10→300MiB线性增长，whole10约34.9MiB；300LFZ9.336s对Python6.244s，LFZ慢49.5%披露。
+- T19-performance报告/111项证据manifest齐，无重跑择窗或修改产品；已释放窗口，R304OPEN，不T20/automation。

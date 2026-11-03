@@ -1,5 +1,5 @@
 # app-dev — 工作状态
-> 最后更新：2026-10-31 by app-dev
+> 最后更新：2026-11-04 by app-dev
 
 ## 当前状态
 T18-B HTTPplan作者验收7/7通过，最终18d328d9/1029120B；独立验收由verifier负责。所有旧应用/oracle保持不变，本轮B完成后停止，无应用阻塞。
@@ -28,3 +28,12 @@ Python AST PASS。菱形共享计数、caller同名全局不串、两次执行ca
 
 ## T18-B最终实跑（2026-10-31）
 冻结18d328d9/1029120B核hash。默认sandbox 2/3，首批8项WinHTTP12029且server零请求，完整失败保留；同一应用/oracle及产物获正常OS权限7/7 PASS，server_shutdown_complete=true。两批5成功3局部失败报告字节一致，全局deadline真实回调/KEEP/无后续请求、禁用、前置验证、空计划均过。app/t18b-evidence两报告及manifest、T18-B说明齐。应用源码77187a…45fdc未改，无产品/旧app/编译/Git，所有Temp在项目内。下一步交独立验证/指南复用；R304OPEN，仅B收口不T19，无阻塞。
+
+## T19准备（2026-11-03）
+jsonlstream.lfz/verify_jsonlstream.py/T19说明已落：forEachLine逐条attempt解析，256条固定批输出，精确物理行号，TAKE早停与字节cap。AST/prepare-only PASS、0解释器，待最终hash。14小样oracle覆盖分行/坏JSON继续/局部读取失败/批次副作用/global零预算。旧app不改，无编译Git；本轮T19后停止，R304OPEN。
+
+## T19恢复检查（2026-11-04）
+确认昨日三份新产物已完整落盘，无重做；重新AST/prepare-only PASS（0解释器），preparation.json保三个文件指纹。待最终hash GO实跑14进程，不干扰perf窗；源码8436f850…71a0b，R304OPEN。
+
+## T19最终功能验收（2026-11-04）
+最终5d2219f8/1041920B，默认权限14/14 PASS。固定struct currentLine.text+单个parseCurrent闭包，256条有界批；首oracle CLI--json错误/逐行closure14绿/误let重绑定失败及全部源码、最终14绿保留app/t19-evidence，manifest齐。全局0步初始化前KEEP；不冒称callback中途资源/关闭/规模性能已由应用证明。所有测试进程结束，无perf并发/产品/旧app/编译/Git。交独立verifier，R304OPEN，仅T19后停止，无阻塞。

@@ -106,3 +106,8 @@
 - R137/213/412/509通过，冻结18d328…/1029120B；667/公开49/httpplan7/独立HTTP11及旧回归全PASS，人21/AI25作者成绩齐。
 - Windows实测/其它Unsupported、TLS自签拒绝非可信TLS成功、API头文本非wire、literal迁移、默认禁用/资源终止/40Barrier关闭与双诊断门禁准确限定。原失败保留。
 - R304OPEN无新性能窗不tag；仅本轮B交付，不T19/automation。只REQUIREMENTS与本人记录，无产品/编译/网络/Git。
+
+## [2026-11-04] T19需求收口
+- R138/214/305/413/510通过，冻结5d2219…/1041920B，独立684/47/app14/8与旧回归、人42/AI45/11文档审计齐。
+- 规模window01唯一42样本、实际输入/OS PeakWorkingSet/64MiB负控/100MiB流式oracle独立审计齐；固定driver约6.5MiB，Python更快，限定R305测量交付通过绝不替代R304OPEN。
+- raw CRcap/UTF8/早停/共享预算/RAII无OSclose错误回传、Windows实测/其它未验、任意callback额外内存均限定；原失败不抹。仅需求及本人记录，无产品/编译/Git。仅本轮不T20/automation。

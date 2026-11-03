@@ -187,3 +187,9 @@ run独占Handles注册表显式早关/逆序最终关，Drop仅兜底，CloseHan
 
 ### [2026-10-31 00:15] T18-B作者实现收口
 owned HTTP backend/CLI/runner双诊断门禁，先红再首4/最终7生命周期，40真实Barrier取消完成race及20normal，TLS自签拒绝12175/appbytes0，API头原件publicN61。唯一release全12harness667/667/build0，新1029120B/SHA18D328D9E48780F8E6AE638F9AD24F53186D94F2207CA24DA8928CBBBA0D0916。永久递归manifest+ZIP，失败/阶段日志保全；源静默交root公开独立，不dist/Git/automation/T19。
+
+### [2026-11-03 21:47] T19只读资源/验收review收口
+完整启动后读现项目与官方std/Win32资料，产出docs/reports/T19-tooling-review.md。建议有界chunk+raw行限额、局部RAII/std close错误边界不扩FFI；Windows排他重开负对照及句柄plateau，不拿rename/delete当证明；100MiB独立oracle与10/100/300MiB峰值WS/吞吐方法。未产品/测试/CLI写、未编译/大fixture/外装/公网/Git；交root/architect，等冻结契约，只T19不automation/T20。
+
+### [2026-11-04 01:23] T19实现最终684通过收口
+reader/lib实现，reader11+runtime5+core新测试同编全验；首515/1新增测试TwoStatements失败完整保全，仅改新增test换行。最终12harness684/684/build0，新1041920B/SHA5D2219F88DB8B3196CAC259941FC0A8A3B489EF03519BC7E20415F8EDF6388E5。真实同host活句柄负控与全部Outcome返回后排他/Drop spy/故障/plateau通过，有效输入旧红新绿。递归源码Rust测试manifest与精确ZIP落docs/tooling/evidence/T19，源/编译静默交root公开独立/perf，不dist/Git/T20/automation。

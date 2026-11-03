@@ -1,16 +1,19 @@
 # language-architect — 工作状态
-> 最后更新：2026-10-30 by language-architect
+> 最后更新：2026-11-03 by language-architect
 
 ## 当前状态
-T18-B三spec §24及T18-B-contract.md11024B已冻结，T18-B-design仅历史提案。root已批准API/迁移/限额/双sidecar/async安全closing。源GO由root即将下达。
+正式冻结三spec §25及T19-contract.md9931B，ADR追加，root可GO三owner。T19-contract-proposal为历史。未源改/编译/Git。
 
-## 精确接口与owner
-runtime evaluator/builtins唯一：六参特殊httpRequest、75名字注册、EvalCapabilities新增pub http默认false、旧函数/EvalLimits不变；Rust literal机械迁移明确ADR。新TracedRun私有http_diagnostics/accessor，保旧process sidecar/文案。双门禁先process后HTTP。
-tooling http_control/platform、CLI/main/lib注册唯一：HttpRequest/Control/Response/Failure/Report及run owned ABI；valid_url/headers/method纯helper给runtime共用。Windows async零crate，其它Unsupported。core error.rs唯一11个Http ValueMsg固定消息。
-URL ASCII<=16384bytes、request头<=256对/65536bytes、body<=16MiB；response native头<=64KiB/256项，头API文本UTF8+body raw合并<=max，含statusline/末CRLF不含UTF16 NUL，非wire。
+## 精确接口
+forEachLine(callback,maxLineBytes,path)，callback(line,lineNo)严格bool，返回lines/stopped，76内置。data-last、无新能力/文法/Value/CLI；原readFile不改。
+core唯一error.rs五ValueMsg：LineLimitRange/LinePathNul/LineTooLong{line:i64,limit:usize}/LineUtf8{line:i64}/LineNumberOverflow，固定消息§25.3；Io调用Span Some且固定“无法逐行读取：{path}”。
+tooling唯一line_reader/lib注册：LineControl deadline/token，ReadLine number/text，LineReadError纯owned；open(path,max,&control)/next_line(&mut self,&control)/finish(self)->()。
+runtime唯一evaluator/builtins：完整类型/arity预检再open，mapping及call_value原home/source，共用session预算，native只cancel/deadline不扣步。
 
-## 生命周期
-协作截止cancel→globaldeadline→localtimeout→超量→OS错→完成；锁存后safe closing+最后callback退出前不free，不detach。异常OS cleanup不硬时界；loopback慢头/慢体/TLS拒绝/取消watchdog必须实测。禁止重定向/自动认证cookie代理PAC/应用重试/自动解压，TLS不insecure，无可信TLS成功虚报。
+## 行/关闭边界
+1..16MiB LF前rawbytes含CR；CRLF仅去一CR，EOF末CR/BOM保留、空/尾LF口径已冻。有界8KiB块，callbackfalse不处理后坏行，UTF8/超长回调前ValueError，JSONL显式callback内attempt。
+普通file预metadata+opened核验不是TOCTOU/阻塞沙箱。RAII所有路径关闭，finish只是消费drop不报告close错误，不sync_all/FFI/filediag。root已批准拒runtime额外close诊断建议，ADR清楚。
+关闭证据要求Windows share_mode0排他重开+handle plateau/Drop spy；三档规模峰值/吞吐独立oracle必须实测。
 
 ## 证据/下一步
-文档diff检查exit0；本角色未源改/编译/Git。完整启动与review均已读，一手资料在提案。root可按§24给owner实施GO，独立/旧回归/最终性能另验，R304OPEN。仅本轮HTTP交付后收口，不T19/自动化。
+文档diff检查exit0，仅换行提示。无产品/性能完成声明，原用户28/1/1保护，R304OPEN。root给GO实现后独立验收，仅当前轮交付收口，不T20/自动化。

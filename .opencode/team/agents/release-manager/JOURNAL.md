@@ -946,3 +946,11 @@
 - 决策：全部失败/default12029/首4normal与补40race/TLS首config保留；API头文本+body非wire限额，Windows已验非Windows Unsupported，TLS仅自签拒绝审计无可信成功。R304OPEN，无性能窗不tag。
 - 下一步：root最后记录后只在首次提交前刷新清单，再代六组Git推送；本角色不虚报已push。本轮B结束不T19、不恢复自动化，其余计划未实施。
 - 阻塞：无交付准备阻塞，性能仍开放限制正式发布。
+## [2026-11-04] T19最终候选与真实规模结果交付准备
+- 来源：team-lead最终功能/规模审计回执，仅T19收口后停，不T20/automation。
+- 完成：1041920B/5d2219 target/dist，28项ZIP701750B/SHA8C90CD23ECB72E51590FCD3C4CEDBAB7F7FB2F24D2D2D22EA41B2261A40383BB，递归src/Cargo/测试/exe全回读及输入前后一致，无大input归档、无编译/产品/Git。
+- 产出：README/checklist实际684/47/app14/独立8/旧回归、人42checkrun/AI45；唯一window01 42=7warm35formal，100MiB实际675779行独立oracle和所有样本重算PASS。流式WS约6.5MiB、whole34.9MiB，300MiB LFZ9.335709s/Python6.244406s慢49.5%，R304OPEN不夸达标。
+- 分组：baselinec2a3d3946ddd874cf9aeb87bbc33284fc3097a51七组，独立perf第6组含runner/reference/drivers/prepare与全部测量证据；清单无Temp/10MiB以上文件。源/测试冻结stage，用户原28/1/1只Temp过滤，root最后刷新代Git。
+- 边界：保全部oracle/driver初稿/515-1失败及固定闭包改进；OSclose不可报告/普通文件TOCTOU/native阻塞/任意callback额外分配公开，不把固定驱动恒定WS推广任意程序。
+- 下一步：root最后记录齐后提交推送；本角色材料齐，未虚报已push。无新后继设计/源码/自动化，功能结束不等于性能门槛通过。
+- 阻塞：无交付准备阻塞；R304继续开放。

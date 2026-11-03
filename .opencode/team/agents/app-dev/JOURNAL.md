@@ -63,3 +63,16 @@
 - 轻量启动读STATUS，核冻结18d328d9/1029120B；默认2/3失败保留（WinHTTP12029、零请求），正常OS许可同字节7/7通过。
 - 请求显式参数/重复头/404与302正常/三局部失败继续/真实回调全局deadline不可吞/KEEP/前置验证/空计划及server完整关闭均有证据。
 - 归档default-permission-failure/results/manifest，更新开发说明；无应用oracle修复、产品/旧app/编译/Git修改。交root及独立verifier，R304OPEN，本轮B后停止。
+
+## [2026-11-03] T19逐条JSONL准备
+- 读启动三文件/角色/skill/§25契约，新增有界批处理及14进程独立oracle，AST与prepare-only通过，0解释器。
+- 开放输入前清空输出与批次不回滚如实文档化；不虚称关闭/性能实证。等待最终hash，旧应用不改，无编译Git，T19后停止。
+
+## [2026-11-04] T19恢复检查
+- 确认已有应用/oracle/说明，重跑AST与prepare-only通过，0解释器；归档app/t19-evidence/preparation.json。
+- 等最终hash再实跑14小样进程，无产品/旧app/编译/Git修改，释放slot。
+
+## [2026-11-04] T19最终14项功能实跑
+- 核5d2219f8/1041920B，最终固定cell/closure应用14/14 PASS，所有进程结束；无提权/规模测/编译Git。
+- 首CLI --json oracle误用、逐行closure版14绿、let重绑定失败全部原样归档。正确struct cell赋值后同产物14绿，固定闭包为静态分配改进而非生产变更。
+- t19-evidence报告/版本/manifest与说明齐；256条已写批次在坏UTF8后保留、earlyfalse毒尾及lineNo核对通过。global零预算KEEP，不扩大为callback资源/关闭/性能结论。交root收口，仅T19。
