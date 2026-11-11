@@ -1,0 +1,13 @@
+import json,pathlib,hashlib,shutil,zipfile
+r=pathlib.Path.cwd();w=r/'Temp/T20-verifier'; e=r/'docs/reports/T20-independent-evidence'; base=r/'docs/tooling/evidence/T20'; sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest(); read=lambda p:json.loads(p.read_text(encoding='utf-8-sig'))
+b=sha(r/'target/release/lfz.exe'); assert b=='a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c'; tool=read(base/'manifest.json'); assert tool['binary']['sha256']==b
+for n,h in tool['source_hashes'].items(): assert sha(r/n)==h,(n,h)
+hs=read(w/'independent-summary.json');assert len(hs)==13 and sum(row['passed']for row in hs)==705 and all(row['exit']==0 for row in hs)
+harness_hashes={v['name']:sha(r/'target/release/deps'/v['name']) for v in hs}
+with zipfile.ZipFile(base/'candidate-snapshot.zip') as z:
+ names=z.namelist(); assert len(names)==len(set(names)); prod=[n for n in names if n.endswith('/lfz.exe')or n=='lfz.exe']; assert len(prod)==1 and hashlib.sha256(z.read(prod[0])).hexdigest()==b
+human=r/'Temp/T20-guide/lead-final.json'; g=read(human); assert g['binary_sha256']==g['final_binary_sha256']==b and g['docs']==g['final_docs'];assert len(g['docs'])==6 and all(sha(r/n)==h for n,h in g['docs'].items()); assert len(g['runs'])==16 and all(v['pass'] for v in g['runs']);shutil.copyfile(human,e/'human-guide-original.json')
+ai=r/'docs/reports/T20-ai-repl-evidence'; m=read(ai/'manifest.json'); a=read(ai/'results.json');assert m['binary']['sha256']==a['binary_sha256']==b and sha(ai/'results.json')==m['results_sha256'] and sha(ai/'verify.py')==m['verify_sha256'];assert m['documents']==a['document_hashes_before']==a['document_hashes_after'] and len(m['documents'])==5 and all(sha(r/n)==h for n,h in m['documents'].items());assert len(a['runs'])==8 and all(v['passed']for v in a['runs'])
+app=r/'app/t20-evidence'; mapp=read(app/'manifest.json'); ap=read(app/'results.json'); assert mapp['binary_sha256']==ap['binary_sha256']==b and all((r/v['path']).stat().st_size==v['bytes'] and sha(r/v['path'])==v['sha256'] for v in mapp['files']);assert ap['total']==ap['passed']==6 and all(v['passed'] for v in ap['rows'])
+results=dict(binary_sha256=b,author_evidence_only=True,human=dict(pass_count=16,docs=g['docs'],sha256=sha(human)),ai=dict(pass_count=8,docs=m['documents'],sha256=sha(ai/'results.json')),app=dict(pass_count=6,sha256=sha(app/'results.json')),source_hashes=tool['source_hashes'],harness_sha256=harness_hashes)
+(e/'guides-app-audit.json').write_text(json.dumps(results,ensure_ascii=False,indent=2)+'\n',encoding='utf8');print('16 human, 8 AI, 6 app, 11 current doc hashes; same candidate, manifest sources match')

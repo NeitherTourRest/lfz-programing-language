@@ -1,0 +1,70 @@
+{
+  "task": "C04",
+  "mode": "CONTROL_OR_SEALED_SUBMISSION_VALIDATION",
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "binary_bytes": 1100800,
+  "source_hashes": {
+    "main.lfz": "c9fcfc7743dd1684588787278cc49d66e2d7b3f2578df3af1373a8bfd49e0546"
+  },
+  "runs": [
+    {
+      "name": "check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C04-wrong-order\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "disabled",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C04-wrong-order\\main.lfz",
+        "--",
+        "http://127.0.0.1:56265"
+      ],
+      "exit": 0,
+      "stdout": "[{\"error\":\"ValueError\"},{\"error\":\"ValueError\"},{\"error\":\"ValueError\"},{\"error\":\"ValueError\"},{\"error\":\"ValueError\"}]\n",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "enabled",
+      "args": [
+        "run",
+        "--allow-http",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C04-wrong-order\\main.lfz",
+        "--",
+        "http://127.0.0.1:56265"
+      ],
+      "exit": 0,
+      "stdout": "[{\"body\":\"雪\",\"repeated\":[\"one\",\"two\"],\"status\":200},{\"body\":\"\",\"repeated\":[],\"status\":302},{\"body\":\"absent\",\"repeated\":[],\"status\":404},{\"error\":\"ValueError\"},{\"body\":\"雪\",\"repeated\":[\"one\",\"two\"],\"status\":200}]\n",
+      "stderr": "",
+      "pass": false,
+      "visits": [
+        "/ok",
+        "/redirect",
+        "/missing",
+        "/bad",
+        "/ok"
+      ]
+    }
+  ],
+  "source_axis": "UNKNOWN",
+  "protocol_axis": "UNKNOWN",
+  "server_closed": true,
+  "check_marker_absent": true,
+  "functional_axis": "FAIL",
+  "certified": "FAIL"
+}

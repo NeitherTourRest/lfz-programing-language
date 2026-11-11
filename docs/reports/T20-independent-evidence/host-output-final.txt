@@ -1,0 +1,2 @@
+absolute deadline retained across cells/reset, earlier than relative 5000ms: PASS
+1000 real cells, reset numbering and definition removal: PASS

@@ -1,0 +1,7 @@
+CONPTY_CONTROL
+Traceback (most recent call last):
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\Temp\T20-tooling\conpty-control.py", line 51, in <module>
+    mark=expect('CONPTY_CONTROL');assert wait(pi.process,4000)==0;code=W.DWORD();ok(exitcode(pi.process,C.byref(code)));assert code.value==0
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\Temp\T20-tooling\conpty-control.py", line 40, in expect
+    raise AssertionError((fragment,text()))
+AssertionError: ('CONPTY_CONTROL', '')

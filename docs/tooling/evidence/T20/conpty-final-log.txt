@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\Temp\T20-tooling\conpty-final.py", line 53, in <module>
+    send('f()\r');mark=expect('17',mark);mark=expect('lfz> ',mark)
+                                              ~~~~~~^^^^^^^^^^^^^^
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\Temp\T20-tooling\conpty-final.py", line 41, in expect
+    raise AssertionError((fragment,text()))
+AssertionError: ('lfz> ', 'lfz> fn f() {\r\n...> return 17\r\n...> }\r\nlfz> f()\r\n17\nlfz> ')

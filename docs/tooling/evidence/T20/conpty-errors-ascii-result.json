@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "exit": 2,
+  "events": [
+    {
+      "observed_before_next_input": "lfz> ",
+      "text_chars": 5
+    },
+    {
+      "observed_before_next_input": "repl: ",
+      "text_chars": 33
+    },
+    {
+      "observed_before_next_input": "lfz> ",
+      "text_chars": 33
+    },
+    {
+      "observed_before_next_input": "lfz> ",
+      "text_chars": 46
+    }
+  ],
+  "pid": 31124,
+  "reset_kept_error_exit": true
+}

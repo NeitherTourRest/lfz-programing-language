@@ -1,0 +1,8 @@
+{
+  "status": "FAIL",
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "exception": "AssertionError(('repl: \u672a\u77e5\u547d\u4ee4', 'lfz> :unknown\\r\\nrepl: \u93c8\\ue046\u7161\u935b\u6212\u62a4\\nlfz> '))",
+  "exit_at_failure": 259,
+  "diagnostic_wait": 0,
+  "exit_after_diagnostic_input": 2
+}

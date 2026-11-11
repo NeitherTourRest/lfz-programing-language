@@ -1,0 +1,7 @@
+{
+  "expectedExit": 0,
+  "output": "IOError: 只支持 .lfz 脚本文件：'repl'",
+  "actualExit": 2,
+  "binarySha": "5D2219F88DB8B3196CAC259941FC0A8A3B489EF03519BC7E20415F8EDF6388E5",
+  "command": "lfz repl <empty EOF>"
+}

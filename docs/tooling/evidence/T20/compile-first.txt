@@ -1,0 +1,71 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+   Compiling lfz v1.4.0 (D:\XUE\2026fall\Program Design\lfz-programing language design)
+warning: variant `Unsupported` is never constructed
+ --> src\process_control.rs:7:89
+  |
+7 | #[derive(Debug)] pub(crate) enum ProcessFailure {Cancelled,Deadline,Timeout,OutputLimit,Unsupported,Io{operation:String,message:String}}
+  |                                  -------------- variant in this enum                    ^^^^^^^^^^^
+  |
+  = note: `ProcessFailure` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+  = note: `#[warn(dead_code)]` on by default
+
+warning: variant `Unsupported` is never constructed
+ --> src\http_control.rs:6:87
+  |
+6 | #[derive(Debug)] pub(crate) enum HttpFailure{Cancelled,Deadline,Timeout,ResponseLimit,Unsupported,Io{operation:String,message:String}}
+  |                                  ----------- variant in this enum                     ^^^^^^^^^^^
+  |
+  = note: `HttpFailure` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: fields `operation` and `message` are never read
+ --> src\line_reader.rs:5:147
+  |
+5 | ...ize},InvalidUtf8{line:i64},NumberOverflow,NotRegular,Io{operation:String,message:String}}
+  |                                                         -- ^^^^^^^^^        ^^^^^^^
+  |                                                         |
+  |                                                         fields in this variant
+  |
+  = note: `LineReadError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: `lfz` (lib) generated 3 warnings
+warning: method `file` is never used
+  --> tests\cli_t20.rs:10:5
+   |
+ 8 | impl Work {
+   | --------- method in this implementation
+ 9 |  fn new()->Self {let p=PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("Temp/T20-tooling/cli-tests").join(format!("{}-{}",std::process::id...
+10 |  fn file(&self,name:&str,body:&str)->String {let p=self.0.join(name);std::fs::write(&p,format!("#42\n{body}")).unwrap();p.to_str().unwrap...
+   |     ^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: unused import: `std::io::BufRead`
+    --> src\cli.rs:1359:72
+     |
+1359 | fn read_repl_line(remaining:usize)->Result<Option<Vec<u8>>,String>{use std::io::BufRead;let stdin=std::io::stdin();let mut input=stdin.lo...
+     |                                                                        ^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(unused_imports)]` on by default
+
+warning: `lfz` (test "cli_t20") generated 1 warning
+warning: `lfz` (bin "lfz") generated 1 warning (1 duplicate)
+warning: `lfz` (bin "lfz" test) generated 1 warning (run `cargo fix --bin "lfz" --tests` to apply 1 suggestion)
+warning: `lfz` (lib test) generated 2 warnings (2 duplicates)
+    Finished `release` profile [optimized] target(s) in 44.85s
+  Executable unittests src\lib.rs (target\release\deps\lfz-63397fd2d9985014.exe)
+  Executable unittests src\main.rs (target\release\deps\lfz-243aeb8f5c3370f1.exe)
+  Executable tests\cli.rs (target\release\deps\cli-d19dbfa7dd3f9d73.exe)
+  Executable tests\cli_t12.rs (target\release\deps\cli_t12-35b857587ead196a.exe)
+  Executable tests\cli_t14.rs (target\release\deps\cli_t14-b528900585815e19.exe)
+  Executable tests\cli_t16b.rs (target\release\deps\cli_t16b-66b0b355c7f6f4d0.exe)
+  Executable tests\cli_t16c.rs (target\release\deps\cli_t16c-24a3e9d865ee9e42.exe)
+  Executable tests\cli_t17.rs (target\release\deps\cli_t17-2cfc935946fdc938.exe)
+  Executable tests\cli_t18a.rs (target\release\deps\cli_t18a-2b1a6784d688e6c5.exe)
+  Executable tests\cli_t18b.rs (target\release\deps\cli_t18b-4fb747188dc55a23.exe)
+  Executable tests\cli_t20.rs (target\release\deps\cli_t20-be52399e4be58bfb.exe)
+  Executable tests\test_runner.rs (target\release\deps\test_runner-a9d3da191eeb2958.exe)
+  Executable tests\unit\main.rs (target\release\deps\unit-ae562ae83f03ad63.exe)

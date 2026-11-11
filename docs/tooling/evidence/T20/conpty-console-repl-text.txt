@@ -1,0 +1,3 @@
+lfz>1
+1
+lfz> :quit

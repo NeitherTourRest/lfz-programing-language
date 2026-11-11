@@ -1,0 +1,5 @@
+lfz> :unknown
+repl: 鏈煡鍛戒护
+lfz> 1
+1
+lfz> :quit

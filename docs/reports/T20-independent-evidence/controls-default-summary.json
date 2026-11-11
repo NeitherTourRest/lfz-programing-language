@@ -1,0 +1,116 @@
+[
+  {
+    "name": "ref-C01",
+    "exit": 0,
+    "functional": "PASS",
+    "failed": [],
+    "certified": "UNKNOWN"
+  },
+  {
+    "name": "ref-C02",
+    "exit": 0,
+    "functional": "FAIL",
+    "failed": [
+      "check",
+      "quantity0",
+      "quantity-4",
+      "quantity13",
+      "fault"
+    ],
+    "certified": "FAIL"
+  },
+  {
+    "name": "ref-C03",
+    "exit": 0,
+    "functional": "PASS",
+    "failed": [],
+    "certified": "UNKNOWN"
+  },
+  {
+    "name": "ref-C04",
+    "exit": 1,
+    "functional": null,
+    "failed": [],
+    "certified": null
+  },
+  {
+    "name": "C01-bad-cap",
+    "exit": 0,
+    "functional": "FAIL",
+    "failed": [
+      "data8"
+    ],
+    "certified": "FAIL"
+  },
+  {
+    "name": "C01-collect-preload",
+    "exit": 0,
+    "functional": "FAIL",
+    "failed": [
+      "data3",
+      "data10"
+    ],
+    "certified": "FAIL"
+  },
+  {
+    "name": "C02-caller-rate",
+    "exit": 0,
+    "functional": "FAIL",
+    "failed": [
+      "check",
+      "quantity0",
+      "quantity-4",
+      "quantity13",
+      "fault"
+    ],
+    "certified": "FAIL"
+  },
+  {
+    "name": "C02-no-home-update",
+    "exit": 0,
+    "functional": "FAIL",
+    "failed": [
+      "check",
+      "quantity0",
+      "quantity-4",
+      "quantity13",
+      "fault"
+    ],
+    "certified": "FAIL"
+  },
+  {
+    "name": "C03-success-nil-false",
+    "exit": 0,
+    "functional": "FAIL",
+    "failed": [
+      "jobs0",
+      "jobs1",
+      "jobs2",
+      "jobs3"
+    ],
+    "certified": "FAIL"
+  },
+  {
+    "name": "C03-budget-fake-success",
+    "exit": 0,
+    "functional": "FAIL",
+    "failed": [
+      "budget"
+    ],
+    "certified": "FAIL"
+  },
+  {
+    "name": "C04-treat-404-error",
+    "exit": 1,
+    "functional": null,
+    "failed": [],
+    "certified": null
+  },
+  {
+    "name": "C04-wrong-order",
+    "exit": 1,
+    "functional": null,
+    "failed": [],
+    "certified": null
+  }
+]

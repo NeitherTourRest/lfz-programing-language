@@ -1,0 +1,2 @@
+rustc.exe --edition 2021 -C opt-level=2 -C lto=fat -C codegen-units=1 Temp/T20-verifier/host.rs --extern lfz=target/release/liblfz.rlib -L dependency=target/release/deps -o Temp/T20-verifier/host-final.exe
+Normal OS permissions. Build exited 0 with empty compiler output. host-final.exe exited 0, see host-output-final.txt.

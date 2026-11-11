@@ -1,0 +1,1 @@
+{"status": "PASS", "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c", "exit": 0, "events": [{"observed_before_next_input": "CONPTY_CONTROL", "text_chars": 16}], "pid": 30836, "probe": "system cmd console stdout control"}

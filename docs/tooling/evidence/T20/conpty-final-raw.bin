@@ -1,0 +1,8 @@
+[?9001h[?1004h[?25l[2J[m[Hlfz>[1C]0;C:\Windows\System32\cmd.exe[?25hfn f() {
+...> return 17
+...> }
+lfz> f()
+17
+lfz> 1
+[?9001l[?1004l1
+lfz> :quit

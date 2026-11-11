@@ -1,0 +1,8 @@
+{
+  "phase": "REPL36 preparation only, no T20 product run",
+  "script_sha256": "631f5f76dd7e8d168233679b844d2648c7d964cde3dbf307d6719daa9e596e32",
+  "files": {
+    "prepared.json": "a5fa9ea8db34700208e0f2e4b300a5a333bc06d3799624026bd62a8527790bab",
+    "T19-red.json": "8720eba1a9fb5c6e73f8b2841727bb3ef770457cbc570bf8e2d1a15cabd2b9f9"
+  }
+}

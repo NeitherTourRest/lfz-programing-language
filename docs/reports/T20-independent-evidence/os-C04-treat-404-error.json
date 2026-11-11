@@ -1,0 +1,67 @@
+{
+  "task": "C04",
+  "mode": "CONTROL_OR_SEALED_SUBMISSION_VALIDATION",
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "binary_bytes": 1100800,
+  "source_hashes": {
+    "main.lfz": "af9a1931896d063cb0510a7b601dd6be3ad4de12b7930089946a4979edb50292"
+  },
+  "runs": [
+    {
+      "name": "check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C04-treat-404-error\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "disabled",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C04-treat-404-error\\main.lfz",
+        "--",
+        "http://127.0.0.1:56272"
+      ],
+      "exit": 0,
+      "stdout": "[{\"error\":\"ValueError\"},{\"error\":\"ValueError\"},{\"error\":\"ValueError\"},{\"error\":\"ValueError\"},{\"error\":\"ValueError\"}]\n",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "enabled",
+      "args": [
+        "run",
+        "--allow-http",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C04-treat-404-error\\main.lfz",
+        "--",
+        "http://127.0.0.1:56272"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C04-treat-404-error\\main.lfz\", line 11, in <module>\n     } else { rows=push({error:r.error[\"class\"]},rows) }\n                               ^\nTypeError: 运算符 '[]' 不支持 nil 与 array / struct\n",
+      "pass": false,
+      "visits": [
+        "/ok",
+        "/missing"
+      ]
+    }
+  ],
+  "source_axis": "UNKNOWN",
+  "protocol_axis": "UNKNOWN",
+  "server_closed": true,
+  "check_marker_absent": true,
+  "functional_axis": "FAIL",
+  "certified": "FAIL"
+}

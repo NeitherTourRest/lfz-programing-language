@@ -1,0 +1,225 @@
+{
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "binary_bytes": 1100800,
+  "docs": {
+    "docs\\guide\\README.md": "2ad40731980c0c4309c7d9cb634a5f27fc4b260b0e96e57a6bf5e7dda5c7159c",
+    "docs\\guide\\tutorial.md": "c97ffc5717ebfad384b3ccf2d04a6de709fcfda3a9650023ec5285a1b9a9be3c",
+    "docs\\guide\\reference.md": "821961015a324bb653704f473bd08cee6c91b833480003b6fa66cf0bae6c24aa",
+    "docs\\guide\\errors.md": "6a44ac925ab26705e663882beec6b6c40ee6bbdfcfbdcbd6cb8218ff95876a70",
+    "docs\\guide\\testing.md": "c42b5fe57a79bea196a6ea43a84c520f7c12ae20526eb088e9f8b0d8bea72b94",
+    "docs\\guide\\repl.md": "24b74609295a4bd41b1bd8a026a75c73b0cb373a27dde3807588ddd9de565c0c"
+  },
+  "runs": [
+    {
+      "name": "persistent",
+      "args": [
+        "repl"
+      ],
+      "stdin_sha256": "f09911f75bf29be00b50d5bb8df7643a97e19ef561f038c0cc24a77e9910fb9c",
+      "stdin_bytes": 32,
+      "exit": 0,
+      "stdout": "2\n",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "multiline",
+      "args": [
+        "repl"
+      ],
+      "stdin_sha256": "521a324c1c7da6e05ceae2c3a398aa787193b3f00d54d3153f590f63479a6a35",
+      "stdin_bytes": 32,
+      "exit": 0,
+      "stdout": "3\n",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "ifelse",
+      "args": [
+        "repl"
+      ],
+      "stdin_sha256": "edc473ac74dee1e210982e996502404544e9a128dcd82924c2eea7a38ab64fc4",
+      "stdin_bytes": 46,
+      "exit": 0,
+      "stdout": "yes\n",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "partial-effects",
+      "args": [
+        "repl"
+      ],
+      "stdin_sha256": "574a4a5e6ba0cc097d361bac153b3bc86317d60d35a22bb389ad4309c9f34162",
+      "stdin_bytes": 88,
+      "exit": 2,
+      "stdout": "1\ncontinued\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:3>\", line 1, in <module>\n    failLater()\n    ^\n  File \"<repl:2>\", line 3, in failLater\n    1/0\n    ^\nZeroDivisionError: 除以零\n",
+      "pass": true
+    },
+    {
+      "name": "default-source",
+      "args": [
+        "repl"
+      ],
+      "stdin_sha256": "6868fb65fd83f0ea5ae5d3c965905dce3c0e30147f893a86d4f5fd8eccf71b79",
+      "stdin_bytes": 35,
+      "exit": 2,
+      "stdout": "after\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:2>\", line 1, in <module>\n    P{}\n    ^\n  File \"<repl:1>\", line 1, in P::<defaults>\n    struct P{x:1/0}\n               ^\nZeroDivisionError: 除以零\n",
+      "pass": true
+    },
+    {
+      "name": "shared-stdin",
+      "args": [
+        "repl"
+      ],
+      "stdin_sha256": "3199db8cd322d06bfe35847aae688ff74edb966e9c2ddaa59a13c795b3973fee",
+      "stdin_bytes": 39,
+      "exit": 0,
+      "stdout": ":quit\ncontinued\n",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "reset-argv",
+      "args": [
+        "repl",
+        "--",
+        "--json",
+        "hello"
+      ],
+      "stdin_sha256": "b8c4676f4b98130bd3ebf358b2eb9e4b90609f0e9ba3d9c426cc9729a2ab2916",
+      "stdin_bytes": 52,
+      "exit": 2,
+      "stdout": "--json\nhello\n",
+      "stderr": "repl: 未知命令\nTraceback (most recent call last):\n  File \"<repl:2>\", line 1, in <module>\n    x\n    ^\nNameError: 未定义的名字 'x'\n",
+      "pass": true
+    },
+    {
+      "name": "steps",
+      "args": [
+        "repl",
+        "--max-steps",
+        "100"
+      ],
+      "stdin_sha256": "771c73ff25cf3c01840b1c42218c176eefefc4d3ad4d2a6acf52bb681c05ede4",
+      "stdin_bytes": 16,
+      "exit": 2,
+      "stdout": "1\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    while true {}\n          ^\nExecutionLimitError: 执行步数预算已耗尽\n",
+      "pass": true
+    },
+    {
+      "name": "relative-timeout",
+      "args": [
+        "repl",
+        "--timeout-ms",
+        "0"
+      ],
+      "stdin_sha256": "f99aae452ab7944b732a28d415b43d9f11de5368b797f04cda63604581316105",
+      "stdin_bytes": 8,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    1\n    ^\nExecutionLimitError: 执行时间上限已到\n",
+      "pass": true
+    },
+    {
+      "name": "incomplete-eof",
+      "args": [
+        "repl"
+      ],
+      "stdin_sha256": "387fd2895d50b8bc73bd605f9a344fca4eba987151a241043ace0629fb91a15b",
+      "stdin_bytes": 17,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"<repl:1>\", line 2\nSyntaxError: 这里期待 '}'，但得到 '文件末尾'\n",
+      "pass": true
+    },
+    {
+      "name": "empty-eof",
+      "args": [
+        "repl"
+      ],
+      "stdin_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdin_bytes": 0,
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "print-once",
+      "args": [
+        "repl"
+      ],
+      "stdin_sha256": "29d9589a40f83b79ae2710d6a77e433c39fcebff8a2258de1444177b615274db",
+      "stdin_bytes": 18,
+      "exit": 0,
+      "stdout": "once\n1\n2\n",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "json-rejected",
+      "args": [
+        "repl",
+        "--json"
+      ],
+      "stdin_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdin_bytes": 0,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: repl 不支持 --json\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "pass": true
+    },
+    {
+      "name": "import-rejected",
+      "args": [
+        "repl"
+      ],
+      "stdin_sha256": "237b3806835b287b217371e556351f9fb8a795aafea556ab1e2ae48b9933c082",
+      "stdin_bytes": 47,
+      "exit": 2,
+      "stdout": "after\n",
+      "stderr": "  File \"<repl:1>\", line 1\n    import lib from \"./missing.lfz\"\n    ^\nSyntaxError: REPL 暂不支持 import/export\n",
+      "pass": true
+    },
+    {
+      "name": "syntax-continue",
+      "args": [
+        "repl"
+      ],
+      "stdin_sha256": "6feae21559a145bd08b30eeedb27dafc99ed453a427b27e0d5734cc05e23eb95",
+      "stdin_bytes": 21,
+      "exit": 2,
+      "stdout": "after\n",
+      "stderr": "  File \"<repl:1>\", line 1\n    let =\n        ^\nSyntaxError: 这里期待 变量名，但得到 '='\n",
+      "pass": true
+    },
+    {
+      "name": "raw-cap",
+      "args": [
+        "repl"
+      ],
+      "stdin_sha256": "bd70af713466cd8104a38ba2b7d5067b78a76548ea68d6c4f97b9d1759f7816b",
+      "stdin_bytes": 1048593,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "repl: REPL 会话容量超限：cell bytes（上限 1048576）\n",
+      "pass": true
+    }
+  ],
+  "executed": true,
+  "passed": 16,
+  "final_binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "final_docs": {
+    "docs\\guide\\README.md": "2ad40731980c0c4309c7d9cb634a5f27fc4b260b0e96e57a6bf5e7dda5c7159c",
+    "docs\\guide\\tutorial.md": "c97ffc5717ebfad384b3ccf2d04a6de709fcfda3a9650023ec5285a1b9a9be3c",
+    "docs\\guide\\reference.md": "821961015a324bb653704f473bd08cee6c91b833480003b6fa66cf0bae6c24aa",
+    "docs\\guide\\errors.md": "6a44ac925ab26705e663882beec6b6c40ee6bbdfcfbdcbd6cb8218ff95876a70",
+    "docs\\guide\\testing.md": "c42b5fe57a79bea196a6ea43a84c520f7c12ae20526eb088e9f8b0d8bea72b94",
+    "docs\\guide\\repl.md": "24b74609295a4bd41b1bd8a026a75c73b0cb373a27dde3807588ddd9de565c0c"
+  }
+}

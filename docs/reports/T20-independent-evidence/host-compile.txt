@@ -1,0 +1,31 @@
+warn: could not canonicalize path D:\XUE\2026fall\Program Design\lfz-programing language design
+warn: could not canonicalize path D:\XUE\2026fall\Program Design
+warn: could not canonicalize path D:\XUE\2026fall
+warn: could not canonicalize path D:\XUE
+warn: could not canonicalize path D:\
+error: linking with `link.exe` failed: exit code: 1107
+  |
+  = note: "D:\\app\\VS\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe" "/NOLOGO" "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\toolchain\\rustcZyMWje\\symbols.o" "<6 object files omitted>" "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release/liblfz.rlib" "<sysroot>\\lib\\rustlib\\x86_64-pc-windows-msvc\\lib/{libstd-*,libpanic_unwind-*,libwindows_targets-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libunwind-*,libcfg_if-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib" "kernel32.lib" "winhttp.lib" "kernel32.lib" "kernel32.lib" "kernel32.lib" "ntdll.lib" "userenv.lib" "ws2_32.lib" "dbghelp.lib" "/defaultlib:msvcrt" "/NXCOMPAT" "/OUT:Temp/T20-verifier/host.exe" "/OPT:REF,NOICF" "/DEBUG" "/PDBALTPATH:%_PDB%" "/NATVIS:<sysroot>\\lib\\rustlib\\etc\\intrinsic.natvis" "/NATVIS:<sysroot>\\lib\\rustlib\\etc\\liballoc.natvis" "/NATVIS:<sysroot>\\lib\\rustlib\\etc\\libcore.natvis" "/NATVIS:<sysroot>\\lib\\rustlib\\etc\\libstd.natvis"
+  = note: some arguments are omitted. use `--verbose` to show all linker arguments
+  = note: host.host.9b32ad86e3edb04f-cgu.1.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN58_$LT$lfz..value..StructObj$u20$as$u20$core..fmt..Debug$GT$3fmt17h68351169c374b949E，函数 _ZN61_$LT$core..cell..Ref$LT$T$GT$$u20$as$u20$core..fmt..Debug$GT$3fmt17h57b3f4e0312a21eaE 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.2.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN5alloc4sync16Arc$LT$T$C$A$GT$9drop_slow17h53a1bf616306cf0dE，函数 _ZN71_$LT$alloc..sync..Arc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$4drop17h47c2059181eab8b8E 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.2.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN3lfz9evaluator11ReplSession3new17h5abaaada7ea40f19E，函数 _ZN4host4main28_$u7b$$u7b$closure$u7d$$u7d$17he8fe4c42d78288bbE 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.2.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN3lfz9evaluator11ReplSession9eval_cell17hc6f96286002667edE，函数 _ZN4host4main28_$u7b$$u7b$closure$u7d$$u7d$17he8fe4c42d78288bbE 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.2.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN3lfz9evaluator11ReplSession5reset17h4da66f0b55623234E，函数 _ZN4host4main28_$u7b$$u7b$closure$u7d$$u7d$17he8fe4c42d78288bbE 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.4.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN5alloc2rc15Rc$LT$T$C$A$GT$9drop_slow17hbfdc6d89e1ea1a87E，函数 _ZN68_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$4drop17h00500201582c7e12E 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.4.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN5alloc2rc15Rc$LT$T$C$A$GT$9drop_slow17ha72d159f2f09e4a8E，函数 _ZN68_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$4drop17h26048adf3f2ceaa9E 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.4.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN5alloc2rc15Rc$LT$T$C$A$GT$9drop_slow17hb000cf3f097c76ddE，函数 _ZN68_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$4drop17h2f04443e3a017c6fE 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.4.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN5alloc2rc15Rc$LT$T$C$A$GT$9drop_slow17h786252f66daed0eeE，函数 _ZN68_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$4drop17h5d33678687181dffE 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.4.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN5alloc2rc15Rc$LT$T$C$A$GT$9drop_slow17he09f5fa2dd02d835E，函数 _ZN68_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$4drop17h7e44da3bdd8dbebcE 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.4.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN5alloc2rc15Rc$LT$T$C$A$GT$9drop_slow17h21dd0589a9f21405E，函数 _ZN68_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$4drop17h8205ac92a73838b0E 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.4.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN5alloc2rc15Rc$LT$T$C$A$GT$9drop_slow17hb8ea8b3133223a45E，函数 _ZN68_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$4drop17h976a41e2e8eccbafE 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.4.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN5alloc2rc15Rc$LT$T$C$A$GT$9drop_slow17h58a8bd092a0fef3aE，函数 _ZN68_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$4drop17h9c482f4ca741b60cE 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.4.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN5alloc2rc15Rc$LT$T$C$A$GT$9drop_slow17h1b0aa2cdd7fcf1f7E，函数 _ZN68_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$4drop17ha6bbe4e0d5d75c5dE 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.4.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN5alloc2rc15Rc$LT$T$C$A$GT$9drop_slow17h393e17b8711f5dfaE，函数 _ZN68_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$4drop17hd29da93d2b76cb97E 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.4.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN5alloc2rc15Rc$LT$T$C$A$GT$9drop_slow17h340395002c7cd195E，函数 _ZN68_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$4drop17he8640f8b3a325365E 中引用了该符号␍
+          host.host.9b32ad86e3edb04f-cgu.4.rcgu.o : error LNK2019: 无法解析的外部符号 _ZN5alloc2rc15Rc$LT$T$C$A$GT$9drop_slow17h76098977fbdd7a37E，函数 _ZN68_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$4drop17hf5535dad5d182b21E 中引用了该符号␍
+          D:\XUE\2026fall\Program Design\lfz-programing language design\target\release\liblfz.rlib : fatal error LNK1107: 文件无效或损坏: 无法在 0x366038 处读取␍
+          
+
+error: aborting due to 1 previous error
+

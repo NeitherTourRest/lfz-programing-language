@@ -1,0 +1,9 @@
+lfz> fn f() {
+...> return 17
+...> }
+lfz> f()
+17
+lfz> input("data> ")
+data> hello
+hello
+lfz> ti

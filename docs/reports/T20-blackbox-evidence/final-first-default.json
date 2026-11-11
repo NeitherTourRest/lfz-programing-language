@@ -1,0 +1,743 @@
+{
+  "schema": "LFZ-T20-CLI-1",
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "script_sha256": "631f5f76dd7e8d168233679b844d2648c7d964cde3dbf307d6719daa9e596e32",
+  "checks_total": 36,
+  "checks_passed": 34,
+  "rows": [
+    {
+      "name": "feature_red",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\feature_red.stdin",
+      "stdin_sha256": "f99aae452ab7944b732a28d415b43d9f11de5368b797f04cda63604581316105",
+      "stdin_bytes": 8,
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "empty_EOF",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\empty_EOF.stdin",
+      "stdin_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdin_bytes": 0,
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "blank_comments",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\blank_comments.stdin",
+      "stdin_sha256": "84d737f79d20fe87f95c3b9e5019476579a18cac8a0ccd377a3a930ecde801a7",
+      "stdin_bytes": 18,
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "echo_nil_print",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\echo_nil_print.stdin",
+      "stdin_sha256": "f4603755db7467709b812c562630452f559f3db4a2059e06b11e4db8af20997b",
+      "stdin_bytes": 23,
+      "exit": 0,
+      "stdout": "1\nP\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "shared_globals",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\shared_globals.stdin",
+      "stdin_sha256": "e8fb79ff642265a8aa412446999b1134d433e280538bd567391d70ff0113c01b",
+      "stdin_bytes": 21,
+      "exit": 0,
+      "stdout": "2\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": false,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": false
+    },
+    {
+      "name": "multiline_fn",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\multiline_fn.stdin",
+      "stdin_sha256": "1beceacf513a839072c981b0ab8c693ea22e95e9d3b6b1fbaa896ac575a59a1b",
+      "stdin_bytes": 27,
+      "exit": 0,
+      "stdout": "3\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "if_else_same_cell",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\if_else_same_cell.stdin",
+      "stdin_sha256": "00cc80a474b51dfb55a45ffe7e88b2678e0ac3f044bfffe7ac2fb3a9de81bd69",
+      "stdin_bytes": 34,
+      "exit": 0,
+      "stdout": "22\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "else_next_cell",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\else_next_cell.stdin",
+      "stdin_sha256": "7386a0ffed1b74e525cc9f9348e9bd27bc76868f94358d1a82ac395d7e05c4cb",
+      "stdin_bytes": 34,
+      "exit": 2,
+      "stdout": "11\n33\n",
+      "stderr": "  File \"<repl:2>\", line 1\n    else {22}\n    ^\nSyntaxError: 这里期待 表达式，但得到 'else'\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "incomplete_array",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\incomplete_array.stdin",
+      "stdin_sha256": "9f9ac543a28049a6806dd0a93c22168347b02302406fb598feee901ae3f85e3a",
+      "stdin_bytes": 13,
+      "exit": 0,
+      "stdout": "[1, 2]\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "nested_comment",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\nested_comment.stdin",
+      "stdin_sha256": "fcbaa1fe58e42cb4d32c0c0ed2483c502e16377319c4cb4cd74c5c18b7402f29",
+      "stdin_bytes": 26,
+      "exit": 2,
+      "stdout": "8\n",
+      "stderr": "  File \"<repl:1>\", line 1\n    c */\n       ^\nSyntaxError: 这里期待 表达式，但得到 '/'\n",
+      "checks": {
+        "exit": false,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": false,
+        "no_tail_effect": true
+      },
+      "passed": false
+    },
+    {
+      "name": "interpolation",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\interpolation.stdin",
+      "stdin_sha256": "9d66208b99bfdd998b5fc72f471e2dcbf13d72f01ccac93c55732e224c271b1b",
+      "stdin_bytes": 16,
+      "exit": 0,
+      "stdout": "x3\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "bare_string_LF",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\bare_string_LF.stdin",
+      "stdin_sha256": "c70726f04fa9296bc5ef1bee36ef49f7dcba1b9c946c1a6472397ae6b22ccbbd",
+      "stdin_bytes": 16,
+      "exit": 2,
+      "stdout": "9\n",
+      "stderr": "  File \"<repl:1>\", line 1\n    \"broken\n           ^\nSyntaxError: 字符串字面量在此处未闭合\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "fatal_before_open",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\fatal_before_open.stdin",
+      "stdin_sha256": "864c5ab6a2879225d55a501b9a8825be8698f40d6ec870792293cd830fbb790b",
+      "stdin_bytes": 12,
+      "exit": 2,
+      "stdout": "9\n",
+      "stderr": "  File \"<repl:1>\", line 1\n    @ (\n    ^\nSyntaxError: 非法字符 '@'\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "unclosed_comment_EOF",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\unclosed_comment_EOF.stdin",
+      "stdin_sha256": "900ef128af48c57cbd2aebefb271d40d345e9abfe0f23a14f6b9990a0e5c5205",
+      "stdin_bytes": 11,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"<repl:1>\", line 1\n    /* pending\n    ^\nSyntaxError: 块注释在此处未闭合（缺少 '*/'）\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "pending_EOF",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\pending_EOF.stdin",
+      "stdin_sha256": "a3bf3c22925466b91e476caa562208ecda2d103ccdd23d690de807ae2d4f87ba",
+      "stdin_bytes": 10,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"<repl:1>\", line 3\nSyntaxError: 这里期待 '}'，但得到 '文件末尾'\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "error_continue",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\error_continue.stdin",
+      "stdin_sha256": "c9857e054384108770e6844bbb8dbb9d2412b880513b66536d85ea5e668e107d",
+      "stdin_bytes": 12,
+      "exit": 2,
+      "stdout": "7\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    1/0\n    ^\nZeroDivisionError: 除以零\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "effects_once",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\effects_once.stdin",
+      "stdin_sha256": "bd4a0073a28454565c14393c045ac41a6e511077a21ce29c32a294726ba3ef60",
+      "stdin_bytes": 39,
+      "exit": 2,
+      "stdout": "ONCE\nAFTER\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:2>\", line 1, in <module>\n    1/0\n    ^\nZeroDivisionError: 除以零\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "failed_cell_effects",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\failed_cell_effects.stdin",
+      "stdin_sha256": "3525054ba5e43389d93597da5094ab124d62cf31df98f3f8d40e28d0e0c5130f",
+      "stdin_bytes": 36,
+      "exit": 2,
+      "stdout": "3\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:2>\", line 3, in <module>\n    1/0\n    ^\nZeroDivisionError: 除以零\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "old_fn_source",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\old_fn_source.stdin",
+      "stdin_sha256": "7fa4bb25b9f9a637951eaa7d6e9a9707978aa0ae273ef37be46136ad695dbc6b",
+      "stdin_bytes": 28,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:2>\", line 1, in <module>\n    bad()\n    ^\n  File \"<repl:1>\", line 2, in bad\n    1/0\n    ^\nZeroDivisionError: 除以零\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "old_default_source",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\old_default_source.stdin",
+      "stdin_sha256": "208fd466c31e0a0bd0b1673d2fa2c6e2b6ec85332753ed0bf533f4fbdbbe43ec",
+      "stdin_bytes": 26,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:2>\", line 1, in <module>\n    T{}\n    ^\n  File \"<repl:1>\", line 1, in T::<defaults>\n    struct T{x:1/0}\n               ^\nZeroDivisionError: 除以零\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "reset_globals",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\reset_globals.stdin",
+      "stdin_sha256": "48eb8b53fc77531926d7ad40eea0ec8e21223ec8f8415d6ed48000a9f18fa706",
+      "stdin_bytes": 23,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    x\n    ^\nNameError: 未定义的名字 'x'\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "reset_keeps_error_exit",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\reset_keeps_error_exit.stdin",
+      "stdin_sha256": "4b96f236d9cf56398f183563070246b4dccf2415fa90e0197823966706c33076",
+      "stdin_bytes": 19,
+      "exit": 2,
+      "stdout": "2\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    1/0\n    ^\nZeroDivisionError: 除以零\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "unknown_command",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\unknown_command.stdin",
+      "stdin_sha256": "d10f40a47aa93a32c1ed37710c73ab52556e3187335c6f236c623dad3622020c",
+      "stdin_bytes": 14,
+      "exit": 2,
+      "stdout": "3\n",
+      "stderr": "repl: 未知命令\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "pending_command_is_source",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\pending_command_is_source.stdin",
+      "stdin_sha256": "0db09a2b8e4686140855e05597722cc81cac056a5735ff0f627562faead6e172",
+      "stdin_bytes": 22,
+      "exit": 2,
+      "stdout": "8\n",
+      "stderr": "  File \"<repl:1>\", line 2\n    :quit\n    ^\nSyntaxError: 这里期待 表达式，但得到 ':'\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "input_consumes_command",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\input_consumes_command.stdin",
+      "stdin_sha256": "a756f8e1b983f191008e3c3ddf5685894a2501e01b79abe3cd8a271bbe353f3e",
+      "stdin_bytes": 22,
+      "exit": 0,
+      "stdout": ":quit\n4\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "argv_snapshot",
+      "args": [
+        "repl",
+        "--",
+        "--json",
+        "雪"
+      ],
+      "stdin_file": "Temp\\T20-public\\argv_snapshot.stdin",
+      "stdin_sha256": "f47630cab01366a50180e64e4135910d5b69e033474d94478f117bc5a1c13058",
+      "stdin_bytes": 79,
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "process_disabled",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\process_disabled.stdin",
+      "stdin_sha256": "66b48933bf973b2ad0950cc2ecf8473d5b0dd95d1490bb20dd0340035bcaeefc",
+      "stdin_bytes": 35,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    exec([\"C:/missing.exe\"],1,0)\n    ^\nValueError: 子进程能力未启用\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "http_disabled",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\http_disabled.stdin",
+      "stdin_sha256": "3c4407fd547396f3e4d017355827760935229fafb6728e450fe8be640adf463b",
+      "stdin_bytes": 57,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    httpRequest(\"GET\",\"http://127.0.0.1:1/\",[],\"\",1,1)\n    ^\nValueError: HTTP 能力未启用\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "steps_each_cell",
+      "args": [
+        "repl",
+        "--max-steps",
+        "2"
+      ],
+      "stdin_file": "Temp\\T20-public\\steps_each_cell.stdin",
+      "stdin_sha256": "73cad7bb7df636c6d3256216fa3f86a4e8a8e909f14010f9d89f2a9d0093498d",
+      "stdin_bytes": 10,
+      "exit": 0,
+      "stdout": "1\n2\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "resource_continue",
+      "args": [
+        "repl",
+        "--max-steps",
+        "30"
+      ],
+      "stdin_file": "Temp\\T20-public\\resource_continue.stdin",
+      "stdin_sha256": "003c643dc05ce53051f6319f2a74727f3dfbf31ae54a3c15e81537fa29794e7c",
+      "stdin_bytes": 22,
+      "exit": 2,
+      "stdout": "1\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    while true {}\n          ^\nExecutionLimitError: 执行步数预算已耗尽\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "timeout_each_cell",
+      "args": [
+        "repl",
+        "--timeout-ms",
+        "1000"
+      ],
+      "stdin_file": "Temp\\T20-public\\timeout_each_cell.stdin",
+      "stdin_sha256": "73cad7bb7df636c6d3256216fa3f86a4e8a8e909f14010f9d89f2a9d0093498d",
+      "stdin_bytes": 10,
+      "exit": 0,
+      "stdout": "1\n2\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "zero_timeout",
+      "args": [
+        "repl",
+        "--timeout-ms",
+        "0"
+      ],
+      "stdin_file": "Temp\\T20-public\\zero_timeout.stdin",
+      "stdin_sha256": "73cad7bb7df636c6d3256216fa3f86a4e8a8e909f14010f9d89f2a9d0093498d",
+      "stdin_bytes": 10,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    1\n    ^\nExecutionLimitError: 执行时间上限已到\nTraceback (most recent call last):\n  File \"<repl:2>\", line 1, in <module>\n    2\n    ^\nExecutionLimitError: 执行时间上限已到\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "json_rejected",
+      "args": [
+        "repl",
+        "--json"
+      ],
+      "stdin_file": "Temp\\T20-public\\json_rejected.stdin",
+      "stdin_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdin_bytes": 0,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "lfz: repl 不支持 --json\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "modules_preflight",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\modules_preflight.stdin",
+      "stdin_sha256": "6065d72cd0ea730b7e75adb1ed3557e728f98012875e4090d85c4ecc16b06c74",
+      "stdin_bytes": 40,
+      "exit": 2,
+      "stdout": "BAD\n",
+      "stderr": "  File \"<repl:2>\", line 1\n    export x\n    ^\nSyntaxError: REPL 暂不支持 import/export\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "pending_capacity",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\pending_capacity.stdin",
+      "stdin_sha256": "314341b64c118e70780f1d5bb2868a48e55b2a036f8fedf35fe737922898b3da",
+      "stdin_bytes": 1048606,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "repl: REPL 会话容量超限：cell bytes（上限 1048576）\n",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    },
+    {
+      "name": "help_idle",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\help_idle.stdin",
+      "stdin_sha256": "1a8de991892d79631bc601646c76782db15611c0cd4196fa5a876ee5fae9d62e",
+      "stdin_bytes": 12,
+      "exit": 0,
+      "stdout": "命令: :help :reset :quit\n多行未完成时继续读取；完整输入立即执行。if 的 } 与 else 须在同一物理行。\ninput() 消费同一stdin下一物理行；限额按cell重新计，能力和argv按session固定。\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "pipe_no_prompt": true,
+        "stdout": true,
+        "stderr": true,
+        "no_tail_effect": true
+      },
+      "passed": true
+    }
+  ],
+  "scope": "public pipe REPL, host safety limits and TTY separately attributed",
+  "timestamp_utc": "2026-11-03T23:51:51.085365+00:00"
+}

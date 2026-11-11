@@ -1,0 +1,87 @@
+{
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "author_evidence_only": true,
+  "human": {
+    "pass_count": 16,
+    "docs": {
+      "docs\\guide\\README.md": "2ad40731980c0c4309c7d9cb634a5f27fc4b260b0e96e57a6bf5e7dda5c7159c",
+      "docs\\guide\\tutorial.md": "c97ffc5717ebfad384b3ccf2d04a6de709fcfda3a9650023ec5285a1b9a9be3c",
+      "docs\\guide\\reference.md": "821961015a324bb653704f473bd08cee6c91b833480003b6fa66cf0bae6c24aa",
+      "docs\\guide\\errors.md": "6a44ac925ab26705e663882beec6b6c40ee6bbdfcfbdcbd6cb8218ff95876a70",
+      "docs\\guide\\testing.md": "c42b5fe57a79bea196a6ea43a84c520f7c12ae20526eb088e9f8b0d8bea72b94",
+      "docs\\guide\\repl.md": "24b74609295a4bd41b1bd8a026a75c73b0cb373a27dde3807588ddd9de565c0c"
+    },
+    "sha256": "594c29d68b612aef7a94f350700266271cd4fc8fe67e2fd36925da9009f5365a"
+  },
+  "ai": {
+    "pass_count": 8,
+    "docs": {
+      ".opencode/skills/lfz-programming/SKILL.md": "025bb99f7aea277d50d0ce5131ca2f283d6392fe52a34e9ac2d30ec62688d5d8",
+      ".opencode/skills/lfz-programming/README.md": "ea77dc84fda416aa80887e4a678882b0da0143fd8c22875ad838e5490f5dd76e",
+      ".opencode/skills/lfz-programming/VERIFICATION.md": "dc603553af76653ff35dfd5ff00336bb3e0bda1a538667a8aea6db182d9bed81",
+      ".opencode/skills/lfz-programming/prompt-template.md": "8b2e0e846b781b763ba5212bf56b7f0cbd1482530e78b807984098c14c9ba728",
+      "docs/guide/ai/README.md": "bdf2722c3a6e1edbe6d24870bcd0e2f07687166861533ac9c95e19c9887e8363"
+    },
+    "sha256": "b911c5087c596fd5acab42c694872914be0f9514b1213602f03b7ddc14ef0495"
+  },
+  "app": {
+    "pass_count": 6,
+    "sha256": "2c6af9698882633e1b896a3fe6fe08e2536f5cfe8ba3508673817bb923d30ccc"
+  },
+  "source_hashes": {
+    "src/ast.rs": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076",
+    "src/builtins.rs": "e05d74d076cb33928e17a7a07944db15c789a9455da67a58f056c5ce93f97a6d",
+    "src/cli.rs": "368d06106e4799066ed4785072b11d7d2c09135ca34c2393bce91ffcd8eef26d",
+    "src/env.rs": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc",
+    "src/error.rs": "6081094b0c8e23e2f362d07e7401ce04ecebcbc359f6526b7feb16d01271c44f",
+    "src/evaluator.rs": "049ff34af33bd90effebf1abaa9aa4be9fa2fffc7f06b2b862cf9d70c5ef96cf",
+    "src/http_control/windows.rs": "0a525c7476dbf9d086b2f58e37cf18c31f02d3856766fe1ad4abe5e13e2c4a78",
+    "src/http_control.rs": "3a2373b1422d1e845dfc188b53b2e7036af3725d22c156650ab1a6c34f09a4a2",
+    "src/json.rs": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f",
+    "src/json_codec.rs": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2",
+    "src/lexer.rs": "429fa13206e6fe85956abe494681df42e0468698cf8cbc5fccfcce6468e92fa2",
+    "src/lib.rs": "171cc87701114aeae7b7f6db09035aec75a74710b6e08ca1bc3a07f25a45f95e",
+    "src/line_reader.rs": "7ab61997386a7e71b4fe90d62235500bce5cf20fe6a063619b70d3dbfa2a9b15",
+    "src/loader.rs": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f",
+    "src/main.rs": "fa68e1cec6c8abbd5bfa84736c4b35ce94cadbaca62bdabec1d2fc91f4694188",
+    "src/modules.rs": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895",
+    "src/parser.rs": "b3ad0318f0175514007ca73b33887a2cf3123b2e036c713dab282254d416e2b8",
+    "src/process_control/fixture.rs": "0c09739e3327414281a5e89d5ad59dc5ec8356d1c6bbe9428dddcf9829f2b0a9",
+    "src/process_control/windows.rs": "540d14c697dcd84e2a9ba6a0f2415b24509335206617ad939c7318e0a8e76a09",
+    "src/process_control.rs": "e8cfcc7e54d7f2fb24f9d979d6f27d79bfcb20afaa7864326b7d49f13dab0442",
+    "src/source.rs": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468",
+    "src/span.rs": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2",
+    "src/test_runner.rs": "a314790d88d4296e2cb953c7b1a565f83e4f3f2f6bec543216fe70c024f2400c",
+    "src/value.rs": "63967cb79996c7fedfe7285378e58c2774825c73680a81e50c12a185bbe438a0",
+    "tests/cli.rs": "a507dc3674df02f8162d1bfd80c87a7dc2373559ab628168944d3621eaead23b",
+    "tests/cli_t12.rs": "c9e4edf50c1fd3a248ba3f5f2e7c44ac04188a51d828a92dd3ba44aa03cbc24a",
+    "tests/cli_t14.rs": "112d628fa2db83ce1a506338f20469fa99bc0dc06e916ce6787c442ee1ce2065",
+    "tests/cli_t16b.rs": "8a384d95e25e92337d0d749664481cb9e32cbb6b1d6839b4efc0c9c006635a3a",
+    "tests/cli_t16c.rs": "cc003077c212c407ccdd2c59e5c6c603a3f17a82cb7ff5a4ef8942529e9d953d",
+    "tests/cli_t17.rs": "141cb54376124b4317723824972ee21ac8c10fdb2ef9a68ef967ba076fcf25f5",
+    "tests/cli_t18a.rs": "faa29e2cc5e413b7a10da9c5302bb82b37ebceb395058ff7a1096810bd56d257",
+    "tests/cli_t18b.rs": "fa95063bd7b3dd7e1cbba0457368f7a3a8bd707aa8af5723d4d9189bf295b036",
+    "tests/cli_t20.rs": "a298e0c0ece45473765581255ce66097d6610a54dda0cbab92a7dae646d0c9da",
+    "tests/test_runner.rs": "c07c297aab45f8b44b85df5caed8acd855c29735a3c9dcfd99aa2820c94ada4f",
+    "tests/unit/ast_depth.rs": "6a7dcd7a88e5d7d7d1e5b16d688db2f4b77da57b165c3fecdc7d7575c41a3ee5",
+    "tests/unit/main.rs": "9a651c048ee0f94820ec21b115ebae6f5cb99ad9dc5f5b57df462e1cf4f1fa78",
+    "tests/unit/nesting_depth.rs": "6ac0aa556ab1f9669f53435de863e8d1e96e2c0e5483e475a7d4043ac70428a1",
+    "Cargo.toml": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c",
+    "Cargo.lock": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4"
+  },
+  "harness_sha256": {
+    "lfz-63397fd2d9985014.exe": "b68942ea41707b1300d4e5807dc0e7c68e6b58717f6913ec4c2a33f533174e1d",
+    "lfz-243aeb8f5c3370f1.exe": "824c6208fff83d3f85d8712e523b0b32561f1ec93ae4b3a399e0b926688e5970",
+    "cli-d19dbfa7dd3f9d73.exe": "43cd30eae27f5ca4437a554f62f4b4738e6055f135a66c0f1638ff825d7c25f6",
+    "cli_t12-35b857587ead196a.exe": "2bb04cbbbc476cf5f3dd60a265916e7b7c1ed46820d0cf35b6d3b4d3964d2e3f",
+    "cli_t14-b528900585815e19.exe": "3c83105406c3c3fd4e621a9905505fe6d0cd4cee8ce1364a73a36052b656e48f",
+    "cli_t16b-66b0b355c7f6f4d0.exe": "e08a9bb751e5f0cfd5b551159b4d388a9356dd8d48bdaeb8b92932586ee9a690",
+    "cli_t16c-24a3e9d865ee9e42.exe": "47f776baa3698508ad9437617e368d1a69d250b2c9ce1984b81ccaabed6f5b16",
+    "cli_t17-2cfc935946fdc938.exe": "e5ed33c5c9fe542e173b4ae649b8770a213689ebe44e6b82891fb3fdb271b3a1",
+    "cli_t18a-2b1a6784d688e6c5.exe": "a5a96e7ae142d7b17367d2f6876c04a07e9fc613bf4bae91c40e437c05729d3f",
+    "cli_t18b-4fb747188dc55a23.exe": "4bdb4085a4b41a910cd023cb8c1212c79d73175da43467988ba72b6ef012d58d",
+    "cli_t20-be52399e4be58bfb.exe": "d957375b52db92d28d828bb977ff1e3e45ff26572491d5374818a3beebf96ae7",
+    "test_runner-a9d3da191eeb2958.exe": "de6fe772a9e8518d35f72789196657420788f2ae394f99862d22b274451394f2",
+    "unit-ae562ae83f03ad63.exe": "64aa63ca1306cf46ca71f1b9da30a0e84fa3c19a1a12e60145826e87969f801f"
+  }
+}

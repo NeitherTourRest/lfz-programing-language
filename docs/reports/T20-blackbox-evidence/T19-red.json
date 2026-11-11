@@ -1,0 +1,31 @@
+{
+  "schema": "LFZ-T20-CLI-1",
+  "binary_sha256": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5",
+  "script_sha256": "631f5f76dd7e8d168233679b844d2648c7d964cde3dbf307d6719daa9e596e32",
+  "checks_total": 1,
+  "checks_passed": 0,
+  "rows": [
+    {
+      "name": "feature_red",
+      "args": [
+        "repl"
+      ],
+      "stdin_file": "Temp\\T20-public\\feature_red.stdin",
+      "stdin_sha256": "f99aae452ab7944b732a28d415b43d9f11de5368b797f04cda63604581316105",
+      "stdin_bytes": 8,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'repl'\n",
+      "checks": {
+        "exit": false,
+        "pipe_no_prompt": true,
+        "stdout": false,
+        "stderr": false,
+        "no_tail_effect": true
+      },
+      "passed": false
+    }
+  ],
+  "scope": "public pipe REPL, host safety limits and TTY separately attributed",
+  "timestamp_utc": "2026-11-03T23:35:19.852538+00:00"
+}

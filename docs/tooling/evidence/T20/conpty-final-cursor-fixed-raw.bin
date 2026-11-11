@@ -1,0 +1,9 @@
+[?9001h[?1004h[?25l[2J[m[Hlfz>[1C]0;C:\Windows\System32\cmd.exe[?25hfn f() {
+...> return 17
+...> }
+lfz> f()
+17
+lfz> input("data> ")
+data> hello
+hello
+lfz> [?9001l[?1004lti[2;4H

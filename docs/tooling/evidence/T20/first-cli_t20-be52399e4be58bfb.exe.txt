@@ -1,0 +1,31 @@
+
+running 7 tests
+test input_consumes_shared_stdin_data_including_meta_command ... ok
+test multiline_eof_and_incomplete_errors_continue ... FAILED
+test old_source_caret_and_per_cell_limits ... ok
+test persistent_bindings_closure_and_side_effects_once ... FAILED
+test raw_cell_cap_stops_before_tail_effect ... ok
+test reset_preserves_failure_history_and_argv ... ok
+test usage_and_pipe_no_prompt ... ok
+
+failures:
+
+failures:
+    multiline_eof_and_incomplete_errors_continue
+    persistent_bindings_closure_and_side_effects_once
+
+test result: FAILED. 5 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.37s
+
+
+thread 'multiline_eof_and_incomplete_errors_continue' panicked at tests\cli_t20.rs:15:372:
+Traceback (most recent call last):
+SyntaxError: 这里期待 变量名，但得到 '='
+Traceback (most recent call last):
+SyntaxError: 这里期待 '}'，但得到 '文件末尾'
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'persistent_bindings_closure_and_side_effects_once' panicked at tests\cli_t20.rs:14:359:
+assertion `left == right` failed
+  left: 2
+ right: 3

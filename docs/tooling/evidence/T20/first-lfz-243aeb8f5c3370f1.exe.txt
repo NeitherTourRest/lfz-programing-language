@@ -1,0 +1,7 @@
+
+running 2 tests
+test cli::t20_frontend_tests::bounded_input_exact_limit_and_unconsumed_tail ... ok
+test cli::t20_frontend_tests::same_writers_and_interactive_prompts_follow_pending ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 56 filtered out; finished in 0.00s
+

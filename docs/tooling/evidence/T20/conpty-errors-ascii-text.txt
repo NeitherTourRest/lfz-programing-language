@@ -1,0 +1,4 @@
+lfz> :unknown
+repl: 鏈煡鍛戒护
+lfz> :reset
+lfz> :quit

@@ -1,0 +1,938 @@
+{
+  "task": "C01",
+  "mode": "CONTROL_OR_SEALED_SUBMISSION_VALIDATION",
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "binary_bytes": 1100800,
+  "source_hashes": {
+    "main.lfz": "a85dbb5aa5fbaaac3f5f13c6a5d8e8a872e4d82c79e0b7bde9be40c424fef575"
+  },
+  "runs": [
+    {
+      "name": "check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "data0",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\out.jsonl"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":0,\"rejected\":0,\"sum\":0}\n",
+      "stderr": "",
+      "pass": true,
+      "output_rows": []
+    },
+    {
+      "name": "data1",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\out.jsonl"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":2,\"rejected\":2,\"sum\":-1}\n",
+      "stderr": "",
+      "pass": true,
+      "output_rows": [
+        {
+          "account": "雪",
+          "delta": 2,
+          "lineNo": 1
+        },
+        {
+          "account": "x",
+          "delta": -3,
+          "lineNo": 4
+        }
+      ]
+    },
+    {
+      "name": "data2",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\out.jsonl"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":0,\"rejected\":4,\"sum\":0}\n",
+      "stderr": "",
+      "pass": true,
+      "output_rows": []
+    },
+    {
+      "name": "data3",
+      "args": [
+        "run",
+        "--json",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\out.jsonl"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"无法读取：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\source-C01-collect-preload\\\\input.jsonl（不是合法的 UTF-8 编码）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\source-C01-collect-preload\\\\main.lfz\",\"line\":3,\"col\":15,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\source-C01-collect-preload\\\\main.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "pass": false,
+      "output_error": "JSONDecodeError('Expecting value: line 1 column 1 (char 0)')"
+    },
+    {
+      "name": "data4",
+      "args": [
+        "run",
+        "--json",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\out.jsonl"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行超过逐行字节上限 4096\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\source-C01-collect-preload\\\\main.lfz\",\"line\":33,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\source-C01-collect-preload\\\\main.lfz\",\"line\":33,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "pass": true,
+      "committed_rows": []
+    },
+    {
+      "name": "data5",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\out.jsonl"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":1,\"rejected\":0,\"sum\":1}\n",
+      "stderr": "",
+      "pass": true,
+      "output_rows": [
+        {
+          "account": "a",
+          "delta": 1,
+          "lineNo": 1
+        }
+      ]
+    },
+    {
+      "name": "data6",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\out.jsonl"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":33,\"rejected\":0,\"sum\":-132}\n",
+      "stderr": "",
+      "pass": true,
+      "output_rows": [
+        {
+          "account": "a",
+          "delta": -20,
+          "lineNo": 1
+        },
+        {
+          "account": "a",
+          "delta": -19,
+          "lineNo": 2
+        },
+        {
+          "account": "a",
+          "delta": -18,
+          "lineNo": 3
+        },
+        {
+          "account": "a",
+          "delta": -17,
+          "lineNo": 4
+        },
+        {
+          "account": "a",
+          "delta": -16,
+          "lineNo": 5
+        },
+        {
+          "account": "a",
+          "delta": -15,
+          "lineNo": 6
+        },
+        {
+          "account": "a",
+          "delta": -14,
+          "lineNo": 7
+        },
+        {
+          "account": "a",
+          "delta": -13,
+          "lineNo": 8
+        },
+        {
+          "account": "a",
+          "delta": -12,
+          "lineNo": 9
+        },
+        {
+          "account": "a",
+          "delta": -11,
+          "lineNo": 10
+        },
+        {
+          "account": "a",
+          "delta": -10,
+          "lineNo": 11
+        },
+        {
+          "account": "a",
+          "delta": -9,
+          "lineNo": 12
+        },
+        {
+          "account": "a",
+          "delta": -8,
+          "lineNo": 13
+        },
+        {
+          "account": "a",
+          "delta": -7,
+          "lineNo": 14
+        },
+        {
+          "account": "a",
+          "delta": -6,
+          "lineNo": 15
+        },
+        {
+          "account": "a",
+          "delta": -5,
+          "lineNo": 16
+        },
+        {
+          "account": "a",
+          "delta": -4,
+          "lineNo": 17
+        },
+        {
+          "account": "a",
+          "delta": -3,
+          "lineNo": 18
+        },
+        {
+          "account": "a",
+          "delta": -2,
+          "lineNo": 19
+        },
+        {
+          "account": "a",
+          "delta": -1,
+          "lineNo": 20
+        },
+        {
+          "account": "a",
+          "delta": 0,
+          "lineNo": 21
+        },
+        {
+          "account": "a",
+          "delta": 1,
+          "lineNo": 22
+        },
+        {
+          "account": "a",
+          "delta": 2,
+          "lineNo": 23
+        },
+        {
+          "account": "a",
+          "delta": 3,
+          "lineNo": 24
+        },
+        {
+          "account": "a",
+          "delta": 4,
+          "lineNo": 25
+        },
+        {
+          "account": "a",
+          "delta": 5,
+          "lineNo": 26
+        },
+        {
+          "account": "a",
+          "delta": 6,
+          "lineNo": 27
+        },
+        {
+          "account": "a",
+          "delta": 7,
+          "lineNo": 28
+        },
+        {
+          "account": "a",
+          "delta": 8,
+          "lineNo": 29
+        },
+        {
+          "account": "a",
+          "delta": 9,
+          "lineNo": 30
+        },
+        {
+          "account": "a",
+          "delta": 10,
+          "lineNo": 31
+        },
+        {
+          "account": "a",
+          "delta": 11,
+          "lineNo": 32
+        },
+        {
+          "account": "a",
+          "delta": 12,
+          "lineNo": 33
+        }
+      ]
+    },
+    {
+      "name": "data7",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\out.jsonl"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":65,\"rejected\":0,\"sum\":780}\n",
+      "stderr": "",
+      "pass": true,
+      "output_rows": [
+        {
+          "account": "a",
+          "delta": -20,
+          "lineNo": 1
+        },
+        {
+          "account": "a",
+          "delta": -19,
+          "lineNo": 2
+        },
+        {
+          "account": "a",
+          "delta": -18,
+          "lineNo": 3
+        },
+        {
+          "account": "a",
+          "delta": -17,
+          "lineNo": 4
+        },
+        {
+          "account": "a",
+          "delta": -16,
+          "lineNo": 5
+        },
+        {
+          "account": "a",
+          "delta": -15,
+          "lineNo": 6
+        },
+        {
+          "account": "a",
+          "delta": -14,
+          "lineNo": 7
+        },
+        {
+          "account": "a",
+          "delta": -13,
+          "lineNo": 8
+        },
+        {
+          "account": "a",
+          "delta": -12,
+          "lineNo": 9
+        },
+        {
+          "account": "a",
+          "delta": -11,
+          "lineNo": 10
+        },
+        {
+          "account": "a",
+          "delta": -10,
+          "lineNo": 11
+        },
+        {
+          "account": "a",
+          "delta": -9,
+          "lineNo": 12
+        },
+        {
+          "account": "a",
+          "delta": -8,
+          "lineNo": 13
+        },
+        {
+          "account": "a",
+          "delta": -7,
+          "lineNo": 14
+        },
+        {
+          "account": "a",
+          "delta": -6,
+          "lineNo": 15
+        },
+        {
+          "account": "a",
+          "delta": -5,
+          "lineNo": 16
+        },
+        {
+          "account": "a",
+          "delta": -4,
+          "lineNo": 17
+        },
+        {
+          "account": "a",
+          "delta": -3,
+          "lineNo": 18
+        },
+        {
+          "account": "a",
+          "delta": -2,
+          "lineNo": 19
+        },
+        {
+          "account": "a",
+          "delta": -1,
+          "lineNo": 20
+        },
+        {
+          "account": "a",
+          "delta": 0,
+          "lineNo": 21
+        },
+        {
+          "account": "a",
+          "delta": 1,
+          "lineNo": 22
+        },
+        {
+          "account": "a",
+          "delta": 2,
+          "lineNo": 23
+        },
+        {
+          "account": "a",
+          "delta": 3,
+          "lineNo": 24
+        },
+        {
+          "account": "a",
+          "delta": 4,
+          "lineNo": 25
+        },
+        {
+          "account": "a",
+          "delta": 5,
+          "lineNo": 26
+        },
+        {
+          "account": "a",
+          "delta": 6,
+          "lineNo": 27
+        },
+        {
+          "account": "a",
+          "delta": 7,
+          "lineNo": 28
+        },
+        {
+          "account": "a",
+          "delta": 8,
+          "lineNo": 29
+        },
+        {
+          "account": "a",
+          "delta": 9,
+          "lineNo": 30
+        },
+        {
+          "account": "a",
+          "delta": 10,
+          "lineNo": 31
+        },
+        {
+          "account": "a",
+          "delta": 11,
+          "lineNo": 32
+        },
+        {
+          "account": "a",
+          "delta": 12,
+          "lineNo": 33
+        },
+        {
+          "account": "a",
+          "delta": 13,
+          "lineNo": 34
+        },
+        {
+          "account": "a",
+          "delta": 14,
+          "lineNo": 35
+        },
+        {
+          "account": "a",
+          "delta": 15,
+          "lineNo": 36
+        },
+        {
+          "account": "a",
+          "delta": 16,
+          "lineNo": 37
+        },
+        {
+          "account": "a",
+          "delta": 17,
+          "lineNo": 38
+        },
+        {
+          "account": "a",
+          "delta": 18,
+          "lineNo": 39
+        },
+        {
+          "account": "a",
+          "delta": 19,
+          "lineNo": 40
+        },
+        {
+          "account": "a",
+          "delta": 20,
+          "lineNo": 41
+        },
+        {
+          "account": "a",
+          "delta": 21,
+          "lineNo": 42
+        },
+        {
+          "account": "a",
+          "delta": 22,
+          "lineNo": 43
+        },
+        {
+          "account": "a",
+          "delta": 23,
+          "lineNo": 44
+        },
+        {
+          "account": "a",
+          "delta": 24,
+          "lineNo": 45
+        },
+        {
+          "account": "a",
+          "delta": 25,
+          "lineNo": 46
+        },
+        {
+          "account": "a",
+          "delta": 26,
+          "lineNo": 47
+        },
+        {
+          "account": "a",
+          "delta": 27,
+          "lineNo": 48
+        },
+        {
+          "account": "a",
+          "delta": 28,
+          "lineNo": 49
+        },
+        {
+          "account": "a",
+          "delta": 29,
+          "lineNo": 50
+        },
+        {
+          "account": "a",
+          "delta": 30,
+          "lineNo": 51
+        },
+        {
+          "account": "a",
+          "delta": 31,
+          "lineNo": 52
+        },
+        {
+          "account": "a",
+          "delta": 32,
+          "lineNo": 53
+        },
+        {
+          "account": "a",
+          "delta": 33,
+          "lineNo": 54
+        },
+        {
+          "account": "a",
+          "delta": 34,
+          "lineNo": 55
+        },
+        {
+          "account": "a",
+          "delta": 35,
+          "lineNo": 56
+        },
+        {
+          "account": "a",
+          "delta": 36,
+          "lineNo": 57
+        },
+        {
+          "account": "a",
+          "delta": 37,
+          "lineNo": 58
+        },
+        {
+          "account": "a",
+          "delta": 38,
+          "lineNo": 59
+        },
+        {
+          "account": "a",
+          "delta": 39,
+          "lineNo": 60
+        },
+        {
+          "account": "a",
+          "delta": 40,
+          "lineNo": 61
+        },
+        {
+          "account": "a",
+          "delta": 41,
+          "lineNo": 62
+        },
+        {
+          "account": "a",
+          "delta": 42,
+          "lineNo": 63
+        },
+        {
+          "account": "a",
+          "delta": 43,
+          "lineNo": 64
+        },
+        {
+          "account": "a",
+          "delta": 44,
+          "lineNo": 65
+        }
+      ]
+    },
+    {
+      "name": "data8",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\out.jsonl"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":1,\"rejected\":0,\"sum\":1}\n",
+      "stderr": "",
+      "pass": true,
+      "output_rows": [
+        {
+          "account": "cap",
+          "delta": 1,
+          "lineNo": 1
+        }
+      ]
+    },
+    {
+      "name": "data9",
+      "args": [
+        "run",
+        "--json",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\out.jsonl"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行超过逐行字节上限 4096\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\source-C01-collect-preload\\\\main.lfz\",\"line\":33,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\source-C01-collect-preload\\\\main.lfz\",\"line\":33,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "pass": true,
+      "committed_rows": []
+    },
+    {
+      "name": "data10",
+      "args": [
+        "run",
+        "--json",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\out.jsonl"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"无法读取：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\source-C01-collect-preload\\\\input.jsonl（不是合法的 UTF-8 编码）\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\source-C01-collect-preload\\\\main.lfz\",\"line\":3,\"col\":15,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\source-C01-collect-preload\\\\main.lfz\",\"line\":3,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "pass": false,
+      "output_error": "JSONDecodeError('Expecting value: line 1 column 1 (char 0)')"
+    },
+    {
+      "name": "data11",
+      "args": [
+        "run",
+        "--json",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\input.jsonl",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\source-C01-collect-preload\\out.jsonl"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 34 行超过逐行字节上限 4096\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\source-C01-collect-preload\\\\main.lfz\",\"line\":33,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\source-C01-collect-preload\\\\main.lfz\",\"line\":33,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "pass": true,
+      "committed_rows": [
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 1
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 2
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 3
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 4
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 5
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 6
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 7
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 8
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 9
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 10
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 11
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 12
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 13
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 14
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 15
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 16
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 17
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 18
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 19
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 20
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 21
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 22
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 23
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 24
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 25
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 26
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 27
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 28
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 29
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 30
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 31
+        },
+        {
+          "account": "keep",
+          "delta": 1,
+          "lineNo": 32
+        }
+      ]
+    }
+  ],
+  "source_axis": "FAIL",
+  "protocol_axis": "UNKNOWN",
+  "server_closed": null,
+  "check_marker_absent": true,
+  "functional_axis": "FAIL",
+  "source_axis_record_sha256": "f206dc12b01a7585c47a6d5896c7b186fc03140ee25da93c7cad9b8b234ae1be",
+  "certified": "FAIL"
+}

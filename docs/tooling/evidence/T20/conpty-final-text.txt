@@ -1,0 +1,8 @@
+lfz> fn f() {
+...> return 17
+...> }
+lfz> f()
+17
+lfz> 1
+1
+lfz> :quit

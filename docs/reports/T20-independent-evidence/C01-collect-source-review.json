@@ -1,0 +1,11 @@
+{
+  "task": "C01",
+  "reviewer": "verifier_t20",
+  "source_hashes": {
+    "main.lfz": "a85dbb5aa5fbaaac3f5f13c6a5d8e8a872e4d82c79e0b7bde9be40c424fef575"
+  },
+  "verdict": "FAIL",
+  "violations": [
+    "第3行 readFile(args[0]) 在 forEachLine 前全读输入，违反逐行读取限制"
+  ]
+}

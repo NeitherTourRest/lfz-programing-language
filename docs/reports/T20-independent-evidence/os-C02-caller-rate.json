@@ -1,0 +1,110 @@
+{
+  "task": "C02",
+  "mode": "CONTROL_OR_SEALED_SUBMISSION_VALIDATION",
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "binary_bytes": 1100800,
+  "source_hashes": {
+    "main.lfz": "ff7f6ec38bae38abc0d8dcba9535692f8f40847691ad266de4e60177bab61c9c",
+    "lib\\rates.lfz": "98c65250f5bdee7c89aa1fae8180ad0c2250d5a8801b1a9308b5e6b2b0bb182f",
+    "lib\\view.lfz": "0653a4856d2f393efabb8478a28d7422e1b053a1269050cd0829f18114fc5493"
+  },
+  "runs": [
+    {
+      "name": "check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C02-caller-rate\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "quantity0",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C02-caller-rate\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C02-caller-rate\\marker.txt",
+        "0",
+        "--allow-http=数据"
+      ],
+      "exit": 0,
+      "stdout": "{\"a\":0,\"args\":[\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\os-C02-caller-rate\\\\marker.txt\",\"0\",\"--allow-http=数据\"],\"b\":1800,\"c\":33,\"history\":[0,1800,33],\"snapshot\":99}\n",
+      "stderr": "",
+      "pass": false,
+      "marker": "I"
+    },
+    {
+      "name": "quantity-4",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C02-caller-rate\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C02-caller-rate\\marker.txt",
+        "-4",
+        "--allow-http=数据"
+      ],
+      "exit": 0,
+      "stdout": "{\"a\":-3600,\"args\":[\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\os-C02-caller-rate\\\\marker.txt\",\"-4\",\"--allow-http=数据\"],\"b\":1800,\"c\":33,\"history\":[-3600,1800,33],\"snapshot\":99}\n",
+      "stderr": "",
+      "pass": false,
+      "marker": "I"
+    },
+    {
+      "name": "quantity13",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C02-caller-rate\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C02-caller-rate\\marker.txt",
+        "13",
+        "--allow-http=数据"
+      ],
+      "exit": 0,
+      "stdout": "{\"a\":11700,\"args\":[\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\os-C02-caller-rate\\\\marker.txt\",\"13\",\"--allow-http=数据\"],\"b\":1800,\"c\":33,\"history\":[11700,1800,33],\"snapshot\":99}\n",
+      "stderr": "",
+      "pass": false,
+      "marker": "I"
+    },
+    {
+      "name": "fault",
+      "args": [
+        "run",
+        "--json",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C02-caller-rate\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\os-C02-caller-rate\\marker.txt",
+        "fault",
+        "中文"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"AssertionError\",\"message\":\"rate-fault\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\os-C02-caller-rate\\\\lib\\\\rates.lfz\",\"line\":13,\"col\":14,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\os-C02-caller-rate\\\\main.lfz\",\"line\":5,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\os-C02-caller-rate\\\\lib\\\\rates.lfz\",\"line\":13,\"func\":\"crash\"}]}\n",
+      "stderr": "",
+      "pass": true
+    }
+  ],
+  "source_axis": "UNKNOWN",
+  "protocol_axis": "UNKNOWN",
+  "server_closed": null,
+  "check_marker_absent": true,
+  "functional_axis": "FAIL",
+  "certified": "FAIL"
+}

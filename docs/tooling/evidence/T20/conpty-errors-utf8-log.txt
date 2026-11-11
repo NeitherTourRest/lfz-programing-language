@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\Temp\T20-tooling\conpty-errors-utf8.py", line 52, in <module>
+    mark=expect('lfz> ');send(':unknown\r');mark=expect('repl: δ֪����',mark);mark=expect('lfz> ',mark);send(':reset\r');mark=expect('lfz> ',mark);send(':quit\r');assert wait(pi.process,4000)==0;code=W.DWORD();ok(exitcode(pi.process,C.byref(code)));assert code.value==2,code.value
+  File "D:\XUE\2026fall\Program Design\lfz-programing language design\Temp\T20-tooling\conpty-errors-utf8.py", line 41, in expect
+    raise AssertionError((fragment,text()))
+AssertionError: ('lfz> ', 'lfz>\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n')

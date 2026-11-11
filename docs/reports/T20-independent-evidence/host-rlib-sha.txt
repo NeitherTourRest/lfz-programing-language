@@ -1,0 +1,5 @@
+
+Algorithm : SHA256
+Hash      : 69E72C764D3317074130C584E22DC0287ACC4026B595B01D0461E286A85EF411
+Path      : D:\XUE\2026fall\Program Design\lfz-programing language design\target\release\liblfz.rlib
+
