@@ -14,3 +14,6 @@ T18-B-HTTPPLAN.md -text
 jsonlstream.lfz -text
 verify_jsonlstream.py -text
 T19-JSONLSTREAM.md -text
+
+verify_repl_jsondesk.py -text
+T20-REPL-JSONDESK.md -text

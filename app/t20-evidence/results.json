@@ -1,0 +1,86 @@
+{
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "binary_bytes": 1100800,
+  "cases_sha256": "15bec18db1ce888e8617b47b9a1f282eb4c8c1dbb6649bf672d0da92da21d8e2",
+  "status": "completed",
+  "rows": [
+    {
+      "name": "jsondesk",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "repl"
+      ],
+      "input": "let desk = { passed: 0, failed: 0, last: nil }\nfn inspectLine(text) {\n    let parsed = attempt(() => jsonParse(text))\n    if parsed.ok {\n        desk.passed = desk.passed + 1\n        desk.last = parsed.value\n    } else {\n        desk.failed = desk.failed + 1\n    }\n    print(jsonStringify({ ok: parsed.ok, value: parsed.value }))\n}\ninspectLine(\"{\\\"id\\\":1}\")\ninspectLine(\"broken\")\ninspectLine(\"[2,3]\")\nfn markThenFail() {\n    desk.failed = desk.failed + 1\n    fail(\"DESK_PARTIAL_ERROR\")\n}\nmarkThenFail()\nprint(jsonStringify(desk))\n@\nprint(\"DESK_CONTINUES\")\n:reset\nprint(type(desk))\nprint(\"RESET_CONTINUES\")\n:quit\n",
+      "exit": 2,
+      "stdout": "{\"ok\":true,\"value\":{\"id\":1}}\n{\"ok\":false,\"value\":null}\n{\"ok\":true,\"value\":[2,3]}\n{\"failed\":2,\"last\":[2,3],\"passed\":2}\nDESK_CONTINUES\nRESET_CONTINUES\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:7>\", line 1, in <module>\n    markThenFail()\n    ^\n  File \"<repl:6>\", line 3, in markThenFail\n        fail(\"DESK_PARTIAL_ERROR\")\n        ^\nAssertionError: DESK_PARTIAL_ERROR\n  File \"<repl:9>\", line 1\n    @\n    ^\nSyntaxError: 非法字符 '@'\nTraceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    print(type(desk))\n               ^\nNameError: 未定义的名字 'desk'\n",
+      "passed": true
+    },
+    {
+      "name": "input_consumes_command",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "repl"
+      ],
+      "input": "print(input())\n:quit\nprint(\"INPUT_AFTER\")\n:quit\n",
+      "exit": 0,
+      "stdout": ":quit\nINPUT_AFTER\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "historical_function",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "repl"
+      ],
+      "input": "fn historical() {\n    fail(\"OLD_FUNCTION_MARK\")\n}\nprint(\"BETWEEN_CELLS\")\nhistorical()\nprint(\"AFTER_OLD_ERROR\")\n:reset\nhistorical()\n:quit\n",
+      "exit": 2,
+      "stdout": "BETWEEN_CELLS\nAFTER_OLD_ERROR\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:3>\", line 1, in <module>\n    historical()\n    ^\n  File \"<repl:1>\", line 2, in historical\n        fail(\"OLD_FUNCTION_MARK\")\n        ^\nAssertionError: OLD_FUNCTION_MARK\nTraceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    historical()\n    ^\nNameError: 未定义的名字 'historical'\n",
+      "passed": true
+    },
+    {
+      "name": "per_cell_steps",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "repl",
+        "--max-steps",
+        "1000"
+      ],
+      "input": "let counter = { n: 0 }\nwhile true { counter.n = counter.n + 1 }\nprint(counter.n > 0)\nprint(\"BUDGET_NEXT\")\n:quit\n",
+      "exit": 2,
+      "stdout": "true\nBUDGET_NEXT\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:2>\", line 1, in <module>\n    while true { counter.n = counter.n + 1 }\n                             ^\nExecutionLimitError: 执行步数预算已耗尽\n",
+      "passed": true
+    },
+    {
+      "name": "timeout_survives_reset",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "repl",
+        "--timeout-ms",
+        "0"
+      ],
+      "input": "print(\"NEVER_ONE\")\n:reset\nprint(\"NEVER_TWO\")\n:quit\n",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    print(\"NEVER_ONE\")\n    ^\nExecutionLimitError: 执行时间上限已到\nTraceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    print(\"NEVER_TWO\")\n    ^\nExecutionLimitError: 执行时间上限已到\n",
+      "passed": true
+    },
+    {
+      "name": "incomplete_eof",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "repl"
+      ],
+      "input": "fn pending() {\n",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"<repl:1>\", line 2\nSyntaxError: 这里期待 '}'，但得到 '文件末尾'\n",
+      "passed": true
+    }
+  ],
+  "total": 6,
+  "passed": 6
+}

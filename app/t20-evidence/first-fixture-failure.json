@@ -1,0 +1,23 @@
+{
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "binary_bytes": 1100800,
+  "cases_sha256": "7605a14b7487790b7b402b98932cbd9ca23515b1ccd674f23d7bd1454a46a4c0",
+  "status": "failed",
+  "rows": [
+    {
+      "name": "jsondesk",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+        "repl"
+      ],
+      "input": "let desk = { passed: 0, failed: 0, last: nil }\nfn inspectLine(text) {\n    let parsed = attempt(() => jsonParse(text))\n    if parsed.ok { desk.passed = desk.passed + 1 } else { desk.failed = desk.failed + 1 }\n    desk.last = parsed.value\n    print(jsonStringify({ ok: parsed.ok, value: parsed.value }))\n}\ninspectLine(\"{\\\"id\\\":1}\")\ninspectLine(\"broken\")\ninspectLine(\"[2,3]\")\ndesk.failed = desk.failed + 1; let kept = \"DECLARED_BEFORE_ERROR\"; fail(\"DESK_PARTIAL_ERROR\")\nprint(kept)\nprint(jsonStringify(desk))\n@\nprint(\"DESK_CONTINUES\")\n:reset\nprint(type(desk))\nprint(\"RESET_CONTINUES\")\n:quit\n",
+      "exit": 2,
+      "stdout": "{\"ok\":true,\"value\":{\"id\":1}}\n{\"ok\":false,\"value\":null}\n{\"ok\":true,\"value\":[2,3]}\n{\"failed\":1,\"last\":[2,3],\"passed\":2}\nDESK_CONTINUES\nRESET_CONTINUES\n",
+      "stderr": "  File \"<repl:6>\", line 1\n    desk.failed = desk.failed + 1; let kept = \"DECLARED_BEFORE_ERROR\"; fail(\"DESK_PARTIAL_ERROR\")\n                                 ^\nSyntaxError: 语句之间必须有换行\nTraceback (most recent call last):\n  File \"<repl:7>\", line 1, in <module>\n    print(kept)\n          ^\nNameError: 未定义的名字 'kept'\n  File \"<repl:9>\", line 1\n    @\n    ^\nSyntaxError: 非法字符 '@'\nTraceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    print(type(desk))\n               ^\nNameError: 未定义的名字 'desk'\n",
+      "passed": false
+    }
+  ],
+  "error": "AssertionError({'name': 'jsondesk', 'argv': ['D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\target\\\\release\\\\lfz.exe', 'repl'], 'input': 'let desk = { passed: 0, failed: 0, last: nil }\\nfn inspectLine(text) {\\n    let parsed = attempt(() => jsonParse(text))\\n    if parsed.ok { desk.passed = desk.passed + 1 } else { desk.failed = desk.failed + 1 }\\n    desk.last = parsed.value\\n    print(jsonStringify({ ok: parsed.ok, value: parsed.value }))\\n}\\ninspectLine(\"{\\\\\"id\\\\\":1}\")\\ninspectLine(\"broken\")\\ninspectLine(\"[2,3]\")\\ndesk.failed = desk.failed + 1; let kept = \"DECLARED_BEFORE_ERROR\"; fail(\"DESK_PARTIAL_ERROR\")\\nprint(kept)\\nprint(jsonStringify(desk))\\n@\\nprint(\"DESK_CONTINUES\")\\n:reset\\nprint(type(desk))\\nprint(\"RESET_CONTINUES\")\\n:quit\\n', 'exit': 2, 'stdout': '{\"ok\":true,\"value\":{\"id\":1}}\\n{\"ok\":false,\"value\":null}\\n{\"ok\":true,\"value\":[2,3]}\\n{\"failed\":1,\"last\":[2,3],\"passed\":2}\\nDESK_CONTINUES\\nRESET_CONTINUES\\n', 'stderr': '  File \"<repl:6>\", line 1\\n    desk.failed = desk.failed + 1; let kept = \"DECLARED_BEFORE_ERROR\"; fail(\"DESK_PARTIAL_ERROR\")\\n                                 ^\\nSyntaxError: 语句之间必须有换行\\nTraceback (most recent call last):\\n  File \"<repl:7>\", line 1, in <module>\\n    print(kept)\\n          ^\\nNameError: 未定义的名字 \\'kept\\'\\n  File \"<repl:9>\", line 1\\n    @\\n    ^\\nSyntaxError: 非法字符 \\'@\\'\\nTraceback (most recent call last):\\n  File \"<repl:1>\", line 1, in <module>\\n    print(type(desk))\\n               ^\\nNameError: 未定义的名字 \\'desk\\'\\n', 'passed': False})",
+  "total": 1,
+  "passed": 0
+}

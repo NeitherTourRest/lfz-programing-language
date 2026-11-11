@@ -1,0 +1,88 @@
+[
+  {
+    "name": "jsondesk",
+    "fixture": "session.repl",
+    "code": 2,
+    "stdout": [
+      "{\"ok\":true,\"value\":{\"id\":1}}",
+      "{\"ok\":false,\"value\":null}",
+      "{\"ok\":true,\"value\":[2,3]}",
+      "DECLARED_BEFORE_ERROR",
+      "{\"failed\":2,\"last\":[2,3],\"passed\":2}",
+      "DESK_CONTINUES",
+      "RESET_CONTINUES"
+    ],
+    "stderr": [
+      "DESK_PARTIAL_ERROR",
+      "NameError",
+      "desk",
+      "^"
+    ]
+  },
+  {
+    "name": "input_consumes_command",
+    "text": "print(input())\n:quit\nprint(\"INPUT_AFTER\")\n:quit\n",
+    "code": 0,
+    "stdout": [
+      ":quit",
+      "INPUT_AFTER"
+    ],
+    "stderr": []
+  },
+  {
+    "name": "historical_function",
+    "text": "fn historical() {\n    fail(\"OLD_FUNCTION_MARK\")\n}\nprint(\"BETWEEN_CELLS\")\nhistorical()\nprint(\"AFTER_OLD_ERROR\")\n:reset\nhistorical()\n:quit\n",
+    "code": 2,
+    "stdout": [
+      "BETWEEN_CELLS",
+      "AFTER_OLD_ERROR"
+    ],
+    "stderr": [
+      "<repl:1>",
+      "fail(\"OLD_FUNCTION_MARK\")",
+      "^",
+      "NameError"
+    ]
+  },
+  {
+    "name": "per_cell_steps",
+    "flags": [
+      "--max-steps",
+      "1000"
+    ],
+    "text": "let counter = { n: 0 }\nwhile true { counter.n = counter.n + 1 }\nprint(counter.n > 0)\nprint(\"BUDGET_NEXT\")\n:quit\n",
+    "code": 2,
+    "stdout": [
+      "true",
+      "BUDGET_NEXT"
+    ],
+    "stderr": [
+      "ExecutionLimitError",
+      "执行步数预算已耗尽"
+    ]
+  },
+  {
+    "name": "timeout_survives_reset",
+    "flags": [
+      "--timeout-ms",
+      "0"
+    ],
+    "text": "print(\"NEVER_ONE\")\n:reset\nprint(\"NEVER_TWO\")\n:quit\n",
+    "code": 2,
+    "stdout": [],
+    "stderr": [
+      "ExecutionLimitError",
+      "执行时间上限已到"
+    ]
+  },
+  {
+    "name": "incomplete_eof",
+    "text": "fn pending() {\n",
+    "code": 2,
+    "stdout": [],
+    "stderr": [
+      "<repl:1>",
+      "^"
+    ]
+  }
+]

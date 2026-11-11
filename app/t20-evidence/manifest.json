@@ -1,0 +1,72 @@
+{
+  "date": "2026-11-11",
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "binary_bytes": 1100800,
+  "files": [
+    {
+      "path": "app/repl_jsondesk/session.repl",
+      "bytes": 612,
+      "sha256": "592a03b5a4775e4c5531e0408d9673358fb5ac3f7415095c7eb6aa1ec91a5813"
+    },
+    {
+      "path": "app/repl_jsondesk/cases.json",
+      "bytes": 2160,
+      "sha256": "15bec18db1ce888e8617b47b9a1f282eb4c8c1dbb6649bf672d0da92da21d8e2"
+    },
+    {
+      "path": "app/verify_repl_jsondesk.py",
+      "bytes": 2788,
+      "sha256": "0e0925c3bf90cda72e4184a74ef27c8e002a0e1322d7ff2bd5894638fe5fbbb8"
+    },
+    {
+      "path": "app/T20-REPL-JSONDESK.md",
+      "bytes": 4721,
+      "sha256": "d56287de8890310ad7f0994a04566fd497350025b00b61c68379284d487cb753"
+    },
+    {
+      "path": "app/t20-evidence/eof-oracle-cases.json",
+      "bytes": 1934,
+      "sha256": "f8e6a401f267c54cfc36b1674ad295b850861d7d4a941d2f0dce2d836d209c67"
+    },
+    {
+      "path": "app/t20-evidence/eof-oracle-failure.json",
+      "bytes": 5279,
+      "sha256": "cd7f8ae96d1711812276cc5f7a2ae2d4799865d7a17baf8a01f7e6a3faf011c6"
+    },
+    {
+      "path": "app/t20-evidence/eof-wording-cases.json",
+      "bytes": 2160,
+      "sha256": "94ea804e1d993db2f562180370ec8338fac5b9f050a59205e48a5e84d65089dd"
+    },
+    {
+      "path": "app/t20-evidence/eof-wording-failure.json",
+      "bytes": 5279,
+      "sha256": "94802e9c6fc006f7381b83ac4c5bd98febd62d18b8ed2d451da88fab33692601"
+    },
+    {
+      "path": "app/t20-evidence/first-cases.json",
+      "bytes": 1985,
+      "sha256": "7605a14b7487790b7b402b98932cbd9ca23515b1ccd674f23d7bd1454a46a4c0"
+    },
+    {
+      "path": "app/t20-evidence/first-fixture-failure.json",
+      "bytes": 3653,
+      "sha256": "6410078a38dcacb5eb17311ff0d5d8a1262e2a1d2d0753fc84b7796e7ba39672"
+    },
+    {
+      "path": "app/t20-evidence/first-session.repl",
+      "bytes": 588,
+      "sha256": "36d4f72346dbe32dcc535107853d5808f9db32dbce6923a64eac30c295387770"
+    },
+    {
+      "path": "app/t20-evidence/preparation.json",
+      "bytes": 801,
+      "sha256": "838ab23ecbfb88251e485f20a5959ca8cb468bd45df6688db1867fc1ad81a024"
+    },
+    {
+      "path": "app/t20-evidence/results.json",
+      "bytes": 4913,
+      "sha256": "2c6af9698882633e1b896a3fe6fe08e2536f5cfe8ba3508673817bb923d30ccc"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-04",
+  "status": "prepared_not_executed",
+  "interpreter_processes": 0,
+  "cases": 6,
+  "files": [
+    {
+      "path": "app/repl_jsondesk/session.repl",
+      "bytes": 588,
+      "sha256": "36d4f72346dbe32dcc535107853d5808f9db32dbce6923a64eac30c295387770"
+    },
+    {
+      "path": "app/repl_jsondesk/cases.json",
+      "bytes": 1985,
+      "sha256": "7605a14b7487790b7b402b98932cbd9ca23515b1ccd674f23d7bd1454a46a4c0"
+    },
+    {
+      "path": "app/verify_repl_jsondesk.py",
+      "bytes": 2788,
+      "sha256": "0e0925c3bf90cda72e4184a74ef27c8e002a0e1322d7ff2bd5894638fe5fbbb8"
+    },
+    {
+      "path": "app/T20-REPL-JSONDESK.md",
+      "bytes": 3870,
+      "sha256": "bb17fa2ff951f2cfa1238c78d55eca29a03c586445b466c241c30e18fdb4e803"
+    }
+  ]
+}

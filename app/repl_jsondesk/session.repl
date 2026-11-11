@@ -1,0 +1,26 @@
+let desk = { passed: 0, failed: 0, last: nil }
+fn inspectLine(text) {
+    let parsed = attempt(() => jsonParse(text))
+    if parsed.ok {
+        desk.passed = desk.passed + 1
+        desk.last = parsed.value
+    } else {
+        desk.failed = desk.failed + 1
+    }
+    print(jsonStringify({ ok: parsed.ok, value: parsed.value }))
+}
+inspectLine("{\"id\":1}")
+inspectLine("broken")
+inspectLine("[2,3]")
+fn markThenFail() {
+    desk.failed = desk.failed + 1
+    fail("DESK_PARTIAL_ERROR")
+}
+markThenFail()
+print(jsonStringify(desk))
+@
+print("DESK_CONTINUES")
+:reset
+print(type(desk))
+print("RESET_CONTINUES")
+:quit
