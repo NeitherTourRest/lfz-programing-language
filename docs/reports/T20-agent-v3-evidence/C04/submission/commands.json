@@ -1,0 +1,46 @@
+[
+  [
+    "check",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C04\\main.lfz"
+  ],
+  [
+    "run",
+    "--max-steps",
+    "200000",
+    "--timeout-ms",
+    "5000",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C04\\main.lfz",
+    "--",
+    "http://127.0.0.1:65309"
+  ],
+  [
+    "check",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C04\\main.lfz"
+  ],
+  [
+    "run",
+    "--allow-http",
+    "--max-steps",
+    "200000",
+    "--timeout-ms",
+    "5000",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C04\\main.lfz",
+    "--",
+    "http://127.0.0.1:65309"
+  ],
+  [
+    "check",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C04\\main.lfz"
+  ],
+  [
+    "run",
+    "--allow-http",
+    "--max-steps",
+    "200000",
+    "--timeout-ms",
+    "5000",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C04\\main.lfz",
+    "--",
+    "http://127.0.0.1:64211"
+  ]
+]

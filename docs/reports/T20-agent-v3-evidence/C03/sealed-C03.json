@@ -1,0 +1,119 @@
+{
+  "task": "C03",
+  "mode": "CONTROL_OR_SEALED_SUBMISSION_VALIDATION",
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "binary_bytes": 1100800,
+  "source_hashes": {
+    "main.lfz": "59f5c8d704d63620b4bb7ab40b12aa360fc1c21f39ca56c43a546eaeac81cade"
+  },
+  "runs": [
+    {
+      "name": "check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C03\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "jobs0",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C03\\main.lfz",
+        "--",
+        "normal",
+        "[]"
+      ],
+      "exit": 0,
+      "stdout": "{\"count\":0,\"items\":[],\"nilOk\":true}\n",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "jobs1",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C03\\main.lfz",
+        "--",
+        "normal",
+        "[1, null, true, \"x\", -4]"
+      ],
+      "exit": 0,
+      "stdout": "{\"count\":5,\"items\":[{\"error\":null,\"ok\":true,\"value\":1},{\"error\":\"AssertionError\",\"ok\":false,\"value\":null},{\"error\":\"AssertionError\",\"ok\":false,\"value\":null},{\"error\":\"AssertionError\",\"ok\":false,\"value\":null},{\"error\":null,\"ok\":true,\"value\":-4}],\"nilOk\":true}\n",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "jobs2",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C03\\main.lfz",
+        "--",
+        "normal",
+        "[\"bad\", \"bad\", 3]"
+      ],
+      "exit": 0,
+      "stdout": "{\"count\":3,\"items\":[{\"error\":\"AssertionError\",\"ok\":false,\"value\":null},{\"error\":\"AssertionError\",\"ok\":false,\"value\":null},{\"error\":null,\"ok\":true,\"value\":3}],\"nilOk\":true}\n",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "jobs3",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C03\\main.lfz",
+        "--",
+        "normal",
+        "[-9223372036854775808, 9223372036854775807]"
+      ],
+      "exit": 0,
+      "stdout": "{\"count\":2,\"items\":[{\"error\":null,\"ok\":true,\"value\":-9223372036854775808},{\"error\":null,\"ok\":true,\"value\":9223372036854775807}],\"nilOk\":true}\n",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "budget",
+      "args": [
+        "run",
+        "--json",
+        "--max-steps",
+        "100",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C03\\main.lfz",
+        "--",
+        "budget",
+        "[]"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\sealed-C03\\\\main.lfz\",\"line\":30,\"col\":15,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\sealed-C03\\\\main.lfz\",\"line\":28,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\sealed-C03\\\\main.lfz\",\"line\":30,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "pass": true
+    }
+  ],
+  "source_axis": "PASS",
+  "protocol_axis": "UNKNOWN",
+  "server_closed": null,
+  "check_marker_absent": true,
+  "functional_axis": "PASS",
+  "source_axis_record_sha256": "aee26e46f2f1c739d6bf4fbd4cc7ebf194601197f74e668737967698fd74a341",
+  "protocol_axis_record_sha256": "dcff70ee39982594582ea9d181360b2e3a449a2717950977861b512af7add632",
+  "certified": "UNKNOWN"
+}

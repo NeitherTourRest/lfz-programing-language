@@ -1,0 +1,3 @@
+只使用提供的五份AI文档与lfz.exe。提交LFZ文件及commands.json（实际check/run argv数组）。先check再run；20分钟、40顶层工具调用、最多5个自调周期，每周期最多1check+1run（合计10次产品启动）。不得批量子启动绕预算。不得读仓库、其它题、评分器或历史答案，不得联网公网/外装/调用其它语言解决业务。workspace仅提示隔离，不是OS沙箱。提交后无隐藏验收反馈或继续修复机会。stdout业务JSON一行，除特别模式外不使用CLI --json。所有题maxsteps200000/timeout5000ms，资源错误不得吞。
+
+编写main.lfz，argv=[inputPath,outputPath]。forEachLine cap4096逐行读取。有效记录为JSON object，account为非空string，delta为int（bool不算），其余含空行/坏JSON记rejected。每条有效记录输出紧凑JSONL {account,delta,lineNo}，按输入顺序；lineNo从1含坏行。清空输出后按最多32记录的批次appendFile，末批flush；输出summary {accepted,rejected,sum}。读取/UTF8/超长错误传播，无部分成功summary；已写批不回滚。禁止readFile读取输入、split整文件、保留全文件数组。只保最多32条批次和常数计数；解析closure在外仅建一次，以struct cell.text更新后attempt(parseCurrent)，不要每行创建closure。公开数据见public.jsonl；隐藏数据满足声明schema、数值总和在i64范围。

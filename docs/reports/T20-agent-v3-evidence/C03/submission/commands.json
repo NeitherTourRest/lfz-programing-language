@@ -1,0 +1,62 @@
+[
+  [
+    "check",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C03\\main.lfz"
+  ],
+  [
+    "run",
+    "--max-steps",
+    "200000",
+    "--timeout-ms",
+    "5000",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C03\\main.lfz",
+    "--",
+    "normal",
+    "[1,-2,3.0,true,null,\"bad\",[],{}]"
+  ],
+  [
+    "check",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C03\\main.lfz"
+  ],
+  [
+    "run",
+    "--max-steps",
+    "100",
+    "--timeout-ms",
+    "5000",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C03\\main.lfz",
+    "--",
+    "budget",
+    "[]"
+  ],
+  [
+    "check",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C03\\main.lfz"
+  ],
+  [
+    "run",
+    "--max-steps",
+    "200000",
+    "--timeout-ms",
+    "5000",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C03\\main.lfz",
+    "--",
+    "normal",
+    "[]"
+  ],
+  [
+    "check",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C03\\main.lfz"
+  ],
+  [
+    "run",
+    "--max-steps",
+    "200000",
+    "--timeout-ms",
+    "5000",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C03\\main.lfz",
+    "--",
+    "normal",
+    "[-9223372036854775808,9223372036854775807,\"--json\",0]"
+  ]
+]

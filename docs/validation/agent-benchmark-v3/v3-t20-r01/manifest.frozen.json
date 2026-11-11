@@ -1,0 +1,89 @@
+{
+  "version": "v3-t20-r01",
+  "status": "FROZEN",
+  "baseline": "0d293b407cc653e4c8249d2f64561c30a0ea5ab3",
+  "budgets": {
+    "seconds": 1200,
+    "top_level_tool_calls": 40,
+    "check_run_cycles": 5,
+    "max_product_launches": 10
+  },
+  "tasks": [
+    "C01",
+    "C02",
+    "C03",
+    "C04"
+  ],
+  "final_binary": {
+    "path": "target/release/lfz.exe",
+    "sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+    "bytes": 1100800
+  },
+  "final_ai_docs": {
+    ".opencode/skills/lfz-programming/SKILL.md": "025bb99f7aea277d50d0ce5131ca2f283d6392fe52a34e9ac2d30ec62688d5d8",
+    ".opencode/skills/lfz-programming/README.md": "ea77dc84fda416aa80887e4a678882b0da0143fd8c22875ad838e5490f5dd76e",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "dc603553af76653ff35dfd5ff00336bb3e0bda1a538667a8aea6db182d9bed81",
+    ".opencode/skills/lfz-programming/prompt-template.md": "8b2e0e846b781b763ba5212bf56b7f0cbd1482530e78b807984098c14c9ba728",
+    "docs/guide/ai/README.md": "bdf2722c3a6e1edbe6d24870bcd0e2f07687166861533ac9c95e19c9887e8363"
+  },
+  "independent_review": {
+    "path": "docs/reports/T20-independent-evidence/v3-controls-receipt.json",
+    "sha256": "22058ff644b06b9c069d26d7e41430fb1fcd11174ed92858f54eb5919eb29c4b",
+    "scope": "four references, eight negative controls, budget and closing gates"
+  },
+  "students_started": 0,
+  "files": {
+    "audit_budget.py": "31e48cca6eb0053b1d4b2edd21fb767d791bf27e3f45b35cc4139db160c1e940",
+    "AUDIT_PROTOCOL.md": "c663e734dedca403a66bd6abd18a7694f7862b712033d15e9a7ce35db09bf392",
+    "DISPATCH.md": "d5c494a388411a25ff8ae23534d89ea06ba64a2c2c86bc1ca421555efa9af35c",
+    "manifest.pre-http-fix.json": "02f0e6188cd41b8553db30d26cc9ce7951b3e87c83a63286c1aca286a4f68115",
+    "manifest.pre-review.json": "8b1f7cfd28980f1cb9b6829e0ea07bc3f52a24b5fed7b1e3c73f0c0d21595b69",
+    "oracles.py": "62cdb05b25b7fdf90e751ab7db6bc21c4806dcf4119fc754241ade4e15865527",
+    "private/CONTROLS.md": "bf38e2603c81055b2deb7b91739ceec6cdcdf440b60c1e688d7db72db17bc221",
+    "private/negatives/C01-bad-cap/main.lfz": "81cd8c2c687bc9e81749ae45df4ef85159693f901082e9850d202aefaed273b5",
+    "private/negatives/C01-collect-preload/main.lfz": "a85dbb5aa5fbaaac3f5f13c6a5d8e8a872e4d82c79e0b7bde9be40c424fef575",
+    "private/negatives/C02-caller-rate/lib/rates.lfz": "98c65250f5bdee7c89aa1fae8180ad0c2250d5a8801b1a9308b5e6b2b0bb182f",
+    "private/negatives/C02-caller-rate/lib/view.lfz": "0653a4856d2f393efabb8478a28d7422e1b053a1269050cd0829f18114fc5493",
+    "private/negatives/C02-caller-rate/main.lfz": "ff7f6ec38bae38abc0d8dcba9535692f8f40847691ad266de4e60177bab61c9c",
+    "private/negatives/C02-no-home-update/lib/rates.lfz": "f221f33486f9a86090c9762dfb6c7883e8020a6f5077b15d92175f5e20b9123b",
+    "private/negatives/C02-no-home-update/lib/view.lfz": "0653a4856d2f393efabb8478a28d7422e1b053a1269050cd0829f18114fc5493",
+    "private/negatives/C02-no-home-update/main.lfz": "ff7f6ec38bae38abc0d8dcba9535692f8f40847691ad266de4e60177bab61c9c",
+    "private/negatives/C03-budget-fake-success/main.lfz": "728cee985fa74171026c03d6d1d86792e9a899d4880e7335b487703d2f7485a4",
+    "private/negatives/C03-success-nil-false/main.lfz": "8228dd668eaf0107ab6620f729524eff633f1d1970664855fdcd1036076b9504",
+    "private/negatives/C04-treat-404-error/main.lfz": "af9a1931896d063cb0510a7b601dd6be3ad4de12b7930089946a4979edb50292",
+    "private/negatives/C04-wrong-order/main.lfz": "c9fcfc7743dd1684588787278cc49d66e2d7b3f2578df3af1373a8bfd49e0546",
+    "private/negatives/matrix.json": "c7586cc902837807010b291682130db6686ee76f433fc1a48e78ab9164b27593",
+    "private/prepare-failure.txt": "77a310eb953c139b90a82a7f3addae95b2e18498f10fdf37920b3713bd2cc2b4",
+    "private/references/C01/main.lfz": "3d144f0ad1420bf108253fdded2cebdb10357c5c1ccf3abc48763e459503df3c",
+    "private/references/C02/lib/rates.lfz": "3762b8aef3b2fe517df5f9cd12ba84d903e1acc60428d44283d74c752060a1ac",
+    "private/references/C02/lib/view.lfz": "0653a4856d2f393efabb8478a28d7422e1b053a1269050cd0829f18114fc5493",
+    "private/references/C02/main.lfz": "ff7f6ec38bae38abc0d8dcba9535692f8f40847691ad266de4e60177bab61c9c",
+    "private/references/C03/main.lfz": "0d0820446e0e72c5bebab8c39e898aba1105bc0adfc412b5772f47ea034b6eec",
+    "private/references/C04/main.lfz": "907de68c5a41f9e7cd5fc6b5545fbca483e6cd33c3169304595fc403e9769917",
+    "README.md": "87036d13d53af1e56bcc7f8f970dba25f15b2b545103243aba0a43181d6b2c7a",
+    "runner.py": "910dea5ed5d3ef4fbd8a40fef6aa4ebd336c876cc723f157cc16f773f662ecb9",
+    "stage_student.py": "65524a0260fc5b9b5426a96ae278aaae6e156a61c8d83e09c943b4b93acaa49d",
+    "student/C01/public.jsonl": "98b875a3298f8393471465a09fa22bf906039b1275813da5755d82918dc069b6",
+    "student/C01/TASK.md": "95c9f8f480fb970d7c1e66529a96002b589b5db1b23f19dfec93cafcf200b966",
+    "student/C02/TASK.md": "f685007c8b104bd3e1f3f581b92034b0cd0f57dae5897ab618b17d3e809cd554",
+    "student/C03/TASK.md": "e125dee2e2ebe3e698d68736af73efbcdea247626723a24183f5ed9794f77e14",
+    "student/C04/selftest_service.py": "f810eaf5804666d93c1e48226446f1f57573a8d11248cdf4dfe7559440990273",
+    "student/C04/TASK.md": "bea56dc538a92e0337937fcd226ccf20005c5c44363a5ed937f1b312927931b2",
+    "student_cycle.py": "5f0e72f5e1485c492d81404df40cd69f63b6ded35da3206664c9a865e6c8281c",
+    "trace_export.py": "9e750450333d7d8031d8f66056817794511ec0c41a1e8a5a7cc6c211f94ea1b3"
+  },
+  "revision": "pre-freeze-03",
+  "candidate_binary": {
+    "path": "target/release/lfz.exe",
+    "sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+    "bytes": 1100800
+  },
+  "candidate_ai_docs": {
+    ".opencode/skills/lfz-programming/SKILL.md": "025bb99f7aea277d50d0ce5131ca2f283d6392fe52a34e9ac2d30ec62688d5d8",
+    ".opencode/skills/lfz-programming/README.md": "ea77dc84fda416aa80887e4a678882b0da0143fd8c22875ad838e5490f5dd76e",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "dc603553af76653ff35dfd5ff00336bb3e0bda1a538667a8aea6db182d9bed81",
+    ".opencode/skills/lfz-programming/prompt-template.md": "8b2e0e846b781b763ba5212bf56b7f0cbd1482530e78b807984098c14c9ba728",
+    "docs/guide/ai/README.md": "bdf2722c3a6e1edbe6d24870bcd0e2f07687166861533ac9c95e19c9887e8363"
+  },
+  "draft_sha256": "749c1a2a5eec6292992b930c38ce6ecdda8ab397045887f310ae21560acb7de6"
+}

@@ -1,0 +1,14 @@
+#42
+var rate=900
+let history=[nil,nil,nil]
+var next=0
+appendFile(argv()[0],"I")
+fn quote(q) {
+ let v=q*rate
+ history[next]=v
+ next=next+1
+ return v
+}
+fn setRate(v) { rate=v }
+fn crash() { fail("rate-fault") }
+export rate,history,quote,setRate,crash

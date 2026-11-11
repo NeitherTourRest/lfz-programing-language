@@ -1,0 +1,22 @@
+#42
+let base = argv()[0]
+let paths = ["/ok", "/missing", "/redirect", "/bad", "/ok"]
+var records = []
+
+for path in paths {
+    let result = attempt(() => httpRequest("GET", base + path, [], "", 1000, 16384))
+    if result.ok {
+        let response = result.value
+        var repeated = []
+        for header in response.headers {
+            if header[0] == "x-repeat" {
+                repeated = push(header[1], repeated)
+            }
+        }
+        records = push({status: response.status, body: response.body, repeated: repeated}, records)
+    } else {
+        records = push({error: result.error["class"]}, records)
+    }
+}
+
+print(jsonStringify(records))

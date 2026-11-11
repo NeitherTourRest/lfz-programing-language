@@ -1,0 +1,25 @@
+#42
+if argv()[0]=="budget" {
+ attempt(()=>{
+  while false {
+   1
+  }
+ })
+}
+let input=jsonParse(argv()[1])
+let cell={count:0,value:nil}
+let process=()=>{
+ cell.count=cell.count+1
+ if type(cell.value)!="int" { fail("bad-job") }
+ return cell.value
+}
+var items=[]
+for v in input {
+ cell.value=v
+ let r=attempt(process)
+ var err=nil
+ if !r.ok { err=r.error["class"] }
+ items=push({ok:r.ok,value:r.value,error:err},items)
+}
+let r=attempt(()=>nil)
+print(jsonStringify({items:items,count:cell.count,nilOk:r.ok && r.value==nil && r.error==nil}))

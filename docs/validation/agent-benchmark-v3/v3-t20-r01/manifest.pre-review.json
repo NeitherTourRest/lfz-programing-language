@@ -1,0 +1,53 @@
+{
+  "version": "v3-t20-r01",
+  "status": "DRAFT_PENDING_REVIEW_AND_FINAL_ARTIFACTS",
+  "baseline": "0d293b407cc653e4c8249d2f64561c30a0ea5ab3",
+  "budgets": {
+    "seconds": 1200,
+    "top_level_tool_calls": 40,
+    "check_run_cycles": 5,
+    "max_product_launches": 10
+  },
+  "tasks": [
+    "C01",
+    "C02",
+    "C03",
+    "C04"
+  ],
+  "final_binary": null,
+  "final_ai_docs": null,
+  "independent_review": null,
+  "students_started": 0,
+  "files": {
+    "AUDIT_PROTOCOL.md": "c663e734dedca403a66bd6abd18a7694f7862b712033d15e9a7ce35db09bf392",
+    "oracles.py": "24045ab53eaa08a077f625cc87763dcf3072444c49256f310838df7b988713eb",
+    "private/CONTROLS.md": "bf38e2603c81055b2deb7b91739ceec6cdcdf440b60c1e688d7db72db17bc221",
+    "private/negatives/C01-bad-cap/main.lfz": "81cd8c2c687bc9e81749ae45df4ef85159693f901082e9850d202aefaed273b5",
+    "private/negatives/C01-collect-preload/main.lfz": "a85dbb5aa5fbaaac3f5f13c6a5d8e8a872e4d82c79e0b7bde9be40c424fef575",
+    "private/negatives/C02-caller-rate/lib/rates.lfz": "98c65250f5bdee7c89aa1fae8180ad0c2250d5a8801b1a9308b5e6b2b0bb182f",
+    "private/negatives/C02-caller-rate/lib/view.lfz": "0653a4856d2f393efabb8478a28d7422e1b053a1269050cd0829f18114fc5493",
+    "private/negatives/C02-caller-rate/main.lfz": "ff7f6ec38bae38abc0d8dcba9535692f8f40847691ad266de4e60177bab61c9c",
+    "private/negatives/C02-no-home-update/lib/rates.lfz": "f221f33486f9a86090c9762dfb6c7883e8020a6f5077b15d92175f5e20b9123b",
+    "private/negatives/C02-no-home-update/lib/view.lfz": "0653a4856d2f393efabb8478a28d7422e1b053a1269050cd0829f18114fc5493",
+    "private/negatives/C02-no-home-update/main.lfz": "ff7f6ec38bae38abc0d8dcba9535692f8f40847691ad266de4e60177bab61c9c",
+    "private/negatives/C03-budget-fake-success/main.lfz": "728cee985fa74171026c03d6d1d86792e9a899d4880e7335b487703d2f7485a4",
+    "private/negatives/C03-success-nil-false/main.lfz": "8228dd668eaf0107ab6620f729524eff633f1d1970664855fdcd1036076b9504",
+    "private/negatives/C04-treat-404-error/main.lfz": "af9a1931896d063cb0510a7b601dd6be3ad4de12b7930089946a4979edb50292",
+    "private/negatives/C04-wrong-order/main.lfz": "c9fcfc7743dd1684588787278cc49d66e2d7b3f2578df3af1373a8bfd49e0546",
+    "private/negatives/matrix.json": "c7586cc902837807010b291682130db6686ee76f433fc1a48e78ab9164b27593",
+    "private/prepare-failure.txt": "77a310eb953c139b90a82a7f3addae95b2e18498f10fdf37920b3713bd2cc2b4",
+    "private/references/C01/main.lfz": "3d144f0ad1420bf108253fdded2cebdb10357c5c1ccf3abc48763e459503df3c",
+    "private/references/C02/lib/rates.lfz": "3762b8aef3b2fe517df5f9cd12ba84d903e1acc60428d44283d74c752060a1ac",
+    "private/references/C02/lib/view.lfz": "0653a4856d2f393efabb8478a28d7422e1b053a1269050cd0829f18114fc5493",
+    "private/references/C02/main.lfz": "ff7f6ec38bae38abc0d8dcba9535692f8f40847691ad266de4e60177bab61c9c",
+    "private/references/C03/main.lfz": "0d0820446e0e72c5bebab8c39e898aba1105bc0adfc412b5772f47ea034b6eec",
+    "private/references/C04/main.lfz": "907de68c5a41f9e7cd5fc6b5545fbca483e6cd33c3169304595fc403e9769917",
+    "README.md": "87036d13d53af1e56bcc7f8f970dba25f15b2b545103243aba0a43181d6b2c7a",
+    "runner.py": "bcc4568f1d2b748097656dfe3d3e2cb8aeda593bccf5722b14356f2070cac1a2",
+    "student/C01/public.jsonl": "98b875a3298f8393471465a09fa22bf906039b1275813da5755d82918dc069b6",
+    "student/C01/TASK.md": "95c9f8f480fb970d7c1e66529a96002b589b5db1b23f19dfec93cafcf200b966",
+    "student/C02/TASK.md": "f0b22522de29b44d7df7327c5657cf3118de1437e2b59b40a3087a7c172b6cdf",
+    "student/C03/TASK.md": "e125dee2e2ebe3e698d68736af73efbcdea247626723a24183f5ed9794f77e14",
+    "student/C04/TASK.md": "430922597292bcda895553727d46baa7896d6679572f24786b672bcbe6557104"
+  }
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "name": "C01-bad-cap",
+    "task": "C01",
+    "expected_axis": "functional",
+    "expected": "FAIL",
+    "reason": "forEachLine(consume,4096 -> forEachLine(consume,4095"
+  },
+  {
+    "name": "C01-collect-preload",
+    "task": "C01",
+    "expected_axis": "source",
+    "expected": "FAIL",
+    "reason": "let args=argv() -> let args=argv()\nlet forbidden=readFile(args[0])"
+  },
+  {
+    "name": "C02-caller-rate",
+    "task": "C02",
+    "expected_axis": "functional",
+    "expected": "FAIL",
+    "reason": "var rate=7 -> var rate=900"
+  },
+  {
+    "name": "C02-no-home-update",
+    "task": "C02",
+    "expected_axis": "functional",
+    "expected": "FAIL",
+    "reason": "rate=v -> let ignored=v"
+  },
+  {
+    "name": "C03-success-nil-false",
+    "task": "C03",
+    "expected_axis": "functional",
+    "expected": "FAIL",
+    "reason": "nilOk:r.ok && r.value==nil && r.error==nil -> nilOk:false"
+  },
+  {
+    "name": "C03-budget-fake-success",
+    "task": "C03",
+    "expected_axis": "functional",
+    "expected": "FAIL",
+    "reason": "while true -> while false"
+  },
+  {
+    "name": "C04-treat-404-error",
+    "task": "C04",
+    "expected_axis": "functional",
+    "expected": "FAIL",
+    "reason": "if r.ok { -> if r.ok && r.value.status!=404 {"
+  },
+  {
+    "name": "C04-wrong-order",
+    "task": "C04",
+    "expected_axis": "functional",
+    "expected": "FAIL",
+    "reason": "[\"/ok\",\"/missing\",\"/redirect\",\"/bad\",\"/ok\"] -> [\"/ok\",\"/redirect\",\"/missing\",\"/bad\",\"/ok\"]"
+  }
+]

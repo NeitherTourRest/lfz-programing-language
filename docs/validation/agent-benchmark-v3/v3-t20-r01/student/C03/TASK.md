@@ -1,0 +1,3 @@
+只使用提供的五份AI文档与lfz.exe。提交LFZ文件及commands.json（实际check/run argv数组）。先check再run；20分钟、40顶层工具调用、最多5个自调周期，每周期最多1check+1run（合计10次产品启动）。不得批量子启动绕预算。不得读仓库、其它题、评分器或历史答案，不得联网公网/外装/调用其它语言解决业务。workspace仅提示隔离，不是OS沙箱。提交后无隐藏验收反馈或继续修复机会。stdout业务JSON一行，除特别模式外不使用CLI --json。所有题maxsteps200000/timeout5000ms，资源错误不得吞。
+
+提交main.lfz。argv=[mode,inputJSON]，mode="normal"时inputJSON是JSON数组文本。每项若为int直接作为成功值；其它类型调用fail("bad-job")。用真实attempt捕获，处理每项前共享cell.count加1（失败不回滚）；输出{items:[{ok:true,value:v,error:nil}或{ok:false,value:nil,error:"AssertionError"}],count:N}。此外追加一次attempt(()=>nil)，要求其ok真/value=nil/error=nil；输出字段nilOk=true。mode="budget"时外包attempt执行含真实AST语句的无限while；带--max-steps 100必须exit2 ExecutionLimitError，不打印成功summary，不能伪造Result/错误。inputJSON数组值不超过i64范围，不要求JSONL。argv中flag样文本用--保护。

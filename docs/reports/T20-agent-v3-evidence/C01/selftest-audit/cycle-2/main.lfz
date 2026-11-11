@@ -1,0 +1,64 @@
+#42
+let args = argv()
+assert(len(args) == 2)
+let inputPath = args[0]
+let outputPath = args[1]
+
+var accepted = 0
+var rejected = 0
+// Two limbs keep the sum exact even if an intermediate total exceeds i64.
+let radix = 4294967296
+var high = 0
+var low = 0
+
+let cell = {text: ""}
+let parseCurrent = () => jsonParse(cell.text)
+var batch = []
+
+fn flush() {
+    appendFile(outputPath, join("", batch))
+    batch = []
+}
+
+fn onLine(line, lineNo) {
+    cell.text = line
+    let parsed = attempt(parseCurrent)
+    let record = parsed.value
+    if !parsed.ok || type(record) != "struct" || !has("account", record) || !has("delta", record) {
+        rejected += 1
+        return true
+    }
+
+    let account = record.account
+    let delta = record.delta
+    if type(account) != "string" || account == "" || type(delta) != "int" {
+        rejected += 1
+        return true
+    }
+
+    high += div(delta, radix)
+    low += delta % radix
+    accepted += 1
+    batch = push(jsonStringify({account: account, delta: delta, lineNo: lineNo}) + "\n", batch)
+    if len(batch) == 32 {
+        flush()
+    }
+    return true
+}
+
+writeFile(outputPath, "")
+forEachLine(onLine, 4096, inputPath)
+if len(batch) > 0 {
+    flush()
+}
+
+// The execution budget bounds both unnormalized limbs well within i64.
+high += div(low, radix)
+low = low % radix
+let total = if high < 0 {
+    (high + 1) * radix + (low - radix)
+} else {
+    high * radix + low
+}
+print(jsonStringify({accepted: accepted, rejected: rejected, sum: total}))
+

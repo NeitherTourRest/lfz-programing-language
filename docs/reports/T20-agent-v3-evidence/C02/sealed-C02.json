@@ -1,0 +1,112 @@
+{
+  "task": "C02",
+  "mode": "CONTROL_OR_SEALED_SUBMISSION_VALIDATION",
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "binary_bytes": 1100800,
+  "source_hashes": {
+    "main.lfz": "20f05da363dbe8ceeebd7b9ebb0291e65a9c9569ee4ca41740b590e4a25ecff1",
+    "lib\\rates.lfz": "1b557f6e9efde52fd3bd370c268ac13bf266fabd5a2a5fccf1f4fffd43f52241",
+    "lib\\view.lfz": "278d692789239630e990ec0b5deaad16e943b691757259a4882669504f991bf3"
+  },
+  "runs": [
+    {
+      "name": "check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C02\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "quantity0",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C02\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C02\\marker.txt",
+        "0",
+        "--allow-http=数据"
+      ],
+      "exit": 0,
+      "stdout": "{\"a\":0,\"args\":[\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\sealed-C02\\\\marker.txt\",\"0\",\"--allow-http=数据\"],\"b\":14,\"c\":33,\"history\":[0,14,33],\"snapshot\":99}\n",
+      "stderr": "",
+      "pass": true,
+      "marker": "I"
+    },
+    {
+      "name": "quantity-4",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C02\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C02\\marker.txt",
+        "-4",
+        "--allow-http=数据"
+      ],
+      "exit": 0,
+      "stdout": "{\"a\":-28,\"args\":[\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\sealed-C02\\\\marker.txt\",\"-4\",\"--allow-http=数据\"],\"b\":14,\"c\":33,\"history\":[-28,14,33],\"snapshot\":99}\n",
+      "stderr": "",
+      "pass": true,
+      "marker": "I"
+    },
+    {
+      "name": "quantity13",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C02\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C02\\marker.txt",
+        "13",
+        "--allow-http=数据"
+      ],
+      "exit": 0,
+      "stdout": "{\"a\":91,\"args\":[\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\sealed-C02\\\\marker.txt\",\"13\",\"--allow-http=数据\"],\"b\":14,\"c\":33,\"history\":[91,14,33],\"snapshot\":99}\n",
+      "stderr": "",
+      "pass": true,
+      "marker": "I"
+    },
+    {
+      "name": "fault",
+      "args": [
+        "run",
+        "--json",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C02\\main.lfz",
+        "--",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C02\\marker.txt",
+        "fault",
+        "中文"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"AssertionError\",\"message\":\"rate-fault\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\sealed-C02\\\\lib\\\\rates.lfz\",\"line\":19,\"col\":15,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\sealed-C02\\\\main.lfz\",\"line\":8,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\agent-benchmark-v3\\\\grading\\\\sealed-C02\\\\lib\\\\rates.lfz\",\"line\":19,\"func\":\"crash\"}]}\n",
+      "stderr": "",
+      "pass": true
+    }
+  ],
+  "source_axis": "PASS",
+  "protocol_axis": "UNKNOWN",
+  "server_closed": null,
+  "check_marker_absent": true,
+  "functional_axis": "PASS",
+  "source_axis_record_sha256": "f272cada2848d6af190079db848582d0f3899ca4caf16b35bebc10b65107435a",
+  "protocol_axis_record_sha256": "877dce11fe43b251f4785cfa8577fa44e1124072d5363edcf5dfe477f463efd9",
+  "certified": "UNKNOWN"
+}

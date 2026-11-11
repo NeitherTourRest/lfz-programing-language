@@ -1,0 +1,36 @@
+#42
+fn runNormal(jobs) {
+    let cell = {count: 0, job: nil}
+    let runJob = () => {
+        cell.count += 1
+        if type(cell.job) != "int" {
+            fail("bad-job")
+        }
+        cell.job
+    }
+
+    let items = map((job) => {
+        cell.job = job
+        let result = attempt(runJob)
+        if !result.ok {
+            result.error = result.error["class"]
+        }
+        result
+    }, jobs)
+
+    let nilResult = attempt(() => nil)
+    let nilOk = nilResult.ok && nilResult.value == nil && nilResult.error == nil
+    print(jsonStringify({items: items, count: cell.count, nilOk: nilOk}))
+}
+
+let args = argv()
+if args[0] == "budget" {
+    attempt(() => {
+        var ticks = 0
+        while true {
+            ticks += 1
+        }
+    })
+} else {
+    runNormal(jsonParse(args[1]))
+}

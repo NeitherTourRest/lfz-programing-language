@@ -1,0 +1,16 @@
+#42
+import rates from "./lib/rates.lfz"
+import view from "./lib/view.lfz"
+
+let rate = 900
+let quantityText = argv()[1]
+if quantityText == "fault" {
+    rates.crash()
+}
+
+let a = rates.quote(int(quantityText))
+rates.rate = 99
+let b = view.quote(2)
+rates.setRate(11)
+let c = view.quote(3)
+print(jsonStringify({a: a, b: b, c: c, snapshot: rates.rate, history: rates.history, args: view.args()}))

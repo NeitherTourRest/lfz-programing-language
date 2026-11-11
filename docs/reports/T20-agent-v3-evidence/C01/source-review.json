@@ -1,0 +1,14 @@
+{
+  "task": "C01",
+  "reviewer": "verifier_t20",
+  "source_hashes": {
+    "main.lfz": "f158dcc711d8ede2135cd60aa8bba98a44feed26cdfaab23100ac6b0b2399386"
+  },
+  "verdict": "PASS",
+  "observations": [
+    "forEachLine cap4096 and one parse closure outside callback",
+    "rejects malformed/non-object/nonempty-account/non-int-delta violations",
+    "buffer flush at 32; file truncated first; error propagates; no whole read",
+    "sum uses floor-div/remainder limbs"
+  ]
+}

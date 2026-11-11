@@ -1,0 +1,13 @@
+#42
+let cell={path:""}
+let fetch=()=>httpRequest("GET",argv()[0]+cell.path,[],"",1000,16384)
+var rows=[]
+for path in ["/ok","/missing","/redirect","/bad","/ok"] {
+ cell.path=path
+ let r=attempt(fetch)
+ if r.ok {
+  let pairs=filter((p)=>p[0]=="x-repeat",r.value.headers)
+  rows=push({status:r.value.status,body:r.value.body,repeated:map((p)=>p[1],pairs)},rows)
+ } else { rows=push({error:r.error["class"]},rows) }
+}
+print(jsonStringify(rows))

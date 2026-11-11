@@ -1,0 +1,66 @@
+{
+  "task": "C03",
+  "reviewer": "verifier_t20",
+  "source_hashes": {
+    "main.lfz": "59f5c8d704d63620b4bb7ab40b12aa360fc1c21f39ca56c43a546eaeac81cade"
+  },
+  "verdict": "UNKNOWN",
+  "source_trace_sha256": "4120d931cc92453fe417b0b3f0bf3dabe63a4ab5dfa01fcc6167bd010ae6bfd2",
+  "export_sha256": "cc62cafb3e7e937a14ad03bb6d5cf8aa6de96c275d059048975ca278c74bcc2c",
+  "session_id": "01a1cad5-6cfb-79f1-a112-1728944d555d",
+  "actual_model": "gpt-6.1-sol",
+  "actual_effort": "medium",
+  "start_utc": "2026-11-11T13:38:54.285497+00:00",
+  "deadline_utc": "2026-11-11T13:58:54.285497+00:00",
+  "last_tool_utc": "2026-11-11T13:43:09.432000+00:00",
+  "submission_message_within_deadline": true,
+  "top_level_calls": 10,
+  "product_calls_observed": 8,
+  "cycles": 4,
+  "snapshots": [
+    {
+      "cycle": 1,
+      "source_hashes": {
+        "main.lfz": "59f5c8d704d63620b4bb7ab40b12aa360fc1c21f39ca56c43a546eaeac81cade"
+      },
+      "record_sha256": "e987e74f0b7bc879950d6397d4d3a1caec65f37783d29c9bf4730a82f4c6f25c",
+      "start_utc": "2026-11-11T13:42:15.143798+00:00",
+      "end_utc": "2026-11-11T13:42:15.274496+00:00",
+      "launches": 2
+    },
+    {
+      "cycle": 2,
+      "source_hashes": {
+        "main.lfz": "59f5c8d704d63620b4bb7ab40b12aa360fc1c21f39ca56c43a546eaeac81cade"
+      },
+      "record_sha256": "69871100eb617cb3f7cfa06575c0afe23bf967db3aa85d4768a1470099d71f56",
+      "start_utc": "2026-11-11T13:42:26.261114+00:00",
+      "end_utc": "2026-11-11T13:42:26.308733+00:00",
+      "launches": 2
+    },
+    {
+      "cycle": 3,
+      "source_hashes": {
+        "main.lfz": "59f5c8d704d63620b4bb7ab40b12aa360fc1c21f39ca56c43a546eaeac81cade"
+      },
+      "record_sha256": "4ee21b62b3cda9216f41b560cd25bf93fb221ada6c9e73a24b7312d9553c6c1f",
+      "start_utc": "2026-11-11T13:42:35.289756+00:00",
+      "end_utc": "2026-11-11T13:42:35.342861+00:00",
+      "launches": 2
+    },
+    {
+      "cycle": 4,
+      "source_hashes": {
+        "main.lfz": "59f5c8d704d63620b4bb7ab40b12aa360fc1c21f39ca56c43a546eaeac81cade"
+      },
+      "record_sha256": "019f2d74354704d616f699dfff7ede4c480d9d82d96e3344adb69de7b8188970",
+      "start_utc": "2026-11-11T13:42:36.122557+00:00",
+      "end_utc": "2026-11-11T13:42:36.175305+00:00",
+      "launches": 2
+    }
+  ],
+  "check_before_run": true,
+  "dispatch_inputs_verified": true,
+  "access_scope": "Reviewed tool invocations and wrapper records; no out-of-scope action identified in tool trace.",
+  "limitation": "Independent OS process/access telemetry unavailable. Tool trace and wrapper evidence do not establish no bypass; protocol remains UNKNOWN."
+}

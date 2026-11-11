@@ -1,0 +1,15 @@
+{
+  "task": "C02",
+  "reviewer": "verifier_t20",
+  "source_hashes": {
+    "main.lfz": "20f05da363dbe8ceeebd7b9ebb0291e65a9c9569ee4ca41740b590e4a25ecff1",
+    "lib\\rates.lfz": "1b557f6e9efde52fd3bd370c268ac13bf266fabd5a2a5fccf1f4fffd43f52241",
+    "lib\\view.lfz": "278d692789239630e990ec0b5deaad16e943b691757259a4882669504f991bf3"
+  },
+  "verdict": "PASS",
+  "observations": [
+    "real three files; both imports reach rates identity",
+    "namespace write and home rate setter distinguished; shared fixed array slots",
+    "marker initialized in rates and fault attributed there; actual argv returned"
+  ]
+}

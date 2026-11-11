@@ -1,0 +1,72 @@
+{
+  "task": "C04",
+  "mode": "CONTROL_OR_SEALED_SUBMISSION_VALIDATION",
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "binary_bytes": 1100800,
+  "source_hashes": {
+    "main.lfz": "abde93aae6332ae90a1e23f5a2f75480d07e5011bb1cccb05368385384524d31"
+  },
+  "runs": [
+    {
+      "name": "check",
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C04\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "disabled",
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C04\\main.lfz",
+        "--",
+        "http://127.0.0.1:54573"
+      ],
+      "exit": 0,
+      "stdout": "[{\"error\":\"ValueError\"},{\"error\":\"ValueError\"},{\"error\":\"ValueError\"},{\"error\":\"ValueError\"},{\"error\":\"ValueError\"}]\n",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "enabled",
+      "args": [
+        "run",
+        "--allow-http",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\grading\\sealed-C04\\main.lfz",
+        "--",
+        "http://127.0.0.1:54573"
+      ],
+      "exit": 0,
+      "stdout": "[{\"body\":\"雪\",\"repeated\":[\"one\",\"two\"],\"status\":200},{\"body\":\"absent\",\"repeated\":[],\"status\":404},{\"body\":\"\",\"repeated\":[],\"status\":302},{\"error\":\"ValueError\"},{\"body\":\"雪\",\"repeated\":[\"one\",\"two\"],\"status\":200}]\n",
+      "stderr": "",
+      "pass": true,
+      "visits": [
+        "/ok",
+        "/missing",
+        "/redirect",
+        "/bad",
+        "/ok"
+      ]
+    }
+  ],
+  "source_axis": "PASS",
+  "protocol_axis": "UNKNOWN",
+  "server_closed": true,
+  "check_marker_absent": true,
+  "functional_axis": "PASS",
+  "source_axis_record_sha256": "8dd656d6caf1078a526145ebf7218e55a60491643bd886276e3200f1c9e421b9",
+  "protocol_axis_record_sha256": "544269cb2b33477f4a1b6ee0b86014bcbe71d0b39fa21e3f31ca4c10148cb369",
+  "certified": "UNKNOWN"
+}

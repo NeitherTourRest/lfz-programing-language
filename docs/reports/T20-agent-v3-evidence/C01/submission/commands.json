@@ -1,0 +1,77 @@
+[
+  [
+    "check",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C01\\main.lfz"
+  ],
+  [
+    "run",
+    "--max-steps",
+    "200000",
+    "--timeout-ms",
+    "5000",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C01\\main.lfz",
+    "--",
+    "public.jsonl",
+    "self-public-output.jsonl"
+  ],
+  [
+    "check",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C01\\main.lfz"
+  ],
+  [
+    "run",
+    "--max-steps",
+    "200000",
+    "--timeout-ms",
+    "5000",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C01\\main.lfz",
+    "--",
+    "self-mixed.jsonl",
+    "self-mixed-output.jsonl"
+  ],
+  [
+    "check",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C01\\main.lfz"
+  ],
+  [
+    "run",
+    "--max-steps",
+    "200000",
+    "--timeout-ms",
+    "5000",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C01\\main.lfz",
+    "--",
+    "self-invalid-utf8.jsonl",
+    "self-invalid-utf8-output.jsonl"
+  ],
+  [
+    "check",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C01\\main.lfz"
+  ],
+  [
+    "run",
+    "--max-steps",
+    "200000",
+    "--timeout-ms",
+    "5000",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C01\\main.lfz",
+    "--",
+    "self-overlong.jsonl",
+    "self-overlong-output.jsonl"
+  ],
+  [
+    "check",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C01\\main.lfz"
+  ],
+  [
+    "run",
+    "--max-steps",
+    "200000",
+    "--timeout-ms",
+    "5000",
+    "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C01\\main.lfz",
+    "--",
+    "self-missing-input.jsonl",
+    "self-missing-output.jsonl"
+  ]
+]

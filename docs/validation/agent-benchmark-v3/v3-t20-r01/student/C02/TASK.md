@@ -1,0 +1,5 @@
+只使用提供的五份AI文档与lfz.exe。提交LFZ文件及commands.json（实际check/run argv数组）。先check再run；20分钟、40顶层工具调用、最多5个自调周期，每周期最多1check+1run（合计10次产品启动）。不得批量子启动绕预算。不得读仓库、其它题、评分器或历史答案，不得联网公网/外装/调用其它语言解决业务。workspace仅提示隔离，不是OS沙箱。提交后无隐藏验收反馈或继续修复机会。stdout业务JSON一行，除特别模式外不使用CLI --json。所有题maxsteps200000/timeout5000ms，资源错误不得吞。
+
+提交main.lfz、lib/rates.lfz、lib/view.lfz。rates顶层var rate=7，let history=[nil,nil,nil]（本题恰三次报价，另用私有索引写入这三个槽）并完整导出rate/history/quote/setRate/crash；quote(q)返回q*rate并向共享history写入结果（数组修改须用下标/字段等保共享引用，不用重绑定代替共享）；setRate(v)更新私有全局rate。view导入同一rates并导出quote/args函数，其quote转调rates.quote，args返回argv()。rates初始化appendFile(argv()[0],"I")一次。入口argv=[markerPath,quantityText,flagText]，定义同名let rate=900，然后：a=rates.quote(int(argv()[1]))；rates.rate=99；b=view.quote(2)；rates.setRate(11)；c=view.quote(3)。打印{a,b,c,snapshot:rates.rate,history:rates.history,args:view.args()}。从lib/view的相对路径和入口不同路径导入同一个rates，证明home globals/namespace快照与共享/缓存；另argv quantityText="fault"时调用rates导出crash()（在rates中fail("rate-fault")），错误CLI --json应指rates.lfz。先check时初始化marker不得产生。不得单文件模拟/硬编码输出。
+
+flagText须经view.args原样返回，flag样文本也只是argv，不开启能力。

@@ -1,0 +1,23 @@
+{
+  "config": {
+    "task": "C04",
+    "workspace": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C04",
+    "binary": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C04\\lfz.exe",
+    "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+    "start_utc": "2026-11-11T13:39:35.451530+00:00",
+    "deadline_utc": "2026-11-11T13:59:35.451530+00:00"
+  },
+  "inputs": {
+    "AI-GUIDE.md": "bdf2722c3a6e1edbe6d24870bcd0e2f07687166861533ac9c95e19c9887e8363",
+    "cycle-config.json": "81f9d7a08fd897ab49f4247a7c912101b68275189ef2324a4989cb1d57d07143",
+    "lfz.exe": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+    "prompt-template.md": "8b2e0e846b781b763ba5212bf56b7f0cbd1482530e78b807984098c14c9ba728",
+    "README.md": "ea77dc84fda416aa80887e4a678882b0da0143fd8c22875ad838e5490f5dd76e",
+    "selftest_service.py": "f810eaf5804666d93c1e48226446f1f57573a8d11248cdf4dfe7559440990273",
+    "SKILL.md": "025bb99f7aea277d50d0ce5131ca2f283d6392fe52a34e9ac2d30ec62688d5d8",
+    "student_cycle.py": "5f0e72f5e1485c492d81404df40cd69f63b6ded35da3206664c9a865e6c8281c",
+    "TASK.md": "bea56dc538a92e0337937fcd226ccf20005c5c44363a5ed937f1b312927931b2",
+    "VERIFICATION.md": "dc603553af76653ff35dfd5ff00336bb3e0bda1a538667a8aea6db182d9bed81"
+  },
+  "manifest_sha256": "793caa2c2a006ab6a843b58513040f52ef164ac0ce039f760bd06baa798763b9"
+}

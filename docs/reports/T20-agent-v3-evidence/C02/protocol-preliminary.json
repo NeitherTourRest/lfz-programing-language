@@ -1,0 +1,64 @@
+{
+  "task": "C02",
+  "reviewer": "verifier_t20",
+  "source_hashes": {
+    "main.lfz": "20f05da363dbe8ceeebd7b9ebb0291e65a9c9569ee4ca41740b590e4a25ecff1",
+    "lib\\rates.lfz": "1b557f6e9efde52fd3bd370c268ac13bf266fabd5a2a5fccf1f4fffd43f52241",
+    "lib\\view.lfz": "278d692789239630e990ec0b5deaad16e943b691757259a4882669504f991bf3"
+  },
+  "verdict": "UNKNOWN",
+  "source_trace_sha256": "43588290d9c6abe6d9cccdec0e7f8b0887c6fa12bec598405831efcdff50042e",
+  "export_sha256": "269e4f0a1fbf5f35ca94c3af1e134fbf7aa08533b351a01d5f6f08e3233f1d0b",
+  "session_id": "01a1cad2-044b-77a2-ac8e-547f966bcca3",
+  "actual_model": "gpt-6.1-sol",
+  "actual_effort": "medium",
+  "start_utc": "2026-11-11T13:35:03.984001+00:00",
+  "deadline_utc": "2026-11-11T13:55:03.984001+00:00",
+  "last_tool_utc": "2026-11-11T13:39:46.898000+00:00",
+  "submission_message_within_deadline": true,
+  "top_level_calls": 13,
+  "product_calls_observed": 5,
+  "cycles": 3,
+  "snapshots": [
+    {
+      "cycle": 1,
+      "source_hashes": {
+        "main.lfz": "20f05da363dbe8ceeebd7b9ebb0291e65a9c9569ee4ca41740b590e4a25ecff1",
+        "lib\\rates.lfz": "1b557f6e9efde52fd3bd370c268ac13bf266fabd5a2a5fccf1f4fffd43f52241",
+        "lib\\view.lfz": "278d692789239630e990ec0b5deaad16e943b691757259a4882669504f991bf3"
+      },
+      "record_sha256": "a6a6e0c96bfe1ece7070dffab8a77b3a1f80209e84e046e68ea654f996527026",
+      "start_utc": "2026-11-11T13:38:04.993060+00:00",
+      "end_utc": "2026-11-11T13:38:05.134332+00:00",
+      "launches": 1
+    },
+    {
+      "cycle": 2,
+      "source_hashes": {
+        "main.lfz": "20f05da363dbe8ceeebd7b9ebb0291e65a9c9569ee4ca41740b590e4a25ecff1",
+        "lib\\rates.lfz": "1b557f6e9efde52fd3bd370c268ac13bf266fabd5a2a5fccf1f4fffd43f52241",
+        "lib\\view.lfz": "278d692789239630e990ec0b5deaad16e943b691757259a4882669504f991bf3"
+      },
+      "record_sha256": "ed2d9191ac9a93c2cb5f73f9aa0c917fb033dc3088a590cca1ea7ae2460c5601",
+      "start_utc": "2026-11-11T13:38:50.352042+00:00",
+      "end_utc": "2026-11-11T13:38:50.396801+00:00",
+      "launches": 2
+    },
+    {
+      "cycle": 3,
+      "source_hashes": {
+        "main.lfz": "20f05da363dbe8ceeebd7b9ebb0291e65a9c9569ee4ca41740b590e4a25ecff1",
+        "lib\\rates.lfz": "1b557f6e9efde52fd3bd370c268ac13bf266fabd5a2a5fccf1f4fffd43f52241",
+        "lib\\view.lfz": "278d692789239630e990ec0b5deaad16e943b691757259a4882669504f991bf3"
+      },
+      "record_sha256": "a7128962b76a478c058522afedf8d7f0a5c590b4f73af0308d45f3d1b5c30df5",
+      "start_utc": "2026-11-11T13:39:15.470322+00:00",
+      "end_utc": "2026-11-11T13:39:15.517232+00:00",
+      "launches": 2
+    }
+  ],
+  "check_before_run": true,
+  "dispatch_inputs_verified": true,
+  "access_scope": "Reviewed tool invocations and wrapper records; no out-of-scope action identified in tool trace.",
+  "limitation": "Independent OS process/access telemetry unavailable. Tool trace and wrapper evidence do not establish no bypass; protocol remains UNKNOWN."
+}

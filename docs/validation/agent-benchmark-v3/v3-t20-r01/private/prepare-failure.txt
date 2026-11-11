@@ -1,0 +1,1 @@
+2026-11-04 Python ast.parse首轮失败：runner.py数据使用b'雪'导致SyntaxError bytes can only contain ASCII literal characters。只修新评分器字节字面量为UTF8 hex escapes，未启动LFZ或学生，未修改产品/旧行为/oracle预期。

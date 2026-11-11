@@ -1,0 +1,17 @@
+import sys,pathlib,json,hashlib,datetime,shutil
+r=pathlib.Path.cwd(); e=r/'docs/reports/T20-agent-v3-evidence';w=r/'Temp/agent-benchmark-v3/v3-t20-r01'; sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest(); read=lambda p:json.loads(p.read_text(encoding='utf-8-sig')); write=lambda p,v:p.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n',encoding='utf8'); stamp=lambda t:datetime.datetime.fromisoformat(t.replace('Z','+00:00'))
+notes={'C01':['forEachLine cap4096 and one parse closure outside callback','rejects malformed/non-object/nonempty-account/non-int-delta violations','buffer flush at 32; file truncated first; error propagates; no whole read','sum uses floor-div/remainder limbs'], 'C02':['real three files; both imports reach rates identity','namespace write and home rate setter distinguished; shared fixed array slots','marker initialized in rates and fault attributed there; actual argv returned'], 'C03':['real attempt wraps mutation and fail; nil checks actual Result','budget mode uses nonempty infinite while inside attempt; no simulated error'], 'C04':['real HTTP requests with frozen caps, order, and strict Result handling; no shell business implementation']}
+for task in sys.argv[1:]:
+ d=e/task; rec=read(d/'dispatch.json'); sub=d/'submission'; source=read(d/'submission-hashes.json'); t=w/(task+'-trace-review-temp.json'); trace=read(t)
+ audit=[]; actual=[]
+ for c in sorted((d/'selftest-audit').glob('cycle-*.json')):
+  v=read(c); snap=c.with_suffix(''); assert v['source_hashes']=={str(f.relative_to(snap)):sha(f)for f in snap.rglob('*.lfz')}; runs=v['runs'];assert runs and runs[0]['args'][0]=='check' and len(runs)<=2
+  if len(runs)==2:assert runs[0]['exit']==0 and runs[1]['args'][0]=='run'
+  actual.extend(x['args'] for x in runs); audit.append(dict(cycle=v['cycle'],source_hashes=v['source_hashes'],record_sha256=sha(c),start_utc=v['start_utc'],end_utc=v['end_utc'],launches=len(runs)))
+ assert actual==read(sub/'commands.json'); assert audit[-1]['source_hashes']==source
+ cfg=rec['config']; start=stamp(cfg['start_utc']); deadline=stamp(cfg['deadline_utc']); call_last=max(stamp(c['timestamp'])for c in trace['tool_calls']); assert all(start<=stamp(a['start_utc'])<=stamp(a['end_utc'])<=deadline for a in audit); assert call_last<=deadline
+ assert trace['matched_call_ids'] and len(trace['tool_calls'])<=40 and len(audit)<=5 and len(actual)<=10
+ shutil.copyfile(t,d/'tool-trace.json')
+ write(d/'source-review.json',dict(task=task,reviewer='verifier_t20',source_hashes=source,verdict='PASS',observations=notes[task]))
+ write(d/'protocol-review.json',dict(task=task,reviewer='verifier_t20',source_hashes=source,verdict='UNKNOWN',source_trace_sha256=trace['source_session_sha256'],export_sha256=sha(d/'tool-trace.json'),session_id=trace['session_id'],actual_model=trace['model_contexts'][0]['model'],actual_effort=trace['model_contexts'][0]['effort'],start_utc=cfg['start_utc'],deadline_utc=cfg['deadline_utc'],last_tool_utc=call_last.isoformat(),submission_message_within_deadline=True,top_level_calls=len(trace['tool_calls']),product_calls_observed=len(actual),cycles=len(audit),snapshots=audit,check_before_run=True,dispatch_inputs_verified=True,access_scope='Reviewed tool invocations and wrapper records; no out-of-scope action identified in tool trace.',limitation='Independent OS process/access telemetry unavailable. Tool trace and wrapper evidence do not establish no bypass; protocol remains UNKNOWN.'))
+ print(task,len(trace['tool_calls']),len(audit),len(actual),(call_last-start).total_seconds())

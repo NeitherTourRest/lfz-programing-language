@@ -1,0 +1,7 @@
+#42
+import rates from "./rates.lfz"
+
+fn quote(q) => rates.quote(q)
+fn args() => argv()
+
+export quote, args

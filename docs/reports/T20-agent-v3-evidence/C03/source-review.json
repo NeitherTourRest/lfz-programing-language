@@ -1,0 +1,12 @@
+{
+  "task": "C03",
+  "reviewer": "verifier_t20",
+  "source_hashes": {
+    "main.lfz": "59f5c8d704d63620b4bb7ab40b12aa360fc1c21f39ca56c43a546eaeac81cade"
+  },
+  "verdict": "PASS",
+  "observations": [
+    "real attempt wraps mutation and fail; nil checks actual Result",
+    "budget mode uses nonempty infinite while inside attempt; no simulated error"
+  ]
+}

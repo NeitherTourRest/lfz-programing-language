@@ -1,0 +1,2 @@
+# 独立审题控制清单（待执行）
+references为正控制候选，不称已过，需verifier实际check/run。特别审C02共享数组增长是否合法；不合法应在派发前修题与参考解，不改产品。负控制由verifier独立制作：C01硬编码public应功能FAIL，全文件collect即使功能过源码FAIL，丢失CRcap应边界FAIL；C02全局caller rate900/初始化两次/重绑定history应FAIL；C03伪造error/source审计FAIL、吞budget功能FAIL；C04跟302导致target访问FAIL、无授权触网FAIL、只看exit0忽略ValueError功能FAIL。缺trace控制必须协议UNKNOWN而非PASS，40/41调用和5/6周期及20min边界需真实审计单测。不得运行学生来调oracle。

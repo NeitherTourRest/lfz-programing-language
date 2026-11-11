@@ -1,0 +1,34 @@
+#42
+let args=argv()
+writeFile(args[1],"")
+let cell={text:""}
+let parseCurrent=()=>jsonParse(cell.text)
+var batch=[]
+var accepted=0
+var rejected=0
+var total=0
+let consume=(s,n)=>{
+ cell.text=s
+ let p=attempt(parseCurrent)
+ var valid=false
+ if p.ok {
+  if type(p.value)=="struct" {
+   if contains("account",keys(p.value)) && contains("delta",keys(p.value)) {
+    valid=type(p.value.account)=="string" && len(p.value.account)>0 && type(p.value.delta)=="int"
+   }
+  }
+ }
+ if valid {
+  accepted=accepted+1
+  total=total+p.value.delta
+  batch=push(jsonStringify({account:p.value.account,delta:p.value.delta,lineNo:n}),batch)
+  if len(batch)==32 {
+   appendFile(args[1],join("\n",batch)+"\n")
+   batch=[]
+  }
+ } else { rejected=rejected+1 }
+ return true
+}
+forEachLine(consume,4096,args[0])
+if len(batch)>0 { appendFile(args[1],join("\n",batch)+"\n") }
+print(jsonStringify({accepted:accepted,rejected:rejected,sum:total}))

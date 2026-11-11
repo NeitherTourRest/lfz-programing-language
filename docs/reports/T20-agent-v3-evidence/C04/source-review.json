@@ -1,0 +1,11 @@
+{
+  "task": "C04",
+  "reviewer": "verifier_t20",
+  "source_hashes": {
+    "main.lfz": "abde93aae6332ae90a1e23f5a2f75480d07e5011bb1cccb05368385384524d31"
+  },
+  "verdict": "PASS",
+  "observations": [
+    "real HTTP requests with frozen caps, order, and strict Result handling; no shell business implementation"
+  ]
+}

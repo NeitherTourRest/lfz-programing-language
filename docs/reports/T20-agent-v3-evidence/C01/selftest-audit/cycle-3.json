@@ -1,0 +1,35 @@
+{
+  "cycle": 3,
+  "start_utc": "2026-11-11T13:38:17.597428+00:00",
+  "source_hashes": {
+    "main.lfz": "f158dcc711d8ede2135cd60aa8bba98a44feed26cdfaab23100ac6b0b2399386"
+  },
+  "runs": [
+    {
+      "args": [
+        "check",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C01\\main.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "run",
+        "--max-steps",
+        "200000",
+        "--timeout-ms",
+        "5000",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C01\\main.lfz",
+        "--",
+        "self-invalid-utf8.jsonl",
+        "self-invalid-utf8-output.jsonl"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\agent-benchmark-v3\\v3-t20-r01\\students\\C01\\main.lfz\", line 50, in <module>\n    forEachLine(onLine, 4096, inputPath)\n    ^\nValueError: 第 34 行不是合法 UTF-8\n"
+    }
+  ],
+  "end_utc": "2026-11-11T13:38:17.644802+00:00"
+}
