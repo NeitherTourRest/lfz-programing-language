@@ -309,3 +309,9 @@ parent库467PASS；仅新增4unit覆盖线程同步取消、7HOF、diamond预算
 
 ### [2026-11-03] T19运行时源码交接
 forEachLine/76注册/预检/native-only poll/统一finish与5新unit落盘；存活host关闭与marker取消见证源码已备但未运行。停止写源/编译，交tooling唯一release。无OSclose错误或性能通过声明。
+
+### [2026-11-04] T20 REPL源码交接
+先只读review后按root§26 GO实现session/source/home/sharedglobals/恢复与capacity，7新unit未编译。evaluator25F94AE7…，diff check过，停写交tooling。SourceMap snapshot复制成本已披露，旧API/UserFn/Value未变。
+
+### [2026-11-04] T20新增oracle修正
+首lib527/1失败因非法后置import先触发ImportOrder；仅本轮测试保原输入精确旧诊断，并新增合法import/export预检无副作用断言。evaluator049FF34A…，diff check过，未编译停源交tooling。首失败日志未动。

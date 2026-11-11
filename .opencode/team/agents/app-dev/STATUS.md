@@ -1,5 +1,5 @@
 # app-dev — 工作状态
-> 最后更新：2026-11-04 by app-dev
+> 最后更新：2026-11-11 by app-dev
 
 ## 当前状态
 T18-B HTTPplan作者验收7/7通过，最终18d328d9/1029120B；独立验收由verifier负责。所有旧应用/oracle保持不变，本轮B完成后停止，无应用阻塞。
@@ -37,3 +37,9 @@ jsonlstream.lfz/verify_jsonlstream.py/T19说明已落：forEachLine逐条attempt
 
 ## T19最终功能验收（2026-11-04）
 最终5d2219f8/1041920B，默认权限14/14 PASS。固定struct currentLine.text+单个parseCurrent闭包，256条有界批；首oracle CLI--json错误/逐行closure14绿/误let重绑定失败及全部源码、最终14绿保留app/t19-evidence，manifest齐。全局0步初始化前KEEP；不冒称callback中途资源/关闭/规模性能已由应用证明。所有测试进程结束，无perf并发/产品/旧app/编译/Git。交独立verifier，R304OPEN，仅T19后停止，无阻塞。
+
+## T20 REPL准备（2026-11-04）
+新增repl_jsondesk/session.repl和cases.json、verify_repl_jsondesk.py/T20说明，AST/prepare-only PASS，6组/0解释器。真实repl持久JSON检查台、多行/错误后容器与声明保留/input消费/history source-caret/reset/每cellsteps与timeout，等最终hash实跑。旧app不改，无产品/编译Git/外装公网。仅T20交付，不automation，R304OPEN。
+
+## T20最终验收（2026-11-11）
+a545d0c2/1100800B 默认权限实际lfz repl重放6/6 PASS，全部子进程结束。多行markThenFail核失败后desk.failed=2，input消费、历史真实来源及caret、reset、每cell预算和EOF均过。首分号、EOF空白行caret预期和EOF中文措辞失败保留于app/t20-evidence及manifest。产品/旧应用未改，未编译/Git。交root收口，R304OPEN，无应用阻塞。

@@ -1,14 +1,24 @@
 # LFZ 语言与解释器 — 程序设计课程作业
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-> 最后更新: 2026-11-04 by release-manager
+> 最后更新: 2026-11-11 by release-manager
 > 仓库地址: https://github.com/NeitherTourRest/lfz-programing-language
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
-## 本轮收口：T19 有界逐行文件处理（2026-11-04）
+## T20 交互式 REPL 与 Agent v3（2026-11-11）
 
-当前76内置/13错误类，新增`forEachLine(callback,maxLineBytes,path)`处理普通UTF8文件和JSONL，不把全文件读入字符串。回调以`line,lineNo`调用，固定解析闭包与可变text cell可避免逐行创建闭包带来的元数据增长；任意用户回调仍可能额外分配或积累结果。
+运行 `dist\lfz.exe repl` 可逐段执行 LFZ。变量和函数跨输入段保留，诊断标出实际来源 `<repl:N>`，出错后仍可继续输入。失败前已发生的副作用会保留。用 `:reset` 清空会话，用 `:quit` 退出。会话曾出错时退出码为 2，重置定义也会保留这个退出状态。当前 REPL 有输入和会话容量限制，`import/export` 请用脚本入口。多行输入、共享 stdin 和限额见[REPL 指南](docs/guide/repl.md)，[JSONdesk](app/T20-REPL-JSONDESK.md)提供交互示例。
+
+Windows 候选 `a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c`（1100800 字节）通过独立验收，包括 705 项 Rust 测试、37 项公开 REPL 测试和全部旧回归。应用 6 项、人指南 16 项及 AI 指南 8 项为作者实跑，原始结果经独立核对。真实 Windows 终端已验证英文提示与退出行为，中文渲染待验。[独立验收](docs/reports/T20-independent-verification.md) · [产物与归档指纹](docs/reports/T20-release-evidence/archive-verification.json)
+
+Agent v3 首次封存提交认证 4/4，功能 27/27、源码 4/4、协议 4/4。独立审阅核对了 29/29 条真实产品进程记录，四题会话均为 `gpt-6.1-sol`、`medium`。冻结任务包另有四份参考通过、八份负控制预期拒绝、九项预算控制通过。v3 使用新题，历史 v2 八题按原报告保留。[v3 独立评分](docs/reports/T20-agent-v3-verification.md) · [冻结任务包清单](docs/validation/agent-benchmark-v3/v3-t20-r01/manifest.frozen.json)
+
+现有 AST 会丢失注释与部分原始写法，[格式化器评估](docs/reports/T20-formatter-assessment.md)据此暂缓生产实现。当前为 1.4.0 候选，R304 仍开放，T20 未开启性能窗口或打正式标签。
+
+## T19 历史有界逐行文件候选（2026-11-04）
+
+T19 候选有 76 个内置函数和 13 类错误，新增 `forEachLine(callback,maxLineBytes,path)` 流式处理普通 UTF-8 文件和 JSONL。回调以 `line,lineNo` 调用，固定解析闭包与可变 text cell 可避免逐行创建闭包带来的元数据增长。任意用户回调仍可能额外分配或积累结果。
 
 最终候选1041920B、SHA256 `5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5`，[精确归档](docs/reports/T19-release-evidence/build.json)包含递归24源码、Cargo、测试及exe。[独立报告](docs/reports/T19-independent-verification.md)功能PASS：684 harness、旧全部回归、公开47、jsonlstream14、自编8；人指南42次check/run、AI45为作者实跑，独立文档/规模审计结果以报告最终段为准。
 

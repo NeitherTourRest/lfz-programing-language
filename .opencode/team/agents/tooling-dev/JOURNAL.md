@@ -193,3 +193,9 @@ owned HTTP backend/CLI/runner双诊断门禁，先红再首4/最终7生命周期
 
 ### [2026-11-04 01:23] T19实现最终684通过收口
 reader/lib实现，reader11+runtime5+core新测试同编全验；首515/1新增测试TwoStatements失败完整保全，仅改新增test换行。最终12harness684/684/build0，新1041920B/SHA5D2219F88DB8B3196CAC259941FC0A8A3B489EF03519BC7E20415F8EDF6388E5。真实同host活句柄负控与全部Outcome返回后排他/Drop spy/故障/plateau通过，有效输入旧红新绿。递归源码Rust测试manifest与精确ZIP落docs/tooling/evidence/T19，源/编译静默交root公开独立/perf，不dist/Git/T20/automation。
+
+### [2026-11-04] T20只读CLI/REPL/formatter review
+完整启动读NEXT/现CLI/main/parser/lexer/AST/loader/source/evaluator/input及官方std文档，报告docs/reports/T20-tooling-review.md。推荐显式REPL/cell+runtime持久session同大栈；输入共享Stdin逐次借锁释放后eval，不跨worker持锁/私有预读；来源/预算/权限/reset/模块边界交架构。formatter缺trivia/AST已脱糖，建议有依据暂缓。未产品写/编译/旧test/Git/外装/公网，腾slot，仅T20不automation不替R304。
+
+### [2026-11-04] T20前端实现与首完整回归交接
+按§26接REPL/sharedstdin/有界pending/同大栈/typedprobe/session/render/exit/flags与poison门禁，Write+Send仅binary内部获root批准。首2/2+5/2失败保留，修本人assignment新oracle与真实compile-source adapter后2/2+7/7过。完整lib527/1在runtime新增import顺序oracle，精确日志报root，未越权修改，源编译暂停腾slot待owner交接；无最终hash或全套成功声明。formatter独立评估本轮暂缓，真实PTY尚待验，不改旧tests/dist/Git/外装/公网/automation。

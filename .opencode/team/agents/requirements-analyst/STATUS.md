@@ -1,18 +1,8 @@
 # requirements-analyst — 工作状态
-> 最后更新: 2026-11-04 by requirements-analyst
+> 2026-11-11 T20需求验收记录完成
 
-## 当前状态
-T19新增R138/214/305/413/510通过，逐行raw/UTF8/早停/回调恢复/预算与RAII、固定闭包应用、人/AI及限定规模测量交付已收口。R305不是R304替代，原19效率门槛R304继续OPEN；不正式发布，仅本轮T19交付不T20/automation。
+R139/215/414/415/511 已按最终 Windows 候选 a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c（1100800 字节）验收。独立 705/705、公开 37/37、全部旧 CLI 和应用回归通过。真实 ConPTY 验证主/续提示、input、正常 exit 0 和错误后 reset 的累计 exit 2。中文终端渲染待验。宿主绝对截止/reset 和 1000 cell 有实跑，4096/16MiB/函数容量按独立报告保留注入边界。
 
-## 证据
-- 冻结5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5/1041920B，76内置/13错误类。
-- T19-independent-verification.md最终功能684/全部旧回归/公开47/app14/自编8通过，人42check-run/AI45作者实跑及11文档SHA独立审计。
-- 唯一window01七组42样本（7warm/35formal）全通过，111文件manifest独立核，100MiB实际104857726B/675779行oracle核一致；固定driver三档OS峰值约6.5MiB，10MiB whole约34.9MiB。stream median0.345100/3.081447/9.335709s，Python更快，warmcache不代表冷磁盘/硬件通用吞吐或原R304达标。
-- RAII同活Windows host真实关闭，std Drop不能报告OSclose错误；其它平台未实测。任意callback保留行/每行造闭包仍可额外内存，固定正式driver才适用规模结论。
-- 原unit/app/oracle/driver准备失败保全，不虚构未测初稿内存失败。旧v2及所有历史限制/证据保持。
+应用 6、人指南 16、AI 指南 8 全过，11 份文档及应用 manifest 独立核验。v3 冻结 manifest 793caa2c2a006ab6a843b58513040f52ef164ac0ce039f760bd06baa798763b9。首次提交三轴认证 4/4，功能 27/27、源码 4/4、协议 4/4，真实产品启动核对 29/29。证据见 T20-independent-verification.md 和 T20-agent-v3-evidence/summary.json。
 
-## 下一步
-交root/release本轮候选归档/Git收尾，不自动下一轮或恢复automation。
-
-## 阻塞/经验
-无需求侧阻塞；仅需求映射及本人记忆，无产品执行/网络/编译/Git。真实OS高水位与当前WS不同，固定callback规模实证不外推任意LFZ脚本。
+格式化器评估交付，生产实现暂缓。R304 OPEN。本轮按功能候选口径交 root 收尾，需求侧无阻塞。

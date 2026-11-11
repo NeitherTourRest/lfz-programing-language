@@ -76,3 +76,11 @@
 - 核5d2219f8/1041920B，最终固定cell/closure应用14/14 PASS，所有进程结束；无提权/规模测/编译Git。
 - 首CLI --json oracle误用、逐行closure版14绿、let重绑定失败全部原样归档。正确struct cell赋值后同产物14绿，固定闭包为静态分配改进而非生产变更。
 - t19-evidence报告/版本/manifest与说明齐；256条已写批次在坏UTF8后保留、earlyfalse毒尾及lineNo核对通过。global零预算KEEP，不扩大为callback资源/关闭/性能结论。交root收口，仅T19。
+
+## [2026-11-04] T20 REPL应用准备
+- 启动三文件/§26契约/项目skill复核，新增交互JSON检查台及6组真正repl重放oracle，保准备指纹。
+- AST和prepare-only PASS/0解释器；不以普通run替代REPL，不把错误恢复宣称回滚。待最终hash，释放slot；无旧app/产品/编译/Git改动，仅T20收口。
+
+## [2026-11-11] T20最终应用验收
+- 核a545d0c2/1100800B，修首版分号fixture为多行函数，核失败前struct写入保留。EOF oracle修空行caret预期及诊断措辞；全部首版、失败和最终结果归档。
+- 最终6/6 PASS，历史函数定义处源码与caret精确断言，说明/manifest齐。只app与自身记录，未改产品/旧应用，无编译/Git。已结束测试进程，交root。

@@ -265,3 +265,15 @@
 - 完成：首脚本未变，许可完整47/47 PASS/exit0；6关闭case均活PID负控32、返回后exclusive成功且PID仍alive。源码验后匹配tooling manifest。
 - 产出：final-first-permitted、manifest-final、script-first、CIM清理查询0活进程及报告。
 - 收工：所有47 communicate无异常，未开server；无自己LFZ活进程，不重跑以协调perf。无产品/旧tests/编译/Git/网络；R304OPEN，仅T19不T20。
+
+## [2026-11-04] T20公开REPL36准备
+- 来源：root启动完整§26/T20-contract并GO新公开脚本，当前无最终产品hash。
+- 完成：新脚本36例、AST PASS/prepare-only exit0/executed:false；冻结T19 5d2219真实缺repl红0/1，未跑活动T20。
+- 产出：tests/t20_cli_repl.py、T20-blackbox.md及专属evidence/计划/red/manifest。
+- 边界：TTY/host安全限额与poison另列不虚计36；无产品旧测试/编译/Git/网络。最终hash后实跑，R304OPEN，本轮收口不automation。
+
+## [2026-11-11] T20公开最终37通过
+- 来源：team-lead 确认两项新 oracle 修正和普通多行块注释补例。
+- 完成：同 a545d0c2…/1100800B 默认环境 37/37 PASS，exit0；首34/36与原脚本保全。
+- 产出：T20-blackbox 报告及 final-corrected-default/manifest-final，验后39个源指纹匹配冻结清单。
+- 下一步：交 team-lead 汇总；R304 OPEN。

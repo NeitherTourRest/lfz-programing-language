@@ -8,7 +8,19 @@
 
 > **2026-10-24 本轮补充核对（T11-12/13/14/16）**：8 项交付物位置保持齐备。当前 69 内置、494 Rust 测试（388+48+28+15+15）、130 黑盒；语言 witness 74/74，V01 干净 CWD 130/130 已独立闭环，详见 `T11-v11-reverification.md`。本地执行 `scripts/build-release.ps1` exit 0，`dist/lfz.exe` 766464 B、`lfz 1.0.1`，hello 冒烟输出 `Hello, LFZ!`；发布版 `dist/lfz.exe test --json` total/passed=130、failed/errored=0、exit 0。SHA256=`149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，原文见 `T11-v11-release-evidence/`。构建有本机 rustup canonicalize 提示，不声称零 warning。`dist/` 被忽略，仅本地刷新、不强制入库；版本仍 1.0.1，既有 8 个 tag 不变，本轮不打 v1.3.0。同题 8 盲测缺原题材料未重跑，历史 2/8 不变。下文 2026-09-27 原始计数、缺陷和历史标签信息保留其当时语境；当前状态以本补充及本轮独立报告为准。
 > **2026-10-24 v2 正式首轮补充核对**：新增[正式独立验收报告](agent-benchmark-v2/v2-20261024-r01/REVIEW.md)与[认证结果](agent-benchmark-v2/v2-20261024-r01/certified-results.json)，run-id `v2-20261024-r01`：8/8 整题、131/131 功能用例，8 份源码约束与协议审查均 PASS；学生共 9 次 LFZ 自调，各题首次自调均 exit 0（8/8），仅为自选测试辅指标。模型为会话日志确认的 `gpt-6.1-sol / medium`；隔离范围为分题无历史派发、指令约束及已记录工具审计，未声称 OS 隔离。新八题是独立 v2 基线，不以历史 2/8 计算提升。[原始字节 ZIP](agent-benchmark-v2/v2-20261024-r01/raw-inputs-submissions.zip)及其[哈希清单](agent-benchmark-v2/v2-20261024-r01/raw-archive.json)提供 Git 行尾归一化之外的原文留存。当前解释器仍为 Cargo 1.0.1 / 69 内置 / 494 Rust 测试 / 130 正式黑盒；dist 766464 B、SHA256 `149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，本轮不重编译或改 Cargo，保持冻结 pin。`v1.3.0` 交付里程碑包含已验收的 v1.1 实现、测试/指南及 v2 正式首轮认证与原始证据；Git 附注标签为发布凭据，不等同于解释器 1.0.1 的版本变更。上方“本轮不打 v1.3.0”仅描述前一批发布时点。
-## 2026-11-04 T19最终候选收口
+## 2026-11-11 T20 交互式候选交付
+
+`target/release/lfz.exe` 与本地 `dist/lfz.exe` 同为 1100800 字节，SHA256 `a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c`。原 T19 dist 先保留在项目 `Temp/T20-release/lfz-T19-5d2219.exe`。既有候选 ZIP 760103 字节、SHA256 `31f34b432db98ca8ac139b1b5f1a8c8a08d379cd69769e0fb52f593504fb6ff0`，递归 24 源码、13 Rust 测试、2 Cargo 文件与 exe 共 40 项均回读逐字节匹配。v3 冻结 ZIP 46 项也均核对，含任务、审查签收、同候选 exe 和五份 AI 文档。[归档复核](T20-release-evidence/archive-verification.json)
+
+独立验收通过 705 项 Rust 测试、37 项公开 REPL 测试与全部旧回归。JSONdesk 6、人指南 16、AI 指南 8 为作者实跑，11 份指南与应用证据经独立核对。Windows 真实 ConPTY 通过英文提示、正常退出和出错重置后累计退出码，中文渲染待验。保留首轮编译、公开测试、应用、旧回归驱动与评分器失败证据。[独立验收](T20-independent-verification.md)
+
+Agent v3 冻结 manifest SHA256 `793caa2c2a006ab6a843b58513040f52ef164ac0ce039f760bd06baa798763b9`。四参考、八负控制和九项预算控制符合预期。四份首次封存答卷独立认证 4/4，功能 27/27、源码 4/4、协议 4/4，29/29 条真实产品进程记录逐项匹配。四个会话均用 `gpt-6.1-sol` / `medium`。审计范围为已关联会话工具记录及冻结运行包装器。[首轮独立评分](T20-agent-v3-verification.md)
+
+提交预检分为契约、REPL、测试及独立证据、应用、指南、v3、候选记录七组，基线 `0d293b407cc653e4c8249d2f64561c30a0ea5ab3`。改动源码与 Rust 测试从候选 ZIP 生成暂存副本，公开 Python 测试核固定指纹。原用户三块 28/1/1 行仅从 `Temp` 暂存副本滤去，工作区原文保留。冻结任务包、证据以及实测五份 AI 和六份人类文档使用限定路径的 Git 字节保真属性。[分组预检](T20-release-evidence/prepare-checkpoint.py)
+
+格式化器完成评估，生产实现暂缓。R304 仍开放，T20 没有性能窗口，仍为候选交付。旧 v2 与旧标签保留，不打正式标签。
+
+## 2026-11-04 T19 历史候选收口
 
 最终1041920B/SHA5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5；28项精确ZIP701750B/SHA8c90cd23ecb72e51590fcd3c4cedbab7f7fb2f24d2d2d22ea41b2261a40383bb，全回读及输入前后字节一致。递归24src+2Cargo+1本轮测试+exe，大输入仅Temp不归档。
 

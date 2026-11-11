@@ -185,3 +185,14 @@ root核target1041920B/SHA5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8
 唯一正式window01全部42/42通过（7预热+35正式），10/100/300MiB逐行LFZ中位0.345100/3.081447/9.335709秒，OS峰值工作集约6.5MiB稳定；10MiB全量readFile约34.9MiB。Python300MiB6.244406秒，LFZ慢约49.5%如实披露，不闭合R304。OS峰值负对照64MiB触碰释放后peak82317312/current15241216证明非瞬时RSS；独立已核42样本分组/median/peak与三输入bytes/SHA，并自写Python重算100MiB675779行（668812有效/6967坏行）及sum/checksum一致，无新性能窗/未启动LFZ。perf报告/111证据SHA已封，全部进程退出。人42/AI45+11文档SHA最后只读审计中，requirements与release收口。候选5d2219/1041920B源不变，原失败/driver初版/固定closure依据全部保留；有界结论限定当前callback策略，不推任意用户callback。仅T19后停，不T20/automation，不正式tag，原用户三块保护。
 ## T19交付完成并收口（2026-11-04）
 七组已推main，git ls-remote实核7d8afe965bd2ab809f61017e274b4f8001780e2d；24src+1本轮test逐一对冻结ZIP归一换行一致。最终dist/target1041920B/SHA5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5。独立684/全部旧回归/公开47/app14/自编8通过，人指南42进程/AI45与11文档证据审计通过。唯一规模窗42样本全部oracle通过，独立100MiB675779行结果核算一致，10/100/300MiB流式WS约6.5MiB，10MiB全读约34.9MiB；LFZ300MiB9.335709s比Python6.244406s慢约49.5%，R304仍OPEN不正式发布/tag。reader有界不保证任意callback总内存，正式应用/驱动固定closure与有界批；stdDrop关闭错误不回传、TOCTOU/阻塞边界与非Windows资源未实测如实披露。原用户三块28/1/1未提交、旧v2/全部失败证据保全。仅本轮T19完成收口，不进入T20，不创建自动化。此后仅本回执Git记账，无新功能。
+## 用户授权进入T20（2026-11-04）
+范围为T20开发体验与综合交付：最小REPL、多行/EOF/错误后继续/持久上下文/真实cell来源，格式化器独立评估与有依据取舍，新版本化Agent任务包及实测、指南/综合验收后候选交付收口；不覆盖旧v2或恢复自动化。已核main0d293b407cc653e4c8249d2f64561c30a0ea5ab3，工作树仅原三用户块28/1/1，无cargo/rustc，D8979587072B。architect先契约提案，tooling只读REPL/formatter可行性，AI先新Agent测评计划；未GO产品或正式Agent测评。原R304OPEN，T20完成不等于原效率线或正式发布获准，失败与旧样本全部保留，临时项目Temp。
+## T20 首轮接入与测评题包准备（2026-11-04）
+三spec§26已冻结，core/runtime/CLI实现落盘；tooling唯一release初编译成功。前端2/2与真实stdin7/7修后通过，首5过2失败证据保全（新增赋值回显oracle错误、compile诊断缺真实cell来源已仅REPL适配修复）。首全lib527过1失败为本轮runtime新增import顺序oracle，交原owner核旧规则，当前停cargo待修。公开36与v3四题/八负控制已准备但未最终验收；独立静态审题进行，AI指南/trace机制准备。formatter有依据暂缓，R304OPEN，未冻最终exe/未学生实测/未发布。临时Temp，原三块保护，不恢复automation。
+
+## T20 验收接续（2026-11-11）
+最终 Windows 候选为 a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c，1100800 bytes，构建者 705/705。ConPTY 正常会话及错误后 reset 退出码已验证，中文终端渲染尚未验收。人指南同产物实跑 16/16，证据 Temp/T20-guide/lead-final.json。JSONdesk 首轮因新增演示把多条语句用分号放在同一行而失败，原件 Temp/T20-app/lead-final.json，待应用负责人修。公开 34/36 原件保留，修正两条本轮新增预期并补普通多行注释正例。AI 指南、v3 评分器修复及独立验收已接续。原 R304 OPEN，候选待交付。
+
+## T20 功能与 Agent v3 最终验收（2026-11-11）
+同一 Windows 候选 a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c（1100800 bytes）独立通过 705 项 Rust、公开 REPL 37/37 及全部旧 CLI/应用回归。ConPTY 实测主提示、续行、input 及时显示和退出码 0/2；中文终端渲染仍待验证，管道诊断文案已核。独立宿主实际验证绝对 deadline 跨 reset 及 1000 cell；应用 6/6、人指南 16/16、AI 8/8，绑定同候选和文档哈希。formatter 已完成评估并暂缓实现。
+v3 冻结 manifest 793caa2c2a006ab6a843b58513040f52ef164ac0ce039f760bd06baa798763b9。四题真实首次交卷，独立功能 27/27，源码和协议均 4/4，认证 4/4。逐条匹配 29 次产品启动，模型为 gpt-6.1-sol medium。四正八负及九预算控制通过。dist 已刷新同候选，精确归档 31f34b432db98ca8ac139b1b5f1a8c8a08d379cd69769e0fb52f593504fb6ff0。R304 保持 OPEN，尚待 Git 候选交付，停止边界为 T20。

@@ -1,11 +1,5 @@
-# docs-writer — 工作状态
-> 2026-11-04 T19最终人指南收工
+# docs-writer 状态
 
-## 当前状态
-五指南入口与line-processing.md完成；最终1041920B/SHA5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5，21场景42check/run全部通过，进程已全部同步结束。
+2026-11-11，T20 人类指南已通过验收。team-lead 在最终候选 a545d0c（1100800 bytes）上实跑 16/16。独立验证者核对六份指南 SHA，保存原始运行记录。docs-writer 已复核记录副本字节哈希及当前六文档 SHA，并更新 T20-guide-evidence.md。
 
-## 证据
-T19-guide-evidence.md及目录verify/runs/manifest，绑定六指南SHA。首轮40通过/第41check因新oracle缺换行SyntaxError保first-failure和verify-first，修验证器非产品；固定解析闭包教程复验两次42通过，第二轮原始保留。不逐行创建UserFn，明确func_names增长风险不推广reader O(line)到脚本整体。
-
-## 边界与下一步
-默认文件权限小样，无网络/规模/性能；host取消、OS关闭排他等由owner，不冒称实测。旧readFile不变，76内置13错误类。无产品/spec/AI/编译/Git，R304OPEN；root收口T19后停止，不T20/automation。
+下一步交 team-lead 纳入候选交付。人类指南无阻塞，R304 仍为 OPEN。

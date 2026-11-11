@@ -1,14 +1,16 @@
 # tooling-dev — 工作状态
-> 最后更新：2026-11-04 01:23 by tooling-dev
+> 最后更新：2026-11-04 T20首完整回归等待runtime交接
 
 ## 当前状态
-T19 reader/lib作者实现及最终684/684回归完成，源码/编译已停止，交root公开/独立与perf。仅T19，不T20/automation；未dist/Git。
+T20 CLI/REPL前端已实现，修后同writers2/2与真实stdin7/7通过；完整lib527通过/1新增runtimeunit失败，已报root，不越权改runtime/core。本人源/编译暂停等待owner修复后GO，尚无最终hash/全套成功。
 
-## 产出/证据
-- src/line_reader.rs精确owned ABI，8KiB固定缓冲/追加前raw cap+capacity限制、LF/CRLF/EOF/BOM/NUL/跨块UTF8/overflow、普通file双metadata、nativecancel/deadline-only，finish/RAII，无生产FFI/close diag/sync_all。
-- reader11unit+runtime5unit同编实际通过：活callback share0错误32负控，宿主/traced仍存活所有Outcome后排他成功；故障注入metadata/open/postopen/read、Drop spy恰一次，暖机50+1000次handle plateau；非Windows资源实测未声明。
-- 首reader7/7保留；首次最终lib515/1因本人新test while/true同行TwoStatements，保完整失败，仅修新增test换行，未改parser/runtime/旧tests。随后全12harness684/684，0失败忽略，正常OS许可串行；watchdog未触发，build0。
-- 最终1041920B/SHA5D2219F88DB8B3196CAC259941FC0A8A3B489EF03519BC7E20415F8EDF6388E5。旧dist有效输入红→同source新产物绿0真实记录。docs/tooling/evidence/T19/递归manifest+精确ZIP，docs/reports/T19-tooling.md齐。
+## 本轮产出
+- cli::execute仅二进制内部Write+Send（root批准），main plain Stdout/Stderr不改旧锁策略；整个REPL driver同on_eval_stack，sharedstdin fill_buf/consume追加前1MiB限制、无另BufReader、每行返回释放锁再eval。
+- 新repl扫描、原flags/argv保护/--json拒绝、typedprobe、多行/EOF/错误继续、元命令/累计exit、autoecho非nil、双diag/容量poison仅reset/help/quit；独立REPL compile-error adapter按真实source与Loaded、tracedNone渲染，不改旧graph/run。
+- tests/cli_t20.rs七项进程测试及同writers/读取cap两unit。首2/2、进程5/2失败保留；一项新oracle把assignment nil多算回显（改新test为2次），另一项真实compile失败缺source渲染已修adapter；第二次2/2+7/7通过。
+- docs/reports/T20-formatter-assessment.md明确lexer丢comments/trivia、AST管道脱糖/数值拼写归一，formatter本轮有据暂缓，无format/check伪功能。
 
-## 下一步/限制
-root接公开/独立，perf统一最终hash/no并发窗口，tooling不重复10/100/300MiB大fixture。std Drop不报告OS close失败，磁盘阻塞不硬截止；R304OPEN，无性能通过声明。任何源改须新编/hash。无其它阻塞。
+## 当前待协调
+Temp/T20-tooling/first-full-runtime-failed.txt及summary：evaluator.rs5068新增unit输入n=9后import，原parser报import必须先于普通语句，unit期待ReplModuleUnsupported。旧parser优先级不能为此随便改，交runtime/root确认新oracle。当前无cargo，待owner停源后我唯一release重建/完整13harness。真实PTY提示尚未实跑（同writers模拟TTY不冒称PTY）。源未终验不公开套旧字节。
+
+所有失败/红证据在Temp/T20-tooling，原旧tests/用户块/dist/Git保持。仅T20收口，无外装/公网/automation，R304OPEN。

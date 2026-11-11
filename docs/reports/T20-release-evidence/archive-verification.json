@@ -1,0 +1,320 @@
+{
+  "binary": {
+    "bytes": 1100800,
+    "sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c"
+  },
+  "candidate_archive": {
+    "path": "docs/tooling/evidence/T20/candidate-snapshot.zip",
+    "members": 40,
+    "bytes": 760103,
+    "sha256": "31f34b432db98ca8ac139b1b5f1a8c8a08d379cd69769e0fb52f593504fb6ff0"
+  },
+  "candidate_archive_members": {
+    "src/ast.rs": {
+      "bytes": 39079,
+      "sha256": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076"
+    },
+    "src/builtins.rs": {
+      "bytes": 115253,
+      "sha256": "e05d74d076cb33928e17a7a07944db15c789a9455da67a58f056c5ce93f97a6d"
+    },
+    "src/cli.rs": {
+      "bytes": 74809,
+      "sha256": "368d06106e4799066ed4785072b11d7d2c09135ca34c2393bce91ffcd8eef26d"
+    },
+    "src/env.rs": {
+      "bytes": 22303,
+      "sha256": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc"
+    },
+    "src/error.rs": {
+      "bytes": 61183,
+      "sha256": "6081094b0c8e23e2f362d07e7401ce04ecebcbc359f6526b7feb16d01271c44f"
+    },
+    "src/evaluator.rs": {
+      "bytes": 231795,
+      "sha256": "049ff34af33bd90effebf1abaa9aa4be9fa2fffc7f06b2b862cf9d70c5ef96cf"
+    },
+    "src/http_control/windows.rs": {
+      "bytes": 18240,
+      "sha256": "0a525c7476dbf9d086b2f58e37cf18c31f02d3856766fe1ad4abe5e13e2c4a78"
+    },
+    "src/http_control.rs": {
+      "bytes": 3528,
+      "sha256": "3a2373b1422d1e845dfc188b53b2e7036af3725d22c156650ab1a6c34f09a4a2"
+    },
+    "src/json.rs": {
+      "bytes": 16503,
+      "sha256": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f"
+    },
+    "src/json_codec.rs": {
+      "bytes": 17226,
+      "sha256": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2"
+    },
+    "src/lexer.rs": {
+      "bytes": 45906,
+      "sha256": "429fa13206e6fe85956abe494681df42e0468698cf8cbc5fccfcce6468e92fa2"
+    },
+    "src/lib.rs": {
+      "bytes": 1003,
+      "sha256": "171cc87701114aeae7b7f6db09035aec75a74710b6e08ca1bc3a07f25a45f95e"
+    },
+    "src/line_reader.rs": {
+      "bytes": 12971,
+      "sha256": "7ab61997386a7e71b4fe90d62235500bce5cf20fe6a063619b70d3dbfa2a9b15"
+    },
+    "src/loader.rs": {
+      "bytes": 16480,
+      "sha256": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f"
+    },
+    "src/main.rs": {
+      "bytes": 872,
+      "sha256": "fa68e1cec6c8abbd5bfa84736c4b35ce94cadbaca62bdabec1d2fc91f4694188"
+    },
+    "src/modules.rs": {
+      "bytes": 17533,
+      "sha256": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895"
+    },
+    "src/parser.rs": {
+      "bytes": 231940,
+      "sha256": "b3ad0318f0175514007ca73b33887a2cf3123b2e036c713dab282254d416e2b8"
+    },
+    "src/process_control/fixture.rs": {
+      "bytes": 1803,
+      "sha256": "0c09739e3327414281a5e89d5ad59dc5ec8356d1c6bbe9428dddcf9829f2b0a9"
+    },
+    "src/process_control/windows.rs": {
+      "bytes": 21560,
+      "sha256": "540d14c697dcd84e2a9ba6a0f2415b24509335206617ad939c7318e0a8e76a09"
+    },
+    "src/process_control.rs": {
+      "bytes": 2006,
+      "sha256": "e8cfcc7e54d7f2fb24f9d979d6f27d79bfcb20afaa7864326b7d49f13dab0442"
+    },
+    "src/source.rs": {
+      "bytes": 5420,
+      "sha256": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468"
+    },
+    "src/span.rs": {
+      "bytes": 2305,
+      "sha256": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2"
+    },
+    "src/test_runner.rs": {
+      "bytes": 29354,
+      "sha256": "a314790d88d4296e2cb953c7b1a565f83e4f3f2f6bec543216fe70c024f2400c"
+    },
+    "src/value.rs": {
+      "bytes": 48864,
+      "sha256": "63967cb79996c7fedfe7285378e58c2774825c73680a81e50c12a185bbe438a0"
+    },
+    "tests/cli.rs": {
+      "bytes": 23476,
+      "sha256": "a507dc3674df02f8162d1bfd80c87a7dc2373559ab628168944d3621eaead23b"
+    },
+    "tests/cli_t12.rs": {
+      "bytes": 6066,
+      "sha256": "c9e4edf50c1fd3a248ba3f5f2e7c44ac04188a51d828a92dd3ba44aa03cbc24a"
+    },
+    "tests/cli_t14.rs": {
+      "bytes": 9738,
+      "sha256": "112d628fa2db83ce1a506338f20469fa99bc0dc06e916ce6787c442ee1ce2065"
+    },
+    "tests/cli_t16b.rs": {
+      "bytes": 4854,
+      "sha256": "8a384d95e25e92337d0d749664481cb9e32cbb6b1d6839b4efc0c9c006635a3a"
+    },
+    "tests/cli_t16c.rs": {
+      "bytes": 3642,
+      "sha256": "cc003077c212c407ccdd2c59e5c6c603a3f17a82cb7ff5a4ef8942529e9d953d"
+    },
+    "tests/cli_t17.rs": {
+      "bytes": 6252,
+      "sha256": "141cb54376124b4317723824972ee21ac8c10fdb2ef9a68ef967ba076fcf25f5"
+    },
+    "tests/cli_t18a.rs": {
+      "bytes": 5401,
+      "sha256": "faa29e2cc5e413b7a10da9c5302bb82b37ebceb395058ff7a1096810bd56d257"
+    },
+    "tests/cli_t18b.rs": {
+      "bytes": 3629,
+      "sha256": "fa95063bd7b3dd7e1cbba0457368f7a3a8bd707aa8af5723d4d9189bf295b036"
+    },
+    "tests/cli_t20.rs": {
+      "bytes": 4063,
+      "sha256": "a298e0c0ece45473765581255ce66097d6610a54dda0cbab92a7dae646d0c9da"
+    },
+    "tests/test_runner.rs": {
+      "bytes": 14041,
+      "sha256": "c07c297aab45f8b44b85df5caed8acd855c29735a3c9dcfd99aa2820c94ada4f"
+    },
+    "tests/unit/ast_depth.rs": {
+      "bytes": 4116,
+      "sha256": "6a7dcd7a88e5d7d7d1e5b16d688db2f4b77da57b165c3fecdc7d7575c41a3ee5"
+    },
+    "tests/unit/main.rs": {
+      "bytes": 460,
+      "sha256": "9a651c048ee0f94820ec21b115ebae6f5cb99ad9dc5f5b57df462e1cf4f1fa78"
+    },
+    "tests/unit/nesting_depth.rs": {
+      "bytes": 3790,
+      "sha256": "6ac0aa556ab1f9669f53435de863e8d1e96e2c0e5483e475a7d4043ac70428a1"
+    },
+    "Cargo.toml": {
+      "bytes": 795,
+      "sha256": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c"
+    },
+    "Cargo.lock": {
+      "bytes": 147,
+      "sha256": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4"
+    },
+    "target/release/lfz.exe": {
+      "bytes": 1100800,
+      "sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c"
+    }
+  },
+  "v3_archive": {
+    "path": "docs/validation/agent-benchmark-v3/v3-t20-r01/frozen-package.zip",
+    "members": 46,
+    "sha256": "90932d39b7dca058b4d64acaa5d6af78d33fb6d050c57451c4b83fe2080a0b08"
+  },
+  "v3_frozen_manifest_sha256": "793caa2c2a006ab6a843b58513040f52ef164ac0ce039f760bd06baa798763b9",
+  "v3_student_evidence": {
+    "files": 79,
+    "manifest_sha256": "806c6b67213d3e992036b4a7a05c7096866e07e5bb7ac37d49fbc3fdfe6687f9"
+  },
+  "byte_bound_git_paths": {
+    ".opencode/skills/lfz-programming/README.md": "ea77dc84fda416aa80887e4a678882b0da0143fd8c22875ad838e5490f5dd76e",
+    ".opencode/skills/lfz-programming/SKILL.md": "025bb99f7aea277d50d0ce5131ca2f283d6392fe52a34e9ac2d30ec62688d5d8",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "dc603553af76653ff35dfd5ff00336bb3e0bda1a538667a8aea6db182d9bed81",
+    ".opencode/skills/lfz-programming/prompt-template.md": "8b2e0e846b781b763ba5212bf56b7f0cbd1482530e78b807984098c14c9ba728",
+    "docs/guide/README.md": "2ad40731980c0c4309c7d9cb634a5f27fc4b260b0e96e57a6bf5e7dda5c7159c",
+    "docs/guide/ai/README.md": "bdf2722c3a6e1edbe6d24870bcd0e2f07687166861533ac9c95e19c9887e8363",
+    "docs/guide/errors.md": "6a44ac925ab26705e663882beec6b6c40ee6bbdfcfbdcbd6cb8218ff95876a70",
+    "docs/guide/reference.md": "821961015a324bb653704f473bd08cee6c91b833480003b6fa66cf0bae6c24aa",
+    "docs/guide/repl.md": "24b74609295a4bd41b1bd8a026a75c73b0cb373a27dde3807588ddd9de565c0c",
+    "docs/guide/testing.md": "c42b5fe57a79bea196a6ea43a84c520f7c12ae20526eb088e9f8b0d8bea72b94",
+    "docs/guide/tutorial.md": "c97ffc5717ebfad384b3ccf2d04a6de709fcfda3a9650023ec5285a1b9a9be3c",
+    "docs/reports/T20-agent-v3-evidence/C01/dispatch.json": "45d90b8dee5a56b4b34f995d57bf556c34defd3020f1c54af5a9183639cdb178",
+    "docs/reports/T20-agent-v3-evidence/C01/protocol-preliminary.json": "a2877ed948c1824ff16ae479f164237e483f3d36d30306504eff9147bbb56c39",
+    "docs/reports/T20-agent-v3-evidence/C01/protocol-review.json": "2407107f4e4ed6ad97d29c0ba3c56a8b11b29e22314646e0d386a5b2080322f6",
+    "docs/reports/T20-agent-v3-evidence/C01/sealed-C01.json": "9c4c3f00be047eac2824ea81287a45dd2bbaab5296656635a71d7a699777319b",
+    "docs/reports/T20-agent-v3-evidence/C01/selftest-audit/cycle-1.json": "8083e06b1422af4ef2234ae10759a5c11dff4746e0678e541ddf55c5abdd574e",
+    "docs/reports/T20-agent-v3-evidence/C01/selftest-audit/cycle-1/main.lfz": "f158dcc711d8ede2135cd60aa8bba98a44feed26cdfaab23100ac6b0b2399386",
+    "docs/reports/T20-agent-v3-evidence/C01/selftest-audit/cycle-2.json": "1d95228732c7ef0023b42ae97dd017b09bc858304c5ea793ecc6187fee0f1a7c",
+    "docs/reports/T20-agent-v3-evidence/C01/selftest-audit/cycle-2/main.lfz": "f158dcc711d8ede2135cd60aa8bba98a44feed26cdfaab23100ac6b0b2399386",
+    "docs/reports/T20-agent-v3-evidence/C01/selftest-audit/cycle-3.json": "c7cb4f9224733989ad2a24a3f2552880ace95d9aa24d8b55520ceaca5759e26c",
+    "docs/reports/T20-agent-v3-evidence/C01/selftest-audit/cycle-3/main.lfz": "f158dcc711d8ede2135cd60aa8bba98a44feed26cdfaab23100ac6b0b2399386",
+    "docs/reports/T20-agent-v3-evidence/C01/selftest-audit/cycle-4.json": "4cb729f697ec17b70baa7f9b2975da92143e53b7ea679f15fa94bc8e285f879d",
+    "docs/reports/T20-agent-v3-evidence/C01/selftest-audit/cycle-4/main.lfz": "f158dcc711d8ede2135cd60aa8bba98a44feed26cdfaab23100ac6b0b2399386",
+    "docs/reports/T20-agent-v3-evidence/C01/selftest-audit/cycle-5.json": "257d067cd861987bacf20649df77366a5445ba77f590a4bb9ff0a6386a0026e7",
+    "docs/reports/T20-agent-v3-evidence/C01/selftest-audit/cycle-5/main.lfz": "f158dcc711d8ede2135cd60aa8bba98a44feed26cdfaab23100ac6b0b2399386",
+    "docs/reports/T20-agent-v3-evidence/C01/source-review.json": "edf4d0cb998244c1c728dba1ddb085cb13de4a141faa535f95f8923ad0241d75",
+    "docs/reports/T20-agent-v3-evidence/C01/submission-hashes.json": "b3e4da7f33e4afcbba78ad5e22674e5047ee3d2fc54d1a5e510e22602c47043d",
+    "docs/reports/T20-agent-v3-evidence/C01/submission/commands.json": "dfce2ed0085615c4327a13656fd3eea41b1192e1bece94cc4d0b8b084a26dd09",
+    "docs/reports/T20-agent-v3-evidence/C01/submission/main.lfz": "f158dcc711d8ede2135cd60aa8bba98a44feed26cdfaab23100ac6b0b2399386",
+    "docs/reports/T20-agent-v3-evidence/C01/tool-trace.json": "4ad85b9bb634062e39c9ecf0fbf974ede1cb7a97c546c5521c27e4586b061e38",
+    "docs/reports/T20-agent-v3-evidence/C02/dispatch.json": "3bab55939190fa6aa5fec2a2502c4d7ad656d4450ea68954328b84e62bcc73f7",
+    "docs/reports/T20-agent-v3-evidence/C02/protocol-preliminary.json": "877dce11fe43b251f4785cfa8577fa44e1124072d5363edcf5dfe477f463efd9",
+    "docs/reports/T20-agent-v3-evidence/C02/protocol-review.json": "33a61d66fd7e3edde20d8decc0b232bc5d78a7fc6b751d91882a2e31193b9796",
+    "docs/reports/T20-agent-v3-evidence/C02/sealed-C02.json": "9bbba5b1f6a670386d0a4e25e6bee4342f4635190168d87518fe4f8bd52c59de",
+    "docs/reports/T20-agent-v3-evidence/C02/selftest-audit/cycle-1.json": "a6a6e0c96bfe1ece7070dffab8a77b3a1f80209e84e046e68ea654f996527026",
+    "docs/reports/T20-agent-v3-evidence/C02/selftest-audit/cycle-1/lib/rates.lfz": "1b557f6e9efde52fd3bd370c268ac13bf266fabd5a2a5fccf1f4fffd43f52241",
+    "docs/reports/T20-agent-v3-evidence/C02/selftest-audit/cycle-1/lib/view.lfz": "278d692789239630e990ec0b5deaad16e943b691757259a4882669504f991bf3",
+    "docs/reports/T20-agent-v3-evidence/C02/selftest-audit/cycle-1/main.lfz": "20f05da363dbe8ceeebd7b9ebb0291e65a9c9569ee4ca41740b590e4a25ecff1",
+    "docs/reports/T20-agent-v3-evidence/C02/selftest-audit/cycle-2.json": "ed2d9191ac9a93c2cb5f73f9aa0c917fb033dc3088a590cca1ea7ae2460c5601",
+    "docs/reports/T20-agent-v3-evidence/C02/selftest-audit/cycle-2/lib/rates.lfz": "1b557f6e9efde52fd3bd370c268ac13bf266fabd5a2a5fccf1f4fffd43f52241",
+    "docs/reports/T20-agent-v3-evidence/C02/selftest-audit/cycle-2/lib/view.lfz": "278d692789239630e990ec0b5deaad16e943b691757259a4882669504f991bf3",
+    "docs/reports/T20-agent-v3-evidence/C02/selftest-audit/cycle-2/main.lfz": "20f05da363dbe8ceeebd7b9ebb0291e65a9c9569ee4ca41740b590e4a25ecff1",
+    "docs/reports/T20-agent-v3-evidence/C02/selftest-audit/cycle-3.json": "a7128962b76a478c058522afedf8d7f0a5c590b4f73af0308d45f3d1b5c30df5",
+    "docs/reports/T20-agent-v3-evidence/C02/selftest-audit/cycle-3/lib/rates.lfz": "1b557f6e9efde52fd3bd370c268ac13bf266fabd5a2a5fccf1f4fffd43f52241",
+    "docs/reports/T20-agent-v3-evidence/C02/selftest-audit/cycle-3/lib/view.lfz": "278d692789239630e990ec0b5deaad16e943b691757259a4882669504f991bf3",
+    "docs/reports/T20-agent-v3-evidence/C02/selftest-audit/cycle-3/main.lfz": "20f05da363dbe8ceeebd7b9ebb0291e65a9c9569ee4ca41740b590e4a25ecff1",
+    "docs/reports/T20-agent-v3-evidence/C02/source-review.json": "f272cada2848d6af190079db848582d0f3899ca4caf16b35bebc10b65107435a",
+    "docs/reports/T20-agent-v3-evidence/C02/submission-hashes.json": "658308b16ee8679ed2868bb3c2b5f383c17c92dc7299e0e946b4126713a65b36",
+    "docs/reports/T20-agent-v3-evidence/C02/submission/commands.json": "5362e1629490e30b612fa55a8ce7a62da19c18a1ec07562cc7c9b73535e72b4e",
+    "docs/reports/T20-agent-v3-evidence/C02/submission/lib/rates.lfz": "1b557f6e9efde52fd3bd370c268ac13bf266fabd5a2a5fccf1f4fffd43f52241",
+    "docs/reports/T20-agent-v3-evidence/C02/submission/lib/view.lfz": "278d692789239630e990ec0b5deaad16e943b691757259a4882669504f991bf3",
+    "docs/reports/T20-agent-v3-evidence/C02/submission/main.lfz": "20f05da363dbe8ceeebd7b9ebb0291e65a9c9569ee4ca41740b590e4a25ecff1",
+    "docs/reports/T20-agent-v3-evidence/C02/tool-trace.json": "269e4f0a1fbf5f35ca94c3af1e134fbf7aa08533b351a01d5f6f08e3233f1d0b",
+    "docs/reports/T20-agent-v3-evidence/C03/dispatch.json": "8317ce93b1dea615ede13a9d0a30871431ae2cfc569059a26f06fa29066f98f5",
+    "docs/reports/T20-agent-v3-evidence/C03/protocol-preliminary.json": "dcff70ee39982594582ea9d181360b2e3a449a2717950977861b512af7add632",
+    "docs/reports/T20-agent-v3-evidence/C03/protocol-review.json": "e33ba318a204c0eb6592f8577858c74d1204ed7798ab9cd96cde7cb6a309bffa",
+    "docs/reports/T20-agent-v3-evidence/C03/sealed-C03.json": "cd248db7506fb61d6f71b400947a6137be9f003bfac86f8bf4fac142ef9c69d9",
+    "docs/reports/T20-agent-v3-evidence/C03/selftest-audit/cycle-1.json": "e987e74f0b7bc879950d6397d4d3a1caec65f37783d29c9bf4730a82f4c6f25c",
+    "docs/reports/T20-agent-v3-evidence/C03/selftest-audit/cycle-1/main.lfz": "59f5c8d704d63620b4bb7ab40b12aa360fc1c21f39ca56c43a546eaeac81cade",
+    "docs/reports/T20-agent-v3-evidence/C03/selftest-audit/cycle-2.json": "69871100eb617cb3f7cfa06575c0afe23bf967db3aa85d4768a1470099d71f56",
+    "docs/reports/T20-agent-v3-evidence/C03/selftest-audit/cycle-2/main.lfz": "59f5c8d704d63620b4bb7ab40b12aa360fc1c21f39ca56c43a546eaeac81cade",
+    "docs/reports/T20-agent-v3-evidence/C03/selftest-audit/cycle-3.json": "4ee21b62b3cda9216f41b560cd25bf93fb221ada6c9e73a24b7312d9553c6c1f",
+    "docs/reports/T20-agent-v3-evidence/C03/selftest-audit/cycle-3/main.lfz": "59f5c8d704d63620b4bb7ab40b12aa360fc1c21f39ca56c43a546eaeac81cade",
+    "docs/reports/T20-agent-v3-evidence/C03/selftest-audit/cycle-4.json": "019f2d74354704d616f699dfff7ede4c480d9d82d96e3344adb69de7b8188970",
+    "docs/reports/T20-agent-v3-evidence/C03/selftest-audit/cycle-4/main.lfz": "59f5c8d704d63620b4bb7ab40b12aa360fc1c21f39ca56c43a546eaeac81cade",
+    "docs/reports/T20-agent-v3-evidence/C03/source-review.json": "aee26e46f2f1c739d6bf4fbd4cc7ebf194601197f74e668737967698fd74a341",
+    "docs/reports/T20-agent-v3-evidence/C03/submission-hashes.json": "799bae3a15b965f5ab2d0c2151860f8548fb297d00ba7d9a038bfc9b7ffe7ca2",
+    "docs/reports/T20-agent-v3-evidence/C03/submission/commands.json": "0759bcdec29dd44eb42bbc518ff95e1b279970314f00a525b5ba442871657a1e",
+    "docs/reports/T20-agent-v3-evidence/C03/submission/main.lfz": "59f5c8d704d63620b4bb7ab40b12aa360fc1c21f39ca56c43a546eaeac81cade",
+    "docs/reports/T20-agent-v3-evidence/C03/tool-trace.json": "cc62cafb3e7e937a14ad03bb6d5cf8aa6de96c275d059048975ca278c74bcc2c",
+    "docs/reports/T20-agent-v3-evidence/C04/dispatch.json": "e05583b69a59d87b9d78c69b9e1b2097e68fd5362852670872283b63a9464bf7",
+    "docs/reports/T20-agent-v3-evidence/C04/protocol-preliminary.json": "544269cb2b33477f4a1b6ee0b86014bcbe71d0b39fa21e3f31ca4c10148cb369",
+    "docs/reports/T20-agent-v3-evidence/C04/protocol-review.json": "39c2d786c9c4aaeef0dd09de79248cb514075f69e7003567abc05736b7c941f2",
+    "docs/reports/T20-agent-v3-evidence/C04/sealed-C04.json": "56e062c817ca5393327d8c2b3e4dc6a371bc1de6248887793eef257ec2d90a2c",
+    "docs/reports/T20-agent-v3-evidence/C04/selftest-audit/cycle-1.json": "d7b2917586420f07ae988caf0db11a5f58aad3ee7bcbf0898811e548b9c18a22",
+    "docs/reports/T20-agent-v3-evidence/C04/selftest-audit/cycle-1/main.lfz": "abde93aae6332ae90a1e23f5a2f75480d07e5011bb1cccb05368385384524d31",
+    "docs/reports/T20-agent-v3-evidence/C04/selftest-audit/cycle-2.json": "3690b27a6a23dc8e01b286ddf2b8b7be3a90d6117ff8c29a890cf9ab76f6292a",
+    "docs/reports/T20-agent-v3-evidence/C04/selftest-audit/cycle-2/main.lfz": "abde93aae6332ae90a1e23f5a2f75480d07e5011bb1cccb05368385384524d31",
+    "docs/reports/T20-agent-v3-evidence/C04/selftest-audit/cycle-3.json": "862f8edd50392d85fa2599311de0526b8ad605c83af8253e7a74ee61b7cb61d7",
+    "docs/reports/T20-agent-v3-evidence/C04/selftest-audit/cycle-3/main.lfz": "abde93aae6332ae90a1e23f5a2f75480d07e5011bb1cccb05368385384524d31",
+    "docs/reports/T20-agent-v3-evidence/C04/source-review.json": "8dd656d6caf1078a526145ebf7218e55a60491643bd886276e3200f1c9e421b9",
+    "docs/reports/T20-agent-v3-evidence/C04/submission-hashes.json": "bcb1ec2b91f74dc6cfcf609d158d57c571f37fa86059ae501b1d188dbcc49ace",
+    "docs/reports/T20-agent-v3-evidence/C04/submission/commands.json": "25dd8d0620563fa85704ba79a61a8942aae9bd72b83f28819caa15cf96bc9c3b",
+    "docs/reports/T20-agent-v3-evidence/C04/submission/main.lfz": "abde93aae6332ae90a1e23f5a2f75480d07e5011bb1cccb05368385384524d31",
+    "docs/reports/T20-agent-v3-evidence/C04/tool-trace.json": "e38f06d37127333140ce2b9b2aa97436738f5294d96d6df115bdc2c6cc36b8bc",
+    "docs/reports/T20-agent-v3-evidence/certify-students.py": "e9cab8d4b2b20d97690ff1816052fe2bafc296a6edcc69a67cec5ca75f73c46f",
+    "docs/reports/T20-agent-v3-evidence/manifest.json": "806c6b67213d3e992036b4a7a05c7096866e07e5bb7ac37d49fbc3fdfe6687f9",
+    "docs/reports/T20-agent-v3-evidence/review-students.py": "82de0a94e0c1b193601cf5a542a25e364694cccd5ecba32bef6e67efbd037d33",
+    "docs/reports/T20-agent-v3-evidence/seal-students.py": "98c661c52a8969f3a460570fe81f5117185f95d8c2133d8f2eee877509e86892",
+    "docs/reports/T20-agent-v3-evidence/summary.json": "17fbc743d2b772a667d9d68238150275284179d0179090659a62d92b3d7304db",
+    "docs/reports/T20-agent-v3-verification.md": "ae67f59253dee732ba85dcd8b7f14bbcf1112fe471c73b79203e9876888797b1",
+    "docs/reports/T20-independent-evidence/v3-controls-receipt.json": "22058ff644b06b9c069d26d7e41430fb1fcd11174ed92858f54eb5919eb29c4b",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/AUDIT_PROTOCOL.md": "c663e734dedca403a66bd6abd18a7694f7862b712033d15e9a7ce35db09bf392",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/DISPATCH.md": "d5c494a388411a25ff8ae23534d89ea06ba64a2c2c86bc1ca421555efa9af35c",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/README.md": "87036d13d53af1e56bcc7f8f970dba25f15b2b545103243aba0a43181d6b2c7a",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/audit_budget.py": "31e48cca6eb0053b1d4b2edd21fb767d791bf27e3f45b35cc4139db160c1e940",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/frozen-package.zip": "90932d39b7dca058b4d64acaa5d6af78d33fb6d050c57451c4b83fe2080a0b08",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/manifest.frozen.json": "793caa2c2a006ab6a843b58513040f52ef164ac0ce039f760bd06baa798763b9",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/manifest.pre-http-fix.json": "02f0e6188cd41b8553db30d26cc9ce7951b3e87c83a63286c1aca286a4f68115",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/manifest.pre-review.json": "8b1f7cfd28980f1cb9b6829e0ea07bc3f52a24b5fed7b1e3c73f0c0d21595b69",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/oracles.py": "62cdb05b25b7fdf90e751ab7db6bc21c4806dcf4119fc754241ade4e15865527",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/CONTROLS.md": "bf38e2603c81055b2deb7b91739ceec6cdcdf440b60c1e688d7db72db17bc221",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/negatives/C01-bad-cap/main.lfz": "81cd8c2c687bc9e81749ae45df4ef85159693f901082e9850d202aefaed273b5",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/negatives/C01-collect-preload/main.lfz": "a85dbb5aa5fbaaac3f5f13c6a5d8e8a872e4d82c79e0b7bde9be40c424fef575",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/negatives/C02-caller-rate/lib/rates.lfz": "98c65250f5bdee7c89aa1fae8180ad0c2250d5a8801b1a9308b5e6b2b0bb182f",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/negatives/C02-caller-rate/lib/view.lfz": "0653a4856d2f393efabb8478a28d7422e1b053a1269050cd0829f18114fc5493",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/negatives/C02-caller-rate/main.lfz": "ff7f6ec38bae38abc0d8dcba9535692f8f40847691ad266de4e60177bab61c9c",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/negatives/C02-no-home-update/lib/rates.lfz": "f221f33486f9a86090c9762dfb6c7883e8020a6f5077b15d92175f5e20b9123b",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/negatives/C02-no-home-update/lib/view.lfz": "0653a4856d2f393efabb8478a28d7422e1b053a1269050cd0829f18114fc5493",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/negatives/C02-no-home-update/main.lfz": "ff7f6ec38bae38abc0d8dcba9535692f8f40847691ad266de4e60177bab61c9c",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/negatives/C03-budget-fake-success/main.lfz": "728cee985fa74171026c03d6d1d86792e9a899d4880e7335b487703d2f7485a4",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/negatives/C03-success-nil-false/main.lfz": "8228dd668eaf0107ab6620f729524eff633f1d1970664855fdcd1036076b9504",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/negatives/C04-treat-404-error/main.lfz": "af9a1931896d063cb0510a7b601dd6be3ad4de12b7930089946a4979edb50292",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/negatives/C04-wrong-order/main.lfz": "c9fcfc7743dd1684588787278cc49d66e2d7b3f2578df3af1373a8bfd49e0546",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/negatives/matrix.json": "c7586cc902837807010b291682130db6686ee76f433fc1a48e78ab9164b27593",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/prepare-failure.txt": "77a310eb953c139b90a82a7f3addae95b2e18498f10fdf37920b3713bd2cc2b4",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/references/C01/main.lfz": "3d144f0ad1420bf108253fdded2cebdb10357c5c1ccf3abc48763e459503df3c",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/references/C02/lib/rates.lfz": "3762b8aef3b2fe517df5f9cd12ba84d903e1acc60428d44283d74c752060a1ac",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/references/C02/lib/view.lfz": "0653a4856d2f393efabb8478a28d7422e1b053a1269050cd0829f18114fc5493",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/references/C02/main.lfz": "ff7f6ec38bae38abc0d8dcba9535692f8f40847691ad266de4e60177bab61c9c",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/references/C03/main.lfz": "0d0820446e0e72c5bebab8c39e898aba1105bc0adfc412b5772f47ea034b6eec",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/private/references/C04/main.lfz": "907de68c5a41f9e7cd5fc6b5545fbca483e6cd33c3169304595fc403e9769917",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/runner.py": "910dea5ed5d3ef4fbd8a40fef6aa4ebd336c876cc723f157cc16f773f662ecb9",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/stage_student.py": "65524a0260fc5b9b5426a96ae278aaae6e156a61c8d83e09c943b4b93acaa49d",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/student/C01/TASK.md": "95c9f8f480fb970d7c1e66529a96002b589b5db1b23f19dfec93cafcf200b966",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/student/C01/public.jsonl": "98b875a3298f8393471465a09fa22bf906039b1275813da5755d82918dc069b6",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/student/C02/TASK.md": "f685007c8b104bd3e1f3f581b92034b0cd0f57dae5897ab618b17d3e809cd554",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/student/C03/TASK.md": "e125dee2e2ebe3e698d68736af73efbcdea247626723a24183f5ed9794f77e14",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/student/C04/TASK.md": "bea56dc538a92e0337937fcd226ccf20005c5c44363a5ed937f1b312927931b2",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/student/C04/selftest_service.py": "f810eaf5804666d93c1e48226446f1f57573a8d11248cdf4dfe7559440990273",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/student_cycle.py": "5f0e72f5e1485c492d81404df40cd69f63b6ded35da3206664c9a865e6c8281c",
+    "docs/validation/agent-benchmark-v3/v3-t20-r01/trace_export.py": "9e750450333d7d8031d8f66056817794511ec0c41a1e8a5a7cc6c211f94ea1b3"
+  },
+  "local_dist": "dist/lfz.exe",
+  "previous_dist_sha256": "5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5"
+}

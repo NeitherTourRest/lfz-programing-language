@@ -1,6 +1,8 @@
 # runtime-dev 状态
-2026-11-03 T19源码完成停写交tooling，不编译。
+2026-11-04 T20 REPL运行时源码已停写交tooling，未编译。
 
-evaluator forEachLine三参预检/arity2/原call_value/共享预算/nativecancel-deadline-only/统一outcome→finish与错误映射；builtins76注册机械更新。5新unit尚未运行，含Windows存活host排他重开和真实marker跨线程取消后重开，JSON恢复/早停/错arity/native不扣步。报告docs/reports/T19-runtime.md，evaluator B0A8CEE3…/builtins E05D74D0…，diff check过。
+evaluator ReplConfig/HostError/Session按§26，单Interp/sharedglobals/独立cell home/source、template定义上下文；真实来源snapshot及失败后非事务恢复、每cellsteps/timeout与hosttoken保持、admission上限与动态ReplCapacity poison/reset。make_closure私有R传播所有构造，旧公开API/Value/UserFn不改。7新unit未运行，diff check过；SHA25F94AE7…，报告docs/reports/T20-runtime-review.md。
 
-待tooling reader实现/唯一统一release及真实关闭、规模/RSS、独立验收。无新diag/Value/FFI/旧readFile改动；未改他人源码/旧行为tests/Git。仅T19不T20/automation，R304OPEN。
+SourceMap保旧outcome时COW深clone历史Loaded成本已披露，不称恒定内存；不擅改core source/CLI。待tooling唯一统一release反馈。无Git/编译/外装/网络，R304OPEN。
+
+最新：tooling首lib527/1新增oracle失败，已仅修本轮compile/import测试。非法后置import保ImportOrder，另合法前置import及合法export精确ReplModuleUnsupported且n无副作用；生产/旧tests不改。新SHA049FF34A…，diff check过，未编译停写交tooling，首失败日志保留。

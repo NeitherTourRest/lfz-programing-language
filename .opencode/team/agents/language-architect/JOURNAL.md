@@ -361,3 +361,17 @@
 - 产出：三spec/T19-contract.md9931B，五ValueMsg、类型arity/bool检查序、有界reader/poll与关闭/规模门禁；ADR拒扩大平台close诊断。
 - 证据：diff --check exit0，未源改/编译/Git。
 - 下一步：rootGO core/runtime/tooling，仅本轮交付后收口，R304OPEN。
+
+## [2026-11-04] T20 REPL提案
+- 来源：root用户进入T20，完整启动。
+- 产出：T20-design-proposal.md11162B；持久session/source/multiline/恢复/限额/CLI/formatter评估/新Agent包。主体root已批准，input及精确ABI等review。
+- 证据：文档diff检查过，未源改/编译/Git。
+- 下一步：合review冻§26，本轮交付收口，不automation，R304OPEN。
+
+- 同轮tool/root补裁决：input保旧共享stdin语义/每物理行释放锁后eval、不新预读，提案追加覆盖旧建议；formatter有据暂缓。
+
+## [2026-11-04] T20 §26冻结
+- 来源：root最终stdin/typed probe/limits/ReplCapacity裁决，合tool review。
+- 产出：三spec/T20-contract.md10245B，精确core probe/runtime session/CLI owner、来源恢复/限额/新Agent包门禁。
+- 证据：diff检查exit0；未源改/编译/Git。
+- 下一步：rootGO三owner；T20交付后收口，R304OPEN。

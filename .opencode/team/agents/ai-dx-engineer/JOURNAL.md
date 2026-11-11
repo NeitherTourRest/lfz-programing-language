@@ -125,3 +125,25 @@
 - 产出：docs/reports/T19-skill-evidence.md、final-results/manifest，STATUS覆盖。无LFZ失败，无活LFZ进程，交还perf窗口。
 - 边界：无编译/产品/人指南/spec/Git/旧v2/网络/规模大测。R304OPEN；T19收口不T20/automation。
 - 阻塞：无。
+
+## [2026-11-04] T20新测评提案
+- 来源：team-lead T20规划任务，完整启动，读NEXT/旧v2冻结协议及metadata/现§18–25与skill。
+- 完成：docs/reports/T20-agent-eval-plan.md，v3四综合任务、同预算、先独立审题负控制再冻结、真实model/tooltrace与源码功能协议三轴认证。
+- 证据：仅文档静态提案；SHA256 588321c5634f52d7855320b5b4f462571de7b0ec2dda3f5954a302faa28cd3dd。
+- 边界：0学生/0题目运行，旧v2/2-8/8-8不动，无产品/人指南/spec/指南/Git变更，§26未冻不猜语法，R304OPEN不自动化。
+- 下一步：team-lead定范围预算，独立审题后正式冻结包再GO实测，无当前阻塞。
+
+## [2026-11-04] T20 v3任务包准备
+- 来源：root批准4题20min/40tool/5周期后GO准备非正式run。
+- 完成：docs/validation/agent-benchmark-v3/v3-t20-r01，四题/reference八负控/oracles/runner/审计契约/draft manifest；Python AST最终PASS，首bytes literal错误保全。
+- 证据：0LFZ/0学生；报告T20-agent-eval-package-preparation.md。未冻结最终exe/docs，未声称正负控通过。
+- 下一步：独立verifier审题/实际控制、wrapper/tooltrace采集可用性、最终hash freeze后root学生GO。
+- 边界：旧v2/历史分数/产品/指南/spec/Git不动，R304OPEN，不自动化。
+
+## [2026-11-04] T20 REPL/审计第二准备
+- 五docs§26/formatter说明，8例prepare0LFZ；预算9纯控制过，wrapper和trace exporter备。关联session实际可读但302/300匹配不全，不冒完整trace。
+- 独立预审C02导出/argv、C01刷批错误保留、C04公开服务与关闭门禁修复，原manifest保，新draft待独立实跑。报告T20-ai-repl-evidence.md；无产品/编译/Git/旧v2变更，释放slot。
+
+## [2026-11-11] T20 AI 最终指南及 v3 派发准备
+- a545d0c2 实际 8/8，五文档 SHA 不变。
+- v3 C04 命名冲突已修，原脚本和首日志保留。草稿加入候选/五文档 SHA 与工作区派发材料，待独立控制后由 root 冻结。

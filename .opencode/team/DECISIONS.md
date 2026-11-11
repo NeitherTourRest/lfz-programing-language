@@ -1297,3 +1297,8 @@ T17 CLI计时边界精确说明：在静态build_graph完成、调用eval入口�
 
 ### [2026-11-03] [language-architect] T19有界逐行§25冻结
 按root批准与runtime/tool review合定forEachLine data-last/bool/两键、有界raw行口径及JSONL显式attempt。采用root建议纯std LineControl/reader错误ABI，reader=tooling、evaluator=runtime、error=core。不采用review中的eachLine改名/int返回或显式平台close/file诊断：root已批RAII统一释放/不报告close异常，避免新增FFI；scope/旧readFile不变。三spec及T19-contract已冻，未源实现/测量，R304OPEN，仅本轮交付后收口。
+
+### [2026-11-04] [language-architect] T20持久REPL §26冻结
+按root最终裁决合tool review冻结单Interp/sharedglobals/逐cell home来源、typed probe、旧input共享stdin（释放lock再eval无预读）、非nil显示/累计exit2、MVP禁导入、percell limits与host资源不reset。65536ID上限新增ExecutionLimitReason::ReplCapacity第4原因且13类不增，Rust穷尽match机械迁移，不可attempt吞；旧原因文本不改。限额admission原子无效果，midcell限额不回滚旧效果并poison。formatter有据暂缓，新Agent任务包独立版本；未源改/编译，R304OPEN，本轮收口。
+
+T20前端cap补钉按root批准：共享stdin fill_buf/consume追加前限制1MiB，eval前drop lock，无额外预读；超cap前端错误即exit2，不无限read_line/drain或把残行当新cell。

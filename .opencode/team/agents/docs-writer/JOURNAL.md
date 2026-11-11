@@ -120,3 +120,9 @@
 - 证据：T19-guide-evidence.md与runs/manifest；首轮第41check oracle缺换行保全first-failure/verify-first，只修验证器后第二轮和最终轮均42通过。
 - 下一步：供root/release收口，不T20/automation；不网络、规模、编译/Git或产品修改。
 - 阻塞：无。
+
+### [2026-11-04] T20人指南准备
+新增repl教程与五入口、16真实stdin验证场景；prepare-only exit0/executed=false。报告T20-guide-evidence.md，待最终SHA实跑。未编译/Git/产品/旧测试变更，Temp项目内，R304OPEN。
+
+### [2026-11-11] T20 人类指南验收收口
+team-lead 用原验证器对 a545d0c 候选实跑 16/16。核对 Temp 原件和独立归档副本 SHA256 同为 594c29d68b612aef7a94f350700266271cd4fc8fe67e2fd36925da9009f5365a，六份文档当前 SHA 均匹配初末记录。已更新报告和自身状态，交 team-lead 收口。R304 OPEN。

@@ -287,3 +287,12 @@
 
 ### [2026-11-04] T19规模与指南最后独立审计收工
 111证据SHA、42样本、7warm35formal/三输入bytesSHA/中位与OSpeak负控核通过；独立Python100MiB重算675779行/668812valid/6967bad及sum/checksum全一致，无新产品运行/性能窗。人42/AI45和11文档SHA只读审计齐，全部历史失败及固定closure边界保留。报告manifest收工停止，R304OPEN，不T20。
+
+### [2026-11-04 07:41] T20 独立静态预审
+报告 T20-independent-preaudit.md，四项冻结门禁及C02澄清交root；只读无产品执行/编译/服务/学生/Git，最终候选后实跑待GO，旧v2保留R304OPEN。
+
+### [2026-11-11 21:38] T20 独立功能通过
+同a545d0c 705/37/旧全回归、host deadline与1000cell实际PASS，人16/AI8/app6及11文档证据审计。v3控制4/8/9及关闭门禁已签，学生审计待GO。保独立驱动首失败与首链接失败，无产品源改/Git。R304OPEN。
+
+### [2026-11-11 21:49] T20 v3 首轮独立签收
+793caa2c任务包、a545d0c候选，封存首交卷4/4三轴通过、功能27/27、真实工具对照wrapper 29/29，原失败与协议待审结果均保存。文档T20-agent-v3-verification.md及证据manifest；已交root收工，R304OPEN。

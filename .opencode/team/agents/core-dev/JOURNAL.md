@@ -214,3 +214,6 @@ C快照后root GO；仅error.rs新增reason/variant/helper及映射，机械精�
 
 ### [2026-11-03] T19 core逐行错误停源交接
 完整启动读state/board/本人和关联STATUS、三spec§25/T19-contract。仅error.rs五ValueMsg固定/动态字段消息与八case严格unit，旧全部断言保留、13类不新类。diff --check exit0，SHA DA2B11D12BF3EE69F8E57AC047CFE0477DBC94FC357FC3A45A313D18A910C621。按root未编译，停源交tooling统一release；仅当前T19，不T20/automation。
+
+### [2026-11-04] T20 core probe停源交接
+完整启动与真实lexer/parser review，先报告prefix遮蔽/EOF字符串风险，按root批准typed EOF方案实现三owner文件与5组新unit；保旧shape/文本/断言。diff检查通过，未编译，统一tooling验证；review报告与STATUS已更新。

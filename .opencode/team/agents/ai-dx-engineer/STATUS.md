@@ -1,11 +1,5 @@
-# ai-dx-engineer — 工作状态
-> 2026-11-04 T19最终完成
+# ai-dx-engineer — T20 最终指南及题包交接
 
-## 当前状态与证据
-最终5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5/1041920B作者45/45 exit0（22 check/run+1 check不执行），五文档前后SHA一致。报告docs/reports/T19-skill-evidence.md，final-results.json/manifest；prepare快照/原脚本/初结果保全。第一次45/45和最终文案后45/45为重复确认，不冒90独立例。
+2026-11-11。最终 a545d0c2 / 1100800 B 的 AI 指南 8/8 通过，五文档运行前后 SHA 一致。见 docs/reports/T20-ai-repl-evidence.md 和 evidence 子目录结果与 manifest。
 
-## 变更与边界
-四skill/AI入口§6.8，JSONL外部structcell+一次parseCurrent closure；避免每行UserFn令func_names元数据增长。reader有界不代callback/总解释器内存约束，let string不可重绑。无产品/人指南/spec/编译/Git/旧v2/网络/规模大测，无活LFZ进程，释放perf窗口。真实关闭/取消/跨源/性能由owner证据，不冒本作者通过。76内置13类，旧readFile不变，R304OPEN。
-
-## 下一步
-team-lead统一独立/候选交付；仅T19收口不T20/automation，本角色无阻塞并收工。
+v3 已修 C04 oracle 命名冲突并保全首失败。草稿清单绑定候选与五文档，新增 stage_student.py 和 DISPATCH.md。独立控制完成后由 root 冻结与启动。当前无学生。R304 OPEN。

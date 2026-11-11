@@ -1,14 +1,11 @@
 # test-engineer — 工作状态
-> 更新：2026-11-04 T19公开最终
+> 更新：2026-11-11
 
 ## 当前状态
-T19公开Windows47/47 PASS、exit0，首完整许可运行、首脚本3be2a83e未变。产品5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5/1041920B初末一致，验后source匹配tooling manifest。
+T20 公开 REPL 最终 37/37 PASS，exit0。冻结 Windows 候选 a545d0c2…/1100800B。首轮 34/36 原件与首脚本保全。
 
 ## 产出
-tests/t19_cli_lines.py；T19-blackbox.md、专属evidence/final-first-permitted、script-first、manifest-final、process-cleanup-query。close6均活PID held错误32负控/调用返回后exclusive成功且仍alive；不是退出后重开。所有47已communicate，无异常。
+修正新矩阵的赋值静默及不可嵌套块注释预期，补普通多行块注释正例。T20-blackbox.md、final-corrected-default.json、manifest-final.json 已落盘，验后 39 个源指纹匹配构建者清单。
 
-## 下一步/边界
-已收工：只读CIM核引用独占Temp/T19-public命令行LFZ进程0，无server/background worker，不再重复跑，供root协调perf窗口。终止same-host/overflow/注入/16MiB/规模吞吐RSS另列，公开47不冒称全部条款或R304通过。未编译/产品旧tests/Git/网络。只T19收口不T20/automation。
-
-## 历史
-HTTP49/A45/T17134/C29/B38与全部原始失败保持。
+## 下一步
+公开进程运行结束，交 team-lead 汇总独立验收。TTY 和宿主容量由对应记录验收，R304 OPEN。
