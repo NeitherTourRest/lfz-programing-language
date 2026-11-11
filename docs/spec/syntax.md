@@ -1037,3 +1037,6 @@ lfz [--json] check [--json] - [--json]
 
 ## 25. T19 逐行调用（2026-11-03 冻结）
 不加文法/Value，新增forEachLine(callback,maxLineBytes,path)特殊内置，76名字；callback(line,lineNo)严格bool控制早停，返回lines/stopped。无新权限/CLI。字节/JSONL/错误/ABI见interface-contract §25。
+
+## 26. T20 REPL（2026-11-04 冻结）
+新增lfz repl命令，LFZ文法不改；core typed Complete/Incomplete探测，完整cell立即执行/真实EOF错误，多行不发明裸字符串换行。MVP import/export整cell拒绝；stdin input旧规则共享下一物理行。精确probe/session/命令/limits见interface-contract §26。

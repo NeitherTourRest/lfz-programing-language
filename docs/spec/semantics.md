@@ -494,3 +494,6 @@ HTTP非2xx普通响应；严格UTF8 body，禁redirect/autoauth/cookie/proxy/PAC
 
 ## 25. T19 有界读取（2026-11-03 冻结）
 LF分行、CRLF去一CR、EOF孤CR/BOM保留；LF前rawbytes含CR计1..16MiB，8KiB有界块，坏UTF8/超长回调前ValueError，JSON坏行callback内attempt恢复。共享预算/home/source，native仅cancel/deadline协作poll；普通文件pre/open metadata不能消灭TOCTOU/阻塞。RAII统一关闭不报告std close错误，不加FFI/diagnostic；原readFile不变。精确契约及实测门禁见interface-contract §25。
+
+## 26. T20 持久会话（2026-11-04 冻结）
+单Interp共享globals仅执行新cell，定义home/source每cell独立，旧函数/模板default真实来源；错后恢复执行栈不回滚用户效果。每cellsteps/相对timeout重建，hosttoken/deadline不reset；容量第4原因ReplCapacity仍ExecutionLimitError不可吞，midcell触限/cleanup污染锁至reset。元数据限制/双diag/非nil echo/累计exit2/stdio详见interface-contract §26。

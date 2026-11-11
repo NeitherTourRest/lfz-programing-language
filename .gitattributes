@@ -1,0 +1,21 @@
+# Preserve the exact documentation bytes bound by the T20 verification receipts.
+/.opencode/skills/lfz-programming/README.md -text
+/.opencode/skills/lfz-programming/SKILL.md -text
+/.opencode/skills/lfz-programming/VERIFICATION.md -text
+/.opencode/skills/lfz-programming/prompt-template.md -text
+/docs/guide/ai/README.md -text
+/docs/guide/README.md -text
+/docs/guide/errors.md -text
+/docs/guide/reference.md -text
+/docs/guide/repl.md -text
+/docs/guide/testing.md -text
+/docs/guide/tutorial.md -text
+
+# Preserve T20 manifests, replay inputs, and submissions without changing v2.
+/docs/validation/agent-benchmark-v3/v3-t20-r01/** -text
+/docs/reports/T20-agent-v3-evidence/** -text
+/docs/reports/T20-agent-v3-verification.md -text
+/docs/reports/T20-ai-repl-evidence/** -text
+/docs/reports/T20-guide-evidence/** -text
+/docs/reports/T20-independent-evidence/** -text
+/docs/reports/T20-release-evidence/** -text

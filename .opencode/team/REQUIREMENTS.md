@@ -1,9 +1,25 @@
 # LFZ 需求矩阵（唯一需求事实源 · v1.1 增量对齐版）
 
-> 最后更新: 2026-11-04 by requirements-analyst
-> 版本: **v13（T19逐行功能及限定规模通过；R-304开放，非正式发布）**
+> 最后更新: 2026-11-11 by requirements-analyst
+> 版本: **v14（T20功能及v3测评通过，R-304开放）**
 > 本文件是**唯一需求事实源**，唯一写者 requirements-analyst，他人只读。
 > 来源: `task-info.md`（课程作业原始要求）+ 用户指令 + 已定案 ADR（见 `DECISIONS.md`）。
+
+## T20 增量需求（2026-11-11，功能及v3测评通过）
+
+来源为三份 docs/spec §26、T20-contract.md 与 NEXT-ITERATIONS.md。Windows 候选 SHA256 a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c，1100800 字节。T20-independent-verification.md 记录独立复跑 13 个 release harness 705/705、公开 REPL 37/37 及旧 CLI/应用全回归通过。源与候选哈希前后一致。
+
+| R-ID | 需求 | 来源 | 验证方式及所需证据 | 状态 | 交付物/负责人 | 评分项 |
+|------|------|------|--------------------|------|---------------|--------|
+| R-139 | `lfz repl`持久单Interp，仅求值新cell；结构化Complete/Incomplete/Error续行，合法多行/错误EOF与原字符串语义；错误后继续保留既有声明和已发生副作用，不事务回滚、不历史重放。不同cell的函数/default诊断保真实定义来源与caret，reset后旧outcome来源仍有效 | §26.1–26.4 | T20-independent-verification.md、T20-blackbox.md 与 T20-tooling.md 绑定同一候选。独立 705/705 与公开 37/37 覆盖持久会话、续行/EOF、错误后继续、历史来源、共享 stdin 与退出码。真实 Windows ConPTY 驱动逐步等待主/续提示及 input 提示，正常会话 exit 0，错误后 reset 再 quit 仍 exit 2。中文终端渲染待验，中文管道诊断已有字节级见证。 | 通过（中文 TTY 渲染待验） | parser/lexer/error（core-dev）、evaluator session（runtime-dev）、CLI/main及tests/cli_t20.rs（tooling-dev）、公开/独立证据 | 1、2 |
+| R-215 | 会话argv与显式process/http权限固定，reset不增权；每cell重新计步及相对求值timeout，host绝对deadline/token不清；容量1MiB raw cell/16MiB raw累计源码/4096提交cell/65536函数ID受控。前端追加前有界，超限不执行余字节；ReplCapacity仍13类内ExecutionLimitError且attempt不能吞，midcell/双cleanup诊断poison须reset | §26.3–26.5 | 独立 host sidecar 实测绝对 deadline 早于相对 5000ms，且跨 cell/reset 保留，另实跑 1000 cell 核编号与 reset。705 批次覆盖宿主 token、双诊断 poison、旧来源快照。公开套件实送超过 1MiB pending，4096/16MiB 为计数注入，65536 为实际配置值加降低门限单测。长会话内存与 GC 未测。 | 通过 | runtime/session及资源unit、CLI bounded stdin、公开矩阵与verifier；保留旧run/check/模块/JSONL/exec/HTTP回归 | 1、2 |
+| R-414 | 人类指南与AI指南/skill分别更新REPL工作流及边界并实跑，讲明命令仅idle、多行ifelse、input共享stdin、错误累计退出、权限/argv/reset、历史来源、预算/容量、非事务及非恒定历史开销；check不加未冻结静态规则 | §26.6；R413后继 | T20-guide-evidence.md 和 T20-ai-repl-evidence.md 分别记录人指南 16/16、AI 指南 8/8 同候选实跑。T20-independent-evidence/guides-app-audit.json 独立核对作者原始结果、11 份指南及应用 manifest，作者运行次数只计一次。 | 通过 | docs-writer人类指南；ai-dx-engineer五AI文档/skill及验证器；verifier证据审计 | 4 |
+| R-415 | 新版本Agent题包独立冻结并实际运行JSONL有界批、模块home/namespace、attempt预算与本地HTTP四题；REPL功能另轨。功能、源码约束、工具协议三轴分别审计，缺完整trace为UNKNOWN，不靠学生自报；旧v2输入/8题成绩与全部旧失败不覆盖 | §26.6；T20-agent-eval-plan.md | v3-t20-r01 冻结 manifest SHA256 793caa2c2a006ab6a843b58513040f52ef164ac0ce039f760bd06baa798763b9。独立四参考正控制、八负控制、预算 9/9。T20-agent-v3-evidence/summary.json 签收四题首次提交 4/4，冻结 runner 功能 27/27、源码 4/4、真实工具协议 4/4、实际产品启动逐项核对 29/29。gpt-6.1-sol medium，C01–C04 的顶层工具/周期/产品启动分别为 11/5/10、13/3/5、10/4/8、18/3/6。预算为每题 20 分钟、40 次顶层工具调用、5 周期。 | 通过 | ai-dx-engineer题包/runner/trace与预算工具；root派学生；verifier独立审核/实测/签收 | 4 |
+| R-511 | JSON检查台端到端真实REPL应用，持久统计、多行函数、坏JSON恢复、失败前容器/声明保留、语法错后继续、历史caret、input/限额/reset/EOF；不以普通run脚本代替repl，不以小演示替代已有≥200行应用交付 | §26；app/T20-REPL-JSONDESK.md | app/verify_repl_jsondesk.py 在冻结候选上六组真实管道会话全部通过，首失败已保留。app/t20-evidence/results.json 记录实际输入、stdout、stderr 与退出码，独立审计核对作者原件和应用 manifest。旧应用已在同候选复验。 | 通过 | app/repl_jsondesk/、verify_repl_jsondesk.py、T20-REPL-JSONDESK.md（app-dev） | 5 |
+
+格式化器评估已交付。T20-formatter-assessment.md 记录注释和原始写法丢失的例子与保真格式化所需工作，结论为暂缓实现。本轮 check 沿原静态规则。
+
+R-304 OPEN。T20 采用功能候选交付，本轮没有原 19 项门槛的新性能窗口。正式发布及标签以原性能门槛为前提。
 
 ## T19 增量需求（2026-11-04，逐行功能与限定规模测量通过）
 
