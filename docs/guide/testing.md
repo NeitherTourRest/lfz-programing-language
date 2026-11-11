@@ -283,3 +283,7 @@ HTTP只用stdlib本地loopback临时端口与有界shutdown/watchdog；默认禁
 ## T19 有界逐行与JSONL
 
 逐行指南聚焦小样：空文件、CRLF/末CR/BOM/尾LF、raw字节N/N+1、UTF8/早停、JSON坏行继续、严格bool、全局限额。先提取prepare-only，再锁最终exe hash跑check→run；性能规模和真实关闭证据由对应owner验收，不能把rename/delete单独当关闭证明。见T19-guide-evidence。
+
+## T20 持久 REPL
+
+`lfz repl` 的多行、错误恢复、真实 cell 来源、共享 stdin、命令/限额与容量边界见 [REPL 教程](repl.md)。本轮 formatter 有依据暂缓，check 不新增未冻结规则；最终候选验证见 [T20 人类指南证据](../reports/T20-guide-evidence.md)。

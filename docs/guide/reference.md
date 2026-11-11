@@ -416,3 +416,7 @@ exec恰三参，返回stdout/stderr/exitCode/signal，非零exit正常；绝对.
 ## T19 有界逐行与JSONL
 
 forEachLine(callback,maxLineBytes,path)为特殊内置，回调恰2参返回严格bool；结果lines/stopped，cap为LF前raw字节含CR，1..16MiB。逐行/UTF8/共享预算及文件边界见[完整参考](line-processing.md)，规范三spec §25；共76内置、13错误类，无新CLI。
+
+## T20 持久 REPL
+
+`lfz repl` 的多行、错误恢复、真实 cell 来源、共享 stdin、命令/限额与容量边界见 [REPL 教程](repl.md)。本轮 formatter 有依据暂缓，check 不新增未冻结规则；最终候选验证见 [T20 人类指南证据](../reports/T20-guide-evidence.md)。

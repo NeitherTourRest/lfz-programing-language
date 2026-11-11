@@ -1,0 +1,16 @@
+{
+  "binary": {
+    "path": "target/release/lfz.exe",
+    "sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+    "bytes": 1100800
+  },
+  "documents": {
+    ".opencode/skills/lfz-programming/SKILL.md": "025bb99f7aea277d50d0ce5131ca2f283d6392fe52a34e9ac2d30ec62688d5d8",
+    ".opencode/skills/lfz-programming/README.md": "ea77dc84fda416aa80887e4a678882b0da0143fd8c22875ad838e5490f5dd76e",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "dc603553af76653ff35dfd5ff00336bb3e0bda1a538667a8aea6db182d9bed81",
+    ".opencode/skills/lfz-programming/prompt-template.md": "8b2e0e846b781b763ba5212bf56b7f0cbd1482530e78b807984098c14c9ba728",
+    "docs/guide/ai/README.md": "bdf2722c3a6e1edbe6d24870bcd0e2f07687166861533ac9c95e19c9887e8363"
+  },
+  "results_sha256": "b911c5087c596fd5acab42c694872914be0f9514b1213602f03b7ddc14ef0495",
+  "verify_sha256": "1537aa5c60df2245a00e3f8d96637245a4e56eb60a7d649fba4baaec24a28af3"
+}

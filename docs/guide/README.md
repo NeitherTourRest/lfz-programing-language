@@ -225,3 +225,7 @@ HTTP使用独立--allow-http显式授权，六参httpRequest返回status/headers
 ## T19 有界逐行与JSONL
 
 T19提供有界forEachLine(callback,maxLineBytes,path)，支持data-last管道与JSONL组合，76内置、13错误类。先check再run，见[逐行教程](line-processing.md)；新增示例已在最终候选实跑，旧readFile不变。
+
+## T20 持久 REPL
+
+`lfz repl` 的多行、错误恢复、真实 cell 来源、共享 stdin、命令/限额与容量边界见 [REPL 教程](repl.md)。本轮 formatter 有依据暂缓，check 不新增未冻结规则；最终候选验证见 [T20 人类指南证据](../reports/T20-guide-evidence.md)。

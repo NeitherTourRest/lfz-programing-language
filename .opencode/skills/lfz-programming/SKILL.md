@@ -1030,3 +1030,35 @@ EOF/false/回调错误/非bool/全局终止/读取解码失败统一finish/drop�
 
 
 T19内存边界补充：reader只保有界当前行与8KiB缓冲，不代表任意callback或整个解释器总内存O(cap)。每行新建`attempt(() => jsonParse(line))`会创建UserFn，现func_names保留其诊断元数据，随行数增长。大文件应在循环外一次定义`let cell={text:""}`与`let parseCurrent=()=>jsonParse(cell.text)`，回调中更新`cell.text=line`再`attempt(parseCurrent)`；let字符串不可重绑定，struct字段可改。回调自身也在调用外仅创建一次；计数/固定输出批，别collect全文件或每行创建closure。此规避不改变产品funcID语义，不代替峰值内存实测。
+
+
+## T20 REPL 工作流（§26，最终候选）
+
+当前规范仍76内置/13错误类，新增`lfz repl`，formatter经评估本轮暂缓，无format命令/check静态规则扩张。依据三spec§26和docs/reports/T20-formatter-assessment.md；本节对应冻结产物 a545d0c2，示例的实际输出见作者验证报告。v3新题另轨，不重写旧v2或比较旧2/8/8/8。
+
+建议Agent开发文件先check再带限额run；REPL用于交互探索，不代模块图check。可用`lfz --max-steps 1000 --timeout-ms 2000 repl -- 中文`；权限仍默认禁用、显式--allow-process/--allow-http沿当前会话，reset不增权，argv是启动快照。repl不接源码来源，`--json`usage拒绝，不提供JSONL输出协议。
+
+以下为pipe输入（每物理行一行，不是一个-e源码），预计最后显示2，再显示5，最终退出0：
+
+```repl
+var total=1
+total=total+1
+total
+:reset
+5
+:quit
+```
+
+完整cell立即执行，只执行新cell。函数/块等不完整时继续读；空白/注释不占history，非nil最后值Display一行stdout，nil静默，print不再重复echo。TTY prompt写stderr，pipe无prompt/欢迎语。if闭块即可完整，else须与闭合`}`同物理行组成同cell，否则下一行else不是上个cell续接。裸string不能跨LF，不猜中文错误消息判断完整性。
+
+空pending才识别整行trim的:help/:reset/:quit；未知命令计失败后继续，pending里冒号是源码。input()消费同stdin下一物理行（即使:quit也只是数据），不会重放为REPL源码。EOF完整正常结束，未完成pending用真实编译诊断并exit2；任一cell/命令失败使最终exit2，reset/quit不抹累计失败。
+
+单Interp共享globals，现let/var遮蔽规则沿用；失败前声明/容器/IO/RNG效果保留，无事务回滚。REPL在任何效果前拒import/export，文件run/check模块功能不变。每非空提交来源<repl:N>保至reset，旧函数/default错误指真实定义cell，不用当前文本画caret；reset从1重建但旧outcome可诊断。
+
+每cell重建max_steps与相对timeout（parse后求值起算），不覆盖host绝对deadline或取消token；reset保配置不清已取消token。未捕获资源错可由host开启下一显式cell，不等于attempt可吞ExecutionLimitError。stmt/expr步数与native协作/阻塞边界沿旧规范，不宣称硬时界。
+
+raw pending/cell最多1MiB，累计源码16MiB，4096非空提交（含失败），65536诊断func/default ID。前三类admission是宿主容量错误，不造业务Result；funcID途中耗尽为ExecutionLimitError/ReplCapacity，消息“REPL 会话容量已耗尽”，不可attempt吞，session poison直到reset；已有部分副作用保留。双cleanup诊断也poison，pipe遇poison结束；TTY仅reset/help/quit。pending超cap观察即结束，不无限drain。source/func_names历史snapshot有成本，不能宣称长会话恒定内存。
+
+Rust ReplSession/ReplConfig整个生命周期及析构必须在on_eval_stack，!Send/!Sync；eval_cell返回Result<Option<TracedRun>,ReplHostError>，None为空cell。host错误不伪LFZ错误；配置/来源/poison均按§26。无新UserFn公开字段。formatter暂缓因comments/trivia丢失、管道脱糖/数字原拼写丢失，不能用AST打印冒充保真格式化。
+
+作者准备与实际运行证据见docs/reports/T20-ai-repl-evidence.md；v3协议trace缺失为UNKNOWN，wrapper不证明无旁路。R304OPEN，仅T20交付收口，不恢复自动化。

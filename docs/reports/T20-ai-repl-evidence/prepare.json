@@ -1,0 +1,13 @@
+{
+  "mode": "prepare-only",
+  "document_hashes_before": {
+    ".opencode/skills/lfz-programming/SKILL.md": "f2e7678af39ad00fbef387517daeedcce824f68416ffec165a398c7afe9d6149",
+    ".opencode/skills/lfz-programming/README.md": "14b23f2f984e87c3b2cdae9823080c4856f6b492941ff3b8e81eb4fec752a020",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "b7dbad41286b9727c28eac72ba852238676abdb07fefd8766810655cf8897ff5",
+    ".opencode/skills/lfz-programming/prompt-template.md": "c1569b7c18116108dc8b73db657b772339ca269542fa497fe20e6a556be0e6e5",
+    "docs/guide/ai/README.md": "3b4b2f5f5dd2a2b366eb001b452bfcf8f795c77d0f597bf3e5fbf09d0f3d17c5"
+  },
+  "cases": 8,
+  "runs": [],
+  "lfz_launches": 0
+}

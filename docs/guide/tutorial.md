@@ -744,3 +744,7 @@ Agent执行生成的job.lfz时，先check，再run时显式设置预算。check�
 ## T19 有界逐行与JSONL
 
 通过[逐行JSONL教程](line-processing.md)用data-last管道逐条处理文件，callback里attempt区分坏JSON并继续；只存计数避免全量累积。先check再带限额run，新增代码已在最终候选核hash实跑。
+
+## T20 持久 REPL
+
+`lfz repl` 的多行、错误恢复、真实 cell 来源、共享 stdin、命令/限额与容量边界见 [REPL 教程](repl.md)。本轮 formatter 有依据暂缓，check 不新增未冻结规则；最终候选验证见 [T20 人类指南证据](../reports/T20-guide-evidence.md)。

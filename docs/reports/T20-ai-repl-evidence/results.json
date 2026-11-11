@@ -1,0 +1,98 @@
+{
+  "mode": "final",
+  "document_hashes_before": {
+    ".opencode/skills/lfz-programming/SKILL.md": "025bb99f7aea277d50d0ce5131ca2f283d6392fe52a34e9ac2d30ec62688d5d8",
+    ".opencode/skills/lfz-programming/README.md": "ea77dc84fda416aa80887e4a678882b0da0143fd8c22875ad838e5490f5dd76e",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "dc603553af76653ff35dfd5ff00336bb3e0bda1a538667a8aea6db182d9bed81",
+    ".opencode/skills/lfz-programming/prompt-template.md": "8b2e0e846b781b763ba5212bf56b7f0cbd1482530e78b807984098c14c9ba728",
+    "docs/guide/ai/README.md": "bdf2722c3a6e1edbe6d24870bcd0e2f07687166861533ac9c95e19c9887e8363"
+  },
+  "cases": 8,
+  "runs": [
+    {
+      "name": "extracted0",
+      "input": "var total=1\ntotal=total+1\ntotal\n:reset\n5\n:quit\n",
+      "args": [],
+      "exit": 0,
+      "stdout": "2\n5\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "extracted1",
+      "input": "var total=1\ntotal=total+1\ntotal\n:reset\n5\n:quit\n",
+      "args": [],
+      "exit": 0,
+      "stdout": "2\n5\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "multiline",
+      "input": "fn twice(x) {\nreturn x*2\n}\ntwice(4)\n",
+      "args": [],
+      "exit": 0,
+      "stdout": "8\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "error_continue",
+      "input": "missing\n7\n",
+      "args": [],
+      "exit": 2,
+      "stdout": "7\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:1>\", line 1, in <module>\n    missing\n    ^\nNameError: 未定义的名字 'missing'\n",
+      "passed": true
+    },
+    {
+      "name": "old_source",
+      "input": "fn bad() {\nfail(\"old\")\n}\nbad()\n9\n",
+      "args": [],
+      "exit": 2,
+      "stdout": "9\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<repl:2>\", line 1, in <module>\n    bad()\n    ^\n  File \"<repl:1>\", line 2, in bad\n    fail(\"old\")\n    ^\nAssertionError: old\n",
+      "passed": true
+    },
+    {
+      "name": "incomplete_eof",
+      "input": "fn f() {\n",
+      "args": [],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"<repl:1>\", line 2\nSyntaxError: 这里期待 '}'，但得到 '文件末尾'\n",
+      "passed": true
+    },
+    {
+      "name": "input",
+      "input": "input()\n:quit\n4\n",
+      "args": [],
+      "exit": 0,
+      "stdout": ":quit\n4\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "argv",
+      "input": "argv()[0]\n",
+      "args": [
+        "--",
+        "中文"
+      ],
+      "exit": 0,
+      "stdout": "中文\n",
+      "stderr": "",
+      "passed": true
+    }
+  ],
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "binary_bytes": 1100800,
+  "document_hashes_after": {
+    ".opencode/skills/lfz-programming/SKILL.md": "025bb99f7aea277d50d0ce5131ca2f283d6392fe52a34e9ac2d30ec62688d5d8",
+    ".opencode/skills/lfz-programming/README.md": "ea77dc84fda416aa80887e4a678882b0da0143fd8c22875ad838e5490f5dd76e",
+    ".opencode/skills/lfz-programming/VERIFICATION.md": "dc603553af76653ff35dfd5ff00336bb3e0bda1a538667a8aea6db182d9bed81",
+    ".opencode/skills/lfz-programming/prompt-template.md": "8b2e0e846b781b763ba5212bf56b7f0cbd1482530e78b807984098c14c9ba728",
+    "docs/guide/ai/README.md": "bdf2722c3a6e1edbe6d24870bcd0e2f07687166861533ac9c95e19c9887e8363"
+  },
+  "documents_unchanged": true
+}

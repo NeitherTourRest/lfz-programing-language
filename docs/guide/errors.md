@@ -389,3 +389,7 @@ HTTP局部timeout/大小/UTF8等ValueError可attempt，全局取消/deadline不�
 ## T19 有界逐行与JSONL
 
 新逐行接口超长/坏UTF8为ValueError，非普通文件或读失败为IOError；回调内attempt可跳坏JSON，不能跳过未交付的超长/坏UTF8行。全局ExecutionLimitError不可吞，既有副作用不回滚；旧readFile错误不变。见[恢复边界](line-processing.md#错误恢复与资源边界)。
+
+## T20 持久 REPL
+
+`lfz repl` 的多行、错误恢复、真实 cell 来源、共享 stdin、命令/限额与容量边界见 [REPL 教程](repl.md)。本轮 formatter 有依据暂缓，check 不新增未冻结规则；最终候选验证见 [T20 人类指南证据](../reports/T20-guide-evidence.md)。
