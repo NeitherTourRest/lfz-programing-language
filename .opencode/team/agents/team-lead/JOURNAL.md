@@ -354,3 +354,6 @@ root核target1041920B/SHA5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8
 ## T20 功能与 Agent v3 最终验收（2026-11-11）
 同一 Windows 候选 a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c（1100800 bytes）独立通过 705 项 Rust、公开 REPL 37/37 及全部旧 CLI/应用回归。ConPTY 实测主提示、续行、input 及时显示和退出码 0/2；中文终端渲染仍待验证，管道诊断文案已核。独立宿主实际验证绝对 deadline 跨 reset 及 1000 cell；应用 6/6、人指南 16/16、AI 8/8，绑定同候选和文档哈希。formatter 已完成评估并暂缓实现。
 v3 冻结 manifest 793caa2c2a006ab6a843b58513040f52ef164ac0ce039f760bd06baa798763b9。四题真实首次交卷，独立功能 27/27，源码和协议均 4/4，认证 4/4。逐条匹配 29 次产品启动，模型为 gpt-6.1-sol medium。四正八负及九预算控制通过。dist 已刷新同候选，精确归档 31f34b432db98ca8ac139b1b5f1a8c8a08d379cd69769e0fb52f593504fb6ff0。R304 保持 OPEN，尚待 Git 候选交付，停止边界为 T20。
+
+## T20 候选已交付（2026-11-11）
+七组提交已推送 origin/main，git ls-remote 实核 b673c53bfe69f41a06a6093f02edebefa6598823。Git 回读候选归档的 39 个源码、Rust 测试与 Cargo 文件，以及 132 个要求保真字节的文件。原用户三处修改仍为 28/1/1 行。独立 REPL、旧回归、应用与指南均通过，Agent v3 首交卷认证 4/4。R304 OPEN，Windows 中文终端渲染待验证。T20 功能候选交付收口。
