@@ -262,6 +262,87 @@ pub fn eval_graph_traced_on_thread_with_args_and_context(g:&crate::modules::Modu
  Ok(out)
 }
 
+/// 整个会话及其Program须由调用者在on_eval_stack内使用/析构。
+#[derive(Clone,Debug)]
+pub struct ReplConfig {pub context:EvalContext,pub args:Vec<String>,pub timeout_ms:Option<u64>}
+impl Default for ReplConfig {fn default()->Self{Self{context:EvalContext::default(),args:vec![],timeout_ms:None}}}
+#[derive(Debug)]
+pub enum ReplHostError {
+ InvalidConfig{reason:String},Capacity{kind:String,limit:usize},Poisoned,Origins(crate::source::SourceMetadataError),
+}
+impl std::fmt::Display for ReplHostError {
+ fn fmt(&self,f:&mut std::fmt::Formatter<'_>)->std::fmt::Result{match self {
+  Self::InvalidConfig{reason}=>write!(f,"{reason}"),Self::Capacity{kind,limit}=>write!(f,"REPL 会话容量超限：{kind}（上限 {limit}）"),
+  Self::Poisoned=>write!(f,"REPL 会话需要 :reset"),Self::Origins(e)=>write!(f,"来源元数据不一致：{e:?}"),
+ }}
+}
+impl std::error::Error for ReplHostError{}
+pub struct ReplSession {
+ config:ReplConfig,interp:Interp,sources:Rc<crate::source::SourceMap>,raw_bytes:usize,cells:usize,poisoned:bool,
+}
+impl ReplSession {
+ pub fn new(config:ReplConfig)->Result<Self,ReplHostError>{
+  if config.timeout_ms.is_some_and(|ms|std::time::Instant::now().checked_add(std::time::Duration::from_millis(ms)).is_none()){
+   return Err(ReplHostError::InvalidConfig{reason:"REPL timeout 超出时钟范围".into()});
+  }
+  let mut out=Self{config,interp:Interp::new(),sources:Rc::new(crate::source::SourceMap::new()),raw_bytes:0,cells:0,poisoned:false};
+  out.configure();Ok(out)
+ }
+ fn configure(&mut self){
+  self.interp.modules=Some(vec![]);self.interp.repl_func_limit=Some(65536);
+  self.interp.capabilities=self.config.context.capabilities.clone();
+  self.interp.script_args=self.config.args.iter().map(|s|Value::string(s.clone())).collect();
+ }
+ pub fn reset(&mut self){
+  self.interp=Interp::new();self.sources=Rc::new(crate::source::SourceMap::new());self.raw_bytes=0;self.cells=0;self.poisoned=false;self.configure();
+ }
+ pub fn eval_cell(&mut self,text:&str)->Result<Option<TracedRun>,ReplHostError>{
+  use crate::source::{ModuleId,SourceRecord};
+  if self.poisoned{return Err(ReplHostError::Poisoned);}
+  let capacity=|kind:&str,limit|ReplHostError::Capacity{kind:kind.into(),limit};
+  if text.len()>1048576{return Err(capacity("cell bytes",1048576));}
+  let loaded=crate::loader::load_source(text);
+  let parsed=match &loaded {Ok(l)=>crate::lexer::lex(&l.text,l.line_base).and_then(|t|crate::parser::parse(&t)),Err(e)=>Err(e.clone())};
+  if parsed.as_ref().is_ok_and(|p|p.stmts.is_empty()){return Ok(None);}
+  if self.cells>=4096{return Err(capacity("cells",4096));}
+  if self.raw_bytes.checked_add(text.len()).is_none_or(|n|n>16777216){return Err(capacity("source bytes",16777216));}
+  // 配置检查在admission前，避免无效timeout只改一半元数据。
+  let mut limits=self.config.context.limits.clone();
+  if let Some(ms)=self.config.timeout_ms {
+   let deadline=std::time::Instant::now().checked_add(std::time::Duration::from_millis(ms)).ok_or_else(||ReplHostError::InvalidConfig{reason:"REPL timeout 超出时钟范围".into()})?;
+   limits.deadline=Some(limits.deadline.map_or(deadline,|host|host.min(deadline)));
+  }
+  let source=Rc::make_mut(&mut self.sources).insert(SourceRecord{identity:None,display_path:format!("<repl:{}>",self.cells+1),loaded:loaded.ok()}).map_err(ReplHostError::Origins)?;
+  let home=ModuleId(self.interp.modules.as_ref().unwrap().len() as u32);
+  self.interp.modules.as_mut().unwrap().push(ModuleInstance{env:Rc::clone(&self.interp.globals),namespace:None,state:ModuleState::Ready,source});
+  self.cells+=1;self.raw_bytes+=text.len();
+  self.interp.limits=limits;self.interp.active_module=home;
+  let idle_globals=Rc::clone(&self.interp.globals);
+  let scope=Scope{env:Rc::clone(&idle_globals),captured:Rc::new(vec![]),self_val:None};
+  let mut result=match parsed {
+   Err(error)=>Err(error),
+   Ok(program)=>{
+    if let Some(span)=crate::modules::module_declaration_span(&program){
+     Err(Box::new(LzError::Syntax{msg:crate::error::SyntaxMsg::ReplModuleUnsupported,span}))
+    }else{
+     let span=program.stmts.first().map_or(program.span,|s|s.span);
+     self.interp.trace.push(TraceFrame{func_id:MODULE_FUNC_ID,span});self.interp.trace_sources.push(source);
+     self.interp.exec_stmts(&program.stmts,&scope).map(|f|match f{Flow::Value(v)|Flow::Return(v)=>v,_=>Value::Nil})
+    }
+   }
+  };
+  let error_source=if result.is_err(){Some(self.interp.fault_source.or_else(||self.interp.trace_sources.last().copied()).unwrap_or(source))}else{None};
+  let capacity_hit=matches!(result.as_ref().map_err(|e|e.as_ref()),Err(LzError::ExecutionLimit{reason:crate::error::ExecutionLimitReason::ReplCapacity,..}));
+  self.poisoned=capacity_hit||!self.interp.host_diagnostics.is_empty()||!self.interp.http_diagnostics.is_empty();
+  let mut outcome=TracedRun{result:std::mem::replace(&mut result,Ok(Value::Nil)),frames:std::mem::take(&mut self.interp.trace),func_names:self.interp.func_names.clone(),
+   origins:None,host_diagnostics:self.interp.host_diagnostics.clone(),http_diagnostics:self.interp.http_diagnostics.clone()};
+  let frame_sources=std::mem::take(&mut self.interp.trace_sources);
+  self.interp.depth=0;self.interp.fault_source=None;self.interp.active_module=ModuleId::ENTRY;self.interp.globals=idle_globals;
+  outcome.attach_origins(Rc::clone(&self.sources),frame_sources,error_source).map_err(ReplHostError::Origins)?;
+  Ok(Some(outcome))
+ }
+}
+
 fn validate_http(args:&[Value],span:Span)->R<crate::http_control::HttpRequest>{
  use crate::error::ValueMsg as V;
  use crate::http_control::{valid_method,valid_url,valid_headers,HttpRequest};
@@ -576,6 +657,7 @@ enum AssignOutcome {
 
 /// 树遍历解释器：模块全局环境 + 单调递增的 `func_id` 分配器 + traceback 帧栈。
 struct Interp {
+    repl_func_limit: Option<u32>,
     capabilities: EvalCapabilities,
     host_diagnostics: Vec<String>,
     http_diagnostics: Vec<String>,
@@ -610,6 +692,7 @@ impl Interp {
             modules: None, trace_sources: vec![], fault_source: None,
             active_module: crate::source::ModuleId::ENTRY,
             globals: Env::root(),
+            repl_func_limit: None,
             next_func_id: 1,
             depth: 0,
             trace: Vec::new(),
@@ -788,7 +871,12 @@ impl Interp {
         params: Vec<String>,
         body: Body,
         scope: &Scope,
-    ) -> Value {
+        allocation_span: Span,
+    ) -> R<Value> {
+        if self.repl_func_limit.is_some_and(|limit| self.next_func_id>limit) {
+            let error=crate::error::execution_limit(crate::error::ExecutionLimitReason::ReplCapacity,allocation_span);
+            self.note_error_span(&error);return Err(error);
+        }
         let mut captured: Vec<CapturedVar> = Vec::new();
         let mut cur = Some(Rc::clone(&scope.env));
         while let Some(e) = cur {
@@ -828,11 +916,11 @@ impl Interp {
             self_val: scope.self_val.clone(),
         };
         // `def_scope`（`;;` 可见链）留 P3.8；本批用空链占位。
-        Value::function(Closure::user(
+        Ok(Value::function(Closure::user(
             name.map(Rc::from),
             Rc::new(ScopeChain::empty()),
             Rc::new(user),
-        ))
+        )))
     }
 
     // -----------------------------------------------------------------------
@@ -881,11 +969,11 @@ impl Interp {
                 self.exec_assign(target, *op, value, scope)
             }
             StmtKind::FnDecl(fd) => {
-                self.declare_fn(fd, scope);
+                self.declare_fn(fd, scope, stmt.span)?;
                 Ok(Flow::Value(Value::Nil))
             }
             StmtKind::StructDecl(sd) => {
-                self.declare_struct(sd, scope);
+                self.declare_struct(sd, scope, stmt.span)?;
                 Ok(Flow::Value(Value::Nil))
             }
             // `if` 是表达式（§1）：作为语句时其值即块值（供函数体以 `if` 收尾）。
@@ -993,20 +1081,21 @@ impl Interp {
     }
 
     /// 声明命名函数：预绑定占位 → 建闭包（捕获自身名）→ 写回闭包（支持递归）。
-    fn declare_fn(&mut self, fd: &FnDecl, scope: &Scope) {
+    fn declare_fn(&mut self, fd: &FnDecl, scope: &Scope, span:Span) -> R<()> {
         scope
             .env
             .borrow_mut()
             .define_named(&fd.name, Value::Nil, true);
-        let cl = self.make_closure(Some(&fd.name), fd.params.clone(), fd.body.clone(), scope);
+        let cl = self.make_closure(Some(&fd.name), fd.params.clone(), fd.body.clone(), scope, span)?;
         let idx = scope.env.borrow().local_index(&fd.name);
         if let Some(i) = idx {
             scope.env.borrow_mut().set_local(i, cl);
         }
+        Ok(())
     }
 
     /// 声明 struct 模板：为每个方法建函数值，字段默认值表达式按声明序存档（§4.5.8）。
-    fn declare_struct(&mut self, sd: &StructDecl, scope: &Scope) {
+    fn declare_struct(&mut self, sd: &StructDecl, scope: &Scope, span:Span) -> R<()> {
         scope
             .env
             .borrow_mut()
@@ -1024,7 +1113,8 @@ impl Interp {
                         fd.params.clone(),
                         fd.body.clone(),
                         scope,
-                    );
+                        span,
+                    )?;
                     if let Value::Func(rc) = cl {
                         methods.push((Rc::from(fd.name.as_str()), rc));
                     }
@@ -1032,7 +1122,7 @@ impl Interp {
             }
         }
         let def = if self.modules.is_some() {
-            let dummy=self.make_closure(Some(&format!("{}::<defaults>",sd.name)),vec![],Body::Block(Block{span:Span::START,stmts:vec![]}),scope);
+            let dummy=self.make_closure(Some(&format!("{}::<defaults>",sd.name)),vec![],Body::Block(Block{span:Span::START,stmts:vec![]}),scope,span)?;
             let Value::Func(cl)=dummy else {unreachable!()};let u=cl.user.as_ref().unwrap();
             Value::struct_template_in_context(sd.name.as_str(),fields,methods,crate::value::TemplateContext{home_module:u.home_module,captured:Rc::clone(&u.captured),self_val:u.self_val.clone(),defaults_func_id:u.func_id})
         } else { Value::struct_template(sd.name.as_str(), fields, methods) };
@@ -1040,6 +1130,7 @@ impl Interp {
         if let Some(i) = idx {
             scope.env.borrow_mut().set_local(i, def);
         }
+        Ok(())
     }
 
     // -----------------------------------------------------------------------
@@ -1289,7 +1380,8 @@ impl Interp {
                 l.params.clone(),
                 l.body.clone(),
                 scope,
-            ))),
+                span,
+            )?)),
         }
     }
 
@@ -4944,4 +5036,80 @@ mod t19_runtime_tests {
   assert!(matches!(*r.result.unwrap_err(),LzError::ExecutionLimit{reason:crate::error::ExecutionLimitReason::Cancelled,..}));
   released(&path);released(&marker);
  }
+}
+
+#[cfg(test)]
+mod t20_session_tests {
+ use super::*;
+ fn cell(s:&mut ReplSession,text:&str)->TracedRun{s.eval_cell(text).unwrap().unwrap()}
+ #[test] fn persistent_globals_partial_effects_and_dynamic_name_lookup(){on_eval_stack(||{
+  let mut s=ReplSession::new(Default::default()).unwrap();
+  cell(&mut s,"var calls=0\nfn bump(){calls+=1\n calls}\nlet n=1\nfn read()=>n").result.unwrap();
+  cell(&mut s,"bump()").result.unwrap();cell(&mut s,"let n=2").result.unwrap();
+  assert_eq!(cell(&mut s,"read()").result.unwrap().as_int(),Some(2));
+  let r=cell(&mut s,"calls+=1\nfn saved()=>calls\nmissing");assert!(r.result.is_err());
+  assert_eq!(cell(&mut s,"saved()").result.unwrap().as_int(),Some(2));
+  assert_eq!(s.interp.depth,0);assert!(s.interp.trace.is_empty());assert!(s.interp.fault_source.is_none());
+ });}
+ #[test] fn old_function_and_default_sources_and_snapshot_survive_reset(){on_eval_stack(||{
+  let mut s=ReplSession::new(Default::default()).unwrap();
+  cell(&mut s,"fn old()=>1/0\nstruct P{x:1/0}").result.unwrap();
+  let function=cell(&mut s,"old()");assert_eq!(function.error_source().unwrap().display_path,"<repl:1>");
+  let defaults=cell(&mut s,"P{}");assert_eq!(defaults.error_source().unwrap().display_path,"<repl:1>");
+  assert_eq!(defaults.frame_source(defaults.frames.len()-1).unwrap().display_path,"<repl:1>");
+  s.reset();assert_eq!(function.error_source().unwrap().display_path,"<repl:1>");
+  assert_eq!(cell(&mut s,"old()").result.unwrap_err().class_name(),"NameError");
+ });}
+ #[test] fn compile_and_import_failure_do_not_execute_cell_prefix(){on_eval_stack(||{
+  let mut s=ReplSession::new(Default::default()).unwrap();
+  assert!(s.eval_cell(" // blank\n").unwrap().is_none());assert_eq!(s.cells,0);
+  let bad=cell(&mut s,"let =");assert!(bad.result.is_err());assert!(bad.frames.is_empty());assert_eq!(bad.error_source().unwrap().display_path,"<repl:1>");
+  cell(&mut s,"var n=0").result.unwrap();
+  // 非法import顺序先由正式parser拒绝，REPL不覆盖既有语法错误。
+  let r=cell(&mut s,"n=9\nimport lib from \"./missing.lfz\"");
+  assert!(matches!(*r.result.unwrap_err(),LzError::Syntax{msg:crate::error::SyntaxMsg::ImportOrder,..}));
+  assert_eq!(cell(&mut s,"n").result.unwrap().as_int(),Some(0));
+  // 合法声明布局整cell预检，既不加载依赖，也不执行赋值。
+  for text in ["import lib from \"./missing.lfz\"\nn=9","n=9\nexport n"] {
+   let r=cell(&mut s,text);
+   assert!(matches!(*r.result.unwrap_err(),LzError::Syntax{msg:crate::error::SyntaxMsg::ReplModuleUnsupported,..}));
+   assert_eq!(cell(&mut s,"n").result.unwrap().as_int(),Some(0));
+  }
+ });}
+ #[test] fn cell_budget_restarts_but_absolute_token_survives_reset(){on_eval_stack(||{
+  use std::sync::{Arc,atomic::{AtomicBool,Ordering}};
+  let token=Arc::new(AtomicBool::new(false));
+  let cfg=ReplConfig{context:EvalContext{limits:EvalLimits{max_steps:Some(2),cancel:Some(token.clone()),..Default::default()},..Default::default()},..Default::default()};
+  let mut s=ReplSession::new(cfg).unwrap();
+  for _ in 0..3{assert_eq!(cell(&mut s,"1").result.unwrap().as_int(),Some(1));}
+  token.store(true,Ordering::Release);s.reset();
+  assert!(matches!(*cell(&mut s,"1").result.unwrap_err(),LzError::ExecutionLimit{reason:crate::error::ExecutionLimitReason::Cancelled,..}));
+  let mut timed=ReplSession::new(ReplConfig{timeout_ms:Some(0),..Default::default()}).unwrap();
+  assert!(matches!(*cell(&mut timed,"1").result.unwrap_err(),LzError::ExecutionLimit{reason:crate::error::ExecutionLimitReason::Deadline,..}));
+ });}
+ #[test] fn func_capacity_is_terminal_not_attempt_business_error_and_reset_unlocks(){on_eval_stack(||{
+  let mut s=ReplSession::new(Default::default()).unwrap();
+  cell(&mut s,"var n=0").result.unwrap();
+  s.interp.repl_func_limit=Some(s.interp.next_func_id);
+  let r=cell(&mut s,"n=5\nattempt(()=>{()=>1})");
+  assert!(matches!(*r.result.unwrap_err(),LzError::ExecutionLimit{reason:crate::error::ExecutionLimitReason::ReplCapacity,..}));
+  assert!(matches!(s.eval_cell("n"),Err(ReplHostError::Poisoned)));assert_eq!(s.interp.depth,0);
+  assert_eq!(s.interp.globals.borrow().get_local(0).unwrap().as_int(),Some(5));
+  s.reset();assert_eq!(cell(&mut s,"1").result.unwrap().as_int(),Some(1));
+ });}
+ #[test] fn admission_bounds_do_not_change_session_metadata(){on_eval_stack(||{
+  let mut s=ReplSession::new(Default::default()).unwrap();
+  assert!(matches!(s.eval_cell(&"x".repeat(1048577)),Err(ReplHostError::Capacity{kind,..}) if kind=="cell bytes"));
+  assert_eq!(s.sources.len(),0);
+  s.cells=4096;assert!(matches!(s.eval_cell("1"),Err(ReplHostError::Capacity{kind,..}) if kind=="cells"));assert_eq!(s.sources.len(),0);
+  s.cells=0;s.raw_bytes=16777216;assert!(matches!(s.eval_cell("1"),Err(ReplHostError::Capacity{kind,..}) if kind=="source bytes"));assert_eq!(s.sources.len(),0);
+ });}
+ #[test] fn cleanup_diagnostics_poison_both_lists_without_changing_permissions(){on_eval_stack(||{
+  let mut s=ReplSession::new(ReplConfig{context:EvalContext{capabilities:EvalCapabilities{subprocess:true,http:false},..Default::default()},args:vec!["kept".into()],..Default::default()}).unwrap();
+  s.interp.host_diagnostics.push("process".into());s.interp.http_diagnostics.push("http".into());
+  let r=cell(&mut s,"1");assert_eq!(r.host_diagnostics(),&[String::from("process")]);assert_eq!(r.http_diagnostics(),&[String::from("http")]);
+  assert!(matches!(s.eval_cell("2"),Err(ReplHostError::Poisoned)));
+  s.reset();assert!(s.interp.capabilities.subprocess);assert!(!s.interp.capabilities.http);
+  assert_eq!(cell(&mut s,"argv()[0]").result.unwrap().as_str(),Some("kept"));
+ });}
 }

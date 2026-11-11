@@ -171,6 +171,21 @@ pub fn lex(text: &str, line_base: u32) -> R<Vec<Token>> {
     Lexer::new(text, line_base).run()
 }
 
+/// Probe-only EOF metadata; tokens preceding an unclosed construct remain available
+/// so the parser can reject an earlier fatal token instead of hiding it.
+pub(crate) fn lex_repl(text: &str, line_base: u32) -> R<(Vec<Token>, bool)> {
+    let mut lexer = Lexer::new(text, line_base);
+    match lexer.run_inner() {
+        Ok(()) => Ok((lexer.out, false)),
+        Err(_) if lexer.incomplete_eof => {
+            let span = lexer.span();
+            lexer.push(TokenKind::Eof, span);
+            Ok((lexer.out, true))
+        }
+        Err(error) => Err(error),
+    }
+}
+
 /// 模式栈条目的词法模式（`syntax.md` §2.8）。
 ///
 /// 栈为空 = **CODE**（顶层）；`Str` = 字符串文本；`Interp(d)` = 插值表达式
@@ -196,6 +211,7 @@ struct Lexer {
     /// 模式栈；空 = CODE（顶层）。
     modes: Vec<Mode>,
     out: Vec<Token>,
+    incomplete_eof: bool,
 }
 
 impl Lexer {
@@ -208,6 +224,7 @@ impl Lexer {
             line_base,
             modes: Vec::new(),
             out: Vec::new(),
+            incomplete_eof: false,
         }
     }
 
@@ -260,6 +277,11 @@ impl Lexer {
     }
 
     fn run(mut self) -> R<Vec<Token>> {
+        self.run_inner()?;
+        Ok(self.out)
+    }
+
+    fn run_inner(&mut self) -> R<()> {
         loop {
             if self.peek().is_none() {
                 break;
@@ -278,7 +300,7 @@ impl Lexer {
         }
         let sp = self.span();
         self.push(TokenKind::Eof, sp);
-        Ok(self.out)
+        Ok(())
     }
 
     /// 当前是否处于插值模式（栈顶为 `INTERP`）。
@@ -485,6 +507,7 @@ impl Lexer {
             }
             self.bump();
         }
+        self.incomplete_eof = true;
         Err(syntax(SyntaxMsg::UnterminatedBlockComment, sp))
     }
 

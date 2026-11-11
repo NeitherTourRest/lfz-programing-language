@@ -1,0 +1,25 @@
+# T20运行时ABI评审与源码交接
+2026-11-04。完整启动审提案/NEXT/§26及SourceMap/UserFn/Env/Interp；root随后GO冻结T20-contract，仅evaluator实现。未编译，tooling唯一整编。
+
+可行性证据：UserFn自身Rc持有Body，声明/lambda从新Program clone得到，旧函数不借即将析构Program；全局名查找运行时走sharedglobals，同名define_named新槽遮蔽旧槽，旧函数随之后续global绑定变化。局部捕获仍cell，不持home Env；每cell ModuleInstance env指同shared Rc，仅source不同，保UserFn/Value公开shape。模板启用已有Some TemplateContext。全局模块声明整Program preflight拒绝，失败前缀不执行。
+
+已实现ReplConfig/ReplHostError/ReplSession精确§26 API。Session含Rc故非Send/Sync，调用方同on_eval_stack创建/使用/析构；不新worker，不跨线程转Interp。new检查相对timeout的checked_add，eval_cell parse之后建立每cell额度/timeout并取hostdeadline较早值，token引用不reset。空白/注释正式parse无stmt不占source；compile失败以当前source/空frames返回。
+
+每cell admission前原子检查1MiB/16MiB/4096，source插入后home槽分别记录SourceId/ModuleId，不依赖数字巧合。source/body/func_names保留直至reset；outcome持独立来源snapshot，旧outcome在reset后仍可诊断。SourceMap当前私有Vec<SourceRecord>中Loaded持String，Rc::make_mut在旧outcome仍保有Rc时会深克隆历史文本；func_names每cell快照亦复制名字表索引。此成本不是O(当前cell)，受会话admission上限约束但host长期保有很多outcome会保多代snapshot，不能宣称总host内存被16MiB限制。未越界修改core SourceMap。
+
+恢复先保存真实result/trace/source/name/双diag，再清depth/trace/trace_sources/fault/active/globals回idle；不回滚globals/容器/IO/RNG/funcIDs。cleanup或ReplCapacity poison，直到reset；reset保存配置能力/args/绝对deadline/token，新Interp释放会话根。既有用户容器/closure自建Rc循环不因reset保证被GC，本语言没有新循环收集器，不作全部堆回收承诺。
+
+make_closure私有返回改R<Value>，声明/方法/default/lambda所有生产构造传播；仅repl_func_limit Some65536启用，分配前检查next_id>limit，返回core第4原因ReplCapacity，note_error_span记录当前定义位置。全局attempt白名单不扩，动态midcell容量不能吞；旧script/graph limit None沿旧路径。旧公开函数/UserFn/Value shape未改。
+
+新增7unit源码未编译：持久globals/旧函数动态查名/失败部分效果；旧函数和模板default真source及reset后snapshot；compile错误/模块拒绝前缀无效果；每cellsteps/timeout0/hosttoken跨reset；安全注入func上限终止不可attempt与poison/reset；安全注入source/cell/raw边界不改元数据；双diag poison与reset能力/argv保持。未删改旧行为断言。
+
+源码evaluator SHA25F94AE7DA741EBE719B0CF487AB9AA5C3D9E1DC48C14EE6E02154CEA6E12A9F，git diff --check通过。停止写源，不编译；需tooling唯一整编后反馈任何作者单元问题，当前不能声称测试通过。CLI负责input共享stdin无跨eval锁、autoecho/累计exit/有界pending；core负责probe/新错误，本角色未改它们。
+
+R304OPEN，本轮format仅依据评估/新Agent包另owner，runtime不扩scope或自动化。
+
+## 首次统一库测试oracle修正（2026-11-04）
+tooling回报首轮lib527通过/1失败，失败在本轮新增compile_and_import_failure_do_not_execute_cell_prefix：n=9后import的输入不符合已有import前置规则，原测试错误期待REPL专属诊断。首失败日志由tooling保全，本角色未删除/改写日志。
+
+仅修此新增测试：保原非法顺序输入，精确断言SyntaxMsg::ImportOrder；另加合法前置import后赋值与赋值后合法export两布局，精确断言ReplModuleUnsupported，每次后续cell核n仍0，证明无本cell赋值副作用。生产语义、旧测试与错误文本未改。
+
+最终evaluator SHA049FF34AF33BD90EFFEBF1ABAA9AA4BE9FA2FFFC7F06B2B862CF9D70C5EF96CF，diff check通过。本角色未编译/运行，修正是否通过待tooling唯一重建确认，停止写源。

@@ -5,7 +5,7 @@
 //! 错误格式化与退出码映射（`0/1/2`）在 [`cli`]；一键测试 runner 在 [`test_runner`]；
 //! JSON 状态协议在 [`json`]；支持 `-e CODE` / `-` 源码入口及 `--` 脚本参数。
 //!
-//! **本批不做**：REPL。
+//! REPL使用同一大栈会话，交替读取共享stdin与求值。
 
 mod cli;
 mod json;

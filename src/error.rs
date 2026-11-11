@@ -36,6 +36,7 @@ pub enum SyntaxMsg {
     ModuleCycle { chain: String },
     ModuleLimit { kind: String, limit: usize },
     ModuleExecutionUnavailable,
+    ReplModuleUnsupported,
     /// `非法字符 '{c}'`
     IllegalChar { c: char },
     /// `'#' 只能出现在文件首行的前导位；(字符串 / 注释 / 格式说明符内的 '#' 除外)`
@@ -97,6 +98,7 @@ impl SyntaxMsg {
             SyntaxMsg::ModuleCycle { chain } => format!("模块循环依赖：{chain}"),
             SyntaxMsg::ModuleLimit { kind, limit } => format!("模块图超限：{kind}（上限 {limit}）"),
             SyntaxMsg::ModuleExecutionUnavailable => "模块执行尚未启用".into(),
+            SyntaxMsg::ReplModuleUnsupported => "REPL 暂不支持 import/export".into(),
             SyntaxMsg::IllegalChar { c } => format!("非法字符 '{c}'"),
             SyntaxMsg::HashPosition => {
                 "'#' 只能出现在文件首行的前导位；(字符串 / 注释 / 格式说明符内的 '#' 除外)".to_string()
@@ -341,6 +343,7 @@ pub enum ExecutionLimitReason {
     StepBudget,
     Cancelled,
     Deadline,
+    ReplCapacity,
 }
 
 /// LFZ 错误（**13 个具体变体 + 1 个基类概念**；基类 `LfzError` **不直接抛出**）。
@@ -428,6 +431,7 @@ impl LzError {
                 ExecutionLimitReason::StepBudget => "执行步数预算已耗尽".to_string(),
                 ExecutionLimitReason::Cancelled => "执行已取消".to_string(),
                 ExecutionLimitReason::Deadline => "执行时间上限已到".to_string(),
+                ExecutionLimitReason::ReplCapacity => "REPL 会话容量已耗尽".to_string(),
             },
         }
     }
@@ -1490,11 +1494,21 @@ mod tests {
     }
 
     #[test]
+    fn repl_errors_match_contract() {
+        assert_execution_limit(ExecutionLimitReason::ReplCapacity, "REPL 会话容量已耗尽");
+        let error = syntax(SyntaxMsg::ReplModuleUnsupported, Span::new(7, 9));
+        assert_eq!(error.class_name(), "SyntaxError");
+        assert_chars_eq(&error.message(), "REPL 暂不支持 import/export");
+        assert_eq!(error.span(), Some(Span::new(7, 9)));
+        assert_eq!(error.to_string(), "SyntaxError: REPL 暂不支持 import/export");
+    }
+
+    #[test]
     fn execution_limit_reason_has_required_value_traits() {
         fn requires_traits<T: Clone + Copy + fmt::Debug + PartialEq + Eq>() {}
         requires_traits::<ExecutionLimitReason>();
         let reasons = [ExecutionLimitReason::StepBudget, ExecutionLimitReason::Cancelled,
-                       ExecutionLimitReason::Deadline];
+                       ExecutionLimitReason::Deadline, ExecutionLimitReason::ReplCapacity];
         for (i, reason) in reasons.iter().enumerate() {
             for (j, other) in reasons.iter().enumerate() {
                 assert_eq!(reason == other, i == j);

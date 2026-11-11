@@ -165,6 +165,7 @@ pub struct Parser<'a> {
     /// **同一层级的左结合链**（`a + b + c`、`f(a)(b)(c)`、`a[0][0]`）由迭代循环展开，
     /// **不计层**。达到 `PARSE_DEPTH_LIMIT + 1` 即报 `SyntaxMsg::NestingTooDeep`。
     depth: u32,
+    expected_eof: std::cell::Cell<bool>,
 }
 
 /// 解析记号流为一个程序（`Program` = 顶层语句序列；即任务书所称 module）。
@@ -175,6 +176,25 @@ pub fn parse(tokens: &[Token]) -> R<Program> {
     let program = Parser::new(tokens).parse_program()?;
     check_ast_depth(&program)?;
     Ok(program)
+}
+
+/// 新 pending 的语法边界；调用者须在解析所需大栈上调用。
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ReplInputStatus { Complete, Incomplete }
+
+/// 同正式 loader/lexer/parser；仅真实 EOF 期待可续输，绝不比较错误文本。
+pub fn probe_repl_input(text: &str) -> R<ReplInputStatus> {
+    let loaded = crate::loader::load_source(text)?;
+    let (tokens, lex_incomplete) = crate::lexer::lex_repl(&loaded.text, loaded.line_base)?;
+    let mut parser = Parser::new(&tokens);
+    match parser.parse_program() {
+        Ok(program) => {
+            check_ast_depth(&program)?;
+            Ok(if lex_incomplete { ReplInputStatus::Incomplete } else { ReplInputStatus::Complete })
+        }
+        Err(_) if parser.expected_eof.get() => Ok(ReplInputStatus::Incomplete),
+        Err(error) => Err(error),
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -405,6 +425,7 @@ impl<'a> Parser<'a> {
             group_depth: 0,
             pipe_stack: Vec::new(),
             depth: 0,
+            expected_eof: std::cell::Cell::new(false),
         }
     }
 
@@ -482,6 +503,7 @@ impl<'a> Parser<'a> {
             self.bump();
             Ok(span)
         } else {
+            self.expected_eof.set(matches!(self.peek(), TokenKind::Eof));
             Err(syntax(
                 SyntaxMsg::UnexpectedToken {
                     expected: token_desc(kind),
@@ -494,6 +516,7 @@ impl<'a> Parser<'a> {
 
     /// 在当前 token 处报 `UnexpectedToken`（期待 `expected`）。
     fn unexpected(&self, expected: &str) -> Box<LzError> {
+        self.expected_eof.set(matches!(self.peek(), TokenKind::Eof));
         syntax(
             SyntaxMsg::UnexpectedToken {
                 expected: expected.to_string(),
@@ -717,6 +740,7 @@ impl<'a> Parser<'a> {
 
     /// 回滚游标与换行模式栈到给定快照（赋值试探失败时用）。
     fn reset(&mut self, pos: usize, stack_len: usize) {
+        self.expected_eof.set(false);
         self.pos = pos;
         self.nl_stack.truncate(stack_len);
     }
@@ -5745,5 +5769,54 @@ mod tests {
         // `a[0][0]…`：各下标为兄弟关系（非嵌套），1001 个下标仍合法。
         let src = format!("a{}", "[0]".repeat(1001));
         assert_eq!(parse_ok_len_big(&src), 1);
+    }
+}
+
+#[cfg(test)]
+mod repl_probe_tests {
+    use super::*;
+
+    #[test]
+    fn repl_complete_programs_and_if_submission_boundary() {
+        for source in ["", "// comment\n", "/* closed */", "1\n", "[1,\n2]\n",
+            "fn f(x) {\nreturn x\n}\n", "if true {\n1\n}\n",
+            "if true {1} else {2}\n", "while false {\nbreak\n}\n",
+            "for x in [1] {\ncontinue\n}\n", "struct S {x: 1}\n",
+            "\u{feff}print(\"中文\")\r\n", "\"${1}\"\n"] {
+            assert_eq!(probe_repl_input(source).unwrap(), ReplInputStatus::Complete, "{source:?}");
+        }
+        assert!(probe_repl_input("else {2}\n").is_err());
+    }
+
+    #[test]
+    fn repl_incomplete_only_for_valid_eof_prefixes() {
+        for source in ["(\n", "[1,\n", "fn f(x)\n", "fn f(x) {\n",
+            "if true\n", "if true {\n", "while true {\n", "for x in [1] {\n",
+            "struct S {\n", "/* open\n", "1\n/* open\n", "[1 +\n",
+            "f(1,\n"] {
+            assert_eq!(probe_repl_input(source).unwrap(), ReplInputStatus::Incomplete, "{source:?}");
+        }
+    }
+
+    #[test]
+    fn repl_fatal_tokens_are_not_hidden_by_open_constructs() {
+        for source in ["let = /* open", "[)\n", "(]\n", "}\n", "[;\n",
+            "fn f(;) {", "if {\n", "1 +\n", "let x =\n", "[1 @\n",
+            "\"open", "\"open\n", "\"${1", "\"${1\n", "\"bad\\q\"",
+            "return 1\n/* open"] {
+            assert!(probe_repl_input(source).is_err(), "{source:?}");
+        }
+    }
+
+    #[test]
+    fn repl_errors_keep_formal_unicode_crlf_positions_and_depth_limit() {
+        let source = "print(\"中文\")\r\n@\r\n";
+        let loaded = crate::loader::load_source(source).unwrap();
+        let formal = crate::lexer::lex(&loaded.text, loaded.line_base).unwrap_err();
+        assert_eq!(probe_repl_input(source).unwrap_err(), formal);
+        assert_eq!(formal.span(), Some(Span::new(2, 1)));
+        let deep = format!("{}1", "[".repeat(PARSE_DEPTH_LIMIT as usize + 1));
+        let error = crate::evaluator::on_eval_stack(|| probe_repl_input(&deep).unwrap_err());
+        assert!(matches!(*error, LzError::Syntax { msg: SyntaxMsg::NestingTooDeep, .. }));
     }
 }

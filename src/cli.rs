@@ -80,6 +80,7 @@ LFZ 解释器
   lfz check FILE       只检查文件语法，不执行 LFZ 程序
   lfz check -e CODE    只检查直接代码；check - 从 stdin 检查源码
   lfz test [路径...]   运行黑盒测试（默认发现 tests/**/*.lfz，排除 tests/fixtures）
+  lfz repl [-- ARG...]  持久REPL，多行自动续读；:help/:reset/:quit
   lfz --help, -h       显示本帮助
   lfz --version, -V    显示版本
 
@@ -159,6 +160,7 @@ enum Command {
     Help,
     /// `--version` / `-V`。
     Version,
+    Repl { args:Vec<String> },
 }
 
 /// CLI 入口：解析 `args`（**不含** `argv[0]`），写 `out` / `err`，返回退出码。
@@ -166,10 +168,17 @@ enum Command {
 /// 与真实进程解耦：`out` / `err` 可为任意 [`Write`]（生产用 stdout/stderr，测试用内存缓冲）。
 ///
 /// `--json` 仅在选项位置生效；CODE 与 `--` 后的脚本参数不参与选项解析。
-pub fn execute(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32 {
+pub fn execute(args: &[String], out: &mut (dyn Write+Send), err: &mut (dyn Write+Send)) -> i32 {
     let (rest, script_args, json, limits) = match scan_options(args) { Ok(v)=>v,Err(msg)=>return usage_error(&msg,err) };
     if limits.is_set() && rest.first().is_some_and(|s| matches!(s.as_str(),"check"|"test"|"--help"|"-h"|"--version"|"-V")) { return usage_error(limits.applicability(),err); }
     let parsed=parse_command(&rest,script_args);
+    if let Ok(Command::Repl{args})=&parsed {
+        if json{return usage_error("repl 不支持 --json",err);}
+        let config=evaluator::ReplConfig{context:evaluator::EvalContext{limits:evaluator::EvalLimits{max_steps:limits.max_steps,..Default::default()},capabilities:evaluator::EvalCapabilities{subprocess:limits.allow_process,http:limits.allow_http}},args:args.clone(),timeout_ms:limits.timeout_ms};
+        use std::io::IsTerminal;
+        let interactive=std::io::stdin().is_terminal();
+        return evaluator::on_eval_stack(move ||repl_loop(config,interactive,out,err,read_repl_line));
+    }
     if limits.is_set() {
         match parsed {
             Ok(command) if is_execution(&command) => return run_limited(command,limits,json,out,err),
@@ -178,6 +187,7 @@ pub fn execute(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32
         }
     }
     match parsed {
+        Ok(Command::Repl{..}) => unreachable!(),
         Ok(Command::Help) => {
             let _ = write!(out, "{HELP}");
             EXIT_OK
@@ -312,6 +322,7 @@ fn parse_command(args: &[String], script_args: Option<Vec<String>>) -> Result<Co
     let first = args.first().ok_or_else(|| "缺少子命令".to_string())?;
     if matches!(first.as_str(), "--help" | "-h") { return Ok(Command::Help); }
     if matches!(first.as_str(), "--version" | "-V") { return Ok(Command::Version); }
+    if first == "repl" {if args.len()!=1{return Err("repl 不接受额外来源".into());}return Ok(Command::Repl{args:script_args.unwrap_or_default()});}
     if first == "test" { return Ok(Command::Test { paths: args[1..].to_vec() }); }
     if first == "check" {
         if script_args.is_some() {
@@ -1341,4 +1352,48 @@ mod tests {
 #[cfg(test)]mod t18b_cli_gate_tests{use super::*;
 #[test]fn http_and_combined_success_fail_closed_both_formats(){for json in [true,false]{for combined in [true,false]{let mut e=with_http_diagnostics(CaseEval::Passed,vec!["http fault".into()]);if combined{e=with_diagnostics(e,vec!["process fault".into()]);}let(mut out,mut err)=(vec![],vec![]);assert_eq!(report_eval("x",&e,json,&mut out,&mut err),2);assert!(out.is_empty());let expected=if combined{"lfz: 子进程资源回收失败\nlfz: 子进程回收诊断：process fault\nlfz: HTTP 回收诊断：http fault\n"}else{"lfz: HTTP 资源回收失败\nlfz: HTTP 回收诊断：http fault\n"};assert_eq!(String::from_utf8(err).unwrap(),expected);}}}
 #[test]fn global_error_json_preserved_with_two_lists(){let e=with_diagnostics(with_http_diagnostics(CaseEval::Failed{err:LzError::ExecutionLimit{reason:lfz::error::ExecutionLimitReason::Cancelled,span:Span::START},loaded:None,traced:None},vec!["http fault".into()]),vec!["process fault".into()]);let(mut out,mut err)=(vec![],vec![]);assert_eq!(report_eval("x",&e,true,&mut out,&mut err),2);let out=String::from_utf8(out).unwrap();assert!(out.contains("ExecutionLimitError"));assert_eq!(out.lines().count(),1);assert!(!out.contains("fault"));assert_eq!(String::from_utf8(err).unwrap(),"lfz: 子进程回收诊断：process fault\nlfz: HTTP 回收诊断：http fault\n");}
+}
+
+const REPL_HELP:&str="命令: :help :reset :quit\n多行未完成时继续读取；完整输入立即执行。if 的 } 与 else 须在同一物理行。\ninput() 消费同一stdin下一物理行；限额按cell重新计，能力和argv按session固定。\n";
+const REPL_CELL_CAP:usize=1048576;
+fn read_repl_line(remaining:usize)->Result<Option<Vec<u8>>,String>{let stdin=std::io::stdin();let mut input=stdin.lock();read_repl_physical(&mut input,remaining)}
+fn read_repl_physical(input:&mut impl std::io::BufRead,remaining:usize)->Result<Option<Vec<u8>>,String>{let mut line=Vec::new();loop{let block=input.fill_buf().map_err(|e|format!("读取stdin失败：{e}"))?;if block.is_empty(){return Ok(if line.is_empty(){None}else{Some(line)});}let take=block.iter().position(|b|*b==b'\n').map_or(block.len(),|n|n+1);if take>remaining-line.len(){return Err("REPL 会话容量超限：cell bytes（上限 1048576）".into());}if line.len()+take>line.capacity(){line.reserve_exact(take);}line.extend_from_slice(&block[..take]);let done=block[take-1]==b'\n';input.consume(take);if done{return Ok(Some(line));}}}
+fn repl_loop(config:evaluator::ReplConfig,interactive:bool,out:&mut dyn Write,err:&mut dyn Write,mut read:impl FnMut(usize)->Result<Option<Vec<u8>>,String>)->i32{
+ let mut session=match evaluator::ReplSession::new(config){Ok(s)=>s,Err(e)=>{let _=writeln!(err,"repl: {e}");return EXIT_ERROR;}};let mut pending=String::new();let mut failed=false;let mut poisoned=false;
+ loop{
+  if interactive{if write!(err,"{}",if pending.is_empty(){"lfz> "}else{"...> "}).and_then(|_|err.flush()).is_err(){return EXIT_ERROR;}}
+  let line=match read(REPL_CELL_CAP-pending.len()){Ok(v)=>v,Err(e)=>{let _=writeln!(err,"repl: {e}");return EXIT_ERROR;}};
+  let eof=line.is_none();let line=match line{Some(bytes)=>match String::from_utf8(bytes){Ok(line)=>line,Err(_)=>{let _=writeln!(err,"repl: stdin 不是合法 UTF-8");return EXIT_ERROR;}},None=>String::new()};
+  if eof&&pending.is_empty(){break;}
+  if pending.is_empty()&&!eof&&line.trim().starts_with(':'){
+   match line.trim(){":quit"=>break,":reset"=>{session.reset();poisoned=false;},":help"=>{if write!(out,"{REPL_HELP}").and_then(|_|out.flush()).is_err(){return EXIT_ERROR;}},_=>{failed=true;let _=writeln!(err,"repl: 未知命令");}}continue;
+  }
+  if poisoned{failed=true;let _=writeln!(err,"repl: REPL 会话需要 :reset");if !interactive{break;}continue;}
+  pending.push_str(&line);
+  if !eof&&matches!(parser::probe_repl_input(&pending),Ok(parser::ReplInputStatus::Incomplete)){continue;}
+  if poisoned{failed=true;let _=writeln!(err,"repl: REPL 会话需要 :reset");pending.clear();if !interactive{break;}continue;}
+  match session.eval_cell(&pending){
+   Ok(None)=>{},Ok(Some(traced))=>{
+    poisoned=!traced.host_diagnostics().is_empty()||!traced.http_diagnostics().is_empty()||matches!(&traced.result,Err(e)if matches!(e.as_ref(),LzError::ExecutionLimit{reason:lfz::error::ExecutionLimitReason::ReplCapacity,..}));
+    let value=traced.result.as_ref().ok().filter(|v|!matches!(v,lfz::value::Value::Nil)).map(|v|v.to_string());
+    let eval=repl_run_result(traced);if report_eval("<repl>",&eval,false,out,err)!=EXIT_OK{failed=true;}else if let Some(value)=value{if writeln!(out,"{value}").and_then(|_|out.flush()).is_err(){return EXIT_ERROR;}}
+    if poisoned&&!interactive{let _=writeln!(err,"repl: REPL 会话需要 :reset");return EXIT_ERROR;}
+   },Err(e)=>{failed=true;let fatal=matches!(e,evaluator::ReplHostError::Poisoned|evaluator::ReplHostError::Origins(_)|evaluator::ReplHostError::InvalidConfig{..});let _=writeln!(err,"repl: {e}");if fatal&&!interactive{return EXIT_ERROR;}}
+  }
+  pending.clear();if eof{break;}
+ }
+ if failed{EXIT_ERROR}else{EXIT_OK}
+}
+#[cfg(test)]mod t20_frontend_tests{use super::*;
+#[test]fn bounded_input_exact_limit_and_unconsumed_tail(){let mut c=std::io::Cursor::new(b"abc\nnext\n");assert_eq!(read_repl_physical(&mut c,4).unwrap().unwrap(),b"abc\n");assert_eq!(read_repl_physical(&mut c,5).unwrap().unwrap(),b"next\n");assert!(read_repl_physical(&mut c,0).unwrap().is_none());let mut c=std::io::Cursor::new(b"abcX\n");assert!(read_repl_physical(&mut c,3).is_err());assert_eq!(c.position(),0);}
+#[test]fn same_writers_and_interactive_prompts_follow_pending(){let (code,out,err)=evaluator::on_eval_stack(||{let mut input=std::io::Cursor::new(b"fn f() {\nreturn 7\n}\nf()\n:quit\n");let(mut out,mut err)=(vec![],vec![]);let code=repl_loop(evaluator::ReplConfig::default(),true,&mut out,&mut err,|n|read_repl_physical(&mut input,n));(code,out,err)});assert_eq!(code,0);assert_eq!(out,b"7\n");assert_eq!(err,b"lfz> ...> ...> lfz> lfz> ");}
+}
+
+fn repl_run_result(traced:TracedRun)->CaseEval{
+ if traced.frames.is_empty()&&traced.result.is_err(){
+  let Some(origin)=traced.error_source()else{return CaseEval::HostFailure("REPL来源元数据缺失".into());};
+  let path=origin.display_path.clone();let loaded=origin.loaded.clone();let err=(**traced.result.as_ref().unwrap_err()).clone();
+  let inner=with_http_diagnostics(with_diagnostics(CaseEval::Failed{err,loaded,traced:None},traced.host_diagnostics().to_vec()),traced.http_diagnostics().to_vec());
+  CaseEval::Located{path,inner:Box::new(inner)}
+ }else{graph_run_result(traced)}
 }
