@@ -1,18 +1,12 @@
 # language-architect — 工作状态
-> 最后更新：2026-11-04 by language-architect
+> 最后更新：2026-11-13 by language-architect
 
 ## 当前状态
-三spec §26及T20-contract.md10245B正式冻结，ADR追加；root可据精确接口GO。提案为历史，已合root/tool最终stdin与ReplCapacity裁决。未源改/编译/Git。
+T21保真空白格式化三spec §27及T21-contract冻结，root可据此给源码GO。
+行首CODE TAB一对一换SP、行尾CODE SP/TAB清理。保原换行/BOM/#42、注释/字符串等原字节及所有实质token位置。裸CR+空白+LF保整个run。已指出attempt.col可观察，root裁决不按深度重新缩进。
+CLI原argv恰fmt FILE且FILE非空、不以连字符开头才进入；其余原解析，含fmt --json、fmt --、fmt --allow-process/http、--json fmt、fmt -- ARG旧裸文件形态。--json fmt FILE与附选项的新调用拒绝。原/新parse及token kind/行号/实质列一致，幂等/差分由owner实测。
 
-## 精确接口
-core parser::ReplInputStatus Complete/Incomplete；probe_repl_input(&str)->R<ReplInputStatus>，内部typed EOF不猜中文；error.rs ReplModuleUnsupported与ExecutionLimitReason::ReplCapacity（第4reason、仍13class），旧三message不变。
-runtime ReplConfig{context,args,timeout_ms}/ReplSession::new、eval_cell(&str)->Result<Option<TracedRun>,ReplHostError>、reset；HostError InvalidConfig/Capacity/Poisoned/Origins。单大栈!Send/Sync session，sharedglobals/每cell home来源，旧UserFn shape不改。每cell新step/相对timeout，host绝对deadline/token不reset。
-tooling CLI repl/typed probe/行循环/错误渲染/stdio/prompt/exit与formatter评估；不加伪formatter。input保旧语义，读REPL物理行后释放stdin lock再eval、无额外预读。
-
-## 边界
-非nil echo/print nil不重复；全部cell错误累计exit2、reset不抹计数。MVP禁import/export。
-1MiB cell/16MiB累计源/4096cell/65536funcID，源码admission无本cell副作用；midcell ReplCapacity不回滚并poison，不可attempt；cleanup poison同样只reset/quit/help。
-旧来源文本保至reset，fault outcome先存后清执行状态不事务回滚；REPL模板Some定义上下文，旧run None保持。
-
-## 证据/下一步
-文档diff检查exit0，仅换行提示。全旧功能/独立REPL/新Agent包版本实测及最终性能待owner完成，R304OPEN。原用户28/1/1保护。仅T20交付后收口，不automation/后继。
+## 分工与证据
+core唯一lexer::lex_format_layout(&str,u32)->R<(Vec<Token>,Vec<Range<usize>>)>，归一化标量索引。
+tooling唯一formatter.rs/lib.rs/cli；format_source(&str,&[u8])->Result<Vec<u8>,FormatError>，InvalidSource或InvariantViolation。
+文档diff检查通过，本角色未写源码/编译。后续由root调度实现验收，R304状态保持。

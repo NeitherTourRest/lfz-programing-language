@@ -375,3 +375,13 @@
 - 产出：三spec/T20-contract.md10245B，精确core probe/runtime session/CLI owner、来源恢复/限额/新Agent包门禁。
 - 证据：diff检查exit0；未源改/编译/Git。
 - 下一步：rootGO三owner；T20交付后收口，R304OPEN。
+
+## [2026-11-13] T21保真空白格式化契约
+- 来源：root授权先格式化器，启动读评估/loader/lexer。
+- 完成：三spec §27、T21-contract、ADR。可观察列与CRLF合并风险已定规则，owner拆分与词法接口明确。
+- 证据：文档diff检查通过；未改源或编译。
+- 下一步：root调度core/tooling与独立验收。
+
+## [2026-11-13] T21 fmt分派兼容补钉
+- 依root裁决同步§27.1与T21-contract，原argv第二项为空或连字符开头回旧解析。
+- 文档diff检查通过。交root和tooling，未改源码或编译。

@@ -199,3 +199,9 @@ v3 冻结 manifest 793caa2c2a006ab6a843b58513040f52ef164ac0ce039f760bd06baa79876
 
 ## T20 候选已交付（2026-11-11）
 七组提交已推送 origin/main，git ls-remote 实核 b673c53bfe69f41a06a6093f02edebefa6598823。Git 回读候选归档的 39 个源码、Rust 测试与 Cargo 文件，以及 132 个要求保真字节的文件。原用户三处修改仍为 28/1/1 行。独立 REPL、旧回归、应用与指南均通过，Agent v3 首交卷认证 4/4。R304 OPEN，Windows 中文终端渲染待验证。T20 功能候选交付收口。
+
+## T21 保真空白格式化（2026-11-13）
+用户授权继续实现功能，本轮选单文件 lfz fmt FILE。三份规范 §27 及 T21-contract.md 冻结。保脚本可读错误列号，只整理顶层 CODE 的行首 TAB 与安全行尾空白，原注释、字面量、换行、BOM 和 #42 保全。T20 候选 a545d0c… 的真实红见证在 Temp/T21-fmt，run 退出 0，fmt 退出 2。core 唯一 lexer 布局入口；tooling 唯一 formatter、CLI 及统一构建。独立、文档和交付均待最终产物。R304 OPEN。
+
+## T21 格式化功能验收（2026-11-13）
+Windows 候选 SHA-256 76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e，1117184 bytes。作者和独立各 715/715，公开 27/27，独立自编 23/23，既有 CLI、REPL 和应用回归通过，人指南 2/2。真实 stdout 断管退出 2、原文件保留。全库 192 个 tracked LFZ 中 173 接受且幂等，19 有诊断且 stdout 空。原版与格式化版的 attempt 行列/traceback、错误 JSON 和文件副作用对照通过。候选源码与归档已冻结，正在准备交付。R304 OPEN。

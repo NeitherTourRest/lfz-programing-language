@@ -1,11 +1,11 @@
 # test-engineer — 工作状态
-> 更新：2026-11-11
+> 更新：2026-11-13
 
 ## 当前状态
-T20 公开 REPL 最终 37/37 PASS，exit0。冻结 Windows 候选 a545d0c2…/1100800B。首轮 34/36 原件与首脚本保全。
+T21 公开格式化 27/27 通过，退出码 0，由 team-lead 在冻结候选 76ac4cb5…/1117184B 上实跑。
 
 ## 产出
-修正新矩阵的赋值静默及不可嵌套块注释预期，补普通多行块注释正例。T20-blackbox.md、final-corrected-default.json、manifest-final.json 已落盘，验后 39 个源指纹匹配构建者清单。
+原始 public-final.json 按字节封存，manifest-final 绑定候选、脚本、T20 对照与 41 个来源指纹。四项兼容对照、attempt 可观察位置及其余检查均通过。报告 T21-blackbox.md 已更新。
 
 ## 下一步
-公开进程运行结束，交 team-lead 汇总独立验收。TTY 和宿主容量由对应记录验收，R304 OPEN。
+公开测试收工，交 team-lead 汇总独立验收。R304 OPEN。

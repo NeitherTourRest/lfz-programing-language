@@ -1302,3 +1302,8 @@ T17 CLI计时边界精确说明：在静态build_graph完成、调用eval入口�
 按root最终裁决合tool review冻结单Interp/sharedglobals/逐cell home来源、typed probe、旧input共享stdin（释放lock再eval无预读）、非nil显示/累计exit2、MVP禁导入、percell limits与host资源不reset。65536ID上限新增ExecutionLimitReason::ReplCapacity第4原因且13类不增，Rust穷尽match机械迁移，不可attempt吞；旧原因文本不改。限额admission原子无效果，midcell限额不回滚旧效果并poison。formatter有据暂缓，新Agent任务包独立版本；未源改/编译，R304OPEN，本轮收口。
 
 T20前端cap补钉按root批准：共享stdin fill_buf/consume追加前限制1MiB，eval前drop lock，无额外预读；超cap前端错误即exit2，不无限read_line/drain或把残行当新cell。
+
+### [2026-11-13] [language-architect] T21保真空白格式化冻结
+root裁决保留attempt可观察列，采用CODE行首TAB一对一、CODE行尾清理、原换行及注释等字节保全。裸CR+空白+LF保护整个run，避免合并换行。精确argv分派、formatter API/core与CLI/tooling分工及验证见三spec §27和T21-contract。
+
+本轮owner明确为core唯一lexer布局，tooling唯一formatter.rs/lib.rs/cli。lex_format_layout返回归一化文本中顶层CODE空白的Unicode标量区间，formatter映射到原始字节。

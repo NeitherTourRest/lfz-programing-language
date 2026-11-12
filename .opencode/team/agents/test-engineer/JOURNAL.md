@@ -277,3 +277,15 @@
 - 完成：同 a545d0c2…/1100800B 默认环境 37/37 PASS，exit0；首34/36与原脚本保全。
 - 产出：T20-blackbox 报告及 final-corrected-default/manifest-final，验后39个源指纹匹配冻结清单。
 - 下一步：交 team-lead 汇总；R304 OPEN。
+
+## [2026-11-13] T21 公开格式化测试准备
+- 来源：team-lead 轻量任务，依据冻结 §27 与 T21-contract。
+- 完成：27 例准备、AST PASS、prepare-only exit0。旧版 a545d0c2 缺 fmt 红测 0/1，旧 parser 合法夹具 13/13。
+- 产出：新公开脚本、T21-blackbox 报告及证据目录。
+- 下一步：等最终 SHA 后实跑。R304 OPEN。
+
+## [2026-11-13] T21 公开格式化验收收口
+- 来源：team-lead 已在最终候选执行原脚本 27/27，要求核对与封存原始结果。
+- 完成：核候选/脚本/T20 基线与 41 个来源指纹，原件 SHA 31542d67…按字节保存。四个旧入口精确对照及位置检查通过。
+- 产出：public-final.json、manifest-final.json、报告及工作状态。
+- 下一步：交 team-lead 汇总。R304 OPEN。

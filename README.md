@@ -1,12 +1,20 @@
 # LFZ 语言与解释器 — 程序设计课程作业
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-> 最后更新: 2026-11-11 by release-manager
+> 最后更新: 2026-11-13 by release-manager
 > 仓库地址: https://github.com/NeitherTourRest/lfz-programing-language
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
-## T20 交互式 REPL 与 Agent v3（2026-11-11）
+## T21 保真空白格式化（2026-11-13）
+
+运行 `dist\lfz.exe fmt FILE` 会把格式化结果写到 stdout，输入文件保持原样。命令将顶层代码行首 Tab 等列替换为空格，并清理可安全删除的代码行尾空白。注释、字符串及插值、数字原写法、BOM、`#42` 和换行序列都保留。格式化只校验当前文件，无需读取模块依赖。旧式裸 `fmt` 文件调用仍按原规则处理。[格式化指南](docs/guide/formatting.md)
+
+Windows 候选 `76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e`（1117184 字节）通过独立 715 项 Rust 测试、23 项自编见证和全部旧回归（含 REPL 37 项）。公开 27 项与人类指南 2 项也通过。192 个库内样本中，173 个合法输入的输出与原件一致且幂等，19 个拒绝样本输出诊断且 stdout 为空。旧版对照可用 T20 候选 ZIP 内的 exe，或本地 `Temp/T21-release/lfz-T20-a545d0.exe`。[独立验收](docs/reports/T21-independent-verification.md) · [候选指纹](docs/reports/T21-release-evidence/archive-verification.json)
+
+中文终端渲染仍待验。R304 仍开放，本轮交付 1.4.0 候选，无新性能窗口或正式标签。
+
+## T20 历史交互式 REPL 与 Agent v3（2026-11-11）
 
 运行 `dist\lfz.exe repl` 可逐段执行 LFZ。变量和函数跨输入段保留，诊断标出实际来源 `<repl:N>`，出错后仍可继续输入。失败前已发生的副作用会保留。用 `:reset` 清空会话，用 `:quit` 退出。会话曾出错时退出码为 2，重置定义也会保留这个退出状态。当前 REPL 有输入和会话容量限制，`import/export` 请用脚本入口。多行输入、共享 stdin 和限额见[REPL 指南](docs/guide/repl.md)，[JSONdesk](app/T20-REPL-JSONDESK.md)提供交互示例。
 

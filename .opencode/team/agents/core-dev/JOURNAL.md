@@ -217,3 +217,6 @@ C快照后root GO；仅error.rs新增reason/variant/helper及映射，机械精�
 
 ### [2026-11-04] T20 core probe停源交接
 完整启动与真实lexer/parser review，先报告prefix遮蔽/EOF字符串风险，按root批准typed EOF方案实现三owner文件与5组新unit；保旧shape/文本/断言。diff检查通过，未编译，统一tooling验证；review报告与STATUS已更新。
+
+### [2026-11-13] T21 格式化词法布局交接
+按冻结 §27.3 在 lexer.rs 实现 crate 内布局收集，复用扫描器和静态观察器。新增区间与诊断等值测试。diff 检查 exit0，SHA EB318A3D8458F667EC1917E289CD16932056A2BD62BCB8636440AF1B4AE6A914。停写并交 tooling 统一构建。

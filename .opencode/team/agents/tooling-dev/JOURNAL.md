@@ -199,3 +199,6 @@ reader/lib实现，reader11+runtime5+core新测试同编全验；首515/1新增�
 
 ### [2026-11-04] T20前端实现与首完整回归交接
 按§26接REPL/sharedstdin/有界pending/同大栈/typedprobe/session/render/exit/flags与poison门禁，Write+Send仅binary内部获root批准。首2/2+5/2失败保留，修本人assignment新oracle与真实compile-source adapter后2/2+7/7过。完整lib527/1在runtime新增import顺序oracle，精确日志报root，未越权修改，源编译暂停腾slot待owner交接；无最终hash或全套成功声明。formatter独立评估本轮暂缓，真实PTY尚待验，不改旧tests/dist/Git/外装/公网/automation。
+
+### [2026-11-13 00:34] T21 格式化作者验收
+格式化 API、原始参数分派与新测试已完成。旧候选红测保留，定向 8 项及完整 715 项通过。候选 1117184B，SHA256 `76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e`。真实脚本前后错误位置、traceback 与文件效果一致。递归清单与候选 ZIP 保全，源冻结交 root 独立验收。
