@@ -3,6 +3,7 @@
 > 面向**人类开发者**的 LFZ 手册。目标：让你在 **5 分钟**内装好 LFZ、跑通第一个程序、看懂常见报错。
 > 权威语法/语义以 `docs/spec/` 为准；本手册只做讲解与示例，不定义新语法。
 > 配套：教程 [`tutorial.md`](tutorial.md) ｜ 参考 [`reference.md`](reference.md) ｜ 错误模型 [`errors.md`](errors.md) ｜ 测试 [`testing.md`](testing.md)
+> 用 `lfz fmt` 整理文件空白与安全保存：[格式化指南](formatting.md)
 > 最后更新: 2026-10-27（T14：非执行语法检查；1.4.0候选） by docs-writer
 
 ---
@@ -228,4 +229,4 @@ T19提供有界forEachLine(callback,maxLineBytes,path)，支持data-last管道�
 
 ## T20 持久 REPL
 
-`lfz repl` 的多行、错误恢复、真实 cell 来源、共享 stdin、命令/限额与容量边界见 [REPL 教程](repl.md)。本轮 formatter 有依据暂缓，check 不新增未冻结规则；最终候选验证见 [T20 人类指南证据](../reports/T20-guide-evidence.md)。
+`lfz repl` 的多行、错误恢复、真实 cell 来源、共享 stdin、命令/限额与容量边界见 [REPL 教程](repl.md)。T20 当时暂缓实现 formatter。T21 的空白格式化见 [格式化指南](formatting.md)。T20 最终候选验证见 [T20 人类指南证据](../reports/T20-guide-evidence.md)。

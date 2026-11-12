@@ -1,0 +1,33 @@
+{
+  "binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+  "binary_bytes": 1117184,
+  "final_binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+  "docs": {
+    "docs/guide/README.md": "4e818a0fbe8ff76fc695f98084655070ce1c8a59f5dd94245b8d89159c5a19dd",
+    "docs/guide/formatting.md": "2d559b9fe9cfcc8fdd6ae305f8f993e17a4b6c8f189ddbee7cb5056b55de7f91"
+  },
+  "final_docs": {
+    "docs/guide/README.md": "4e818a0fbe8ff76fc695f98084655070ce1c8a59f5dd94245b8d89159c5a19dd",
+    "docs/guide/formatting.md": "2d559b9fe9cfcc8fdd6ae305f8f993e17a4b6c8f189ddbee7cb5056b55de7f91"
+  },
+  "executed": true,
+  "runs": [
+    {
+      "name": "stdout",
+      "exit": 0,
+      "stdout_hex": "efbbbf2334320d0a207072696e742822e4bda0e5a5bd22290d0a202f2f20636f6d6d656e742020090d0a20777269746546696c65282272616e2e747874222c202272616e2229",
+      "stderr_hex": "",
+      "output_hex": "efbbbf2334320d0a207072696e742822e4bda0e5a5bd22290d0a202f2f20636f6d6d656e742020090d0a20777269746546696c65282272616e2e747874222c202272616e2229",
+      "pass": true
+    },
+    {
+      "name": "cmd-redirect",
+      "exit": 0,
+      "stdout_hex": "",
+      "stderr_hex": "",
+      "output_hex": "efbbbf2334320d0a207072696e742822e4bda0e5a5bd22290d0a202f2f20636f6d6d656e742020090d0a20777269746546696c65282272616e2e747874222c202272616e2229",
+      "pass": true
+    }
+  ],
+  "passed": 2
+}

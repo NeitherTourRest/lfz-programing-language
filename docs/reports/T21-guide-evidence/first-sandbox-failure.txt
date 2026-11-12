@@ -1,0 +1,3 @@
+2026-11-13, first restricted-environment run, tool exit 1.
+Command: D:/app/ANACONDA/python.exe -B docs/reports/T21-guide-evidence/verify.py --binary target/release/lfz.exe --sha256 76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e --output docs/reports/T21-guide-evidence/runs.json
+Tool transcript exception: PermissionError: [WinError 5] at Path.resolve(strict=True) for target/release/lfz.exe, verify.py line 40. No product process started and no runs.json generated.
