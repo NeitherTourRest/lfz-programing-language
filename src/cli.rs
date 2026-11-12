@@ -80,6 +80,7 @@ LFZ 解释器
   lfz check FILE       只检查文件语法，不执行 LFZ 程序
   lfz check -e CODE    只检查直接代码；check - 从 stdin 检查源码
   lfz test [路径...]   运行黑盒测试（默认发现 tests/**/*.lfz，排除 tests/fixtures）
+  lfz fmt FILE        保真格式化一个文件，结果写 stdout
   lfz repl [-- ARG...]  持久REPL，多行自动续读；:help/:reset/:quit
   lfz --help, -h       显示本帮助
   lfz --version, -V    显示版本
@@ -169,6 +170,11 @@ enum Command {
 ///
 /// `--json` 仅在选项位置生效；CODE 与 `--` 后的脚本参数不参与选项解析。
 pub fn execute(args: &[String], out: &mut (dyn Write+Send), err: &mut (dyn Write+Send)) -> i32 {
+    if let [command, path] = args {
+        if command == "fmt" && !path.is_empty() && !path.starts_with('-') {
+            return evaluator::on_eval_stack(|| format_file(path, out, err));
+        }
+    }
     let (rest, script_args, json, limits) = match scan_options(args) { Ok(v)=>v,Err(msg)=>return usage_error(&msg,err) };
     if limits.is_set() && rest.first().is_some_and(|s| matches!(s.as_str(),"check"|"test"|"--help"|"-h"|"--version"|"-V")) { return usage_error(limits.applicability(),err); }
     let parsed=parse_command(&rest,script_args);
@@ -1396,4 +1402,33 @@ fn repl_run_result(traced:TracedRun)->CaseEval{
   let inner=with_http_diagnostics(with_diagnostics(CaseEval::Failed{err,loaded,traced:None},traced.host_diagnostics().to_vec()),traced.http_diagnostics().to_vec());
   CaseEval::Located{path,inner:Box::new(inner)}
  }else{graph_run_result(traced)}
+}
+
+fn format_file(path: &str, out: &mut dyn Write, err: &mut dyn Write) -> i32 {
+    use lfz::formatter::{format_source, FormatError};
+
+    let raw = match std::fs::read(path) {
+        Ok(bytes) => bytes,
+        Err(_) => {
+            let error = LzError::Io { msg: format!("无法读取：{path}"), span: None };
+            let _ = write!(err, "{}", render_error(path, None, &error, None));
+            return EXIT_ERROR;
+        }
+    };
+    let formatted = match format_source(path, &raw) {
+        Ok(bytes) => bytes,
+        Err(FormatError::InvalidSource { error, loaded }) => {
+            let _ = write!(err, "{}", render_error(path, loaded.as_ref(), &error, None));
+            return EXIT_ERROR;
+        }
+        Err(FormatError::InvariantViolation) => {
+            let _ = writeln!(err, "lfz: 格式化结果未通过保真校验");
+            return EXIT_ERROR;
+        }
+    };
+    if let Err(error) = out.write_all(&formatted).and_then(|()| out.flush()) {
+        let _ = writeln!(err, "lfz: 无法写入格式化结果：{error}");
+        return EXIT_ERROR;
+    }
+    EXIT_OK
 }

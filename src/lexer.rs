@@ -186,6 +186,26 @@ pub(crate) fn lex_repl(text: &str, line_base: u32) -> R<(Vec<Token>, bool)> {
     }
 }
 
+/// 扫描已归一化源码，附带顶层 CODE 中连续 SP/TAB 的标量索引范围。
+/// 注释、字符串、插值及 CR/LF 不属于这些范围。
+pub(crate) fn lex_format_layout(
+    text: &str,
+    line_base: u32,
+) -> R<(Vec<Token>, Vec<std::ops::Range<usize>>)> {
+    let mut lexer = Lexer::new(text, line_base);
+    let mut layout: Vec<std::ops::Range<usize>> = Vec::new();
+    lexer.run_observing_code(|lexer| {
+        if matches!(lexer.peek(), Some(' ' | '\t')) {
+            let index = lexer.pos;
+            match layout.last_mut() {
+                Some(run) if run.end == index => run.end = index + 1,
+                _ => layout.push(index..index + 1),
+            }
+        }
+    })?;
+    Ok((lexer.out, layout))
+}
+
 /// 模式栈条目的词法模式（`syntax.md` §2.8）。
 ///
 /// 栈为空 = **CODE**（顶层）；`Str` = 字符串文本；`Interp(d)` = 插值表达式
@@ -282,12 +302,20 @@ impl Lexer {
     }
 
     fn run_inner(&mut self) -> R<()> {
+        self.run_observing_code(|_| {})
+    }
+
+    // 普通词法分析使用静态空闭包。只有格式化入口记录布局。
+    fn run_observing_code(&mut self, mut observe: impl FnMut(&Self)) -> R<()> {
         loop {
             if self.peek().is_none() {
                 break;
             }
             match self.modes.last() {
-                None => self.code_token()?,
+                None => {
+                    observe(self);
+                    self.code_token()?;
+                }
                 Some(Mode::Str) => self.str_text(false)?,
                 Some(Mode::Interp(_)) => self.code_token()?,
                 Some(Mode::FormatSpec) => self.str_text(true)?,
@@ -715,6 +743,48 @@ mod tests {
         match *e {
             LzError::Syntax { msg, span } => (msg, span),
             other => panic!("期望 SyntaxError，得到 {other:?}"),
+        }
+    }
+
+    #[test]
+    fn format_layout_reports_maximal_top_level_runs_in_scalar_offsets() {
+        // 显式标注可编辑片段，未标注片段须整体保留。
+        let fragments = [
+            ("\t ", true),
+            ("let", false),
+            (" \t", true),
+            ("x=\"中 \t${ f(\"内 \t\") : \t} 尾 \t\"", false),
+            (" \t", true),
+            ("// 注释 \t\n", false),
+            (" \t", true),
+            ("/* 注释 \t\n \t闭合 */", false),
+            ("\t ", true),
+            ("\r", false),
+            (" ", true),
+            ("\n", false),
+            ("\t", true),
+        ];
+        let mut source = String::new();
+        let mut expected = Vec::new();
+        let mut offset = 0;
+        for (fragment, editable) in fragments {
+            source.push_str(fragment);
+            let end = offset + fragment.chars().count();
+            if editable {
+                expected.push(offset..end);
+            }
+            offset = end;
+        }
+        let (tokens, layout) = lex_format_layout(&source, 7).unwrap();
+        assert_eq!(layout, expected);
+        assert_eq!(tokens, lex(&source, 7).unwrap());
+        assert_eq!(tokens[0].span, Span::new(8, 3));
+    }
+
+    #[test]
+    fn format_layout_preserves_lexical_failures_and_positions() {
+        for source in ["\t\"中\" @", "\t/* 未闭合", "\t\"${ 1\n"] {
+            assert_eq!(lex_format_layout(source, 2).unwrap_err(), lex(source, 2).unwrap_err());
         }
     }
 
