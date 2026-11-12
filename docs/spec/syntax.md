@@ -1040,3 +1040,6 @@ lfz [--json] check [--json] - [--json]
 
 ## 26. T20 REPL（2026-11-04 冻结）
 新增lfz repl命令，LFZ文法不改；core typed Complete/Incomplete探测，完整cell立即执行/真实EOF错误，多行不发明裸字符串换行。MVP import/export整cell拒绝；stdin input旧规则共享下一物理行。精确probe/session/命令/limits见interface-contract §26。
+
+## 27. T21 保真空白格式化（2026-11-13 冻结）
+lfz fmt FILE只清理顶层CODE行尾SP/TAB、行首TAB一对一换SP。保护注释、整个字符串、字面量、BOM、前导及原行终止符。命令精确形态、字节规则与保真校验见interface-contract §27。

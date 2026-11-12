@@ -497,3 +497,6 @@ LF分行、CRLF去一CR、EOF孤CR/BOM保留；LF前rawbytes含CR计1..16MiB，8
 
 ## 26. T20 持久会话（2026-11-04 冻结）
 单Interp共享globals仅执行新cell，定义home/source每cell独立，旧函数/模板default真实来源；错后恢复执行栈不回滚用户效果。每cellsteps/相对timeout重建，hosttoken/deadline不reset；容量第4原因ReplCapacity仍ExecutionLimitError不可吞，midcell触限/cleanup污染锁至reset。元数据限制/双diag/非nil echo/累计exit2/stdio详见interface-contract §26。
+
+## 27. T21 保真空白格式化（2026-11-13 冻结）
+fmt在输出前检查原稿及结果均可解析，所有token kind与行号一致，除Newline/EOF外列一致。attempt可观察错误及帧位置保留。字节保护和失败行为见interface-contract §27。

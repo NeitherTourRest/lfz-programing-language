@@ -19,3 +19,10 @@
 /docs/reports/T20-guide-evidence/** -text
 /docs/reports/T20-independent-evidence/** -text
 /docs/reports/T20-release-evidence/** -text
+
+# Preserve T21 guide and evidence bytes used for formatter checks.
+/docs/guide/formatting.md -text
+/docs/reports/T21-guide-evidence/** -text
+/docs/reports/T21-independent-evidence/** -text
+/docs/reports/T21-independent-verification.md -text
+/docs/reports/T21-release-evidence/** -text
