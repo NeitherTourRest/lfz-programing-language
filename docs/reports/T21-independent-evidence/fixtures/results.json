@@ -1,0 +1,441 @@
+{
+  "candidate_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+  "baseline_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "passed": [
+    "raw.lfz",
+    "comment.txt",
+    "module.lfz",
+    "prelude.lfz",
+    "position.lfz",
+    "behavior_positions_trace_side_effect",
+    "bad-utf8.lfz",
+    "bad-prefix.lfz",
+    "bad-lex.lfz",
+    "bad-syntax.lfz",
+    "missing.lfz",
+    "legacy ('fmt',)",
+    "legacy ('fmt', '--json')",
+    "legacy ('--json', 'fmt')",
+    "legacy ('fmt', '--')",
+    "legacy ('fmt', '--', 'two')",
+    "legacy ('fmt', '--allow-process')",
+    "legacy ('fmt', '--allow-http')",
+    "legacy ('run', 'fmt')",
+    "rejected ('fmt', 'raw.lfz', 'extra')",
+    "rejected ('--json', 'fmt', 'raw.lfz')",
+    "rejected ('fmt', 'raw.lfz', '--', 'extra')"
+  ],
+  "logs": [
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "raw.lfz"
+      ],
+      "exit": 0,
+      "stdout_hex": "efbbbf2334320d206c65742078203d20307866660d09200a207072696e742822e99baa20247b0922e4b8ad20247b783a3e347d2220097d200922290d0a202f2ae6b3a820090d0a09e4b8ad20090de5b0be202a2f0a202f2fe4bf9de7959920090a202078207c3e2073747228290a203b3b",
+      "stderr": ""
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "formatted-raw.lfz"
+      ],
+      "exit": 0,
+      "stdout_hex": "efbbbf2334320d206c65742078203d20307866660d09200a207072696e742822e99baa20247b0922e4b8ad20247b783a3e347d2220097d200922290d0a202f2ae6b3a820090d0a09e4b8ad20090de5b0be202a2f0a202f2fe4bf9de7959920090a202078207c3e2073747228290a203b3b",
+      "stderr": ""
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "comment.txt"
+      ],
+      "exit": 0,
+      "stdout_hex": "efbbbf202f2ae5bc8020090de5868520090d0ae694b6202a2f0920390a202f2fe69cab2009",
+      "stderr": ""
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "formatted-comment.txt"
+      ],
+      "exit": 0,
+      "stdout_hex": "efbbbf202f2ae5bc8020090de5868520090d0ae694b6202a2f0920390a202f2fe69cab2009",
+      "stderr": ""
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "module.lfz"
+      ],
+      "exit": 0,
+      "stdout_hex": "2334320a20696d706f7274206465702066726f6d20222e2f6e657665722d6c6f61642e6c667a220a207072696e742822444f204e4f54204558454355544522290a",
+      "stderr": ""
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "formatted-module.lfz"
+      ],
+      "exit": 0,
+      "stdout_hex": "2334320a20696d706f7274206465702066726f6d20222e2f6e657665722d6c6f61642e6c667a220a207072696e742822444f204e4f54204558454355544522290a",
+      "stderr": ""
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "prelude.lfz"
+      ],
+      "exit": 0,
+      "stdout_hex": "efbbbf2334320d",
+      "stderr": ""
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "formatted-prelude.lfz"
+      ],
+      "exit": 0,
+      "stdout_hex": "efbbbf2334320d",
+      "stderr": ""
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "position.lfz"
+      ],
+      "exit": 0,
+      "stdout_hex": "2334320d0a20666e2070726f62652829207b0a202072657475726e20756e626f756e6428290d0a207d0d09200a206c65742073617665643d617474656d70742828293d3e70726f62652829290a207072696e74286a736f6e537472696e67696679287b6c696e653a73617665642e6572726f722e6c696e652c636f6c3a73617665642e6572726f722e636f6c2c74726163656261636b3a73617665642e6572726f722e74726163656261636b7d29290a20617070656e6446696c6528226566666563742e747874222c22782229202f2a206e6f20657865637574696f6e20696e20666d74202a2f0d0a2070726f62652829",
+      "stderr": ""
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "formatted-position.lfz"
+      ],
+      "exit": 0,
+      "stdout_hex": "2334320d0a20666e2070726f62652829207b0a202072657475726e20756e626f756e6428290d0a207d0d09200a206c65742073617665643d617474656d70742828293d3e70726f62652829290a207072696e74286a736f6e537472696e67696679287b6c696e653a73617665642e6572726f722e6c696e652c636f6c3a73617665642e6572726f722e636f6c2c74726163656261636b3a73617665642e6572726f722e74726163656261636b7d29290a20617070656e6446696c6528226566666563742e747874222c22782229202f2a206e6f20657865637574696f6e20696e20666d74202a2f0d0a2070726f62652829",
+      "stderr": ""
+    },
+    {
+      "exe": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own\\baseline",
+      "args": [
+        "--json",
+        "subject.lfz"
+      ],
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a224e616d654572726f72222c226d657373616765223a22e69caae5ae9ae4b989e79a84e5908de5ad972027756e626f756e6427222c2266696c65223a227375626a6563742e6c667a222c226c696e65223a332c22636f6c223a31302c2274726163656261636b223a5b7b2266696c65223a227375626a6563742e6c667a222c226c696e65223a392c2266756e63223a223c6d6f64756c653e227d2c7b2266696c65223a227375626a6563742e6c667a222c226c696e65223a332c2266756e63223a2270726f6265227d5d7d0a",
+      "stderr": "{\"col\":10,\"line\":3,\"traceback\":[{\"col\":12,\"func\":\"<module>\",\"line\":6},{\"col\":24,\"func\":\"<fn>\",\"line\":6},{\"col\":10,\"func\":\"probe\",\"line\":3}]}\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own\\current_raw",
+      "args": [
+        "--json",
+        "subject.lfz"
+      ],
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a224e616d654572726f72222c226d657373616765223a22e69caae5ae9ae4b989e79a84e5908de5ad972027756e626f756e6427222c2266696c65223a227375626a6563742e6c667a222c226c696e65223a332c22636f6c223a31302c2274726163656261636b223a5b7b2266696c65223a227375626a6563742e6c667a222c226c696e65223a392c2266756e63223a223c6d6f64756c653e227d2c7b2266696c65223a227375626a6563742e6c667a222c226c696e65223a332c2266756e63223a2270726f6265227d5d7d0a",
+      "stderr": "{\"col\":10,\"line\":3,\"traceback\":[{\"col\":12,\"func\":\"<module>\",\"line\":6},{\"col\":24,\"func\":\"<fn>\",\"line\":6},{\"col\":10,\"func\":\"probe\",\"line\":3}]}\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own\\current_formatted",
+      "args": [
+        "--json",
+        "subject.lfz"
+      ],
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a224e616d654572726f72222c226d657373616765223a22e69caae5ae9ae4b989e79a84e5908de5ad972027756e626f756e6427222c2266696c65223a227375626a6563742e6c667a222c226c696e65223a332c22636f6c223a31302c2274726163656261636b223a5b7b2266696c65223a227375626a6563742e6c667a222c226c696e65223a392c2266756e63223a223c6d6f64756c653e227d2c7b2266696c65223a227375626a6563742e6c667a222c226c696e65223a332c2266756e63223a2270726f6265227d5d7d0a",
+      "stderr": "{\"col\":10,\"line\":3,\"traceback\":[{\"col\":12,\"func\":\"<module>\",\"line\":6},{\"col\":24,\"func\":\"<fn>\",\"line\":6},{\"col\":10,\"func\":\"probe\",\"line\":3}]}\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "bad-utf8.lfz"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "  File \"bad-utf8.lfz\", line 1\nSyntaxError: 文件不是合法的 UTF-8 编码（首个非法字节位于字节偏移 4）\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "bad-prefix.lfz"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "File \"bad-prefix.lfz\", line 1\nCosmosAnswerError: 你忘记了宇宙的答案\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "bad-lex.lfz"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "  File \"bad-lex.lfz\", line 2\n    @\n    ^\nSyntaxError: 非法字符 '@'\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "bad-syntax.lfz"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "  File \"bad-syntax.lfz\", line 2\n    let =\n        ^\nSyntaxError: 这里期待 变量名，但得到 '='\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "missing.lfz"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "IOError: 无法读取：missing.lfz\n"
+    },
+    {
+      "exe": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'fmt'\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'fmt'\n"
+    },
+    {
+      "exe": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "--json"
+      ],
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22494f4572726f72222c226d657373616765223a22e58faae694afe68c81202e6c667a20e8849ae69cace69687e4bbb6efbc9a27666d7427222c2266696c65223a22666d74222c226c696e65223a6e756c6c2c22636f6c223a6e756c6c2c2274726163656261636b223a5b5d7d0a",
+      "stderr": ""
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "--json"
+      ],
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22494f4572726f72222c226d657373616765223a22e58faae694afe68c81202e6c667a20e8849ae69cace69687e4bbb6efbc9a27666d7427222c2266696c65223a22666d74222c226c696e65223a6e756c6c2c22636f6c223a6e756c6c2c2274726163656261636b223a5b5d7d0a",
+      "stderr": ""
+    },
+    {
+      "exe": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "--json",
+        "fmt"
+      ],
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22494f4572726f72222c226d657373616765223a22e58faae694afe68c81202e6c667a20e8849ae69cace69687e4bbb6efbc9a27666d7427222c2266696c65223a22666d74222c226c696e65223a6e756c6c2c22636f6c223a6e756c6c2c2274726163656261636b223a5b5d7d0a",
+      "stderr": ""
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "--json",
+        "fmt"
+      ],
+      "exit": 2,
+      "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22494f4572726f72222c226d657373616765223a22e58faae694afe68c81202e6c667a20e8849ae69cace69687e4bbb6efbc9a27666d7427222c2266696c65223a22666d74222c226c696e65223a6e756c6c2c22636f6c223a6e756c6c2c2274726163656261636b223a5b5d7d0a",
+      "stderr": ""
+    },
+    {
+      "exe": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "--"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'fmt'\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "--"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'fmt'\n"
+    },
+    {
+      "exe": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "--",
+        "two"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'fmt'\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "--",
+        "two"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'fmt'\n"
+    },
+    {
+      "exe": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "--allow-process"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'fmt'\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "--allow-process"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'fmt'\n"
+    },
+    {
+      "exe": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "--allow-http"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'fmt'\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "--allow-http"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "IOError: 只支持 .lfz 脚本文件：'fmt'\n"
+    },
+    {
+      "exe": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "run",
+        "fmt"
+      ],
+      "exit": 0,
+      "stdout_hex": "5b5d0a",
+      "stderr": ""
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "run",
+        "fmt"
+      ],
+      "exit": 0,
+      "stdout_hex": "5b5d0a",
+      "stderr": ""
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "raw.lfz",
+        "extra"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "lfz: 裸文件调用只接受一个 <file> 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "--json",
+        "fmt",
+        "raw.lfz"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "lfz: 裸文件调用只接受一个 <file> 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n"
+    },
+    {
+      "exe": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "cwd": "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\own",
+      "args": [
+        "fmt",
+        "raw.lfz",
+        "--",
+        "extra"
+      ],
+      "exit": 2,
+      "stdout_hex": "",
+      "stderr": "lfz: 裸文件调用只接受一个 <file> 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）\n"
+    }
+  ]
+}

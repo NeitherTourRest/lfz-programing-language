@@ -1,0 +1,10 @@
+{
+  "phase": "prepare only; no T21 product run",
+  "cases_total": 27,
+  "script_sha256": "d5bd25dd0d809c6c4647d614525010fabaa5d2bdf08fe4f51455411bbdff6deb",
+  "files": {
+    "fixture-old-parser.json": "6e4d00ef85c18ba9575fd8f3062f6ceb9786e220b19362c6de6db4952d24c8e4",
+    "prepared.json": "63dd12b1567d68600869f99af74a70283f90fa84b996cad487e6dff9cbc1579c",
+    "T20-red.json": "dc789005d4e1f92fc1ed17a1ccd3d17f0444024892cb1dd8e5816f998bf71150"
+  }
+}

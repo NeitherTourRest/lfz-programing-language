@@ -1,0 +1,305 @@
+[
+  {
+    "name": "attempt13",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "tests/t15_cli_check.py",
+      "--binary",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "--expected-sha256",
+      "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\attempt13.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"total\": 13, \"passed\": 13, \"output\": \"Temp\\\\T21-verifier\\\\regression\\\\attempt13.json\"}\r\n",
+    "stderr": "",
+    "driver_original_sha": null
+  },
+  {
+    "name": "check117",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "tests/t14_cli_check.py",
+      "--binary",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\check117.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T14-CHECK-BLACKBOX-1\", \"date\": \"2026-10-29\", \"timestamp_utc\": \"2026-11-12T16:36:02.554396+00:00\", \"binary\": \"target\\\\release\\\\lfz.exe\", \"binary_sha256\": \"76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e\", \"binary_bytes\": 1117184, \"script_sha256\": \"44e1c5d9639b5306da9779994e0acb30f62f4943aebbc116de735e4a86a42106\", \"smoke_only\": false, \"total\": 117, \"passed\": 117, \"failed\": 0}\r\n",
+    "stderr": "",
+    "driver_original_sha": null
+  },
+  {
+    "name": "cli91",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "tests/t12_cli_check.py",
+      "--lfz",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\cli91.json",
+      "--full-suite"
+    ],
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T12-BLACKBOX-1\", \"date\": \"2026-10-25\", \"binary\": \"target\\\\release\\\\lfz.exe\", \"binary_sha256\": \"76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e\", \"total\": 91, \"passed\": 91, \"failed\": 0}\r\n",
+    "stderr": "",
+    "driver_original_sha": null
+  },
+  {
+    "name": "jsonflow",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "app/verify_jsonflow.py",
+      "--lfz",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\jsonflow.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"passed\": 37, \"report\": \"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\jsonflow.json\"}\r\n",
+    "stderr": "",
+    "driver_original_sha": null
+  },
+  {
+    "name": "sortviz",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "app/verify_sortviz.py",
+      "--lfz",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "--before-exe",
+      "Temp/t12-perf/lfz-before.exe",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\sortviz.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"passed\": 11, \"report\": \"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\sortviz.json\"}\r\n",
+    "stderr": "",
+    "driver_original_sha": null
+  },
+  {
+    "name": "jsonbatch",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "app/verify_jsonbatch.py",
+      "--lfz",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "--expected-sha",
+      "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\jsonbatch.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"date\": \"2026-11-12\", \"binary_sha256\": \"76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e\", \"binary\": \"target\\\\release\\\\lfz.exe\", \"script_sha256\": \"adcc2a25dd3237082b043f0c1be99d66545a9cc2f47cb6e873c5756debafb0c7\", \"total\": 38, \"passed\": 38}\r\n",
+    "stderr": "",
+    "driver_original_sha": null
+  },
+  {
+    "name": "independent140",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\check140.py",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\independent140.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"passed\": 140, \"frozen_inputs\": 9, \"old_cases\": 99}\r\n",
+    "stderr": "",
+    "driver_original_sha": "1bc6a0bb10c67d22ec26b1544227181714b1196c1718efd3b71b72373cb43252"
+  },
+  {
+    "name": "public134",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public134.py",
+      "--binary",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public134.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T17-CLI-1\", \"binary\": \"target\\\\release\\\\lfz.exe\", \"binary_sha256\": \"76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e\", \"bytes\": 1117184, \"script_sha256\": \"9dfcbdbd9272d2cb73685099f38c2be0795b674539817581fc3e6ba3c2031662\", \"red_only\": false, \"checks_total\": 134, \"checks_passed\": 134, \"timestamp_utc\": \"2026-11-12T16:36:12.560922+00:00\"}\r\n",
+    "stderr": "",
+    "driver_original_sha": "83726aee610a78319bf54d7fe1baf15bb937bece5dbb8d01b4300817c7760153"
+  },
+  {
+    "name": "app40",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\app40.py",
+      "--lfz",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\app40.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"date\": \"2026-10-30\", \"binary_sha256\": \"76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e\", \"binary_bytes\": 1117184, \"status\": \"completed\", \"callback_budget_witness\": 28, \"total\": 40, \"passed\": 40}\r\n",
+    "stderr": "",
+    "driver_original_sha": "27e5c0d477e29dcfbd2774ec0f89c4346d014a095fc0fe46b67cf1e340198c06"
+  },
+  {
+    "name": "public29",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public.py",
+      "--binary",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public29.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T17-CLI-1\", \"binary\": \"target\\\\release\\\\lfz.exe\", \"binary_sha256\": \"76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e\", \"bytes\": 1117184, \"checks_total\": 29, \"checks_passed\": 29, \"script_sha256\": \"661851ac93c3e29da654065fa2a1b9a2b2391b79d6cf5fc229c46f7a5fd0378a\", \"timestamp_utc\": \"2026-11-12T16:36:13.646500+00:00\"}\r\n",
+    "stderr": "",
+    "driver_original_sha": "bccb60b9a7748642d50a23c641ff50b7cb7aa4518f84801551b8bf9136b7998f"
+  },
+  {
+    "name": "app33",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\app.py",
+      "--lfz",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\app33.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"date\": \"2026-10-30\", \"binary_sha256\": \"76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e\", \"binary_bytes\": 1117184, \"binary\": \"target\\\\release\\\\lfz.exe\", \"total\": 33, \"passed\": 33}\r\n",
+    "stderr": "",
+    "driver_original_sha": "733bd2bce23d2d71ecdd30cb0065a178339ebb9c183272c544c32b41fb52fafc"
+  },
+  {
+    "name": "toolplan7",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\toolplan7.py",
+      "--lfz",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\toolplan7.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"date\": \"2026-10-30\", \"binary_sha256\": \"76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e\", \"fixture_sha256\": \"51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee\", \"source_sha256\": \"b06a9bc3c00dc0822b7a88f5477a9365144a7883b2f783c918f1944cb13a0d65\", \"status\": \"completed\", \"total\": 7, \"passed\": 7}\r\n",
+    "stderr": "",
+    "driver_original_sha": "44cdf0826e59ac0f889bdb437212111e285283823cca0a0ead7e9352ab1a1d59"
+  },
+  {
+    "name": "httpplan7",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\httpplan7.py",
+      "--lfz",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\httpplan7.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"date\": \"2026-10-31\", \"binary_sha256\": \"76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e\", \"binary_bytes\": 1117184, \"source_sha256\": \"77187a030c515d08dfd948091c918c91f63a347161361f6e281f5da244b45fdc\", \"network_scope\": \"http://127.0.0.1:65375\", \"status\": \"completed\", \"total\": 7, \"passed\": 7, \"server_shutdown_complete\": true}\r\n",
+    "stderr": "",
+    "driver_original_sha": "20448c004ae5527b29be4e32c4192df6e396f6f11092c689424cbfa7ee21b56d"
+  },
+  {
+    "name": "public45",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public45-final.py",
+      "--binary",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public45.json",
+      "--fixture",
+      "Temp/T18-A-tooling/fixture.exe",
+      "--fixture-sha",
+      "51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee"
+    ],
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T18A-CLI-1\", \"binary_sha256\": \"76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e\", \"fixture_sha256\": \"51b83f054f128e381fa034adbe980d6398f24f76621703ba27da4d7e54d27bee\", \"script_sha256\": \"e21527addb045c141f812ea642d06ff25e78883d171e3032a081059dc84c6d2d\", \"checks_total\": 45, \"checks_passed\": 45, \"red_only\": false, \"timestamp_utc\": \"2026-11-12T16:36:16.850551+00:00\"}\r\n",
+    "stderr": "",
+    "driver_original_sha": "5f2b9f92432c1ecb5dacc0cbad1b776e01c521e137ad2c5ed526a06b88cdcdba"
+  },
+  {
+    "name": "public49",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public49.py",
+      "--binary",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public49.json",
+      "--header-witness",
+      "docs/reports/T18-B-blackbox-evidence/public-header-witness-bound.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T18B-CLI-1\", \"binary_sha256\": \"76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e\", \"script_sha256\": \"6531d248c2d5a858c4ebfeb9723bf5948d1c9c6124e97bb0ed2fe24e2cb438e8\", \"checks_total\": 49, \"checks_passed\": 49, \"pending\": [\"TLS self-signed rejection fixture\", \"host cancel/callback diagnostics require unit/independent tests\"], \"timestamp_utc\": \"2026-11-12T16:36:22.218642+00:00\", \"server_errors\": [], \"header_witness_sha256\": \"a47fd2588b8ad0684199637d71d97352ee419e0f3fbdad67655c0ad8523e4e9d\"}\r\n",
+    "stderr": "",
+    "driver_original_sha": "2cf47543e909c9822f17f2508ca86d705c16bd97564533280d6645b38561b455"
+  },
+  {
+    "name": "public47",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47.py",
+      "--binary",
+      "target/release/lfz.exe",
+      "--expected-sha",
+      "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"schema\": \"LFZ-T19-CLI-1\", \"binary_sha256\": \"76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e\", \"script_sha256\": \"7d9d620d35c13bd225602ea2b534a7c6f28d88d9db478bb68ff48c3c71677145\", \"checks_total\": 47, \"checks_passed\": 47, \"scope\": \"small public fixtures; global terminal close requires same-host unit evidence, not process-exit reopen\", \"timestamp_utc\": \"2026-11-12T16:36:23.041775+00:00\"}\r\n",
+    "stderr": "",
+    "driver_original_sha": "92032ab8f3d097690fce3bd8507277fbd3474940b7892b78438cfd6cca01b7c4"
+  },
+  {
+    "name": "stream14-final",
+    "command": [
+      "D:/app/ANACONDA/python.exe",
+      "-B",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\stream14-final.py",
+      "--binary",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\target\\release\\lfz.exe",
+      "--expected-sha",
+      "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+      "--output",
+      "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\stream14-final.json"
+    ],
+    "exit": 0,
+    "stdout": "{\"status\": \"completed\", \"total\": 14, \"passed\": 14}\r\n",
+    "stderr": "",
+    "driver_original_sha": "7d9cf271c3f1c33b13e37a01d27ad23e8ce18c5a4e8f30b414e9c0962820f0dc"
+  }
+]

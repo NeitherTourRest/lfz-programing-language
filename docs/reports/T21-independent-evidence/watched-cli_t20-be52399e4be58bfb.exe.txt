@@ -1,0 +1,12 @@
+
+running 7 tests
+test input_consumes_shared_stdin_data_including_meta_command ... ok
+test multiline_eof_and_incomplete_errors_continue ... ok
+test old_source_caret_and_per_cell_limits ... ok
+test persistent_bindings_closure_and_side_effects_once ... ok
+test raw_cell_cap_stops_before_tail_effect ... ok
+test reset_preserves_failure_history_and_argv ... ok
+test usage_and_pipe_no_prompt ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+

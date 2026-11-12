@@ -1,0 +1,3 @@
+#42
+ import dep from "./never-load.lfz"
+ print("DO NOT EXECUTE")

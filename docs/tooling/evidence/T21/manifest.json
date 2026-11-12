@@ -1,0 +1,172 @@
+{
+  "date": "2026-11-13",
+  "status": "author PASS; independent pending",
+  "binary": {
+    "path": "target/release/lfz.exe",
+    "bytes": 1117184,
+    "sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e"
+  },
+  "tests": {
+    "total": 715,
+    "failed": 0,
+    "ignored": 0,
+    "harnesses": [
+      {
+        "name": "lfz-63397fd2d9985014.exe",
+        "exit": 0,
+        "passed": 533
+      },
+      {
+        "name": "lfz-243aeb8f5c3370f1.exe",
+        "exit": 0,
+        "passed": 58
+      },
+      {
+        "name": "cli-d19dbfa7dd3f9d73.exe",
+        "exit": 0,
+        "passed": 28
+      },
+      {
+        "name": "cli_t12-35b857587ead196a.exe",
+        "exit": 0,
+        "passed": 12
+      },
+      {
+        "name": "cli_t14-b528900585815e19.exe",
+        "exit": 0,
+        "passed": 12
+      },
+      {
+        "name": "cli_t16b-66b0b355c7f6f4d0.exe",
+        "exit": 0,
+        "passed": 7
+      },
+      {
+        "name": "cli_t16c-24a3e9d865ee9e42.exe",
+        "exit": 0,
+        "passed": 5
+      },
+      {
+        "name": "cli_t17-2cfc935946fdc938.exe",
+        "exit": 0,
+        "passed": 9
+      },
+      {
+        "name": "cli_t18a-2b1a6784d688e6c5.exe",
+        "exit": 0,
+        "passed": 6
+      },
+      {
+        "name": "cli_t18b-4fb747188dc55a23.exe",
+        "exit": 0,
+        "passed": 3
+      },
+      {
+        "name": "cli_t20-be52399e4be58bfb.exe",
+        "exit": 0,
+        "passed": 7
+      },
+      {
+        "name": "cli_t21-f65aa2b7afce5cb1.exe",
+        "exit": 0,
+        "passed": 5
+      },
+      {
+        "name": "test_runner-a9d3da191eeb2958.exe",
+        "exit": 0,
+        "passed": 15
+      },
+      {
+        "name": "unit-ae562ae83f03ad63.exe",
+        "exit": 0,
+        "passed": 15
+      }
+    ],
+    "watchdog_seconds_per_harness": 90,
+    "threads": 1
+  },
+  "source_hashes": {
+    "src/ast.rs": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076",
+    "src/builtins.rs": "e05d74d076cb33928e17a7a07944db15c789a9455da67a58f056c5ce93f97a6d",
+    "src/cli.rs": "d0b34eca901cc5a240471457192980d8662d2d9797f12f6618440417a328767d",
+    "src/env.rs": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc",
+    "src/error.rs": "6081094b0c8e23e2f362d07e7401ce04ecebcbc359f6526b7feb16d01271c44f",
+    "src/evaluator.rs": "049ff34af33bd90effebf1abaa9aa4be9fa2fffc7f06b2b862cf9d70c5ef96cf",
+    "src/formatter.rs": "1d5d81766b3d2be53c6e8c4b5737d76d66c6c1995eb20cdc4e3d354258a08573",
+    "src/http_control/windows.rs": "0a525c7476dbf9d086b2f58e37cf18c31f02d3856766fe1ad4abe5e13e2c4a78",
+    "src/http_control.rs": "3a2373b1422d1e845dfc188b53b2e7036af3725d22c156650ab1a6c34f09a4a2",
+    "src/json.rs": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f",
+    "src/json_codec.rs": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2",
+    "src/lexer.rs": "eb318a3d8458f667ec1917e289cd16932056a2bd62bcb8636440af1b4ae6a914",
+    "src/lib.rs": "cf9f7658009bf991db5b9d60a782d5231ee07fc988fbb60c85ab2f5e6c93274f",
+    "src/line_reader.rs": "7ab61997386a7e71b4fe90d62235500bce5cf20fe6a063619b70d3dbfa2a9b15",
+    "src/loader.rs": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f",
+    "src/main.rs": "fa68e1cec6c8abbd5bfa84736c4b35ce94cadbaca62bdabec1d2fc91f4694188",
+    "src/modules.rs": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895",
+    "src/parser.rs": "b3ad0318f0175514007ca73b33887a2cf3123b2e036c713dab282254d416e2b8",
+    "src/process_control/fixture.rs": "0c09739e3327414281a5e89d5ad59dc5ec8356d1c6bbe9428dddcf9829f2b0a9",
+    "src/process_control/windows.rs": "540d14c697dcd84e2a9ba6a0f2415b24509335206617ad939c7318e0a8e76a09",
+    "src/process_control.rs": "e8cfcc7e54d7f2fb24f9d979d6f27d79bfcb20afaa7864326b7d49f13dab0442",
+    "src/source.rs": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468",
+    "src/span.rs": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2",
+    "src/test_runner.rs": "a314790d88d4296e2cb953c7b1a565f83e4f3f2f6bec543216fe70c024f2400c",
+    "src/value.rs": "63967cb79996c7fedfe7285378e58c2774825c73680a81e50c12a185bbe438a0",
+    "tests/cli.rs": "a507dc3674df02f8162d1bfd80c87a7dc2373559ab628168944d3621eaead23b",
+    "tests/cli_t12.rs": "c9e4edf50c1fd3a248ba3f5f2e7c44ac04188a51d828a92dd3ba44aa03cbc24a",
+    "tests/cli_t14.rs": "112d628fa2db83ce1a506338f20469fa99bc0dc06e916ce6787c442ee1ce2065",
+    "tests/cli_t16b.rs": "8a384d95e25e92337d0d749664481cb9e32cbb6b1d6839b4efc0c9c006635a3a",
+    "tests/cli_t16c.rs": "cc003077c212c407ccdd2c59e5c6c603a3f17a82cb7ff5a4ef8942529e9d953d",
+    "tests/cli_t17.rs": "141cb54376124b4317723824972ee21ac8c10fdb2ef9a68ef967ba076fcf25f5",
+    "tests/cli_t18a.rs": "faa29e2cc5e413b7a10da9c5302bb82b37ebceb395058ff7a1096810bd56d257",
+    "tests/cli_t18b.rs": "fa95063bd7b3dd7e1cbba0457368f7a3a8bd707aa8af5723d4d9189bf295b036",
+    "tests/cli_t20.rs": "a298e0c0ece45473765581255ce66097d6610a54dda0cbab92a7dae646d0c9da",
+    "tests/cli_t21.rs": "2d419ddb325430df6c8f9d56b70e68ec03d1235e270e30f51241d610fe2194ff",
+    "tests/test_runner.rs": "c07c297aab45f8b44b85df5caed8acd855c29735a3c9dcfd99aa2820c94ada4f",
+    "tests/unit/ast_depth.rs": "6a7dcd7a88e5d7d7d1e5b16d688db2f4b77da57b165c3fecdc7d7575c41a3ee5",
+    "tests/unit/main.rs": "9a651c048ee0f94820ec21b115ebae6f5cb99ad9dc5f5b57df462e1cf4f1fa78",
+    "tests/unit/nesting_depth.rs": "6ac0aa556ab1f9669f53435de863e8d1e96e2c0e5483e475a7d4043ac70428a1",
+    "Cargo.toml": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c",
+    "Cargo.lock": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4"
+  },
+  "evidence": {
+    ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
+    "baseline-position.json": "ee155ffc25f5a71bd1f7b6b172eb87a2e8a2bffc09a191a87ad901239806f7fa",
+    "build-final.txt": "cb758158fc709cd33b3a2be93d09059899ab5844b03dc1b1007a922f68a50cab",
+    "candidate-snapshot.zip": "a4c2e0650cc2dc4a27a3433a3a811b03890d99f8b229c03672bbc6f2f9f5b197",
+    "cli-edit.py": "6216bdc6139f2fe8eccb34c412adb9442a8d66f1d5fbf3f1f936309fd68c074f",
+    "column-oracle.lfz": "8a69d40c0dac71f15629aab9c590a8bc9f51c6c078aebf181470960da8c707cf",
+    "compile-first.txt": "a75090c273e1b06c7287d8accfcf3a330655b4122004e6c173bb7ca89ad754a3",
+    "directed-first-cli.txt": "1917571b372b03bb1cd71b0a7f562627125eaca460491cc708f7f412f7cfa6a4",
+    "directed-first-formatter.txt": "3a6eb0fb9262799d78a654835b26eb5dd7e7ff09e2136d49e5e45829cecec6b3",
+    "directed.py": "ad28f08e3100d7e70f7f35e4faa0f4a434aa96bbed6ee31331355365f82dbb3b",
+    "effect.txt": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+    "oracle.py": "c306999c28af6b08f9f0cd3b2d45a86929144631f965809e61789e194491d4fc",
+    "position-and-trace.lfz": "f26faa0e6c7c1ddc199c7ed7ed5c94d2b23bcfe4096e3dfd1ebd8cc5bb695e91",
+    "position-effect.txt": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+    "position-formatted.lfz": "f26faa0e6c7c1ddc199c7ed7ed5c94d2b23bcfe4096e3dfd1ebd8cc5bb695e91",
+    "position-original.lfz": "ebd3b304fded9315393952f98785f134309922b925053e9f283466fc4ee0a6f4",
+    "position-trace-witness.json": "13c294acbd3038acb88d0ae4cc104da81b1a5a89c51cd388712ef4940d20d31d",
+    "position-trace.py": "97b41cb07af89a3372139978114d99bd26ec6cae59ae9d97a54fbc5ca857d36b",
+    "red-input.lfz": "1a03bb27ea294271bf46eac531579e4545cb90a979d59b04d72a175831a536aa",
+    "red.json": "7a0abd7f914748a39b1bd86b26127d5d8c4b638dfe0c3b6921b2eaa246591a70",
+    "seal.py": "b8bfb4a7f68734998203be06907d6970f63105964e2f85cc8b49852da59e2817",
+    "snapshot.json": "b59621e8e60e1c8409cd627eab701583e64e411acd9a36fa354931fad98bae54",
+    "watch-setup.py": "c1b80f2d8470d2dc2238001a1f81756d770684f1af5caa76b0557e864e031f08",
+    "watch.py": "7f03a2ed76c82893392353cc7b3d393c5cf92a6f49bf170194cd10f92548278a",
+    "watched-cli-d19dbfa7dd3f9d73.exe.txt": "811cbb8deb04dd385752a43f03360ec2833afb04f12d92b47a5bbc1e12db01fc",
+    "watched-cli_t12-35b857587ead196a.exe.txt": "c64197db6d18b28eb5606c3b8efa5fefbb7d0f575c7f8694d8ee0f9c7604243d",
+    "watched-cli_t14-b528900585815e19.exe.txt": "c29c1d5d25416ab5d1eca8c971253428b15b7604444a60fd0a4c2163fbb43d74",
+    "watched-cli_t16b-66b0b355c7f6f4d0.exe.txt": "cbed2e1bdc1ddc839416143042ddfaa339d1393d3b2ce230571f776f8989438e",
+    "watched-cli_t16c-24a3e9d865ee9e42.exe.txt": "d285cef4af6553d244925ff93c95a890ff020b575a30dd77054e85d3f2056fea",
+    "watched-cli_t17-2cfc935946fdc938.exe.txt": "537ce6d6b2de3d54986499f29139e926cd1fe2e68d38a6b58feca9000f50f072",
+    "watched-cli_t18a-2b1a6784d688e6c5.exe.txt": "da6b17b886392fcb2df917e7e6fe829b7c97d71a136ded2377c868979a9925f2",
+    "watched-cli_t18b-4fb747188dc55a23.exe.txt": "9d49f3bad806915f5cb9b01e5368b35de1fb5a564b4b82c79898602623b73a24",
+    "watched-cli_t20-be52399e4be58bfb.exe.txt": "aaea2ace3b5d9e4f01fc67933f74c40c4d41da34d8bad0ef2b2a282ce6cd48e1",
+    "watched-cli_t21-f65aa2b7afce5cb1.exe.txt": "8e67f311f7e9ea5f5e7e8e511f19c44b277ab2aa270b063a8ea16cf454f76958",
+    "watched-lfz-243aeb8f5c3370f1.exe.txt": "a07ce398927ca2695e99216a876b237c0e27d73b10e72ada276f0f06b56c6cb8",
+    "watched-lfz-63397fd2d9985014.exe.txt": "7d1002a45ddb4879f4ed91c04a44ae76e088cf36eca3ec2453b117c0f92067bf",
+    "watched-summary.json": "79935ff3234060e3c34d1bb036a07448f50c0f7f6f73e991a6a9dde220048fd3",
+    "watched-test_runner-a9d3da191eeb2958.exe.txt": "72f40665d44407e7ef1973cd1a8d027586d97effa00687db3503b66bef55cf82",
+    "watched-unit-ae562ae83f03ad63.exe.txt": "87aa86c6e26e219552fbfbd1a7805eaeaaf9370a0d6460db15fc69d445075acf"
+  }
+}

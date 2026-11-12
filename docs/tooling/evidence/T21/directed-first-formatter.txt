@@ -1,0 +1,8 @@
+
+running 3 tests
+test formatter::tests::empty_comment_and_whitespace_files_preserve_their_terminators ... ok
+test formatter::tests::invalid_input_uses_original_loader_and_frontend_diagnostics ... ok
+test formatter::tests::preserves_raw_protected_regions_and_mixed_line_endings ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 530 filtered out; finished in 0.00s
+

@@ -1,0 +1,29 @@
+{
+  "schema": "LFZ-T21-CLI-1",
+  "binary_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "script_sha256": "d5bd25dd0d809c6c4647d614525010fabaa5d2bdf08fe4f51455411bbdff6deb",
+  "checks_total": 1,
+  "checks_passed": 0,
+  "rows": [
+    {
+      "name": "basic.lfz",
+      "checks": {
+        "bytes": false,
+        "input_unchanged": true
+      },
+      "input_hex": "2334320a096c65742078203d203120090a097072696e7428782909",
+      "expected_hex": "2334320a206c65742078203d20310a207072696e74287829",
+      "first": {
+        "args": [
+          "fmt",
+          "basic.lfz"
+        ],
+        "exit": 2,
+        "stdout_hex": "",
+        "stderr_hex": "6c667a3a20e8a3b8e69687e4bbb6e8b083e794a8e58faae68ea5e58f97e4b880e4b8aa203c66696c653e20e58f82e695b00ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+      },
+      "passed": false
+    }
+  ],
+  "timestamp_utc": "2026-11-12T16:30:14.490205+00:00"
+}

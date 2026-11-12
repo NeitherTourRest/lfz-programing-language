@@ -1,0 +1,10 @@
+
+running 5 tests
+test formatting_preserves_observable_error_columns_and_effects ... ok
+test invalid_source_missing_file_and_invalid_options_keep_stdout_empty ... ok
+test module_source_formats_without_loading_dependencies ... ok
+test old_bare_fmt_and_explicit_execution_keep_their_meaning ... ok
+test stdout_is_exact_and_input_is_untouched ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+

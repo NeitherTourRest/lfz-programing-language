@@ -1,0 +1,1 @@
+First regression launch exited 1 before Python executed. The parallel harness escalation had not created Temp/T21-verifier yet. PowerShell Set-Content reported missing parent directory, and Python reported [Errno 2] unable to open regression.py. The same regression was rerun after directory creation. No candidate or oracle changed.

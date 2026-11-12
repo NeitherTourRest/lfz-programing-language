@@ -1,0 +1,80 @@
+[
+  {
+    "input": "basic.lfz",
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": ""
+  },
+  {
+    "input": "bom.lfz",
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": ""
+  },
+  {
+    "input": "bom-no-preamble.txt",
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": ""
+  },
+  {
+    "input": "mixed.lfz",
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": ""
+  },
+  {
+    "input": "white.lfz",
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": ""
+  },
+  {
+    "input": "empty.txt",
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": ""
+  },
+  {
+    "input": "comments.lfz",
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": ""
+  },
+  {
+    "input": "same_line_comment.lfz",
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": ""
+  },
+  {
+    "input": "literal.lfz",
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": ""
+  },
+  {
+    "input": "format_spec.lfz",
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": ""
+  },
+  {
+    "input": "pipe_dump.lfz",
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": ""
+  },
+  {
+    "input": "position.lfz",
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": ""
+  },
+  {
+    "input": "control_effect.lfz",
+    "exit": 0,
+    "stdout_hex": "",
+    "stderr_hex": ""
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "exit": 2,
+  "stderr": "lfz: 无法写入格式化结果：管道正在被关闭。 (os error 232)\n",
+  "unchanged": true,
+  "candidate_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e"
+}

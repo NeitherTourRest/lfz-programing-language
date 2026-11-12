@@ -1,0 +1,7 @@
+#42
+	let result=attempt(()=>missing()) 	
+	print(result.error.line)  
+	print(result.error.col) 	
+	if true { 	
+		appendFile("effect.txt","x") /* keep */ 	
+	} 	

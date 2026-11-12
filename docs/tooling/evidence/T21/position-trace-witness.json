@@ -1,0 +1,28 @@
+{
+  "baseline_sha256": "a545d0c294eb85276abc5556f297434806ea1def598192ee664593550c579a3c",
+  "candidate_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+  "exit": 2,
+  "stdout_error": {
+    "ok": false,
+    "error": "NameError",
+    "message": "未定义的名字 'missing'",
+    "file": "position-and-trace.lfz",
+    "line": 3,
+    "col": 10,
+    "traceback": [
+      {
+        "file": "position-and-trace.lfz",
+        "line": 10,
+        "func": "<module>"
+      },
+      {
+        "file": "position-and-trace.lfz",
+        "line": 3,
+        "func": "fail"
+      }
+    ]
+  },
+  "stderr_script_output": "3\n10\n[{\"col\":8,\"func\":\"<module>\",\"line\":5},{\"col\":20,\"func\":\"<fn>\",\"line\":5},{\"col\":10,\"func\":\"fail\",\"line\":3}]\n",
+  "effect": "x",
+  "formatted_bytes": 208
+}

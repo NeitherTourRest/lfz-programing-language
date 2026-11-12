@@ -1,0 +1,8 @@
+#42
+ fn probe() {
+  return unbound()
+ }	 
+ let saved=attempt(()=>probe())
+ print(jsonStringify({line:saved.error.line,col:saved.error.col,traceback:saved.error.traceback}))
+ appendFile("effect.txt","x") /* no execution in fmt */
+ probe()

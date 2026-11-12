@@ -1,0 +1,795 @@
+{
+  "schema": "LFZ-T21-CLI-1",
+  "binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+  "script_sha256": "d5bd25dd0d809c6c4647d614525010fabaa5d2bdf08fe4f51455411bbdff6deb",
+  "checks_total": 27,
+  "checks_passed": 27,
+  "rows": [
+    {
+      "name": "basic.lfz",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true,
+        "same_behavior": true
+      },
+      "input_hex": "2334320a096c65742078203d203120090a097072696e7428782909",
+      "expected_hex": "2334320a206c65742078203d20310a207072696e74287829",
+      "first": {
+        "args": [
+          "fmt",
+          "basic.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a206c65742078203d20310a207072696e74287829",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-basic.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a206c65742078203d20310a207072696e74287829",
+        "stderr_hex": ""
+      },
+      "original_run": {
+        "args": [
+          "run",
+          "basic.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "310a",
+        "stderr_hex": "",
+        "effect_hex": null
+      },
+      "formatted_run": {
+        "args": [
+          "run",
+          "formatted-basic.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "310a",
+        "stderr_hex": "",
+        "effect_hex": null
+      },
+      "passed": true
+    },
+    {
+      "name": "bom.lfz",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true
+      },
+      "input_hex": "efbbbf2334320d0a0931090d0a",
+      "expected_hex": "efbbbf2334320d0a20310d0a",
+      "first": {
+        "args": [
+          "fmt",
+          "bom.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "efbbbf2334320d0a20310d0a",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-bom.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "efbbbf2334320d0a20310d0a",
+        "stderr_hex": ""
+      },
+      "passed": true
+    },
+    {
+      "name": "bom-no-preamble.txt",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true
+      },
+      "input_hex": "efbbbf09312009",
+      "expected_hex": "efbbbf2031",
+      "first": {
+        "args": [
+          "fmt",
+          "bom-no-preamble.txt"
+        ],
+        "exit": 0,
+        "stdout_hex": "efbbbf2031",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-bom-no-preamble.txt"
+        ],
+        "exit": 0,
+        "stdout_hex": "efbbbf2031",
+        "stderr_hex": ""
+      },
+      "passed": true
+    },
+    {
+      "name": "mixed.lfz",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true
+      },
+      "input_hex": "2334320a093120090d09200a0932200d0a0933200a0934200d093509",
+      "expected_hex": "2334320a20310d09200a20320d0a20330a20340d2035",
+      "first": {
+        "args": [
+          "fmt",
+          "mixed.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a20310d09200a20320d0a20330a20340d2035",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-mixed.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a20310d09200a20320d0a20330a20340d2035",
+        "stderr_hex": ""
+      },
+      "passed": true
+    },
+    {
+      "name": "white.lfz",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true
+      },
+      "input_hex": "2334320a0920200d0a20090a0920",
+      "expected_hex": "2334320a0d0a0a",
+      "first": {
+        "args": [
+          "fmt",
+          "white.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a0d0a0a",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-white.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a0d0a0a",
+        "stderr_hex": ""
+      },
+      "passed": true
+    },
+    {
+      "name": "empty.txt",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true
+      },
+      "input_hex": "",
+      "expected_hex": "",
+      "first": {
+        "args": [
+          "fmt",
+          "empty.txt"
+        ],
+        "exit": 0,
+        "stdout_hex": "",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-empty.txt"
+        ],
+        "exit": 0,
+        "stdout_hex": "",
+        "stderr_hex": ""
+      },
+      "passed": true
+    },
+    {
+      "name": "comments.lfz",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true
+      },
+      "input_hex": "2334320a092f2f207461696c20090a092f2a206865616420090d0a09696e7369646520090d0a656e64202a2f20090a",
+      "expected_hex": "2334320a202f2f207461696c20090a202f2a206865616420090d0a09696e7369646520090d0a656e64202a2f0a",
+      "first": {
+        "args": [
+          "fmt",
+          "comments.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a202f2f207461696c20090a202f2a206865616420090d0a09696e7369646520090d0a656e64202a2f0a",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-comments.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a202f2f207461696c20090a202f2a206865616420090d0a09696e7369646520090d0a656e64202a2f0a",
+        "stderr_hex": ""
+      },
+      "passed": true
+    },
+    {
+      "name": "same_line_comment.lfz",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true,
+        "same_behavior": true
+      },
+      "input_hex": "2334320a097072696e742831202f2a20636f6d6d656e74202a2f202b20322920090a",
+      "expected_hex": "2334320a207072696e742831202f2a20636f6d6d656e74202a2f202b2032290a",
+      "first": {
+        "args": [
+          "fmt",
+          "same_line_comment.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a207072696e742831202f2a20636f6d6d656e74202a2f202b2032290a",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-same_line_comment.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a207072696e742831202f2a20636f6d6d656e74202a2f202b2032290a",
+        "stderr_hex": ""
+      },
+      "original_run": {
+        "args": [
+          "run",
+          "same_line_comment.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "330a",
+        "stderr_hex": "",
+        "effect_hex": null
+      },
+      "formatted_run": {
+        "args": [
+          "run",
+          "formatted-same_line_comment.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "330a",
+        "stderr_hex": "",
+        "effect_hex": null
+      },
+      "passed": true
+    },
+    {
+      "name": "literal.lfz",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true,
+        "same_behavior": true
+      },
+      "input_hex": "2334320a097072696e742822e99baa20205c74247b2031202b2032207d20222920090a",
+      "expected_hex": "2334320a207072696e742822e99baa20205c74247b2031202b2032207d2022290a",
+      "first": {
+        "args": [
+          "fmt",
+          "literal.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a207072696e742822e99baa20205c74247b2031202b2032207d2022290a",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-literal.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a207072696e742822e99baa20205c74247b2031202b2032207d2022290a",
+        "stderr_hex": ""
+      },
+      "original_run": {
+        "args": [
+          "run",
+          "literal.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "e99baa20200933200a",
+        "stderr_hex": "",
+        "effect_hex": null
+      },
+      "formatted_run": {
+        "args": [
+          "run",
+          "formatted-literal.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "e99baa20200933200a",
+        "stderr_hex": "",
+        "effect_hex": null
+      },
+      "passed": true
+    },
+    {
+      "name": "format_spec.lfz",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true,
+        "same_behavior": true
+      },
+      "input_hex": "2334320a097072696e742822247b226162223a3e337d3a247b373a3035647d3a5c247b6c69746572616c7d222920090a",
+      "expected_hex": "2334320a207072696e742822247b226162223a3e337d3a247b373a3035647d3a5c247b6c69746572616c7d22290a",
+      "first": {
+        "args": [
+          "fmt",
+          "format_spec.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a207072696e742822247b226162223a3e337d3a247b373a3035647d3a5c247b6c69746572616c7d22290a",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-format_spec.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a207072696e742822247b226162223a3e337d3a247b373a3035647d3a5c247b6c69746572616c7d22290a",
+        "stderr_hex": ""
+      },
+      "original_run": {
+        "args": [
+          "run",
+          "format_spec.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2061623a30303030373a247b6c69746572616c7d0a",
+        "stderr_hex": "",
+        "effect_hex": null
+      },
+      "formatted_run": {
+        "args": [
+          "run",
+          "formatted-format_spec.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2061623a30303030373a247b6c69746572616c7d0a",
+        "stderr_hex": "",
+        "effect_hex": null
+      },
+      "passed": true
+    },
+    {
+      "name": "pipe_dump.lfz",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true
+      },
+      "input_hex": "2334320a096c65742078203d205b312c2020325d207c3e206c656e2020090a093b3b20090a",
+      "expected_hex": "2334320a206c65742078203d205b312c2020325d207c3e206c656e0a203b3b0a",
+      "first": {
+        "args": [
+          "fmt",
+          "pipe_dump.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a206c65742078203d205b312c2020325d207c3e206c656e0a203b3b0a",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-pipe_dump.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a206c65742078203d205b312c2020325d207c3e206c656e0a203b3b0a",
+        "stderr_hex": ""
+      },
+      "passed": true
+    },
+    {
+      "name": "position.lfz",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true,
+        "same_behavior": true,
+        "observable_position": true
+      },
+      "input_hex": "2334320a666e206261642829207b20090a09312f3020090a7d0a096c65742072203d20617474656d7074286261642920090a097072696e74286a736f6e537472696e6769667928722e6572726f72292920090a",
+      "expected_hex": "2334320a666e206261642829207b0a20312f300a7d0a206c65742072203d20617474656d707428626164290a207072696e74286a736f6e537472696e6769667928722e6572726f7229290a",
+      "first": {
+        "args": [
+          "fmt",
+          "position.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a666e206261642829207b0a20312f300a7d0a206c65742072203d20617474656d707428626164290a207072696e74286a736f6e537472696e6769667928722e6572726f7229290a",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-position.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a666e206261642829207b0a20312f300a7d0a206c65742072203d20617474656d707428626164290a207072696e74286a736f6e537472696e6769667928722e6572726f7229290a",
+        "stderr_hex": ""
+      },
+      "original_run": {
+        "args": [
+          "run",
+          "position.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "7b22636c617373223a225a65726f4469766973696f6e4572726f72222c22636f6c223a322c226c696e65223a332c226d657373616765223a22e999a4e4bba5e99bb6222c2274726163656261636b223a5b7b22636f6c223a31302c2266756e63223a223c6d6f64756c653e222c226c696e65223a357d2c7b22636f6c223a322c2266756e63223a22626164222c226c696e65223a337d5d7d0a",
+        "stderr_hex": "",
+        "effect_hex": null
+      },
+      "formatted_run": {
+        "args": [
+          "run",
+          "formatted-position.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "7b22636c617373223a225a65726f4469766973696f6e4572726f72222c22636f6c223a322c226c696e65223a332c226d657373616765223a22e999a4e4bba5e99bb6222c2274726163656261636b223a5b7b22636f6c223a31302c2266756e63223a223c6d6f64756c653e222c226c696e65223a357d2c7b22636f6c223a322c2266756e63223a22626164222c226c696e65223a337d5d7d0a",
+        "stderr_hex": "",
+        "effect_hex": null
+      },
+      "passed": true
+    },
+    {
+      "name": "control_effect.lfz",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true,
+        "same_behavior": true,
+        "write_effect": true
+      },
+      "input_hex": "2334320a0969662074727565207b20090a0909777269746546696c6528226566666563742e747874222c20224f4b222920090a7d0a",
+      "expected_hex": "2334320a2069662074727565207b0a2020777269746546696c6528226566666563742e747874222c20224f4b22290a7d0a",
+      "first": {
+        "args": [
+          "fmt",
+          "control_effect.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a2069662074727565207b0a2020777269746546696c6528226566666563742e747874222c20224f4b22290a7d0a",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-control_effect.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a2069662074727565207b0a2020777269746546696c6528226566666563742e747874222c20224f4b22290a7d0a",
+        "stderr_hex": ""
+      },
+      "original_run": {
+        "args": [
+          "run",
+          "control_effect.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "",
+        "stderr_hex": "",
+        "effect_hex": "4f4b"
+      },
+      "formatted_run": {
+        "args": [
+          "run",
+          "formatted-control_effect.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "",
+        "stderr_hex": "",
+        "effect_hex": "4f4b"
+      },
+      "passed": true
+    },
+    {
+      "name": "no_dependency.lfz",
+      "checks": {
+        "bytes": true,
+        "input_unchanged": true,
+        "idempotent": true
+      },
+      "input_hex": "2334320a09696d706f7274206d2066726f6d20222e2f6d697373696e672d646570656e64656e63792e6c667a2220090a097072696e74286d2920090a",
+      "expected_hex": "2334320a20696d706f7274206d2066726f6d20222e2f6d697373696e672d646570656e64656e63792e6c667a220a207072696e74286d290a",
+      "first": {
+        "args": [
+          "fmt",
+          "no_dependency.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a20696d706f7274206d2066726f6d20222e2f6d697373696e672d646570656e64656e63792e6c667a220a207072696e74286d290a",
+        "stderr_hex": ""
+      },
+      "second": {
+        "args": [
+          "fmt",
+          "formatted-no_dependency.lfz"
+        ],
+        "exit": 0,
+        "stdout_hex": "2334320a20696d706f7274206d2066726f6d20222e2f6d697373696e672d646570656e64656e63792e6c667a220a207072696e74286d290a",
+        "stderr_hex": ""
+      },
+      "passed": true
+    },
+    {
+      "name": "invalid_utf8.lfz",
+      "checks": {
+        "failed_without_output": true
+      },
+      "first": {
+        "args": [
+          "fmt",
+          "invalid_utf8.lfz"
+        ],
+        "exit": 2,
+        "stdout_hex": "",
+        "stderr_hex": "202046696c652022696e76616c69645f757466382e6c667a222c206c696e6520310a53796e7461784572726f723a20e69687e4bbb6e4b88de698afe59088e6b395e79a84205554462d3820e7bc96e7a081efbc88e9a696e4b8aae99d9ee6b395e5ad97e88a82e4bd8de4ba8ee5ad97e88a82e5818fe7a7bb2034efbc890a"
+      },
+      "passed": true
+    },
+    {
+      "name": "bad_preamble.lfz",
+      "checks": {
+        "failed_without_output": true
+      },
+      "first": {
+        "args": [
+          "fmt",
+          "bad_preamble.lfz"
+        ],
+        "exit": 2,
+        "stdout_hex": "",
+        "stderr_hex": "46696c6520226261645f707265616d626c652e6c667a222c206c696e6520310a436f736d6f73416e737765724572726f723a20e4bda0e5bf98e8aeb0e4ba86e5ae87e5ae99e79a84e7ad94e6a1880a"
+      },
+      "passed": true
+    },
+    {
+      "name": "lex_error.lfz",
+      "checks": {
+        "failed_without_output": true
+      },
+      "first": {
+        "args": [
+          "fmt",
+          "lex_error.lfz"
+        ],
+        "exit": 2,
+        "stdout_hex": "",
+        "stderr_hex": "202046696c6520226c65785f6572726f722e6c667a222c206c696e6520320a20202020400a202020205e0a53796e7461784572726f723a20e99d9ee6b395e5ad97e7aca6202740270a"
+      },
+      "passed": true
+    },
+    {
+      "name": "parse_error.lfz",
+      "checks": {
+        "failed_without_output": true
+      },
+      "first": {
+        "args": [
+          "fmt",
+          "parse_error.lfz"
+        ],
+        "exit": 2,
+        "stdout_hex": "",
+        "stderr_hex": "202046696c65202270617273655f6572726f722e6c667a222c206c696e6520320a202020206c65742078203d0a20202020202020202020205e0a53796e7461784572726f723a20e8a1a8e8bebee5bc8fe69caae7bb93e69d9fefbc9ae8a18ce5b0bee4b88de883bde7bb88e6ada2e8a1a8e8bebee5bc8fefbc9be8afb7e794a8e68bace58fb7e8b7a8e8a18c0a"
+      },
+      "passed": true
+    },
+    {
+      "name": "missing_file",
+      "checks": {
+        "failed_without_output": true
+      },
+      "first": {
+        "args": [
+          "fmt",
+          "absent.lfz"
+        ],
+        "exit": 2,
+        "stdout_hex": "",
+        "stderr_hex": "494f4572726f723a20e697a0e6b395e8afbbe58f96efbc9a616273656e742e6c667a0a"
+      },
+      "passed": true
+    },
+    {
+      "name": "json_fmt",
+      "checks": {
+        "failed_without_output": true
+      },
+      "first": {
+        "args": [
+          "--json",
+          "fmt",
+          "basic.lfz"
+        ],
+        "exit": 2,
+        "stdout_hex": "",
+        "stderr_hex": "6c667a3a20e8a3b8e69687e4bbb6e8b083e794a8e58faae68ea5e58f97e4b880e4b8aa203c66696c653e20e58f82e695b00ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+      },
+      "passed": true
+    },
+    {
+      "name": "extra_arg",
+      "checks": {
+        "failed_without_output": true
+      },
+      "first": {
+        "args": [
+          "fmt",
+          "basic.lfz",
+          "--",
+          "x"
+        ],
+        "exit": 2,
+        "stdout_hex": "",
+        "stderr_hex": "6c667a3a20e8a3b8e69687e4bbb6e8b083e794a8e58faae68ea5e58f97e4b880e4b8aa203c66696c653e20e58f82e695b00ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+      },
+      "passed": true
+    },
+    {
+      "name": "dash_file",
+      "checks": {
+        "failed_without_output": true
+      },
+      "first": {
+        "args": [
+          "fmt",
+          "-x"
+        ],
+        "exit": 2,
+        "stdout_hex": "",
+        "stderr_hex": "6c667a3a20e8a3b8e69687e4bbb6e8b083e794a8e58faae68ea5e58f97e4b880e4b8aa203c66696c653e20e58f82e695b00ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+      },
+      "passed": true
+    },
+    {
+      "name": "empty_path",
+      "checks": {
+        "failed_without_output": true
+      },
+      "first": {
+        "args": [
+          "fmt",
+          ""
+        ],
+        "exit": 2,
+        "stdout_hex": "",
+        "stderr_hex": "6c667a3a20e8a3b8e69687e4bbb6e8b083e794a8e58faae68ea5e58f97e4b880e4b8aa203c66696c653e20e58f82e695b00ae794a8e6b3953a206c667a203c66696c653e207c206c667a2072756e203c66696c653e207c206c667a20636865636b2046494c45207c206c667a2074657374205be8b7afe5be842e2e2e5defbc88e69bb4e5a49a3a206c667a202d2d68656c70efbc890a"
+      },
+      "passed": true
+    },
+    {
+      "name": "bare_fmt",
+      "checks": {
+        "legacy_exact": true
+      },
+      "first": {
+        "args": [
+          "fmt"
+        ],
+        "exit": 2,
+        "stdout_hex": "",
+        "stderr_hex": "494f4572726f723a20e58faae694afe68c81202e6c667a20e8849ae69cace69687e4bbb6efbc9a27666d74270a"
+      },
+      "legacy_baseline": {
+        "args": [
+          "fmt"
+        ],
+        "exit": 2,
+        "stdout_hex": "",
+        "stderr_hex": "494f4572726f723a20e58faae694afe68c81202e6c667a20e8849ae69cace69687e4bbb6efbc9a27666d74270a"
+      },
+      "passed": true
+    },
+    {
+      "name": "json_bare_fmt",
+      "checks": {
+        "legacy_exact": true
+      },
+      "first": {
+        "args": [
+          "--json",
+          "fmt"
+        ],
+        "exit": 2,
+        "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22494f4572726f72222c226d657373616765223a22e58faae694afe68c81202e6c667a20e8849ae69cace69687e4bbb6efbc9a27666d7427222c2266696c65223a22666d74222c226c696e65223a6e756c6c2c22636f6c223a6e756c6c2c2274726163656261636b223a5b5d7d0a",
+        "stderr_hex": ""
+      },
+      "legacy_baseline": {
+        "args": [
+          "--json",
+          "fmt"
+        ],
+        "exit": 2,
+        "stdout_hex": "7b226f6b223a66616c73652c226572726f72223a22494f4572726f72222c226d657373616765223a22e58faae694afe68c81202e6c667a20e8849ae69cace69687e4bbb6efbc9a27666d7427222c2266696c65223a22666d74222c226c696e65223a6e756c6c2c22636f6c223a6e756c6c2c2274726163656261636b223a5b5d7d0a",
+        "stderr_hex": ""
+      },
+      "passed": true
+    },
+    {
+      "name": "run_fmt",
+      "checks": {
+        "legacy_exact": true
+      },
+      "first": {
+        "args": [
+          "run",
+          "fmt"
+        ],
+        "exit": 0,
+        "stdout_hex": "6c65676163790a",
+        "stderr_hex": ""
+      },
+      "legacy_baseline": {
+        "args": [
+          "run",
+          "fmt"
+        ],
+        "exit": 0,
+        "stdout_hex": "6c65676163790a",
+        "stderr_hex": ""
+      },
+      "passed": true
+    },
+    {
+      "name": "argv_fmt",
+      "checks": {
+        "legacy_exact": true
+      },
+      "first": {
+        "args": [
+          "-e",
+          "print(jsonStringify(argv()))",
+          "--",
+          "fmt",
+          "--json"
+        ],
+        "exit": 0,
+        "stdout_hex": "5b22666d74222c222d2d6a736f6e225d0a",
+        "stderr_hex": ""
+      },
+      "legacy_baseline": {
+        "args": [
+          "-e",
+          "print(jsonStringify(argv()))",
+          "--",
+          "fmt",
+          "--json"
+        ],
+        "exit": 0,
+        "stdout_hex": "5b22666d74222c222d2d6a736f6e225d0a",
+        "stderr_hex": ""
+      },
+      "passed": true
+    }
+  ],
+  "timestamp_utc": "2026-11-12T16:33:28.991338+00:00"
+}

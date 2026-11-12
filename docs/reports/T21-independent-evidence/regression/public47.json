@@ -1,0 +1,904 @@
+{
+  "schema": "LFZ-T19-CLI-1",
+  "binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+  "script_sha256": "7d9d620d35c13bd225602ea2b534a7c6f28d88d9db478bb68ff48c3c71677145",
+  "checks_total": 47,
+  "checks_passed": 47,
+  "rows": [
+    {
+      "name": "feature_red",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\feature_red.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "empty",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\empty.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "single",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\single.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "tailLF",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\tailLF.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "oneLF",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\oneLF.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "twoLF",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\twoLF.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "CRLF_EOFCR",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\CRLF_EOFCR.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "doubleCR",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\doubleCR.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "BOM",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\BOM.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "NUL",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\NUL.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "whitespace",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\whitespace.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "cross_UTF8",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\cross_UTF8.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "capN",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\capN.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "CR_capN",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\CR_capN.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "UTF8capN",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\UTF8capN.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "capPlus",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\capPlus.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行超过逐行字节上限 1\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\capPlus.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\capPlus.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "CRcapPlus",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\CRcapPlus.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行超过逐行字节上限 1\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\CRcapPlus.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\CRcapPlus.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "UTF8capPlus",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\UTF8capPlus.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行超过逐行字节上限 2\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\UTF8capPlus.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\UTF8capPlus.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "secondTooLong",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\secondTooLong.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 2 行超过逐行字节上限 3\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\secondTooLong.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\secondTooLong.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "badUTF8",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\badUTF8.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行不是合法 UTF-8\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\badUTF8.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\badUTF8.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "laterUTF8",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\laterUTF8.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 2 行不是合法 UTF-8\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\laterUTF8.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\laterUTF8.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "crossBadUTF8",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\crossBadUTF8.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"第 1 行不是合法 UTF-8\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\crossBadUTF8.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\crossBadUTF8.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "earlyUTF8",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\earlyUTF8.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "earlyLong",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\earlyLong.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "arity",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\arity.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 forEachLine 期待 3 个参数，得到 0\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\arity.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\arity.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "cbType",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\cbType.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'forEachLine' 不支持 int 与 function\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\cbType.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\cbType.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "capType",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\capType.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'forEachLine' 不支持 string 与 int\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\capType.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\capType.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "pathType",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\pathType.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'forEachLine' 不支持 int 与 string\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\pathType.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\pathType.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "callbackArity",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\callbackArity.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 <fn> 期待 0 个参数，得到 2\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\callbackArity.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\callbackArity.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "argvArity",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\argvArity.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"函数 argv 期待 0 个参数，得到 2\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\argvArity.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\argvArity.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "nonbool",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\nonbool.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"TypeError\",\"message\":\"运算符 'forEachLine' 不支持 int 与 bool\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\nonbool.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\nonbool.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true
+      },
+      "passed": true
+    },
+    {
+      "name": "pathNUL",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\pathNUL.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"逐行读取路径不能包含 NUL\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\pathNUL.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\pathNUL.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "range0",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\range0.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"逐行读取 maxLineBytes 必须在 1..16777216 范围内\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\range0.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\range0.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "range-1",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\range-1.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"逐行读取 maxLineBytes 必须在 1..16777216 范围内\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\range-1.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\range-1.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "range16777217",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\range16777217.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ValueError\",\"message\":\"逐行读取 maxLineBytes 必须在 1..16777216 范围内\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\range16777217.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\range16777217.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "missing",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\missing.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"无法逐行读取：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\missing.data\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\missing.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\missing.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "directory",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\directory.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"IOError\",\"message\":\"无法逐行读取：D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\directory.lfz\",\"line\":2,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\directory.lfz\",\"line\":2,\"func\":\"<module>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "JSONL_attempt",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\JSONL_attempt.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "steps_shared",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\steps_shared.lfz",
+        "--max-steps",
+        "100"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\steps_shared.lfz\",\"line\":3,\"col\":7,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\steps_shared.lfz\",\"line\":2,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\steps_shared.lfz\",\"line\":3,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "message": true
+      },
+      "passed": true
+    },
+    {
+      "name": "home",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\home.lfz"
+      ],
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "callback_source",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\callback_source.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\home\\\\lib.lfz\",\"line\":8,\"col\":1,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\callback_source.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"\\\\\\\\?\\\\D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T21-verifier\\\\regression\\\\public47\\\\home\\\\lib.lfz\",\"line\":8,\"func\":\"bad\"}]}\n",
+      "stderr": "",
+      "checks": {
+        "exit": true,
+        "protocol": true,
+        "ok": true,
+        "class": true,
+        "source": true
+      },
+      "passed": true
+    },
+    {
+      "name": "close_EOF",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\close_EOF.lfz",
+        "--timeout-ms",
+        "6000"
+      ],
+      "unheld_control": {
+        "ok": true,
+        "error": 0
+      },
+      "held_probe": {
+        "ok": false,
+        "error": 32
+      },
+      "after_probe": {
+        "ok": true,
+        "error": 0
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "held_negative": true,
+        "same_pid_alive": true,
+        "returned_closed": true,
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "close_false",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\close_false.lfz",
+        "--timeout-ms",
+        "6000"
+      ],
+      "unheld_control": {
+        "ok": true,
+        "error": 0
+      },
+      "held_probe": {
+        "ok": false,
+        "error": 32
+      },
+      "after_probe": {
+        "ok": true,
+        "error": 0
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "held_negative": true,
+        "same_pid_alive": true,
+        "returned_closed": true,
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "close_callbackError",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\close_callbackError.lfz",
+        "--timeout-ms",
+        "6000"
+      ],
+      "unheld_control": {
+        "ok": true,
+        "error": 0
+      },
+      "held_probe": {
+        "ok": false,
+        "error": 32
+      },
+      "after_probe": {
+        "ok": true,
+        "error": 0
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "held_negative": true,
+        "same_pid_alive": true,
+        "returned_closed": true,
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "close_nonbool",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\close_nonbool.lfz",
+        "--timeout-ms",
+        "6000"
+      ],
+      "unheld_control": {
+        "ok": true,
+        "error": 0
+      },
+      "held_probe": {
+        "ok": false,
+        "error": 32
+      },
+      "after_probe": {
+        "ok": true,
+        "error": 0
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "held_negative": true,
+        "same_pid_alive": true,
+        "returned_closed": true,
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "close_UTF8",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\close_UTF8.lfz",
+        "--timeout-ms",
+        "6000"
+      ],
+      "unheld_control": {
+        "ok": true,
+        "error": 0
+      },
+      "held_probe": {
+        "ok": false,
+        "error": 32
+      },
+      "after_probe": {
+        "ok": true,
+        "error": 0
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "held_negative": true,
+        "same_pid_alive": true,
+        "returned_closed": true,
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    },
+    {
+      "name": "close_tooLong",
+      "args": [
+        "--json",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T21-verifier\\regression\\public47\\close_tooLong.lfz",
+        "--timeout-ms",
+        "6000"
+      ],
+      "unheld_control": {
+        "ok": true,
+        "error": 0
+      },
+      "held_probe": {
+        "ok": false,
+        "error": 32
+      },
+      "after_probe": {
+        "ok": true,
+        "error": 0
+      },
+      "exit": 0,
+      "stdout": "{\"ok\":true}\n",
+      "stderr": "",
+      "checks": {
+        "held_negative": true,
+        "same_pid_alive": true,
+        "returned_closed": true,
+        "exit": true,
+        "protocol": true,
+        "ok": true
+      },
+      "passed": true
+    }
+  ],
+  "scope": "small public fixtures; global terminal close requires same-host unit evidence, not process-exit reopen",
+  "timestamp_utc": "2026-11-12T16:36:23.041775+00:00"
+}

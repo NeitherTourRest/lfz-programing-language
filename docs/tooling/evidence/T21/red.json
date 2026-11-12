@@ -1,0 +1,10 @@
+{
+  "baselineSha": "A545D0C294EB85276ABC5556F297434806EA1DEF598192EE664593550C579A3C",
+  "actualExit": 2,
+  "argv": [
+    "fmt",
+    "Temp/T21-tooling/red-input.lfz"
+  ],
+  "diagnostics": "lfz: 裸文件调用只接受一个 <file> 参数\n用法: lfz <file> | lfz run <file> | lfz check FILE | lfz test [路径...]（更多: lfz --help）",
+  "expectedExit": 0
+}

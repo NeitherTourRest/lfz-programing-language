@@ -1,0 +1,43 @@
+{
+  "binary": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+  "candidate_zip": {
+    "bytes": 771423,
+    "sha256": "a4c2e0650cc2dc4a27a3433a3a811b03890d99f8b229c03672bbc6f2f9f5b197",
+    "members": 42
+  },
+  "source_count": 41,
+  "guide": {
+    "sha256": "59aea0d2e98958bd579f24c88ad0109ecdd3939d7536eba5eaeaa2fcb8494b49",
+    "runs": 2,
+    "docs": {
+      "docs/guide/README.md": "4e818a0fbe8ff76fc695f98084655070ce1c8a59f5dd94245b8d89159c5a19dd",
+      "docs/guide/formatting.md": "2d559b9fe9cfcc8fdd6ae305f8f993e17a4b6c8f189ddbee7cb5056b55de7f91"
+    }
+  },
+  "public": {
+    "sha256": "31542d67d30d523fb20f33e0e3cf1883fae60e2a0fc804a71ee736d1039f1b62",
+    "runs": 27
+  },
+  "corpus": {
+    "sha256": "8bf9ce39a287691055b3d2f8fbfdd19b255eb28ae093c2def89a9c2481fe8b22",
+    "cases": 192,
+    "accepted": 173,
+    "rejected": 19
+  },
+  "harness_sha256": {
+    "lfz-63397fd2d9985014.exe": "50c046775ca262fac4d4dbe88b15e03d0342ced3caa6892a6f9543a5a117041a",
+    "lfz-243aeb8f5c3370f1.exe": "cd7b96a80928a7ee8910debec09efcfcc2b2b9da102c8e7dcea1d674bd3b0ee3",
+    "cli-d19dbfa7dd3f9d73.exe": "b6a30c10218f312945529b3bf277bca59c8b139a1569fafded124a9976dfbbd9",
+    "cli_t12-35b857587ead196a.exe": "2b28371edc4fd5b1a1fb66618f0d45e215c12d45381903a7b6c47503bef70b53",
+    "cli_t14-b528900585815e19.exe": "eaf3d861df95468106d7312e8977dded4d88d46bdd709702a2067d4b2a20add3",
+    "cli_t16b-66b0b355c7f6f4d0.exe": "06f928585b7ddbb8a46a678b2d8736cbb165f6ec55cd44175503e25887704f8b",
+    "cli_t16c-24a3e9d865ee9e42.exe": "a0adcf1d013961bfa29b2161d1c9fdd99e935d42982ed1b6cbee8a4049b6df54",
+    "cli_t17-2cfc935946fdc938.exe": "861fc7fc9efa2088452b4dbf95c3ff8c2131e57a13dc63949d9a6919a050e670",
+    "cli_t18a-2b1a6784d688e6c5.exe": "f430a18e20d74a9ff07f0d6b04176a1e77f62c0baadd67245a7a2aa38b5c82ed",
+    "cli_t18b-4fb747188dc55a23.exe": "c45a95bd52e7a0a4e64032a2849e2f6a58e84693e134c167edfa384c99b93464",
+    "cli_t20-be52399e4be58bfb.exe": "a6c6561943720d164b5f5b5740732b1372c380a70e2401f6cd71ab631cd10d17",
+    "cli_t21-f65aa2b7afce5cb1.exe": "1b198ef5eceec143e60d3c4e388e601431a42197698291214e3f3072ed9b558d",
+    "test_runner-a9d3da191eeb2958.exe": "186eba3c47740b8fcbfd86c7818317270168f8dcc87e802fd9c595ffecaf5c61",
+    "unit-ae562ae83f03ad63.exe": "0c57a30a736002e25639be5fe63590b9ba65bd4bd859d6a4de8fd6e08b36cebb"
+  }
+}

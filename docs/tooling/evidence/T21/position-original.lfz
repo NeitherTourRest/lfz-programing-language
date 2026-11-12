@@ -1,0 +1,10 @@
+#42
+	fn fail() { 	
+		return missing() 	
+	} 	
+	let r=attempt(()=>fail()) 	
+	print(r.error.line) 	
+	print(r.error.col) 	
+	print(jsonStringify(r.error.traceback)) 	
+	appendFile("position-effect.txt","x") /* kept */ 	
+	fail() 	
