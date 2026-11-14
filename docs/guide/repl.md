@@ -4,6 +4,8 @@
 
 启动 `lfz repl`。REPL 输入不要求文件的 `#42` 前导。终端在 stderr 输出 `lfz> `，未完成片段输出 `...> ` 并刷新；管道输入没有提示或欢迎语。成功结果非 nil 时回显一行；`print` 自己输出且返回 nil，不重复回显。赋值不额外回显。
 
+Windows 下直接在终端运行 `lfz repl` 即可。普通控制台实测在 CP437、CP936 和 CP65001 下均能正确输入和显示常见中文，并显示中文错误诊断。需要捕获 stdout 或 stderr 时，使用普通管道并按 UTF-8 解码。直接重定向到只写的 `CONOUT$` 在 CP437 和 CP936 下可能出现乱码。[Windows 控制台独立验证](../reports/T22-independent-verification.md)
+
 ```text
 var n=1
 fn read()=>n
