@@ -1,9 +1,17 @@
 # LFZ 需求矩阵（唯一需求事实源 · v1.1 增量对齐版）
 
-> 最后更新: 2026-11-13 by requirements-analyst
-> 版本: **v15（T21保真空白格式化通过，R-304开放）**
+> 最后更新: 2026-11-14 by requirements-analyst
+> 版本: **v16（T22 普通 Windows 控制台 BMP 中文验证通过，R-304 开放）**
 > 本文件是**唯一需求事实源**，唯一写者 requirements-analyst，他人只读。
 > 来源: `task-info.md`（课程作业原始要求）+ 用户指令 + 已定案 ADR（见 `DECISIONS.md`）。
+
+## T22 增量需求（2026-11-14，普通 Windows 控制台 BMP 中文验证通过）
+
+| R-ID | 需求 | 来源 | 验证方式及证据 | 状态 | 交付物/负责人 | 评分项 |
+|------|------|------|----------------|------|---------------|--------|
+| R-217 | 在交付版 Windows 解释器上验证普通控制台的 BMP 中文显示、诊断、REPL 输入与回显，并记录设备重定向和管道的行为边界 | T20 中文 TTY 后续验证 | 同一 dist/lfz.exe，1117184 字节，SHA256 76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e。独立普通控制台在 CP437/936/65001 各 5 项，共 15/15，用实际宽字符按键和 UTF-16 屏幕缓冲核对输出及退出码。私有 ConPTY 六组对照复现同样的权限与码页差异，管道原始 UTF-8 分别核对 stdout/stderr。 | 通过（普通控制台 BMP 中文） | docs/reports/T22-independent-verification.md、T22-tooling.md、T22-pipe-evidence/ | 2 |
+
+只写 CONOUT$ 无法通过 GetConsoleMode，返回 Windows 错误 5。在 CP437/936 仍复现显示乱码，CP65001 对照正常。普通控制台的 BMP 中文待验项由本条在当前交付版上补证。emoji 的终端渲染仍待验，管道 UTF-8 对照已确认能完整输出 emoji。此轮使用现有交付版，R-304 OPEN。
 
 ## T21 增量需求（2026-11-13，保真空白格式化验收通过）
 

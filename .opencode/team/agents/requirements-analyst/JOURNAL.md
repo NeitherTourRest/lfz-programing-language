@@ -124,3 +124,7 @@
 ## [2026-11-13] T21 需求验收
 - 新增 R140/216/416，记录 §27 保真空白和可观察位置、stdout 与真实断管、输入文件保护及人指南。作者和独立各 715/715、公开 27/27、独立 23、旧全回归、T20 REPL 37/37、人指南 2/2。
 - 证据为 T21-tooling.md、T21-blackbox.md、T21-independent-verification.md、T21-guide-evidence.md。R304 OPEN，T20 中文 TTY 待验。
+
+## [2026-11-14] T22 普通控制台验证
+- 新增 R217，记录同交付版 76ac4cb… 的普通 Windows 控制台 BMP 中文 CP437/936/65001 15/15、六组私有 ConPTY 和 UTF-8 管道互证。
+- 记录只写 CONOUT$ 在 CP437/936 的乱码边界及 emoji 终端渲染待验。R304 OPEN。T21 及更早需求章节与原文一致。
