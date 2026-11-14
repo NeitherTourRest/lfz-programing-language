@@ -1,0 +1,56 @@
+{
+  "binary": {
+    "bytes": 1117184,
+    "sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e"
+  },
+  "files": {
+    ".gitattributes": {
+      "bytes": 9,
+      "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+    },
+    "conpty-errors-936-raw.bin": {
+      "bytes": 154,
+      "sha256": "1bc47b27ed191d759d2205ffac1cda5fe5f009c395b9d2126346234e78484b6b"
+    },
+    "conpty-errors-936-result.json": {
+      "bytes": 367,
+      "sha256": "933832a2040b108d7062980cc8e48032caff599df218a1b66d07dbdef3982d0b"
+    },
+    "conpty-errors-utf8-raw.bin": {
+      "bytes": 310,
+      "sha256": "7c923821c9bdda3d4cae8b2c48b89c9dccb35667e6f6541a2dcd85a20c901dc4"
+    },
+    "conpty-errors-utf8-result.json": {
+      "bytes": 368,
+      "sha256": "9d5ef564b85d8545133df8b1572f8bfec537c0e0926c8231e98610d5e858eef6"
+    },
+    "legacy-redirection-936.py": {
+      "bytes": 5344,
+      "sha256": "cf0423328cd04a5eb19a6c2d075ddefb9c3945b3b5bab47b861a9889f5644743"
+    },
+    "legacy-redirection-utf8.py": {
+      "bytes": 5350,
+      "sha256": "58d6f8b127952c4c138d96b6edefc5d6a07a91b41b8ce93fd66ce3f498a6bcad"
+    },
+    "pipe-control.json": {
+      "bytes": 175,
+      "sha256": "538fe7f549e9ea82f313774741bef3f0e90c8870a70e456b6190321b3486d2d2"
+    },
+    "pipe-control.py": {
+      "bytes": 1017,
+      "sha256": "bffeba058a049a027b350f7813f629e7250cdf5530615a468d429e708246ac37"
+    },
+    "stderr.bin": {
+      "bytes": 19,
+      "sha256": "2c163078e1de6f4ed83efad5e6e4f8b059fc3258c40088835ac65af68286e27d"
+    },
+    "stdin.bin": {
+      "bytes": 50,
+      "sha256": "07c88a478d9fd23fb8626f0f8e63be4903b44c49780ca5931580484cbaa3877e"
+    },
+    "stdout.bin": {
+      "bytes": 14,
+      "sha256": "042edc93be4bb7e4ee27c87035cfbb3b48c54f8ebe9cdfa21573f391f4a52bd1"
+    }
+  }
+}

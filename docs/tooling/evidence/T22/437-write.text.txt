@@ -1,0 +1,12 @@
+lfz>:unknown
+repl: µ£¬τƒÑσæ╜Σ╗ñ
+lfz> print("RESULT<"+input()+">")
+你好LFZ
+RESULT<Σ╜áσÑ╜LFZ>
+lfz> let = "中文源码"
+  File "<repl:2>", line 1
+    let = "Σ╕¡µûçµ║Éτáü"
+        ^
+SyntaxError: Φ┐ÖΘçîµ£ƒσ╛à σÅÿΘçÅσÉì∩╝îΣ╜åσ╛ùσê░ '='
+lfz> :reset
+lfz> :quit

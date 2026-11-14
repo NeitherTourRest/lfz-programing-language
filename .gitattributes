@@ -26,3 +26,6 @@
 /docs/reports/T21-independent-evidence/** -text
 /docs/reports/T21-independent-verification.md -text
 /docs/reports/T21-release-evidence/** -text
+
+# Preserve the report bound by the T22 independent verification manifest.
+/docs/reports/T22-independent-verification.md -text

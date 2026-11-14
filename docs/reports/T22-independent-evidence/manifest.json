@@ -1,0 +1,192 @@
+{
+  "files": {
+    "docs/reports/T22-independent-evidence/.gitattributes": {
+      "bytes": 10,
+      "sha256": "4ce4b6e6b8435f8c3a8387387732964a2ebf0183e8d77b8247ae8061b033e462"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/437-ordinary-error.utf16le": {
+      "bytes": 1426,
+      "sha256": "8fc5e314ea8bed9a771d6431c22e1541eb77413cfc809a508251f472349fe10b"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/437-ordinary-out.utf16le": {
+      "bytes": 950,
+      "sha256": "82f8c0fd5653e648fe789700f5841ec83fe36dd4870f2c2fd93170229ddfc8c2"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/437-ordinary-repl.utf16le": {
+      "bytes": 950,
+      "sha256": "9c0e6999c4ba26f83b4b2ee2272513a09afd0570ad53e5b7a49b27be0c225a2b"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/437-write-only-error.utf16le": {
+      "bytes": 1428,
+      "sha256": "c3a817b23af391a7c88e7d80d945287bda29820fbc389e31b117761fb707ea1b"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/437-write-only-out.utf16le": {
+      "bytes": 952,
+      "sha256": "badcc98b31ee1f2df0ebaa888cdff7749428bed4d29eda967a417ff5b8475c72"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/65001-ordinary-error.utf16le": {
+      "bytes": 1426,
+      "sha256": "8fc5e314ea8bed9a771d6431c22e1541eb77413cfc809a508251f472349fe10b"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/65001-ordinary-out.utf16le": {
+      "bytes": 950,
+      "sha256": "82f8c0fd5653e648fe789700f5841ec83fe36dd4870f2c2fd93170229ddfc8c2"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/65001-ordinary-repl.utf16le": {
+      "bytes": 950,
+      "sha256": "9c0e6999c4ba26f83b4b2ee2272513a09afd0570ad53e5b7a49b27be0c225a2b"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/65001-write-only-error.utf16le": {
+      "bytes": 1426,
+      "sha256": "8fc5e314ea8bed9a771d6431c22e1541eb77413cfc809a508251f472349fe10b"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/65001-write-only-out.utf16le": {
+      "bytes": 950,
+      "sha256": "82f8c0fd5653e648fe789700f5841ec83fe36dd4870f2c2fd93170229ddfc8c2"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/936-ordinary-error.utf16le": {
+      "bytes": 1426,
+      "sha256": "8fc5e314ea8bed9a771d6431c22e1541eb77413cfc809a508251f472349fe10b"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/936-ordinary-out.utf16le": {
+      "bytes": 950,
+      "sha256": "82f8c0fd5653e648fe789700f5841ec83fe36dd4870f2c2fd93170229ddfc8c2"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/936-ordinary-repl.utf16le": {
+      "bytes": 950,
+      "sha256": "9c0e6999c4ba26f83b4b2ee2272513a09afd0570ad53e5b7a49b27be0c225a2b"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/936-write-only-error.utf16le": {
+      "bytes": 1420,
+      "sha256": "b98931fef47094d70b176a3bc0f1dbd731f7a32594a71dfdf4ab40689cf56978"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/936-write-only-out.utf16le": {
+      "bytes": 944,
+      "sha256": "834087195b6d53f515418ff082cbfa39ef7d61f3d19e58b4bd7cd1fdaaa7319c"
+    },
+    "docs/reports/T22-independent-evidence/initial-emoji/ordinary-console.json": {
+      "bytes": 6045,
+      "sha256": "5be157f9276f2a6c83d4a70ab59c0e879725b4f3d0d31ab3d3167adcf521366b"
+    },
+    "docs/reports/T22-independent-evidence/input-final/437-ordinary-error.utf16le": {
+      "bytes": 1666,
+      "sha256": "43731142ecbc0b7e78cd8bd88f3c2c06ef24c0c63891fbc2f0069ea0218b3cb7"
+    },
+    "docs/reports/T22-independent-evidence/input-final/437-ordinary-out.utf16le": {
+      "bytes": 952,
+      "sha256": "769997f4f35bf5cc9f64ae9080f5d29cc37dcfd86a9521175c71fa396ca8d92a"
+    },
+    "docs/reports/T22-independent-evidence/input-final/437-ordinary-repl-chinese-input.utf16le": {
+      "bytes": 944,
+      "sha256": "ff73b40b2fd5bd0aa2731db0a5334d16b78306664dc6cf6a39a495bfad4309d1"
+    },
+    "docs/reports/T22-independent-evidence/input-final/437-ordinary-repl-error.utf16le": {
+      "bytes": 950,
+      "sha256": "ca862fb79760cfcc0fd662c89e744858b983f47b56b2401e7cced13636b841e2"
+    },
+    "docs/reports/T22-independent-evidence/input-final/437-ordinary-repl.utf16le": {
+      "bytes": 952,
+      "sha256": "50d035b3e9f7fa0d968195d39994a7b62495ec5254aae64b090e90be0330818b"
+    },
+    "docs/reports/T22-independent-evidence/input-final/437-write-only-error.utf16le": {
+      "bytes": 1668,
+      "sha256": "b8f1e391b51ee0a84bbdec7d24c5f559490656d164d43f8e13cbdfa52be436a4"
+    },
+    "docs/reports/T22-independent-evidence/input-final/437-write-only-out.utf16le": {
+      "bytes": 954,
+      "sha256": "f39781762b94ab118e60304ce49461ef504bf7cc0c8eecefcc76c57131bc9017"
+    },
+    "docs/reports/T22-independent-evidence/input-final/65001-ordinary-error.utf16le": {
+      "bytes": 1666,
+      "sha256": "43731142ecbc0b7e78cd8bd88f3c2c06ef24c0c63891fbc2f0069ea0218b3cb7"
+    },
+    "docs/reports/T22-independent-evidence/input-final/65001-ordinary-out.utf16le": {
+      "bytes": 952,
+      "sha256": "769997f4f35bf5cc9f64ae9080f5d29cc37dcfd86a9521175c71fa396ca8d92a"
+    },
+    "docs/reports/T22-independent-evidence/input-final/65001-ordinary-repl-chinese-input.utf16le": {
+      "bytes": 944,
+      "sha256": "ff73b40b2fd5bd0aa2731db0a5334d16b78306664dc6cf6a39a495bfad4309d1"
+    },
+    "docs/reports/T22-independent-evidence/input-final/65001-ordinary-repl-error.utf16le": {
+      "bytes": 950,
+      "sha256": "ca862fb79760cfcc0fd662c89e744858b983f47b56b2401e7cced13636b841e2"
+    },
+    "docs/reports/T22-independent-evidence/input-final/65001-ordinary-repl.utf16le": {
+      "bytes": 952,
+      "sha256": "50d035b3e9f7fa0d968195d39994a7b62495ec5254aae64b090e90be0330818b"
+    },
+    "docs/reports/T22-independent-evidence/input-final/65001-write-only-error.utf16le": {
+      "bytes": 1666,
+      "sha256": "43731142ecbc0b7e78cd8bd88f3c2c06ef24c0c63891fbc2f0069ea0218b3cb7"
+    },
+    "docs/reports/T22-independent-evidence/input-final/65001-write-only-out.utf16le": {
+      "bytes": 952,
+      "sha256": "769997f4f35bf5cc9f64ae9080f5d29cc37dcfd86a9521175c71fa396ca8d92a"
+    },
+    "docs/reports/T22-independent-evidence/input-final/936-ordinary-error.utf16le": {
+      "bytes": 1666,
+      "sha256": "43731142ecbc0b7e78cd8bd88f3c2c06ef24c0c63891fbc2f0069ea0218b3cb7"
+    },
+    "docs/reports/T22-independent-evidence/input-final/936-ordinary-out.utf16le": {
+      "bytes": 952,
+      "sha256": "769997f4f35bf5cc9f64ae9080f5d29cc37dcfd86a9521175c71fa396ca8d92a"
+    },
+    "docs/reports/T22-independent-evidence/input-final/936-ordinary-repl-chinese-input.utf16le": {
+      "bytes": 944,
+      "sha256": "ff73b40b2fd5bd0aa2731db0a5334d16b78306664dc6cf6a39a495bfad4309d1"
+    },
+    "docs/reports/T22-independent-evidence/input-final/936-ordinary-repl-error.utf16le": {
+      "bytes": 950,
+      "sha256": "ca862fb79760cfcc0fd662c89e744858b983f47b56b2401e7cced13636b841e2"
+    },
+    "docs/reports/T22-independent-evidence/input-final/936-ordinary-repl.utf16le": {
+      "bytes": 952,
+      "sha256": "50d035b3e9f7fa0d968195d39994a7b62495ec5254aae64b090e90be0330818b"
+    },
+    "docs/reports/T22-independent-evidence/input-final/936-write-only-error.utf16le": {
+      "bytes": 1660,
+      "sha256": "918d882660c4feef8f181bedc0879099367403b0c3ff9eb4b7881f385cc5fef3"
+    },
+    "docs/reports/T22-independent-evidence/input-final/936-write-only-out.utf16le": {
+      "bytes": 950,
+      "sha256": "f2e4567728d9da62fc4b0e9b94956fa38149255a3d5dba83295c4b78e6873648"
+    },
+    "docs/reports/T22-independent-evidence/input-final/error.lfz": {
+      "bytes": 14,
+      "sha256": "b8d71f8c37176e7eed3a0f58205e467d4c1f481066e493d15796568ddde8de68"
+    },
+    "docs/reports/T22-independent-evidence/input-final/launch.txt": {
+      "bytes": 9060,
+      "sha256": "1d5e73df0f68acf0c13e52cf3ac72eb5528bf3433106f7af11981e74d07425ba"
+    },
+    "docs/reports/T22-independent-evidence/input-final/ordinary-console.json": {
+      "bytes": 8715,
+      "sha256": "3b760a3579186d2f7f5a0c06d9de04ce2919091f8337f1ed3958bd757501279f"
+    },
+    "docs/reports/T22-independent-evidence/input-final/print.lfz": {
+      "bytes": 23,
+      "sha256": "144627266c40922e1674dd10c103e15067b475345eeb788f6c2c86e73a77653d"
+    },
+    "docs/reports/T22-independent-evidence/native-console-final.py": {
+      "bytes": 5591,
+      "sha256": "cbc87194fe453059e4954073141aa2575d8f98fc7228fb2569142b14fc8e779a"
+    },
+    "docs/reports/T22-independent-evidence/native-console.py": {
+      "bytes": 5330,
+      "sha256": "90a2212368fd20107844aaa851873abdaa80b97fdae36c152870d3a50f3601be"
+    },
+    "docs/reports/T22-independent-evidence/pipe-utf8.bin": {
+      "bytes": 14,
+      "sha256": "d172046e2ce0b17a23f1103e77e1bfd74afa4a22fe77e9a49ccecda7ae4b819d"
+    },
+    "docs/reports/T22-independent-evidence/verify-native-final.py": {
+      "bytes": 1103,
+      "sha256": "cc8bdb06b87586c4ec4c93a1d4ed2386087ded887a5f2f06c0b967ed5789e7ea"
+    },
+    "docs/reports/T22-independent-verification.md": {
+      "bytes": 2223,
+      "sha256": "2b8a2238fdd526d40d172c21c9829c11621ce868a7c427d1aff3eed8c135b4f7"
+    }
+  }
+}

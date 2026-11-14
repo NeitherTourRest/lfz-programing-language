@@ -1,0 +1,12 @@
+[?9001h[?1004h[?25l[2J[m[Hlfz>[1C]0;D:\app\ANACONDA\python.exe[?25h[?25l[?9001l[?1004l:unknown
+repl: 鏈煡鍛戒护
+lfz> print("RESULT<"+input()+">")
+你好LFZ
+RESULT<浣犲ソLFZ>
+lfz> let = "中文源码"
+  File "<repl:2>", line 1
+    let = "涓枃婧愮爜"
+        ^
+SyntaxError: 杩欓噷鏈熷緟 鍙橀噺鍚嶏紝浣嗗緱鍒?'='[12;1Hlfz> :reset
+lfz> :quit
+[?25h

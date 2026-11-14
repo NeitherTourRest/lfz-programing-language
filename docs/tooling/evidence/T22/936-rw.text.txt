@@ -1,0 +1,12 @@
+lfz> :unknown
+repl: 未知命令
+lfz> print("RESULT<"+input()+">")
+你好LFZ
+RESULT<你好LFZ>
+lfz> let = "中文源码"
+  File "<repl:2>", line 1
+    let = "中文源码"
+        ^
+SyntaxError: 这里期待 变量名，但得到 '='
+lfz> :reset
+lfz> :quit

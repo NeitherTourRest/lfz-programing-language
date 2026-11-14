@@ -1,0 +1,160 @@
+{
+  "binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+  "handles": {
+    "original_cp": 936,
+    "ordinary": [
+      {
+        "type": 2,
+        "console_mode": true,
+        "mode": 503,
+        "mode_error": null
+      },
+      {
+        "type": 2,
+        "console_mode": true,
+        "mode": 3,
+        "mode_error": null
+      },
+      {
+        "type": 2,
+        "console_mode": true,
+        "mode": 3,
+        "mode_error": null
+      }
+    ],
+    "explicit_write_only": {
+      "type": 2,
+      "console_mode": false,
+      "mode": null,
+      "mode_error": 5
+    },
+    "read_write_console": {
+      "type": 2,
+      "console_mode": true,
+      "mode": 3,
+      "mode_error": null
+    }
+  },
+  "results": [
+    {
+      "cp": 437,
+      "actual_cp": 437,
+      "variant": "ordinary-out",
+      "exit": 0,
+      "text": "中文雪�",
+      "raw_sha256": "82f8c0fd5653e648fe789700f5841ec83fe36dd4870f2c2fd93170229ddfc8c2"
+    },
+    {
+      "cp": 437,
+      "actual_cp": 437,
+      "variant": "ordinary-error",
+      "exit": 2,
+      "text": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T22-verifier\\error.lfz\", line 2, in <module>\n    missing()\n    ^\nNameError: 未定义的名字 'missing'",
+      "raw_sha256": "8fc5e314ea8bed9a771d6431c22e1541eb77413cfc809a508251f472349fe10b"
+    },
+    {
+      "cp": 437,
+      "actual_cp": 437,
+      "variant": "ordinary-repl",
+      "exit": 0,
+      "text": "lfz> argv()[0]\n中文雪�                                                                                                                lfz>\n :quit",
+      "raw_sha256": "9c0e6999c4ba26f83b4b2ee2272513a09afd0570ad53e5b7a49b27be0c225a2b"
+    },
+    {
+      "cp": 437,
+      "actual_cp": 437,
+      "variant": "write-only-out",
+      "exit": 0,
+      "text": "Σ╕¡µûçΘ¢¬≡ƒÿÇ",
+      "raw_sha256": "badcc98b31ee1f2df0ebaa888cdff7749428bed4d29eda967a417ff5b8475c72"
+    },
+    {
+      "cp": 437,
+      "actual_cp": 437,
+      "variant": "write-only-error",
+      "exit": 2,
+      "text": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T22-verifier\\error.lfz\", line 2, in <module>\n    missing()\n    ^\nNameError: µ£¬σ«ÜΣ╣ëτÜäσÉìσ¡ù 'missing'",
+      "raw_sha256": "c3a817b23af391a7c88e7d80d945287bda29820fbc389e31b117761fb707ea1b"
+    },
+    {
+      "cp": 936,
+      "actual_cp": 936,
+      "variant": "ordinary-out",
+      "exit": 0,
+      "text": "中文雪�",
+      "raw_sha256": "82f8c0fd5653e648fe789700f5841ec83fe36dd4870f2c2fd93170229ddfc8c2"
+    },
+    {
+      "cp": 936,
+      "actual_cp": 936,
+      "variant": "ordinary-error",
+      "exit": 2,
+      "text": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T22-verifier\\error.lfz\", line 2, in <module>\n    missing()\n    ^\nNameError: 未定义的名字 'missing'",
+      "raw_sha256": "8fc5e314ea8bed9a771d6431c22e1541eb77413cfc809a508251f472349fe10b"
+    },
+    {
+      "cp": 936,
+      "actual_cp": 936,
+      "variant": "ordinary-repl",
+      "exit": 0,
+      "text": "lfz> argv()[0]\n中文雪�                                                                                                                lfz>\n :quit",
+      "raw_sha256": "9c0e6999c4ba26f83b4b2ee2272513a09afd0570ad53e5b7a49b27be0c225a2b"
+    },
+    {
+      "cp": 936,
+      "actual_cp": 936,
+      "variant": "write-only-out",
+      "exit": 0,
+      "text": "涓枃闆煒€",
+      "raw_sha256": "834087195b6d53f515418ff082cbfa39ef7d61f3d19e58b4bd7cd1fdaaa7319c"
+    },
+    {
+      "cp": 936,
+      "actual_cp": 936,
+      "variant": "write-only-error",
+      "exit": 2,
+      "text": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T22-verifier\\error.lfz\", line 2, in <module>\n    missing()\n    ^\nNameError: 鏈畾涔夌殑鍚嶅瓧 'missing'",
+      "raw_sha256": "b98931fef47094d70b176a3bc0f1dbd731f7a32594a71dfdf4ab40689cf56978"
+    },
+    {
+      "cp": 65001,
+      "actual_cp": 65001,
+      "variant": "ordinary-out",
+      "exit": 0,
+      "text": "中文雪�",
+      "raw_sha256": "82f8c0fd5653e648fe789700f5841ec83fe36dd4870f2c2fd93170229ddfc8c2"
+    },
+    {
+      "cp": 65001,
+      "actual_cp": 65001,
+      "variant": "ordinary-error",
+      "exit": 2,
+      "text": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T22-verifier\\error.lfz\", line 2, in <module>\n    missing()\n    ^\nNameError: 未定义的名字 'missing'",
+      "raw_sha256": "8fc5e314ea8bed9a771d6431c22e1541eb77413cfc809a508251f472349fe10b"
+    },
+    {
+      "cp": 65001,
+      "actual_cp": 65001,
+      "variant": "ordinary-repl",
+      "exit": 0,
+      "text": "lfz> argv()[0]\n中文雪�                                                                                                                lfz>\n :quit",
+      "raw_sha256": "9c0e6999c4ba26f83b4b2ee2272513a09afd0570ad53e5b7a49b27be0c225a2b"
+    },
+    {
+      "cp": 65001,
+      "actual_cp": 65001,
+      "variant": "write-only-out",
+      "exit": 0,
+      "text": "中文雪�",
+      "raw_sha256": "82f8c0fd5653e648fe789700f5841ec83fe36dd4870f2c2fd93170229ddfc8c2"
+    },
+    {
+      "cp": 65001,
+      "actual_cp": 65001,
+      "variant": "write-only-error",
+      "exit": 2,
+      "text": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T22-verifier\\error.lfz\", line 2, in <module>\n    missing()\n    ^\nNameError: 未定义的名字 'missing'",
+      "raw_sha256": "8fc5e314ea8bed9a771d6431c22e1541eb77413cfc809a508251f472349fe10b"
+    }
+  ]
+}

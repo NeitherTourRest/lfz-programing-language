@@ -1,0 +1,169 @@
+{
+  "binary": {
+    "path": "dist/lfz.exe",
+    "sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e"
+  },
+  "cases": [
+    {
+      "name": "437-rw",
+      "code_page": 437,
+      "output_handle": "rw",
+      "files": {
+        "input.bin": "437-rw.input.bin",
+        "raw.bin": "437-rw.raw.bin",
+        "text.txt": "437-rw.text.txt",
+        "result.json": "437-rw.result.json",
+        "handles.json": "437-rw.handles.json"
+      },
+      "result": {
+        "binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+        "exit": 2,
+        "strict_utf8": true,
+        "unknown_message": true,
+        "input_result": true,
+        "diagnostic_source": true,
+        "syntax_error": true
+      }
+    },
+    {
+      "name": "437-write",
+      "code_page": 437,
+      "output_handle": "write",
+      "files": {
+        "input.bin": "437-write.input.bin",
+        "raw.bin": "437-write.raw.bin",
+        "text.txt": "437-write.text.txt",
+        "result.json": "437-write.result.json",
+        "handles.json": "437-write.handles.json"
+      },
+      "result": {
+        "binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+        "exit": 2,
+        "strict_utf8": true,
+        "unknown_message": false,
+        "input_result": false,
+        "diagnostic_source": false,
+        "syntax_error": true
+      }
+    },
+    {
+      "name": "936-rw",
+      "code_page": 936,
+      "output_handle": "rw",
+      "files": {
+        "input.bin": "936-rw.input.bin",
+        "raw.bin": "936-rw.raw.bin",
+        "text.txt": "936-rw.text.txt",
+        "result.json": "936-rw.result.json",
+        "handles.json": "936-rw.handles.json"
+      },
+      "result": {
+        "binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+        "exit": 2,
+        "strict_utf8": true,
+        "unknown_message": true,
+        "input_result": true,
+        "diagnostic_source": true,
+        "syntax_error": true
+      }
+    },
+    {
+      "name": "936-write",
+      "code_page": 936,
+      "output_handle": "write",
+      "files": {
+        "input.bin": "936-write.input.bin",
+        "raw.bin": "936-write.raw.bin",
+        "text.txt": "936-write.text.txt",
+        "result.json": "936-write.result.json",
+        "handles.json": "936-write.handles.json"
+      },
+      "result": {
+        "binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+        "exit": 2,
+        "strict_utf8": true,
+        "unknown_message": false,
+        "input_result": false,
+        "diagnostic_source": false,
+        "syntax_error": true
+      }
+    },
+    {
+      "name": "65001-rw",
+      "code_page": 65001,
+      "output_handle": "rw",
+      "files": {
+        "input.bin": "65001-rw.input.bin",
+        "raw.bin": "65001-rw.raw.bin",
+        "text.txt": "65001-rw.text.txt",
+        "result.json": "65001-rw.result.json",
+        "handles.json": "65001-rw.handles.json"
+      },
+      "result": {
+        "binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+        "exit": 2,
+        "strict_utf8": true,
+        "unknown_message": true,
+        "input_result": true,
+        "diagnostic_source": true,
+        "syntax_error": true
+      }
+    },
+    {
+      "name": "65001-write",
+      "code_page": 65001,
+      "output_handle": "write",
+      "files": {
+        "input.bin": "65001-write.input.bin",
+        "raw.bin": "65001-write.raw.bin",
+        "text.txt": "65001-write.text.txt",
+        "result.json": "65001-write.result.json",
+        "handles.json": "65001-write.handles.json"
+      },
+      "result": {
+        "binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+        "exit": 2,
+        "strict_utf8": true,
+        "unknown_message": true,
+        "input_result": true,
+        "diagnostic_source": true,
+        "syntax_error": true
+      }
+    }
+  ],
+  "sha256": {
+    ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
+    "437-rw.handles.json": "5aee72320ea2361e88b88157a5bd5131f8035433c5b921ea11e202291a2deb90",
+    "437-rw.input.bin": "0082aad5eee5e8d3e4f67f94ae342b360f22efa736e41ab3e21591b7c01da60c",
+    "437-rw.raw.bin": "00b9855f5f16fcc899843751a0eec754440dab4c71889f05179797824decbdcd",
+    "437-rw.result.json": "a9c5661d57134af17bbce64e2e4907bd719a084126e415b1bd534f6a551bc229",
+    "437-rw.text.txt": "3b9d825a2f7dbbbed8a06b73b3ed952ac8c3b3b9271cc1a76817a4ecd7ba78fd",
+    "437-write.handles.json": "2695327d41d2016157d4c2e461811d9580c572190c2fbd01359e4eacac4bb2a6",
+    "437-write.input.bin": "0082aad5eee5e8d3e4f67f94ae342b360f22efa736e41ab3e21591b7c01da60c",
+    "437-write.raw.bin": "734cafc48b6225acd80dfe9463f75173528a24e19277259462cb5a32b44a2d0e",
+    "437-write.result.json": "0f7d0f984a3f724b2109c50eca676c4664c60113711bd2b07be562a30c5c7c29",
+    "437-write.text.txt": "3a808a69ad38e6e4047176babc4c0d5eaf26303a3bf070332d3472e47cb4c043",
+    "65001-rw.handles.json": "1e0c328180c2ddc703dc63ae8227c341cabb9b7e554775a41a1381e06bcde917",
+    "65001-rw.input.bin": "0082aad5eee5e8d3e4f67f94ae342b360f22efa736e41ab3e21591b7c01da60c",
+    "65001-rw.raw.bin": "00b9855f5f16fcc899843751a0eec754440dab4c71889f05179797824decbdcd",
+    "65001-rw.result.json": "a9c5661d57134af17bbce64e2e4907bd719a084126e415b1bd534f6a551bc229",
+    "65001-rw.text.txt": "3b9d825a2f7dbbbed8a06b73b3ed952ac8c3b3b9271cc1a76817a4ecd7ba78fd",
+    "65001-write.handles.json": "d1f50f8e93317ac474f173ba602f9067c3f73de4f43343077985674fbaf0ea4f",
+    "65001-write.input.bin": "0082aad5eee5e8d3e4f67f94ae342b360f22efa736e41ab3e21591b7c01da60c",
+    "65001-write.raw.bin": "00b9855f5f16fcc899843751a0eec754440dab4c71889f05179797824decbdcd",
+    "65001-write.result.json": "a9c5661d57134af17bbce64e2e4907bd719a084126e415b1bd534f6a551bc229",
+    "65001-write.text.txt": "3b9d825a2f7dbbbed8a06b73b3ed952ac8c3b3b9271cc1a76817a4ecd7ba78fd",
+    "936-rw.handles.json": "2b75c2fc41e1b906008d053dd752ba2b168921102e08a5537f3cde7fc9e9cc3b",
+    "936-rw.input.bin": "0082aad5eee5e8d3e4f67f94ae342b360f22efa736e41ab3e21591b7c01da60c",
+    "936-rw.raw.bin": "3938349f5b0f2416a5666ce126c9cb03fc74897d7438a1975ec5e9015142f222",
+    "936-rw.result.json": "a9c5661d57134af17bbce64e2e4907bd719a084126e415b1bd534f6a551bc229",
+    "936-rw.text.txt": "ac4f21e2b1016efbd4e6a65b840903210d641922b064c451bfad2a93b4bd48cc",
+    "936-write.handles.json": "12799d79ad59e6c6b0ff48e7977e424aba9f7848aee24677c9062c35431dd258",
+    "936-write.input.bin": "0082aad5eee5e8d3e4f67f94ae342b360f22efa736e41ab3e21591b7c01da60c",
+    "936-write.raw.bin": "233262d2782cf8cc930ec8af95f321332201374bc623881794142b0cf61b34ec",
+    "936-write.result.json": "0f7d0f984a3f724b2109c50eca676c4664c60113711bd2b07be562a30c5c7c29",
+    "936-write.text.txt": "4cdfe564050fa2a9da90eeecedeaf41f37c2b697d8aa36cf8b8d364fcb2c285d",
+    "conpty_compare.executed.py": "0589500e655386cd599ffdb2808217f0efe31656af170f8f90d5a8bba9557617",
+    "conpty_compare.py": "fd51220fcde3ac73547aaaabd5179bc443e6d36c31638c756fc7f0840e003d1a"
+  }
+}

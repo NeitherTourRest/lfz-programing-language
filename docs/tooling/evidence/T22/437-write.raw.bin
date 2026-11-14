@@ -1,0 +1,12 @@
+[?9001h[?1004h[?25l[2J[m[Hlfz>[1C]0;D:\app\ANACONDA\python.exe[?25h[?9001l[?1004l:unknown
+repl: µ£¬τƒÑσæ╜Σ╗ñ
+lfz> print("RESULT<"+input()+">")
+你好LFZ
+RESULT<Σ╜áσÑ╜LFZ>
+lfz> let = "中文源码"
+  File "<repl:2>", line 1
+    let = "Σ╕¡µûçµ║Éτáü"
+        ^
+SyntaxError: Φ┐ÖΘçîµ£ƒσ╛à σÅÿΘçÅσÉì∩╝îΣ╜åσ╛ùσê░ '='
+lfz> :reset
+lfz> :quit

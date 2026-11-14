@@ -1,0 +1,29 @@
+{
+  "requested_cp": 936,
+  "input_cp": 936,
+  "output_cp": 936,
+  "supported": true,
+  "handles": [
+    {
+      "device": "CONIN$",
+      "access": "0xc0000000",
+      "mode_ok": true,
+      "mode": 503,
+      "error": 0
+    },
+    {
+      "device": "CONOUT$",
+      "access": "0x40000000",
+      "mode_ok": false,
+      "mode": 0,
+      "error": 5
+    },
+    {
+      "device": "CONOUT$",
+      "access": "0x40000000",
+      "mode_ok": false,
+      "mode": 0,
+      "error": 5
+    }
+  ]
+}

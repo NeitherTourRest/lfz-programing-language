@@ -1,0 +1,9 @@
+{
+  "binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+  "exit": 2,
+  "strict_utf8": true,
+  "unknown_message": true,
+  "input_result": true,
+  "diagnostic_source": true,
+  "syntax_error": true
+}
