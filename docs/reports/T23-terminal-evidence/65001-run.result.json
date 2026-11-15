@@ -1,0 +1,12 @@
+{
+  "binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+  "exit": 0,
+  "strict_utf8": true,
+  "markers": {
+    "CASE0<中文雪>": true,
+    "CASE1<😀>": true,
+    "CASE2<𠀀>": true,
+    "CASE3<é>": true,
+    "CASE4<👩‍💻>": true
+  }
+}

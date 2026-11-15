@@ -1,0 +1,11 @@
+lfz>print("CASE0<"+argv()[0]+">")
+CASE0<中文雪>
+lfz> print("CASE1<"+argv()[1]+">")
+CASE1<😀>
+lfz> print("CASE2<"+argv()[2]+">")
+CASE2<𠀀>
+lfz> print("CASE3<"+argv()[3]+">")
+CASE3<é>
+lfz> print("CASE4<"+argv()[4]+">")
+CASE4<👩‍💻>
+lfz> :quit

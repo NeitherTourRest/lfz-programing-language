@@ -1,0 +1,88 @@
+{
+  "binary_sha256": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e",
+  "handles": {
+    "original_cp": 936,
+    "ordinary": [
+      {
+        "type": 2,
+        "console_mode": true,
+        "mode": 503,
+        "mode_error": null
+      },
+      {
+        "type": 2,
+        "console_mode": true,
+        "mode": 3,
+        "mode_error": null
+      },
+      {
+        "type": 2,
+        "console_mode": true,
+        "mode": 3,
+        "mode_error": null
+      }
+    ],
+    "explicit_write_only": {
+      "type": 2,
+      "console_mode": false,
+      "mode": null,
+      "mode_error": 5
+    },
+    "read_write_console": {
+      "type": 2,
+      "console_mode": true,
+      "mode": 3,
+      "mode_error": null
+    }
+  },
+  "results": [
+    {
+      "cp": 437,
+      "actual_cp": 437,
+      "variant": "ordinary-out",
+      "exit": 0,
+      "text": "EMOJI<�> CJK<�> BMP<中文雪>",
+      "raw_sha256": "b219ecdf6325051ab22ad67f4c9e3b4882ba648f93a14fa18615df9c425b6608"
+    },
+    {
+      "cp": 437,
+      "actual_cp": 437,
+      "variant": "wide",
+      "exit": 0,
+      "text": "EMOJI<�> CJK<�> BMP<中文雪>",
+      "raw_sha256": "b219ecdf6325051ab22ad67f4c9e3b4882ba648f93a14fa18615df9c425b6608"
+    },
+    {
+      "cp": 936,
+      "actual_cp": 936,
+      "variant": "ordinary-out",
+      "exit": 0,
+      "text": "EMOJI<�> CJK<�> BMP<中文雪>",
+      "raw_sha256": "b219ecdf6325051ab22ad67f4c9e3b4882ba648f93a14fa18615df9c425b6608"
+    },
+    {
+      "cp": 936,
+      "actual_cp": 936,
+      "variant": "wide",
+      "exit": 0,
+      "text": "EMOJI<�> CJK<�> BMP<中文雪>",
+      "raw_sha256": "b219ecdf6325051ab22ad67f4c9e3b4882ba648f93a14fa18615df9c425b6608"
+    },
+    {
+      "cp": 65001,
+      "actual_cp": 65001,
+      "variant": "ordinary-out",
+      "exit": 0,
+      "text": "EMOJI<�> CJK<�> BMP<中文雪>",
+      "raw_sha256": "b219ecdf6325051ab22ad67f4c9e3b4882ba648f93a14fa18615df9c425b6608"
+    },
+    {
+      "cp": 65001,
+      "actual_cp": 65001,
+      "variant": "wide",
+      "exit": 0,
+      "text": "EMOJI<�> CJK<�> BMP<中文雪>",
+      "raw_sha256": "b219ecdf6325051ab22ad67f4c9e3b4882ba648f93a14fa18615df9c425b6608"
+    }
+  ]
+}

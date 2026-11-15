@@ -372,3 +372,6 @@ Windows 候选 SHA-256 76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d
 
 ## T22 中文终端验证已交付（2026-11-14）
 T22 三组已推送，远端 main 实核 d05989f669ce34bc9abdf8cc5f8647e87d033d6c。95 个绑定证据文件完成 Git 字节核对，dist 仍为已冻结 76ac4cb…f11e，未重构建。普通 Windows 控制台在 CP437/936/65001 的 BMP 中文验收闭环；只写 CONOUT$ 低码页及 emoji 显示边界已记录。原用户修改保持 28/1/1，R304 OPEN。
+
+## T23 Windows 补充平面字符输出验收（2026-11-15）
+同 T21 候选 76ac4cb…f11e。私有 ConPTY 三代码页×三写入路径，五样本原始 UTF-8 标记 45/45。传统屏幕缓冲 LFZ 与 WriteConsoleW 在三种代码页逐字节一致，均回读 emoji/扩展汉字为替代字符。验证范围为本机 Unicode 输出传输，字体与图形渲染未验。无需源码修改或重构建，R304 OPEN。证据见 T23-terminal-verification.md。
