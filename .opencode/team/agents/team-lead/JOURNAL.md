@@ -375,3 +375,6 @@ T22 三组已推送，远端 main 实核 d05989f669ce34bc9abdf8cc5f8647e87d033d6
 
 ## T23 Windows 补充平面字符输出验收（2026-11-15）
 同 T21 候选 76ac4cb…f11e。私有 ConPTY 三代码页×三写入路径，五样本原始 UTF-8 标记 45/45。传统屏幕缓冲 LFZ 与 WriteConsoleW 在三种代码页逐字节一致，均回读 emoji/扩展汉字为替代字符。验证范围为本机 Unicode 输出传输，字体与图形渲染未验。无需源码修改或重构建，R304 OPEN。证据见 T23-terminal-verification.md。
+
+## T23 验证已交付（2026-11-15）
+远端 main 实核 8e5cd747ea7f4bbaeffdc844f377e2e88a2d209c，52 个证据文件逐字节核对。独立回读另核原始流的 45 个完整标记和三对原生屏幕转储，REPL 输入只有 ASCII 表达式，标记来自输出。产品候选未变，R304 OPEN。
