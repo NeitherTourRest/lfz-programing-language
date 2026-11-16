@@ -8,6 +8,14 @@
 
 > **2026-10-24 本轮补充核对（T11-12/13/14/16）**：8 项交付物位置保持齐备。当前 69 内置、494 Rust 测试（388+48+28+15+15）、130 黑盒；语言 witness 74/74，V01 干净 CWD 130/130 已独立闭环，详见 `T11-v11-reverification.md`。本地执行 `scripts/build-release.ps1` exit 0，`dist/lfz.exe` 766464 B、`lfz 1.0.1`，hello 冒烟输出 `Hello, LFZ!`；发布版 `dist/lfz.exe test --json` total/passed=130、failed/errored=0、exit 0。SHA256=`149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，原文见 `T11-v11-release-evidence/`。构建有本机 rustup canonicalize 提示，不声称零 warning。`dist/` 被忽略，仅本地刷新、不强制入库；版本仍 1.0.1，既有 8 个 tag 不变，本轮不打 v1.3.0。同题 8 盲测缺原题材料未重跑，历史 2/8 不变。下文 2026-09-27 原始计数、缺陷和历史标签信息保留其当时语境；当前状态以本补充及本轮独立报告为准。
 > **2026-10-24 v2 正式首轮补充核对**：新增[正式独立验收报告](agent-benchmark-v2/v2-20261024-r01/REVIEW.md)与[认证结果](agent-benchmark-v2/v2-20261024-r01/certified-results.json)，run-id `v2-20261024-r01`：8/8 整题、131/131 功能用例，8 份源码约束与协议审查均 PASS；学生共 9 次 LFZ 自调，各题首次自调均 exit 0（8/8），仅为自选测试辅指标。模型为会话日志确认的 `gpt-6.1-sol / medium`；隔离范围为分题无历史派发、指令约束及已记录工具审计，未声称 OS 隔离。新八题是独立 v2 基线，不以历史 2/8 计算提升。[原始字节 ZIP](agent-benchmark-v2/v2-20261024-r01/raw-inputs-submissions.zip)及其[哈希清单](agent-benchmark-v2/v2-20261024-r01/raw-archive.json)提供 Git 行尾归一化之外的原文留存。当前解释器仍为 Cargo 1.0.1 / 69 内置 / 494 Rust 测试 / 130 正式黑盒；dist 766464 B、SHA256 `149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，本轮不重编译或改 Cargo，保持冻结 pin。`v1.3.0` 交付里程碑包含已验收的 v1.1 实现、测试/指南及 v2 正式首轮认证与原始证据；Git 附注标签为发布凭据，不等同于解释器 1.0.1 的版本变更。上方“本轮不打 v1.3.0”仅描述前一批发布时点。
+## 2026-11-17 T26 回调优化候选交付
+
+Windows 候选 B 为 1119232 字节，SHA256 `7a14421320bc93d460d3be9abf48aa89b9c8091f7c6fc928ee11e860e52aa8ef`。精确候选 ZIP 为 739914 字节，SHA256 `2d831875d1a4aee967cd58c82fb7ee98fc5035034950dc779a6820450eade361`。[候选快照](../../benchmarks/t26/results/candidate-snapshot.zip)
+
+候选 B 通过 715 项 Rust release 测试、37 项公开 REPL 测试、27 项公开格式化测试及旧版全量回归。B 省去用户回调的临时参数向量，保留参数绑定与已有调用行为。原型 A 与 B 的筛选结果分别留存，B 按预定条件进入正式窗口。[回调优化与验证](T26-R304-callback-experiments.md)
+
+R304 原 19 条固定绝对线全部通过，无环境不确定项。独立复核 684 条原始记录，包括 152 次预热与 532 次正式样本。`struct_ops 8000` 为 17.5651 ms，相对原 89.4598 ms 下降 80.3654%，达到原至少 30% 降时目标。结论限定于本机、固定协议与该窗口的整体进程耗时。无正式发布或新标签。[R304 独立审计](T26-independent-verification.md) · [原始窗口](../../benchmarks/t26/results/gate-b.json)
+
 ## 2026-11-13 T21 格式化候选交付
 
 Windows `target/release/lfz.exe` 与本地 `dist/lfz.exe` 均为 1117184 字节，SHA256 `76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e`。候选 ZIP 771423 字节，SHA256 `a4c2e0650cc2dc4a27a3433a3a811b03890d99f8b229c03672bbc6f2f9f5b197`，递归 25 源码、14 Rust 测试、2 Cargo 文件和 exe 共 42 项逐字节核对。独立证据清单 72 件、工具链证据 39 件和两份实测指南也核对通过。[归档复核](T21-release-evidence/archive-verification.json)

@@ -315,3 +315,9 @@ forEachLine/76注册/预检/native-only poll/统一finish与5新unit落盘；存
 
 ### [2026-11-04] T20新增oracle修正
 首lib527/1失败因非法后置import先触发ImportOrder；仅本轮测试保原输入精确旧诊断，并新增合法import/export预检无副作用断言。evaluator049FF34A…，diff check过，未编译停源交tooling。首失败日志未动。
+
+### [2026-11-17] T26 globals 切换原型
+保存基线后仅调整 call_user，普通脚本省去 globals 保存恢复，模块和 REPL 维持 home 与返回路径。候选 FC850936…，diff check 通过，交主调度统一构建与对照。
+
+### [2026-11-17] T26 独立回调原型
+保存 A 差异，从精确基线生成 B。回调借用实参切片后逐个绑定，直接调用移动 Vec。B 982f54cd… 交主调度统一执行运行和性能验证。

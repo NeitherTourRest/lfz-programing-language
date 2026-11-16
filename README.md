@@ -1,10 +1,18 @@
 # LFZ 语言与解释器 — 程序设计课程作业
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-> 最后更新: 2026-11-14 by release-manager
+> 最后更新: 2026-11-17 by release-manager
 > 仓库地址: https://github.com/NeitherTourRest/lfz-programing-language
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
+
+## 当前候选 T26：回调优化通过 R304（2026-11-17）
+
+T26 省去用户函数回调每次分配的临时参数向量，参数值仍逐个克隆至独立参数槽。Windows 候选 B 通过 715 项 Rust release 测试、37 项公开 REPL 测试、27 项公开格式化测试及旧版全量回归。[回调优化与验证](docs/reports/T26-R304-callback-experiments.md)
+
+在本机单次正式窗口，独立复算确认 R304 原 19 条固定绝对线全部通过。`struct_ops 8000` 的中位耗时由原基线 89.4598 ms 降至 17.5651 ms，约下降 80.37%。本窗口计入启动、解析、I/O 和执行，未测峰值内存。[R304 独立审计](docs/reports/T26-independent-verification.md)
+
+候选 B 为 1119232 字节，SHA256 `7a14421320bc93d460d3be9abf48aa89b9c8091f7c6fc928ee11e860e52aa8ef`。本轮交付候选归档，无正式发布或新标签。[候选快照](benchmarks/t26/results/candidate-snapshot.zip)
 
 ## T22 Windows REPL 中文控制台验证（2026-11-14）
 
