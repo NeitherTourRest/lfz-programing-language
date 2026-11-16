@@ -1,0 +1,42 @@
+{
+  "protocol_sha256": "74934a4ebc1f2eca5a6ea00e8d6e1c39ed5a4de5315a6cb8524d076d84c9f1bb",
+  "hashes": {
+    "old": "149b184e442ffbf250590431fa0aeffab401eac526faf60b4b435f620725d5ab",
+    "t12": "47ed2bfe2a2694b11bd611172cfcf0000d0bfc58e3b9bd809ca95f066dd0261f",
+    "new": "7a14421320bc93d460d3be9abf48aa89b9c8091f7c6fc928ee11e860e52aa8ef"
+  },
+  "source_hashes": {
+    "src/ast.rs": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076",
+    "src/builtins.rs": "e05d74d076cb33928e17a7a07944db15c789a9455da67a58f056c5ce93f97a6d",
+    "src/cli.rs": "d0b34eca901cc5a240471457192980d8662d2d9797f12f6618440417a328767d",
+    "src/env.rs": "5f92a0493e651fb21aba0d7f0415caf999d3d099ff6cb385b4c08b1c558fe7dc",
+    "src/error.rs": "6081094b0c8e23e2f362d07e7401ce04ecebcbc359f6526b7feb16d01271c44f",
+    "src/evaluator.rs": "982f54cd78860fa109aa30d837fc1333428de63b16338746f4dfac8b3200db0b",
+    "src/formatter.rs": "1d5d81766b3d2be53c6e8c4b5737d76d66c6c1995eb20cdc4e3d354258a08573",
+    "src/http_control.rs": "3a2373b1422d1e845dfc188b53b2e7036af3725d22c156650ab1a6c34f09a4a2",
+    "src/json.rs": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f",
+    "src/json_codec.rs": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2",
+    "src/lexer.rs": "eb318a3d8458f667ec1917e289cd16932056a2bd62bcb8636440af1b4ae6a914",
+    "src/lib.rs": "cf9f7658009bf991db5b9d60a782d5231ee07fc988fbb60c85ab2f5e6c93274f",
+    "src/line_reader.rs": "7ab61997386a7e71b4fe90d62235500bce5cf20fe6a063619b70d3dbfa2a9b15",
+    "src/loader.rs": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f",
+    "src/main.rs": "fa68e1cec6c8abbd5bfa84736c4b35ce94cadbaca62bdabec1d2fc91f4694188",
+    "src/modules.rs": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895",
+    "src/parser.rs": "b3ad0318f0175514007ca73b33887a2cf3123b2e036c713dab282254d416e2b8",
+    "src/process_control.rs": "e8cfcc7e54d7f2fb24f9d979d6f27d79bfcb20afaa7864326b7d49f13dab0442",
+    "src/source.rs": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468",
+    "src/span.rs": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2",
+    "src/test_runner.rs": "a314790d88d4296e2cb953c7b1a565f83e4f3f2f6bec543216fe70c024f2400c",
+    "src/value.rs": "63967cb79996c7fedfe7285378e58c2774825c73680a81e50c12a185bbe438a0",
+    "Cargo.toml": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c",
+    "Cargo.lock": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4"
+  },
+  "affinity": {
+    "process_mask": 16777215,
+    "system_mask": 16777215,
+    "modified": false
+  },
+  "new_bytes": 1119232,
+  "output": "Temp/T26-perf/gate-b.json",
+  "timing_performed": false
+}

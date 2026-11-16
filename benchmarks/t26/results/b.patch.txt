@@ -1,0 +1,79 @@
+diff --git a/src/evaluator.rs b/src/evaluator.rs
+index 140abce..c0fbeea 100644
+--- a/src/evaluator.rs
++++ b/src/evaluator.rs
+@@ -655,6 +655,21 @@ enum AssignOutcome {
+ // 解释器
+ // ===========================================================================
+ 
++// Direct calls transfer their argument vector. Callbacks borrow the caller's slice.
++enum UserCallArgs<'a> {
++    Owned(Vec<Value>),
++    Borrowed(&'a [Value]),
++}
++
++impl UserCallArgs<'_> {
++    fn len(&self) -> usize {
++        match self {
++            Self::Owned(args) => args.len(),
++            Self::Borrowed(args) => args.len(),
++        }
++    }
++}
++
+ /// 树遍历解释器：模块全局环境 + 单调递增的 `func_id` 分配器 + traceback 帧栈。
+ struct Interp {
+     repl_func_limit: Option<u32>,
+@@ -1652,7 +1667,7 @@ impl Interp {
+         piped: bool,
+     ) -> R<Flow> {
+         match callee {
+-            Value::Func(cl) => Ok(Flow::Value(self.call_user(&cl, argv, span, self_override)?)),
++            Value::Func(cl) => Ok(Flow::Value(self.call_user(&cl, UserCallArgs::Owned(argv), span, self_override)?)),
+             other => Err(type_error(non_function_call_msg(&other, piped), span)),
+         }
+     }
+@@ -1664,7 +1679,7 @@ impl Interp {
+     /// 位置取**回调调用点**（内置的 `Call` 节点 span），满足「运行时错误必须带位置」。
+     fn call_value(&mut self, callee: &Value, args: &[Value], span: Span) -> R<Value> {
+         match callee {
+-            Value::Func(cl) => self.call_user(cl, args.to_vec(), span, None),
++            Value::Func(cl) => self.call_user(cl, UserCallArgs::Borrowed(args), span, None),
+             other => Err(type_error(
+                 TypeMsg::NotCallable {
+                     t: other.type_name().to_string(),
+@@ -1831,12 +1846,12 @@ impl Interp {
+     fn call_user(
+         &mut self,
+         cl: &Rc<Closure>,
+-        argv: Vec<Value>,
++        argv: UserCallArgs<'_>,
+         span: Span,
+         self_override: Option<Value>,
+     ) -> R<Value> {
+         if cl.builtin == Some("argv") {
+-            if !argv.is_empty() {
++            if argv.len() != 0 {
+                 return Err(type_error(TypeMsg::ArgCount { name: "argv".into(), n: 0, m: argv.len() }, span));
+             }
+             return Ok(Value::array(self.script_args.clone()));
+@@ -1870,8 +1885,17 @@ impl Interp {
+         if let Some(modules)=&self.modules { self.active_module=user.home_module;self.globals=Rc::clone(&modules[user.home_module.0 as usize].env); }
+         // 调用帧直接挂在 globals 之下；自由局部经捕获 cell 解析（§4.5.3）。
+         let frame = Env::child_after(&self.globals);
+-        for (p, a) in user.params.iter().zip(argv.into_iter()) {
+-            frame.borrow_mut().define_named(p, a, true);
++        match argv {
++            UserCallArgs::Owned(args) => {
++                for (param, arg) in user.params.iter().zip(args) {
++                    frame.borrow_mut().define_named(param, arg, true);
++                }
++            }
++            UserCallArgs::Borrowed(args) => {
++                for (param, arg) in user.params.iter().zip(args.iter().cloned()) {
++                    frame.borrow_mut().define_named(param, arg, true);
++                }
++            }
+         }
+         let scope = Scope {
+             env: Rc::clone(&frame),

@@ -1,0 +1,31 @@
+--- a/src/evaluator.rs
++++ b/src/evaluator.rs
+@@ -1866,8 +1866,14 @@
+             return Err(recursion(self.depth + 1, RECURSION_LIMIT, span));
+         }
+         self.depth += 1;
+-        let caller_module=self.active_module;let caller_globals=Rc::clone(&self.globals);
+-        if let Some(modules)=&self.modules { self.active_module=user.home_module;self.globals=Rc::clone(&modules[user.home_module.0 as usize].env); }
++        let caller = if let Some(modules) = &self.modules {
++            let home_globals = Rc::clone(&modules[user.home_module.0 as usize].env);
++            let caller_module = std::mem::replace(&mut self.active_module, user.home_module);
++            let caller_globals = std::mem::replace(&mut self.globals, home_globals);
++            Some((caller_module, caller_globals))
++        } else {
++            None
++        };
+         // 调用帧直接挂在 globals 之下；自由局部经捕获 cell 解析（§4.5.3）。
+         let frame = Env::child_after(&self.globals);
+         for (p, a) in user.params.iter().zip(argv.into_iter()) {
+@@ -1889,7 +1895,10 @@
+         });
+         if let Some(modules)=&self.modules { self.trace_sources.push(modules[self.active_module.0 as usize].source); }
+         let body_result = match &user.body { Body::Block(b)=>self.exec_stmts(&b.stmts,&scope),Body::Expr(e)=>self.eval_expr(e,&scope) };
+-        self.active_module=caller_module;self.globals=caller_globals;
++        if let Some((caller_module, caller_globals)) = caller {
++            self.active_module = caller_module;
++            self.globals = caller_globals;
++        }
+         let outcome = match body_result {
+             Ok(Flow::Value(v))|Ok(Flow::Return(v))=>Ok(v),Ok(_)=>Ok(Value::Nil),Err(e)=>return Err(e),
+         };

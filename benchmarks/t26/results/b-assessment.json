@@ -1,0 +1,41 @@
+{
+  "raw_sha256": "7a76bb0302dfba1be66393e07d27710b475e89bd85a9c46d3bace7fb7aa42820",
+  "samples_checked": 70,
+  "identities": {
+    "prototype": "7a14421320bc93d460d3be9abf48aa89b9c8091f7c6fc928ee11e860e52aa8ef",
+    "baseline": "76ac4cb51fe8ff1a67cd697540e483f50759e4fd67dce00636781481d492f11e"
+  },
+  "advance_to_r304_window": true,
+  "cases": {
+    "empty": {
+      "baseline_ms": 10.98185,
+      "prototype_ms": 12.17945,
+      "ratio": 1.1090526641686054,
+      "faster_pairs": 2
+    },
+    "full": {
+      "baseline_ms": 99.38905,
+      "prototype_ms": 93.51679999999999,
+      "ratio": 0.9409165295372075,
+      "faster_pairs": 6
+    },
+    "callbacks": {
+      "baseline_ms": 88.82705,
+      "prototype_ms": 84.00755000000001,
+      "ratio": 0.9457428789991338,
+      "faster_pairs": 5
+    },
+    "text_tail": {
+      "baseline_ms": 26.52145,
+      "prototype_ms": 26.8917,
+      "ratio": 1.0139603980928644,
+      "faster_pairs": 4
+    },
+    "identity": {
+      "baseline_ms": 31.077849999999998,
+      "prototype_ms": 25.869,
+      "ratio": 0.8323934892536002,
+      "faster_pairs": 6
+    }
+  }
+}
