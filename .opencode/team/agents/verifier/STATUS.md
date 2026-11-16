@@ -1,2 +1,2 @@
 # verifier 工作状态
-2026-11-15 T23独立原始证据回读完成。候选76ac4cb，三代码页、ConPTY系统对照/LFZ执行/REPL九流共45条完整UTF8输出，REPL ASCII输入不含任何实际标记。普通控制台LFZ/WriteConsoleW三对UTF16逐字节一致，原字节含U+FFFD。50个归档输入与实际执行目录SHA相同。复验脚本和结果在docs/reports/T23-independent-evidence。初读取器未处理OSC标题，修后通过。未重放产品或重编译，R304 OPEN。
+2026-11-16 T24 R304唯一完整窗口独立重算完成。原T13协议/固定阈值、当前dist76ac4cb与两基线身份、递归27源/Cargo，76组684样本（152预热532正式）输出与逐项统计均核。11通过6环境不确定2失败，struct8降75.9293%通过子目标，R304 OPEN。零产品启动，报告T24-independent-verification.md与T24-independent-evidence。收工。
