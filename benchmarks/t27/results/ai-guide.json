@@ -1,0 +1,58 @@
+{
+  "binary": "Temp\\T27\\candidate.exe",
+  "binary_bytes": 1119744,
+  "binary_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+  "inputs": {
+    "docs\\guide\\ai\\findIndex.md": "b023e4f9badbf8e0ca463ec1b5d5b0c73790a6cd3fff0734e76c175dda5fb259",
+    "docs\\guide\\ai\\examples\\05_find_index.lfz": "0ada4b580e3c124efd43d9d50d9afc6f0172fc291671c0f1efd2d724e53fbe94",
+    "docs\\guide\\ai\\examples\\06_find_index_budget.lfz": "d4db327213c986f0b60238c57e98a3dc0eee1f12885a696643204a04aba24c51"
+  },
+  "runs": [
+    {
+      "argv": [
+        "check",
+        "docs\\guide\\ai\\examples\\05_find_index.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "argv": [
+        "run",
+        "--max-steps",
+        "10000",
+        "docs\\guide\\ai\\examples\\05_find_index.lfz"
+      ],
+      "exit": 0,
+      "stdout": "findIndex witnesses passed\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "argv": [
+        "check",
+        "docs\\guide\\ai\\examples\\06_find_index_budget.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "argv": [
+        "run",
+        "--json",
+        "--max-steps",
+        "100",
+        "docs\\guide\\ai\\examples\\06_find_index_budget.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"docs\\\\guide\\\\ai\\\\examples\\\\06_find_index_budget.lfz\",\"line\":4,\"col\":9,\"traceback\":[{\"file\":\"docs\\\\guide\\\\ai\\\\examples\\\\06_find_index_budget.lfz\",\"line\":2,\"func\":\"<module>\"},{\"file\":\"docs\\\\guide\\\\ai\\\\examples\\\\06_find_index_budget.lfz\",\"line\":2,\"func\":\"<fn>\"},{\"file\":\"docs\\\\guide\\\\ai\\\\examples\\\\06_find_index_budget.lfz\",\"line\":4,\"func\":\"<fn>\"}]}\n",
+      "stderr": "",
+      "passed": true
+    }
+  ],
+  "inputs_unchanged": true
+}

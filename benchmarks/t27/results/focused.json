@@ -1,0 +1,534 @@
+{
+  "status": "completed",
+  "array_size": 16000,
+  "repeats": 40,
+  "rounds": 8,
+  "warmups": 1,
+  "settle_seconds": 1,
+  "hashes": {
+    "feature": "d752b9cc7d66622bc1403c591e520e1d0e5df5e9c0e9cc7f65efe56b951179d4",
+    "candidate": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636"
+  },
+  "cases": {
+    "join": {
+      "source": "#42\nlet parts = range(16000) |> map((i) => \"item${i}\")\nvar total = 0\nvar completed = 0\nwhile completed < 40 {\n  total += len(join(\",\", parts))\n  completed += 1\n}\nprint(total, completed)\n",
+      "sha256": "aab711457eee69376b4ade28c49892352a4007238e81b88080d3e79d9c5b879d",
+      "stdout": "5955560 40\n"
+    },
+    "join_control": {
+      "source": "#42\nlet parts = range(16000) |> map((i) => \"item${i}\")\nvar total = 0\nvar completed = 0\nwhile completed < 40 {\n  total += len(parts)\n  completed += 1\n}\nprint(total, completed)\n",
+      "sha256": "31a72afabcf94c53e0fd519f1b77c65b73fb8516ec62b44e0103a3981bb6fc14",
+      "stdout": "640000 40\n"
+    },
+    "find_first": {
+      "source": "#42\nlet items = range(16000)\nvar total = 0\nvar completed = 0\nwhile completed < 40 {\n  total += items |> findIndex((x) => x == 0)\n  completed += 1\n}\nprint(total, completed)\n",
+      "sha256": "a00500df615f7f6a657980f7aeb4e2d302ae9ab418199f4ddd43881ffe54c3dd",
+      "stdout": "0 40\n"
+    },
+    "filter_first": {
+      "source": "#42\nlet items = range(16000)\nvar total = 0\nvar completed = 0\nwhile completed < 40 {\n  total += (items |> filter((x) => x == 0))[0]\n  completed += 1\n}\nprint(total, completed)\n",
+      "sha256": "8c3b2c8dec10e1035adbbbf05422c1aecaffe2fc55fec60081c8c5312a039ec0",
+      "stdout": "0 40\n"
+    }
+  },
+  "samples": [
+    {
+      "round": -1,
+      "binary": "candidate",
+      "case": "filter_first",
+      "elapsed_ms": 226.0133,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": -1,
+      "binary": "candidate",
+      "case": "join",
+      "elapsed_ms": 24.5217,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": -1,
+      "binary": "candidate",
+      "case": "join_control",
+      "elapsed_ms": 18.7712,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": -1,
+      "binary": "candidate",
+      "case": "find_first",
+      "elapsed_ms": 17.4087,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": -1,
+      "binary": "feature",
+      "case": "join_control",
+      "elapsed_ms": 29.4711,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": -1,
+      "binary": "feature",
+      "case": "join",
+      "elapsed_ms": 42.4643,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "feature",
+      "case": "join",
+      "elapsed_ms": 31.5539,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "feature",
+      "case": "join_control",
+      "elapsed_ms": 26.0717,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "candidate",
+      "case": "join",
+      "elapsed_ms": 42.1701,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "candidate",
+      "case": "join_control",
+      "elapsed_ms": 21.8282,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "candidate",
+      "case": "find_first",
+      "elapsed_ms": 14.6911,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 0,
+      "binary": "candidate",
+      "case": "filter_first",
+      "elapsed_ms": 156.5587,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "candidate",
+      "case": "join_control",
+      "elapsed_ms": 22.0688,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "candidate",
+      "case": "find_first",
+      "elapsed_ms": 16.0834,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "candidate",
+      "case": "filter_first",
+      "elapsed_ms": 124.9589,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "candidate",
+      "case": "join",
+      "elapsed_ms": 33.2484,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "feature",
+      "case": "join_control",
+      "elapsed_ms": 25.2875,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "binary": "feature",
+      "case": "join",
+      "elapsed_ms": 32.3984,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "feature",
+      "case": "join",
+      "elapsed_ms": 32.7793,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "feature",
+      "case": "join_control",
+      "elapsed_ms": 26.5755,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "candidate",
+      "case": "find_first",
+      "elapsed_ms": 22.0412,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "candidate",
+      "case": "filter_first",
+      "elapsed_ms": 142.8794,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "candidate",
+      "case": "join",
+      "elapsed_ms": 28.1986,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "binary": "candidate",
+      "case": "join_control",
+      "elapsed_ms": 22.3938,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "candidate",
+      "case": "filter_first",
+      "elapsed_ms": 143.0358,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "candidate",
+      "case": "join",
+      "elapsed_ms": 28.8113,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "candidate",
+      "case": "join_control",
+      "elapsed_ms": 23.0769,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "candidate",
+      "case": "find_first",
+      "elapsed_ms": 19.0989,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "feature",
+      "case": "join_control",
+      "elapsed_ms": 21.3806,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "binary": "feature",
+      "case": "join",
+      "elapsed_ms": 33.8762,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "feature",
+      "case": "join",
+      "elapsed_ms": 34.312,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "feature",
+      "case": "join_control",
+      "elapsed_ms": 20.4078,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "candidate",
+      "case": "join",
+      "elapsed_ms": 25.1948,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "candidate",
+      "case": "join_control",
+      "elapsed_ms": 21.4356,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "candidate",
+      "case": "find_first",
+      "elapsed_ms": 18.798,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "binary": "candidate",
+      "case": "filter_first",
+      "elapsed_ms": 143.9994,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "candidate",
+      "case": "join_control",
+      "elapsed_ms": 27.6344,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "candidate",
+      "case": "find_first",
+      "elapsed_ms": 22.6563,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "candidate",
+      "case": "filter_first",
+      "elapsed_ms": 132.8617,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "candidate",
+      "case": "join",
+      "elapsed_ms": 29.5053,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "feature",
+      "case": "join_control",
+      "elapsed_ms": 25.6642,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "binary": "feature",
+      "case": "join",
+      "elapsed_ms": 36.9886,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "feature",
+      "case": "join",
+      "elapsed_ms": 37.4118,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "feature",
+      "case": "join_control",
+      "elapsed_ms": 24.7448,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "candidate",
+      "case": "find_first",
+      "elapsed_ms": 30.4713,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "candidate",
+      "case": "filter_first",
+      "elapsed_ms": 133.7953,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "candidate",
+      "case": "join",
+      "elapsed_ms": 34.5826,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "binary": "candidate",
+      "case": "join_control",
+      "elapsed_ms": 26.1817,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 7,
+      "binary": "candidate",
+      "case": "filter_first",
+      "elapsed_ms": 131.0307,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 7,
+      "binary": "candidate",
+      "case": "join",
+      "elapsed_ms": 27.6891,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 7,
+      "binary": "candidate",
+      "case": "join_control",
+      "elapsed_ms": 23.466,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 7,
+      "binary": "candidate",
+      "case": "find_first",
+      "elapsed_ms": 27.577,
+      "exit": 0,
+      "stdout": "0 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 7,
+      "binary": "feature",
+      "case": "join_control",
+      "elapsed_ms": 23.5377,
+      "exit": 0,
+      "stdout": "640000 40\n",
+      "stderr": ""
+    },
+    {
+      "round": 7,
+      "binary": "feature",
+      "case": "join",
+      "elapsed_ms": 29.8699,
+      "exit": 0,
+      "stdout": "5955560 40\n",
+      "stderr": ""
+    }
+  ],
+  "median_ms": {
+    "feature": {
+      "join": 33.327749999999995,
+      "join_control": 25.016150000000003
+    },
+    "candidate": {
+      "join": 29.158299999999997,
+      "join_control": 22.735349999999997,
+      "find_first": 20.570050000000002,
+      "filter_first": 138.33735000000001
+    }
+  }
+}

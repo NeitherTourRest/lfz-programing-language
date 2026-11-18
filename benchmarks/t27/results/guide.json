@@ -1,0 +1,54 @@
+{
+  "binary_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+  "binary_bytes": 1119744,
+  "final_binary_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+  "docs": {
+    "docs/guide/find-index.md": "273fd5409c90ffc05df2dc1748d10f41bbd7dc2ac094c91f249d57a78b3f7864",
+    "docs/guide/examples/find-index.lfz": "a564654ac7101ca2f3d6b88275c50252fbf7d92ccdb94e0023f8b4ee07d93b68",
+    "docs/guide/examples/find-index-budget.lfz": "4bbb3b28f20847a6e00e045b1d8c518e6a7a5f8e36d41e4e75a18491323ab4a2"
+  },
+  "final_docs": {
+    "docs/guide/find-index.md": "273fd5409c90ffc05df2dc1748d10f41bbd7dc2ac094c91f249d57a78b3f7864",
+    "docs/guide/examples/find-index.lfz": "a564654ac7101ca2f3d6b88275c50252fbf7d92ccdb94e0023f8b4ee07d93b68",
+    "docs/guide/examples/find-index-budget.lfz": "4bbb3b28f20847a6e00e045b1d8c518e6a7a5f8e36d41e4e75a18491323ab4a2"
+  },
+  "passed": 3,
+  "runs": [
+    {
+      "name": "check",
+      "args": [
+        "check",
+        "docs/guide/examples/find-index.lfz"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "examples",
+      "args": [
+        "run",
+        "docs/guide/examples/find-index.lfz"
+      ],
+      "exit": 0,
+      "stdout": "findIndex examples ok\n",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "name": "budget",
+      "args": [
+        "--json",
+        "--max-steps",
+        "200",
+        "run",
+        "docs/guide/examples/find-index-budget.lfz"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"docs/guide/examples/find-index-budget.lfz\",\"line\":3,\"col\":11,\"traceback\":[{\"file\":\"docs/guide/examples/find-index-budget.lfz\",\"line\":6,\"func\":\"<module>\"},{\"file\":\"docs/guide/examples/find-index-budget.lfz\",\"line\":6,\"func\":\"<fn>\"},{\"file\":\"docs/guide/examples/find-index-budget.lfz\",\"line\":3,\"func\":\"spin\"}]}\n",
+      "stderr": "",
+      "pass": true
+    }
+  ]
+}

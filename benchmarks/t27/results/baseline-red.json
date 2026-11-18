@@ -1,0 +1,11 @@
+{
+  "binary": "dist/lfz.exe",
+  "sha256": "7a14421320bc93d460d3be9abf48aa89b9c8091f7c6fc928ee11e860e52aa8ef",
+  "argv": [
+    "run",
+    "--json",
+    "tests/lfz/test_find_index.lfz"
+  ],
+  "exit": 2,
+  "stdout": "{\"ok\":false,\"error\":\"NameError\",\"message\":\"未定义的名字 'findIndex'\",\"file\":\"tests/lfz/test_find_index.lfz\",\"line\":3,\"col\":8,\"traceback\":[{\"file\":\"tests/lfz/test_find_index.lfz\",\"line\":3,\"func\":\"<module>\"}]}"
+}

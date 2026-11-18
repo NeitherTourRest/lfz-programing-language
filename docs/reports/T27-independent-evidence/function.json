@@ -1,0 +1,125 @@
+{
+  "passed": [
+    "argument-order-and-priority",
+    "nested-reentrant-search",
+    "member-dispatch",
+    "callback-nonbool-source",
+    "join-empty-delimiter-and-priority",
+    "resource-error-not-catchable"
+  ],
+  "runs": [
+    {
+      "sha": "d752b9cc7d66622bc1403c591e520e1d0e5df5e9c0e9cc7f65efe56b951179d4",
+      "argv": [
+        "-e",
+        "var log=[]\nfn p() { log=push(\"P\",log)\n return 0 }\nfn xs() { log=push(\"A\",log)\n return false }\nlet e=attempt(()=>findIndex(p(),xs()))\nlet f=attempt(()=>findIndex(0,[]))\nprint(jsonStringify(log))\nprint(e.error.message == f.error.message)\n"
+      ],
+      "exit": 0,
+      "stdout": "[\"P\",\"A\"]\ntrue\n",
+      "stderr": ""
+    },
+    {
+      "sha": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "argv": [
+        "-e",
+        "var log=[]\nfn p() { log=push(\"P\",log)\n return 0 }\nfn xs() { log=push(\"A\",log)\n return false }\nlet e=attempt(()=>findIndex(p(),xs()))\nlet f=attempt(()=>findIndex(0,[]))\nprint(jsonStringify(log))\nprint(e.error.message == f.error.message)\n"
+      ],
+      "exit": 0,
+      "stdout": "[\"P\",\"A\"]\ntrue\n",
+      "stderr": ""
+    },
+    {
+      "sha": "d752b9cc7d66622bc1403c591e520e1d0e5df5e9c0e9cc7f65efe56b951179d4",
+      "argv": [
+        "-e",
+        "let xs=[1,2,3]\nlet nested=(x)=>findIndex((y)=>x+y==5,xs)!=nil\nprint(findIndex(nested,xs))\n"
+      ],
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    {
+      "sha": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "argv": [
+        "-e",
+        "let xs=[1,2,3]\nlet nested=(x)=>findIndex((y)=>x+y==5,xs)!=nil\nprint(findIndex(nested,xs))\n"
+      ],
+      "exit": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    {
+      "sha": "d752b9cc7d66622bc1403c591e520e1d0e5df5e9c0e9cc7f65efe56b951179d4",
+      "argv": [
+        "-e",
+        "let obj={findIndex:(x)=>x+2}\nlet key=\"findIndex\"\nprint(obj.findIndex(3))\nprint(obj[key](4))\n"
+      ],
+      "exit": 0,
+      "stdout": "5\n6\n",
+      "stderr": ""
+    },
+    {
+      "sha": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "argv": [
+        "-e",
+        "let obj={findIndex:(x)=>x+2}\nlet key=\"findIndex\"\nprint(obj.findIndex(3))\nprint(obj[key](4))\n"
+      ],
+      "exit": 0,
+      "stdout": "5\n6\n",
+      "stderr": ""
+    },
+    {
+      "sha": "d752b9cc7d66622bc1403c591e520e1d0e5df5e9c0e9cc7f65efe56b951179d4",
+      "argv": [
+        "-e",
+        "fn bad(x) { nil }\nfn a() { findIndex(bad,[1]) }\nlet result=attempt(a)\nprint(result.error.line)\nprint(result.error.col)\nprint(result.error[\"class\"])\n"
+      ],
+      "exit": 0,
+      "stdout": "2\n10\nTypeError\n",
+      "stderr": ""
+    },
+    {
+      "sha": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "argv": [
+        "-e",
+        "fn bad(x) { nil }\nfn a() { findIndex(bad,[1]) }\nlet result=attempt(a)\nprint(result.error.line)\nprint(result.error.col)\nprint(result.error[\"class\"])\n"
+      ],
+      "exit": 0,
+      "stdout": "2\n10\nTypeError\n",
+      "stderr": ""
+    },
+    {
+      "sha": "d752b9cc7d66622bc1403c591e520e1d0e5df5e9c0e9cc7f65efe56b951179d4",
+      "argv": [
+        "-e",
+        "print(jsonStringify(join(\"\",[\"\", \"𠀀\", \"雪\", \"\"])))\nlet e=attempt(()=>join(1,[false]))\nlet f=attempt(()=>join(1,[]))\nlet p=attempt(()=>join(\"-\",[\"x\",false,17]))\nlet q=attempt(()=>join(\"-\",[false]))\nprint(e.error.message == f.error.message)\nprint(p.error.message == q.error.message)\n"
+      ],
+      "exit": 0,
+      "stdout": "\"𠀀雪\"\ntrue\ntrue\n",
+      "stderr": ""
+    },
+    {
+      "sha": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "argv": [
+        "-e",
+        "print(jsonStringify(join(\"\",[\"\", \"𠀀\", \"雪\", \"\"])))\nlet e=attempt(()=>join(1,[false]))\nlet f=attempt(()=>join(1,[]))\nlet p=attempt(()=>join(\"-\",[\"x\",false,17]))\nlet q=attempt(()=>join(\"-\",[false]))\nprint(e.error.message == f.error.message)\nprint(p.error.message == q.error.message)\n"
+      ],
+      "exit": 0,
+      "stdout": "\"𠀀雪\"\ntrue\ntrue\n",
+      "stderr": ""
+    },
+    {
+      "sha": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "argv": [
+        "--json",
+        "--max-steps",
+        "100",
+        "-e",
+        "let bad=attempt(()=>findIndex((x)=>{while true {\n  x+1\n }},[1]))\nprint(\"continued\")\n"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":2,\"col\":3,\"traceback\":[{\"file\":\"<command>\",\"line\":1,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":1,\"func\":\"<fn>\"},{\"file\":\"<command>\",\"line\":2,\"func\":\"<fn>\"}]}\n",
+      "stderr": ""
+    }
+  ]
+}

@@ -1,0 +1,401 @@
+{
+  "protocol_sha256": "74934a4ebc1f2eca5a6ea00e8d6e1c39ed5a4de5315a6cb8524d076d84c9f1bb",
+  "raw_sha256": "a0ae7a73f0cb44a1e2b04c90a647bf690969bbb285ad885ff917b3ed0ab6d8cd",
+  "receipt_sha256": "a2726e6f518957f1578d1123ea2daaef777705eb159918c23f1d3559bdc4fa55",
+  "candidate_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+  "source_files_verified": 27,
+  "groups": 76,
+  "samples": {
+    "warmup": 152,
+    "formal": 532
+  },
+  "absolute": {
+    "PASS": 16,
+    "FAIL": 2,
+    "ENVIRONMENT_INDETERMINATE": 1
+  },
+  "cases": [
+    {
+      "name": "noop",
+      "n": 0,
+      "original": 11.307,
+      "limit": 16.307000000000002,
+      "median": {
+        "old": 14.982,
+        "t12": 15.5887,
+        "new": 15.7145
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "numeric_loop",
+      "n": 10000,
+      "original": 12.9676,
+      "limit": 17.967599999999997,
+      "median": {
+        "t12": 17.4534,
+        "new": 18.4975,
+        "old": 13.8461
+      },
+      "status": "FAIL"
+    },
+    {
+      "name": "numeric_loop",
+      "n": 100000,
+      "original": 32.3154,
+      "limit": 38.778479999999995,
+      "median": {
+        "new": 32.218,
+        "old": 33.8726,
+        "t12": 34.6025
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "numeric_loop",
+      "n": 500000,
+      "original": 109.5807,
+      "limit": 131.49684,
+      "median": {
+        "old": 112.257,
+        "t12": 94.3988,
+        "new": 99.8333
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "array_builtins",
+      "n": 1000,
+      "original": 12.2102,
+      "limit": 17.2102,
+      "median": {
+        "t12": 13.4916,
+        "new": 17.1744,
+        "old": 15.2655
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "array_builtins",
+      "n": 10000,
+      "original": 17.7717,
+      "limit": 22.7717,
+      "median": {
+        "new": 19.7039,
+        "old": 21.3439,
+        "t12": 21.463
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "array_builtins",
+      "n": 50000,
+      "original": 43.5882,
+      "limit": 52.305839999999996,
+      "median": {
+        "old": 43.8426,
+        "t12": 43.8615,
+        "new": 44.2948
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "struct_ops",
+      "n": 2000,
+      "original": 17.4452,
+      "limit": 22.4452,
+      "median": {
+        "t12": 15.6408,
+        "new": 18.2442,
+        "old": 25.6
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "struct_ops",
+      "n": 4000,
+      "original": 31.5587,
+      "limit": 37.87044,
+      "median": {
+        "new": 18.9898,
+        "old": 38.343,
+        "t12": 20.0942
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "struct_ops",
+      "n": 8000,
+      "original": 89.4598,
+      "limit": 107.35176,
+      "median": {
+        "old": 99.6032,
+        "t12": 22.024,
+        "new": 22.1641
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "string_ops",
+      "n": 2000,
+      "original": 23.9022,
+      "limit": 28.9022,
+      "median": {
+        "t12": 32.3668,
+        "new": 40.3671,
+        "old": 28.6862
+      },
+      "status": "FAIL"
+    },
+    {
+      "name": "string_ops",
+      "n": 4000,
+      "original": 84.9204,
+      "limit": 101.90447999999999,
+      "median": {
+        "new": 87.5574,
+        "old": 73.0679,
+        "t12": 85.528
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "string_ops",
+      "n": 8000,
+      "original": 196.9606,
+      "limit": 236.35271999999998,
+      "median": {
+        "old": 190.4141,
+        "t12": 236.1241,
+        "new": 200.7778
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "string_map",
+      "n": 2000,
+      "original": 12.5219,
+      "limit": 17.521900000000002,
+      "median": {
+        "t12": 14.4363,
+        "new": 15.5722,
+        "old": 16.2932
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "string_map",
+      "n": 4000,
+      "original": 18.0626,
+      "limit": 23.0626,
+      "median": {
+        "new": 17.9904,
+        "old": 19.5684,
+        "t12": 18.4345
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "string_map",
+      "n": 8000,
+      "original": 17.5214,
+      "limit": 22.5214,
+      "median": {
+        "old": 23.5313,
+        "t12": 22.9913,
+        "new": 23.9812
+      },
+      "status": "ENVIRONMENT_INDETERMINATE"
+    },
+    {
+      "name": "struct_small",
+      "n": 4,
+      "original": 13.7462,
+      "limit": 18.7462,
+      "median": {
+        "t12": 14.1612,
+        "new": 16.8096,
+        "old": 18.1279
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "struct_small",
+      "n": 16,
+      "original": 28.8616,
+      "limit": 34.633919999999996,
+      "median": {
+        "new": 29.975,
+        "old": 31.3649,
+        "t12": 28.8364
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "struct_small",
+      "n": 64,
+      "original": 65.2589,
+      "limit": 78.31067999999999,
+      "median": {
+        "old": 72.984,
+        "t12": 65.0594,
+        "new": 67.2255
+      },
+      "status": "PASS"
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "json_parse",
+      "n": 2000,
+      "median": {
+        "t12": 28.2891,
+        "new": 27.3515
+      }
+    },
+    {
+      "name": "json_stringify",
+      "n": 2000,
+      "median": {
+        "new": 19.4332,
+        "t12": 18.5037
+      }
+    },
+    {
+      "name": "json_parse",
+      "n": 4000,
+      "median": {
+        "t12": 39.9329,
+        "new": 42.3086
+      }
+    },
+    {
+      "name": "json_stringify",
+      "n": 4000,
+      "median": {
+        "new": 23.6494,
+        "t12": 24.0683
+      }
+    },
+    {
+      "name": "json_parse",
+      "n": 8000,
+      "median": {
+        "t12": 68.1541,
+        "new": 67.6148
+      }
+    },
+    {
+      "name": "json_stringify",
+      "n": 8000,
+      "median": {
+        "new": 28.7246,
+        "t12": 28.7738
+      }
+    },
+    {
+      "name": "cli_eval",
+      "n": 0,
+      "median": {
+        "t12": 15.4603,
+        "new": 11.7267
+      }
+    },
+    {
+      "name": "cli_stdin",
+      "n": 0,
+      "median": {
+        "new": 16.4511,
+        "t12": 15.2449
+      }
+    },
+    {
+      "name": "cli_argv",
+      "n": 0,
+      "median": {
+        "t12": 13.6638,
+        "new": 14.6914
+      }
+    }
+  ],
+  "struct8": {
+    "target_ms": 62.62186,
+    "original_ms": 89.4598,
+    "candidate_ms": 22.1641,
+    "reduction_percent": 75.2245142510938
+  },
+  "dist_probe_median_ms": 105.5814,
+  "measurement_gate": "FAIL",
+  "json_scaling": {
+    "json_parse": {
+      "totals_ms": [
+        27.3515,
+        42.3086,
+        67.6148
+      ],
+      "near_net_ms": [
+        11.637000000000002,
+        26.594099999999997,
+        51.9003
+      ],
+      "startup_share": [
+        0.5745388735535527,
+        0.37142566759476797,
+        0.23241213462141422
+      ],
+      "eligible": [
+        false,
+        true,
+        true
+      ],
+      "eligible_doubling_ratios": [
+        null,
+        1.951571965210329
+      ]
+    },
+    "json_stringify": {
+      "totals_ms": [
+        19.4332,
+        23.6494,
+        28.7246
+      ],
+      "near_net_ms": [
+        3.7187,
+        7.934900000000001,
+        13.0101
+      ],
+      "startup_share": [
+        0.8086419117798407,
+        0.6644777457356211,
+        0.5470746328930604
+      ],
+      "eligible": [
+        false,
+        false,
+        false
+      ],
+      "eligible_doubling_ratios": [
+        null,
+        null
+      ]
+    }
+  },
+  "startup_ms": 15.7145,
+  "focus": {
+    "sha256": "aee9fbdc5d9f86fcd05c4317a565373c554cdc0c132c6ec764101bb15546f027",
+    "samples": 54,
+    "median_ms": {
+      "feature": {
+        "join": 33.327749999999995,
+        "join_control": 25.016150000000003
+      },
+      "candidate": {
+        "join": 29.158299999999997,
+        "join_control": 22.735349999999997,
+        "find_first": 20.570050000000002,
+        "filter_first": 138.33735000000001
+      }
+    }
+  },
+  "candidate_zip_sha256": "9aa771a16896f10fd9203bf60be0b854ed21b81390ff17b0cbc7b3fcf7aaad59"
+}
