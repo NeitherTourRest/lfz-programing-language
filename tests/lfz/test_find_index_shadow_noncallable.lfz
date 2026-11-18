@@ -1,0 +1,4 @@
+#42
+let findIndex = 1
+let result = attempt(() => findIndex((x) => true, [1]))
+assert(!result.ok && result.error["class"] == "TypeError", "noncallable binding blocks builtin fallback")

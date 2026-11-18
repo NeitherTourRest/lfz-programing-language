@@ -1,4 +1,4 @@
-//! 内置函数表（`data-last`，已实现 **76 个**；非高阶 65 + 高阶 7 + Interp特殊4；含已授权文件 IO 三项）。
+//! 内置函数表（`data-last`，已实现 **77 个**；非高阶 65 + 高阶 8 + Interp特殊4；含已授权文件 IO 三项）。
 //!
 //! 单一事实源（本模块**只读消费**，不得偏离）：
 //! - `docs/spec/interface-contract.md` §10.7（内置表 + 「数值内置形参加宽」规范性补钉）、§8.1（错误类 ↔ 变体）、
@@ -106,10 +106,10 @@ impl Builtin {
     }
 }
 
-/// §10.7 全表 **54 个**内置名（字母序；= [`TABLE`] 的 47 个非高阶 + [`HOF_TABLE`] 的 7 个高阶）。
+/// 按字母序列出 77 个内置名，包括 [`TABLE`] 的 65 个普通内置、[`HOF_TABLE`] 的 8 个高阶内置及 4 个求值器专用内置。
 pub const BUILTIN_NAMES: &[&str] = &[
     "abs", "appendFile", "argv", "assert", "attempt", "ceil", "check", "chr", "contains", "cos", "del", "div", "drop", "each",
-    "endsWith", "entries", "eprint", "exec", "exp", "fail", "filter", "float", "floor", "forEachLine", "has", "httpRequest", "indexOf",
+    "endsWith", "entries", "eprint", "exec", "exp", "fail", "filter", "findIndex", "float", "floor", "forEachLine", "has", "httpRequest", "indexOf",
     "input", "insert", "int", "join", "jsonParse", "jsonStringify", "keys", "len", "log", "lower", "map", "max", "maxBy",
     "min", "minBy", "ord", "padEnd", "padStart", "pop", "pow", "print", "push", "rand", "randInt",
     "range", "readFile", "reduce", "removeAt", "repeat", "replace", "round", "seed", "sin", "slice", "sort", "sortBy",
@@ -242,12 +242,13 @@ impl Hof {
 
 /// 高阶内置名（字母序；与 [`HOF_TABLE`] 逐项对应）。
 pub const HOF_NAMES: &[&str] =
-    &["each", "filter", "map", "maxBy", "minBy", "reduce", "sortBy"];
+    &["each", "filter", "findIndex", "map", "maxBy", "minBy", "reduce", "sortBy"];
 
 /// 高阶内置函数表（字母序；签名 / 语义见 §10.7）。
-static HOF_TABLE: [Hof; 7] = [
+static HOF_TABLE: [Hof; 8] = [
     Hof { name: "each", min_args: 2, max_args: 2, func: h_each },
     Hof { name: "filter", min_args: 2, max_args: 2, func: h_filter },
+    Hof { name: "findIndex", min_args: 2, max_args: 2, func: h_find_index },
     Hof { name: "map", min_args: 2, max_args: 2, func: h_map },
     Hof { name: "maxBy", min_args: 2, max_args: 2, func: h_max_by },
     Hof { name: "minBy", min_args: 2, max_args: 2, func: h_min_by },
@@ -824,6 +825,31 @@ fn h_filter(args: &[Value], span: Span, call: Invoke<'_>) -> R<Value> {
     Ok(Value::array(out))
 }
 
+/// `findIndex(pred, xs) -> int | nil`：首次匹配的浅快照索引。
+fn h_find_index(args: &[Value], span: Span, call: Invoke<'_>) -> R<Value> {
+    let pred = need_func("findIndex", args, 0, span)?;
+    let snapshot = array_snapshot("findIndex", args, 1, span)?;
+    for (index, item) in snapshot.iter().enumerate() {
+        match call(pred, std::slice::from_ref(item), span)? {
+            Value::Bool(true) => {
+                return i64::try_from(index)
+                    .map(Value::Int)
+                    .map_err(|_| overflow(span, OverflowMsg::IntegerOutOfRange));
+            }
+            Value::Bool(false) => {}
+            other => {
+                return Err(type_error(
+                    TypeMsg::ConditionNotBool {
+                        t: other.type_name().to_string(),
+                    },
+                    span,
+                ));
+            }
+        }
+    }
+    Ok(Value::Nil)
+}
+
 /// `reduce(f, init, xs) -> value`：左折叠 `acc = f(acc, x)`（**左→右**求值序，B1）。
 ///
 /// 空数组 → 直接返回 `init`（不调用 `f`）。
@@ -1004,9 +1030,9 @@ fn b_split(args: &[Value], span: Span) -> R<Value> {
 fn b_join(args: &[Value], span: Span) -> R<Value> {
     let sep = need_str("join", args, 0, span)?;
     let xs = need_array("join", args, 1, span)?;
-    let items = xs.borrow().to_vec();
+    let items = xs.borrow();
     let mut strs: Vec<&str> = Vec::with_capacity(items.len());
-    for v in &items {
+    for v in items.iter() {
         match v {
             Value::Str(s) => strs.push(s.as_str()),
             _ => return Err(bad_operands("join", v, "string", span)),
@@ -2230,7 +2256,7 @@ mod tests {
         assert!(is_builtin("push"));
         assert!(!is_builtin("nope"));
         assert!(lookup("nope").is_none());
-        assert_eq!(BUILTIN_NAMES.len(), 76);
+        assert_eq!(BUILTIN_NAMES.len(), 77);
         // 字母序。
         let mut sorted = BUILTIN_NAMES.to_vec();
         sorted.sort_unstable();
@@ -2238,7 +2264,7 @@ mod tests {
         // 无重复。
         let mut dedup = sorted.clone();
         dedup.dedup();
-        assert_eq!(dedup.len(), 76);
+        assert_eq!(dedup.len(), 77);
         // 两表（非高阶 + 高阶）名字并集与全表名单逐项一致。
         let mut table_names: Vec<&str> = TABLE.iter().map(|b| b.name).collect();
         table_names.extend(HOF_TABLE.iter().map(|h| h.name));
@@ -2251,8 +2277,8 @@ mod tests {
         // HOF_NAMES 与 HOF_TABLE 逐项一致。
         let hof_names: Vec<&str> = HOF_TABLE.iter().map(|h| h.name).collect();
         assert_eq!(hof_names.as_slice(), HOF_NAMES);
-        // §10.7 v1.1 全部 72 个（65 非高阶 + 7 高阶）。
-        assert_eq!(TABLE.len() + HOF_TABLE.len(), 72);
+        // 65 个普通内置加 8 个高阶内置。
+        assert_eq!(TABLE.len() + HOF_TABLE.len(), 73);
     }
 
     #[test]
@@ -2262,7 +2288,7 @@ mod tests {
             assert!(is_builtin(name), "{name} 应为内置");
             assert!(lookup(name).is_none(), "{name} 属高阶表，不在非高阶表");
         }
-        assert_eq!(HOF_NAMES.len(), 7);
+        assert_eq!(HOF_NAMES.len(), 8);
     }
 
     #[test]
@@ -2362,6 +2388,65 @@ mod tests {
         let e = hof("filter", &[fnval(), arr(vec![i(1)])], |_, _, _| Ok(i(1))).unwrap_err();
         assert_eq!(e.class_name(), "TypeError");
         assert_eq!(e.message(), "条件必须是 bool，得到 int");
+    }
+
+    #[test]
+    fn hof_find_index_uses_snapshot_and_stops_at_first_match() {
+        let original = arr(vec![i(5), i(7), i(7)]);
+        let shared = original.as_array().unwrap();
+        let mut seen = Vec::new();
+        let found = hof("findIndex", &[fnval(), original.clone()], |_, args, _| {
+            let item = args[0].as_int().unwrap();
+            seen.push(item);
+            shared.borrow_mut().clear();
+            Ok(Value::Bool(item == 7))
+        })
+        .unwrap();
+        assert_eq!(found.as_int(), Some(1));
+        assert_eq!(seen, vec![5, 7]);
+        assert!(shared.borrow().is_empty());
+    }
+
+    #[test]
+    fn hof_find_index_handles_first_match_and_nil_results() {
+        let first = hof("findIndex", &[fnval(), arr(vec![i(9)])], |_, _, _| {
+            Ok(Value::Bool(true))
+        })
+        .unwrap();
+        assert_eq!(first.as_int(), Some(0));
+        let missing = hof("findIndex", &[fnval(), arr(vec![i(9)])], |_, _, _| {
+            Ok(Value::Bool(false))
+        })
+        .unwrap();
+        assert!(matches!(missing, Value::Nil));
+        let empty = hof("findIndex", &[fnval(), arr(vec![])], |_, _, _| {
+            panic!("空数组不应调用谓词")
+        })
+        .unwrap();
+        assert!(matches!(empty, Value::Nil));
+    }
+
+    #[test]
+    fn hof_find_index_preserves_callback_error_and_checks_bool() {
+        let args = [fnval(), arr(vec![i(1)])];
+        let non_bool = hof("findIndex", &args, |_, _, _| Ok(i(1))).unwrap_err();
+        assert_eq!(non_bool.message(), "条件必须是 bool，得到 int");
+        assert_eq!(non_bool.span(), Some(Span::START));
+        let callback_span = Span::new(9, 4);
+        let failure = hof("findIndex", &args, |_, _, _| {
+            Err(crate::error::execution_limit(
+                crate::error::ExecutionLimitReason::StepBudget,
+                callback_span,
+            ))
+        })
+        .unwrap_err();
+        assert!(matches!(
+            *failure,
+            crate::error::LzError::ExecutionLimit {
+                reason: crate::error::ExecutionLimitReason::StepBudget,
+                span,
+            } if span == callback_span
+        ));
     }
 
     #[test]

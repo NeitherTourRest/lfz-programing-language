@@ -1,0 +1,73 @@
+#42
+// T27 §28 public assertions. Run with lfz run or the standard lfz test discovery.
+assert(findIndex((x) => x == 3, [3, 3, 4]) == 0, "first duplicate at zero")
+assert(([1, 2, 3] |> findIndex((x) => x == 2)) == 1, "pipeline and middle index")
+assert(findIndex((x) => x == 9, [1, 2]) == nil, "no match")
+assert(findIndex(() => true, []) == nil, "empty does not call wrong-arity predicate")
+
+var visits = []
+fn stopAtTwo(x) {
+    visits = push(x, visits)
+    if x == 3 { 1 / 0 }
+    x == 2
+}
+assert(findIndex(stopAtTwo, [1, 2, 3]) == 1, "short circuit avoids a later error")
+assert(visits == [1, 2], "short circuit avoids a later side effect")
+
+let xs = [1, 2, 3]
+fn mutateOriginal(x) {
+    if x == 1 { xs[1] = 99 }
+    x == 2
+}
+assert(findIndex(mutateOriginal, xs) == 1, "index comes from original shallow snapshot")
+assert(xs == [1, 99, 3], "callback can replace an element of original array")
+
+let nested = [[1], [2]]
+fn mutateNested(x) {
+    if x[0] == 1 { nested[1][0] = 7 }
+    x[0] == 7
+}
+assert(findIndex(mutateNested, nested) == 1, "nested reference remains shared")
+
+let badPredicate = attempt(() => findIndex(0, []))
+assert(!badPredicate.ok && badPredicate.error["class"] == "TypeError", "empty input still validates predicate")
+let badArray = attempt(() => findIndex((x) => true, 0))
+assert(!badArray.ok && badArray.error["class"] == "TypeError", "array parameter required")
+let badArity = attempt(() => findIndex(() => true, [1]))
+assert(!badArity.ok && badArity.error["class"] == "TypeError", "actual call checks predicate arity")
+let badBool = attempt(() => findIndex((x) => 1, [1]))
+assert(!badBool.ok && badBool.error["class"] == "TypeError", "predicate must return bool")
+assert(badBool.error.message == "条件必须是 bool，得到 int", "existing filter boolean error")
+
+fn badCallback(x) { x / 0 }
+fn viaIndex() { findIndex(badCallback, [1]) }
+fn viaFilter() { filter(badCallback, [1]) }
+let indexError = attempt(viaIndex)
+let filterError = attempt(viaFilter)
+assert(!indexError.ok && indexError.error["class"] == "ZeroDivisionError", "callback error propagates")
+assert(indexError.error.line == filterError.error.line && indexError.error.col == filterError.error.col, "original callback source position")
+let indexFrames = indexError.error.traceback
+let filterFrames = filterError.error.traceback
+assert(indexFrames[len(indexFrames) - 1] == filterFrames[len(filterFrames) - 1], "original callback frame")
+
+fn localShadow() {
+    let findIndex = (x) => x + 10
+    findIndex(2)
+}
+fn captureShadow() {
+    let findIndex = (x) => x + 20
+    () => findIndex(2)
+}
+assert(localShadow() == 12, "local binding wins")
+let captured = captureShadow()
+assert(captured() == 22, "captured binding wins")
+let nonFirstClass = attempt(() => findIndex)
+assert(!nonFirstClass.ok && nonFirstClass.error["class"] == "NameError", "builtin is not first class")
+
+assert(join("-", []) == "", "join empty")
+assert(join("-", ["x"]) == "x", "join single")
+assert(join("-", ["雪", "", "y"]) == "雪--y", "join multiple and Unicode")
+let badJoin = attempt(() => join("-", ["ok", 1, false]))
+let firstJoinError = attempt(() => join("-", [1]))
+assert(!badJoin.ok && badJoin.error["class"] == "TypeError", "join rejects nonstring element")
+assert(badJoin.error.message == firstJoinError.error.message, "join reports first nonstring element")

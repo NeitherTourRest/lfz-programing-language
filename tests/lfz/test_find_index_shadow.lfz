@@ -1,0 +1,3 @@
+#42
+let findIndex = (value) => value * 3
+assert(findIndex(4) == 12, "global binding wins over builtin")
