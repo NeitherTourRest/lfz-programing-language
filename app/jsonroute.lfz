@@ -1,0 +1,42 @@
+#42
+fn require(ok, message) {
+    if !ok { fail("jsonroute: ${message}") }
+}
+fn requireFields(item, fields, label) {
+    require(type(item) == "struct", "${label} 必须是 JSON 对象")
+    for field in fields { require(has(field, item), "${label} 缺少 ${field}") }
+}
+fn route(plan) {
+    requireFields(plan, ["event", "rules"], "请求")
+    let event = plan.event
+    let rules = plan.rules
+    requireFields(event, ["kind", "severity"], "event")
+    require(type(event.kind) == "string" && len(trim(event.kind)) > 0 && event.kind != "*", "event.kind 必须是非空且非通配符的字符串")
+    require(type(event.severity) == "int" && event.severity >= 0, "event.severity 必须是非负整数")
+    require(type(rules) == "array", "rules 必须是数组")
+    var ruleIndex = 0
+    for rule in rules {
+        let label = "rules[${ruleIndex}]"
+        requireFields(rule, ["kind", "minSeverity", "target"], label)
+        require(type(rule.kind) == "string" && len(trim(rule.kind)) > 0, "${label}.kind 必须是非空字符串")
+        require(type(rule.minSeverity) == "int" && rule.minSeverity >= 0, "${label}.minSeverity 必须是非负整数")
+        require(type(rule.target) == "string" && len(trim(rule.target)) > 0, "${label}.target 必须是非空字符串")
+        ruleIndex = ruleIndex + 1
+    }
+    let scan = { checked: 0 }
+    let index = rules |> findIndex((rule) => {
+        scan.checked = scan.checked + 1
+        (rule.kind == "*" || rule.kind == event.kind) && event.severity >= rule.minSeverity
+    })
+    if index == nil {
+        return { matched: false, index: nil, target: nil, checked: scan.checked }
+    }
+    ({ matched: true, index: index, target: rules[index].target, checked: scan.checked })
+}
+fn main(args) {
+    require(len(args) <= 1, "用法: jsonroute [JSON]，省略参数则读 stdin 一行")
+    var source = ""
+    if len(args) == 1 { source = args[0] } else { source = input() }
+    print(jsonStringify(route(jsonParse(source))))
+}
+main(argv())

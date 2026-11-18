@@ -1,0 +1,8 @@
+#42
+let result = attempt(() => findIndex((x) => {
+    while true {
+        x
+    }
+    return false
+}, [1]))
+print(result.ok)

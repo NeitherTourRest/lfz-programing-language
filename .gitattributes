@@ -29,3 +29,12 @@
 
 # Preserve the report bound by the T22 independent verification manifest.
 /docs/reports/T22-independent-verification.md -text
+
+# Preserve the measured T27 guide and application bytes.
+/app/jsonroute.lfz -text
+/docs/guide/find-index.md -text
+/docs/guide/examples/find-index.lfz -text
+/docs/guide/examples/find-index-budget.lfz -text
+/docs/guide/ai/findIndex.md -text
+/docs/guide/ai/examples/05_find_index.lfz -text
+/docs/guide/ai/examples/06_find_index_budget.lfz -text

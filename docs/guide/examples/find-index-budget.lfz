@@ -1,0 +1,7 @@
+#42
+fn spin(x) {
+    while true {}
+    return false
+}
+attempt(() => findIndex(spin, [1]))
+print("unreachable")

@@ -1,0 +1,39 @@
+#42
+let numbers = [10, 20, 30]
+let first = findIndex((x) => x >= 10, numbers)
+assert(first == 0)
+let missing = numbers |> findIndex((x) => x == 99)
+assert(missing == nil)
+assert(findIndex((x) => true, []) == nil)
+assert((numbers |> findIndex((x) => x == 20)) == 1)
+
+var calls = 0
+fn firstHeavy(x) {
+    calls += 1
+    return x >= 20
+}
+assert(findIndex(firstHeavy, numbers) == 1)
+assert(calls == 2)
+assert(filter((x) => x >= 20, numbers) == [20, 30])
+
+let originalSecond = {score: 2}
+let items = [{score: 1}, originalSecond, {score: 3}]
+fn look(item) {
+    if item.score == 1 {
+        items[1] = {score: 99}
+        originalSecond.score = 8
+    }
+    return item.score == 8
+}
+assert(findIndex(look, items) == 1)
+assert(items[1].score == 99)
+assert(originalSecond.score == 8)
+
+let invalid = attempt(() => findIndex((x) => x, [1]))
+assert(!invalid.ok)
+assert(invalid.error["class"] == "TypeError")
+let failed = attempt(() => findIndex((x) => fail("callback failed"), [1]))
+assert(!failed.ok)
+assert(failed.error["class"] == "AssertionError")
+assert(failed.error.message == "callback failed")
+print("findIndex examples ok")

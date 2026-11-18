@@ -1,0 +1,46 @@
+#42
+let records = [{name: "ready"}, {name: "ready"}]
+var calls = 0
+let first = records |> findIndex((row) => {
+    calls = calls + 1
+    assert(calls == 1)
+    return row.name == "ready"
+})
+assert(first == 0 && calls == 1)
+assert(records[first].name == "ready")
+assert(findIndex((x) => x == 2, [1, 2, 2]) == 1)
+assert(findIndex((x) => false, [1]) == nil)
+assert(findIndex(() => true, []) == nil)
+
+let xs = [1, 2, 3]
+let slot = findIndex((x) => {
+    if x == 1 { xs[1] = 99 }
+    return x == 2
+}, xs)
+assert(slot == 1 && xs[slot] == 99)
+
+let shared = {ready: false}
+let nested = [{ready: false}, shared]
+let nestedIndex = findIndex((row) => {
+    if row.ready { return true }
+    shared.ready = true
+    return false
+}, nested)
+assert(nestedIndex == 1 && shared.ready)
+
+let miss = attempt(() => findIndex((x) => false, [1]))
+assert(miss.ok && miss.value == nil && miss.error == nil)
+let badCondition = attempt(() => findIndex((x) => 1, [1]))
+assert(!badCondition.ok && badCondition.error["class"] == "TypeError")
+assert(badCondition.error.message == "条件必须是 bool，得到 int")
+
+var changed = 0
+let failure = attempt(() => findIndex((x) => {
+    changed = x
+    fail("predicate failed")
+    return false
+}, [7]))
+assert(!failure.ok && failure.error["class"] == "AssertionError")
+assert(failure.error.message == "predicate failed" && changed == 7)
+
+print("findIndex witnesses passed")
