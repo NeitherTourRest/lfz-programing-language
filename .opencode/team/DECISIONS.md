@@ -1307,3 +1307,6 @@ T20前端cap补钉按root批准：共享stdin fill_buf/consume追加前限制1Mi
 root裁决保留attempt可观察列，采用CODE行首TAB一对一、CODE行尾清理、原换行及注释等字节保全。裸CR+空白+LF保护整个run，避免合并换行。精确argv分派、formatter API/core与CLI/tooling分工及验证见三spec §27和T21-contract。
 
 本轮owner明确为core唯一lexer布局，tooling唯一formatter.rs/lib.rs/cli。lex_format_layout返回归一化文本中顶层CODE空白的Unicode标量区间，formatter映射到原始字节。
+
+### [2026-11-18 00:00] [language-architect] T27 findIndex 契约冻结
+findIndex 加入现有高阶内置表，延续局部、捕获、全局绑定优先及 filter 的浅快照和类型契约。首次匹配返回快照索引。同批 join 改用同步借用，保持校验顺序。三 spec §28 与 T27-contract 记录接口和验收。

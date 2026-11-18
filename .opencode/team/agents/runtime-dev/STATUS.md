@@ -1,3 +1,5 @@
 # runtime-dev 状态
 
-2026-11-17 T26 独立原型 B 已交主调度构建。以原基线移除回调每次调用的 args.to_vec，直接调用继续移动 Vec。B SHA256 982f54cd…，A 差异存 Temp/T26-runtime/evaluator.prototype-a.diff。运行验证和性能筛查待主调度执行。报告 docs/reports/T26-runtime-prototype.md。
+2026-11-18 T27 join 候选已交主调度对照构建。src/builtins.rs SHA256 111acf0a4b80d1c094b5c95be49f59ebce1bd37bb161a3cd8091dee85f78e6df。与仅含 findIndex 的已冻结源码对照，唯一可执行差异是 join 借用原数组代替 Vec 克隆，另校正公开内置名单注释。逐字节逆向比较通过。
+
+既有 Rust 单元测试和新黑盒已覆盖空数组、单元素、多元素、Unicode、首个非法元素及自引用数组诊断。当前静态检查完成，运行验证由主调度执行。

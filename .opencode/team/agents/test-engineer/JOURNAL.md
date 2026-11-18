@@ -289,3 +289,9 @@
 - 完成：核候选/脚本/T20 基线与 41 个来源指纹，原件 SHA 31542d67…按字节保存。四个旧入口精确对照及位置检查通过。
 - 产出：public-final.json、manifest-final.json、报告及工作状态。
 - 下一步：交 team-lead 汇总。R304 OPEN。
+
+## [2026-11-18] T27 findIndex 公开夹具
+- 来源：team-lead 批准冻结 §28 后补公开黑盒。
+- 完成：三公开自动发现用例和一项预算专用夹具。旧 dist 静态检查 4/4。首语法检查发现 class 为关键字，改用下标访问。旧 dist 主用例实际 NameError、exit2。
+- 产出：tests/lfz/test_find_index*.lfz、tests/fixtures/t27_find_index_budget.lfz、Temp/T27-public/baseline-red.json。
+- 下一步：冻结候选提供后复验。R304 OPEN。

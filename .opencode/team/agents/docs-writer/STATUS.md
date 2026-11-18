@@ -1,5 +1,5 @@
 # docs-writer 状态
 
-2026-11-14，T22 REPL 人指南说明已补充。普通 Windows 控制台 CP437/936/65001 中文实测范围、只写 CONOUT$ 重定向差异和 UTF-8 管道捕获用法均引用独立报告。依据交付候选 76ac4cb5 的既有证据完成文档核对。
+2026-11-18，T27 findIndex 指南验收完成。team-lead 在最终候选 4816058d（1119744 字节）实跑 3/3。指南和两份示例的当前 SHA256 匹配实跑初末记录。报告 T27-guide-evidence.md 已更新候选、验收结果、证据链接与复现命令。
 
-T21 人类格式化指南实跑 2/2 已归档于 docs/reports/T21-guide-evidence.md。当前人指南无阻塞，交 team-lead 收口。
+人指南无阻塞，交 team-lead 纳入候选交付。

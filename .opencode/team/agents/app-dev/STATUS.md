@@ -43,3 +43,9 @@ jsonlstream.lfz/verify_jsonlstream.py/T19说明已落：forEachLine逐条attempt
 
 ## T20最终验收（2026-11-11）
 a545d0c2/1100800B 默认权限实际lfz repl重放6/6 PASS，全部子进程结束。多行markThenFail核失败后desk.failed=2，input消费、历史真实来源及caret、reset、每cell预算和EOF均过。首分号、EOF空白行caret预期和EOF中文措辞失败保留于app/t20-evidence及manifest。产品/旧应用未改，未编译/Git。交root收口，R304OPEN，无应用阻塞。
+
+## T27 规则路由准备（2026-11-18）
+jsonroute.lfz、verify_jsonroute.py、T27-JSONROUTE.md 已就绪。九组 oracle，AST 与 prepare-only PASS，解释器 0 次。等待最终候选哈希实跑。
+
+## T27 规则路由最终验收（2026-11-18）
+回读 lead 实跑证据 Temp/T27/jsonroute.json，冻结 4816058d…c636 / 1119744B，9/9 PASS，源码指纹与准备版一致。说明已更新复现命令及结果，正式证据由 lead 统一归档。

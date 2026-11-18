@@ -132,3 +132,9 @@ team-lead 用原验证器对 a545d0c 候选实跑 16/16。核对 Temp 原件和�
 
 ### [2026-11-14] T22 REPL 控制台指南
 依据 76ac4cb5 独立验收补充普通终端中文、UTF-8 管道捕获及只写 CONOUT$ 在 CP437/936 的显示差异。核对报告路径和 BMP 中文实测范围，交 team-lead 收口。
+
+### [2026-11-18] T27 findIndex 人指南准备
+新增说明与两份 LFZ 示例，验证器 prepare-only exit 0，3 项待实跑。保留 README 修改由 team-lead，交候选验证。
+
+### [2026-11-18] T27 findIndex 人指南验收
+team-lead 实跑最终候选 4816058d，check、主示例及预算终止 3/3。核对原始记录 SHA256 和三份指南文件初末 SHA256。更新 T27-guide-evidence.md 与个人状态，交付证据由 team-lead 归档。

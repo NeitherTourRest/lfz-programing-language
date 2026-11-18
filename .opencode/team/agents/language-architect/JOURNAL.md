@@ -385,3 +385,8 @@
 ## [2026-11-13] T21 fmt分派兼容补钉
 - 依root裁决同步§27.1与T21-contract，原argv第二项为空或连字符开头回旧解析。
 - 文档diff检查通过。交root和tooling，未改源码或编译。
+
+## [2026-11-18 00:00] T27 findIndex 契约
+- 来源：team-lead 轻量启动。
+- 产出：三 spec §28、T27-contract.md 与 ADR。审阅名字遮蔽、filter 快照和 join。
+- 证据：文档 diff 检查通过。委托 runtime 实现及验收。

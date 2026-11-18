@@ -1,5 +1,7 @@
-# ai-dx-engineer — T20 最终指南及题包交接
+# ai-dx-engineer — T27 findIndex 指南交付
 
-2026-11-11。最终 a545d0c2 / 1100800 B 的 AI 指南 8/8 通过，五文档运行前后 SHA 一致。见 docs/reports/T20-ai-repl-evidence.md 和 evidence 子目录结果与 manifest。
+2026-11-18。新增 `docs/guide/ai/findIndex.md`、`findIndex-validation.md` 与两个示例。T20 v3 冻结五文档沿用原件。
 
-v3 已修 C04 oracle 命名冲突并保全首失败。草稿清单绑定候选与五文档，新增 stage_student.py 和 DISPATCH.md。独立控制完成后由 root 冻结与启动。当前无学生。R304 OPEN。
+候选 `Temp/T27/candidate.exe` 为 1119744 B，SHA256 `4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636`。两次 check exit0，正常 run exit0，预算 run exit2 / ExecutionLimitError。四次均符合预期，完整证据 `Temp/T27-ai/results.json`。无活动 LFZ 测试进程，已交还性能窗口。
+
+当前任务完成。由 team-lead 纳入候选交付。

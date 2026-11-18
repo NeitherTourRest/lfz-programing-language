@@ -1,3 +1,6 @@
+## T27 收口（2026-11-18）
+用户要求按完整批次推进特色与性能，当前批包含 findIndex、join 借用、JSON 规则路由、人/AI 指南与独立见证。冻结产物 4816058d…ac636 功能通过，原 R304 16/2/1，T27 性能候选拒收，沿用 T26 dist。已经过一次正式窗口，保留全部样本与旧基线。下一可解释的诊断入口是 string_ops 2000 与短 numeric_loop 10000；当前无后台编译、测试或性能窗口。
+
 ## 当前执行检查点（2026-10-30）
 B独立已PASS：584harness/公开38/额外18进程及旧13/117/91含178/apps/140，源8ea375/859136B。B精确ZIP21成员（18src+2Cargo+exe）582683B/SHA DB4AE08E66DD43D7A90C9DDD33706B170EE36C014114840922431C36292556CA，Temp保B exe。已GO runtime_dev_t16按§21改value/evaluator实现C，唯一--lib编译，tooling暂只准备。release_manager_t12准备B索引快照提交：所有src从ZIP，cli_t16b.rs也已要求快照；禁止add活动C源或未来C tests。C尚未验收，B checkpoint可按快照保存，C工作树保留继续。核心/parser/graph生产接口不准C owner擅改，任何疑问先汇报。R304OPEN，不tag；heartbeat lf z实际id=lfz继续。
 
