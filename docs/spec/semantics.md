@@ -500,3 +500,7 @@ LF分行、CRLF去一CR、EOF孤CR/BOM保留；LF前rawbytes含CR计1..16MiB，8
 
 ## 27. T21 保真空白格式化（2026-11-13 冻结）
 fmt在输出前检查原稿及结果均可解析，所有token kind与行号一致，除Newline/EOF外列一致。attempt可观察错误及帧位置保留。字节保护和失败行为见interface-contract §27。
+
+## 28. T27 findIndex（2026-11-18 冻结）
+
+findIndex 按数组浅快照从左至右调用单参数谓词。首次 true 返回从 0 开始的快照索引。空数组或无匹配返回 nil。布尔类型、回调错误和资源终止沿 filter 的规则。接口见 interface-contract §28。

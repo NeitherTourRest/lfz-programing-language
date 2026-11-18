@@ -1043,3 +1043,7 @@ lfz [--json] check [--json] - [--json]
 
 ## 27. T21 保真空白格式化（2026-11-13 冻结）
 lfz fmt FILE只清理顶层CODE行尾SP/TAB、行首TAB一对一换SP。保护注释、整个字符串、字面量、BOM、前导及原行终止符。命令精确形态、字节规则与保真校验见interface-contract §27。
+
+## 28. T27 findIndex（2026-11-18 冻结）
+
+findIndex(predicate, array) 沿普通调用和 data-last 管道语法。写法 [1, 2, 3] |> findIndex((x) => x == 2) 返回 1。作用域绑定优先，名字和参数规则见 interface-contract §28。
