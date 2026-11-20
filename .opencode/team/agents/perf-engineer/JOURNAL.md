@@ -100,3 +100,10 @@ benchmarks/t19/measure.py、stream.lfz、whole.lfz、reference.py已落。prepar
 - ALL QUIET后修共享cell单闭包，初两驱动原文保全；小样与64MiB OS peak负对照过。
 - window01三档42/42通过，stream peak约6.5MiB不随10→300MiB线性增长，whole10约34.9MiB；300LFZ9.336s对Python6.244s，LFZ慢49.5%披露。
 - T19-performance报告/111项证据manifest齐，无重跑择窗或修改产品；已释放窗口，R304OPEN，不T20/automation。
+
+## [2026-11-20] T28 固定对照驱动
+- 8 个 LFZ 测项，两版 1+6 轮，112 次；追加 Python 同题 2k/4k/8k 共 21 次，分别保全原始结果。
+- 实际仅用 Python 静态载入和生成全部夹具，核对旧协议源码。定向窗口与 R304 待 team-lead 使用最终产物运行，未编译或改动旧测试与门槛。
+
+## [2026-11-20] T28 剩余开销诊断已准备
+- 总调度报告正式窗部分结果后追加单独诊断脚本，仅项目内轻量文件操作。SHA256 90cbad5d05d46e27b2321d8b904a00b44172da967b98a64afbbdbbead9df8a06，待主调度在正式窗结束后执行。

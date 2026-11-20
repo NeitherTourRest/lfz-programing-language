@@ -295,3 +295,10 @@
 - 完成：三公开自动发现用例和一项预算专用夹具。旧 dist 静态检查 4/4。首语法检查发现 class 为关键字，改用下标访问。旧 dist 主用例实际 NameError、exit2。
 - 产出：tests/lfz/test_find_index*.lfz、tests/fixtures/t27_find_index_budget.lfz、Temp/T27-public/baseline-red.json。
 - 下一步：冻结候选提供后复验。R304 OPEN。
+
+## [2026-11-20] T28 push 重绑定公开见证
+- 来源：team-lead 轻量任务，仅新增一个生产组合场景和本人记录。
+- 完成：test_push_rebinding.lfz 14 个断言。冻结 Temp/T27/candidate.exe SHA4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636，执行 `run --json tests/lfz/test_push_rebinding.lfz` 得 {"ok":true}，退出0。运行后核原候选 SHA 一致。
+- Oracle：64条追加后首16条页保持原容器；captured callback按序生成记录；push首参发布[10]并将目标改为[20]，最终[20,[10]]，修改发布旧数组后嵌套值同步为11；局部push返回[9,[1,2]]且只调用一次。
+- 产出：用例 SHA1e1ff505645875c3a8ddc4f0827811630c4ff28c9e9d9989b0622a8db8d02359，标准发现无需manifest接入。
+- 下一步：交team-lead跑T28新产物，当前绿色仅属于旧T27候选。未Cargo/Git。

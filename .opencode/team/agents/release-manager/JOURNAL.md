@@ -971,3 +971,11 @@
 ### [2026-11-17] T26 候选文档收口
 - README 和交付清单补记候选 B、715/37/27 及旧全回归、R304 原 19 线独立复算通过。候选 ZIP 739914 字节，SHA256 2d831875…ade361，只读核对一致。
 - 原窗口口径与历史记录保留。无正式发布或新标签，dist/Git/主验收由 team-lead 处理。
+
+### [2026-11-20] T28 精确提交准备
+- Temp/T28/prepare-checkpoint.py 已完成 preparation 模式实跑。分四组生成清单和冻结源/新增测试副本，所有 Git 写入仅在 root 明确执行 --stage-group N 时发生。
+- 原用户28/1/1块逐一核对，过滤后与HEAD同blob者不入暂存集合，仍保留原工作字节SHA。--stage-group核main和dist为准备时身份，逐项校验blob，raw日志保留原字节。
+- 当前验收与性能窗等待最终签收，候选是否快进main由root决定。无LFZ/Cargo启动或Git写入。
+
+### [2026-11-20] T28 诊断脚本分组补充
+- 第3组精确允许 benchmarks/t28/diagnose.py，用于 array_builtins 残余成本诊断；文件尚待落盘，root最终prepare会按实际清单纳入。本次只改分组及自身记录。

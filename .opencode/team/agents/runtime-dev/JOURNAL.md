@@ -330,3 +330,6 @@ forEachLine/76注册/预检/native-only poll/统一finish与5新unit落盘；存
 
 ### [2026-11-18] T27 join 借用候选
 join 改为持原数组借用遍历，校正 BUILTIN_NAMES 注释。逐字节逆向比对确认仅这两处差异。既有用例覆盖所需边界。候选 111acf0a… 交主调度构建与对照。
+
+### [2026-11-20] T28缓冲复用原型
+设计后获GO，仅普通push赋值在写入前证明唯一强引用+无Weak再移动Vec到fresh Rc，原分派/Flow/错误优先/计步保护。采root FnOnce和local_binding共用建议。4unit未编译，evaluator DF62EF3C…/env07800B07…停写交root。

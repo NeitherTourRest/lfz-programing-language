@@ -1,11 +1,11 @@
 # test-engineer — 工作状态
-> 更新：2026-11-18
+> 更新：2026-11-20
 
 ## 当前状态
-T27 三个公开 findIndex LFZ 用例与一个预算夹具已写。冻结 dist 7a144213 的静态检查 4/4。旧运行缺 findIndex 返回 NameError、exit 2，证据 Temp/T27-public/baseline-red.json。
+T28 新公开用例 tests/lfz/test_push_rebinding.lfz 已完成。14 个断言在冻结 T27 候选 4816058d…ac636 上实际通过，run --json 输出 {"ok":true}，退出码 0。
 
 ## 产出
-`tests/lfz/test_find_index.lfz`、`test_find_index_shadow.lfz`、`test_find_index_shadow_noncallable.lfz` 由标准 runner 自动发现。`tests/fixtures/t27_find_index_budget.lfz` 用 CLI `--max-steps 60` 验证回调终止穿过 attempt。现有 cases.json 与旧测试原样保留。
+用例 SHA256 1e1ff505645875c3a8ddc4f0827811630c4ff28c9e9d9989b0622a8db8d02359。场景为批次连续追加和发布历史页、回调捕获追加、首参数发布旧数组并重绑目标后读第二参、嵌套共享、局部 push 遮蔽。标准 runner 自动发现。
 
 ## 下一步
-等待最终候选指纹后验证三公开用例、全 runner 与预算。R304 OPEN。
+交 team-lead 在 T28 新产物运行。旧 T27 通过记录只说明语义基线。未运行 Cargo 或 Git。

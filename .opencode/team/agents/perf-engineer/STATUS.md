@@ -1,14 +1,9 @@
 # perf-engineer — 工作状态
-> 更新：2026-11-04 by perf-engineer
 
-## 当前状态
-T19固定最终候选规模测窗完成，42/42样本通过，测量进程全部结束；已通知root释放无并发窗口。停止产品调用/数据生成/测量。R304仍OPEN，不替代原19项门槛。
+2026-11-20 T28 定向对照已冻结在 benchmarks/t28/focused.py，SHA256 d9af70d361e799c8542cfdceed07a8068bbabc8822287d56d311d0b450e6e82c。只读载入驱动并生成 8 项负载，原 numeric_loop 10000 与 string_ops 三档源码、期望输出和 stdin 取自 T13 原协议。
 
-## 最终证据
-- 最终1041920B SHA5d2219f88db8b3196cac259941fc0a8a3b489ef03519bc7e20415f8edf6388e5初末一致。
-- docs/reports/T19-performance.md及T19-performance-evidence/manifest.json，111个证据文件/源码驱动SHA；window01单窗7预热35正式共42，10/100/300MiB二次Python oracle全通过，无stderr/非零退出/watchdog/择窗重跑。
-- LFZ stream三档median0.345100/3.081447/9.335709s，峰值WS约6.5MiB平稳；10MiB whole约34.9MiB。Python同任务更快，300MiB median6.244406s，LFZ约慢49.5%，不声称吞吐领先。
-- 修后单parseCurrent共享cell避免每行新UserFn；初驱动原文/SHA保留，静态修前没有正式测量，不虚构失败。小样stream/whole check/live峰值握手过；64MiB释放负对照OS peak82317312/current15241216通过。
+两份产物用同一执行路径、每轮交换次序，覆盖 1 轮预热与 6 轮正式样本。自赋值与持有旧数组别名的 push 分别测 4000 与 8000 项。LFZ 窗完整保存后，同一 Python 解释器运行课程原 string_ops.py 做 3 档同题对照。两组分别保留原样本、退出码、双通道字节和哈希。
 
-## 边界与下一步
-warm-cache/含startup至父观察marker，observer握手等待单列；物理工作集OS peak非heap/private/采样RSS。数据约410MiB仅项目Temp，manifest可重建；所有原样本保全。Get-CimInstance环境查询失败保留，改只读环境与GlobalMemoryStatusEx记录；非产品故障。无产品修改/编译/Git/系统配置/外装/公网。仅T19，等待独立审计或root交付，不T20/automation。
+计时与最终候选由 team-lead 运行，R304 正式门槛单独执行。本角色本次未启动 LFZ 或性能负载。
+
+正式窗后剩余开销诊断驱动已交给 team-lead。benchmarks/t28/diagnose.py 固定 T27/T28 各 5 项、每项进程内 16 次重复，1+6 轮。原 array_builtins 10000、string_map 2000、map/filter 与 sort/reduce 分段和循环/输出对照分别记录。单窗 70 次，各进程 16 行完整输出与独立预期校验。脚本由本角色准备，未运行 LFZ/Python 测量。
