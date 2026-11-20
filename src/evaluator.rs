@@ -670,6 +670,36 @@ impl UserCallArgs<'_> {
     }
 }
 
+enum PendingAssignment {
+    Ready(Value),
+    Push { element: Value, array: Rc<RefCell<Vec<Value>>> },
+}
+
+impl PendingAssignment {
+    fn store(self, read: impl FnOnce() -> Option<Value>, write: impl FnOnce(Value)) {
+        match self {
+            Self::Ready(value) => write(value),
+            Self::Push { element, array } => {
+                let current = read();
+                let reusable = matches!(&current, Some(Value::Array(target))
+                    if Rc::ptr_eq(target, &array) && Rc::strong_count(&array) == 3 && Rc::weak_count(&array) == 0);
+                if reusable {
+                    // The three references are the binding, this pending RHS, and read().
+                    // No callback runs while moving the uniquely observable buffer.
+                    let mut items = std::mem::take(&mut *array.borrow_mut());
+                    items.push(element);
+                    // Both old references remain alive during the fresh Rc allocation.
+                    write(Value::array(items));
+                } else {
+                    let mut items = array.borrow().clone();
+                    items.push(element);
+                    write(Value::array(items));
+                }
+            }
+        }
+    }
+}
+
 /// 树遍历解释器：模块全局环境 + 单调递增的 `func_id` 分配器 + traceback 帧栈。
 struct Interp {
     repl_func_limit: Option<u32>,
@@ -781,19 +811,19 @@ impl Interp {
     ///
     /// `let` 只锁重绑定、不锁内容（`semantics.md` §4.5.2）：`a = v` 非法，但 `a[i] = v` /
     /// `s.k = v` 走容器原地修改路径（A1），不经本方法。
-    fn assign_name(&self, scope: &Scope, name: &str, value: Value) -> AssignOutcome {
+    fn assign_name(&self, scope: &Scope, name: &str, value: PendingAssignment) -> AssignOutcome {
         let mut cur = Some(Rc::clone(&scope.env));
         while let Some(e) = cur {
             if Rc::ptr_eq(&e, &self.globals) {
                 break;
             }
             // RefCell 陷阱：先取 `idx` 结束借用，再做可变性查询 / 写入。
-            let idx = e.borrow().local_index(name);
-            if let Some(i) = idx {
-                if e.borrow().local_mutable(i) == Some(false) {
+            let binding = e.borrow().local_binding(name);
+            if let Some((i, mutable)) = binding {
+                if !mutable {
                     return AssignOutcome::Immutable;
                 }
-                e.borrow_mut().set_local(i, value);
+                value.store(|| e.borrow().get_local(i), |v| { e.borrow_mut().set_local(i, v); });
                 return AssignOutcome::Assigned;
             }
             cur = e.borrow().parent();
@@ -803,16 +833,16 @@ impl Interp {
                 if !*mutable {
                     return AssignOutcome::Immutable;
                 }
-                *c.borrow_mut() = value;
+                value.store(|| Some(c.borrow().clone()), |v| *c.borrow_mut() = v);
                 return AssignOutcome::Assigned;
             }
         }
-        let gi = self.globals.borrow().local_index(name);
-        if let Some(i) = gi {
-            if self.globals.borrow().local_mutable(i) == Some(false) {
+        let binding = self.globals.borrow().local_binding(name);
+        if let Some((i, mutable)) = binding {
+            if !mutable {
                 return AssignOutcome::Immutable;
             }
-            self.globals.borrow_mut().set_local(i, value);
+            value.store(|| self.globals.borrow().get_local(i), |v| { self.globals.borrow_mut().set_local(i, v); });
             return AssignOutcome::Assigned;
         }
         AssignOutcome::NotFound
@@ -1170,13 +1200,24 @@ impl Interp {
                     .clone()
                     .ok_or_else(|| name_error("self".to_string(), target.span))?,
             };
-            let newv = match self.eval_rhs(op, Some(current), value, scope, target.span)? {
-                Step::Done(v) => v,
-                Step::Flow(f) => return Ok(f),
+            let push_candidate = op == AssignOp::Assign && matches!((&target.base, &value.node),
+                (LvalueBase::Name(target_name), ExprKind::Call { callee, args })
+                if matches!(&callee.node, ExprKind::Ident(name) if name == "push") && args.len() == 2
+                    && matches!(&args[1].node, ExprKind::Ident(name) if name == target_name));
+            let newv = if push_candidate {
+                drop(current);
+                match self.eval_push_assignment(value, scope)? {
+                    Step::Done(v) => v,
+                    Step::Flow(f) => return Ok(f),
+                }
+            } else {
+                match self.eval_rhs(op, Some(current), value, scope, target.span)? {
+                    Step::Done(v) => PendingAssignment::Ready(v),
+                    Step::Flow(f) => return Ok(f),
+                }
             };
             let outcome = match &target.base {
                 LvalueBase::Name(n) => self.assign_name(scope, n, newv),
-                // `self` 是只读绑定，不属可重绑定变量（保持报 `NameError`）。
                 LvalueBase::SelfValue => AssignOutcome::NotFound,
             };
             match outcome {
@@ -1246,6 +1287,31 @@ impl Interp {
         };
         self.write_final(&current, &key, newv, err_span)?;
         Ok(Flow::Value(Value::Nil))
+    }
+
+    fn eval_push_assignment(&mut self, expr: &Expr, scope: &Scope) -> R<Step<PendingAssignment>> {
+        self.poll(expr.span)?;
+        let result = (|| {
+            let ExprKind::Call { callee, args } = &expr.node else { unreachable!() };
+            if self.lookup(scope, "push").is_some() {
+                return self.eval_call(expr, callee, args, scope).map(|flow| match flow {
+                    Flow::Value(value) => Step::Done(PendingAssignment::Ready(value)),
+                    flow => Step::Flow(flow),
+                });
+            }
+            let mut values = match self.eval_args(args, scope)? {
+                Step::Done(values) => values,
+                Step::Flow(flow) => return Ok(Step::Flow(flow)),
+            };
+            if !matches!(&values[1], Value::Array(_)) {
+                return builtins::call("push", &values, expr.span).map(|value| Step::Done(PendingAssignment::Ready(value)));
+            }
+            let Value::Array(array) = values.pop().unwrap() else { unreachable!() };
+            let element = values.pop().unwrap();
+            Ok(Step::Done(PendingAssignment::Push { element, array }))
+        })();
+        if let Err(error) = &result { self.note_error_span(error); }
+        result
     }
 
     /// 求 RHS 并按 `op` 合成新值（`=` 直接取 RHS；其余读旧值后二元运算）。
@@ -5136,4 +5202,79 @@ mod t20_session_tests {
   s.reset();assert!(s.interp.capabilities.subprocess);assert!(!s.interp.capabilities.http);
   assert_eq!(cell(&mut s,"argv()[0]").result.unwrap().as_str(),Some("kept"));
  });}
+}
+
+#[cfg(test)]
+mod t28_push_reuse_tests {
+    use super::*;
+
+    fn run(text: &str, max_steps: Option<u64>) -> TracedRun {
+        on_eval_stack(move || {
+            let tokens = crate::lexer::lex(text, 0).unwrap();
+            let program = crate::parser::parse(&tokens).unwrap();
+            eval_module_traced_on_thread_with_args_and_limits(&program, &[], EvalLimits { max_steps, ..Default::default() })
+        })
+    }
+
+    #[test]
+    fn push_reuses_vec_in_a_distinct_container_only_without_observers() {
+        let mut items = Vec::with_capacity(8);
+        items.push(Value::Int(1));
+        let binding = RefCell::new(Value::array(items));
+        let original = binding.borrow().as_array().unwrap().as_ref().borrow().as_ptr();
+        let old_identity = Rc::as_ptr(binding.borrow().as_array().unwrap());
+        let array = binding.borrow().as_array().unwrap().clone();
+        PendingAssignment::Push { element: Value::Int(2), array }.store(
+            || Some(binding.borrow().clone()), |value| *binding.borrow_mut() = value,
+        );
+        let value = binding.borrow();
+        let result = value.as_array().unwrap();
+        assert_ne!(Rc::as_ptr(result), old_identity);
+        assert_eq!(result.borrow().as_ptr(), original);
+        assert_eq!(value.to_string(), "[1, 2]");
+    }
+
+    #[test]
+    fn weak_and_strong_aliases_prevent_buffer_reuse() {
+        for weak_only in [true, false] {
+            let binding = RefCell::new(Value::array(vec![Value::Int(1)]));
+            let array = binding.borrow().as_array().unwrap().clone();
+            let weak = Rc::downgrade(&array);
+            let strong = if weak_only { None } else { Some(array.clone()) };
+            PendingAssignment::Push { element: Value::Int(2), array }.store(
+                || Some(binding.borrow().clone()), |value| *binding.borrow_mut() = value,
+            );
+            if let Some(old) = strong {
+                assert_eq!(old.borrow().len(), 1);
+                assert!(!Rc::ptr_eq(&old, binding.borrow().as_array().unwrap()));
+            } else {
+                assert!(weak.upgrade().is_none());
+            }
+        }
+    }
+
+    #[test]
+    fn push_assignment_preserves_alias_shadow_capture_and_rebinding() {
+        for source in [
+            "var a=[1]\nlet old=a\na=push(2,a)\nassert(old==[1])\nassert(a==[1,2])",
+            "var a=[1]\nfn push(x,xs)=>[9]\na=push(2,a)\nassert(a==[9])",
+            "fn build(){var a=[]\n fn add(x){a=push(x,a)\n a}\n add}\nlet add=build()\nassert(add(1)==[1])\nassert(add(2)==[1,2])",
+            "var a=[1]\nfn element(){a=[7]\n8}\na=push(element(),a)\nassert(a==[7,8])",
+            "var a=[]\na=push(a,a)\nassert(len(a)==1)\nassert(a[0]==[])",
+            "var a=[1]\nvar b=[]\nb=push(2,a)\nassert(a==[1])\nassert(b==[1,2])",
+            "let a=1\nlet r=attempt(()=>{a=push(2,a)})\nlet plain=attempt(()=>push(2,a))\nassert(r.error.message==plain.error.message)",
+        ] {
+            let result = run(source, None);
+            assert!(result.result.is_ok(), "{source}: {:?}", result.result);
+        }
+    }
+
+    #[test]
+    fn push_assignment_keeps_ast_budget_and_does_not_mutate_on_failure() {
+        let source = "var a=[]\na=push(1,a)\na";
+        assert_eq!(run(source, Some(8)).result.unwrap().to_string(), "[1]");
+        assert_eq!(run(source, Some(7)).result.unwrap_err().class_name(), "ExecutionLimitError");
+        let result = run("let a=[1]\nlet r=attempt(()=>{a=push(2,a)})\nassert(!r.ok)\nassert(a==[1])", None);
+        assert!(result.result.is_ok());
+    }
 }

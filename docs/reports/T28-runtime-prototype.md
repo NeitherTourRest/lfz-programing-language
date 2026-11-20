@@ -1,0 +1,14 @@
+# T28 pure push赋值缓冲复用原型
+2026-11-20 runtime-dev，按root先设计后GO实施。产品源仅evaluator.rs与经明确批准的env.rs查找整理，未编译。基线原字节在Temp/T28-runtime/evaluator.baseline.rs、env.baseline.rs。
+
+仅普通无后缀name=push(element,name)进入候选。目标存在性检查仍先于RHS；仅该候选释放检查所得旧Value，避免多余引用阻止复用。RHS call poll、push绑定查找、全部实参从左到右求值、Flow与错误定位沿现路径。push被用户绑定遮蔽则调用原eval_call。第二参不是数组时直接沿builtins::call报告原参数错误，先于赋值不可写错误。
+
+合法builtin push暂存element与Array，赋值沿同一个assign_name查env/captured/globals及可写性。仅该候选读取当前位置比较ptr_eq。已知strong_count3分别是目标绑定、pending RHS、位置读取临时Value，weak_count必须0。别名/嵌套自引用/首参返回原数组/外部Rc或Weak会阻止复用。首参重绑定后以最终位置和RHS最后一次变量读取为准。失败或不可写不会移动原buffer。
+
+获准复用后mem::take移动原Vec、追加element，创建fresh Rc<Array>再一次写回。旧Rc由pending/read Value在新Rc分配时保持存活，因此新容器地址不同，Vec元素缓冲可保留。没有临时写Nil、try_unwrap或unsafe。共享/Weak分支维持浅复制和新容器结果。capture共享cell的后续读仍得到新绑定，持有旧数组值的观察者计入强引用门禁。
+
+Env::local_binding(name)一次反向搜索返回槽位偏移及mutable。local_index复用同一规则，保first_slot/匿名槽间隙及同名latest binding。assign_name删除旧wrapper，Ready值写入不读旧值，仅push候选做额外当前位置读取。未将借用跨入用户回调。
+
+新增4unit源码，尚待构建运行：buffer真实复用并fresh Rc；weak及strong观察者路径；原数组alias/shadow/captured/首参重绑定/嵌套自身/RHS不同目标/不可写加坏数组的原诊断比较；确定性8步成功/7步终止及不可写不改数组。普通脚本/graph/REPL及资源终止仍需统一旧回归和独立验证。没有引用运行成功或性能提升结论。
+
+交接SHA256为evaluator DF62EF3C260DD32AAAA7F66C28A6BD8F1B77F39DB97E454D69A99B227B6F2D43，env 07800B074B1FE235908F19C32CAD288BC489799D9BF00784AA79616A23D410C5。已停写交root唯一Cargo构建与对照。T26正式性能通过仅属于其原候选，T28性能另测。

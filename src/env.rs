@@ -117,11 +117,16 @@ impl Env {
     /// **从后往前**搜索，使同作用域内后定义的绑定遮蔽先定义的（重定义语义）。
     #[must_use]
     pub fn local_index(&self, name: &str) -> Option<usize> {
+        self.local_binding(name).map(|(index, _)| index)
+    }
+
+    /// Resolve the latest named binding and its mutability in one search.
+    pub(crate) fn local_binding(&self, name: &str) -> Option<(usize, bool)> {
         self.names
             .iter()
             .rev()
-            .find(|(n, _, _)| n == name)
-            .map(|(_, slot, _)| (slot - self.first_slot) as usize)
+            .find(|(binding, _, _)| binding == name)
+            .map(|(_, slot, mutable)| ((slot - self.first_slot) as usize, *mutable))
     }
 
     /// 槽位 `idx` 的绑定是否可变（`var` = `true`）；不存在 → `None`。
