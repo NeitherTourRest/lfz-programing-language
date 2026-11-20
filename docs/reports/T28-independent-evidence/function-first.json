@@ -1,0 +1,193 @@
+{
+  "passed": 10,
+  "rows": [
+    {
+      "name": "alias-and-original-preserved",
+      "binary_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "source": "var xs=[1]\nlet alias=xs\nxs=push(2,xs)\nassert(alias==[1])\nassert(xs==[1,2])\nxs[0]=9\nassert(alias==[1])\nprint(jsonStringify([alias,xs]))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[1],[9,2]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "alias-and-original-preserved",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source": "var xs=[1]\nlet alias=xs\nxs=push(2,xs)\nassert(alias==[1])\nassert(xs==[1,2])\nxs[0]=9\nassert(alias==[1])\nprint(jsonStringify([alias,xs]))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[1],[9,2]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "returned-snapshot",
+      "binary_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "source": "var xs=[]\nlet values=map((i)=>{xs=push(i,xs)\n return xs},range(4))\nassert(values==[[0],[0,1],[0,1,2],[0,1,2,3]])\nprint(jsonStringify(values))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[0],[0,1],[0,1,2],[0,1,2,3]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "returned-snapshot",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source": "var xs=[]\nlet values=map((i)=>{xs=push(i,xs)\n return xs},range(4))\nassert(values==[[0],[0,1],[0,1,2],[0,1,2,3]])\nprint(jsonStringify(values))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[0],[0,1],[0,1,2],[0,1,2,3]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "nested-shared-reference",
+      "binary_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "source": "let inner={n:1}\nlet old=[inner]\nlet next=push(inner,old)\nnext[0].n=7\nassert(old[0].n==7)\nassert(len(old)==1)\nprint(jsonStringify([old,next]))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[{\"n\":7}],[{\"n\":7},{\"n\":7}]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "nested-shared-reference",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source": "let inner={n:1}\nlet old=[inner]\nlet next=push(inner,old)\nnext[0].n=7\nassert(old[0].n==7)\nassert(len(old)==1)\nprint(jsonStringify([old,next]))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[{\"n\":7}],[{\"n\":7},{\"n\":7}]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "self-reference-retains-old",
+      "binary_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "source": "var xs=[1]\nlet prior=xs\nxs=push(xs,xs)\nassert(xs==[1,[1]])\nxs[1][0]=8\nassert(prior==[8])\nassert(xs[0]==1)\nprint(jsonStringify([prior,xs]))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[8],[1,[8]]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "self-reference-retains-old",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source": "var xs=[1]\nlet prior=xs\nxs=push(xs,xs)\nassert(xs==[1,[1]])\nxs[1][0]=8\nassert(prior==[8])\nassert(xs[0]==1)\nprint(jsonStringify([prior,xs]))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[8],[1,[8]]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "closure-retains-argument",
+      "binary_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "source": "fn keep(array) {()=>array}\nvar xs=[1]\nlet saved=keep(xs)\nxs=push(2,xs)\nassert(saved()==[1])\nprint(jsonStringify([saved(),xs]))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[1],[1,2]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "closure-retains-argument",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source": "fn keep(array) {()=>array}\nvar xs=[1]\nlet saved=keep(xs)\nxs=push(2,xs)\nassert(saved()==[1])\nprint(jsonStringify([saved(),xs]))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[1],[1,2]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "pipeline-and-captured-assignment",
+      "binary_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "source": "fn make(){var xs=[]\n fn add(x){xs=xs |> push(x)\n return xs}\n return add}\nlet add=make()\nlet first=add(1)\nlet second=add(2)\nassert(first==[1])\nassert(second==[1,2])\nprint(jsonStringify([first,second]))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[1],[1,2]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "pipeline-and-captured-assignment",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source": "fn make(){var xs=[]\n fn add(x){xs=xs |> push(x)\n return xs}\n return add}\nlet add=make()\nlet first=add(1)\nlet second=add(2)\nassert(first==[1])\nassert(second==[1,2])\nprint(jsonStringify([first,second]))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[1],[1,2]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "shadowed-and-immutable-error",
+      "binary_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "source": "fn local(){let push=(v,xs)=>[v+10]\n var xs=[]\n xs=push(1,xs)\n return xs}\nassert(local()==[11])\nlet immutable=[1]\nlet bad=attempt(()=>{immutable=push(2,immutable)})\nassert(!bad.ok)\nassert(immutable==[1])\nprint(bad.error[\"class\"])\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "TypeError\n",
+      "stderr": ""
+    },
+    {
+      "name": "shadowed-and-immutable-error",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source": "fn local(){let push=(v,xs)=>[v+10]\n var xs=[]\n xs=push(1,xs)\n return xs}\nassert(local()==[11])\nlet immutable=[1]\nlet bad=attempt(()=>{immutable=push(2,immutable)})\nassert(!bad.ok)\nassert(immutable==[1])\nprint(bad.error[\"class\"])\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "TypeError\n",
+      "stderr": ""
+    },
+    {
+      "name": "argument-order-visible-alias",
+      "binary_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "source": "var xs=[1]\nlet cell={alias:nil}\nfn next(){cell.alias=xs\n xs[0]=9\n return 2}\nxs=push(next(),xs)\nassert(cell.alias==[9])\nassert(xs==[9,2])\nprint(jsonStringify([cell.alias,xs]))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[9],[9,2]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "argument-order-visible-alias",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source": "var xs=[1]\nlet cell={alias:nil}\nfn next(){cell.alias=xs\n xs[0]=9\n return 2}\nxs=push(next(),xs)\nassert(cell.alias==[9])\nassert(xs==[9,2])\nprint(jsonStringify([cell.alias,xs]))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "[[9],[9,2]]\n",
+      "stderr": ""
+    },
+    {
+      "name": "type-error-trace",
+      "binary_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "source": "var xs=[1]\nfn bad(){xs=push(2,0)}\nlet e=attempt(bad)\nassert(!e.ok)\nassert(xs==[1])\nprint(jsonStringify(e.error))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "{\"class\":\"TypeError\",\"col\":13,\"line\":2,\"message\":\"运算符 'push' 不支持 int 与 array\",\"traceback\":[{\"col\":7,\"func\":\"<module>\",\"line\":3},{\"col\":13,\"func\":\"bad\",\"line\":2}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "type-error-trace",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source": "var xs=[1]\nfn bad(){xs=push(2,0)}\nlet e=attempt(bad)\nassert(!e.ok)\nassert(xs==[1])\nprint(jsonStringify(e.error))\n",
+      "flags": [],
+      "exit": 0,
+      "stdout": "{\"class\":\"TypeError\",\"col\":13,\"line\":2,\"message\":\"运算符 'push' 不支持 int 与 array\",\"traceback\":[{\"col\":7,\"func\":\"<module>\",\"line\":3},{\"col\":13,\"func\":\"bad\",\"line\":2}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "budget-propagation",
+      "binary_sha256": "4816058d402a5d25c0455a0f9c5329febb0dd60629fc27d18654213a947ac636",
+      "source": "var xs=[]\nattempt(()=>{while true {\n xs=push(1,xs)\n}})\n",
+      "flags": [
+        "--json",
+        "--max-steps",
+        "100"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":3,\"col\":12,\"traceback\":[{\"file\":\"<command>\",\"line\":2,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":3,\"func\":\"<fn>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "budget-propagation",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source": "var xs=[]\nattempt(()=>{while true {\n xs=push(1,xs)\n}})\n",
+      "flags": [
+        "--json",
+        "--max-steps",
+        "100"
+      ],
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"<command>\",\"line\":3,\"col\":12,\"traceback\":[{\"file\":\"<command>\",\"line\":2,\"func\":\"<module>\"},{\"file\":\"<command>\",\"line\":3,\"func\":\"<fn>\"}]}\n",
+      "stderr": ""
+    }
+  ]
+}

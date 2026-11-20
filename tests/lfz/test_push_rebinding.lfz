@@ -1,0 +1,62 @@
+#42
+// T28 production-style batch collection. This file runs independently and is
+// automatically discovered by `lfz test`.
+
+// Accumulate a batch and retain the first page for a later consumer.
+var records = []
+var firstPage = nil
+for id in range(64) {
+    records = push(id, records)
+    if id == 15 { firstPage = records }
+}
+assert(len(records) == 64, "batch contains every accepted record")
+assert(records[0] == 0 && records[63] == 63, "batch preserves input order")
+assert(firstPage == range(16), "published page keeps its original length and values")
+records[0] = 900
+assert(firstPage[0] == 0, "later batch element writes do not overwrite the old array")
+
+// A callback appends through a captured variable, as in a record-processing job.
+fn collectSummaries(ids) {
+    var summaries = []
+    fn accept(id) {
+        summaries = push({id: id, label: "row-${id}"}, summaries)
+    }
+    each(accept, ids)
+    summaries
+}
+let summaries = collectSummaries([2, 4, 6])
+assert(len(summaries) == 3, "callback updates its captured batch binding")
+assert(map((row) => row.id, summaries) == [2, 4, 6], "captured batch order")
+assert(summaries[2].label == "row-6", "captured batch retains record fields")
+
+// Evaluate the element first. It publishes the old batch, then installs a new
+// target. The array argument must be read after those effects have completed.
+var pending = [10]
+let original = pending
+var published = nil
+fn rotateBatch() {
+    published = pending
+    pending = [20]
+    published
+}
+pending = push(rotateBatch(), pending)
+assert(len(pending) == 2 && pending[0] == 20, "push uses the rebound array argument")
+assert(pending[1] == [10], "element is the published old array")
+assert(original == [10] && published == [10], "publication remains available after assignment")
+published[0] = 11
+assert(original[0] == 11 && pending[1][0] == 11, "nested old array references remain shared")
+assert(pending[0] == 20, "nested mutation leaves the new batch prefix intact")
+
+// User-defined push dispatch still applies to the same assignment spelling.
+fn useLocalCollector() {
+    var calls = 0
+    let push = (value, xs) => {
+        calls += 1
+        [value, xs]
+    }
+    var batch = [1, 2]
+    batch = push(9, batch)
+    assert(calls == 1, "local push is invoked once")
+    batch
+}
+assert(useLocalCollector() == [9, [1, 2]], "local push binding controls the assignment result")
