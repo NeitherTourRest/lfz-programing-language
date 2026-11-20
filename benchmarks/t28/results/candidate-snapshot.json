@@ -1,0 +1,118 @@
+{
+  "archive_sha256": "b2e1f6bb6ed86d6f8102e053a8b2ea425272000979edaa2517fe9795c9cbbe54",
+  "archive_bytes": 742402,
+  "entries": {
+    "lfz.exe": {
+      "sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "bytes": 1132032
+    },
+    "src/ast.rs": {
+      "sha256": "4706d3b49149e41bf7d73d9991d5175be71b9c385237acf6995df62c9e921076",
+      "bytes": 39079
+    },
+    "src/builtins.rs": {
+      "sha256": "111acf0a4b80d1c094b5c95be49f59ebce1bd37bb161a3cd8091dee85f78e6df",
+      "bytes": 118546
+    },
+    "src/cli.rs": {
+      "sha256": "d0b34eca901cc5a240471457192980d8662d2d9797f12f6618440417a328767d",
+      "bytes": 76217
+    },
+    "src/env.rs": {
+      "sha256": "07800b074b1fe235908f19c32cad288bc489799d9bf00784aa79616a23d410c5",
+      "bytes": 23154
+    },
+    "src/error.rs": {
+      "sha256": "6081094b0c8e23e2f362d07e7401ce04ecebcbc359f6526b7feb16d01271c44f",
+      "bytes": 61183
+    },
+    "src/evaluator.rs": {
+      "sha256": "df62ef3c260dd32aaaa7f66c28a6bd8f1b77f39db97e454d69a99b227b6f2d43",
+      "bytes": 239442
+    },
+    "src/formatter.rs": {
+      "sha256": "1d5d81766b3d2be53c6e8c4b5737d76d66c6c1995eb20cdc4e3d354258a08573",
+      "bytes": 6592
+    },
+    "src/http_control/windows.rs": {
+      "sha256": "0a525c7476dbf9d086b2f58e37cf18c31f02d3856766fe1ad4abe5e13e2c4a78",
+      "bytes": 18240
+    },
+    "src/http_control.rs": {
+      "sha256": "3a2373b1422d1e845dfc188b53b2e7036af3725d22c156650ab1a6c34f09a4a2",
+      "bytes": 3528
+    },
+    "src/json.rs": {
+      "sha256": "aac7d577b48d96fad7cd7fd9cb2ca4ee12567b209228ccce8e726d9ee63d7a5f",
+      "bytes": 16503
+    },
+    "src/json_codec.rs": {
+      "sha256": "2c655500e1cfdae0c4ae50bb8c238b2c6c1175a376614b6e046cf5b7f7bf89f2",
+      "bytes": 17226
+    },
+    "src/lexer.rs": {
+      "sha256": "eb318a3d8458f667ec1917e289cd16932056a2bd62bcb8636440af1b4ae6a914",
+      "bytes": 48414
+    },
+    "src/lib.rs": {
+      "sha256": "cf9f7658009bf991db5b9d60a782d5231ee07fc988fbb60c85ab2f5e6c93274f",
+      "bytes": 1024
+    },
+    "src/line_reader.rs": {
+      "sha256": "7ab61997386a7e71b4fe90d62235500bce5cf20fe6a063619b70d3dbfa2a9b15",
+      "bytes": 12971
+    },
+    "src/loader.rs": {
+      "sha256": "b1cfff2713f56231a33c60dfcaa7ffd0b0345ceea8ce01242850bd7b8859e73f",
+      "bytes": 16480
+    },
+    "src/main.rs": {
+      "sha256": "fa68e1cec6c8abbd5bfa84736c4b35ce94cadbaca62bdabec1d2fc91f4694188",
+      "bytes": 872
+    },
+    "src/modules.rs": {
+      "sha256": "664a3b5877d2c46fb4559463d2c699ff9ccbb8fdd0a9464a919c8b1559641895",
+      "bytes": 17533
+    },
+    "src/parser.rs": {
+      "sha256": "b3ad0318f0175514007ca73b33887a2cf3123b2e036c713dab282254d416e2b8",
+      "bytes": 231940
+    },
+    "src/process_control/fixture.rs": {
+      "sha256": "0c09739e3327414281a5e89d5ad59dc5ec8356d1c6bbe9428dddcf9829f2b0a9",
+      "bytes": 1803
+    },
+    "src/process_control/windows.rs": {
+      "sha256": "540d14c697dcd84e2a9ba6a0f2415b24509335206617ad939c7318e0a8e76a09",
+      "bytes": 21560
+    },
+    "src/process_control.rs": {
+      "sha256": "e8cfcc7e54d7f2fb24f9d979d6f27d79bfcb20afaa7864326b7d49f13dab0442",
+      "bytes": 2006
+    },
+    "src/source.rs": {
+      "sha256": "004c3d35615bba42c64d27d0d3e168455ad481d104e6906032500ff307754468",
+      "bytes": 5420
+    },
+    "src/span.rs": {
+      "sha256": "36e669b9d7144a99b0c6d4a14507d1b02ff2a95e01edd98ebc10a78008fefdf2",
+      "bytes": 2305
+    },
+    "src/test_runner.rs": {
+      "sha256": "a314790d88d4296e2cb953c7b1a565f83e4f3f2f6bec543216fe70c024f2400c",
+      "bytes": 29354
+    },
+    "src/value.rs": {
+      "sha256": "63967cb79996c7fedfe7285378e58c2774825c73680a81e50c12a185bbe438a0",
+      "bytes": 48864
+    },
+    "Cargo.toml": {
+      "sha256": "2957325d259be8f0278cdd3f0d83d20c2ffd09ec750ca0b55743e4cb9b9e028c",
+      "bytes": 795
+    },
+    "Cargo.lock": {
+      "sha256": "1932aefc1e4ed67ef8f2d86857c05febcc6a6caf3df12ccd65c10a7f53f206d4",
+      "bytes": 147
+    }
+  }
+}
