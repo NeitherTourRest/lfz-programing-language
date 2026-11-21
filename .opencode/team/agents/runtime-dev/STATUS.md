@@ -1,2 +1,7 @@
 # runtime-dev 状态
-2026-11-20 T28原型已停写交root构建。仅evaluator/env。普通name=push(element,name)在原参数/Flow/poll后延迟到同一赋值位置检查可写与唯一强引用/无Weak，mem::take Vec并新Rc一次写回。Env local_binding共用idx/mutable查找。4新unit未运行。evaluator DF62EF3C…/env07800B07…，原字节基线Temp/T28-runtime。报告docs/reports/T28-runtime-prototype.md。编译/旧回归/性能对照待root唯一执行。
+
+2026-11-20 T29参数帧原型已同步根src并停源交root唯一构建。事前只读核验env/evaluator与66565e3一致，原字节备份Temp/T29-runtime/*.root-baseline。隔离可构建副本Temp/T29-runtime/prototype、REVIEW.md、baseline/prototype SHA及root-handoff.json保全。
+
+每次HOF独立单帧缓存，成功后立即清值/Shared cell引用，参数名匹配时保留String，下一回新Direct槽；错误drop保故障栈。只缓存小帧，所有旧API/poll保持。4新unit未编译，风险和固定双full中位/4/6门槛交root验证。根evaluator fdf89ffb…/env6ae04c19…。
+
+未编译计时。若拒收按root-baseline恢复精确原字节并保实验归档。

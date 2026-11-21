@@ -979,3 +979,14 @@
 
 ### [2026-11-20] T28 诊断脚本分组补充
 - 第3组精确允许 benchmarks/t28/diagnose.py，用于 array_builtins 残余成本诊断；文件尚待落盘，root最终prepare会按实际清单纳入。本次只改分组及自身记录。
+
+### [2026-11-20] T29 暂存准备
+- Temp/T29/prepare-checkpoint.py 两种明确决策模式已落。retain-source preparation通过，ZIP成员逐项SHA与长度回读正确。archive-only要求拒收源码已恢复基线，仍保留ZIP/清单。三用户过滤和main/dist约束沿T28，未执行Git写入或LFZ/Cargo。
+
+### [2026-11-20] T29 基准输入原始字节归档
+- 新增 benchmarks/t29/results/benchmark-inputs.zip 与 benchmark-inputs.json，11项，25746B，SHA256 8800480693667d9c296412564fafea3d3ada488a6749dcac9ac698fa57d9383a。成员均为仓库相对路径，ZIP回读与原件逐字节一致。
+- 对照screen依赖/预声明、T28 focused/diagnosis以及原协议脚本和两基线JSON的预期SHA全部符合。实际T28 run-gate与T27 assess-gate入口按主调度确认归档，缺少入口预声明SHA的限制明确记在manifest notes。
+- 未运行LFZ、计时或Git，原基线只读。
+
+### [2026-11-21] T29 最终交付预备
+- prepare-delivery.py只读模式通过，旧dist与T26 ZIP相符，新候选与T29 ZIP相符。delivery-steps.md列四候选commit后的明确GO、旧实物保全、原子dist切换与第五文档提交步骤。当前未更新README/交付清单或dist，未Git写入，等待独立终验和主调度GO。

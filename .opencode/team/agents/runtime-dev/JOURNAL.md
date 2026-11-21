@@ -333,3 +333,6 @@ join 改为持原数组借用遍历，校正 BUILTIN_NAMES 注释。逐字节逆
 
 ### [2026-11-20] T28缓冲复用原型
 设计后获GO，仅普通push赋值在写入前证明唯一强引用+无Weak再移动Vec到fresh Rc，原分派/Flow/错误优先/计步保护。采root FnOnce和local_binding共用建议。4unit未编译，evaluator DF62EF3C…/env07800B07…停写交root。
+
+### [2026-11-20] T29隔离参数帧原型
+先准备Temp完整src/Cargo副本及4新unit，root确认T28归档后核66565e3并同步两源。小帧HOF私有cache、Shared cell隔离、正常清值与参数名复用，未编译/计时，固定门槛待root执行，失败可原字节恢复。
