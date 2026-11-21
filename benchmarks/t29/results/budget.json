@@ -1,0 +1,1 @@
+{"ok":false,"error":"ExecutionLimitError","message":"执行步数预算已耗尽","file":"tests/fixtures/t27_find_index_budget.lfz","line":6,"col":26,"traceback":[{"file":"tests/fixtures/t27_find_index_budget.lfz","line":9,"func":"<module>"},{"file":"tests/fixtures/t27_find_index_budget.lfz","line":9,"func":"<fn>"},{"file":"tests/fixtures/t27_find_index_budget.lfz","line":6,"func":"expensive"}]}

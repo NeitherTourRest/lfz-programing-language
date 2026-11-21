@@ -1,0 +1,12 @@
+{
+  "src/evaluator.rs": {
+    "baseline": "df62ef3c260dd32aaaa7f66c28a6bd8f1b77f39db97e454d69a99b227b6f2d43",
+    "candidate": "fdf89ffba9c7bf2131fe5922dc9da8e5ac14d8a1e78a8478210ea0eb8cb2855d",
+    "verified_commit": "66565e3"
+  },
+  "src/env.rs": {
+    "baseline": "07800b074b1fe235908f19c32cad288bc489799d9bf00784aa79616a23d410c5",
+    "candidate": "6ae04c196571aeb0282c84decc9a7fb842e4c016657546a8a466611f5a48a0cd",
+    "verified_commit": "66565e3"
+  }
+}

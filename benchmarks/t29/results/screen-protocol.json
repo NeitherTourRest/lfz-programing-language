@@ -1,0 +1,94 @@
+{
+  "declared_date": "2026-11-20",
+  "status": "PREPARED_NOT_MEASURED",
+  "timing_or_compilation_started": false,
+  "criteria": {
+    "baseline_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+    "cases_in_initial_order": [
+      "control",
+      "array_full",
+      "array_map_filter",
+      "array_sort_reduce",
+      "string_full",
+      "push_self_8000"
+    ],
+    "warmup_rounds": 1,
+    "formal_rounds": 6,
+    "settle_after_copy_seconds": 1,
+    "execution": "one subject.exe path; two binary blocks per round; label order alternates; case order rotates by one",
+    "round_indices": "warmup=-1, formal=0..5; odd rounds candidate first, even rounds t28 first",
+    "required_improvements": {
+      "array_full": {
+        "candidate_median_strictly_lower": true,
+        "minimum_paired_wins": 4
+      },
+      "string_full": {
+        "candidate_median_strictly_lower": true,
+        "minimum_paired_wins": 4
+      }
+    },
+    "regression_veto": {
+      "control": {
+        "candidate_over_baseline_median_strictly_above": 1.1,
+        "minimum_paired_slower_rounds": 5
+      },
+      "push_self_8000": {
+        "candidate_over_baseline_median_strictly_above": 1.1,
+        "minimum_paired_slower_rounds": 5
+      }
+    },
+    "ties": "equal elapsed times count as neither a win nor a slower round",
+    "pairing": "same case and formal round; elapsed wall milliseconds, warmup excluded",
+    "other_segments": "array_map_filter and array_sort_reduce are diagnostic only, with all medians and paired counts reported",
+    "correctness": "every process exit 0, no stderr, stdout exact after CRLF normalization; any mismatch or timeout aborts screen",
+    "selection": "pass iff both improvement criteria hold, neither veto holds and every output matches; not the R304 release gate",
+    "retries": "no automatic retry, early performance stop, sample removal or threshold change"
+  },
+  "dependencies_sha256": {
+    "benchmarks/t29/screen.py": "b38a88dd80d2b9659d68fd99effaed6b25d1604704d78b5da58cec3ac331cea1",
+    "benchmarks/t28/diagnose.py": "90cbad5d05d46e27b2321d8b904a00b44172da967b98a64afbbdbbead9df8a06",
+    "benchmarks/t28/focused.py": "d9af70d361e799c8542cfdceed07a8068bbabc8822287d56d311d0b450e6e82c",
+    "benchmarks/t13/protocol.json": "74934a4ebc1f2eca5a6ea00e8d6e1c39ed5a4de5315a6cb8524d076d84c9f1bb"
+  },
+  "cases": {
+    "control": {
+      "source_sha256": "1769b85c4b6fddf278116d3c75c58a8f40c178b37e12f50859114f8139c1bc34",
+      "stdin": "10000\n",
+      "expected_stdout": "RESULT control=1\nRESULT control=1\nRESULT control=1\nRESULT control=1\nRESULT control=1\nRESULT control=1\nRESULT control=1\nRESULT control=1\nRESULT control=1\nRESULT control=1\nRESULT control=1\nRESULT control=1\nRESULT control=1\nRESULT control=1\nRESULT control=1\nRESULT control=1\n"
+    },
+    "array_full": {
+      "source_sha256": "e9733baa7063053c402ec2526ed8554755bf07380f6e84f3abbcbb0b928b8dba",
+      "stdin": "10000\n",
+      "expected_stdout": "RESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\n"
+    },
+    "array_map_filter": {
+      "source_sha256": "07366daf12b08f107eeb0947aa841dd3353ca0c03016009251e8d154bef75070",
+      "stdin": "10000\n",
+      "expected_stdout": "RESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\nRESULT n=5000 first=0 last=9986\n"
+    },
+    "array_sort_reduce": {
+      "source_sha256": "54c993695c92931a9db376dae6cfafe94fca08b95ace9466bb8078fc4acc5069",
+      "stdin": "10000\n",
+      "expected_stdout": "RESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\nRESULT total=24995000\n"
+    },
+    "string_full": {
+      "source_sha256": "c724b85802a78a0dbfaff48b3424d5351f7d7680a24e06849351358b136a1ef7",
+      "stdin": "2000\n",
+      "expected_stdout": "RESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\nRESULT chars=16889 words=2000 tag=ababab\n"
+    },
+    "push_self_8000": {
+      "source_sha256": "8320af2f9927338bf4f31f9bc365e56f9914fa3d25ac01befca0dca607b6e1e7",
+      "stdin": "8000\n",
+      "expected_stdout": "RESULT n=8000 first=0 last=7999 sum=0\n"
+    }
+  },
+  "static_validation": {
+    "ast_parse": true,
+    "exact_case_count": 6,
+    "synthetic_threshold_checks": 4,
+    "no_lfz_process_started": true
+  },
+  "invocation": "D:/app/ANACONDA/python.exe -B benchmarks/t29/screen.py --baseline <T28_EXE> --candidate <CANDIDATE_EXE> --candidate-sha <SHA256> --work-dir Temp/T29/<NEW_SCREEN_DIR>",
+  "outputs": "screen.json retains criteria, dependencies, both source identities, fixtures, 84 process samples (12 warmup + 72 formal), paired medians/counts; aborted samples retained",
+  "handoff": "Await team-lead dispatch; no benchmark or compiler invoked. Only screen.py and this Temp/T29 declaration written."
+}

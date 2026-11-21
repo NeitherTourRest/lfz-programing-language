@@ -1,0 +1,163 @@
+{
+  "status": "PASS",
+  "archive": "benchmarks/t29/results/benchmark-inputs.zip",
+  "archive_bytes": 25746,
+  "archive_sha256": "8800480693667d9c296412564fafea3d3ada488a6749dcac9ac698fa57d9383a",
+  "members": 11,
+  "files": {
+    "benchmarks/t12/process_measure.py": {
+      "bytes": 1396,
+      "sha256": "ce7eacd78a75e9bbf87cb829e9b206cb946690edb9b96270c08c352012a01bf4",
+      "claims": [
+        {
+          "source": "benchmarks/t13/protocol.json#supporting_scripts",
+          "expected_sha256": "ce7eacd78a75e9bbf87cb829e9b206cb946690edb9b96270c08c352012a01bf4",
+          "match": true
+        }
+      ]
+    },
+    "benchmarks/t12/results/before-small.json": {
+      "bytes": 5992,
+      "sha256": "b85707fea800b5b2bd1e17d4791d7c2a0f594e21929555fb1aad3d8debd334d3",
+      "claims": [
+        {
+          "source": "benchmarks/t13/protocol.json#original_baseline_files",
+          "expected_sha256": "b85707fea800b5b2bd1e17d4791d7c2a0f594e21929555fb1aad3d8debd334d3",
+          "match": true
+        }
+      ]
+    },
+    "benchmarks/t12/results/before.json": {
+      "bytes": 32540,
+      "sha256": "ee650be02706381021f191206f22d233c567514652008884b8a6d56d97f9d396",
+      "claims": [
+        {
+          "source": "benchmarks/t13/protocol.json#original_baseline_files",
+          "expected_sha256": "ee650be02706381021f191206f22d233c567514652008884b8a6d56d97f9d396",
+          "match": true
+        }
+      ]
+    },
+    "benchmarks/t13/protocol.json": {
+      "bytes": 15857,
+      "sha256": "74934a4ebc1f2eca5a6ea00e8d6e1c39ed5a4de5315a6cb8524d076d84c9f1bb",
+      "claims": [
+        {
+          "source": "benchmarks/t29/results/screen.json#dependencies_sha256",
+          "expected_sha256": "74934a4ebc1f2eca5a6ea00e8d6e1c39ed5a4de5315a6cb8524d076d84c9f1bb",
+          "match": true
+        },
+        {
+          "source": "benchmarks/t29/results/screen-protocol.json#dependencies_sha256",
+          "expected_sha256": "74934a4ebc1f2eca5a6ea00e8d6e1c39ed5a4de5315a6cb8524d076d84c9f1bb",
+          "match": true
+        },
+        {
+          "source": "benchmarks/t28/results/diagnosis.json#protocol_sha256",
+          "expected_sha256": "74934a4ebc1f2eca5a6ea00e8d6e1c39ed5a4de5315a6cb8524d076d84c9f1bb",
+          "match": true
+        }
+      ]
+    },
+    "benchmarks/t13/run.py": {
+      "bytes": 13302,
+      "sha256": "667627e37a90b6da52e36f712118ece76b688453b6fb50a3e06604493134cc07",
+      "claims": [
+        {
+          "source": "benchmarks/t13/protocol.json#supporting_scripts",
+          "expected_sha256": "667627e37a90b6da52e36f712118ece76b688453b6fb50a3e06604493134cc07",
+          "match": true
+        },
+        {
+          "source": "Temp/T29/gate.receipt.json#runner_sha256",
+          "expected_sha256": "667627e37a90b6da52e36f712118ece76b688453b6fb50a3e06604493134cc07",
+          "match": true
+        }
+      ]
+    },
+    "benchmarks/t27/assess-gate.py": {
+      "bytes": 1163,
+      "sha256": "f323b6c8184f3d6d87bcff66262a85624ee9d5a1978de7be6d6739e759fbe590",
+      "claims": []
+    },
+    "benchmarks/t28/diagnose.py": {
+      "bytes": 6117,
+      "sha256": "90cbad5d05d46e27b2321d8b904a00b44172da967b98a64afbbdbbead9df8a06",
+      "claims": [
+        {
+          "source": "benchmarks/t29/results/screen.json#dependencies_sha256",
+          "expected_sha256": "90cbad5d05d46e27b2321d8b904a00b44172da967b98a64afbbdbbead9df8a06",
+          "match": true
+        },
+        {
+          "source": "benchmarks/t29/results/screen-protocol.json#dependencies_sha256",
+          "expected_sha256": "90cbad5d05d46e27b2321d8b904a00b44172da967b98a64afbbdbbead9df8a06",
+          "match": true
+        },
+        {
+          "source": "benchmarks/t28/results/diagnosis.json#runner_sha256",
+          "expected_sha256": "90cbad5d05d46e27b2321d8b904a00b44172da967b98a64afbbdbbead9df8a06",
+          "match": true
+        }
+      ]
+    },
+    "benchmarks/t28/focused.py": {
+      "bytes": 8353,
+      "sha256": "d9af70d361e799c8542cfdceed07a8068bbabc8822287d56d311d0b450e6e82c",
+      "claims": [
+        {
+          "source": "benchmarks/t29/results/screen.json#dependencies_sha256",
+          "expected_sha256": "d9af70d361e799c8542cfdceed07a8068bbabc8822287d56d311d0b450e6e82c",
+          "match": true
+        },
+        {
+          "source": "benchmarks/t29/results/screen-protocol.json#dependencies_sha256",
+          "expected_sha256": "d9af70d361e799c8542cfdceed07a8068bbabc8822287d56d311d0b450e6e82c",
+          "match": true
+        },
+        {
+          "source": "benchmarks/t28/results/focused.json#runner_sha256",
+          "expected_sha256": "d9af70d361e799c8542cfdceed07a8068bbabc8822287d56d311d0b450e6e82c",
+          "match": true
+        },
+        {
+          "source": "benchmarks/t28/results/diagnosis.json#shared_runner_sha256",
+          "expected_sha256": "d9af70d361e799c8542cfdceed07a8068bbabc8822287d56d311d0b450e6e82c",
+          "match": true
+        }
+      ]
+    },
+    "benchmarks/t28/run-gate.py": {
+      "bytes": 2331,
+      "sha256": "c10e3fed39758f5231a40174765cf7e0b6ea9c385964083d48211e8a5f925fde",
+      "claims": []
+    },
+    "benchmarks/t29/results/screen-protocol.json": {
+      "bytes": 6340,
+      "sha256": "65e57a1be3804cf1c321c4d154b41124afba28eda10d565d19657d8bf82c573c",
+      "claims": []
+    },
+    "benchmarks/t29/screen.py": {
+      "bytes": 8543,
+      "sha256": "b38a88dd80d2b9659d68fd99effaed6b25d1604704d78b5da58cec3ac331cea1",
+      "claims": [
+        {
+          "source": "benchmarks/t29/results/screen.json#dependencies_sha256",
+          "expected_sha256": "b38a88dd80d2b9659d68fd99effaed6b25d1604704d78b5da58cec3ac331cea1",
+          "match": true
+        },
+        {
+          "source": "benchmarks/t29/results/screen-protocol.json#dependencies_sha256",
+          "expected_sha256": "b38a88dd80d2b9659d68fd99effaed6b25d1604704d78b5da58cec3ac331cea1",
+          "match": true
+        }
+      ]
+    }
+  },
+  "issues": [],
+  "notes": [
+    "Team-lead confirmed the actual preflight and formal wrapper was benchmarks/t28/run-gate.py, invoking benchmarks/t13/run.py with Temp/T29/candidate.exe. Gate recomputation used benchmarks/t27/assess-gate.py.",
+    "No predeclared wrapper SHA was found in screen dependencies or gate receipt. Its observed SHA records preserved bytes, not retrospective predeclaration."
+  ],
+  "executed_benchmarks": false
+}

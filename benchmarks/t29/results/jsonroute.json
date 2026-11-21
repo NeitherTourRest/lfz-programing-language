@@ -1,0 +1,177 @@
+{
+  "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+  "binary_bytes": 1137664,
+  "source_sha256": "eb706d114f47d3534f497597f51ac39f73eba8ff29ce40e3baa9f2b7d815ccb4",
+  "status": "completed",
+  "rows": [
+    {
+      "name": "first_overlap",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29\\candidate.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz"
+      ],
+      "payload": "{\"event\": {\"kind\": \"build\", \"severity\": 4}, \"rules\": [{\"kind\": \"build\", \"minSeverity\": 4, \"target\": \"build-oncall\"}, {\"kind\": \"*\", \"minSeverity\": 0, \"target\": \"general\"}]}",
+      "mode": "stdin",
+      "expected": {
+        "matched": true,
+        "index": 0,
+        "target": "build-oncall",
+        "checked": 1
+      },
+      "passed": true,
+      "exit": 0,
+      "stdout": "{\"checked\":1,\"index\":0,\"matched\":true,\"target\":\"build-oncall\"}\n",
+      "stderr": ""
+    },
+    {
+      "name": "reversed_priority",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29\\candidate.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz"
+      ],
+      "payload": "{\"event\": {\"kind\": \"build\", \"severity\": 4}, \"rules\": [{\"kind\": \"*\", \"minSeverity\": 0, \"target\": \"general\"}, {\"kind\": \"build\", \"minSeverity\": 4, \"target\": \"build-oncall\"}]}",
+      "mode": "stdin",
+      "expected": {
+        "matched": true,
+        "index": 0,
+        "target": "general",
+        "checked": 1
+      },
+      "passed": true,
+      "exit": 0,
+      "stdout": "{\"checked\":1,\"index\":0,\"matched\":true,\"target\":\"general\"}\n",
+      "stderr": ""
+    },
+    {
+      "name": "second_match",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29\\candidate.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz",
+        "--",
+        "{\"event\": {\"kind\": \"build\", \"severity\": 4}, \"rules\": [{\"kind\": \"build\", \"minSeverity\": 5, \"target\": \"urgent\"}, {\"kind\": \"build\", \"minSeverity\": 4, \"target\": \"build-oncall\"}, {\"kind\": \"*\", \"minSeverity\": 0, \"target\": \"general\"}]}"
+      ],
+      "payload": "{\"event\": {\"kind\": \"build\", \"severity\": 4}, \"rules\": [{\"kind\": \"build\", \"minSeverity\": 5, \"target\": \"urgent\"}, {\"kind\": \"build\", \"minSeverity\": 4, \"target\": \"build-oncall\"}, {\"kind\": \"*\", \"minSeverity\": 0, \"target\": \"general\"}]}",
+      "mode": "argv",
+      "expected": {
+        "matched": true,
+        "index": 1,
+        "target": "build-oncall",
+        "checked": 2
+      },
+      "passed": true,
+      "exit": 0,
+      "stdout": "{\"checked\":2,\"index\":1,\"matched\":true,\"target\":\"build-oncall\"}\n",
+      "stderr": ""
+    },
+    {
+      "name": "unicode_target",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29\\candidate.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz"
+      ],
+      "payload": "{\"event\": {\"kind\": \"构建\", \"severity\": 1}, \"rules\": [{\"kind\": \"构建\", \"minSeverity\": 1, \"target\": \"值班组\"}]}",
+      "mode": "stdin",
+      "expected": {
+        "matched": true,
+        "index": 0,
+        "target": "值班组",
+        "checked": 1
+      },
+      "passed": true,
+      "exit": 0,
+      "stdout": "{\"checked\":1,\"index\":0,\"matched\":true,\"target\":\"值班组\"}\n",
+      "stderr": ""
+    },
+    {
+      "name": "unmatched",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29\\candidate.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz"
+      ],
+      "payload": "{\"event\": {\"kind\": \"build\", \"severity\": 4}, \"rules\": [{\"kind\": \"test\", \"minSeverity\": 1, \"target\": \"testing\"}, {\"kind\": \"build\", \"minSeverity\": 5, \"target\": \"urgent\"}]}",
+      "mode": "stdin",
+      "expected": {
+        "matched": false,
+        "index": null,
+        "target": null,
+        "checked": 2
+      },
+      "passed": true,
+      "exit": 0,
+      "stdout": "{\"checked\":2,\"index\":null,\"matched\":false,\"target\":null}\n",
+      "stderr": ""
+    },
+    {
+      "name": "empty",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29\\candidate.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz"
+      ],
+      "payload": "{\"event\": {\"kind\": \"build\", \"severity\": 4}, \"rules\": []}",
+      "mode": "stdin",
+      "expected": {
+        "matched": false,
+        "index": null,
+        "target": null,
+        "checked": 0
+      },
+      "passed": true,
+      "exit": 0,
+      "stdout": "{\"checked\":0,\"index\":null,\"matched\":false,\"target\":null}\n",
+      "stderr": ""
+    },
+    {
+      "name": "invalid_rule_after_match",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29\\candidate.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz"
+      ],
+      "payload": "{\"event\": {\"kind\": \"build\", \"severity\": 4}, \"rules\": [{\"kind\": \"build\", \"minSeverity\": 4, \"target\": \"build-oncall\"}, {\"kind\": \"*\", \"minSeverity\": true, \"target\": \"general\"}]}",
+      "mode": "stdin",
+      "expected": "rules[1].minSeverity 必须是非负整数",
+      "passed": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz\", line 42, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz\", line 40, in main\n        print(jsonStringify(route(jsonParse(source))))\n                            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz\", line 22, in route\n            require(type(rule.minSeverity) == \"int\" && rule.minSeverity >= 0, \"${label}.minSeverity 必须是非负整数\")\n            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz\", line 3, in require\n        if !ok { fail(\"jsonroute: ${message}\") }\n                 ^\nAssertionError: jsonroute: rules[1].minSeverity 必须是非负整数\n"
+    },
+    {
+      "name": "missing_field",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29\\candidate.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz"
+      ],
+      "payload": "{\"event\": {\"kind\": \"build\"}, \"rules\": []}",
+      "mode": "stdin",
+      "expected": "event 缺少 severity",
+      "passed": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz\", line 42, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz\", line 40, in main\n        print(jsonStringify(route(jsonParse(source))))\n                            ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz\", line 13, in route\n        requireFields(event, [\"kind\", \"severity\"], \"event\")\n        ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz\", line 7, in requireFields\n        for field in fields { require(has(field, item), \"${label} 缺少 ${field}\") }\n                              ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz\", line 3, in require\n        if !ok { fail(\"jsonroute: ${message}\") }\n                 ^\nAssertionError: jsonroute: event 缺少 severity\n"
+    },
+    {
+      "name": "invalid_json",
+      "argv": [
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29\\candidate.exe",
+        "run",
+        "D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz"
+      ],
+      "payload": "{broken",
+      "mode": "stdin",
+      "expected": "ValueError:",
+      "passed": true,
+      "exit": 2,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz\", line 42, in <module>\n    main(argv())\n    ^\n  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\app\\jsonroute.lfz\", line 40, in main\n        print(jsonStringify(route(jsonParse(source))))\n                                  ^\nValueError: JSON 解析失败（字节偏移 1）：不是合法的 JSON\n"
+    }
+  ],
+  "total": 9,
+  "passed": 9
+}
