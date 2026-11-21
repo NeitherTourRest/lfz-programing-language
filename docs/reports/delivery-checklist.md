@@ -8,7 +8,17 @@
 
 > **2026-10-24 本轮补充核对（T11-12/13/14/16）**：8 项交付物位置保持齐备。当前 69 内置、494 Rust 测试（388+48+28+15+15）、130 黑盒；语言 witness 74/74，V01 干净 CWD 130/130 已独立闭环，详见 `T11-v11-reverification.md`。本地执行 `scripts/build-release.ps1` exit 0，`dist/lfz.exe` 766464 B、`lfz 1.0.1`，hello 冒烟输出 `Hello, LFZ!`；发布版 `dist/lfz.exe test --json` total/passed=130、failed/errored=0、exit 0。SHA256=`149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，原文见 `T11-v11-release-evidence/`。构建有本机 rustup canonicalize 提示，不声称零 warning。`dist/` 被忽略，仅本地刷新、不强制入库；版本仍 1.0.1，既有 8 个 tag 不变，本轮不打 v1.3.0。同题 8 盲测缺原题材料未重跑，历史 2/8 不变。下文 2026-09-27 原始计数、缺陷和历史标签信息保留其当时语境；当前状态以本补充及本轮独立报告为准。
 > **2026-10-24 v2 正式首轮补充核对**：新增[正式独立验收报告](agent-benchmark-v2/v2-20261024-r01/REVIEW.md)与[认证结果](agent-benchmark-v2/v2-20261024-r01/certified-results.json)，run-id `v2-20261024-r01`：8/8 整题、131/131 功能用例，8 份源码约束与协议审查均 PASS；学生共 9 次 LFZ 自调，各题首次自调均 exit 0（8/8），仅为自选测试辅指标。模型为会话日志确认的 `gpt-6.1-sol / medium`；隔离范围为分题无历史派发、指令约束及已记录工具审计，未声称 OS 隔离。新八题是独立 v2 基线，不以历史 2/8 计算提升。[原始字节 ZIP](agent-benchmark-v2/v2-20261024-r01/raw-inputs-submissions.zip)及其[哈希清单](agent-benchmark-v2/v2-20261024-r01/raw-archive.json)提供 Git 行尾归一化之外的原文留存。当前解释器仍为 Cargo 1.0.1 / 69 内置 / 494 Rust 测试 / 130 正式黑盒；dist 766464 B、SHA256 `149B184E442FFBF250590431FA0AEFFAB401EAC526FAF60B4B435F620725D5AB`，本轮不重编译或改 Cargo，保持冻结 pin。`v1.3.0` 交付里程碑包含已验收的 v1.1 实现、测试/指南及 v2 正式首轮认证与原始证据；Git 附注标签为发布凭据，不等同于解释器 1.0.1 的版本变更。上方“本轮不打 v1.3.0”仅描述前一批发布时点。
-## 2026-11-17 T26 回调优化候选交付
+## 2026-11-21 T29 当前候选交付
+
+本地 `dist/lfz.exe` 已更新为 T29，1137664 字节，SHA256 `f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9`。T26 旧实物已保存在项目 `Temp/T29/lfz-T26-7a144213.exe`，SHA256 `7a14421320bc93d460d3be9abf48aa89b9c8091f7c6fc928ee11e860e52aa8ef`。新旧实物分别与各自冻结 ZIP 内的 exe 逐字节一致。T29 ZIP 745482 字节，SHA256 `f34a034cb31a25a5f15d5a1a2602661b9729ca36a1e7dd646eac0022e65f9854`，全部成员长度和 SHA 已回读核对。[候选 ZIP](../../benchmarks/t29/results/candidate-snapshot.zip) · [清单](../../benchmarks/t29/results/candidate-snapshot.json)
+
+已交付 T27 首次匹配 `findIndex`、T28 独占数组追加缓冲复用与 T29 回调帧复用。最终候选通过 726 项 Rust release、182 项 LFZ 黑盒、17 套既有回归、37 项 REPL、27 项格式化、JSON 路由 9 项与交互工具 6 项。人类指南 3 项、AI 指南 4 项实跑通过，十组独立功能差分逐字节一致。[T27](T27-find-index.md) · [T28](T28-array-append.md) · [T29 实测及功能记录](T29-callback-frames.md)
+
+独立审核复算 76 组、684 条正式窗记录（152 预热、532 正式），原 19 条固定线、struct 至少 30% 降时目标与九项 JSON/CLI 能力全部通过。struct_ops 8000 中位 15.2285 ms，相对原基线下降 82.9773%。JSON parse 相邻可比净时比均低于 3.0，stringify 按原规则保留总时口径。原始计时及历史失败保持归档。[独立验收](T29-independent-verification.md) · [离线复算入口](T29-independent-evidence/offline-audit.py) · [原字节基准输入](../../benchmarks/t29/results/benchmark-inputs.zip)
+
+主调度在候选四组提交后授权本次本地交付切换，文档与角色记录供最后交付提交使用。当前为候选交付，无正式发布或新标签。
+
+## 2026-11-17 T26 历史回调优化候选交付
 
 Windows 候选 B 为 1119232 字节，SHA256 `7a14421320bc93d460d3be9abf48aa89b9c8091f7c6fc928ee11e860e52aa8ef`。精确候选 ZIP 为 739914 字节，SHA256 `2d831875d1a4aee967cd58c82fb7ee98fc5035034950dc779a6820450eade361`。[候选快照](../../benchmarks/t26/results/candidate-snapshot.zip)
 

@@ -36,3 +36,5 @@ T28 和 T29 在同一个可执行文件路径交替运行。六个负载各预�
 为方便异机复核，性能输入包保存本次实际使用的基准脚本、冻结协议、原始基线数据和筛选预声明的字节，路径按仓库根目录组织。[输入包](../../benchmarks/t29/results/benchmark-inputs.zip) · [逐项 SHA256](../../benchmarks/t29/results/benchmark-inputs.json)
 
 独立复核确认这份候选通过 R304。九项 JSON 与 CLI 能力的输出、退出码符合预期。按原启动占比和净时规则，JSON 解析的两个相邻输入翻倍区间比值为 2.18 和 2.05，均满足 3.0 的上限。JSON 序列化只有 8,000 项满足净时估算条件，因此三档分别报告总时。验收基于本次 Windows 整体进程计时；独立复核读取仓库归档即可重算。[独立报告](T29-independent-verification.md) · [离线复核入口](T29-independent-evidence/offline-audit.py)
+
+交付时直接运行 `dist/lfz.exe`，在同一个程序中检查首个匹配位置、数组旧别名和闭包分别捕获的值。文件入口与 `-e` 均输出 `[10,20,30]`。首次把文件标记 `#42` 传入 `-e` 触发语法错误；改为向 `-e` 传代码正文后通过，两次输入形式及原始输出均可查。[交付实物校验](../../benchmarks/t29/results/delivery-receipt.json) · [命令行实测](../../benchmarks/t29/results/delivery-check.json)

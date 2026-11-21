@@ -990,3 +990,7 @@
 
 ### [2026-11-21] T29 最终交付预备
 - prepare-delivery.py只读模式通过，旧dist与T26 ZIP相符，新候选与T29 ZIP相符。delivery-steps.md列四候选commit后的明确GO、旧实物保全、原子dist切换与第五文档提交步骤。当前未更新README/交付清单或dist，未Git写入，等待独立终验和主调度GO。
+
+### [2026-11-21] T29 GO 后本地候选交付完成
+- 主调度明确GO后执行prepare-delivery.py --apply-go，两ZIP全部成员核对通过。先保存T26旧dist，再原子替换为T29，回读SHA f0d483f7…a4ed9，1137664B。旧实物Temp/T29/lfz-T26-7a144213.exe与T26 ZIP字节一致。
+- README与交付清单记录已兑现的findIndex、数组追加与回调帧，功能实测与独立审核、R304全门槛、候选ZIP和离线复算入口，T26移历史。供主调度第五交付提交使用。无Git写入、标签或正式发布。

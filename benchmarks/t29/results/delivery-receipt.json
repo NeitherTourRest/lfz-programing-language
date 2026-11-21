@@ -1,0 +1,8 @@
+{
+  "status": "local dist updated after explicit team-lead GO",
+  "previous_dist": "Temp/T29/lfz-T26-7a144213.exe",
+  "previous_sha256": "7a14421320bc93d460d3be9abf48aa89b9c8091f7c6fc928ee11e860e52aa8ef",
+  "dist": "dist/lfz.exe",
+  "sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+  "bytes": 1137664
+}

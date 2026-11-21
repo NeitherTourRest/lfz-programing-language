@@ -132,3 +132,11 @@
 ## [2026-11-17] T26 R304 及候选验收
 - R304 原门槛在指定 B 通过，19/19、struct_ops 8000 降时 80.3654%、九项能力按原规则评估，独立重算 76 组 684 样本。保留不满足可测条件的 JSON 档与既往失败。
 - 同一 B 功能回归 715/37/27 与 17 套旧 CLI/应用通过。正式发布及标签未执行。
+
+## [2026-11-21 09:27] T29 R304最终需求收口
+- 来源: team-lead轻量启动、只读核对后GO更新。
+- 完成: REQUIREMENTS v18新增T29验收段；原19线19/19、struct8k15.2285ms/降82.9773%、parse净时比2.18181/2.05207、stringify仅8k可测；九能力正确。功能726 Rust/182 LFZ/旧17套按team-lead最终汇总，10组独立功能差分另列。
+- 产出: REQUIREMENTS.md、本人STATUS/JOURNAL。只读T29-independent-verification.md及audit.json，状态INDEPENDENT_MEASUREMENT_GATE_PASS，正式窗口SHA66aa0e…916b，候选f0d483…4ed9。
+- 决策: 无新增范围/阈值。保留T26通过、T27/T28及全部历史原始记录。
+- 下一步: team-lead/release-manager汇总指定候选。
+- 阻塞: 无；未运行性能、构建、测试或Git。

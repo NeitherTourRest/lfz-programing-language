@@ -1,0 +1,25 @@
+{
+  "sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+  "source": "#42\nvar a = [10]\nlet previous = a\na = push(20, a)\na = push(30, a)\nlet readers = map((x) => () => x, a)\nlet values = map((f) => f(), readers)\nassert(previous == [10])\nassert(values == [10, 20, 30])\nassert(findIndex((x) => x > 15, values) == 1)\nprint(jsonStringify(values))\n",
+  "initial_header_in_eval": {
+    "sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+    "source": "#42\nvar a = [10]\nlet previous = a\na = push(20, a)\na = push(30, a)\nlet readers = map((x) => () => x, a)\nlet values = map((f) => f(), readers)\nassert(previous == [10])\nassert(values == [10, 20, 30])\nassert(findIndex((x) => x > 15, values) == 1)\nprint(jsonStringify(values))\n",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "  File \"<command>\", line 1\n    #42\n    ^\nSyntaxError: '#' 只能出现在文件首行的前导位；(字符串 / 注释 / 格式说明符内的 '#' 除外)\n"
+  },
+  "checks": [
+    {
+      "name": "file",
+      "exit": 0,
+      "stdout": "[10,20,30]\n",
+      "stderr": ""
+    },
+    {
+      "name": "eval",
+      "exit": 0,
+      "stdout": "[10,20,30]\n",
+      "stderr": ""
+    }
+  ]
+}

@@ -1,6 +1,17 @@
 # requirements-analyst — 工作状态
-> 2026-11-17 T26 需求验收记录完成
+> 2026-11-21 09:27 T29 需求验收记录完成
 
-R304 在指定 Windows 候选 B 上通过。SHA256 7a14421320bc93d460d3be9abf48aa89b9c8091f7c6fc928ee11e860e52aa8ef，1119232 字节。原门槛 19/19，struct_ops 8000 耗时降低 80.3654%，九项能力各按原输出和启动/净时规则评估。76 组 684 样本独立重算。JSON parse 4k→8k 近似净时比 2.25335，其他不满足可测条件的 JSON 档位或区间按原规则不报吞吐。
+## 当前状态
+REQUIREMENTS.md v18 已记录 T29 指定候选通过 R-304。SHA256 f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9。独立76组684样本、原19线19/19、struct8k降耗82.9773%、parse两组净时比2.18181/2.05207；stringify仅8k可测，不报相邻比值。九项能力输出正确。同一候选726 Rust/182 LFZ/旧17套由team-lead汇总，另10组独立功能差分通过。
 
-同一 B 通过 715 release、37 REPL、27 fmt 及既有 17 套 CLI/应用回归。原失败、环境不确定及 A 筛选退回记录保留。证据见 T26-independent-verification.md、T26-R304-callback-experiments.md 与 benchmarks/t26/results。正式发布和标签未执行，需求侧无阻塞。
+## 进行中
+无。本任务只读证据及更新需求，未运行性能/构建/测试，未执行Git。
+
+## 阻塞
+需求侧无。正式发布及标签未在本任务执行。
+
+## 下一步
+team-lead/release-manager按指定候选身份汇总交付，历史T26通过及T27/T28失败保留。
+
+## 关键经验
+R304须同时核19固定线、struct至少30%目标、九能力与启动/净时资格；定向筛选和局部收益不能代替正式窗口。独立审计零计时进程，不能冒记为独立重跑性能。证据T29-independent-verification.md、T29-independent-evidence/audit.json。

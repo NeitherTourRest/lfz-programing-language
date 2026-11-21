@@ -1,12 +1,20 @@
 # LFZ 语言与解释器 — 程序设计课程作业
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-> 最后更新: 2026-11-17 by release-manager
+> 最后更新: 2026-11-21 by release-manager
 > 仓库地址: https://github.com/NeitherTourRest/lfz-programing-language
 
 LFZ 是一个解释型通用脚本语言及其解释器，配套黑盒测试、性能对比、人/AI 开发指南与 Agent 开发应用。项目由 14 名 opencode AI 开发团队协作完成。
 
-## 当前候选 T26：回调优化通过 R304（2026-11-17）
+## 当前候选 T29（2026-11-21）
+
+当前候选包含 T27 的 `findIndex(predicate, array)` 首次匹配查找、T28 的独占数组追加缓冲复用和 T29 的高阶函数回调参数帧复用。`findIndex` 返回零基索引，未命中返回 `nil`。循环中的 `xs = push(item, xs)` 可复用独占数组的底层缓冲，已有别名的数组仍保留浅复制行为。回调返回的闭包保有各次调用独立的参数绑定。[findIndex 与 JSON 路由](docs/reports/T27-find-index.md) · [数组追加](docs/reports/T28-array-append.md) · [回调帧实现与实测](docs/reports/T29-callback-frames.md)
+
+T29 通过 726 项 Rust release 测试、182 项 LFZ 黑盒、17 套既有回归、37 项 REPL 和 27 项格式化测试。JSON 路由 9 项、交互式 JSON 应用 6 项、人类指南 3 项和 AI 指南 4 项实跑通过，十组独立差分的退出码与双通道逐字节一致。正式窗口由独立审核重算，R304 原 19 条固定绝对线、原 struct 降时目标及九项 JSON/CLI 能力均通过。`struct_ops 8000` 中位 15.2285 ms，相对原基线下降约 82.98%。结论限定于本机同窗整体进程耗时。[独立验收](docs/reports/T29-independent-verification.md) · [归档离线复核](docs/reports/T29-independent-evidence/offline-audit.py)
+
+本地 `dist/lfz.exe` 已切换为 1137664 字节的 T29 候选，SHA256 `f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9`。候选源码与产物、基准原始输入均有精确字节归档。当前交付为候选，无正式发布或新标签。[候选 ZIP](benchmarks/t29/results/candidate-snapshot.zip) · [候选指纹](benchmarks/t29/results/candidate-snapshot.json) · [基准输入 ZIP](benchmarks/t29/results/benchmark-inputs.zip)
+
+## T26 历史回调优化候选（2026-11-17）
 
 T26 省去用户函数回调每次分配的临时参数向量，参数值仍逐个克隆至独立参数槽。Windows 候选 B 通过 715 项 Rust release 测试、37 项公开 REPL 测试、27 项公开格式化测试及旧版全量回归。[回调优化与验证](docs/reports/T26-R304-callback-experiments.md)
 

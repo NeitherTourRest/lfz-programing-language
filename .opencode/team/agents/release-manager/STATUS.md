@@ -1,12 +1,11 @@
 # release-manager — 工作状态
-> 最后更新：2026-11-20 by release-manager
+> 最后更新：2026-11-21 by release-manager
 
-T29 暂存准备脚本已生成于 Temp/T29/prepare-checkpoint.py，基线66565e31bf677855b79502f15c47fc729466ebe3。白名单只允许env/evaluator、screen.py、results、T29-independent证据、T29-callback-frames报告与参与角色/团队记录。
+## 当前交付
+主调度在候选四提交HEAD 61116d6之后明确GO。已将本地dist切为T29，1137664B，SHA256 f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9。切换前保留T26旧实物于Temp/T29/lfz-T26-7a144213.exe，新旧实物与各自ZIP内exe逐字节一致；两份ZIP全部成员长度和SHA均核对。Temp/T29/delivery-receipt.json保留本地回执。
 
-准备时须指定 --decision retain-source 或 archive-only。保留源码模式核两源码与冻结ZIP SHA一致；仅归档模式要求工作源码先由root恢复到基线，ZIP与清单仍逐成员精确核对。脚本不自动恢复源、不自动切换分支。--stage-group沿T28逐项验证工作字节/副本/index blob。三保护块28/1/1过滤后等于HEAD时不入expected stage。main和dist身份保留检查。
+## 文档与验证
+README最前当前候选和delivery-checklist已记录T27 findIndex、T28追加缓冲、T29回调帧，T26标历史。引用作者726Rust/182LFZ/17旧套/37REPL/27fmt/路由9/交互6/人3/AI4，独立十组差分、正式R304原19线和全部门槛通过。独立离线复算入口与候选ZIP均有链接，历史失败保留。
 
-已实跑 retain-source 准备模式成功，当前四组含空独立组（最终证据落盘后刷新）。未执行Git写入或启动LFZ/Cargo，筛选最终结论等待主调度。
-
-T29 benchmark-inputs.zip及manifest已落盘并回读通过，11仓库相对路径，25746B/SHA8800480693667d9c296412564fafea3d3ada488a6749dcac9ac698fa57d9383a。各预声明/协议SHA全部匹配，入口额外原件SHA限制记入notes。无Git/LFZ/计时执行。
-
-2026-11-21 交付准备已齐：Temp/T29/prepare-delivery.py 默认只读，已核两ZIP全部成员及新旧实物；Temp/T29/delivery-steps.md 描述候选四commit后GO第五交付提交步骤。dist仍为T26，README/交付清单待明确GO。
+## 下一步
+文档及自身记录完成，交主调度执行第五交付提交及获授权分支快进推送。未写Git、未打标签、未正式发布。
