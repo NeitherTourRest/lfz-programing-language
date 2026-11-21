@@ -1,0 +1,6 @@
+#42
+let callbacks=map((x)=>()=>x,[11,22,33])
+assert(callbacks[0]()==11)
+assert(callbacks[1]()==22)
+assert(callbacks[2]()==33)
+print(jsonStringify(map((f)=>f(),callbacks)))

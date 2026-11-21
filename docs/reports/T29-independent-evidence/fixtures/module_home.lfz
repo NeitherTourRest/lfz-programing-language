@@ -1,0 +1,8 @@
+#42
+import lib from "./lib/private.lfz"
+let offset=900
+let callbacks=lib.make()
+assert(map((f)=>f(),callbacks)==[41,42,43])
+lib.adjust(10)
+assert(map((f)=>f(),callbacks)==[51,52,53])
+print("home")

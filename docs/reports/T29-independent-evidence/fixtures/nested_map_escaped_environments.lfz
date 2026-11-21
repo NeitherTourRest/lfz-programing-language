@@ -1,0 +1,7 @@
+#42
+let matrix=map((x)=>map((y)=>()=>x*10+y,[1,2]),[1,2,3])
+let a=matrix[0][0]
+let b=matrix[1][1]
+let c=matrix[2][0]
+assert([a(),b(),c()]==[11,22,31])
+print("nested")

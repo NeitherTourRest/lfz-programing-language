@@ -1,0 +1,7 @@
+#42
+var captures=[]
+let sorted=sortBy((x)=>{captures=push(()=>x,captures)
+ return -x},[3,1,2])
+assert(sorted==[3,2,1])
+assert(map((f)=>f(),captures)==[3,1,2])
+print("sort captures")

@@ -1,0 +1,5 @@
+#42
+var offset=40
+fn make(){map((x)=>()=>offset+x,[1,2,3])}
+fn adjust(x){offset+=x}
+export make,adjust

@@ -1,0 +1,10 @@
+#42
+let callbacks=map((x)=>{var n=x
+ return ()=>{n+=1
+ x+=10
+ return [n,x]}},[1,2,3])
+assert(callbacks[0]()==[2,11])
+assert(callbacks[1]()==[3,12])
+assert(callbacks[0]()==[3,21])
+assert(callbacks[2]()==[4,13])
+print("mutable isolated")

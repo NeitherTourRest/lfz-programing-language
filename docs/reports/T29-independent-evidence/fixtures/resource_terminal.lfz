@@ -1,0 +1,5 @@
+#42
+attempt(()=>map((x)=>{while true {
+ x+1
+ }},[1]))
+print("AFTER_LIMIT")

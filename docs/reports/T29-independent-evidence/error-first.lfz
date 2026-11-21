@@ -1,0 +1,12 @@
+#42
+let saved={fn:nil}
+let result=attempt(()=>map((x)=>{saved.fn=()=>x
+ if x==2 { fail("stop") }
+ return x},[1,2,3]))
+assert(!result.ok)
+let last=saved.fn
+assert(last()==2)
+let later=map((x)=>x+1,[7,8])
+assert(later==[8,9])
+assert(last()==2)
+print(jsonStringify(result.error))

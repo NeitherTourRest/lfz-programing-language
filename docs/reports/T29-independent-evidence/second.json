@@ -1,0 +1,175 @@
+{
+  "passed": [
+    "escape_parameters",
+    "escape_mutable_and_mutated_parameter",
+    "parameter_cell_escape_before_later_write",
+    "nested_map_escaped_environments",
+    "error_restoration_escaped_callback",
+    "shortcircuit_and_shared_objects",
+    "sortkey_escaped",
+    "resource_terminal",
+    "runtime_stack"
+  ],
+  "rows": [
+    {
+      "name": "escape_parameters",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "3b25a6864e201a9a8fb5ee0267669e626bd34a5160f824148a571af79046f2d9",
+      "exit": 0,
+      "stdout": "[11,22,33]\n",
+      "stderr": ""
+    },
+    {
+      "name": "escape_parameters",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "3b25a6864e201a9a8fb5ee0267669e626bd34a5160f824148a571af79046f2d9",
+      "exit": 0,
+      "stdout": "[11,22,33]\n",
+      "stderr": ""
+    },
+    {
+      "name": "escape_mutable_and_mutated_parameter",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "e081a1e63a5707ee0ae143246a16f40bfc7b910e5aa583e5f0b0d1cdf9ce3a62",
+      "exit": 0,
+      "stdout": "mutable isolated\n",
+      "stderr": ""
+    },
+    {
+      "name": "escape_mutable_and_mutated_parameter",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "e081a1e63a5707ee0ae143246a16f40bfc7b910e5aa583e5f0b0d1cdf9ce3a62",
+      "exit": 0,
+      "stdout": "mutable isolated\n",
+      "stderr": ""
+    },
+    {
+      "name": "parameter_cell_escape_before_later_write",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "7e617c9e8b9ce655ad5015b84e51a6a93811fe46f05c931b902a6cdbbbf75965",
+      "exit": 0,
+      "stdout": "same-call captured cells\n",
+      "stderr": ""
+    },
+    {
+      "name": "parameter_cell_escape_before_later_write",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "7e617c9e8b9ce655ad5015b84e51a6a93811fe46f05c931b902a6cdbbbf75965",
+      "exit": 0,
+      "stdout": "same-call captured cells\n",
+      "stderr": ""
+    },
+    {
+      "name": "nested_map_escaped_environments",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "2c23aef5e339f8eacc8d5e8a77cc3f2afcc85cd3a18d1a91197b46e55c08f0bb",
+      "exit": 0,
+      "stdout": "nested\n",
+      "stderr": ""
+    },
+    {
+      "name": "nested_map_escaped_environments",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "2c23aef5e339f8eacc8d5e8a77cc3f2afcc85cd3a18d1a91197b46e55c08f0bb",
+      "exit": 0,
+      "stdout": "nested\n",
+      "stderr": ""
+    },
+    {
+      "name": "error_restoration_escaped_callback",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "02a673e572a1c0eef03a780eacd633e85d24619e86eac6cc8b5f63eff89c6fd1",
+      "exit": 0,
+      "stdout": "{\"class\":\"AssertionError\",\"col\":12,\"line\":4,\"message\":\"stop\",\"traceback\":[{\"col\":12,\"func\":\"<module>\",\"line\":3},{\"col\":24,\"func\":\"<fn>\",\"line\":3},{\"col\":12,\"func\":\"<fn>\",\"line\":4}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "error_restoration_escaped_callback",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "02a673e572a1c0eef03a780eacd633e85d24619e86eac6cc8b5f63eff89c6fd1",
+      "exit": 0,
+      "stdout": "{\"class\":\"AssertionError\",\"col\":12,\"line\":4,\"message\":\"stop\",\"traceback\":[{\"col\":12,\"func\":\"<module>\",\"line\":3},{\"col\":24,\"func\":\"<fn>\",\"line\":3},{\"col\":12,\"func\":\"<fn>\",\"line\":4}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "shortcircuit_and_shared_objects",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "2b737686e34155539cefe5f5aadd2a3f1afb3df33e49aa5c582e02ea0b45d862",
+      "exit": 0,
+      "stdout": "[{\"x\":11},{\"x\":12},{\"x\":3}]\n",
+      "stderr": ""
+    },
+    {
+      "name": "shortcircuit_and_shared_objects",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "2b737686e34155539cefe5f5aadd2a3f1afb3df33e49aa5c582e02ea0b45d862",
+      "exit": 0,
+      "stdout": "[{\"x\":11},{\"x\":12},{\"x\":3}]\n",
+      "stderr": ""
+    },
+    {
+      "name": "sortkey_escaped",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "4eb63eaad9496785e64f5b6983d7564c0222ccc29f75a94b577c1c0dc77c3472",
+      "exit": 0,
+      "stdout": "sort captures\n",
+      "stderr": ""
+    },
+    {
+      "name": "sortkey_escaped",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "4eb63eaad9496785e64f5b6983d7564c0222ccc29f75a94b577c1c0dc77c3472",
+      "exit": 0,
+      "stdout": "sort captures\n",
+      "stderr": ""
+    },
+    {
+      "name": "resource_terminal",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "bc2b1136926f517c8ea8a0e8530d2bc3bba403ed1c76200b4dcdf3a8d39eefb2",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\resource_terminal.lfz\",\"line\":3,\"col\":2,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\resource_terminal.lfz\",\"line\":2,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\resource_terminal.lfz\",\"line\":2,\"func\":\"<fn>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\resource_terminal.lfz\",\"line\":3,\"func\":\"<fn>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "resource_terminal",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "bc2b1136926f517c8ea8a0e8530d2bc3bba403ed1c76200b4dcdf3a8d39eefb2",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ExecutionLimitError\",\"message\":\"执行步数预算已耗尽\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\resource_terminal.lfz\",\"line\":3,\"col\":2,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\resource_terminal.lfz\",\"line\":2,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\resource_terminal.lfz\",\"line\":2,\"func\":\"<fn>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\resource_terminal.lfz\",\"line\":3,\"func\":\"<fn>\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "runtime_stack",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "e85e58005c008b7394ec2ca435ca51b844e27baae7ea3ea17c02a77c7e8579f2",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\runtime_stack.lfz\",\"line\":2,\"col\":14,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\runtime_stack.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\runtime_stack.lfz\",\"line\":2,\"func\":\"failer\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "runtime_stack",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "e85e58005c008b7394ec2ca435ca51b844e27baae7ea3ea17c02a77c7e8579f2",
+      "exit": 2,
+      "stdout": "{\"ok\":false,\"error\":\"ZeroDivisionError\",\"message\":\"除以零\",\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\runtime_stack.lfz\",\"line\":2,\"col\":14,\"traceback\":[{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\runtime_stack.lfz\",\"line\":3,\"func\":\"<module>\"},{\"file\":\"D:\\\\XUE\\\\2026fall\\\\Program Design\\\\lfz-programing language design\\\\Temp\\\\T29-verifier\\\\fixtures\\\\runtime_stack.lfz\",\"line\":2,\"func\":\"failer\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "module_home",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "20c484723839e734b51f720f976702a1ebd36514758c42ff65b3d49c78b1658c",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29-verifier\\fixtures\\./lib/private.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29-verifier\\fixtures\\module_home.lfz:2:1）\n"
+    },
+    {
+      "name": "module_home",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "20c484723839e734b51f720f976702a1ebd36514758c42ff65b3d49c78b1658c",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "IOError: 无法读取模块：D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29-verifier\\fixtures\\./lib/private.lfz（导入于 D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29-verifier\\fixtures\\module_home.lfz:2:1）\n"
+    }
+  ]
+}

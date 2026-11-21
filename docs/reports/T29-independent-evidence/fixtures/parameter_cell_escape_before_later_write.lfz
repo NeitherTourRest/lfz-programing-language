@@ -1,0 +1,9 @@
+#42
+let out=[]
+var saved=[]
+let values=map((x)=>{saved=push(()=>x,saved)
+ x+=100
+ return x},[1,2,3])
+assert(values==[101,102,103])
+assert(map((f)=>f(),saved)==values)
+print("same-call captured cells")

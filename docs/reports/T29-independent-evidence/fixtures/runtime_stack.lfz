@@ -1,0 +1,3 @@
+#42
+fn failer(x){x/0}
+map(failer,[1])

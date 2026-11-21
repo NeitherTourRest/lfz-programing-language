@@ -1,0 +1,10 @@
+#42
+var seen=[]
+let objs=[{x:1},{x:2},{x:3}]
+let index=findIndex((v)=>{seen=push(v.x,seen)
+ v.x+=10
+ return v.x==12},objs)
+assert(index==1)
+assert(seen==[1,2])
+assert(map((o)=>o.x,objs)==[11,12,3])
+print(jsonStringify(objs))

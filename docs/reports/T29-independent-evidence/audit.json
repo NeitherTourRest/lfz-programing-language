@@ -1,0 +1,539 @@
+{
+  "status": "INDEPENDENT_MEASUREMENT_GATE_PASS",
+  "interpreter_launches": 0,
+  "raw_sha256": "66aa0e666abcda306369c710bbd32b246b0645a35c2603db6f40452e6c3b916b",
+  "receipt_sha256": "d0a1a5f0feb3c5ba76fd13ee1cb8f1ab5f832ffd38635f5fe61ef3105c6c2201",
+  "protocol_sha256": "74934a4ebc1f2eca5a6ea00e8d6e1c39ed5a4de5315a6cb8524d076d84c9f1bb",
+  "candidate_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+  "archives": {
+    "t28": "b2e1f6bb6ed86d6f8102e053a8b2ea425272000979edaa2517fe9795c9cbbe54",
+    "t29": "f34a034cb31a25a5f15d5a1a2602661b9729ca36a1e7dd646eac0022e65f9854"
+  },
+  "input_zip_sha256": "8800480693667d9c296412564fafea3d3ada488a6749dcac9ac698fa57d9383a",
+  "samples": {
+    "warmup": 152,
+    "formal": 532
+  },
+  "groups": 76,
+  "counts": {
+    "PASS": 19
+  },
+  "cases": [
+    {
+      "name": "noop",
+      "n": 0,
+      "median_ms": {
+        "old": 8.8791,
+        "t12": 8.2926,
+        "new": 8.96
+      },
+      "limit_ms": 16.307000000000002,
+      "status": "PASS"
+    },
+    {
+      "name": "numeric_loop",
+      "n": 10000,
+      "median_ms": {
+        "t12": 9.6746,
+        "new": 10.3604,
+        "old": 9.9091
+      },
+      "limit_ms": 17.967599999999997,
+      "status": "PASS"
+    },
+    {
+      "name": "numeric_loop",
+      "n": 100000,
+      "median_ms": {
+        "new": 24.8582,
+        "old": 26.9337,
+        "t12": 22.3059
+      },
+      "limit_ms": 38.778479999999995,
+      "status": "PASS"
+    },
+    {
+      "name": "numeric_loop",
+      "n": 500000,
+      "median_ms": {
+        "old": 93.5955,
+        "t12": 83.4638,
+        "new": 91.6498
+      },
+      "limit_ms": 131.49684,
+      "status": "PASS"
+    },
+    {
+      "name": "array_builtins",
+      "n": 1000,
+      "median_ms": {
+        "t12": 14.3605,
+        "new": 8.8049,
+        "old": 8.5733
+      },
+      "limit_ms": 17.2102,
+      "status": "PASS"
+    },
+    {
+      "name": "array_builtins",
+      "n": 10000,
+      "median_ms": {
+        "new": 11.0637,
+        "old": 13.347,
+        "t12": 13.773
+      },
+      "limit_ms": 22.7717,
+      "status": "PASS"
+    },
+    {
+      "name": "array_builtins",
+      "n": 50000,
+      "median_ms": {
+        "old": 37.1249,
+        "t12": 36.7629,
+        "new": 21.3415
+      },
+      "limit_ms": 52.305839999999996,
+      "status": "PASS"
+    },
+    {
+      "name": "struct_ops",
+      "n": 2000,
+      "median_ms": {
+        "t12": 10.1451,
+        "new": 10.527,
+        "old": 13.4474
+      },
+      "limit_ms": 22.4452,
+      "status": "PASS"
+    },
+    {
+      "name": "struct_ops",
+      "n": 4000,
+      "median_ms": {
+        "new": 13.6454,
+        "old": 28.8459,
+        "t12": 12.5649
+      },
+      "limit_ms": 37.87044,
+      "status": "PASS"
+    },
+    {
+      "name": "struct_ops",
+      "n": 8000,
+      "median_ms": {
+        "old": 90.4025,
+        "t12": 14.4079,
+        "new": 15.2285
+      },
+      "limit_ms": 107.35176,
+      "status": "PASS"
+    },
+    {
+      "name": "string_ops",
+      "n": 2000,
+      "median_ms": {
+        "t12": 21.3694,
+        "new": 10.7459,
+        "old": 22.1108
+      },
+      "limit_ms": 28.9022,
+      "status": "PASS"
+    },
+    {
+      "name": "string_ops",
+      "n": 4000,
+      "median_ms": {
+        "new": 11.8012,
+        "old": 70.6226,
+        "t12": 71.415
+      },
+      "limit_ms": 101.90447999999999,
+      "status": "PASS"
+    },
+    {
+      "name": "string_ops",
+      "n": 8000,
+      "median_ms": {
+        "old": 189.064,
+        "t12": 188.7652,
+        "new": 15.3484
+      },
+      "limit_ms": 236.35271999999998,
+      "status": "PASS"
+    },
+    {
+      "name": "string_map",
+      "n": 2000,
+      "median_ms": {
+        "t12": 10.1899,
+        "new": 10.0209,
+        "old": 10.4686
+      },
+      "limit_ms": 17.521900000000002,
+      "status": "PASS"
+    },
+    {
+      "name": "string_map",
+      "n": 4000,
+      "median_ms": {
+        "new": 11.3637,
+        "old": 11.6919,
+        "t12": 13.1795
+      },
+      "limit_ms": 23.0626,
+      "status": "PASS"
+    },
+    {
+      "name": "string_map",
+      "n": 8000,
+      "median_ms": {
+        "old": 15.2726,
+        "t12": 20.9583,
+        "new": 13.1248
+      },
+      "limit_ms": 22.5214,
+      "status": "PASS"
+    },
+    {
+      "name": "struct_small",
+      "n": 4,
+      "median_ms": {
+        "t12": 11.9259,
+        "new": 12.803,
+        "old": 11.4695
+      },
+      "limit_ms": 18.7462,
+      "status": "PASS"
+    },
+    {
+      "name": "struct_small",
+      "n": 16,
+      "median_ms": {
+        "new": 25.111,
+        "old": 27.1178,
+        "t12": 21.8392
+      },
+      "limit_ms": 34.633919999999996,
+      "status": "PASS"
+    },
+    {
+      "name": "struct_small",
+      "n": 64,
+      "median_ms": {
+        "old": 64.5792,
+        "t12": 60.5671,
+        "new": 57.1833
+      },
+      "limit_ms": 78.31067999999999,
+      "status": "PASS"
+    }
+  ],
+  "startup_ms": 8.96,
+  "struct8": {
+    "original_ms": 89.4598,
+    "candidate_ms": 15.2285,
+    "reduction_percent": 82.97727023758156
+  },
+  "json_rule": {
+    "json_parse": {
+      "total_ms": [
+        19.3508,
+        31.6307,
+        55.4819
+      ],
+      "approx_net_ms": [
+        10.390799999999999,
+        22.6707,
+        46.5219
+      ],
+      "startup_share": [
+        0.46302995225003624,
+        0.28326910248587606,
+        0.16149410888956578
+      ],
+      "eligible": [
+        true,
+        true,
+        true
+      ],
+      "doubling_ratios": [
+        2.1818050583208226,
+        2.0520716166682105
+      ]
+    },
+    "json_stringify": {
+      "total_ms": [
+        13.878,
+        15.7773,
+        20.0507
+      ],
+      "approx_net_ms": [
+        4.917999999999999,
+        6.8172999999999995,
+        11.090699999999998
+      ],
+      "startup_share": [
+        0.6456261709179998,
+        0.5679045210523981,
+        0.44686719166911887
+      ],
+      "eligible": [
+        false,
+        false,
+        true
+      ],
+      "doubling_ratios": [
+        null,
+        null
+      ]
+    }
+  },
+  "candidate_path_probe_ms": 94.9237,
+  "screen": {
+    "samples": 84,
+    "passes": true,
+    "cases": {
+      "control": {
+        "t28_median_ms": 10.52795,
+        "candidate_median_ms": 9.375250000000001,
+        "candidate_over_t28_median": 0.8905104982451475,
+        "paired_wins": 3,
+        "paired_slower_rounds": 3,
+        "paired_ties": 0,
+        "paired_elapsed_ms": [
+          {
+            "round": 0,
+            "t28": 8.9365,
+            "candidate": 8.8447
+          },
+          {
+            "round": 1,
+            "t28": 8.8629,
+            "candidate": 9.5073
+          },
+          {
+            "round": 2,
+            "t28": 27.9799,
+            "candidate": 9.2432
+          },
+          {
+            "round": 3,
+            "t28": 10.7473,
+            "candidate": 8.5569
+          },
+          {
+            "round": 4,
+            "t28": 10.3086,
+            "candidate": 10.8635
+          },
+          {
+            "round": 5,
+            "t28": 12.4339,
+            "candidate": 14.546
+          }
+        ]
+      },
+      "array_full": {
+        "t28_median_ms": 92.8483,
+        "candidate_median_ms": 49.518,
+        "candidate_over_t28_median": 0.533321557852971,
+        "paired_wins": 6,
+        "paired_slower_rounds": 0,
+        "paired_ties": 0,
+        "paired_elapsed_ms": [
+          {
+            "round": 0,
+            "t28": 90.8876,
+            "candidate": 50.2273
+          },
+          {
+            "round": 1,
+            "t28": 94.2503,
+            "candidate": 49.0181
+          },
+          {
+            "round": 2,
+            "t28": 108.8454,
+            "candidate": 48.7576
+          },
+          {
+            "round": 3,
+            "t28": 89.8115,
+            "candidate": 50.0179
+          },
+          {
+            "round": 4,
+            "t28": 91.4463,
+            "candidate": 48.7029
+          },
+          {
+            "round": 5,
+            "t28": 104.136,
+            "candidate": 61.4096
+          }
+        ]
+      },
+      "array_map_filter": {
+        "t28_median_ms": 74.2051,
+        "candidate_median_ms": 40.5229,
+        "candidate_over_t28_median": 0.5460931930554638,
+        "paired_wins": 6,
+        "paired_slower_rounds": 0,
+        "paired_ties": 0,
+        "paired_elapsed_ms": [
+          {
+            "round": 0,
+            "t28": 72.4752,
+            "candidate": 41.598
+          },
+          {
+            "round": 1,
+            "t28": 72.4551,
+            "candidate": 41.0849
+          },
+          {
+            "round": 2,
+            "t28": 80.972,
+            "candidate": 38.974
+          },
+          {
+            "round": 3,
+            "t28": 69.6332,
+            "candidate": 39.5022
+          },
+          {
+            "round": 4,
+            "t28": 75.935,
+            "candidate": 39.9609
+          },
+          {
+            "round": 5,
+            "t28": 93.4601,
+            "candidate": 53.0207
+          }
+        ]
+      },
+      "array_sort_reduce": {
+        "t28_median_ms": 32.76435,
+        "candidate_median_ms": 20.765349999999998,
+        "candidate_over_t28_median": 0.633778787004778,
+        "paired_wins": 6,
+        "paired_slower_rounds": 0,
+        "paired_ties": 0,
+        "paired_elapsed_ms": [
+          {
+            "round": 0,
+            "t28": 31.2437,
+            "candidate": 19.6514
+          },
+          {
+            "round": 1,
+            "t28": 32.5607,
+            "candidate": 18.9452
+          },
+          {
+            "round": 2,
+            "t28": 32.968,
+            "candidate": 23.1932
+          },
+          {
+            "round": 3,
+            "t28": 31.5611,
+            "candidate": 19.6341
+          },
+          {
+            "round": 4,
+            "t28": 34.5647,
+            "candidate": 21.8793
+          },
+          {
+            "round": 5,
+            "t28": 37.0148,
+            "candidate": 23.7819
+          }
+        ]
+      },
+      "string_full": {
+        "t28_median_ms": 37.43405,
+        "candidate_median_ms": 28.9066,
+        "candidate_over_t28_median": 0.7722007103158756,
+        "paired_wins": 6,
+        "paired_slower_rounds": 0,
+        "paired_ties": 0,
+        "paired_elapsed_ms": [
+          {
+            "round": 0,
+            "t28": 35.5789,
+            "candidate": 27.5797
+          },
+          {
+            "round": 1,
+            "t28": 34.8434,
+            "candidate": 29.9747
+          },
+          {
+            "round": 2,
+            "t28": 40.6361,
+            "candidate": 27.855
+          },
+          {
+            "round": 3,
+            "t28": 38.1237,
+            "candidate": 29.92
+          },
+          {
+            "round": 4,
+            "t28": 36.7444,
+            "candidate": 27.8932
+          },
+          {
+            "round": 5,
+            "t28": 48.7678,
+            "candidate": 35.6524
+          }
+        ]
+      },
+      "push_self_8000": {
+        "t28_median_ms": 14.651599999999998,
+        "candidate_median_ms": 11.18275,
+        "candidate_over_t28_median": 0.763244287313331,
+        "paired_wins": 4,
+        "paired_slower_rounds": 2,
+        "paired_ties": 0,
+        "paired_elapsed_ms": [
+          {
+            "round": 0,
+            "t28": 10.9083,
+            "candidate": 11.1346
+          },
+          {
+            "round": 1,
+            "t28": 10.7825,
+            "candidate": 11.2309
+          },
+          {
+            "round": 2,
+            "t28": 29.9817,
+            "candidate": 10.5031
+          },
+          {
+            "round": 3,
+            "t28": 14.8783,
+            "candidate": 10.961
+          },
+          {
+            "round": 4,
+            "t28": 14.671,
+            "candidate": 13.6129
+          },
+          {
+            "round": 5,
+            "t28": 14.6322,
+            "candidate": 13.7047
+          }
+        ]
+      }
+    }
+  }
+}

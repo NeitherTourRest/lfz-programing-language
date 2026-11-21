@@ -1,0 +1,90 @@
+{
+  "passed": [
+    "escape_parameters",
+    "escape_mutable_and_mutated_parameter",
+    "parameter_cell_escape_before_later_write",
+    "nested_map_escaped_environments"
+  ],
+  "rows": [
+    {
+      "name": "escape_parameters",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "3b25a6864e201a9a8fb5ee0267669e626bd34a5160f824148a571af79046f2d9",
+      "exit": 0,
+      "stdout": "[11,22,33]\n",
+      "stderr": ""
+    },
+    {
+      "name": "escape_parameters",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "3b25a6864e201a9a8fb5ee0267669e626bd34a5160f824148a571af79046f2d9",
+      "exit": 0,
+      "stdout": "[11,22,33]\n",
+      "stderr": ""
+    },
+    {
+      "name": "escape_mutable_and_mutated_parameter",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "e081a1e63a5707ee0ae143246a16f40bfc7b910e5aa583e5f0b0d1cdf9ce3a62",
+      "exit": 0,
+      "stdout": "mutable isolated\n",
+      "stderr": ""
+    },
+    {
+      "name": "escape_mutable_and_mutated_parameter",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "e081a1e63a5707ee0ae143246a16f40bfc7b910e5aa583e5f0b0d1cdf9ce3a62",
+      "exit": 0,
+      "stdout": "mutable isolated\n",
+      "stderr": ""
+    },
+    {
+      "name": "parameter_cell_escape_before_later_write",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "7e617c9e8b9ce655ad5015b84e51a6a93811fe46f05c931b902a6cdbbbf75965",
+      "exit": 0,
+      "stdout": "same-call captured cells\n",
+      "stderr": ""
+    },
+    {
+      "name": "parameter_cell_escape_before_later_write",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "7e617c9e8b9ce655ad5015b84e51a6a93811fe46f05c931b902a6cdbbbf75965",
+      "exit": 0,
+      "stdout": "same-call captured cells\n",
+      "stderr": ""
+    },
+    {
+      "name": "nested_map_escaped_environments",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "2c23aef5e339f8eacc8d5e8a77cc3f2afcc85cd3a18d1a91197b46e55c08f0bb",
+      "exit": 0,
+      "stdout": "nested\n",
+      "stderr": ""
+    },
+    {
+      "name": "nested_map_escaped_environments",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "2c23aef5e339f8eacc8d5e8a77cc3f2afcc85cd3a18d1a91197b46e55c08f0bb",
+      "exit": 0,
+      "stdout": "nested\n",
+      "stderr": ""
+    },
+    {
+      "name": "error_restoration_escaped_callback",
+      "binary_sha256": "326b8ec9ede80883c7ac23217068be278ed607e1b84930df4d7f6af6ef9e73ea",
+      "source_sha256": "846cbb0b43b5f72ef75c12ce88110e30c76f5fb4c66f69ecfca58785009dbda9",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29-verifier\\fixtures\\error_restoration_escaped_callback.lfz\", line 2\n    let saved={fn:nil}\n               ^\nSyntaxError: 这里期待 字段名，但得到 'fn'\n"
+    },
+    {
+      "name": "error_restoration_escaped_callback",
+      "binary_sha256": "f0d483f7a0cbf2d9c45da5bd684327f8ac177ac4c2378e23230eba86d29a4ed9",
+      "source_sha256": "846cbb0b43b5f72ef75c12ce88110e30c76f5fb4c66f69ecfca58785009dbda9",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "  File \"D:\\XUE\\2026fall\\Program Design\\lfz-programing language design\\Temp\\T29-verifier\\fixtures\\error_restoration_escaped_callback.lfz\", line 2\n    let saved={fn:nil}\n               ^\nSyntaxError: 这里期待 字段名，但得到 'fn'\n"
+    }
+  ]
+}
