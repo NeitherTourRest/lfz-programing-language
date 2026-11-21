@@ -1646,8 +1646,12 @@ impl Interp {
                     // P3.9b：高阶内置（map/filter/reduce/sortBy/minBy/maxBy/each）需要「调用用户函数」
                     // 的能力——注入一个经 [`Interp::call_value`] 调用回调的闭包（窄 ABI，见 builtins
                     // 的 `Invoke`）。
+                    let mut reusable_frame = None;
                     let mut invoke = |f: &Value, a: &[Value], s: Span| -> R<Value> {
-                        self.call_value(f, a, s)
+                        match f {
+                            Value::Func(cl) => self.call_user(cl, UserCallArgs::Borrowed(a), s, None, Some(&mut reusable_frame)),
+                            _ => self.call_value(f, a, s),
+                        }
                     };
                     return Ok(Flow::Value(builtins::call_with(
                         name, &argv, span, &mut invoke,
@@ -1733,7 +1737,7 @@ impl Interp {
         piped: bool,
     ) -> R<Flow> {
         match callee {
-            Value::Func(cl) => Ok(Flow::Value(self.call_user(&cl, UserCallArgs::Owned(argv), span, self_override)?)),
+            Value::Func(cl) => Ok(Flow::Value(self.call_user(&cl, UserCallArgs::Owned(argv), span, self_override, None)?)),
             other => Err(type_error(non_function_call_msg(&other, piped), span)),
         }
     }
@@ -1745,7 +1749,7 @@ impl Interp {
     /// 位置取**回调调用点**（内置的 `Call` 节点 span），满足「运行时错误必须带位置」。
     fn call_value(&mut self, callee: &Value, args: &[Value], span: Span) -> R<Value> {
         match callee {
-            Value::Func(cl) => self.call_user(cl, UserCallArgs::Borrowed(args), span, None),
+            Value::Func(cl) => self.call_user(cl, UserCallArgs::Borrowed(args), span, None, None),
             other => Err(type_error(
                 TypeMsg::NotCallable {
                     t: other.type_name().to_string(),
@@ -1915,6 +1919,7 @@ impl Interp {
         argv: UserCallArgs<'_>,
         span: Span,
         self_override: Option<Value>,
+        mut reusable_frame: Option<&mut Option<Rc<RefCell<Env>>>>,
     ) -> R<Value> {
         if cl.builtin == Some("argv") {
             if argv.len() != 0 {
@@ -1950,16 +1955,32 @@ impl Interp {
         let caller_module=self.active_module;let caller_globals=Rc::clone(&self.globals);
         if let Some(modules)=&self.modules { self.active_module=user.home_module;self.globals=Rc::clone(&modules[user.home_module.0 as usize].env); }
         // 调用帧直接挂在 globals 之下；自由局部经捕获 cell 解析（§4.5.3）。
-        let frame = Env::child_after(&self.globals);
-        match argv {
-            UserCallArgs::Owned(args) => {
-                for (param, arg) in user.params.iter().zip(args) {
-                    frame.borrow_mut().define_named(param, arg, true);
+        let frame = if let Some(frame) = reusable_frame.as_mut().and_then(|cache| cache.take()) {
+            frame
+        } else {
+            Env::child_after(&self.globals)
+        };
+        if reusable_frame.is_some() {
+            frame.borrow_mut().prepare_call(&self.globals, &user.params);
+            match argv {
+                UserCallArgs::Owned(args) => {
+                    for arg in args { frame.borrow_mut().define(arg); }
+                }
+                UserCallArgs::Borrowed(args) => {
+                    for arg in args { frame.borrow_mut().define(arg.clone()); }
                 }
             }
-            UserCallArgs::Borrowed(args) => {
-                for (param, arg) in user.params.iter().zip(args.iter().cloned()) {
-                    frame.borrow_mut().define_named(param, arg, true);
+        } else {
+            match argv {
+                UserCallArgs::Owned(args) => {
+                    for (param, arg) in user.params.iter().zip(args) {
+                        frame.borrow_mut().define_named(param, arg, true);
+                    }
+                }
+                UserCallArgs::Borrowed(args) => {
+                    for (param, arg) in user.params.iter().zip(args.iter().cloned()) {
+                        frame.borrow_mut().define_named(param, arg, true);
+                    }
                 }
             }
         }
@@ -1987,6 +2008,13 @@ impl Interp {
         // 仅**成功**返回时弹帧 / 退深度；出错时经 `?` 提前返回，帧栈保留供 traceback（§8.2）。
         self.trace.pop();
         self.depth -= 1;
+        if let Some(cache) = reusable_frame {
+            drop(scope);
+            if Rc::strong_count(&frame) == 1 && Rc::weak_count(&frame) == 0
+                && frame.borrow_mut().release_call(user.params.len()) {
+                *cache = Some(frame);
+            }
+        }
         outcome
     }
 
@@ -5276,5 +5304,67 @@ mod t28_push_reuse_tests {
         assert_eq!(run(source, Some(7)).result.unwrap_err().class_name(), "ExecutionLimitError");
         let result = run("let a=[1]\nlet r=attempt(()=>{a=push(2,a)})\nassert(!r.ok)\nassert(a==[1])", None);
         assert!(result.result.is_ok());
+    }
+}
+
+#[cfg(test)]
+mod t29_frame_tests {
+    use super::*;
+
+    fn run(text: &str) -> TracedRun {
+        on_eval_stack(move || {
+            let program = crate::parser::parse(&crate::lexer::lex(text, 0).unwrap()).unwrap();
+            eval_module_traced_on_thread(&program)
+        })
+    }
+
+    #[test]
+    fn escaping_parameter_cells_and_rebindings_are_independent() {
+        for text in [
+            "let functions=map((x)=>()=>x,[1,2,3])\nassert(map((f)=>f(),functions)==[1,2,3])",
+            "let functions=map((x)=>{x+=10\n()=>x},[1,2,3])\nassert(map((f)=>f(),functions)==[11,12,13])",
+            "let functions=map((x)=>{let x=x+10\n()=>x},[1,2])\nassert(map((f)=>f(),functions)==[11,12])",
+            "assert(map((x)=>map((y)=>x+y,[10,20]),[1,2])==[[11,21],[12,22]])",
+        ] {
+            let result = run(text);
+            assert!(result.result.is_ok(), "{text}: {:?}", result.result);
+        }
+    }
+
+    #[test]
+    fn errors_release_frames_and_preserve_attempt_side_effects() {
+        let result = run("var seen=[]\nlet r=attempt(()=>map((x)=>{seen=push(x,seen)\n1/(x-2)},[1,2,3]))\nassert(!r.ok)\nassert(seen==[1,2])\nassert(map((x)=>x+1,[4,5])==[5,6])");
+        assert!(result.result.is_ok(), "{:?}", result.result);
+    }
+
+    #[test]
+    fn module_callback_fault_keeps_definition_source() {
+        on_eval_stack(|| {
+            let graph=super::t16_c_tests::graph(&["import lib from \"./lib.lfz\"\nmap(lib.bad,[1,2])", "fn bad(x)=>1/(x-2)\nexport bad"]);
+            let result=eval_graph_traced_on_thread_with_args(&graph,&[]).unwrap();
+            assert_eq!(result.result.as_ref().unwrap_err().class_name(), "ZeroDivisionError");
+            assert_eq!(result.error_source().unwrap().display_path,"m1.lfz");
+            assert_eq!(result.frame_source(result.frames.len()-1).unwrap().display_path,"m1.lfz");
+        });
+    }
+
+    #[test]
+    fn empty_cached_frames_drop_values_and_detach_captured_cells() {
+        let parent=Env::root();
+        let frame=Env::child_after(&parent);
+        frame.borrow_mut().prepare_call(&parent,&["x".into()]);
+        let array=Value::array(vec![Value::Int(1)]);
+        let weak=Rc::downgrade(array.as_array().unwrap());
+        frame.borrow_mut().define(array);
+        assert!(frame.borrow_mut().release_call(1));
+        assert!(weak.upgrade().is_none());
+        frame.borrow_mut().prepare_call(&parent,&["x".into()]);
+        frame.borrow_mut().define(Value::Int(10));
+        let captured=frame.borrow_mut().capture_local(0).unwrap();
+        assert!(frame.borrow_mut().release_call(1));
+        frame.borrow_mut().prepare_call(&parent,&["x".into()]);
+        frame.borrow_mut().define(Value::Int(20));
+        assert_eq!(captured.borrow().as_int(),Some(10));
+        assert_eq!(frame.borrow().get_local(0).unwrap().as_int(),Some(20));
     }
 }

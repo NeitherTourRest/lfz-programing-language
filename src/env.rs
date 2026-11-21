@@ -92,6 +92,33 @@ impl Env {
         Env::child(parent, first_slot)
     }
 
+    /// Start a fresh callback binding set while retaining compatible parameter names.
+    pub(crate) fn prepare_call(&mut self, parent: &Rc<RefCell<Env>>, params: &[String]) {
+        self.slots.clear();
+        self.first_slot = { let parent = parent.borrow(); parent.first_slot + parent.slots.len() as u32 };
+        self.parent = Some(Rc::clone(parent));
+        let same_names = self.names.len() == params.len()
+            && self.names.iter().zip(params).all(|((name, _, _), param)| name == param);
+        if !same_names {
+            self.names.clear();
+            self.names.extend(params.iter().enumerate().map(|(index, name)|
+                (name.clone(), self.first_slot + index as u32, true)));
+        } else {
+            for (index, (_, slot, mutable)) in self.names.iter_mut().enumerate() {
+                *slot = self.first_slot + index as u32;
+                *mutable = true;
+            }
+        }
+    }
+
+    /// Discard every value and shared-cell reference before retaining a small empty frame.
+    pub(crate) fn release_call(&mut self, parameter_count: usize) -> bool {
+        self.slots.clear();
+        self.names.truncate(parameter_count);
+        self.slots.capacity() <= 64 && self.names.capacity() <= 64
+            && self.names.iter().map(|(name, _, _)| name.capacity()).sum::<usize>() <= 4096
+    }
+
     /// 在**当前作用域**分配一个新槽位，返回其绝对下标。
     pub fn define(&mut self, value: Value) -> u32 {
         let slot = self.first_slot + self.slots.len() as u32;
